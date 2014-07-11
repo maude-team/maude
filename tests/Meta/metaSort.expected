@@ -1,0 +1,334 @@
+Maude> ==========================================
+reduce in META-LEVEL : sortLeq(fmod 'FOO is
+  nil
+  sorts 'NzNat ; 'Nat ; 'Int ; 'NzInt .
+  subsort 'NzNat < 'Nat .
+  subsort 'NzNat < 'NzInt .
+  subsort 'Nat < 'Int .
+  subsort 'NzInt < 'Int .
+  none
+  none
+  none
+endfm, 'NzNat, 'Int) .
+rewrites: 1
+result Bool: true
+==========================================
+reduce in META-LEVEL : sortLeq(fmod 'FOO is
+  nil
+  sorts 'NzNat ; 'Nat ; 'Int ; 'NzInt .
+  subsort 'NzNat < 'Nat .
+  subsort 'NzNat < 'NzInt .
+  subsort 'Nat < 'Int .
+  subsort 'NzInt < 'Int .
+  none
+  none
+  none
+endfm, 'Int, 'NzInt) .
+rewrites: 1
+result Bool: false
+==========================================
+reduce in META-LEVEL : sameKind(fmod 'FOO is
+  nil
+  sorts 'NzNat ; 'Nat ; 'Int ; 'NzInt .
+  subsort 'NzNat < 'Nat .
+  subsort 'NzNat < 'NzInt .
+  subsort 'Nat < 'Int .
+  subsort 'NzInt < 'Int .
+  none
+  none
+  none
+endfm, '`[Int`], 'NzInt) .
+rewrites: 1
+result Bool: true
+==========================================
+reduce in META-LEVEL : sameKind(fmod 'FOO is
+  protecting 'BOOL .
+  sorts 'NzNat ; 'Nat ; 'Int ; 'NzInt .
+  subsort 'NzNat < 'Nat .
+  subsort 'NzNat < 'NzInt .
+  subsort 'Nat < 'Int .
+  subsort 'NzInt < 'Int .
+  none
+  none
+  none
+endfm, '`[Int`], 'Bool) .
+rewrites: 1
+result Bool: false
+==========================================
+reduce in META-LEVEL : leastSort(fmod 'FOO is
+  protecting 'FLOAT .
+  sorts none .
+  none
+  none
+  none
+  none
+endfm, 'pi.Float) .
+rewrites: 1
+result Sort: 'FiniteFloat
+==========================================
+reduce in META-LEVEL : completeName(fmod 'FOO is
+  protecting 'BOOL .
+  sorts 'NzNat ; 'Nat ; 'NzInt .
+  subsort 'NzNat < 'Nat .
+  subsort 'NzNat < 'NzInt .
+  none
+  none
+  none
+endfm, '`[NzInt`]) .
+rewrites: 1
+result Kind: '`[NzInt`,Nat`]
+==========================================
+reduce in META-LEVEL : completeName(fmod 'FOO is
+  protecting 'BOOL .
+  sorts 'NzNat ; 'Nat ; 'NzInt .
+  subsort 'NzNat < 'Nat .
+  subsort 'NzNat < 'NzInt .
+  none
+  none
+  none
+endfm, '`[NzInt`,Nat`]) .
+rewrites: 1
+result Kind: '`[NzInt`,Nat`]
+==========================================
+reduce in META-LEVEL : lesserSorts(fmod 'FOO is
+  protecting 'BOOL .
+  sorts 'NzNat ; 'Nat ; 'Int ; 'NzInt .
+  subsort 'NzNat < 'Nat .
+  subsort 'NzNat < 'NzInt .
+  subsort 'Nat < 'Int .
+  subsort 'NzInt < 'Int .
+  none
+  none
+  none
+endfm, 'Int) .
+rewrites: 1
+result NeSortSet: 'Nat ; 'NzInt ; 'NzNat
+==========================================
+reduce in META-LEVEL : lesserSorts(fmod 'FOO is
+  protecting 'BOOL .
+  sorts 'NzNat ; 'Nat ; 'Int ; 'NzInt .
+  subsort 'NzNat < 'Nat .
+  subsort 'NzNat < 'NzInt .
+  subsort 'Nat < 'Int .
+  subsort 'NzInt < 'Int .
+  none
+  none
+  none
+endfm, 'NzNat) .
+rewrites: 1
+result EmptyTypeSet: (none).EmptyTypeSet
+==========================================
+reduce in META-LEVEL : lesserSorts(fmod 'FOO is
+  protecting 'BOOL .
+  sorts 'NzNat ; 'Nat ; 'Int ; 'NzInt .
+  subsort 'NzNat < 'Nat .
+  subsort 'NzNat < 'NzInt .
+  subsort 'Nat < 'Int .
+  subsort 'NzInt < 'Int .
+  none
+  none
+  none
+endfm, 'Nat) .
+rewrites: 1
+result Sort: 'NzNat
+==========================================
+reduce in META-LEVEL : glbSorts(fmod 'FOO is
+  protecting 'BOOL .
+  sorts 'NzNat ; 'Nat ; 'Int ; 'NzInt .
+  subsort 'NzNat < 'Nat .
+  subsort 'NzNat < 'NzInt .
+  subsort 'Nat < 'Int .
+  subsort 'NzInt < 'Int .
+  none
+  none
+  none
+endfm, 'Nat, 'NzInt) .
+rewrites: 1
+result Sort: 'NzNat
+==========================================
+reduce in META-LEVEL : glbSorts(fmod 'FOO is
+  protecting 'BOOL .
+  sorts 'NzNat ; 'Nat ; 'Int ; 'NzInt .
+  subsort 'NzNat < 'Nat .
+  subsort 'NzNat < 'NzInt .
+  subsort 'Nat < 'Int .
+  subsort 'NzInt < 'Int .
+  none
+  none
+  none
+endfm, 'Nat, 'Int) .
+rewrites: 1
+result Sort: 'Nat
+==========================================
+reduce in META-LEVEL : glbSorts(fmod 'FOO is
+  protecting 'BOOL .
+  sorts 'Nat ; 'Int ; 'NzInt .
+  subsort 'Nat < 'Int .
+  subsort 'NzInt < 'Int .
+  none
+  none
+  none
+endfm, 'Nat, 'NzInt) .
+rewrites: 1
+result EmptyTypeSet: (none).EmptyTypeSet
+==========================================
+reduce in META-LEVEL : getKind(fmod 'FOO is
+  protecting 'FLOAT .
+  sorts 'Bar ; 'Foo .
+  subsort 'Bar < 'Foo .
+  op 'a : nil -> 'Foo [none] .
+  mb 'a.Foo : 'Bar [none] .
+  none
+endfm, 'Foo) .
+rewrites: 1
+result Kind: '`[Foo`]
+==========================================
+reduce in META-LEVEL : getKind(fmod 'FOO is
+  protecting 'FLOAT .
+  sorts 'Bar ; 'Foo .
+  subsort 'Bar < 'Foo .
+  op 'a : nil -> 'Foo [none] .
+  mb 'a.Foo : 'Bar [none] .
+  none
+endfm, 'Bar) .
+rewrites: 1
+result Kind: '`[Foo`]
+==========================================
+reduce in META-LEVEL : getKind(fmod 'FOO is
+  protecting 'FLOAT .
+  sorts 'Bar ; 'Foo .
+  subsort 'Bar < 'Foo .
+  op 'a : nil -> 'Foo [none] .
+  mb 'a.Foo : 'Bar [none] .
+  none
+endfm, '`[Bar`]) .
+rewrites: 1
+result Kind: '`[Foo`]
+==========================================
+reduce in META-LEVEL : getKinds(fmod 'FOO is
+  nil
+  sorts none .
+  none
+  none
+  none
+  none
+endfm) .
+rewrites: 1
+result EmptyTypeSet: (none).EmptyTypeSet
+==========================================
+reduce in META-LEVEL : getKinds(fmod 'FOO is
+  protecting 'BOOL .
+  sorts none .
+  none
+  none
+  none
+  none
+endfm) .
+rewrites: 1
+result Kind: '`[Bool`]
+==========================================
+reduce in META-LEVEL : getKinds(fmod 'FOO is
+  protecting 'META-LEVEL .
+  sorts none .
+  none
+  none
+  none
+  none
+endfm) .
+rewrites: 1
+result NeKindSet: '`[AttrSet`] ; '`[Bool`] ; '`[Condition`] ; '`[EquationSet`]
+    ; '`[FindResult`,NatList`,Bound`] ; '`[HookList`] ; '`[ImportList`] ;
+    '`[MatchPair?`] ; '`[MembAxSet`] ; '`[Module`] ; '`[OpDeclSet`] ;
+    '`[OpMappingSet`] ; '`[ParameterDeclList`] ; '`[PrintOptionSet`] ; '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`] ; '`[RenamingSet`] ; '`[Result4Tuple?`] ; '`[ResultPair?`] ;
+    '`[ResultTriple?`] ; '`[RuleSet`] ; '`[SortMappingSet`] ; '`[String`] ;
+    '`[SubsortDeclSet`] ; '`[Substitution?`] ; '`[Trace?`] ;
+    '`[UnificationPair?`] ; '`[UnificationProblem`] ; '`[UnificationTriple?`] ;
+    '`[Variant?`] ; '`[View`]
+==========================================
+reduce in META-LEVEL : maximalSorts(fmod 'FOO is
+  protecting 'META-LEVEL .
+  sorts none .
+  none
+  none
+  none
+  none
+endfm, '`[Qid`]) .
+rewrites: 1
+result NeSortSet: 'GTermList ; 'Header ; 'ModuleExpression ; 'ParameterList ;
+    'QidList ; 'QidSet ; 'Type? ; 'TypeListSet
+==========================================
+reduce in META-LEVEL : minimalSorts(fmod 'FOO is
+  protecting 'META-LEVEL .
+  sorts none .
+  none
+  none
+  none
+  none
+endfm, '`[Qid`]) .
+rewrites: 1
+result NeSortSet: 'Constant ; 'Context ; 'EmptyCommaList ; 'EmptyTypeSet ;
+    'Kind ; 'Sort ; 'Variable
+==========================================
+reduce in META-LEVEL : maximalSorts(fmod 'FOO is
+  protecting 'META-LEVEL .
+  sorts none .
+  none
+  none
+  none
+  none
+endfm, 'Qid) .
+rewrites: 0
+result [QidSet,QidList,TypeListSet,GTermList,ParameterList,Type?,
+    ModuleExpression,Header]: maximalSorts(fmod 'FOO is
+  protecting 'META-LEVEL .
+  sorts none .
+  none
+  none
+  none
+  none
+endfm, 'Qid)
+==========================================
+reduce in META-LEVEL : minimalSorts(fmod 'FOO is
+  protecting 'META-LEVEL .
+  sorts none .
+  none
+  none
+  none
+  none
+endfm, 'Qid) .
+rewrites: 0
+result [QidSet,QidList,TypeListSet,GTermList,ParameterList,Type?,
+    ModuleExpression,Header]: minimalSorts(fmod 'FOO is
+  protecting 'META-LEVEL .
+  sorts none .
+  none
+  none
+  none
+  none
+endfm, 'Qid)
+==========================================
+reduce in META-LEVEL : maximalAritySet(['RAT], '_+_, 'Nat 'Nat, 'PosRat) .
+rewrites: 2
+result TypeListSet: 'Nat 'PosRat ; 'PosRat 'Nat ; 'PosRat 'PosRat
+==========================================
+reduce in META-LEVEL : maximalAritySet(['RAT], '_+_, 'Nat 'Nat, 'Rat) .
+rewrites: 2
+result NeTypeList: 'Rat 'Rat
+==========================================
+reduce in META-LEVEL : maximalAritySet(['RAT], '_/_, 'Nat 'Nat, 'Nat) .
+rewrites: 2
+result EmptyTypeSet: (none).EmptyTypeSet
+==========================================
+reduce in META-LEVEL : maximalAritySet(['META-LEVEL], '_;_, 'TypeSet 'TypeSet,
+    'KindSet) .
+rewrites: 2
+result NeTypeList: 'KindSet 'KindSet
+==========================================
+reduce in META-LEVEL : maximalAritySet(['NAT], '0, nil, 'Nat) .
+rewrites: 2
+result TypeList: (nil).TypeList
+==========================================
+reduce in META-LEVEL : glbSorts(['RAT], '`[Int`], 'Int) .
+rewrites: 2
+result Sort: 'Int
+Maude> Bye.

@@ -1,0 +1,10 @@
+#!/bin/sh
+
+MAUDE_LIB=$srcdir/../../src/Main
+export MAUDE_LIB
+
+../../src/Main/maude \
+  < $srcdir/metaFrewrite.maude -no-banner -no-advise \
+  > metaFrewrite.out 2>&1
+
+diff $srcdir/metaFrewrite.expected metaFrewrite.out > /dev/null 2>&1

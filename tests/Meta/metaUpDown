@@ -1,0 +1,10 @@
+#!/bin/sh
+
+MAUDE_LIB=$srcdir/../../src/Main
+export MAUDE_LIB
+
+../../src/Main/maude \
+  < $srcdir/metaUpDown.maude -no-banner -no-advise \
+  > metaUpDown.out 2>&1
+
+diff $srcdir/metaUpDown.expected metaUpDown.out > /dev/null 2>&1

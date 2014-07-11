@@ -1,0 +1,200 @@
+2014-03-03  Steven Eker  <eker@ape.csl.sri.com>
+
+	* prelude.maude: added metaGetIrredundantVariant()
+
+2014-02-26  Steven Eker  <eker@ape.csl.sri.com>
+
+	* main.cc (main): added -always-advise
+	(printHelp): added -always-advise
+
+===================================Maude101===========================================
+
+2014-02-07  Steven Eker  <eker@ape.csl.sri.com>
+
+	* main.cc (main): removed commented out code
+
+2014-02-06  Steven Eker  <eker@ape.csl.sri.com>
+
+	* prelude.maude: version number = 2.7
+
+2014-01-31  Steven Eker  <eker@ape.csl.sri.com>
+
+	* Makefile.am: moved mention of dlmalloc
+
+===================================Maude100a===========================================
+
+2012-07-30  Steven Eker  <eker@ape.csl.sri.com>
+
+	* prelude.maude: updated declarations for metaVariantUnify() and
+	metaVariantDisjointUnify()
+
+2012-07-20  Steven Eker  <eker@ape.csl.sri.com>
+
+	* prelude.maude: metaGenerateVariant() replaced by
+	metaGetVariant(); Term and Substitution arguments switched in meta
+	variant ctor; added hood for emptyTermListSymbol
+
+===================================Maude96a===========================================
+
+2012-05-03  Steven Eker  <eker@ape.csl.sri.com>
+
+	* prelude.maude: added meta representation of variant attribute
+
+2012-03-28  Steven Eker  <eker@ape.csl.sri.com>
+
+	* prelude.maude: fix arity for metaGenerateVariant()
+
+2012-03-08  Steven Eker  <eker@ape.csl.sri.com>
+
+	* prelude.maude: added variant narrowing syntax and descent functions
+
+===================================Maude96===========================================
+
+2010-07-13  Steven Eker  <eker@rho>
+
+	* metaInterpreter.maude: added insertView/insertedView and
+	showView/showingView
+
+===================================Maude94a===========================================
+
+2010-05-18  Steven Eker  <eker@rho>
+
+	* prelude.maude: split of Boolean operations into BOOL-OPS
+
+===================================Maude93d2===========================================
+
+2010-05-05  Steven Eker  <eker@rho>
+
+	* prelude.maude: added projection functions for meta-views
+
+2009-08-11  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: op mappings don't take AttrSets
+
+2009-08-07  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: added upView()
+
+2009-08-06  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: added fmod META-VIEW
+
+2009-08-05  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaIntepreter.maude: added showModule/showingModule messages
+
+2008-12-22  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: added TermQid to fix lub problem - Variable and
+	Constant had multiple minimal upper bounds
+
+===================================Maude92===========================================
+
+2008-08-26  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: added operator for print attribute
+
+2008-01-22  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: added Bool arg to the XG specific version of
+	metaNarrow
+
+===================================Maude90===========================================
+
+2007-12-04  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: added a failure operator for ResultPair?
+	added 5 arg version of metaNarrow
+
+2007-11-19  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: metaXunify()/metaDisjointXunify() deleted;
+	metaNarrow() added
+
+===================================Maude89h===========================================
+
+2007-06-27  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: added metaXunify(), metaDisjointXunify() and
+	associated declarations
+
+2007-06-19  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: add UnificationProblem constructors; use for
+	metaUnify() and metaDisjointUnify()
+
+2007-06-14  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: added UnificationPair and ctors; updated decl for
+	metaUnify()
+
+2007-06-07  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: added UnificationTriple and ctors
+
+===================================Maude89c===========================================
+
+2007-03-14  Steven Eker  <eker@goo.csl.sri.com>
+
+	* main.cc (main): call checkForPending() if the -no-prelude flag
+	given since we won't hit a top level EOF to check for them
+	otherwise; this fixes a bug where we were ignoring command line
+	files if -no-prelude flag given
+
+2007-01-17  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: moved set include BOOL on to after last module;
+	added syntax for metaUnify()
+
+===================================Maude88d===========================================
+
+2006-11-20  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: rm getHeader() since this doesn't make sense with
+	theories
+
+2006-11-16  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: added getHeader() and redefined getName();
+	modified other projection functions so that they work with
+	parameterized modules
+
+2006-11-14  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: added min() and max() for Float
+
+===================================Maude88c===========================================
+
+2006-11-13  Steven Eker  <eker@goo.csl.sri.com>
+
+	* model-checker.maude: change protecting to including for
+	SATISFACTION and LTL in MODEL-CHECKER
+
+2006-11-07  Steven Eker  <eker@goo.csl.sri.com>
+
+	* model-checker.maude: many minor changes recommended by Jose
+
+2006-10-20  Steven Eker  <eker@goo.csl.sri.com>
+
+	* model-checker.maude: changed importation modes
+
+2006-10-19  Steven Eker  <eker@goo.csl.sri.com>
+
+	* socket.maude: minor clean up
+
+	* machine-int.maude: minor clean up
+
+	* linear.maude: minor clean up
+
+	* model-checker.maude: changed some importation modes
+
+	* prelude.maude: added protecting BOOL to a number of modules; use
+	set include BOOL on/off
+
+===================================Maude88b===========================================
+
+2006-10-06  Steven Eker  <eker@goo.csl.sri.com>
+
+	* main.cc: moved here and cleaned up
+
+===================================Maude88a===========================================
