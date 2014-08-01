@@ -1,5 +1,7 @@
 ## NOTES ON GIT BRANCHES FOR MAUDE + HOOKS
 
+This branch contains the original Maude sources with the Termination Checker hooks used in Maude Formal Environment. It may be compiled in Linux and Mac OS X. This readme file includes all changes done on Maude source code.
+
 ### Initial repository setting
 
 The original repository stands on https://github.com/maude-team/maude.git. Local copy for UMA is stored in //atenea02/gisum/uma/es/usr/jmalvarez/maude-githab/maude. Local repository is a clone of remote repository:
@@ -109,7 +111,7 @@ configure.ac:19: aclocal.m4 with aclocal and run automake again.
 jmalvarez@atenea02:~/maude-github/maude$ aclocal
 ~~~
 
-## Mac OS X Users
+### Mac OS X Users
 
 Maude + TerminationChecker hooks can be compiled on OS X, with a minor change:
 
