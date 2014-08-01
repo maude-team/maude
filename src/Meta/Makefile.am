@@ -17,6 +17,7 @@ libmeta_a_CPPFLAGS = \
 	-I$(top_srcdir)/src/MSCP10 \
 	-I$(top_srcdir)/src/IO_Stuff \
 	-I$(top_srcdir)/src/StrategyLanguage \
+	-I$(top_srcdir)/src/ACU_Theory \
 	-I$(top_srcdir)/src/3rdParty
 
 libmeta_a_SOURCES = \
@@ -26,7 +27,9 @@ libmeta_a_SOURCES = \
 	metaOpCache.cc \
 	metaModule.cc \
 	metaLevelOpSymbol.cc \
-	metaPreModule.cc
+	metaPreModule.cc \
+	cetaSymbol.cc \
+	completenessCheckerSymbol.cc
 
 EXTRA_DIST = \
 	metaDown.cc \
@@ -56,5 +59,7 @@ noinst_HEADERS = \
 	metaModule.hh \
 	metaModuleCache.hh \
 	metaOpCache.hh \
-	metaPreModule.hh
+	metaPreModule.hh \
+	cetaSymbol.hh \
+	completenessCheckerSymbol.hh
 

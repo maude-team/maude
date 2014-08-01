@@ -147,6 +147,9 @@
 
 #include "interpreter.hh"
 #include "global.hh"  // HACK shouldn't be accessing global variables
+// for ceta and termination checker
+#include "cetaSymbol.hh"
+#include "completenessCheckerSymbol.hh"
 #include "terminationCheckerSymbol.hh"
 
 Vector<int> MixfixModule::emptyGather;

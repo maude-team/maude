@@ -58,6 +58,7 @@ maude_LDADD = \
 	$(TECLA_LIBS) \
 	$(LIBSIGSEGV_LIB) \
 	$(GMP_LIBS) \
+	$(CETA_LIBS) \
 	$(DLMALLOC_LIB)
 
 maude_SOURCES = \
@@ -79,5 +80,7 @@ EXTRA_DIST = \
 	linear.maude \
 	machine-int.maude \
 	term-order.maude \
-	metaInterpreter.maude
+	metaInterpreter.maude \
+	scc.maude \
+	scc2.maude
 

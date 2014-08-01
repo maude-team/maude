@@ -342,9 +342,10 @@ MetaLevel::upOpDecls(bool flat, ImportModule* m, PointerMap& qidMap)
     int nrSymbols = m->getNrUserSymbols();
     for (int i = 0; i < nrSymbols; i++)
       {
+        Symbol* symbol = m->getSymbols()[i];
 	int nrOpDecls = m->getNrUserDeclarations(i);
 	for (int j = flat ? 0 : m->getNrImportedDeclarations(i); j < nrOpDecls; j++)
-	  args.append(upOpDecl(m, i, j, qidMap));
+	  args.append(upOpDecl(m, symbol, j, qidMap));
       }
   }
   return upGroup(args, emptyOpDeclSetSymbol, opDeclSetSymbol);
@@ -508,11 +509,10 @@ MetaLevel::upTermHook(int purpose, Term* term, MixfixModule* m, PointerMap& qidM
 }
 
 DagNode*
-MetaLevel::upOpDecl(ImportModule* m, int symbolNr, int declNr, PointerMap& qidMap)
+MetaLevel::upOpDecl(ImportModule* m, Symbol* symbol, int declNr, PointerMap& qidMap)
 {
   static Vector<DagNode*> args(4);
 
-  Symbol* symbol = m->getSymbols()[symbolNr];
   args[0] = upQid(symbol->id(), qidMap);
 
   const OpDeclaration& d = symbol->getOpDeclarations()[declNr];

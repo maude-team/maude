@@ -552,6 +552,10 @@ MixfixModule::newFancySymbol(Token prefixName,
       return new SocketManagerSymbol(name);
     case SymbolType::INTERPRETER_MANAGER_SYMBOL:
       return new InterpreterManagerSymbol(name);
+    case SymbolType::CETA_SYMBOL:
+       return new CetaSymbol(name, nrArgs);
+    case SymbolType::COMPLETENESS_CHECKER_SYMBOL:
+       return new CompletenessCheckerSymbol(name, nrArgs);
     case SymbolType::TERMINATION_CHECKER_SYMBOL:
        return new TerminationCheckerSymbol(name,nrArgs);
     }

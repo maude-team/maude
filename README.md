@@ -59,7 +59,7 @@ Modified ./src/Mixfix/Makefile.am to include new headers in the libbuiltIn_a_CPP
 ~~~
 
 Copied source files ./src/BuiltIn/terminationCheckerSymbol.hh and ./src/BuiltIn/terminationCheckerSymbol.cc
-Made changes in ../src/Mixfix/mixfixModule.cc to include hook:
+Made changes in ../src/Mixfix/entry.cc to include hook:
 
 ~~~
 554a555,560
@@ -67,7 +67,7 @@ Made changes in ../src/Mixfix/mixfixModule.cc to include hook:
 >        return new TerminationCheckerSymbol(name,nrArgs);
 ~~~
 
-Made changes in ../src/Mixfix/specialSymbolTypes.cc to include hook:
+Made changes in ../src/Mixfix/mixfixModule.cc to include hook:
 
 ~~~
 150a151,155
@@ -75,7 +75,7 @@ Made changes in ../src/Mixfix/specialSymbolTypes.cc to include hook:
 > #include "terminationCheckerSymbol.hh"
 ~~~
 
-Made changes in ../src/Mixfix/symbolType.hh to include hook:
+Made changes in ../src/Mixfix/specialSymbolTypes.cc to include hook:
 
 ~~~
 56a57,59
@@ -109,4 +109,140 @@ configure.ac:19: aclocal.m4 with aclocal and run automake again.
 jmalvarez@atenea02:~/maude-github/maude$ aclocal
 ~~~
 
+## Adding scc hook
+
+./src/configure.ac: Included test of presence of ceta lib.
+
+~~~
+125a126,133
+> #
+> #       Check if user set particular CETA libraries to use and if
+> #       not set defaults.
+> #
+> if (test -z "$CETA_LIBS") then
+>   CETA_LIBS="-lceta"
+> fi
+> AC_SUBST(CETA_LIBS)
+~~
+
+Modified ./src/Main/Makefile.am:
+
+~~~
+64a65
+>       $(CETA_LIBS) \
+86c87,89
+<       metaInterpreter.maude
+---
+>       metaInterpreter.maude \
+>       scc.maude \
+>       scc2.maude
+~~~
+
+Modified ./src/Meta/Makefile.am:
+
+~~~
+19c19,20
+<       -I$(top_srcdir)/src/StrategyLanguage
+---
+>       -I$(top_srcdir)/src/StrategyLanguage \
+>       -I$(top_srcdir)/src/ACU_Theory
+28c29,31
+<       metaPreModule.cc
+---
+>       metaPreModule.cc \
+>       cetaSymbol.cc \
+>       completenessCheckerSymbol.cc
+~~~ 
+
+Copied new source files:
+
+~~~
+./src/Main: prelude-ceta.maude
+./src/Main: scc2.maude
+./src/Main: scc.maude
+
+./src/Meta: cetaSymbol.cc
+./src/Meta: cetaSymbol.hh
+./src/Meta: completenessCheckerSymbol.cc
+./src/Meta: completenessCheckerSymbol.hh
+~~~
+
+Modified changes in ../src/Mixfix/entry.cc to include hook:
+
+~~~
+554a555,560
+>     case SymbolType::CETA_SYMBOL:
+>        return new CetaSymbol(name, nrArgs);
+>     case SymbolType::COMPLETENESS_CHECKER_SYMBOL:
+>        return new CompletenessCheckerSymbol(name, nrArgs);
+~~~
+
+Made changes in ../src/Mixfix/mixfixModule.cc to include hook:
+
+~~~
+150a151,155
+> // for ceta and termination checker
+> #include "cetaSymbol.hh"
+> #include "completenessCheckerSymbol.hh"
+
+~~~
+
+Made changes in ../src/Mixfix/specialSymbolTypes.cc to include hook:
+
+~~~
+56a57,59
+>   MACRO(CetaSymbol, SymbolType::CETA_SYMBOL)
+>   MACRO(CompletenessCheckerSymbol, SymbolType::COMPLETENESS_CHECKER_SYMBOL)
+
+~~~
+
+Made changes in ../src/Mixfix/symbolType.hh to include hook:
+
+~~~
+56a57,59
+78a79,81
+>     CETA_SYMBOL,
+>     COMPLETENESS_CHECKER_SYMBOL,
+~~~
+
+Changed ./src/Mixfix/banner.cc to include a new line in the opening banner with information about the new features.
+
+~~~
+   s << "\t     With CETA and termination checker extensions \n";
+~~~
+
+Modified other source files.
+
+./src/Meta/metaLevel.hh
+
+~~~
+197a198
+>   DagNode* upOpDecl(ImportModule* m, Symbol* symbol, int declNr, PointerMap& qidMap);
+270d270
+<   DagNode* upOpDecl(ImportModule* m, int symbolNr, int declNr, PointerMap& qidMap);
+~~~
+
+./src/Meta/metaUpModule.cc
+
+~~~
+344a345
+>       Symbol* symbol = m->getSymbols()[i];
+347c348
+<         args.append(upOpDecl(m, i, j, qidMap));
+---
+>         args.append(upOpDecl(m, symbol, j, qidMap));
+511c512
+< MetaLevel::upOpDecl(ImportModule* m, int symbolNr, int declNr, PointerMap& qidMap)
+---
+> MetaLevel::upOpDecl(ImportModule* m, Symbol* symbol, int declNr, PointerMap& qidMap)
+515d515
+<   Symbol* symbol = m->getSymbols()[symbolNr];
+~~~
+
+./src/Mixfix/banner.cc
+
+~~~
+57aO58
+>   s << "\t     With CETA and termination checker extensions \n";
+~~~
 

@@ -123,6 +123,14 @@ if (test -z "$GMP_LIBS") then
 fi
 AC_SUBST(GMP_LIBS)
 #
+#       Check if user set particular CETA libraries to use and if
+#       not set defaults.
+#
+if (test -z "$CETA_LIBS") then
+  CETA_LIBS="-lceta"
+fi
+AC_SUBST(CETA_LIBS)
+#
 #	Check if the user set particular GCC libraries to use - otherwise
 #	let the compiler pick.
 #

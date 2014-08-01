@@ -1,0 +1,45 @@
+
+fmod FOO-EXT is
+  pr META-LEVEL .
+
+  sort SCCResult .
+  op nil : -> SCCResult [ctor].
+  op _;_ : SCCResult SCCResult -> SCCResult [ctor assoc comm id: nil].
+  op unverifiable : OpDecl -> SCCResult [ctor].
+  op unverifiable : MembAx -> SCCResult [ctor].
+  op counterexample : OpDecl Term -> SCCResult [ctor].
+  op counterexample : MembAx Term -> SCCResult [ctor].
+
+  op check-completeness : Module -> SCCResult
+     [special (
+	id-hook CompletenessCheckerSymbol
+        op-hook shareWith (metaReduce : Module Term ~> ResultPair)
+        op-hook nilSymbol (nil : ~> SCCResult)
+        op-hook unionSymbol (_;_ : SCCResult SCCResult ~> SCCResult)
+        op-hook unverifiableOpSymbol (unverifiable : OpDecl ~> SCCResult)
+        op-hook unverifiableMbSymbol (unverifiable : MembAx ~> SCCResult)
+        op-hook counterexampleOpSymbol
+           (counterexample : OpDecl Term ~> SCCResult)
+        op-hook counterexampleMbSymbol
+           (counterexample : MembAx Term ~> SCCResult)
+           )].
+endfm
+
+fmod TEST is
+  pr EXT-BOOL .
+  pr CONVERSION .
+---a  pr META-LEVEL .
+
+  sort S .
+  ops a b c : -> S .
+  op f : S S ~> S .
+  op g : S ~> S .
+
+  var X Y Z : S .
+  mb f(g(g(g(a))), g(g(g(a)))) : S .
+  mb f(b, c) : S .
+endfm
+
+select FOO-EXT .
+red check-completeness(upModule('TEST, true)) .
+

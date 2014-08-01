@@ -57,7 +57,9 @@ am_libmeta_a_OBJECTS = libmeta_a-metaModuleCache.$(OBJEXT) \
 	libmeta_a-interpreterManagerSymbol.$(OBJEXT) \
 	libmeta_a-metaOpCache.$(OBJEXT) libmeta_a-metaModule.$(OBJEXT) \
 	libmeta_a-metaLevelOpSymbol.$(OBJEXT) \
-	libmeta_a-metaPreModule.$(OBJEXT)
+	libmeta_a-metaPreModule.$(OBJEXT) \
+	libmeta_a-cetaSymbol.$(OBJEXT) \
+	libmeta_a-completenessCheckerSymbol.$(OBJEXT)
 libmeta_a_OBJECTS = $(am_libmeta_a_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
@@ -87,6 +89,7 @@ BUILD_COMPILER_FALSE = @BUILD_COMPILER_FALSE@
 BUILD_COMPILER_TRUE = @BUILD_COMPILER_TRUE@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
+CETA_LIBS = @CETA_LIBS@
 CFLAGS = @CFLAGS@
 CPPFLAGS = @CPPFLAGS@
 CXX = @CXX@
@@ -194,6 +197,7 @@ libmeta_a_CPPFLAGS = \
 	-I$(top_srcdir)/src/MSCP10 \
 	-I$(top_srcdir)/src/IO_Stuff \
 	-I$(top_srcdir)/src/StrategyLanguage \
+	-I$(top_srcdir)/src/ACU_Theory \
 	-I$(top_srcdir)/src/3rdParty
 
 libmeta_a_SOURCES = \
@@ -203,7 +207,9 @@ libmeta_a_SOURCES = \
 	metaOpCache.cc \
 	metaModule.cc \
 	metaLevelOpSymbol.cc \
-	metaPreModule.cc
+	metaPreModule.cc \
+	cetaSymbol.cc \
+	completenessCheckerSymbol.cc
 
 EXTRA_DIST = \
 	metaDown.cc \
@@ -233,7 +239,9 @@ noinst_HEADERS = \
 	metaModule.hh \
 	metaModuleCache.hh \
 	metaOpCache.hh \
-	metaPreModule.hh
+	metaPreModule.hh \
+	cetaSymbol.hh \
+	completenessCheckerSymbol.hh
 
 all: all-am
 
@@ -282,6 +290,8 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmeta_a-cetaSymbol.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmeta_a-completenessCheckerSymbol.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmeta_a-interpreterManagerSymbol.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmeta_a-metaLevel.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmeta_a-metaLevelOpSymbol.Po@am__quote@
@@ -401,6 +411,34 @@ libmeta_a-metaPreModule.obj: metaPreModule.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='metaPreModule.cc' object='libmeta_a-metaPreModule.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmeta_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmeta_a-metaPreModule.obj `if test -f 'metaPreModule.cc'; then $(CYGPATH_W) 'metaPreModule.cc'; else $(CYGPATH_W) '$(srcdir)/metaPreModule.cc'; fi`
+
+libmeta_a-cetaSymbol.o: cetaSymbol.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmeta_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmeta_a-cetaSymbol.o -MD -MP -MF "$(DEPDIR)/libmeta_a-cetaSymbol.Tpo" -c -o libmeta_a-cetaSymbol.o `test -f 'cetaSymbol.cc' || echo '$(srcdir)/'`cetaSymbol.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmeta_a-cetaSymbol.Tpo" "$(DEPDIR)/libmeta_a-cetaSymbol.Po"; else rm -f "$(DEPDIR)/libmeta_a-cetaSymbol.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='cetaSymbol.cc' object='libmeta_a-cetaSymbol.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmeta_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmeta_a-cetaSymbol.o `test -f 'cetaSymbol.cc' || echo '$(srcdir)/'`cetaSymbol.cc
+
+libmeta_a-cetaSymbol.obj: cetaSymbol.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmeta_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmeta_a-cetaSymbol.obj -MD -MP -MF "$(DEPDIR)/libmeta_a-cetaSymbol.Tpo" -c -o libmeta_a-cetaSymbol.obj `if test -f 'cetaSymbol.cc'; then $(CYGPATH_W) 'cetaSymbol.cc'; else $(CYGPATH_W) '$(srcdir)/cetaSymbol.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmeta_a-cetaSymbol.Tpo" "$(DEPDIR)/libmeta_a-cetaSymbol.Po"; else rm -f "$(DEPDIR)/libmeta_a-cetaSymbol.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='cetaSymbol.cc' object='libmeta_a-cetaSymbol.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmeta_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmeta_a-cetaSymbol.obj `if test -f 'cetaSymbol.cc'; then $(CYGPATH_W) 'cetaSymbol.cc'; else $(CYGPATH_W) '$(srcdir)/cetaSymbol.cc'; fi`
+
+libmeta_a-completenessCheckerSymbol.o: completenessCheckerSymbol.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmeta_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmeta_a-completenessCheckerSymbol.o -MD -MP -MF "$(DEPDIR)/libmeta_a-completenessCheckerSymbol.Tpo" -c -o libmeta_a-completenessCheckerSymbol.o `test -f 'completenessCheckerSymbol.cc' || echo '$(srcdir)/'`completenessCheckerSymbol.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmeta_a-completenessCheckerSymbol.Tpo" "$(DEPDIR)/libmeta_a-completenessCheckerSymbol.Po"; else rm -f "$(DEPDIR)/libmeta_a-completenessCheckerSymbol.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='completenessCheckerSymbol.cc' object='libmeta_a-completenessCheckerSymbol.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmeta_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmeta_a-completenessCheckerSymbol.o `test -f 'completenessCheckerSymbol.cc' || echo '$(srcdir)/'`completenessCheckerSymbol.cc
+
+libmeta_a-completenessCheckerSymbol.obj: completenessCheckerSymbol.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmeta_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmeta_a-completenessCheckerSymbol.obj -MD -MP -MF "$(DEPDIR)/libmeta_a-completenessCheckerSymbol.Tpo" -c -o libmeta_a-completenessCheckerSymbol.obj `if test -f 'completenessCheckerSymbol.cc'; then $(CYGPATH_W) 'completenessCheckerSymbol.cc'; else $(CYGPATH_W) '$(srcdir)/completenessCheckerSymbol.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmeta_a-completenessCheckerSymbol.Tpo" "$(DEPDIR)/libmeta_a-completenessCheckerSymbol.Po"; else rm -f "$(DEPDIR)/libmeta_a-completenessCheckerSymbol.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='completenessCheckerSymbol.cc' object='libmeta_a-completenessCheckerSymbol.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmeta_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmeta_a-completenessCheckerSymbol.obj `if test -f 'completenessCheckerSymbol.cc'; then $(CYGPATH_W) 'completenessCheckerSymbol.cc'; else $(CYGPATH_W) '$(srcdir)/completenessCheckerSymbol.cc'; fi`
 uninstall-info-am:
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)

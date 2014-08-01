@@ -1,0 +1,1605 @@
+--- This module defines many operations using the Maude meta-level.  These
+--- operations are "generic" in the sense that they may be useful in many
+--- programs other than this one.
+fmod META-BASICS is
+  pr META-LEVEL .
+  pr EXT-BOOL .
+  pr INT .
+  pr SET{Nat} * (sort NeSet{Nat} to NeNatSet,
+                 sort Set{Nat} to NatSet,
+                 op empty to none,
+                 op _,_ to _;_) .
+
+  sort NeKindList KindList .
+  subsort Kind < NeKindList < KindList < TypeList .
+  subsort NeKindList < NeTypeList .
+
+  op nil : -> KindList [ctor].
+  op __ : KindList KindList -> KindList [ctor ditto].
+  op __ : NeKindList KindList -> NeKindList [ctor ditto].
+  op __ : KindList NeKindList -> NeKindList [ctor ditto].
+
+  sorts NeConstantList ConstantList .
+  subsort Constant < NeConstantList < ConstantList < GroundTermList .
+  subsort EmptyCommaList < ConstantList .
+  subsort NeConstantList < NeGroundTermList .
+  op _,_ : ConstantList ConstantList -> ConstantList [ctor ditto].
+  op _,_ : NeConstantList ConstantList -> NeConstantList [ctor ditto].
+  op _,_ : ConstantList NeConstantList -> NeConstantList [ctor ditto].
+
+  sort NeConstantSet ConstantSet .
+  subsort Constant < NeConstantSet < ConstantSet < QidSet .
+  subsort EmptyTypeSet < ConstantSet .
+  subsort NeConstantSet < NeQidSet .
+  op _;_ : ConstantSet ConstantSet -> ConstantSet [ctor ditto].
+  op _;_ : NeConstantSet ConstantSet -> NeConstantSet [ctor ditto].
+
+  sort NeVariableSet VariableSet .
+  subsort Variable < NeVariableSet < VariableSet < QidSet .
+  subsort EmptyTypeSet < VariableSet .
+  subsort NeVariableSet < NeQidSet .
+  op _;_ : VariableSet VariableSet -> VariableSet [ctor ditto].
+  op _;_ : NeVariableSet VariableSet -> NeVariableSet [ctor ditto].
+
+  var AS       : AttrSet .
+  var Eq       : Equation .
+  var Eqs      : EquationSet .
+  var EqCond   : EqCondition .
+  var GT       : GroundTerm .
+  var H        : Header .
+  var K K'     : Kind .
+  var Im       : Import .
+  var ImL      : ImportList .
+  var M        : Module .
+  var Mb       : MembAx .
+  var Mbs      : MembAxSet .
+  var N N'     : Nat .
+  var NL       : NatList .
+  var NeNL     : NeNatList .
+  var Op       : OpDecl .
+  var Ops      : OpDeclSet .
+  var Q        : Qid .
+  var Rls      : RuleSet .
+  var S        : Sort .
+  var SS       : SortSet .
+  var SSDS     : SubsortDeclSet .
+  var T T'     : Term .
+  var TL TL'   : TermList .
+  var Tp Tp'   : Type .
+  var TpL TpL' : TypeList .
+  var V        : Variable .
+  var VS       : VariableSet .
+
+  var St : String .
+  var Count : Nat .
+
+  op _monus_ : Nat Nat -> Nat .
+  eq N monus N'
+   = if N >= N' then sd(N, N') else 0 fi .
+
+  op kind-name : String Nat Nat -> String .
+  eq kind-name(St, N, Count)
+   = if substr(St, N, 2) == "`]" then
+       ""
+     else if substr(St, N, 2) == "`{" then
+       substr(St, N, 2) + kind-name(St, N + 2, s Count)
+     else if substr(St, N, 2) == "`}" then
+        substr(St, N, 2) + kind-name(St, N + 2, Count monus 1)
+     else if (substr(St, N, 2) == "`,") and (Count == 0) then
+       ""
+     else
+       substr(St, N, 1) + kind-name(St, s N, Count)
+     fi fi fi fi .
+
+  --- Return a short name for a kind taken from first maximal sort.
+  op kind-name : Kind ~> String .
+  eq kind-name(K) = kind-name(string(K), 2, 0) .
+
+  --- Returns the kinds of given a list of types.
+  op get-kinds : Module TypeList ~> KindList .
+  eq get-kinds(M, Tp TpL) = getKind(M, Tp) get-kinds(M, TpL) .
+  eq get-kinds(M, nil) = nil .
+
+  --- Returns the kind of a term.
+  op get-kind : Module Term ~> Kind .
+  eq get-kind(M, T) = getKind(M, getType(metaNormalize(M, T))) .
+
+  --- Returns the kind of a list of terms.
+  op get-kinds : Module TermList ~> KindList .
+  eq get-kinds(M, (T, TL)) = get-kind(M, T) get-kinds(M, TL) .
+  eq get-kinds(M, empty) = nil .
+
+  --- Returns identifier for op declaration.
+  op identifier : OpDecl -> Qid .
+  eq identifier((op Q : TpL -> Tp [AS].)) = Q .
+
+  op inputs : OpDecl -> TypeList .
+  eq inputs((op Q : TpL -> Tp [AS].)) = TpL .
+
+  op output : OpDecl -> Type .
+  eq output((op Q : TpL -> Tp [AS].)) = Tp .
+
+  op attrs : OpDecl -> AttrSet .
+  eq attrs((op Q : TpL -> Tp [AS].)) = AS .
+
+  op is-special : OpDecl -> Bool .
+  eq is-special((op Q : TpL -> Tp [special(HL:HookList) AS].)) = true .
+  eq is-special(Op) = false [owise].
+
+  op is-ctor? : OpDecl -> Bool .
+  eq is-ctor?((op Q : TpL -> Tp [ctor AS].)) = true .
+  eq is-ctor?(Op) = false [owise].
+
+  --- nats-in-range(N, N') returns set {N, ..., N' - 1}.
+  op nats-in-range : Nat Nat -> NatSet .
+  eq nats-in-range(N, N')
+   = if N < N' then
+       N ; nats-in-range(s N, N')
+     else
+       none
+     fi .
+
+  op list-to-set : NatList -> NatSet .
+  eq list-to-set(N NL) = N ; list-to-set(NL) .
+  eq list-to-set(nil) = none .
+
+  --- Returns replacement indices for op declaration.
+  op mu : OpDecl -> NatSet .
+  eq mu(Op) = $mu(Op, 0) .
+
+  --- Implements mu above using rule priortities.
+  op $mu : OpDecl Nat -> NatSet .
+  eq $mu((op Q : TpL -> Tp [assoc strat(NeNL) AS].), 0)
+   = if occurs(1, NeNL) or-else occurs(2, NeNL) then
+       1 ; 2 ; list-to-set(NeNL)
+     else
+       list-to-set(NeNL)
+     fi .
+  eq $mu((op Q : TpL -> Tp [strat(NeNL) AS].), 1)
+   = list-to-set(NeNL) .
+  eq $mu((op Q : TpL -> Tp [AS].), 2)
+   = nats-in-range(0, size(TpL) + 1) .
+  eq $mu(Op, N) = $mu(Op, N + 1) [owise].
+
+  op lhs : Equation -> Term .
+  eq lhs(eq T = T' [AS].) = T .
+  eq lhs(ceq T = T' if EqCond [AS].) = T .
+
+  op condition : Equation -> EqCondition .
+  eq condition(eq T = T' [AS].) = nil .
+  eq condition(ceq T = T' if EqCond [AS].) = EqCond .
+
+  op is-exec? : Equation -> Bool .
+  eq is-exec?(eq T = T' [nonexec AS].) = false .
+  eq is-exec?(ceq T = T' if EqCond [nonexec AS].) = false .
+  eq is-exec?(Eq) = true [owise].
+
+  op lhs : MembAx -> Term .
+  eq lhs(mb  T : S [AS].) = T .
+  eq lhs(cmb T : S if EqCond [AS].) = T .
+
+  op rhs : MembAx -> Sort .
+  eq rhs(mb  T : S [AS].) = S .
+  eq rhs(cmb T : S if EqCond [AS].) = S .
+
+  op is-ctor? : MembAx -> Bool .
+  eq is-ctor?((mb T : S [metadata("dfn") AS].)) = false .
+  eq is-ctor?((cmb T : S if EqCond [metadata("dfn") AS].)) = false .
+  eq is-ctor?(Mb) = true [owise].
+
+  --- Returns true if a membership in set is conditional.
+  op has-condition? : MembAxSet -> Bool .
+  eq has-condition?((cmb T : S if EqCond [AS].) Mbs) = true .
+  eq has-condition?(Mbs) = false [owise].
+
+  --- Returns true if the term is linear.
+  --- This function assumes the terms have been normalized.
+  op linear? : Term -> Bool .
+  eq linear?(T) = $linear?(T, none) .
+
+  --- Implements linear? above.
+  op $linear? : TermList VariableSet -> Bool .
+  eq $linear?((GT, TL), VS) = $linear?(TL, VS) .
+  eq $linear?((Q[TL], TL'), VS) = $linear?((TL, TL'), VS) .
+  eq $linear?((V, TL), VS) = not (V in VS) and-then $linear?(TL, V ; VS) .
+  eq $linear?(empty, VS) = true .
+
+  --- Returns true if all memberships in set are left-linear.
+  --- Assumes terms in memberships have been normalized.
+  op left-linear? : MembAxSet -> Bool .
+  eq left-linear?(Mb Mbs)
+   = linear?(lhs(Mb)) and-then left-linear?(Mbs) .
+  eq left-linear?((none).MembAxSet) = true .
+
+  --- Returns true if a equation in set is conditional.
+  op has-condition? : EquationSet -> Bool .
+  eq has-condition?((ceq T = T' if EqCond [AS].) Eqs) = true .
+  eq has-condition?(Eqs) = false [owise].
+
+  --- Returns true if all equations in set are left-linear.
+  --- Assumes terms in equations have been normalized.
+  op left-linear? : EquationSet -> Bool .
+  eq left-linear?(Eq Eqs)
+   = linear?(lhs(Eq)) and left-linear?(Eqs) .
+  eq left-linear?((none).EquationSet) = true .
+
+  op is-universal-op? : OpDecl ~> Bool .
+  eq is-universal-op?(Op)
+   = (output(Op) == 'Universal) or-else occurs('Universal, inputs(Op)) .
+
+  --- Removes operators from consideration that have "Universal" inputs or
+  --- outputs.
+  op remove-universal-ops : OpDeclSet -> OpDeclSet .
+  ceq remove-universal-ops(Op Ops) = remove-universal-ops(Ops)
+   if is-universal-op?(Op) .
+  eq remove-universal-ops(Ops) = Ops [owise].
+
+  --- Returns true if the module is parameterized.
+  op isParameterized? : Module -> Bool .
+  eq isParameterized?(fmod H is ImL sorts SS . SSDS Ops Mbs Eqs endfm)
+   = not (H :: Qid) .
+  eq isParameterized?(mod H is ImL sorts SS . SSDS Ops Mbs Eqs Rls endm)
+   = not (H :: Qid) .
+  eq isParameterized?(Th:STheory) = false .
+endfm
+
+fmod PTA-OPS is
+  pr META-BASICS .
+  pr CONVERSION .
+
+  var AS : AttrSet .
+  var C C' : Constant .
+  var CS : ConstantSet .
+  var CL : ConstantList .
+  var Eqs : EquationSet .
+  var K  : Kind .
+  var KL : KindList .
+  var KS : KindSet .
+  var M  : Module .
+  var N  : Nat .
+  var NeKL : NeKindList .
+  var NeTL : NeTermList .
+  var Ops : OpDeclSet .
+  var Q : Qid .
+  var Rls : RuleSet .
+  var St : String .
+  var Tp : Type .
+  var TpL : TypeList .
+  var TL : TermList .
+
+  op state-name : Kind ~> String .
+  eq state-name(K) = kind-name(K) + "State" .
+
+  --- Returns the name of the tree sort for kind in the automaton.
+  op tree-name : Kind ~> String .
+  eq tree-name(K) = kind-name(K) + "Tree" .
+
+  --- Returns sort for trees with the given kind in a PTA.
+  op tree-sort : Kind ~> Sort .
+  eq tree-sort(K) = qid(tree-name(K)) .
+
+  --- Returns list of sorts for
+  op tree-sorts : KindList ~> TypeList .
+  eq tree-sorts(K KL) = tree-sort(K) tree-sorts(KL) .
+  eq tree-sorts(nil) = nil .
+
+  --- Returns sort associated to a state with the given kind in a PTA module.
+  op state-sort : Kind ~> Sort .
+  eq state-sort(K) = qid(state-name(K)) .
+
+  op lit-name : Kind ~> String .
+  eq lit-name(K) = kind-name(K) + "Lit" .
+
+  ---a Returns sort in automaton module for terms that are either a State
+  ---a (representing a positive literal) or a term ! State (representing a
+  ---a negative literal).
+  op lit-sort : Kind ~> Sort .
+  eq lit-sort(K) = qid(lit-name(K)) .
+
+  op lit-set-name : Kind ~> String .
+  eq lit-set-name(K) = kind-name(K) + "LitSet" .
+
+  --- Returns a variable representing a literal set.
+  op lit-set-var : String Kind ~> Variable .
+  eq lit-set-var(St, K) = qid(St + ":" + lit-set-name(K)) .
+
+  --- Returns the sort associated to sets of literals with the given kind.
+  op lit-set-sort : Kind ~> Sort .
+  eq lit-set-sort(K) = qid(lit-set-name(K)) .
+
+  --- Returns a constant for tree with a single leaf with the given qid
+  --- and kind.
+  op tree-constant : Qid Kind ~> Constant .
+  eq tree-constant(Q, K) = qid(string(Q) + "." + tree-name(K)) .
+
+  --- Returns sorts need in a module for a PTA with given Kinds.
+  op pta-sorts : KindSet -> SortSet .
+  eq pta-sorts(K ; KS)
+   = tree-sort(K) ; state-sort(K) ; lit-sort(K) ; lit-set-sort(K) ;
+     pta-sorts(KS) .
+  eq pta-sorts(none) = none .
+
+  --- Returns subsort declarations for a PTA with given Kinds.
+  op pta-subsorts : KindSet -> SubsortDeclSet .
+  eq pta-subsorts(K ; KS)
+   = (subsort state-sort(K) < lit-sort(K) .)
+     (subsort   lit-sort(K) < lit-set-sort(K) .)
+     pta-subsorts(KS) .
+  eq pta-subsorts(none) = none .
+
+  --- Returns operator declarations required for every PTA with given kinds.
+  op pta-required-ops : KindSet -> OpDeclSet .
+  eq pta-required-ops(K ; KS)
+   = (op '_:_ : tree-sort(K) state-sort(K) -> tree-sort(K) [ctor frozen(1)].)
+     (op '!_ : state-sort(K) -> lit-sort(K) [ctor].)
+     (op 'none : nil -> lit-set-sort(K) [ctor].)
+     (op '_;_ : lit-set-sort(K) lit-set-sort(K) -> lit-set-sort(K)
+         [ctor assoc comm id(qid("none." + lit-set-name(K)))].)
+     (op 'accept : lit-set-sort(K) -> '`[Bool`] [none].)
+     pta-required-ops(KS) .
+  eq pta-required-ops(none) = none .
+
+  --- Returns the equational axioms in a set of attributes.
+  op pta-axioms : Module AttrSet -> AttrSet .
+  eq pta-axioms(M, assoc AS) = assoc pta-axioms(M, AS) .
+  eq pta-axioms(M, comm AS) = comm pta-axioms(M, AS) .
+  eq pta-axioms(M, id(C) AS)
+   = id(tree-constant(getName(C), getKind(M, getType(C))))
+     pta-axioms(M, AS) .
+  eq pta-axioms(M, left-id(C) AS)
+   = left-id(tree-constant(getName(C), getKind(M, getType(C))))
+     pta-axioms(M, AS) .
+  eq pta-axioms(M, right-id(C) AS)
+   = right-id(tree-constant(getName(C), getKind(M, getType(C))))
+     pta-axioms(M, AS) .
+  eq pta-axioms(M, AS) = none [owise].
+
+  --- Returns operator declartions required for PTA with given operator
+  --- declarations.
+  op pta-ops : Module OpDeclSet ~> OpDeclSet .
+  eq pta-ops(M, (op Q : TpL -> Tp [AS].) Ops)
+   = (op Q : tree-sorts(get-kinds(M, TpL)) -> tree-sort(getKind(M, Tp))
+         [ctor pta-axioms(M, AS)].)
+     pta-ops(M, Ops) .
+  eq pta-ops(M, none) = none .
+
+  op pta-state-decl : Constant -> OpDecl .
+  eq pta-state-decl(C)
+   = (op getName(C) : nil -> getType(C) [ctor].) .
+
+  --- Returns a set of state operator declarations given a list of states
+  --- represented as constants.
+  --- states.
+  op pta-state-decls : ConstantSet ~> OpDeclSet .
+  eq pta-state-decls(C ; CS) = pta-state-decl(C) pta-state-decls(CS) .
+  eq pta-state-decls(none) = none .
+
+  --- Returns a variable with a name "X"N with the tree sort for kind.
+  op tree-var : Kind Nat ~> Variable .
+  eq tree-var(K, N) = qid("X" + string(N, 10) + ":" + tree-name(K)) .
+
+  --- Helper function for var-states below:
+  op var-states-aux : KindList ConstantList Nat ~> TermList .
+  eq var-states-aux(K KL, (C, CL), N)
+   = '_:_[tree-var(K, N), C], var-states-aux(KL, CL, s N) .
+  eq var-states-aux(nil, empty, N) = empty .
+
+  --- Given a list of types (K1 ... KN) and a list of constants that are
+  --- states (C1 ... CN), constructs a list of terms
+  --- ('X1:K1 : C1, ..., 'XN:KN : CN)
+  op var-states : KindList ConstantList ~> TermList .
+  eq var-states(KL, CL) = var-states-aux(KL, CL, 0) .
+
+  op var-list-aux : KindList Nat ~> TermList .
+  eq var-list-aux(K KL, N) = (tree-var(K, N), var-list-aux(KL, s N)) .
+  eq var-list-aux(nil, N) = empty .
+
+  op var-list : KindList ~> TermList .
+  eq var-list(KL) = var-list-aux(KL, 0) .
+
+  --- Returns a tree automaton rule, given the qid of the operator, it's
+  --- input kinds, and its output type, along with a list of constants in a
+  --- QidList for the lhs and the result kind.
+  op pta-rule : Qid KindList Kind ConstantList Constant ~> Rule .
+  eq pta-rule(Q, nil, K, empty, C)
+   = (rl tree-constant(Q, K) => '_:_[tree-constant(Q, K), C] [none].) .
+  eq pta-rule(Q, NeKL, K, CL, C)
+   = (rl Q[var-states(NeKL, CL)] => '_:_[Q[var-list(NeKL)], C] [none].) .
+
+  --- Constructs a new tree automaton rule.
+  op pta-erule : Constant Constant ~> Rule .
+  eq pta-erule(C, C') = (rl C => C' [none].) .
+
+  --- Create a using operators and kinds from the given module.
+  --- The module should already be flattened.
+  --- 1st arg: Module to pull signature from
+  --- 2nd arg: Name of PTA.
+  --- 3rd arg: States in PTA.
+  --- 4th arg: Acceptance equations in PTA.
+  --- 5th arg: Rules in PTA.
+  op make-pta : Module Qid ConstantSet EquationSet RuleSet ~> Module .
+  eq make-pta(M, Q, CS, Eqs, Rls)
+   = (mod Q is
+        protecting 'BOOL .
+        sorts pta-sorts(getKinds(M)) .
+        pta-subsorts(getKinds(M))
+        pta-required-ops(getKinds(M))
+        --- The line below is wrong.  We need to instantiate the universal
+        --- ops with specific kinds as needed or not allow universal ops
+        --- to be used in rules explicitly.
+        pta-ops(M, remove-universal-ops(getOps(M)))
+        pta-state-decls(CS)
+        (none).MembAxSet
+        Eqs
+        Rls
+      endm) .
+
+  --- Converts a term in the tree automaton representation back to the
+  --- original module representation.
+  op ta-parse : GroundTermList ~> GroundTermList .
+  eq ta-parse((Q[NeTL], TL)) = Q[ta-parse(NeTL)], ta-parse(TL) .
+  eq ta-parse((C, TL))
+   = qid(substr(string(C), 0, _-_(length(string(C)), 4))),
+     ta-parse(TL) .
+  eq ta-parse(empty) = empty .
+endfm
+
+fmod TERM-STATE-MAP is
+  pr META-BASICS .
+  pr PTA-OPS .
+
+  sort TermStateMap .
+  op nil : -> TermStateMap [ctor].
+  op term : Term Nat -> TermStateMap [ctor].
+  op msize : Nat -> TermStateMap [ctor].
+  op module : Module -> TermStateMap [ctor].
+  op __ : TermStateMap TermStateMap -> TermStateMap
+          [ctor assoc comm id: nil].
+
+  --- TermStateMapMode is a sort containing constants which are used to
+  --- control the state associated to variables in the term.  These constants
+  --- are declared in modules which import TERM-STATE-MAP, and are passed to
+  --- term-var-state.
+  sort TermStateMapMode .
+
+  op term-var-state : Module Variable TermStateMapMode ~> Constant .
+
+  var C C'   : Constant .
+  var Eq     : Equation .
+  var Eqs    : EquationSet .
+  var K      : Kind .
+  var M      : Module .
+  var Mb     : MembAx .
+  var Mbs    : MembAxSet .
+  var N      : Nat .
+  var Q      : Qid .
+  var S      : Sort .
+  var T T'   : Term .
+  var TL TL' : TermList .
+  var Tp     : Type .
+  var TSM TSM' : TermStateMap .
+  var V      : Variable .
+  var Mode   : TermStateMapMode .
+
+  op init : Module -> TermStateMap .
+  eq init(M) = msize(0) module(M) .
+
+  --- Returns index of term in map that recognizes the same set of ground
+  --- terms as the argument.
+  --- The term is assumed to be metaNormalized already.
+  op find-term : Term TermStateMap ~> FindResult .
+  eq find-term(T, term(T, N) TSM) = N  .
+  eq find-term(T, TSM) = notFound [owise].
+
+  --- Returns map with all terms in list as well as their subterms added.
+  --- The terms are assumed to be metaNormalized already.
+  op register-terms : TermList TermStateMap ~> TermStateMap .
+  eq register-terms((V, TL), TSM) = register-terms(TL, TSM) .
+  eq register-terms((Q[TL], TL'), msize(N) TSM)
+   = if find-term(Q[TL], msize(N) TSM) == notFound then
+       register-terms((TL, TL'), term(Q[TL], N) msize(N + 1) TSM)
+     else
+       register-terms(TL', msize(N) TSM)
+     fi .
+  eq register-terms((C, TL), msize(N) TSM)
+   = if find-term(C, msize(N) TSM) == notFound then
+       register-terms(TL, term(C, N) msize(N + 1) TSM)
+     else
+       register-terms(TL, msize(N) TSM)
+     fi .
+  eq register-terms(empty, TSM) = TSM .
+
+  --- Returns the term state for a given number.
+  op term-state : Kind Nat ~> Constant .
+  eq term-state(K, N)
+   = qid(kind-name(K) + "Term" + string(N, 10) + "." + state-name(K)) .
+
+  op term-states : TermStateMap ~> ConstantSet .
+  eq term-states(module(M) term(T, N) TSM)
+   = term-state(get-kind(M, T), N) ; term-states(module(M) TSM) .
+  eq term-states(TSM) = none [owise].
+
+  --- Given a module and termstate map, returns the appropriate state
+  --- constant for a term (variables are assumed to be in ctor subsignature).
+  --- The term is assumed to be metaNormalized already.
+  op term-state : TermStateMap Term TermStateMapMode ~> Constant .
+  eq term-state(module(M) TSM, T, Mode)
+   = if T :: Variable then
+       term-var-state(M, T, Mode)
+     else
+       term-state(get-kind(M, T), find-term(T, module(M) TSM))
+     fi .
+
+  --- Returns the state assocated to each term in the list.
+  --- The terms are assumed to be metaNormalized already.
+  op term-states : TermStateMap TermList TermStateMapMode ~> ConstantList .
+  eq term-states(TSM, (T, TL), Mode)
+   = term-state(TSM, T, Mode), term-states(TSM, TL, Mode) .
+  eq term-states(TSM, empty, Mode) = empty .
+
+  --- Returns rule mapping term of given state to constant.
+  --- The term is assumed to be metaNormalized already.
+  op term-rule : TermStateMap Term Constant TermStateMapMode -> Rule .
+  eq term-rule(module(M) TSM, Q[TL], C, Mode)
+   = pta-rule(Q, get-kinds(M, TL), get-kind(M, Q[TL]),
+              term-states(module(M) TSM, TL, Mode), C) .
+  eq term-rule(module(M) TSM, C', C, Mode)
+   = pta-rule(getName(C'), nil, getKind(M, getType(C')), empty, C) .
+  eq term-rule(module(M) TSM, V, C, Mode)
+   = pta-erule(term-var-state(M, V, Mode), C) .
+
+  --- Returns the transitions in an sca automata for recognizing terms of a
+  --- particular pattern.
+  op $term-rules : TermStateMap TermStateMap TermStateMapMode ~> RuleSet .
+  eq $term-rules(TSM, term(T, N) TSM', Mode)
+   = term-rule(TSM, T, term-state(TSM, T, Mode), Mode)
+     $term-rules(TSM, TSM', Mode) .
+  eq $term-rules(TSM, TSM', Mode) = none [owise].
+
+  op term-rules : TermStateMap TermStateMapMode ~> RuleSet .
+  eq term-rules(TSM, Mode) = $term-rules(TSM, TSM, Mode) .
+
+  --- Adds subterms appearing the lhs of memberships to term state map.
+  op mb-statemap : Module MembAxSet TermStateMap -> TermStateMap .
+  ceq mb-statemap(M, Mb Mbs, TSM) =
+      mb-statemap(M, Mbs, register-terms(TL, TSM))
+   if Q[TL] := lhs(Mb) .
+  eq mb-statemap(M, Mbs, TSM) = TSM [owise].
+
+  --- Adds strict subterms appearing in the lhs of executable equations to
+  --- TermStateMap.
+  op eq-statemap : Module EquationSet TermStateMap -> TermStateMap .
+  ceq eq-statemap(M, Eq Eqs, TSM) =
+      eq-statemap(M, Eqs, register-terms(TL, TSM))
+   if Q[TL] := lhs(Eq) .
+  eq eq-statemap(M, Eqs, TSM) = TSM [owise].
+
+endfm
+
+fmod PTA-EMPTINESS-TEST is
+  pr META-BASICS .
+
+  sort EmptinessResult .
+  op empty : -> EmptinessResult [ctor].
+  op accepting : Term ConstantSet -> EmptinessResult [ctor].
+  op invalid-input : -> EmptinessResult [ctor].
+
+  op test-emptiness : Module ~> EmptinessResult
+	[special (
+	   id-hook CetaSymbol
+           op-hook shareWith (metaReduce : Module Term ~> ResultPair)
+           op-hook emptySymbol (empty : ~> EmptinessResult)
+           op-hook acceptingTermSymbol
+                   (accepting : Term Term ~> EmptinessResult)
+           op-hook invalidInputSymbol (invalid-input : ~> EmptinessResult)
+           op-hook qidSetSymbol (_;_ : QidSet QidSet ~> QidSet))] .
+endfm
+
+fmod PTA-STATE-NAMES is
+  pr PTA-OPS .
+  pr TERM-STATE-MAP .
+
+  var K : Kind .
+  var KL : KindList .
+  var M : Module .
+  var S : Sort .
+  var TSM : TermStateMap .
+  var T : Term .
+  var TL : TermList .
+
+  --- Returns the automaton state for reducible terms of type.
+  op red-state : Kind ~> Constant .
+  eq red-state(K) = qid("r[" + kind-name(K) + "]." + state-name(K)) .
+
+  --- Returns the automaton state for terms with given kind.
+  op kind-state : Kind ~> Constant .
+  eq kind-state(K) = qid("k[" + kind-name(K) + "]." + state-name(K)) .
+
+  --- Returns constants associated to kinds in automaton.
+  op kind-state-list : KindList ~> ConstantList .
+  eq kind-state-list(K KL)
+   = kind-state(K), kind-state-list(KL) .
+  eq kind-state-list(nil) = empty .
+endfm
+
+--- Provides functionality common to both ordinary and context-sensitive
+--- sufficient completeness checkers.
+fmod SCC-COMMON is
+  pr META-BASICS .
+  pr PTA-OPS .
+  pr PTA-STATE-NAMES .
+  pr PTA-EMPTINESS-TEST .
+  pr TERM-STATE-MAP .
+
+  sort SCCResult .
+  op complete : -> SCCResult [ctor].
+  op counterexample : Term Sort -> SCCResult [ctor].
+  op invalid-input : -> SCCResult [ctor].
+
+  op sca-ctor : -> TermStateMapMode [ctor].
+  op sca-def : -> TermStateMapMode [ctor].
+
+  --- Control flag which if true, indicates sufficient completeness checker
+  --- should drop equations that are conditional are not left-linear.
+  op drop-bad-eqs : -> Bool .
+  eq drop-bad-eqs = true .
+
+  var C : Constant .
+  var CS : ConstantSet .
+  var Eq : Equation .
+  var Eqs : EquationSet .
+  var K K' : Kind .
+  var KL KL' : KindList .
+  var KS : KindSet .
+  var M : Module .
+  var Mode  : TermStateMapMode .
+  var N : Nat .
+  var NS : NatSet .
+  var Q : Qid .
+  var S : Sort .
+  var SS : SortSet .
+  var T : Term .
+  var Tp : Type .
+  var TpL : TypeList .
+  var TSM : TermStateMap .
+  var V : Variable .
+
+  eq term-var-state(M, V, sca-ctor) = sca-ctor-state(M, getType(V)) .
+  eq term-var-state(M, V, sca-def) = sca-def-state(M, getType(V)) .
+
+  --- Returns the automaton state for reducible terms of type.
+  op sca-red-state : Kind ~> Constant .
+  eq sca-red-state(K) = qid("r[" + kind-name(K) + "]." + state-name(K)) .
+
+  --- Returns the automaton state for constructor terms with type.
+  op sca-ctor-state : Module Type ~> Constant .
+  eq sca-ctor-state(M, S)
+   = qid("c" + string(S) + "." + state-name(getKind(M, S))) .
+  eq sca-ctor-state(M, K) = kind-state(getKind(M, K)) .
+
+  --- Returns the constructor automaton states for all types in list.
+  op sca-ctor-state-list : Module TypeList ~> ConstantList .
+  eq sca-ctor-state-list(M, Tp TpL)
+   = sca-ctor-state(M, Tp), sca-ctor-state-list(M, TpL) .
+  eq sca-ctor-state-list(M, nil) = empty .
+
+  --- Returns the automaton state for defined terms with sort.
+  op sca-def-state : Module Sort ~> Constant .
+  eq sca-def-state(M, S)
+   = qid("d" + string(S) + "." + state-name(getKind(M, S))) .
+
+  --- Returns states associated to each kind in automaton.
+  op sca-per-kind-states : KindSet ~> ConstantSet .
+  eq sca-per-kind-states(K ; KS)
+   = kind-state(K) ; sca-red-state(K) ; sca-per-kind-states(KS) .
+  eq sca-per-kind-states(none) = none .
+
+  --- Returns states associated to each sort in module.
+  op sca-per-sort-states : Module SortSet ~> ConstantSet .
+  eq sca-per-sort-states(M, S ; SS)
+   = sca-ctor-state(M, S) ; sca-def-state(M, S) 
+   ; sca-per-sort-states(M, SS) .
+  eq sca-per-sort-states(M, none) = none .
+
+  --- Returns the equations for the accept operation given the sorts in
+  --- the specification.
+  op sca-accept-eqs : Module SortSet -> EquationSet .
+  eq sca-accept-eqs(M, S ; SS)
+   = (eq 'accept['_;_['!_[sca-red-state(getKind(M, S))],
+                      '!_[sca-ctor-state(M, S)],
+                      sca-def-state(M, S),
+                      lit-set-var("X", getKind(M, S))]]
+       = 'true.Bool [none].)
+     sca-accept-eqs(M, SS) .
+  eq sca-accept-eqs(M, none) = none .
+
+  --- Returns rules closing reducible states under replacing positions.
+  op sca-red-rules : Qid KindList Kind NatSet ~> RuleSet .
+  eq sca-red-rules(Q, KL, K, NS)
+   = $sca-red-rules(Q, nil, KL, K, 1, NS) .
+
+  --- Implementation of sca-red-rules above.
+  --- 1st arg. Module
+  --- 2nd Arg: Operator qid
+  --- 3rd arg. Kinds already processed (initially should be nil)
+  --- 4th Arg: Kinds to process (initially should be input kinds of op).
+  --- 5th arg: Output kind.
+  op $sca-red-rules : Qid KindList KindList Kind Nat NatSet ~> RuleSet .
+  eq $sca-red-rules(Q, KL, K KL', K', N, NS)
+   = if N in NS then
+       pta-rule(Q, KL K KL', K',
+                (kind-state-list(KL), sca-red-state(K),
+                 kind-state-list(KL')),
+                sca-red-state(K'))
+     else
+       none
+     fi
+     $sca-red-rules(Q, KL K, KL', K', s N, NS) .
+  eq $sca-red-rules(Q, KL, nil, K, N, NS) = none .
+
+  --- Returns true if this is an executable equation that should be used in
+  --- constructing the automaton.
+  --- Assumes terms in equation have been normalized.
+  op sca-use-eq? : Equation -> Bool .
+  eq sca-use-eq?(Eq)
+   = is-exec?(Eq) and
+     not (drop-bad-eqs
+          and (has-condition?(Eq) or not left-linear?(Eq))) .
+
+  --- Returns usable equations in set.
+  op sca-usable-eqs : EquationSet -> EquationSet .
+  ceq sca-usable-eqs(Eq Eqs) = sca-usable-eqs(Eqs)
+   if sca-use-eq?(Eq) = false .
+  eq sca-usable-eqs(Eqs) = Eqs [owise].
+
+  --- Returns rules for each equation.
+  op sca-eq-rules : Module TermStateMap TermStateMapMode EquationSet
+          -> RuleSet . 
+  eq sca-eq-rules(M, TSM, Mode, Eq Eqs)
+   = term-rule(TSM, lhs(Eq), sca-red-state(get-kind(M, lhs(Eq))), Mode)
+     sca-eq-rules(M, TSM, Mode, Eqs) .
+  eq sca-eq-rules(M, TSM, Mode, none) = none .
+
+  --- Converts a constant for a "defined" state into a constant for a
+  --- "constructor" state.
+  op to-ctor : Constant -> Constant .
+  eq to-ctor(C) = qid("c" + substr(string(C), 1, length(string(C)))) .
+
+  --- Returns sort with defined state in set whose constructor state is not
+  --- in set.
+  op sca-parse-sort : NeConstantSet ~> Sort .
+  ceq sca-parse-sort(C ; CS)
+    =  qid(substr(string(C), 1,
+                  _-_(rfind(string(C), ".", length(string(C))), 1)))
+   if substr(string(C), 0, 1) = "d"
+   /\ (to-ctor(C) in CS) = false .
+
+
+  --- Parses the result of the emptiness test into a sufficient completeness
+  --- check result.
+  op sca-result : EmptinessResult -> SCCResult .
+  eq sca-result(empty) = complete .
+  eq sca-result(accepting(T, CS))
+   = counterexample(ta-parse(T), sca-parse-sort(CS)) .
+  eq sca-result(invalid-input) = invalid-input .
+endfm
+
+--- Provides functionality specific to the non-context-sensitive sufficient
+--- completeness checker.
+fmod SCC is
+  pr SCC-COMMON .
+
+  var C C'      : Constant .
+  var CS        : ConstantSet .
+  var Eq        : Equation .
+  var Eqs       : EquationSet .
+  var K K'      : Kind .
+  var KL KL'    : KindList .
+  var KS        : KindSet .
+  var M         : Module .
+  var Mb        : MembAx .
+  var Mbs       : MembAxSet .
+  var N         : Nat .
+  var NS        : NatSet .
+  var Op        : OpDecl .
+  var Ops       : OpDeclSet .
+  var Q         : Qid .
+  var QS QS'    : QidSet .
+  var S S'      : Sort .
+  var SS        : SortSet .
+  var SSDS      : SubsortDeclSet .
+  var St        : String .
+  var NeTL      : NeTermList .
+  var T         : Term .
+  var Tp        : Type .
+  var TpL       : TypeList .
+  var TSM       : TermStateMap .
+  var TL        : TermList .
+
+  --- Returns the rules generated by subsort declarations in the
+  --- specification.
+  op sca-subsort-rules : Module SubsortDeclSet ~> RuleSet .
+  eq sca-subsort-rules(M, (subsort S < S' .) SSDS)
+   = pta-erule(sca-ctor-state(M, S), sca-ctor-state(M, S'))
+     sca-subsort-rules(M, SSDS) .
+  eq sca-subsort-rules(M, none) = none .
+
+  --- Returns the rules generated by op declarations in the specification.
+  op sca-op-rules : Module OpDeclSet ~> RuleSet .
+  eq sca-op-rules(M, Op Ops)
+   = if output(Op) :: Sort then
+       pta-rule(identifier(Op),
+                get-kinds(M, inputs(Op)),
+                getKind(M, output(Op)),
+                sca-ctor-state-list(M, inputs(Op)),
+                if is-ctor?(Op) then
+                  sca-ctor-state(M, output(Op))
+                else if is-special(Op) then
+                  sca-red-state(getKind(M, output(Op)))
+                else
+                  sca-def-state(M, output(Op))
+                fi fi)
+     else
+       none
+     fi
+     pta-rule(identifier(Op),
+              get-kinds(M, inputs(Op)),
+              getKind(M, output(Op)),
+              kind-state-list(get-kinds(M, inputs(Op))),
+              kind-state(getKind(M, output(Op))))
+     sca-red-rules(identifier(Op),
+                   get-kinds(M, inputs(Op)), getKind(M, output(Op)),
+                   nats-in-range(0, size(inputs(Op)) + 1))
+     sca-op-rules(M, Ops) .
+  eq sca-op-rules(M, none) = none .
+
+  op sca-mb-rules : Module TermStateMap MembAxSet ~> RuleSet .
+  eq sca-mb-rules(M, TSM, Mb Mbs)
+   = term-rule(TSM, lhs(Mb),
+               if is-ctor?(Mb) then
+                 sca-ctor-state(M, rhs(Mb))
+               else
+                 sca-def-state(M, rhs(Mb))
+               fi,
+               sca-ctor)
+     sca-mb-rules(M, TSM, Mbs) .
+  eq sca-mb-rules(M, TSM, none) = none .
+
+  --- Returns the sufficient completeness automaton for a module.
+  --- The module is assumed to be flattened already.
+  op sca : Module ~> Module .
+  ceq sca(M)
+    = make-pta(M,
+               qid(string(getName(M)) + "-SCA"),
+               sca-per-kind-states(getKinds(M)) ;
+                 sca-per-sort-states(M, getSorts(M)) ;
+                 term-states(TSM),
+               sca-accept-eqs(M, getSorts(M)),
+               sca-subsort-rules(M, getSubsorts(M))
+                 term-rules(TSM, sca-ctor)
+                 sca-op-rules(M, remove-universal-ops(getOps(M)))
+                 sca-mb-rules(M, TSM, getMbs(M))
+                 sca-eq-rules(M, TSM, sca-ctor, sca-usable-eqs(getEqs(M))))
+   if TSM := eq-statemap(M, sca-usable-eqs(getEqs(M)),
+               mb-statemap(M, getMbs(M), init(M))) .
+
+  --- Checks the sufficient completeness of a module.
+  --- The module is assumed to be flattened already because otherwise
+  --- getting all the declarations is quite complex due to the module
+  --- renaming, parameterized specifications, etc.
+  op scc : Module ~> SCCResult .
+  eq scc(M)
+   = if wellFormed(M) and-then (getImports(M) == nil) then
+       sca-result(test-emptiness(sca(M)))
+     else
+       invalid-input
+     fi .
+endfm
+
+fmod MU-SCC is
+  pr SCC-COMMON .
+
+  var Mb  : MembAx .
+  var Mbs : MembAxSet .
+  var M   : Module .
+  var N   : Nat .
+  var NS  : NatSet .
+  var Op  : OpDecl .
+  var Ops : OpDeclSet .
+  var S S' : Sort .
+  var SSDS : SubsortDeclSet .
+  var TSM : TermStateMap .
+  var Tp  : Type .
+  var TpL : TypeList .
+
+  --- Returns the rules generated by subsort declarations in the
+  --- specification.
+  op mu-sca-subsort-rules : Module SubsortDeclSet ~> RuleSet .
+  eq mu-sca-subsort-rules(M, (subsort S < S' .) SSDS)
+   = pta-erule(sca-ctor-state(M, S), sca-ctor-state(M, S'))
+     pta-erule(sca-def-state(M, S), sca-def-state(M, S'))
+     mu-sca-subsort-rules(M, SSDS) .
+  eq mu-sca-subsort-rules(M, none) = none .
+
+  --- Returns the constructor automaton states for all types in list.
+  --- Given Tp1 ... TpN, this returns C1 ... CN where Ci is the
+  --- ctor-state if i \in NS and def-state otherwise.
+  op mu-sca-type-state-list : Module TypeList NatSet ~> ConstantList .
+  eq mu-sca-type-state-list(M, TpL, NS)
+   = $mu-sca-type-state-list(M, TpL, 1, NS) .
+
+  op $mu-sca-type-state-list : Module TypeList Nat NatSet ~> ConstantList .
+  eq $mu-sca-type-state-list(M, Tp TpL, N, NS)
+   = (if N in NS then sca-ctor-state(M, Tp) else sca-def-state(M, Tp) fi),
+     $mu-sca-type-state-list(M, TpL, s N, NS) .
+  eq $mu-sca-type-state-list(M, nil, N, NS) = empty .
+
+  --- Returns the rules generated by op declarations in the specification.
+  op mu-sca-op-rules : Module OpDeclSet ~> RuleSet .
+  eq mu-sca-op-rules(M, Op Ops)
+   = if output(Op) :: Sort then
+       pta-rule(identifier(Op),
+                get-kinds(M, inputs(Op)),
+                getKind(M, output(Op)),
+                mu-sca-type-state-list(M, inputs(Op), none),
+                sca-def-state(M, output(Op)))
+       if is-ctor?(Op) then
+         pta-rule(identifier(Op),
+                  get-kinds(M, inputs(Op)),
+                  getKind(M, output(Op)),
+                  mu-sca-type-state-list(M, inputs(Op), mu(Op)),
+                  sca-ctor-state(M, output(Op)))
+       else if is-special(Op) then
+         pta-rule(identifier(Op),
+                  get-kinds(M, inputs(Op)),
+                  getKind(M, output(Op)),
+                  mu-sca-type-state-list(M, inputs(Op), mu(Op)),
+                  sca-red-state(getKind(M, output(Op))))
+       else
+         none
+       fi fi
+     else
+       none
+     fi
+     pta-rule(identifier(Op),
+              get-kinds(M, inputs(Op)),
+              getKind(M, output(Op)),
+              kind-state-list(get-kinds(M, inputs(Op))),
+              kind-state(getKind(M, output(Op))))
+     sca-red-rules(identifier(Op),
+                   get-kinds(M, inputs(Op)), getKind(M, output(Op)),
+                   mu(Op))
+     mu-sca-op-rules(M, Ops) .
+  eq mu-sca-op-rules(M, none) = none .
+
+  --- Returns the mu-sufficient completeness automaton for a module.
+  --- The module is assumed to be flattened already.
+  op mu-sca : Module ~> Module .
+  ceq mu-sca(M)
+    = make-pta(M,
+               qid(string(getName(M)) + "-MU-SCA"),
+               sca-per-kind-states(getKinds(M))
+               ; sca-per-sort-states(M, getSorts(M))
+               ; term-states(TSM),
+               sca-accept-eqs(M, getSorts(M)),
+               mu-sca-subsort-rules(M, getSubsorts(M))
+                 term-rules(TSM, sca-def)
+                 mu-sca-op-rules(M, remove-universal-ops(getOps(M)))
+                 sca-eq-rules(M, TSM, sca-def, sca-usable-eqs(getEqs(M))))
+   if getMbs(M) = none
+   /\ TSM := eq-statemap(M, sca-usable-eqs(getEqs(M)), init(M)) .
+
+  --- Checks the mu-sufficient completeness of a module.
+  --- The module is assumed to be flattened already because otherwise
+  --- getting all the declarations is quite complex due to the module
+  --- renaming, parameterized specifications, etc.
+  op mu-scc : Module ~> SCCResult .
+  eq mu-scc(M)
+   = if wellFormed(M) and-then (getImports(M) == nil) then
+       sca-result(test-emptiness(mu-sca(M)))
+     else
+       invalid-input
+     fi .
+endfm
+
+
+fmod CCC is
+  pr TERM-STATE-MAP .
+  pr PTA-STATE-NAMES .
+  pr PTA-EMPTINESS-TEST .
+
+  var CS : ConstantSet .
+  var Eq : Equation .
+  var Eqs : EquationSet .
+  var K K' : Kind .
+  var KL KL' : KindList .
+  var KS : KindSet .
+  var M : Module .
+  var Mb : MembAx .
+  var Mbs : MembAxSet .
+  var N : Nat .
+  var NS : NatSet .
+  var Op : OpDecl .
+  var Ops : OpDeclSet .
+  var Q : Qid .
+  var S S' : Sort .
+  var SS : SortSet .
+  var SSDS : SubsortDeclSet .
+  var T : Term .
+  var Tp : Type .
+  var TpL : TypeList .
+  var TSM : TermStateMap .
+  var V : Variable .
+
+  --- Returns the automaton state for reducible terms of type.
+  op mu-red-state : Kind ~> Constant .
+  eq mu-red-state(K) = qid("rmu[" + kind-name(K) + "]." + state-name(K)) .
+
+  --- Returns the automaton state for constructor terms with type.
+  op cca-type-state : Module Type ~> Constant .
+  eq cca-type-state(M, S)
+   = qid("p" + string(S) + "." + state-name(getKind(M, S))) .
+  eq cca-type-state(M, K) = kind-state(K) .
+
+  --- Returns automaton states for each type in list.
+  op cca-type-state-list : Module TypeList ~> ConstantList .
+  eq cca-type-state-list(M, Tp TpL)
+   = cca-type-state(M, Tp), cca-type-state-list(M, TpL) .
+  eq cca-type-state-list(M, nil) = empty .
+
+  --- Returns the set of states needed for each kind.
+  op cca-per-kind-states : KindSet ~> ConstantSet .
+  eq cca-per-kind-states(K ; KS)
+   = kind-state(K) ; mu-red-state(K) ; red-state(K)
+        ; cca-per-kind-states(KS) .
+  eq cca-per-kind-states(none) = none .
+
+  op cca-per-sort-states : Module SortSet ~> ConstantSet .
+  eq cca-per-sort-states(M, S ; SS)
+   = cca-type-state(M, S) ; cca-per-sort-states(M, SS) .
+  eq cca-per-sort-states(M, none) = none .
+
+  op cca : -> TermStateMapMode [ctor].
+  eq term-var-state(M, V, cca) = cca-type-state(M, getType(V)) .
+
+  --- Returns the equations for the accept operation given the kinds
+  --- in the specification.
+  op cca-accept-eqs : Module KindSet -> EquationSet .
+  eq cca-accept-eqs(M, K ; KS)
+   = $cca-accept-eqs(M, K, maximalSorts(M, K))
+     cca-accept-eqs(M, KS) .
+  eq cca-accept-eqs(M, none) = none .
+
+  op $cca-accept-eqs : Module Kind SortSet -> EquationSet .
+  eq $cca-accept-eqs(M, K, S ; SS) 
+   = (eq 'accept['_;_[cca-type-state(M, S),
+                      red-state(K),
+                      '!_[mu-red-state(K)],
+                      lit-set-var("X", K)]]
+       = 'true.Bool [none].)
+     $cca-accept-eqs(M, K, SS) .
+  eq $cca-accept-eqs(M, K, none) = none .
+
+  --- Returns rules from subsort declarations.
+  op cca-subsort-rules : Module SubsortDeclSet -> RuleSet .
+  eq cca-subsort-rules(M, (subsort S < S' .) SSDS)
+   = pta-erule(cca-type-state(M, S), cca-type-state(M, S'))
+     cca-subsort-rules(M, SSDS) .
+  eq cca-subsort-rules(M, none) = none .
+
+  --- Returns rules closing reducibility and mu-reducibility under context.
+  op $cca-red-rules : Qid KindList KindList Kind Nat NatSet
+        ~> RuleSet .
+  eq $cca-red-rules(Q, KL, K KL', K', N, NS)
+   = pta-rule(Q, KL K KL', K',
+              (kind-state-list(KL), red-state(K), kind-state-list(KL')),
+              red-state(K'))
+     if N in NS then
+       pta-rule(Q, KL K KL', K',
+                (kind-state-list(KL), mu-red-state(K), kind-state-list(KL')),
+                mu-red-state(K'))
+     else
+       none
+     fi
+     $cca-red-rules(Q, KL K, KL', K', s N, NS) .
+  eq $cca-red-rules(Q, KL, nil, K, N, NS) = none .
+
+  --- Returns rules closing reducibility and mu-reducibility under context.
+  op cca-red-rules : Qid KindList Kind NatSet ~> RuleSet .
+  eq cca-red-rules(Q, KL, K, NS)
+   = $cca-red-rules(Q, nil, KL, K, 1, NS) .
+
+  --- Returns the rules generated by op declarations in the specification.
+  op cca-op-rules : Module OpDeclSet ~> RuleSet .
+  eq cca-op-rules(M, Op Ops)
+   = if output(Op) :: Sort then
+       pta-rule(identifier(Op),
+                get-kinds(M, inputs(Op)),
+                getKind(M, output(Op)),
+                cca-type-state-list(M, inputs(Op)),
+                cca-type-state(M, output(Op)))
+     else
+       none
+     fi
+     if output(Op) :: Sort
+          and-then not is-ctor?(Op)
+          and-then is-special(Op) then
+       pta-rule(identifier(Op),
+                get-kinds(M, inputs(Op)),
+                getKind(M, output(Op)),
+                cca-type-state-list(M, inputs(Op)),
+                mu-red-state(getKind(M, output(Op))))
+     else
+       none
+     fi
+     pta-rule(identifier(Op),
+              get-kinds(M, inputs(Op)),
+              getKind(M, output(Op)),
+              kind-state-list(get-kinds(M, inputs(Op))),
+              kind-state(getKind(M, output(Op))))
+     cca-red-rules(identifier(Op),
+                   get-kinds(M, inputs(Op)), getKind(M, output(Op)),
+                   mu(Op))
+     cca-op-rules(M, Ops) .
+  eq cca-op-rules(M, none) = none .
+
+  --- Returns rules from memberships.
+  op cca-mb-rules : Module TermStateMap MembAxSet ~> RuleSet .
+  eq cca-mb-rules(M, TSM, Mb Mbs)
+   = term-rule(TSM, lhs(Mb), cca-type-state(M, rhs(Mb)), cca)
+     cca-mb-rules(M, TSM, Mbs) .
+  eq cca-mb-rules(M, TSM, none) = none .
+
+  --- Returns rules for equations.
+  op cca-eq-rules : Module TermStateMap EquationSet ~> RuleSet .
+  eq cca-eq-rules(M, TSM, Eq Eqs)
+   = term-rule(TSM, lhs(Eq), mu-red-state(get-kind(M, lhs(Eq))), cca)
+     cca-eq-rules(M, TSM, Eqs) .
+  eq cca-eq-rules(M, TSM, none) = none .
+
+  --- Returns rules of the form "mu-red-state(K) => red-state(K)"
+  op cca-r-epsilon-rules : KindSet -> RuleSet .
+  eq cca-r-epsilon-rules(K ; KS)
+   = pta-erule(mu-red-state(K), red-state(K))
+     cca-r-epsilon-rules(KS) .
+  eq cca-r-epsilon-rules(none) = none .
+
+  --- Constructs a canonical completeness automaton.
+  op cca : Module ~> Module .
+  ceq cca(M)
+    = make-pta(M,
+               qid(string(getName(M)) + "-CCA"),
+               cca-per-kind-states(getKinds(M)) ;
+                 cca-per-sort-states(M, getSorts(M)) ;
+                 term-states(TSM),
+               cca-accept-eqs(M, getKinds(M)),
+               cca-op-rules(M, remove-universal-ops(getOps(M)))
+                 cca-mb-rules(M, TSM, getMbs(M))
+                 cca-subsort-rules(M, getSubsorts(M))
+                 term-rules(TSM, cca)
+                 cca-eq-rules(M, TSM, getEqs(M))
+                 cca-r-epsilon-rules(getKinds(M)))
+   if TSM := eq-statemap(M, getEqs(M),
+             mb-statemap(M, getMbs(M), init(M))) .
+
+  sort CCCResult .
+  op complete : -> CCCResult [ctor].
+  op counterexample : Term -> CCCResult [ctor].
+  op invalid-input : -> CCCResult [ctor].
+
+  op cca-result : EmptinessResult -> CCCResult .
+  eq cca-result(empty) = complete .
+  eq cca-result(accepting(T, CS)) = counterexample(ta-parse(T)) .
+  eq cca-result(invalid-input) = invalid-input .
+
+  --- Checks that the module is canonically complete.
+  op ccc : Module ~> CCCResult .
+  eq ccc(M)
+   = if wellFormed(M) and-then (getImports(M) == nil) then
+       cca-result(test-emptiness(cca(M)))
+     else
+       invalid-input
+     fi .
+endfm
+
+--- Provides operations for checking a module to see if it does not satisfy
+--- the requirements of the sufficient completeness checker.
+fmod SCC-CHECKER is
+  pr SCC .
+  pr MU-SCC .
+
+  var AS : AttrSet .
+  var Eqs : EquationSet .
+  var M : Module .
+  var Mbs : MembAxSet .
+  var Ops : OpDeclSet .
+  var NL : NatList .
+  var Q : Qid .
+  var QL : QidList .
+  var Tp : Type .
+  var TpL : TypeList .
+
+  op warning-font : QidList -> QidList .
+  eq warning-font(QL) = '\! '\y QL '\o .
+
+  op warning : QidList -> QidList .
+  eq warning(QL) = warning-font('Warning:) QL '\n .
+
+  --- Checks for attributes that are not compatible with scc. The QidList
+  --- refers to the operator name.
+  op check-attrs : AttrSet QidList ~> QidList .
+---a  eq check-attrs(strat(NL) AS, QL)
+---a   = warning('Ignoring 'strategy 'for QL '.)
+---a     check-attrs(AS, QL) .
+  eq check-attrs(idem AS, QL)
+   = warning('Ignoring 'idempotence 'for QL '.)
+     check-attrs(AS, QL) .
+  eq check-attrs(AS, QL) = nil [owise].
+
+  --- Checks that operators have attributes that are compatible with scc.
+  op check-ops : OpDeclSet ~> QidList .
+  eq check-ops((op Q : TpL -> Tp[AS].) Ops)
+   = check-attrs(AS, Q ': TpL '-> Tp)
+     check-ops(Ops) .
+  eq check-ops(none) = nil .
+
+  --- Checks that memberships are left-linear and unconditional.
+  op check-mbs : MembAxSet ~> QidList .
+  eq check-mbs(Mbs)
+   = if has-condition?(Mbs) then
+       warning('This 'module 'has 'conditional 'memberships. 'The 'sufficient
+         'completeness 'checker 'will 'treat 'these 'as 'unconditional.
+         warning-font('This 'is 'unsound!))
+     else
+       nil
+     fi
+     if not left-linear?(Mbs) then
+      warning('This 'module 'has 'memberships 'that 'are 'not 'left-linear.
+        'The 'sufficient 'completeness 'checker 'will 'rename 'variables 'as
+        'needed 'to 'drop 'the 'non-linearity 'conditions.
+        warning-font('This 'is 'unsound!))
+     else
+       nil
+     fi .
+
+  --- Checks that equations are left-linear and unconditional.
+  op check-eqs : EquationSet ~> QidList .
+  eq check-eqs(Eqs)
+   = if has-condition?(Eqs) then
+       if drop-bad-eqs then
+         warning('This 'module 'has 'conditional 'equations 'which 'will 'be
+           'ignored 'when 'checking 'sufficient 'completeness.)
+       else
+         warning('This 'module 'has 'conditional 'equations 'which 'will 'be
+           'treated 'as 'unconditional.)
+       fi
+     else
+       nil
+     fi
+     if not left-linear?(Eqs) then
+       if drop-bad-eqs then
+         warning('This 'module 'has 'equations 'that 'are 'not 'left-linear
+           'which 'will 'be 'ignored 'when 'checking.)
+       else
+         warning('This 'module 'has 'equations 'that 'are 'not 'left-linear.
+           'The 'sufficient 'completeness 'checker 'will 'rename 'variables
+           'as 'needed 'to 'drop 'the 'non-linearity 'conditions.)
+       fi
+     else
+       nil
+     fi .
+
+  --- Checks a module for ways in which it does not satisfy the requirements
+  --- of the sufficient completeness checker.
+  --- This function assumes terms in memberships and equations have been
+  --- normalized.
+  op scc-check-module : Module ~> QidList .
+  eq scc-check-module(M)
+   = if getImports(M) == nil then
+       nil
+     else
+       warning('The 'module 'has 'not 'been 'flattened.)
+     fi
+     check-ops(getOps(M))
+     check-mbs(getMbs(M))
+     check-eqs(getEqs(M)) .
+endfm
+
+fmod CC-GRAMMAR is
+  pr QID .
+  sorts ModuleName Command .
+  op module : Qid -> ModuleName
+               [ctor
+                special (
+                 id-hook Bubble (1 1)
+                 op-hook qidSymbol (<Qids> : ~> Qid))] .
+  op scc_. : ModuleName -> Command [ctor].
+  op mu-scc_. : ModuleName -> Command [ctor].
+  op ccc_. : ModuleName -> Command [ctor].
+endfm
+
+mod CC-LOOP is
+  pr SCC .
+  pr CCC .
+  pr SCC-CHECKER .
+  pr CC-GRAMMAR .
+  inc LOOP-MODE .
+
+  op scc : -> State [ctor].
+
+  var B : Bool .
+  var C : Constant .
+  var M : Module .
+  var N : Nat .
+  var Q : Qid .
+  var QL : QidList .
+  var NeQL : NeQidList .
+  var RP RP' : ResultPair .
+  var S : Sort .
+  var T : Term .
+  var Tp : Type .
+  var IL : ImportList .
+  var SS : SortSet .
+  var SSDS : SubsortDeclSet .
+  var Op : OpDecl .
+  var Ops : OpDeclSet .
+  var Mb : MembAx .
+  var Mbs : MembAxSet .
+  var Eq  : Equation .
+  var Eqs : EquationSet .
+  var Rls : RuleSet .
+  var AS : AttrSet .
+  var TpL : TypeList .
+  var T1 T2 : Term .
+  var Tp1 Tp2 : Type .
+
+  --- Returns the qid at the given index or nil if the integer is greater
+  --- than the lenght of the list.
+  op at : Nat QidList ~> Qid .
+  eq at(0, Q QL) = Q .
+  eq at(s N, Q QL) = at(N, QL) .
+  eq at(N, QL) = nil [owise].
+
+  op error : QidList -> QidList .
+  eq error(QL) = '\! '\r 'ERROR: '\o QL .
+
+  op sound-analysis? : Module ~> Bool .
+  eq sound-analysis?(M)
+   = (drop-bad-eqs or-else (check-eqs(getEqs(M)) == nil))
+       and-then (check-mbs(getMbs(M)) == nil) .
+
+  op complete-analysis? : Module ~> Bool .
+  eq complete-analysis?(M)
+   = (not drop-bad-eqs or-else check-eqs(getEqs(M)) == nil)
+       and-then (check-mbs(getMbs(M)) == nil) .
+
+
+  op ctor-ops : Module OpDeclSet -> OpDeclSet .
+  eq ctor-ops(M, Op Ops)
+   = if is-universal-op?(Op) or-else is-ctor?(Op) then
+       Op ctor-ops(M, Ops)
+     else
+       (op identifier(Op) :
+           get-kinds(M, inputs(Op)) ->
+           getKind(M, output(Op)) [attrs(Op)].)
+       ctor-ops(M, Ops)
+     fi .
+  eq ctor-ops(M, none) = none .
+
+
+  op ctor-mbs : MembAxSet ~> MembAxSet .
+  eq ctor-mbs(Mb Mbs)
+   = if is-ctor?(Mb) then
+       Mb ctor-mbs(Mbs)
+     else
+       ctor-mbs(Mbs)
+     fi .
+  eq ctor-mbs(none) = none .
+
+  --- Returns the module with defined operators and memberships removed.
+  op ctor-subsystem : Module Module ~> Module .
+  eq ctor-subsystem(M, fmod Q is IL sorts SS . SSDS Ops Mbs Eqs endfm)
+   = fmod Q is IL sorts SS . SSDS ctor-ops(M,Ops) ctor-mbs(Mbs) Eqs endfm .
+  eq ctor-subsystem(M, mod Q is IL sorts SS . SSDS Ops Mbs Eqs Rls endm)
+   = mod Q is IL sorts SS . SSDS ctor-ops(M,Ops) ctor-mbs(Mbs) Eqs Rls endm .
+  eq ctor-subsystem(M, fth Q is IL sorts SS . SSDS Ops Mbs Eqs endfth)
+   = fth Q is IL sorts SS . SSDS ctor-ops(M,Ops) ctor-mbs(Mbs) Eqs endfth .
+  eq ctor-subsystem(M, th Q is IL sorts SS . SSDS Ops Mbs Eqs Rls endth)
+   = th Q is IL sorts SS . SSDS ctor-ops(M,Ops) ctor-mbs(Mbs) Eqs Rls endth .
+
+  op ctor-subsystem : Module ~> Module .
+  eq ctor-subsystem(M) = ctor-subsystem(M, M) .
+
+  --- Returns true if term matches equation in set.
+  op match-eq? : Module Term EquationSet ~> Bool .
+  ceq match-eq?(M, T, Eq Eqs) = true
+   if is-exec?(Eq)
+   /\ get-kind(M, T) = get-kind(M, lhs(Eq))
+   /\ metaXmatch(M, lhs(Eq), T, condition(Eq), 0, unbounded, 0) : MatchPair .
+  eq match-eq?(M, T, Eqs) = false [owise].
+
+  op is-reducible? : Module Term ~> Bool .
+  eq is-reducible?(M, T) = match-eq?(M, T, getEqs(M)) .
+
+  op true-counterexample? : Module Term ~> Bool .
+  eq true-counterexample?(M, T)
+   = leastSort(M, T) =/= leastSort(ctor-subsystem(M), T)
+        and-then not is-reducible?(M, T) .
+
+  op failure : QidList -> QidList .
+  eq failure(QL)
+   = '\! '\r 'Failure: '\o QL .
+
+  --- Parse the reslt of checking sufficient completeness.
+  --- The boolen is true if this is context-sensitive sufficient completeness
+  --- and false if not.
+  op scc-scan-result : Module SCCResult Bool -> QidList .
+  eq scc-scan-result(M, complete, true)
+   = if sound-analysis?(M) then
+       '\! '\g 'Success: '\o '\c getName(M) '\o 'is 'mu-sufficiently
+       'complete 'under 'the 'assumption 'that 'it 'is
+       'ground 'mu-weakly 'normalizing '`, ' 'ground 'mu-confluent '`, 
+       ' 'and 'ground 'mu-sort-decreasing.
+     else
+       warning-font('Maybe:)
+       'No 'counterexamples 'were 'found 'when
+       'checking 'mu-sufficient 'completeness.
+       'However '`, '  '\c getName(M) '\o 'may 'still 'not 'be
+       'sufficiently 'complete.
+     fi .
+  eq scc-scan-result(M, complete, false)
+   = if sound-analysis?(M) then
+       '\! '\g 'Success: '\o '\c getName(M) '\o 'is 'sufficiently 'complete
+       'under 'the 'assumption 'that 'it 'is 'ground 'weakly-normalizing '`,
+       ' 'confluent '`, ' 'and 'ground 'sort-decreasing.
+     else
+       warning-font('Maybe:)
+       'No 'counterexamples 'were 'found 'when
+       'checking 'sufficient 'completeness.
+       'However '`, '  '\c getName(M) '\o 'may 'still 'not 'be
+       'sufficiently 'complete.
+     fi .
+  eq scc-scan-result(M, counterexample(T, S), true)
+   = if complete-analysis?(M) then
+       failure('The 'term '\m metaPrettyPrint(M, T, mixfix) '\o ' 'is 'an
+       'mu-irreducible 'term 'with 'sort '\m S '\o 'in '\c getName(M) '\o
+       'with 'defined 'symbols 'in 'replacement 'positions.)
+     else
+       failure('The 'term '\m metaPrettyPrint(M, T, mixfix) '\o 'was 'found
+       'to 'be 'a 'counterexample.  'Since 'the 'analysis 'is 'incomplete
+       '`, ' 'it 'may 'not 'be 'a 'real 'counterexample.)
+     fi .
+  eq scc-scan-result(M, counterexample(T, S), false)
+   = if complete-analysis?(M) then
+       failure('The 'term '\m metaPrettyPrint(M, T, mixfix) '\o ' 'is 'an
+       'irreducible 'term 'with 'sort '\m S '\o 'in '\c getName(M) '\o
+       'that 'does 'not 'have 'sort '\m S '\o 'in 'the 'constructor
+       'subsignature.)
+     else
+       failure('The 'term '\m metaPrettyPrint(M, T, mixfix) '\o 'was 'found
+       'to 'be 'a 'counterexample.  'Since 'the 'analysis 'is 'incomplete
+       '`, ' 'it 'may 'not 'be 'a 'real 'counterexample.)
+     fi .
+  eq scc-scan-result(M, invalid-input, B)
+   = error('Could 'not 'parse 'module getName(M) '.) .
+
+  op ccc-scan-result : Module CCCResult -> QidList .
+  eq ccc-scan-result(M, complete)
+   = '\! '\g 'Success: '\o '\c getName(M) '\o 'is 'canonically 'complete. .
+  eq ccc-scan-result(M, counterexample(T))
+   = failure('The 'term '\m metaPrettyPrint(M, T, mixfix) '\o 'is 'a
+     'counterexample 'that 'is 'mu-irreducible '`, ' 'but
+     'reducible 'under 'ordinary 'rewriting.) .
+  eq ccc-scan-result(M, invalid-input)
+   = error('Could 'not 'parse 'module getName(M) '.) .
+
+  op exec : Command ~> QidList .
+  eq exec(scc module(Q) .)
+   = 'Checking 'sufficient 'completeness 'of '\c Q '\o '... '\n
+     if not (upModule(Q, true) :: Module) then
+       error('The 'module Q 'could 'not 'be 'found.)
+     else if isParameterized?(upModule(Q, true)) then
+       error('The 'SCC 'cannot 'check 'parameterized 'modules.)
+     else if upModule(Q, true) :: STheory then
+       error('The 'SCC 'cannot 'check 'theories)
+     else
+       scc-check-module(upModule(Q, true))
+       scc-scan-result(upModule(Q, true),
+                       scc(upModule(Q, true)),
+                       false)
+     fi fi fi .
+  ---TODO
+  eq exec(mu-scc module(Q) .)
+   = 'Checking 'the 'mu-sufficient 'completeness 'of '\c Q '\o '... '\n
+     if not (upModule(Q, true) :: Module) then
+       error('The 'module Q 'could 'not 'be 'found.)
+     else if isParameterized?(upModule(Q, true)) then
+       error('The 'SCC 'cannot 'check 'parameterized 'modules.)
+     else if upModule(Q, true) :: STheory then
+       error('The 'SCC 'cannot 'check 'theories)
+     else if getMbs(upModule(Q, true)) =/= none then
+       error('The 'SCC 'cannot 'yet 'check 'mu-sufficient 'completeness 'of
+             'theories 'with 'memberships.)
+     else
+       scc-check-module(upModule(Q, true))
+       scc-scan-result(upModule(Q, true),
+                       mu-scc(upModule(Q, true)),
+                       true)
+     fi fi fi fi .
+  eq exec(ccc module(Q) .)
+   = 'Checking 'canonical 'completeness 'of '\c Q '\o '... '\n
+     if not (upModule(Q, true) :: Module) then
+       error('The 'module Q 'could 'not 'be 'found.)
+     else if isParameterized?(upModule(Q, true)) then
+       error('This 'tool 'cannot 'check 'parameterized 'modules.)
+     else if upModule(Q, true) :: STheory then
+       error('This 'tool 'cannot 'check 'theories)
+     else
+       ccc-scan-result(upModule(Q, true),
+                       ccc(upModule(Q, true)))
+     fi fi fi .
+
+
+  op errorCommand : ~> Command [ctor].
+
+  op init-cc : -> System [ctor].
+  rl [init] :
+     init-cc
+     =>
+     [nil, scc, 'Starting 'the 'Maude 'Sufficient 'and 'Canonical
+       'Completeness 'Checker.] .
+
+  crl [exec] :
+      [NeQL, scc, nil]
+   => [nil, scc, exec(downTerm(T, errorCommand))]
+   if {T, Tp} := metaParse(['CC-GRAMMAR], NeQL, 'Command) .
+
+
+  crl [invalid] :
+      [NeQL, scc, nil]
+   => [nil, scc,
+       'The 'command 'could 'not 'be 'parsed '-- 'starting 'with 'the
+       'word 'token qid(string(N, 10)) ': at(N, NeQL) '.]
+   if noParse(N) := metaParse(['CC-GRAMMAR], NeQL, 'Command)
+   /\ N < size(NeQL) .
+
+  crl [eol] :
+      [NeQL, scc, nil]
+   => [nil, scc,
+       'Unexpected 'end 'of 'command.
+       if (size(NeQL) > 0) and last(NeQL) =/= '. then
+         'Perhaps 'a 'terminating 'period 'was 'omitted?
+       else
+         nil
+       fi]
+   if noParse(N) := metaParse(['SCC-GRAMMAR], NeQL, 'Command)
+   /\ N >= size(NeQL) .
+
+  crl [ambiguous] :
+      [NeQL, scc, nil]
+   => [nil, scc,
+       'The 'command 'is 'ambiguous.  'Two 'possible 'parses 'are
+       metaPrettyPrint(['SCC-GRAMMAR], T1) 'and
+       metaPrettyPrint(['SCC-GRAMMAR], T2) '.]
+   if ambiguity({T1, Tp1}, {T2, Tp2})
+            := metaParse(['SCC-GRAMMAR], NeQL, 'Command) .
+endm
+
+---a loop init-scc .
+
+---a set include BOOL off .
+---a fmod TEST is
+---a   sort S .
+---a   op a : -> S .
+---a   op f : S -> S .
+---a endfm
+---a
+---a select CC-LOOP .
+---a (scc TEST .)
+---a (scc QID .)
+
+---a time: (scc META-LEVEL .) = 8.18 seconds
+
+---a loop init-scc .
+
+---a (scc SCC .)

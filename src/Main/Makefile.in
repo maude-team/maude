@@ -70,7 +70,7 @@ maude_DEPENDENCIES = ../Mixfix/libmixfix.a \
 	../IO_Stuff/libIO_Stuff.a $(am__DEPENDENCIES_1) \
 	../Utility/libutility.a $(am__DEPENDENCIES_2) \
 	$(am__DEPENDENCIES_2) $(am__DEPENDENCIES_2) \
-	$(am__DEPENDENCIES_2)
+	$(am__DEPENDENCIES_2) $(am__DEPENDENCIES_2)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -106,6 +106,7 @@ BUILD_COMPILER_FALSE = @BUILD_COMPILER_FALSE@
 BUILD_COMPILER_TRUE = @BUILD_COMPILER_TRUE@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
+CETA_LIBS = @CETA_LIBS@
 CFLAGS = @CFLAGS@
 CPPFLAGS = @CPPFLAGS@
 CXX = @CXX@
@@ -250,6 +251,7 @@ maude_LDADD = \
 	$(TECLA_LIBS) \
 	$(LIBSIGSEGV_LIB) \
 	$(GMP_LIBS) \
+	$(CETA_LIBS) \
 	$(DLMALLOC_LIB)
 
 maude_SOURCES = \
@@ -271,7 +273,9 @@ EXTRA_DIST = \
 	linear.maude \
 	machine-int.maude \
 	term-order.maude \
-	metaInterpreter.maude
+	metaInterpreter.maude \
+	scc.maude \
+	scc2.maude
 
 all: all-am
 
