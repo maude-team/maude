@@ -109,3 +109,9 @@ configure.ac:19: aclocal.m4 with aclocal and run automake again.
 jmalvarez@atenea02:~/maude-github/maude$ aclocal
 ~~~
 
+## Mac OS X Users
+
+Maude + TerminationChecker hooks can be compiled on OS X, with a minor change:
+
+In file `/src/BuiltIn/terminationCheckerSymbol.cc` added `#include <signal.h>`. 
+
