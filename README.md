@@ -1,6 +1,6 @@
-# NOTES ON GIT BRANCHES FOR MAUDE + HOOKS
+## NOTES ON GIT BRANCHES FOR MAUDE + HOOKS
 
-## Initial repository setting
+### Initial repository setting
 
 The original repository stands on https://github.com/maude-team/maude.git. Local copy for UMA is stored in //atenea02/gisum/uma/es/usr/jmalvarez/maude-githab/maude. Local repository is a clone of remote repository:
 
@@ -108,5 +108,4 @@ configure.ac:19: comes from Automake 1.11.3.  You should recreate
 configure.ac:19: aclocal.m4 with aclocal and run automake again.
 jmalvarez@atenea02:~/maude-github/maude$ aclocal
 ~~~
-
 
