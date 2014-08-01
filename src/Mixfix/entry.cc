@@ -552,6 +552,8 @@ MixfixModule::newFancySymbol(Token prefixName,
       return new SocketManagerSymbol(name);
     case SymbolType::INTERPRETER_MANAGER_SYMBOL:
       return new InterpreterManagerSymbol(name);
+    case SymbolType::TERMINATION_CHECKER_SYMBOL:
+       return new TerminationCheckerSymbol(name,nrArgs);
     }
 
   int lineNr = prefixName.lineNumber();

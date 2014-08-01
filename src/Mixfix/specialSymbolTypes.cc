@@ -54,3 +54,4 @@
   MACRO(CounterSymbol, SymbolType::COUNTER_SYMBOL)
   MACRO(SocketManagerSymbol, SymbolType::SOCKET_MANAGER_SYMBOL)
   MACRO(InterpreterManagerSymbol, SymbolType::INTERPRETER_MANAGER_SYMBOL)
+  MACRO(TerminationCheckerSymbol, SymbolType::TERMINATION_CHECKER_SYMBOL)
