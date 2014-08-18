@@ -553,7 +553,11 @@ MixfixModule::newFancySymbol(Token prefixName,
     case SymbolType::INTERPRETER_MANAGER_SYMBOL:
       return new InterpreterManagerSymbol(name);
     case SymbolType::TERMINATION_CHECKER_SYMBOL:
-       return new TerminationCheckerSymbol(name,nrArgs);
+      return new TerminationCheckerSymbol(name,nrArgs);
+    case SymbolType::LTLR_FAIRCHECKER_SYMBOL:
+      return new modelChecker::LTLRFairnessCheckerSymbol(name, nrArgs);
+    case SymbolType::SYMBOLIC_MODEL_CHECKER_SYMBOL:
+      return new modelChecker::SymbolicModelCheckerSymbol(name, nrArgs);
     }
 
   int lineNr = prefixName.lineNumber();

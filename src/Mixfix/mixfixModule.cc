@@ -145,6 +145,10 @@
 #include "loopSymbol.hh"
 #include "userLevelRewritingContext.hh"
 
+//	ltlr and lmc model checkers
+#include "ltlrFairnessCheckerSymbol.hh"
+#include "SymbolicModelCheckerSymbol.hh"
+
 #include "interpreter.hh"
 #include "global.hh"  // HACK shouldn't be accessing global variables
 #include "terminationCheckerSymbol.hh"

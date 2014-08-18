@@ -1,0 +1,74 @@
+
+--- modified from "All about Maude," p390.
+
+fmod TOKEN-CONF is
+  sorts Number . 
+  op 0 : -> Number [ctor] .
+  op s : -> Number [ctor] .
+  op __ : Number Number -> Number [ctor comm assoc id: 0] .
+
+  sorts Token Mode ModeWait .
+  subsorts ModeWait < Mode .
+  op {_} : Number -> Token [ctor] . 
+  op crit : -> Mode [ctor] . 
+  op wait : -> ModeWait [ctor] . 
+
+  sorts Proc ProcWait .
+  subsort ProcWait < Proc .
+  op [_,_] : Number Mode -> Proc [ctor] . 
+  op [_,_] : Number ModeWait -> ProcWait [ctor] . 
+
+  sort Conf ConfTWait ConfWait .
+  subsort Proc < Conf . 
+  subsort Token < ConfTWait .
+  subsorts ProcWait < ConfWait < ConfTWait < Conf .
+  op none : -> ConfWait [ctor] . 
+  op __ : Conf Conf -> Conf [ctor comm assoc id: none] . 
+  op __ : ConfWait ConfWait -> ConfWait [ctor ditto] . 
+  op __ : ConfTWait ConfTWait -> ConfTWait [ctor ditto] . 
+endfm
+
+mod TOKEN-MUTEX is 
+  pr TOKEN-CONF .
+
+  sort Top .
+  op <_,_> : Number Conf -> Top .
+
+--- NOTE : we do not impose N > M in the enter rule,
+---   since it make unifications nontrivial and we do *not* need it 
+---   to prove the invariant.
+
+  vars N M : Number . var CF : Conf .
+
+  rl [enter] : < N,   {M} [M, wait] CF > 
+            => < N,       [M, crit] CF > . 
+  rl [exit1] : < s s N M,       [M, crit] CF >
+            => < s s N M, {s M} [M, wait] CF > . 
+  rl [exit2] : <     s M,       [M, crit] CF >
+            => <     s M,   {0} [M, wait] CF > . 
+endm
+
+load symbolic-checker
+
+(mod TOKEN-MUTEX-SATISFACTION is
+  pr TOKEN-MUTEX .
+  pr SYMBOLIC-CHECKER .
+
+  subsort Top < State .
+
+  op ex? : -> Prop .
+
+  vars N M M' : Number .  
+  var CF : Conf .  var WF : ConfWait . var WTF : ConfTWait .
+
+  eq < N, WTF > |= ex? = true [variant] .
+  eq < N, WTF [M,crit] > |= ex? = true [variant] .
+  eq < N, CF [M,crit] [M',crit] > |= ex? = false [variant] .
+endm)
+
+--- true: one token
+(lfmc < N, {M} WF > |= [] ex? .)
+
+--- false: more than one token: 
+(lfmc < N, WTF > |= [] ex? .)
+
