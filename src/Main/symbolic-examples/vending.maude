@@ -1,0 +1,29 @@
+load symbolic-checker
+
+--- from the Maude manual 
+--- http://maude.cs.uiuc.edu/maude2-manual/maude-manual.pdf
+
+(mod NARROWING-VENDING-MACHINE is  
+  sorts Coin Item Marking Money Conf .  
+  subsort Coin < Money .  
+  op __ : Money Money -> Money [assoc comm] .  
+  subsort Money Item < Marking .  
+  op __ : Marking Marking -> Marking [assoc comm] .  
+  op <_> : Marking -> Conf .  
+  op $ : -> Coin [format (r! o)] .  
+  op q : -> Coin [format (r! o)] .  
+  op a : -> Item [format (b! o)] .  
+  op c : -> Item [format (b! o)] .  
+
+  var M : Marking .  
+  rl [buy-c] : < $ > => < c > .  
+  rl [buy-c] : < M $ > => < M c > .  
+  rl [buy-a] : < $ > => < a q > .  
+  rl [buy-a] : < M $ > => < M a q > .  
+  rl [change]: < q q q q > => < $ > .  
+  rl [change]: < M q q q q > => < M $ > .  
+endm)
+
+--- narrowing-based logical search
+(search [,4] < M:Money > ~>* < a c > .)  
+

@@ -1,0 +1,216 @@
+***
+***        Maude LTLR model checker.
+***        Version 1.0
+***
+
+load model-checker
+
+fmod STATE-ASSIGNMENT is
+  protecting QID .
+
+  sorts StateAssignment .
+  op _\_ : Qid Universal -> StateAssignment [ctor poly(2)] .
+endfm
+
+
+fmod STATE-SUBSTITUTION is
+  including STATE-ASSIGNMENT .
+
+  sorts StateSubstitution .
+  subsorts StateAssignment < StateSubstitution .
+  op none : -> StateSubstitution [ctor] .
+  op _;_ : StateSubstitution StateSubstitution -> StateSubstitution [ctor comm assoc id: none prec 65] .
+  eq A:StateAssignment ; A:StateAssignment = A:StateAssignment .
+endfm
+
+
+fmod STATE-CONTEXT is
+  including SATISFACTION .
+
+  sort StateContext .
+  op noContext : -> StateContext [ctor] . 
+  op [] : -> StateContext [ctor] .
+endfm
+
+
+fmod PROOF-TERM is
+  including STATE-SUBSTITUTION .
+  including STATE-CONTEXT .
+
+  sorts RuleName .
+  subsorts Qid < RuleName .
+  ops unlabeled : -> RuleName .
+
+  sort ##Dummy## . --- a dummy sort to "attach" a polymorphic operator..
+
+  sorts ProofTerm .
+  op deadlock : -> ProofTerm [ctor format(r! o)] .
+  op {_|_:_} : StateContext RuleName StateSubstitution -> ProofTerm 
+       [ctor format (c! o c r c y? c! o)] .
+endfm
+
+
+fmod ACTION-SATISFACTION is
+  protecting PROOF-TERM .
+
+  sorts Action .
+  subsorts ProofTerm < Action .
+
+  op enabled : Action -> Prop [ctor] .
+  op _|=_ : ProofTerm Action -> Bool [frozen] .
+
+  eq P:ProofTerm |= P:ProofTerm = true .
+endfm
+
+
+fmod SPATIAL-ACTION-PATTERN-SYNTAX is
+  including ACTION-SATISFACTION .
+
+  sorts BasicActionPattern ActionPattern .
+  subsorts BasicActionPattern ProofTerm < ActionPattern < Action .
+
+  op {_}   : RuleName -> BasicActionPattern 
+       [ctor format (c! or c! o)] .
+
+  op {_:_} : RuleName StateSubstitution -> BasicActionPattern 
+       [ctor format (c! or c y? c! o)] .
+
+  op {_|_} : StateContext RuleName -> ActionPattern 
+       [ctor format (c! o c r c! o)] .
+
+  op top{_}   : RuleName -> ActionPattern [ctor] .
+
+  op top{_:_}   : RuleName StateSubstitution -> ActionPattern [ctor] .
+endfm
+
+
+fmod SPATIAL-ACTION-PATTERN is
+  including SPATIAL-ACTION-PATTERN-SYNTAX .
+
+  var CXT : [StateContext] . --- TODO: to deal with some broken context terms
+  var R : RuleName . 
+  var SUB SUB' : [StateSubstitution] .
+
+  eq {CXT | R : SUB}        |= {R}             = true .
+  eq {CXT | R : SUB ; SUB'} |= {R : SUB}       = true .
+  eq {CXT | R : SUB ; SUB'} |= {CXT | R : SUB} = true .
+  eq {CXT | R : SUB}        |= {CXT | R}       = true .
+  eq {[]  | R : SUB}        |= top{R}          = true .
+  eq {[]  | R : SUB ; SUB'} |= top{R : SUB}    = true .
+endfm
+
+
+fmod FAIRNESS-SPEC is
+  including LTL .
+  including SATISFACTION .
+  including ACTION-SATISFACTION .
+
+  sorts FairnessSet .
+  subsort Fairness < FairnessSet .
+  op noFairness : -> FairnessSet [ctor] .
+  op _;_ : FairnessSet FairnessSet -> FairnessSet [ctor comm assoc id: noFairness] .
+
+  sorts Fairness FairnessType .
+  ops fair just : -> FairnessType . 
+  op _:_=>_ : FairnessType Formula Formula -> Fairness [ctor] .
+
+  --- shortcuts
+  subsorts Prop Action < Formula .
+  ops fair just : Action -> Fairness .
+  eq fair(A:Action) = fair : enabled(A:Action) => A:Action .
+  eq just(A:Action) = just : enabled(A:Action) => A:Action .
+endfm
+
+
+--- counter example
+fmod LTLR-COUNTEREXAMPLE is
+  including LTL .
+  including SPATIAL-ACTION-PATTERN-SYNTAX .
+
+  sorts Transition TransitionList .
+  subsorts Transition < TransitionList .
+  op {_,_} : State Action -> Transition [ctor format (n s d i s d)] .
+  op nil : -> TransitionList [ctor] .
+  op __ : TransitionList TransitionList -> TransitionList [ctor assoc id: nil] .
+
+  sorts ModelCheckResult .
+  subsorts Bool < ModelCheckResult .
+  op counterexample : TransitionList TransitionList -> ModelCheckResult [ctor] . 
+  var S : State . var R : RuleName . var SS : StateSubstitution .
+  var C : StateContext .
+
+--- simplified counterexamples
+  eq {S, {noContext | R : SS}} = {S, {R : SS}} .
+  eq {S, {R : none}}           = {S, {R}} .
+  eq {S, {C | R : none}}       = {S, {C | R}} .
+  eq {S, {noContext | R}}      = {S, {R}} .
+endfm
+
+
+fmod LTLR-MODEL-CHECKER is
+  including FAIRNESS-SPEC .
+  including LTLR-COUNTEREXAMPLE .
+
+---  subsort State < StateContext .  --- TODO: should be avoid in a normal situation
+
+  --- internally used for computing realized props
+  op reProp? : State -> Prop .
+  op reAction? : ProofTerm -> Action .
+
+  --- default model checker with no fairness
+  op modelCheck : State Formula ~> ModelCheckResult .
+  eq modelCheck(S:State, F:Formula)
+   = modelCheckFair(S:State, F:Formula, noFairness) .
+
+  --- basic function
+  --- args: initial states, LTLR formula, Fairness
+  op modelCheckFair : State Formula FairnessSet ~> ModelCheckResult
+        [special (id-hook LTLRFairnessCheckerSymbol
+
+	   --- state/event temporal
+           op-hook trueSymbol              (True : ~> Formula)
+           op-hook falseSymbol             (False : ~> Formula)
+           op-hook notSymbol               (~_ : Formula ~> Formula)
+           op-hook nextSymbol              (O_ : Formula ~> Formula)
+           op-hook andSymbol               (_/\_ : Formula Formula ~> Formula)
+           op-hook orSymbol                (_\/_ : Formula Formula ~> Formula)
+           op-hook untilSymbol             (_U_ : Formula Formula ~> Formula)
+           op-hook releaseSymbol           (_R_ : Formula Formula ~> Formula)
+
+           --- fairness
+	   op-hook fairnessSymbol          (_:_=>_ : FairnessType Formula Formula ~> Fairness)
+	   op-hook strongFairTypeSymbol    (fair : ~> FairnessType)
+	   op-hook weakFairTypeSymbol      (just : ~> FairnessType)
+	   op-hook fairnessSetSymbol       (_;_ : FairnessSet FairnessSet ~> FairnessSet)
+	   op-hook emptyFairnessSetSymbol  (noFairness : ~> FairnessSet)
+
+	   --- results
+           op-hook counterexampleSymbol    (counterexample : TransitionList TransitionList ~> ModelCheckResult)
+	   op-hook transitionSymbol        ({_,_} : State Action ~> Transition)
+	   op-hook transitionListSymbol    (__ : TransitionList TransitionList ~> TransitionList)
+	   op-hook nilTransitionListSymbol (nil : ~> TransitionList)
+           term-hook falseTerm             (false)
+
+	   --- proof terms
+           op-hook prooftermSymbol         ({_|_:_} : StateContext RuleName StateSubstitution ~> ProofTerm)
+           op-hook assignOp		   (_\_ : Qid ##Dummy## ~> StateAssignment)
+           op-hook holeOp		   ([] : ~> StateContext)
+	   op-hook substitutionSymbol	   (_;_ : StateSubstitution StateSubstitution ~> StateSubstitution)
+	   op-hook emptySubstSymbol	   (none : ~> StateSubstitution)
+	   op-hook qidSymbol		   (<Qids> : ~> Qid)
+	   op-hook unlabeledSymbol	   (unlabeled : ~> RuleName)
+	   op-hook noContextSymbol	   (noContext : ~> StateContext) 
+
+           --- realized props
+           op-hook realizedPropSymbol      (reProp? : State ~> Prop)
+           op-hook realizedActionSymbol    (reAction? : ProofTerm ~> Action)
+
+	   --- labeling 
+           op-hook satisfiesSymbol         (_|=_ : State Prop ~> Bool)
+           op-hook actionmatchSymbol       (_|=_ : ProofTerm Action ~> Bool)
+           op-hook enabledSymbol	   (enabled : Action ~> Prop)
+           term-hook deadlockTerm          (deadlock)
+           term-hook trueTerm              (true)
+         )] .
+endfm
+

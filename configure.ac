@@ -3,7 +3,7 @@
 #
 #	Initialize autoconf stuff.
 #
-AC_INIT(Maude-mfe-hooks, 2.7, [maude-bugs@maude.cs.uiuc.edu])
+AC_INIT(Maude-mfe-ltlr-hooks, 2.7, [maude-bugs@maude.cs.uiuc.edu])
 #
 #	Allow directory names that look like macros.
 #
@@ -16,7 +16,8 @@ AC_CANONICAL_HOST
 #
 #	Initialize automake stuff.
 #
-AM_INIT_AUTOMAKE(Maude-mfe-hooks, 2.7)
+AM_INIT_AUTOMAKE(Maude-mfe-ltlr-hooks, 2.7)
+AM_INIT_AUTOMAKE([subdir-objects])
 #
 #	Cause defines to be put in a header file rather than passed as
 #	compiler flags.
@@ -357,6 +358,7 @@ AC_CONFIG_FILES([Makefile
 		 src/MSCP10/Makefile
 		 src/StrategyLanguage/Makefile
 		 src/Mixfix/Makefile
+		 src/ModelChecker/Makefile
 		 src/Main/Makefile
 		 tests/Makefile
 		 tests/BuiltIn/Makefile

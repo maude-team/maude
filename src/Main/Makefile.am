@@ -29,6 +29,7 @@ maude_CPPFLAGS = \
 	-I$(top_srcdir)/src/3rdParty \
 	-I$(top_srcdir)/src/FullCompiler \
 	-I$(top_srcdir)/src/StrategyLanguage \
+	-I$(top_srcdir)/src/ModelChecker \
 	-I$(top_srcdir)/src/Mixfix
 
 maude_LDADD = \
@@ -52,6 +53,7 @@ maude_LDADD = \
 	../MSCP10/libmscp10.a \
 	../Temporal/libtemporal.a \
 	../IO_Stuff/libIO_Stuff.a \
+	../ModelChecker/libModelChecker.a \
 	$(FULL_COMPILER_LIB) \
 	../Utility/libutility.a \
 	$(BUDDY_LIB) \

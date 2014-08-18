@@ -1,0 +1,233 @@
+--- Dekker's algorithm, borrowed from:
+--- Clavel. M. et al, All about maude-a high-performance logical framework: how to specify, program and verify systems in rewriting logic, LNCS 4350, 2007
+
+fmod MEMORY is 
+    inc INT + QID . 
+    sorts Memory Bool? Int? .
+    subsorts Bool < Bool? . subsorts Int < Int? .
+    op null : -> Int? [ctor] .
+    op none : -> Memory [ctor] .
+    op __ : Memory Memory -> Memory [ctor assoc comm id: none] .
+    op `[_`,_`] : Qid Int? -> Memory [ctor] .
+    op _in_ : Qid Memory -> Bool? .
+    var Q : Qid . var M : Memory . var N? : Int? .
+    eq null + N? = null .
+    eq null * N? = null .
+    eq Q in [Q,N?] M = true .
+endfm
+
+fmod EXPRESSION is 
+    inc MEMORY .
+    sort Expression .
+    subsorts Qid Int? < Expression .
+    op _+'_ : Expression Expression -> Expression [ctor] .
+    op _-'_ : Expression Expression -> Expression [ctor] .
+    op _*'_ : Expression Expression -> Expression [ctor] .
+    op eval : Expression Memory -> Int? .
+    var Q : Qid .
+    var M : Memory .
+    vars N N' : Int .
+    var N? : Int? .
+    vars E E' : Expression .
+    eq eval(N?, M) = N? .
+    eq eval(Q, [Q, N?] M) = N? .
+    ceq eval(Q,M) = null if Q in M =/= true .
+    eq eval(E +' E', M) = eval(E,M) + eval(E',M) .
+    eq eval(E -' E', M) = eval(E,M) - eval(E',M) .
+    eq eval(E *' E', M) = eval(E,M) * eval(E',M) .
+endfm
+
+fmod TESTS is 
+    inc EXPRESSION .
+    sort Test .
+    op _=_ : Expression Expression -> Test [ctor] . 
+    op _!=_ : Expression Expression -> Test [ctor] . 
+    op _<'_ : Expression Expression -> Test [ctor] .
+    op eval : Test Memory -> Bool .
+    var Q : Qid .
+    var M : Memory .
+    vars N? N'? : Int? .
+    vars E E' : Expression .
+    eq eval(E = E', M) = eval(E, M) == eval (E', M) .
+    eq eval(E != E', M) = eval(E, M) =/= eval (E', M) .
+    eq eval(E <' E', M) = eval(E, M) < eval (E', M) .
+endfm
+
+fmod SEQUENTIAL is inc TESTS + EXPRESSION .
+    sorts UserStatement LoopingUserStatement Program .
+    subsort LoopingUserStatement < UserStatement < Program .
+    op skip : -> Program .
+    op _;_ : Program Program -> Program [prec 61 assoc id: skip] .
+    op _:=_ : Qid Expression -> Program .  
+    op if_then_fi : Test Program -> Program .
+    op while_do_od : Test Program -> Program .
+    op repeat_forever : Program -> Program .
+
+    op choose_|_ : Program Program -> Program .	--- nondeterministic choice
+    op request_ : Qid -> Program .	--- acquire lock
+    op release_ : Qid -> Program .	--- release lock
+endfm
+
+mod PARALLEL is inc SEQUENTIAL + TESTS .
+    sorts Pid Process Soup MachineState .
+    subsort Process < Soup .
+    subsort Int < Pid .
+    op `[_`,_`] : Pid Program -> Process [ctor] .
+    op empty : -> Soup [ctor] .
+    op _|_ : Soup Soup -> Soup [ctor prec 61 assoc comm id: empty] .
+    op `{_`,_`} : Soup Memory -> MachineState [ctor] .
+
+    vars P P' R : Program .
+    var S : Soup .
+    var U : UserStatement .
+    var L : LoopingUserStatement .
+    vars I J : Pid .
+    var M : Memory .
+    var Q : Qid .
+    vars N? X? : Int? .
+    var T : Test .
+    var E : Expression .
+
+    --- the definition of execution semantics with localized fairness
+    --- declarations using renamed fairness items.
+
+    rl [user] : 
+        {[I, U ; R] | S, M} 
+      => 
+        {[I, R] | S, M}	    [metadata "just[exec(I)]"] .
+
+    rl [loop] : 
+        {[I, L ; R] | S, M} 
+      => 
+        {[I, L ; R] | S, M} [metadata "just[exec(I)]"] .
+
+    rl [asgn] : 
+        {[I, (Q := E) ; R] | S, [Q, X?] M} 
+      => 
+        {[I, R] | S, [Q,eval(E,[Q, X?] M)] M} [metadata "just[exec(I)]"] .
+
+   crl [asgn] : 
+        {[I, (Q := E) ; R] | S, M} 
+      => 
+        {[I, R] | S, [Q,eval(E,M)] M} 
+     if Q in M =/= true [metadata "just[exec(I)]"] .
+
+    rl [cond] : 
+        {[I, if T then P fi ; R] | S, M} 
+      =>
+        {[I, if eval(T, M) then P else skip fi ; R] | S, M} 
+    [metadata "just[exec(I)]"] .
+
+    rl [whil] : 
+        {[I, while T do P od ; R] | S, M} 
+      =>
+        {[I, if eval(T,M) then (P ; while T do P od) else skip fi ; R] | S, M} 
+     [metadata "just[exec(I)]"].
+
+    rl [rept] : 
+        {[I, repeat P forever ; R] | S, M} 
+      =>
+        {[I, P ; repeat P forever ; R] | S, M} [metadata "just[exec(I)]"] .
+endm
+
+--- Dekker's algorithm
+mod DEKKER is inc PARALLEL .
+    subsort Int < Pid .
+    op crit : -> UserStatement .
+    op rem : -> LoopingUserStatement .
+    ops p1 p2 : -> Program .
+    op initMem : -> Memory .
+    op init : -> MachineState .
+
+    eq p1 =
+    repeat
+        'c1 := 1 ;
+        while 'c2 = 1 do
+    if 'turn = 2 then
+        'c1 := 0 ;
+    while 'turn = 2 do skip od ;
+        'c1 := 1
+    fi
+        od ;
+        crit ;
+        'turn := 2 ;
+        'c1 := 0 ;
+        rem
+    forever .
+    eq p2 =
+    repeat
+        'c2 := 1 ;
+        while 'c1 = 1 do
+    if 'turn = 1 then
+        'c2 := 0 ;
+    while 'turn = 1 do skip od ;
+        'c2 := 1
+    fi
+        od ;
+        crit ;
+        'turn := 1 ;
+        'c2 := 0 ;
+        rem
+    forever .
+
+    --- initial memory and state
+    eq initMem = ['c1, 0] ['c2, 0] ['turn, 1] .
+    eq init = { [1, p1] | [2, p2], initMem } .
+endm
+
+--- Full Maude interface
+
+load ltlr-interface
+
+--- predicate descriptions
+(mod DEKKER-CHECK is 
+    protecting DEKKER .
+    including LTLR-MODEL-CHECKER .
+
+    var M : Memory .  vars R : Program .  var S : Soup .  vars I : Pid .
+
+    subsort MachineState < State .
+
+  *** process I is in critical section
+    op in-crit : Pid -> Prop .
+    eq {[I, crit ; R] | S, M} |= in-crit(I) = true . 
+    eq {[I, R] | S, M} |= in-crit(I) = false [owise] . 
+
+  *** process I is in rem section
+    op in-rem : Pid -> Prop .
+    eq {[I, rem ; R] | S, M} |= in-rem(I) = true . 
+    eq {[I, R] | S, M} |= in-rem(I) = false [owise] . 
+endm)
+
+set verbose on .
+
+*** the mutual exclusion property
+*** true
+(mc init |= [] ~ (in-crit(1) /\ in-crit(2)) .)
+
+*** liveness property
+*** false
+(mc init |= ((~ <>[] in-rem(1)) -> []<> in-crit(1)) /\
+            ((~ <>[] in-rem(2)) -> []<> in-crit(2)) .)
+
+*** false
+(mc init |= ((~ <>[] in-rem(1)) -> []<> in-crit(1)) /\
+            ((~ <>[] in-rem(2)) -> []<> in-crit(2)) 
+ under just(exec(1)) .)
+
+*** true
+*** NOTE: the rule attributes automatically declare the simplified 
+*** renamed action pattern exec(I).
+(mc init |= ((~ <>[] in-rem(1)) -> []<> in-crit(1)) /\
+            ((~ <>[] in-rem(2)) -> []<> in-crit(2)) 
+ under just(exec(1)) ; just(exec(2)) .)
+
+*** true
+(mc init |= ((~ <>[] in-rem(1)) -> []<> in-crit(1)) /\
+            ((~ <>[] in-rem(2)) -> []<> in-crit(2)) 
+ under just(exec(I:Pid)) .)
+
+*** true
+(pfmc init |= ((~ <>[] in-rem(1)) -> []<> in-crit(1)) /\
+            ((~ <>[] in-rem(2)) -> []<> in-crit(2)) .)
+

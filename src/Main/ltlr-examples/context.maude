@@ -1,0 +1,68 @@
+
+mod POSITION-MODEL is
+  including NAT .
+
+  sort Conf .
+  subsort Nat < Conf .
+  op [_] : Nat -> Conf .
+  op f : Conf Conf -> Conf [ctor] .
+  ops a b : -> Conf .
+
+  var N : Nat . vars C D : Conf .
+
+  eq [s(N)] = f([N], [N]) .
+  eq [0] = a .
+
+  eq f(b,b) = b .
+
+  rl [tob]: a => b .
+  rl [toa]: b => a .
+
+endm
+
+load ltlr-interface .
+
+(mod POSITION-MODEL-PRED is
+  including LTLR-MODEL-CHECKER .
+  including SPATIAL-ACTION-PATTERN .
+  protecting CONTEXT[POSITION-MODEL] .
+
+  subsort Conf < State .
+  subsorts Context$Conf < StateContext .
+
+  var CXT : StateContext . var CF : Conf . var XCF : Context$Conf . 
+  var R : RuleName . var SUB : StateSubstitution .
+
+--- predicates
+  op reach : Conf -> Prop .
+  eq C:Conf |= reach(C:Conf) = true .
+
+--- position
+  sorts Pos .
+  subsort Nat < Pos .
+  op nil : -> Pos [ctor] .
+  op _._ : Pos Pos -> Pos [ctor assoc id: nil] .
+
+  op pos : Context$Conf -> Pos .
+  eq pos([]) = nil .
+  eq pos(f(XCF,CF)) = 0 . pos(XCF) .
+  eq pos(f(CF,XCF)) = 1 . pos(XCF) .
+
+  op pos : RuleName Pos -> Action .
+ ceq {CXT | R : SUB} |= pos(R,P:Pos) = true if P:Pos := pos(CXT) .
+endm)
+
+set verbose on .
+
+*** false
+(mc [2] |= <> reach(b) .)
+
+*** false
+(mc [2] |= <> reach(b) under fair({'tob}) .)
+
+*** false
+(mc [2] |= <> reach(b) under fair(pos('tob,P:Pos)) .)
+
+*** true
+(mc [2] |= <> reach(b) under fair({CXT:StateContext | 'tob}) .)
+
