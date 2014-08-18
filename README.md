@@ -1,119 +1,82 @@
-## NOTES ON GIT BRANCHES FOR MAUDE + HOOKS
+## MAUDE + HOOKS (LTLR and LMC)
 
-This branch contains the original Maude sources with the Termination Checker hooks used in Maude Formal Environment. It may be compiled in Linux and Mac OS X. This readme file includes all changes done on Maude source code.
+This branch contains the original Maude sources with the hooks for the Maude LTLR and LMC model checkers,
+in addition to the Termination Checker hooks for Maude Formal Environment.
 
-### Initial repository setting
+### Configuration
 
-The original repository stands on https://github.com/maude-team/maude.git. Local copy for UMA is stored in //atenea02/gisum/uma/es/usr/jmalvarez/maude-githab/maude. Local repository is a clone of remote repository:
-
-~~~
-git clone https://github.com/maude-team/maude.git
-~~~
-
-A new branch has been created to host the MFE hooks (mfe-hooks):
+The LTLR and LMC model checkers need c++11. For gcc 4.8, CXXFLAGS should include the option '-std=c++11'.
+For example, the binary can be configured in MacOSX as follows, where the MacPorts installed:
 
 ~~~
-cd maude
-git branch mfe-hooks
-git checkout mfe-hooks
+./configure \
+CC=/opt/local/bin/gcc-mp-4.8 \
+CXX=/opt/local/bin/g++-mp-4.8 \
+FLEX=/opt/local/bin/flex \
+BISON=/opt/local/bin/bison \
+CFLAGS="-Wall -Wno-deprecated -O2 -static-libstdc++ -static-libgcc -fno-crossjumping -fno-stack-protector -fstrict-aliasing -mmacosx-version-min=10.5 -finline-limit=10000" \
+CXXFLAGS="-std=c++11 -Wall -Wno-deprecated -O2 -static-libstdc++ -static-libgcc -fno-crossjumping -fno-stack-protector -fstrict-aliasing -mmacosx-version-min=10.5 -finline-limit=10000" \
+CPPFLAGS="-I/opt/local/include" \
+LDFLAGS="-L/opt/local/lib" \
+BUDDY_LIB="/opt/local/lib/libbdd.a" \
+TECLA_LIBS="/opt/local/lib/libtecla.a /usr/lib/libncurses.dylib" \
+LIBSIGSEGV_LIB="/opt/local/lib/libsigsegv.a" \
+GMP_LIBS="/opt/local/lib/libgmp.a /opt/local/lib/libgmpxx.a" 
 ~~~
 
-Make has been built using the new verion of ncurses library installed in atenea02:
+### Changes
 
-~~~
-../configure CPPFLAGS="-I/usr/local/include -I/usr/local/include/ncurses" LDFLAGS="-static -L/usr/local/lib" GMP_LIBS="/usr/local/lib/libgmpxx.a /usr/local/lib/libgmp.a" LIBSIGSEGV_LIB="/usr/local/lib/libsigsegv.a" TECLA_LIBS="/usr/local/lib/libtecla.a /usr/local/lib/libncurses.a" BUDDY_LIB="/usr/local/lib/libbdd.a"
-~~~
-
-Maude source files are modified to incorporate the MFE hooks and new source code files are included in their corresponding directories:
+The source files for the model checker extensions are included in the directory src/ModelChecker.
+As usual, the following files are modified to incorporate the new hooks:
 
 ~~~
 ./configure.ac
-
-< AC_INIT(Maude, 2.6, [maude-bugs@maude.cs.uiuc.edu])
----
-> AC_INIT(Maude-ceta, 2.6, [maude-bugs@maude.cs.uiuc.edu])
-19c19
-< AM_INIT_AUTOMAKE(Maude, 2.6)
----
-> AM_INIT_AUTOMAKE(Maude-ceta, 2.6)
-
-./src/BuiltIn/Makefile.am
-37c37,38
-<       equalityExtorFinal.cc
----
->       equalityExtorFinal.cc \
->       terminationCheckerSymbol.cc
-64c65,66
-<       equalityExtorFinal.hh
----
->       equalityExtorFinal.hh \
->       terminationCheckerSymbol.hh
+./src/Makefile.am
+./src/Main/Makefile.am
+./src/Mixfix/Makefile.am
+./src/Mixfix/entry.cc
+./src/Mixfix/mixfixModule.cc
+./src/Mixfix/specialSymbolTypes.cc
+./src/Mixfix/symbolType.hh
+./src/Mixfix/banner.cc
 ~~~
 
-Modified ./src/Mixfix/Makefile.am to include new headers in the libbuiltIn_a_CPPFLAGS list:
+In addition, for C++11 and Mac OS X, the following files are changed:
 
 ~~~
-        -I$(top_srcdir)/src/Mixfix \
-        -I$(top_srcdir)/src/IO_Stuff \
-        -I$(top_srcdir)/src/Higher \
-        -I$(top_srcdir)/src/StrategyLanguage \
-        -I$(top_srcdir)/src/AU_Theory
+./src/BuiltIn/terminationCheckerSymbol.hh
+@@ -42,6 +42,11 @@
+ #include "term.hh"
+ #include "cachedDag.hh"
+ 
++// fix for mac os x
++#if defined(DARWIN)
++#include <signal.h>
++#endif
++
+ #include <vector>
+ #include <map>
+ using namespace std;
+
+./src/Utility/macros.cc
+@@ -180,7 +180,7 @@ doubleToString(double d)
+ {
+   if (!finite(d))
+     {
+-      if (isnan(d))
++      if (std::isnan(d))
+    return "NaN";
+       else
+    return (d < 0) ? "-Infinity" : "Infinity";
+
+./src/Utility/mathStuff.hh
+@@ -34,7 +34,7 @@
+ //
+ // Darwin fix from Fabricio Chalub <fc@gnu.org>
+ //
+-#if defined(DARWIN) && !defined(isnan)
++#if defined(DARWIN) && !defined(isnan) && !defined(__GXX_EXPERIMENTAL_CXX0X__)
+ extern "C" int isnan(double);
+ #endif
+ #endif
 ~~~
-
-Copied source files ./src/BuiltIn/terminationCheckerSymbol.hh and ./src/BuiltIn/terminationCheckerSymbol.cc
-Made changes in ../src/Mixfix/mixfixModule.cc to include hook:
-
-~~~
-554a555,560
->     case SymbolType::TERMINATION_CHECKER_SYMBOL:
->        return new TerminationCheckerSymbol(name,nrArgs);
-~~~
-
-Made changes in ../src/Mixfix/specialSymbolTypes.cc to include hook:
-
-~~~
-150a151,155
-> // for ceta and termination checker
-> #include "terminationCheckerSymbol.hh"
-~~~
-
-Made changes in ../src/Mixfix/symbolType.hh to include hook:
-
-~~~
-56a57,59
->   MACRO(TerminationCheckerSymbol, SymbolType::TERMINATION_CHECKER_SYMBOL)
-~~~
-
-Made changes in ../src/Mixfix/symbolType.hh to include hook:
-
-~~~
-56a57,59
-78a79,81
->     TERMINATION_CHECKER_SYMBOL,
-~~~
-
-Changed ./src/Mixfix/banner.cc to include a new line in the opening banner with information about the new features.
-
-~~~
-   s << "\t     With CETA and termination checker extensions \n";
-~~~
-
-Installation:
-
-~~~
-jmalvarez@atenea02:~/maude-github/maude$ autoconf
-jmalvarez@atenea02:~/maude-github/maude$ automake
-Useless use of /d modifier in transliteration operator at /usr/share/automake-1.9/Automake/Wrap.pm line 60.
-configure.ac:19: version mismatch.  This is Automake 1.9.6,
-configure.ac:19: but the definition used by this AM_INIT_AUTOMAKE
-configure.ac:19: comes from Automake 1.11.3.  You should recreate
-configure.ac:19: aclocal.m4 with aclocal and run automake again.
-jmalvarez@atenea02:~/maude-github/maude$ aclocal
-~~~
-
-### Mac OS X Users
-
-Maude + TerminationChecker hooks can be compiled on OS X, with a minor change:
-
-In file `/src/BuiltIn/terminationCheckerSymbol.cc` added `#include <signal.h>`. 
-
