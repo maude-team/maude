@@ -180,7 +180,7 @@ doubleToString(double d)
 {
   if (!finite(d))
     {
-      if (isnan(d))
+      if (std::isnan(d))
 	return "NaN";
       else
 	return (d < 0) ? "-Infinity" : "Infinity";
