@@ -42,6 +42,11 @@
 #include "term.hh"
 #include "cachedDag.hh"
 
+// fix for mac os x
+#if defined(DARWIN)
+#include <signal.h>
+#endif
+
 #include <vector>
 #include <map>
 using namespace std;

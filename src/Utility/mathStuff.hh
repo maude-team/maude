@@ -34,7 +34,7 @@
 //
 //	Darwin fix from Fabricio Chalub <fc@gnu.org>
 //
-#if defined(DARWIN) && !defined(isnan)
+#if defined(DARWIN) && !defined(isnan) && !defined(__GXX_EXPERIMENTAL_CXX0X__)	//NOTE: the last option added for c++11
 extern "C" int isnan(double);
 #endif
 #endif
