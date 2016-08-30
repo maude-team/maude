@@ -37,7 +37,8 @@
 
 // Types used in declaration
 #include "freeSymbol.hh"
-#include "ropeStuff.hh"
+// #include "ropeStuff.hh"
+#include "rope.hh"
 
 #include "term.hh"
 #include "cachedDag.hh"
@@ -81,10 +82,10 @@ private:
     ERROR = -1
   };
   
-  crope sendMsg(vector<crope> & msg);
+  Rope sendMsg(vector<Rope> & msg);
   void terminate(void);
 
-  crope lastTheory;
+  Rope lastTheory;
   int op;
   StringSymbol* stringSymbol;
   Symbol* falseSymbol;
@@ -98,13 +99,13 @@ private:
   int replyFd;
   //CachedDag executableTerm;
 
-  map<crope, pair<crope, crope> > *execFiles;
+  map<Rope, pair<Rope, Rope> > *execFiles;
 
-  const pair <crope, crope> chooseBatch(const crope & tool);
-  void readToolsFile(map<crope, pair<crope, crope> > **);
-  crope createTempFile(const crope &, const crope &);
-  crope writeLogFile(const vector<crope> &args);
-  crope writeLogFileBool(const vector<crope> &args);
+  const pair <Rope, Rope> chooseBatch(const Rope & tool);
+  void readToolsFile(map<Rope, pair<Rope, Rope> > **);
+  Rope createTempFile(const Rope &, const Rope &);
+  Rope writeLogFile(const vector<Rope> &args);
+  Rope writeLogFileBool(const vector<Rope> &args);
 };
 
 #endif

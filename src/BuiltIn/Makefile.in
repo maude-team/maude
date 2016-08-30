@@ -130,7 +130,8 @@ am_libbuiltIn_a_OBJECTS = libbuiltIn_a-equalitySymbol.$(OBJEXT) \
 	libbuiltIn_a-counterSymbol.$(OBJEXT) \
 	libbuiltIn_a-matrixOpSymbol.$(OBJEXT) \
 	libbuiltIn_a-equalityExtor.$(OBJEXT) \
-	libbuiltIn_a-equalityExtorFinal.$(OBJEXT)
+	libbuiltIn_a-equalityExtorFinal.$(OBJEXT) \
+	libbuiltIn_a-terminationCheckerSymbol.$(OBJEXT)
 libbuiltIn_a_OBJECTS = $(am_libbuiltIn_a_OBJECTS)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -316,7 +317,13 @@ libbuiltIn_a_CPPFLAGS = \
 	-I$(top_srcdir)/src/CUI_Theory \
 	-I$(top_srcdir)/src/S_Theory \
 	-I$(top_srcdir)/src/FreeTheory \
-	-I$(top_srcdir)/src/3rdParty
+	-I$(top_srcdir)/src/3rdParty \
+	-I$(top_srcdir)/src/Mixfix \
+	-I$(top_srcdir)/src/IO_Stuff \
+	-I$(top_srcdir)/src/Higher \
+	-I$(top_srcdir)/src/StrategyLanguage \
+	-I$(top_srcdir)/src/AU_Theory \
+	-I$(top_srcdir)/src/SMT
 
 libbuiltIn_a_SOURCES = \
 	equalitySymbol.cc \
@@ -340,7 +347,8 @@ libbuiltIn_a_SOURCES = \
 	counterSymbol.cc \
 	matrixOpSymbol.cc \
 	equalityExtor.cc \
-	equalityExtorFinal.cc
+	equalityExtorFinal.cc \
+	terminationCheckerSymbol.cc
 
 EXTRA_DIST = \
 	matrixOpSignature.cc
@@ -369,7 +377,8 @@ noinst_HEADERS = \
 	counterSymbol.hh \
 	matrixOpSymbol.hh \
 	equalityExtor.hh \
-	equalityExtorFinal.hh
+	equalityExtorFinal.hh \
+	terminationCheckerSymbol.hh
 
 all: all-am
 
@@ -441,6 +450,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libbuiltIn_a-stringSymbol.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libbuiltIn_a-stringTerm.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libbuiltIn_a-succSymbol.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libbuiltIn_a-terminationCheckerSymbol.Po@am__quote@
 
 .cc.o:
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -763,6 +773,20 @@ libbuiltIn_a-equalityExtorFinal.obj: equalityExtorFinal.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='equalityExtorFinal.cc' object='libbuiltIn_a-equalityExtorFinal.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libbuiltIn_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libbuiltIn_a-equalityExtorFinal.obj `if test -f 'equalityExtorFinal.cc'; then $(CYGPATH_W) 'equalityExtorFinal.cc'; else $(CYGPATH_W) '$(srcdir)/equalityExtorFinal.cc'; fi`
+
+libbuiltIn_a-terminationCheckerSymbol.o: terminationCheckerSymbol.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libbuiltIn_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libbuiltIn_a-terminationCheckerSymbol.o -MD -MP -MF $(DEPDIR)/libbuiltIn_a-terminationCheckerSymbol.Tpo -c -o libbuiltIn_a-terminationCheckerSymbol.o `test -f 'terminationCheckerSymbol.cc' || echo '$(srcdir)/'`terminationCheckerSymbol.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libbuiltIn_a-terminationCheckerSymbol.Tpo $(DEPDIR)/libbuiltIn_a-terminationCheckerSymbol.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='terminationCheckerSymbol.cc' object='libbuiltIn_a-terminationCheckerSymbol.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libbuiltIn_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libbuiltIn_a-terminationCheckerSymbol.o `test -f 'terminationCheckerSymbol.cc' || echo '$(srcdir)/'`terminationCheckerSymbol.cc
+
+libbuiltIn_a-terminationCheckerSymbol.obj: terminationCheckerSymbol.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libbuiltIn_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libbuiltIn_a-terminationCheckerSymbol.obj -MD -MP -MF $(DEPDIR)/libbuiltIn_a-terminationCheckerSymbol.Tpo -c -o libbuiltIn_a-terminationCheckerSymbol.obj `if test -f 'terminationCheckerSymbol.cc'; then $(CYGPATH_W) 'terminationCheckerSymbol.cc'; else $(CYGPATH_W) '$(srcdir)/terminationCheckerSymbol.cc'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libbuiltIn_a-terminationCheckerSymbol.Tpo $(DEPDIR)/libbuiltIn_a-terminationCheckerSymbol.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='terminationCheckerSymbol.cc' object='libbuiltIn_a-terminationCheckerSymbol.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libbuiltIn_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libbuiltIn_a-terminationCheckerSymbol.obj `if test -f 'terminationCheckerSymbol.cc'; then $(CYGPATH_W) 'terminationCheckerSymbol.cc'; else $(CYGPATH_W) '$(srcdir)/terminationCheckerSymbol.cc'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique

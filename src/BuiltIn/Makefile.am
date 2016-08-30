@@ -17,7 +17,8 @@ libbuiltIn_a_CPPFLAGS = \
 	-I$(top_srcdir)/src/IO_Stuff \
 	-I$(top_srcdir)/src/Higher \
 	-I$(top_srcdir)/src/StrategyLanguage \
-	-I$(top_srcdir)/src/AU_Theory
+	-I$(top_srcdir)/src/AU_Theory \
+	-I$(top_srcdir)/src/SMT
 
 libbuiltIn_a_SOURCES = \
 	equalitySymbol.cc \

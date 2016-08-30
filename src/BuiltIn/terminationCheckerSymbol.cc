@@ -91,7 +91,7 @@ TerminationCheckerSymbol::TerminationCheckerSymbol(int id, int arity)
     child(0)
 {
 //  printf("Constructing\n");
-    execFiles = (map<crope, pair <crope, crope> > *)0;
+    execFiles = (map<Rope, pair <Rope, Rope> > *)0;
 }
 
 
@@ -163,7 +163,7 @@ int writen(int fd, const char* ptr, int nbytes)
 
 static bool
 rewriteToString(StringSymbol* stringSymbol, DagNode* subject,
-    RewritingContext& context, const crope& result) {
+    RewritingContext& context, const Rope& result) {
 
   bool trace = RewritingContext::getTraceStatus();
   if (trace)
@@ -181,7 +181,7 @@ rewriteToString(StringSymbol* stringSymbol, DagNode* subject,
 
 static bool
 rewriteToQid(QuotedIdentifierSymbol* quotedIdentifierSymbol, DagNode* subject,
-    RewritingContext& context, const crope& result) {
+    RewritingContext& context, const Rope& result) {
 
   int idIndex = Token::ropeToPrefixNameCode(result);
   if (idIndex != NONE) {
@@ -200,20 +200,20 @@ rewriteToQid(QuotedIdentifierSymbol* quotedIdentifierSymbol, DagNode* subject,
   }
 }
 
-list<crope*> splitCrope(const crope & src)
+list<Rope*> splitCrope(const Rope & src)
 {
 
-  list<crope*> splStr;
+  list<Rope*> splStr;
 
-  crope::const_iterator f = src.begin(), l = src.end();
-  crope::const_iterator iniword, endword;
+  Rope::const_iterator f = src.begin(), l = src.end();
+  Rope::const_iterator iniword, endword;
   while (f != l){
-    while (f != l && isspace(*f) != 0){ f++;}
+    while (f != l && isspace(*f) != 0){ ++f;}
     if (f != l){
       iniword = f;
-      while (f != l && isspace(*f) == 0){ f++;}
+      while (f != l && isspace(*f) == 0){ ++f;}
       endword = f;
-      crope * nr = new crope(iniword, endword);
+      Rope * nr = new Rope(iniword, endword);
       splStr.push_back(nr);
     }
   }
@@ -221,10 +221,10 @@ list<crope*> splitCrope(const crope & src)
 }
 
 /*
-list<crope*> splitCrope(const crope & src)
+list<Rope*> splitCrope(const Rope & src)
 {
 
-  list<crope*> splStr;
+  list<Rope*> splStr;
 
   string srcAsStr(src.c_str());
   stringstream srcAsStrStream(srcAsStr);
@@ -232,7 +232,7 @@ list<crope*> splitCrope(const crope & src)
 
   srcAsStrStream >> word;
   while (!srcAsStrStream.fail()){
-    splStr.push_back(new crope(word.c_str()));
+    splStr.push_back(new Rope(word.c_str()));
     srcAsStrStream >> word;
   }
   return splStr;
@@ -240,15 +240,15 @@ list<crope*> splitCrope(const crope & src)
 */
 
 /*
-list<crope*> splitString(const string & orig)
+list<Rope*> splitString(const string & orig)
 {
   stringstream origAsStrStream(orig);
   string word;
-  list<crope*> splStr;
+  list<Rope*> splStr;
 
   origAsStrStream >> word;
   while (!origAsStrStream.fail()){
-    splStr.push_back(new crope(word.c_str()));
+    splStr.push_back(new Rope(word.c_str()));
     origAsStrStream >> word;
   }
   return splStr;
@@ -256,10 +256,10 @@ list<crope*> splitString(const string & orig)
 */
 
 /*
-Vector<DagNode*> listcropeTolistQid(QuotedIdentifierSymbol* quotedIdentifierSymbol, list<crope*> listCR)
+Vector<DagNode*> listRope(QuotedIdentifierSymbol* quotedIdentifierSymbol, list<Rope*> listCR)
 {
   Vector<DagNode*> listDN;
-  list<crope*>:: iterator it;
+  list<Rope*>:: iterator it;
   for(it = listCR.begin(); it != listCR.end(); it++){
     int idIndex = Token::ropeToPrefixNameCode(**it);
     listDN.append(new QuotedIdentifierDagNode(quotedIdentifierSymbol, idIndex));
@@ -270,14 +270,14 @@ Vector<DagNode*> listcropeTolistQid(QuotedIdentifierSymbol* quotedIdentifierSymb
 
 DagNode* makeQidListNode(QuotedIdentifierSymbol* quotedIdentifierSymbol, 
                          Symbol* nilQidListSymbol, AU_Symbol* qidListSymbol, 
-                         const list<crope*> & listCR) {
+                         const list<Rope*> & listCR) {
       Vector<DagNode*> args;
       if (listCR.empty())
         return nilQidListSymbol->makeDagNode(args);
       else
       {
-        const list<crope *>::const_iterator e = listCR.end();
-        for(list<crope *>::const_iterator i = listCR.begin(); i!=e; ++i)
+        const list<Rope *>::const_iterator e = listCR.end();
+        for(list<Rope *>::const_iterator i = listCR.begin(); i!=e; ++i)
         {
           args.append(new QuotedIdentifierDagNode(quotedIdentifierSymbol,
                           Token::ropeToPrefixNameCode(**i)));
@@ -290,7 +290,7 @@ DagNode* makeQidListNode(QuotedIdentifierSymbol* quotedIdentifierSymbol,
 static bool
 rewriteToQidList(QuotedIdentifierSymbol* quotedIdentifierSymbol, 
                  Symbol* nilQidListSymbol, AU_Symbol* qidListSymbol, 
-                 DagNode* subject, RewritingContext& context, const crope& result)
+                 DagNode* subject, RewritingContext& context, const Rope& result)
 {
 
   int idIndex = Token::ropeToPrefixNameCode(result);
@@ -303,7 +303,7 @@ rewriteToQidList(QuotedIdentifierSymbol* quotedIdentifierSymbol,
 	return false;
     }
 
-    list<crope*> result_lst = splitCrope(result);
+    list<Rope*> result_lst = splitCrope(result);
     DagNode* ret = makeQidListNode(quotedIdentifierSymbol, nilQidListSymbol, 
                                    qidListSymbol, result_lst);
      return context.builtInReplace(subject, ret);
@@ -322,7 +322,7 @@ TerminationCheckerSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
   Assert(this == subject->symbol(), "bad symbol");
   int nrArgs = arity();
   FreeDagNode* d = safeCast(FreeDagNode*, subject);
-  std::vector<crope> argums;
+  std::vector<Rope> argums;
   bool specialEval = true;
 
   // Evaluate arguments.
@@ -339,30 +339,30 @@ TerminationCheckerSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
         Assert(nrArgs == 3, "checkTermination has three arguments");
         DagNode* a = d->getArgument(0);
 	if (a->symbol() == stringSymbol) {
-          pair<crope, crope> batch_exten = 
+          pair<Rope, Rope> batch_exten = 
                 chooseBatch((safeCast(StringDagNode*, a)->getValue()).c_str());
-          crope batchfile = batch_exten.first;
-          if (batchfile.compare(crope("")) == 0) { 
+          Rope batchfile = batch_exten.first;
+          if (batchfile.compare(Rope("")) == 0) { 
             cerr << "No batch file associated to tool " << 
                     (safeCast(StringDagNode*, a)->getValue()).c_str() << endl;
           } else {
             argums.push_back(batchfile);
             a = d->getArgument(1);
             if (a->symbol() == stringSymbol) {
-              crope extension = batch_exten.second;
-              crope tmpFileNam = 
+              Rope extension = batch_exten.second;
+              Rope tmpFileNam = 
                     createTempFile(safeCast(StringDagNode*, a)->getValue(),
                                             extension);
-              if (tmpFileNam.compare(crope("")) != 0){
+              if (tmpFileNam.compare(Rope("")) != 0){
                 argums.push_back(tmpFileNam);
                 a = d->getArgument(2);
                 if (succSymbol->isNat(a)) {
                   const mpz_class& aa0 = succSymbol->getNat(a);
                   std::stringstream ss;
                   ss << aa0;
-                  crope cr_argum3(ss.str().c_str());  
+                  Rope cr_argum3(ss.str().c_str());  
                   argums.push_back(cr_argum3);
-	          crope t = sendMsg(argums);
+	          Rope t = sendMsg(argums);
 /* JMAP 01/jul/2014
 Commented to check content of temporary file because of 
 exception raise in aprove.
@@ -371,7 +371,7 @@ exception raise in aprove.
                          << tmpFileNam <<". error " << errno << endl;
                   }
 */
-                  list<crope*> result_lst = splitCrope(t);
+                  list<Rope*> result_lst = splitCrope(t);
 /*
                   DagNode* ret = makeQidListNode(quotedIdentifierSymbol, 
                                  nilQidListSymbol, qidListSymbol, result_lst);
@@ -397,16 +397,16 @@ exception raise in aprove.
             argums.push_back(safeCast(StringDagNode*, a0)->getValue());
             argums.push_back(safeCast(StringDagNode*, a1)->getValue());
             if (a2->symbol() == trueSymbol) {
-              crope cropeTrue("true");
-              argums.push_back(cropeTrue);
+              Rope Rope("true");
+              argums.push_back(Rope);
             } else if (a2->symbol() == falseSymbol) {
-              crope cropeFalse("false");
-              argums.push_back(cropeFalse);
+              Rope Rope("false");
+              argums.push_back(Rope);
             } else {
               cout << "The value of the third argument " 
                    << "must be 'true' of 'false'." << endl;
             }
-	    crope t = writeLogFile(argums);
+	    Rope t = writeLogFile(argums);
             return rewriteToString(stringSymbol, subject, context, t);
           } else {
           }
@@ -417,7 +417,7 @@ exception raise in aprove.
       {
         DagNode* a0 = d->getArgument(0);
         if (a0->symbol() == stringSymbol){
-          list<crope*> 
+          list<Rope*> 
           result_lst = splitCrope(safeCast(StringDagNode*, a0)->getValue());
           DagNode* ret = makeQidListNode(quotedIdentifierSymbol, 
                          nilQidListSymbol, qidListSymbol, result_lst);
@@ -495,12 +495,12 @@ TerminationCheckerSymbol::resetRules()
   FreeSymbol::resetRules();
 }
 
-crope TerminationCheckerSymbol::sendMsg(vector<crope> & msg) {
+Rope TerminationCheckerSymbol::sendMsg(vector<Rope> & msg) {
 
   static int max_size = 0;
 
   char command[1024];
-  crope reply_str("");
+  Rope reply_str("");
   char line[1024];
  
   sprintf(command, "%s %s %s", msg[0].c_str(), msg[1].c_str(), msg[2].c_str());
@@ -546,24 +546,24 @@ TerminationCheckerSymbol::terminate(void)
   }
 }
 
-const pair <crope, crope>
-TerminationCheckerSymbol::chooseBatch(const crope & tool){
-  if (execFiles == (map<crope, pair <crope, crope> >*) 0){
+const pair <rope, Rope>
+TerminationCheckerSymbol::chooseBatch(const Rope & tool){
+  if (execFiles == (map<Rope, pair <Rope, Rope> >*) 0){
     readToolsFile(&execFiles);
   }
-  if (execFiles == (map<crope, pair <crope, crope> >*) 0){
-    return pair<crope, crope> (crope(""), crope(""));
+  if (execFiles == (map<Rope, pair <Rope, Rope> >*) 0){
+    return pair<Rope, Rope> (Rope(""), Rope(""));
   } else {
     if (0 < execFiles->count(tool)){
       return (*execFiles)[tool];
     } else {
-      return pair<crope, crope> (crope(""), crope(""));
+      return pair<Rope, Rope> (Rope(""), Rope(""));
     }
   }
 }
 
 void
-TerminationCheckerSymbol::readToolsFile(map<crope, pair<crope, crope> > **mp)
+TerminationCheckerSymbol::readToolsFile(map<Rope, pair<Rope, Rope> > **mp)
 {
   char line[2100], tool_name[1024], test_file_name[1024], extension[32];
   char *envvar = getenv("MAUDE_LIB");
@@ -590,17 +590,17 @@ TerminationCheckerSymbol::readToolsFile(map<crope, pair<crope, crope> > **mp)
         cerr << "Warning: Incorrect line in configuration file"
              << " for tools and batch files. Line discarded" << endl;
       }else if (read_items == 2) {
-        if (*mp == (map<crope, pair<crope, crope> >*) 0) {
-          *mp = new map<crope, pair<crope, crope> >;
+        if (*mp == (map<Rope, pair<Rope, Rope> >*) 0) {
+          *mp = new map<Rope, pair<Rope, Rope> >;
         }
-        (**mp)[crope(tool_name)] = 
-              pair<crope, crope> (crope(test_file_name), crope(""));
+        (**mp)[Rope(tool_name)] = 
+              pair<Rope, Rope> (Rope(test_file_name), Rope(""));
       } else if (read_items == 3){
-        if (*mp == (map<crope, pair<crope, crope> >*) 0) {
-          *mp = new map<crope, pair<crope, crope> >;
+        if (*mp == (map<Rope, pair<Rope, Rope> >*) 0) {
+          *mp = new map<Rope, pair<Rope, Rope> >;
         }
-        (**mp)[crope(tool_name)] = 
-              make_pair (crope(test_file_name), crope(extension));
+        (**mp)[Rope(tool_name)] = 
+              make_pair (Rope(test_file_name), Rope(extension));
       }
       f.getline(line, 2100);
     }
@@ -613,7 +613,7 @@ TerminationCheckerSymbol::readToolsFile(map<crope, pair<crope, crope> > **mp)
 
 }
 
-crope TerminationCheckerSymbol::createTempFile(const crope & expr, const crope & ext)
+Rope TerminationCheckerSymbol::createTempFile(const Rope & expr, const Rope & ext)
 {
   char fileName[L_tmpnam + 4];
   ofstream f;
@@ -626,39 +626,39 @@ crope TerminationCheckerSymbol::createTempFile(const crope & expr, const crope &
   if (!f.fail()) {
     f << expr.c_str();
     f.close();
-    return crope(fileName);
+    return Rope(fileName);
   } else {
-    return crope("");
+    return Rope("");
   }
 }
 
-crope TerminationCheckerSymbol::writeLogFile(const vector<crope> &args)
+Rope TerminationCheckerSymbol::writeLogFile(const vector<Rope> &args)
 {
   char *envvar = (char *)0;
   ofstream f;
   ios_base::openmode mode;
 
-  if (args[2] == crope("true")){
+  if (args[2] == Rope("true")){
     mode = ios_base::out;
-  } else if (args[2] == crope("false")){
+  } else if (args[2] == Rope("false")){
     mode = ios_base::app;
   } else {
     cerr << "Error: opening mode must be \"true\" to reset the log file or \"false\" to append to the current log file." << endl;
-    return crope("ERROR");
+    return Rope("ERROR");
   }
 
   f.open(args[0].c_str(),mode);
   if (f.fail()){
     cerr << "Error when opening file " << args[0] 
          << ". ERROR: " << strerror(errno) << endl;
-    return crope("ERROR");
+    return Rope("ERROR");
   }
 
   f << args[1].c_str() << endl;
 
   f.close();
 
-  return crope("SUCCESS");
+  return Rope("SUCCESS");
 
 }
 
