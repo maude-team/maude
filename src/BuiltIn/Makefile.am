@@ -12,13 +12,7 @@ libbuiltIn_a_CPPFLAGS = \
 	-I$(top_srcdir)/src/CUI_Theory \
 	-I$(top_srcdir)/src/S_Theory \
 	-I$(top_srcdir)/src/FreeTheory \
-	-I$(top_srcdir)/src/3rdParty \
-	-I$(top_srcdir)/src/Mixfix \
-	-I$(top_srcdir)/src/IO_Stuff \
-	-I$(top_srcdir)/src/Higher \
-	-I$(top_srcdir)/src/StrategyLanguage \
-	-I$(top_srcdir)/src/AU_Theory \
-	-I$(top_srcdir)/src/SMT
+	-I$(top_srcdir)/src/3rdParty
 
 libbuiltIn_a_SOURCES = \
 	equalitySymbol.cc \
@@ -42,8 +36,7 @@ libbuiltIn_a_SOURCES = \
 	counterSymbol.cc \
 	matrixOpSymbol.cc \
 	equalityExtor.cc \
-	equalityExtorFinal.cc \
-	terminationCheckerSymbol.cc
+	equalityExtorFinal.cc
 
 EXTRA_DIST = \
 	matrixOpSignature.cc
@@ -72,5 +65,4 @@ noinst_HEADERS = \
 	counterSymbol.hh \
 	matrixOpSymbol.hh \
 	equalityExtor.hh \
-	equalityExtorFinal.hh \
-	terminationCheckerSymbol.hh
+	equalityExtorFinal.hh
