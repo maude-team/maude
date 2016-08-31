@@ -72,6 +72,8 @@
 #include "global.hh"
 
 #include "terminationCheckerSymbol.hh"
+// required for kill
+#include <signal.h>
 
 //const string TerminationCheckerSymbol::mfeConfigFileName = "mfe.config";
 #define MFE_CONFIG "mfe.config"
@@ -206,6 +208,7 @@ list<Rope*> splitCrope(const Rope & src)
   list<Rope*> splStr;
 
   Rope::const_iterator f = src.begin(), l = src.end();
+/*
   Rope::const_iterator iniword, endword;
   while (f != l){
     while (f != l && isspace(*f) != 0){ ++f;}
@@ -215,6 +218,17 @@ list<Rope*> splitCrope(const Rope & src)
       endword = f;
       Rope * nr = new Rope(iniword, endword);
       splStr.push_back(nr);
+    }
+  }
+*/
+  Rope::size_type iniword = 0, endword = 0;
+  while (f != l){
+    while (f != l && isspace(*f) != 0){ ++f;++iniword;++endword;}
+    if (f != l){
+      while (f != l && isspace(*f) == 0){ ++f;++endword;}
+      Rope nr = src.substr(iniword, endword - iniword + 1);
+      splStr.push_back(&nr);
+      iniword = endword;
     }
   }
   return splStr;
@@ -339,12 +353,19 @@ TerminationCheckerSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
         Assert(nrArgs == 3, "checkTermination has three arguments");
         DagNode* a = d->getArgument(0);
 	if (a->symbol() == stringSymbol) {
+/*
           pair<Rope, Rope> batch_exten = 
                 chooseBatch((safeCast(StringDagNode*, a)->getValue()).c_str());
+*/
+          char * toolName = (safeCast(StringDagNode*, a)->getValue()).makeZeroTerminatedString();
+          pair<Rope, Rope> batch_exten = chooseBatch(toolName);
           Rope batchfile = batch_exten.first;
           if (batchfile.compare(Rope("")) == 0) { 
+/*
             cerr << "No batch file associated to tool " << 
                     (safeCast(StringDagNode*, a)->getValue()).c_str() << endl;
+*/
+            cerr << "No batch file associated to tool " << toolName << endl;
           } else {
             argums.push_back(batchfile);
             a = d->getArgument(1);
@@ -382,6 +403,7 @@ exception raise in aprove.
               }
             }
           }
+          delete [] toolName;
         }
       }
       break;
@@ -497,13 +519,20 @@ TerminationCheckerSymbol::resetRules()
 
 Rope TerminationCheckerSymbol::sendMsg(vector<Rope> & msg) {
 
-  static int max_size = 0;
+  static unsigned int max_length = 0;
 
   char command[1024];
   Rope reply_str("");
   char line[1024];
  
-  sprintf(command, "%s %s %s", msg[0].c_str(), msg[1].c_str(), msg[2].c_str());
+  char *firstMessage = msg[0].makeZeroTerminatedString();
+  char *secondMessage = msg[1].makeZeroTerminatedString();
+  char *thirdMessage = msg[2].makeZeroTerminatedString();
+  sprintf(command, "%s %s %s", firstMessage, secondMessage, thirdMessage);
+
+  delete [] firstMessage;
+  delete [] secondMessage;
+  delete [] thirdMessage;
 
   FILE *pop = popen(command, "r");
 
@@ -514,16 +543,16 @@ Rope TerminationCheckerSymbol::sendMsg(vector<Rope> & msg) {
 
   while ((fgets(line, 1024, pop)) != NULL){
     reply_str += line;
-    if (reply_str.size() == 100000) {
+    if (reply_str.length() == 100000) {
       cerr << "Reply size is HUGE!  Bad things ahead." << endl;
     }
   }
 
   pclose(pop);
 
-  if (max_size < reply_str.size()) {
-    max_size = reply_str.size();
-//    cerr << "New largest reply " << max_size << endl;
+  if (max_length < reply_str.length()) {
+    max_length = reply_str.length();
+//    cerr << "New largest reply " << max_length << endl;
   }
 
 //  cerr << "Received reply" << endl;
@@ -546,7 +575,7 @@ TerminationCheckerSymbol::terminate(void)
   }
 }
 
-const pair <rope, Rope>
+const pair <Rope, Rope>
 TerminationCheckerSymbol::chooseBatch(const Rope & tool){
   if (execFiles == (map<Rope, pair <Rope, Rope> >*) 0){
     readToolsFile(&execFiles);
@@ -567,7 +596,7 @@ TerminationCheckerSymbol::readToolsFile(map<Rope, pair<Rope, Rope> > **mp)
 {
   char line[2100], tool_name[1024], test_file_name[1024], extension[32];
   char *envvar = getenv("MAUDE_LIB");
-  int read_items, acc_rslt;
+  int read_items;
 
 // Directory search order for config file:
 // $MAUDE_LIB, directory where the executable file is and the presnt dir (.).
@@ -577,7 +606,7 @@ TerminationCheckerSymbol::readToolsFile(map<Rope, pair<Rope, Rope> > **mp)
   if (findPrelude(directory, fileName)){
     string fullPathFileName = directory + "/" + fileName;
     ifstream f(fullPathFileName.c_str());
-    if (f == 0){
+    if (f.fail()){
       cerr << "Error opening file " << fullPathFileName << endl;
       return;
     }
@@ -615,16 +644,41 @@ TerminationCheckerSymbol::readToolsFile(map<Rope, pair<Rope, Rope> > **mp)
 
 Rope TerminationCheckerSymbol::createTempFile(const Rope & expr, const Rope & ext)
 {
+/*
+FILE *uid_file;
+char temp_uid_name[L_tmpnam];
+
+tmpnam(temp_uid_name)
+uid_file = fopen(temp_uid_name,"w");
+
+Can be replaced with code like this:
+
+FILE *uid_file;
+char template_name[]="/tmp/cmguiXXXXXX";
+int temp_fd;
+
+temp_fd=mkstemp(template_name);
+uid_file = fdopen(temp_fd,"w");
+*/
+
   char fileName[L_tmpnam + 4];
   ofstream f;
 
   tmpnam(fileName);
 
+/*
   strcat(fileName, ext.c_str());
+*/
+  char *fileExtension = ext.makeZeroTerminatedString();
+  strcat(fileName, fileExtension);
+  delete [] fileExtension;
   f.open(fileName);
 
   if (!f.fail()) {
+/*
     f << expr.c_str();
+*/
+    f << expr;
     f.close();
     return Rope(fileName);
   } else {
@@ -634,7 +688,6 @@ Rope TerminationCheckerSymbol::createTempFile(const Rope & expr, const Rope & ex
 
 Rope TerminationCheckerSymbol::writeLogFile(const vector<Rope> &args)
 {
-  char *envvar = (char *)0;
   ofstream f;
   ios_base::openmode mode;
 
@@ -647,14 +700,22 @@ Rope TerminationCheckerSymbol::writeLogFile(const vector<Rope> &args)
     return Rope("ERROR");
   }
 
+/*
   f.open(args[0].c_str(),mode);
+*/
+  char *fileName = args[0].makeZeroTerminatedString();
+  f.open(fileName,mode);
+  delete [] fileName;
   if (f.fail()){
     cerr << "Error when opening file " << args[0] 
          << ". ERROR: " << strerror(errno) << endl;
     return Rope("ERROR");
   }
 
+/*
   f << args[1].c_str() << endl;
+*/
+  f << args[1] << endl;
 
   f.close();
 
