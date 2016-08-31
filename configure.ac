@@ -3,7 +3,7 @@
 #
 #	Initialize autoconf stuff.
 #
-AC_INIT(Maude-mfe-hooks, 2.7.1, [maude-bugs@maude.cs.uiuc.edu])
+AC_INIT(Maude, 2.7.1, [maude-bugs@lists.cs.illinois.edu])
 #
 #	Allow directory names that look like macros.
 #
@@ -16,7 +16,7 @@ AC_CANONICAL_HOST
 #
 #	Initialize automake stuff.
 #
-AM_INIT_AUTOMAKE(Maude-mfe-hooks, 2.7.1)
+AM_INIT_AUTOMAKE
 #
 #	Cause defines to be put in a header file rather than passed as
 #	compiler flags.

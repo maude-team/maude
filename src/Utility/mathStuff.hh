@@ -34,7 +34,7 @@
 //
 //	Darwin fix from Fabricio Chalub <fc@gnu.org>
 //
-//#if defined(DARWIN) && !defined(isnan)
-//extern "C" int isnan(double);
-//#endif
+#if defined(DARWIN) && !defined(isnan)
+extern "C" int isnan(double);
+#endif
 #endif
