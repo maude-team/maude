@@ -208,19 +208,29 @@ list<Rope*> splitCrope(const Rope & src)
   list<Rope*> splStr;
 
   Rope::const_iterator f = src.begin(), l = src.end();
-
-  Rope::size_type wordStartingPos = 0, wordLength;
+/*
+  Rope::const_iterator iniword, endword;
   while (f != l){
-    while (f != l && isspace(*f) != 0){ ++f;++wordStartingPos;}
+    while (f != l && isspace(*f) != 0){ ++f;}
     if (f != l){
-      wordLength = 1;
-      while (f != l && isspace(*f) == 0){ ++f;++wordLength;}
-      Rope nr = src.substr(wordStartingPos, wordLength - 1);
-      splStr.push_back(&nr);
-      wordStartingPos += wordLength - 1;
+      iniword = f;
+      while (f != l && isspace(*f) == 0){ ++f;}
+      endword = f;
+      Rope * nr = new Rope(iniword, endword);
+      splStr.push_back(nr);
     }
   }
-
+*/
+  Rope::size_type iniword = 0, endword = 0;
+  while (f != l){
+    while (f != l && isspace(*f) != 0){ ++f;++iniword;++endword;}
+    if (f != l){
+      while (f != l && isspace(*f) == 0){ ++f;++endword;}
+      Rope nr = src.substr(iniword, endword - iniword + 1);
+      splStr.push_back(&nr);
+      iniword = endword;
+    }
+  }
   return splStr;
 }
 
@@ -356,9 +366,7 @@ TerminationCheckerSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
                     (safeCast(StringDagNode*, a)->getValue()).c_str() << endl;
 */
             cerr << "No batch file associated to tool " << toolName << endl;
-            delete [] toolName;
           } else {
-            delete [] toolName;
             argums.push_back(batchfile);
             a = d->getArgument(1);
             if (a->symbol() == stringSymbol) {
@@ -395,6 +403,7 @@ exception raise in aprove.
               }
             }
           }
+          delete [] toolName;
         }
       }
       break;

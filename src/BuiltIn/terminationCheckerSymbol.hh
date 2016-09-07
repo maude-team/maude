@@ -37,7 +37,6 @@
 
 // Types used in declaration
 #include "freeSymbol.hh"
-// #include "ropeStuff.hh"
 #include "rope.hh"
 
 #include "term.hh"

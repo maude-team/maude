@@ -52,10 +52,10 @@ printBanner(std::ostream& s)
     Tty(Tty::MAGENTA) << 'd' <<
     Tty(Tty::GREEN) << 'e' <<
     Tty(Tty::RESET) << " ---\n";
+  s << "\t     With additional hooks\n";
   s << "\t\t     /||||||||||||||||||\\\n";
   s << "\t   " << PACKAGE_STRING << " built: " <<
     __DATE__ << ' ' << __TIME__ << '\n';
-  s << "\t     With termination checker extension \n";
   s << "\t    Copyright 1997-2016 SRI International\n";
   s << "\t\t   " << ctime(&secs);
 }
