@@ -59,6 +59,7 @@ maude_LDADD = \
 	$(BUDDY_LIB) \
 	$(CVC4_LIB) \
 	$(TECLA_LIBS) \
+	$(READLINE_LIBS) \
 	$(LIBSIGSEGV_LIB) \
 	$(GMP_LIBS) \
 	$(DLMALLOC_LIB)

@@ -119,6 +119,27 @@ else
 fi
 AC_SUBST(TECLA_LIBS)
 #
+#	Check to see if we should use Readline for command line editing.
+#
+AC_ARG_WITH(readline,
+	    AC_HELP_STRING([--with-readline],
+                           [use Readline command line editing library [default=no]]),
+			   [WITH_READLINE=$withval],
+			   [WITH_READLINE=no])
+if (test $WITH_READLINE = yes) then
+#
+#	Check if user set particular Readline libraries to use and if
+#	not set defaults.
+#
+  AC_DEFINE([USE_READLINE], [], [use Readline command line editing library])
+  if (test -z "$READLINE_LIBS") then
+    READLINE_LIBS="-lreadline"
+  fi
+else
+  READLINE_LIBS=""
+fi
+AC_SUBST(READLINE_LIBS)
+#
 #	Check to see if we should use libsigsegv to handle segmentation faults.
 #
 AC_ARG_WITH(libsigsegv,

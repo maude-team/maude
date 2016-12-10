@@ -38,6 +38,11 @@
 #include <sys/termios.h>
 #endif
 #include "libtecla.h"
+#else
+#ifdef USE_READLINE
+#include <readline/readline.h>
+#include <readline/history.h>
+#endif
 #endif
 
 //	IO Stuff class definitions
@@ -134,6 +139,30 @@ IO_Manager::getInput(char* buf, int maxSize, FILE* stream)
 	}
       return n;
     }
+#else
+#ifdef USE_READLINE
+  rl_instream = stream;
+  char* line = readline(contFlag ? contPrompt.c_str() : prompt.c_str());
+
+  contFlag = true;
+
+  if(line == NULL)
+    {
+      return 0;
+    }
+
+  if(*line)
+    {
+      add_history(line);
+    }
+
+  string input;
+  input.append(line);
+  input.push_back('\n');
+  memset(buf, 0, maxSize - 1);
+  strncpy(buf, input.c_str(), maxSize - 2);
+  return strlen(buf);
+#endif
 #endif
 
   //
