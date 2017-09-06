@@ -1,3 +1,16 @@
+2007-02-13  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unify.cc (doUnification): use getSolution()
+
+2007-02-09  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freshVariableSource.cc (reset): added
+
+	* freshVariableSource.hh (FreshVariableGenerator): added decl for
+	reset()
+
+===================================Maude88f===========================================
+
 2007-01-23  Steven Eker  <eker@goo.csl.sri.com>
 
 	* interpreter.cc (Interpreter): clear savedStrategicSearch (fixed

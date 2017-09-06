@@ -29,7 +29,7 @@
 #include "substitution.hh"
 #include "simpleRootContainer.hh"
 
-class UnificationProblem : public VariableInfo, public Substitution, private SimpleRootContainer
+class UnificationProblem : public VariableInfo, private SimpleRootContainer
 {
   NO_COPYING(UnificationProblem);
 
@@ -40,12 +40,14 @@ public:
     virtual ~FreshVariableGenerator() {}
     virtual int getFreshVariableName() = 0;
     virtual Symbol* getBaseVariableSymbol(Sort* sort) = 0;
+    virtual void reset() = 0;
   };
 
   UnificationProblem(Term* lhs, Term* rhs, FreshVariableGenerator* freshVariableGenerator);
   ~UnificationProblem();
 
   bool findNextUnifier();
+  const Substitution& getSolution() const;
 
 private:
   void markReachableNodes();
@@ -59,10 +61,18 @@ private:
   DagNode* lhsDag;
   DagNode* rhsDag;
 
+  RewritingContext* unsortedSolution;
   Subproblem* subproblem;
   bool viable;
   Vector<int> freeVariables;
   AllSat* orderSortedUnifiers;
+  Substitution* sortedSolution;
 };
+
+inline const Substitution&
+UnificationProblem::getSolution() const
+{
+  return *sortedSolution;
+}
 
 #endif

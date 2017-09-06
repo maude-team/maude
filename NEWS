@@ -1,3 +1,11 @@
+Overview of Changes in Maude alpha88f
+=====================================
+* added commutative unification
+* fixed free theory instantiation bug
+* fixed sort calculation of S_Theory terms bug
+* fixed unification with too many variables bug
+* added iter theory unification
+
 Overview of Changes in Maude alpha88e
 =====================================
 * string, qid and float constants allowed in unification

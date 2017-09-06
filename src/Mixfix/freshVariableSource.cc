@@ -71,3 +71,9 @@ FreshVariableSource::getBaseVariableSymbol(Sort* sort)
 {
   return module->instantiateVariable(sort);
 }
+
+void
+FreshVariableSource::reset()
+{
+  counter = 0;
+}

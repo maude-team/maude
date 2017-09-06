@@ -82,7 +82,7 @@ MetaLevelOpSymbol::metaUnify(FreeDagNode* subject, RewritingContext& context)
 	  {
 	    PointerMap qidMap;
 	    PointerMap dagNodeMap;
-	    result = metaLevel->upSubstition(*unification,
+	    result = metaLevel->upSubstition(unification->getSolution(),
 					     *unification,
 					     m,
 					     qidMap,

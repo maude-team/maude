@@ -310,76 +310,61 @@ FreeDagNode::computeBaseSortForGroundSubterms()
 DagNode*
 FreeDagNode::instantiate2(Substitution& substitution)
 {
+  //  cout << "FreeDagNode::instantiate2 enter " << this << endl;
   Symbol* s = symbol();
   int nrArgs = s->arity();
   Assert(nrArgs > 0, "we shouldn't be called on constants");
   DagNode** args = argArray();
   for (int i = 0; i < nrArgs; ++i)
     {
-      DagNode* a = args[i];
-      if (a->getSortIndex() == Sort::SORT_UNKNOWN)
+      if (DagNode* n = args[i]->instantiate(substitution))
 	{
 	  //
-	  //	Our argument is non-ground - try instantiating it.
+	  //	Argument changed under instantiation - need to make a new
+	  //	dagnode.
 	  //
-	  if (DagNode* n = a->instantiate2(substitution))
+	  bool ground = true;
+	  FreeDagNode* d = new FreeDagNode(s);
+	  DagNode** args2 = d->argArray();
+	  //
+	  //	Copy the arguments we already looked at.
+	  //
+	  for (int j = 0; j < i; ++j)
 	    {
-	      //
-	      //	It changed under instantiation - need to make a new
-	      //	dagnode.
-	      //
-	      bool ground = true;
-	      FreeDagNode* d = new FreeDagNode(s);
-	      DagNode** args2 = d->argArray();
-	      //
-	      //	Copy the arguments we already looked at.
-	      //
-	      for (int j = 0; j < i; ++j)
-		{
-		  DagNode* a = args[i];
-		  if (a->getSortIndex() == Sort::SORT_UNKNOWN)
-		    ground = false;
-		  args2[j] = a;
-		}
-	      //
-	      //	Handle current argument.
-	      //
-	      args2[i] = n;
-	      if (n->getSortIndex() == Sort::SORT_UNKNOWN)
+	      DagNode* a = args[j];
+	      if (a->getSortIndex() == Sort::SORT_UNKNOWN)
 		ground = false;
-	      //
-	      //	Handle remaining arguments.
-	      //
-	      for (++i; i < nrArgs; ++i)
-		{
-		  DagNode* a = args[i];
-		  if (a->getSortIndex() == Sort::SORT_UNKNOWN)
-		    {
-		      if (DagNode* n = a->instantiate2(substitution))
-			{
-			  args2[i] = n;
-			  if (n->getSortIndex() == Sort::SORT_UNKNOWN)
-			    ground = false;
-			}
-		      else
-			{
-			  ground = false;
-			  args2[i] = a;
-			}
-		    }
-		  else
-		    args2[i] = a;
-		}
-	      //
-	      //	Now if all the arguments of the new dagnode are ground
-	      //	we compute its base sort.
-	      //
-	      if (ground)
-		s->computeBaseSort(d);
-	      return d;	
+	      args2[j] = a;
 	    }
+	  //
+	  //	Handle current argument.
+	  //
+	  args2[i] = n;
+	  if (n->getSortIndex() == Sort::SORT_UNKNOWN)
+	    ground = false;
+	  //
+	  //	Handle remaining arguments.
+	  //
+	  for (++i; i < nrArgs; ++i)
+	    {
+	      DagNode* a = args[i];
+	      if (DagNode* n = a->instantiate(substitution))
+		a = n;
+	      if (a->getSortIndex() == Sort::SORT_UNKNOWN)
+		ground = false;
+	      args2[i] = a;
+	    }
+	  //
+	  //	Now if all the arguments of the new dagnode are ground
+	  //	we compute its base sort.
+	  //
+	  if (ground)
+	    s->computeBaseSort(d);
+	  // cout << "FreeDagNode::instantiate2 exit " << d << endl;
+	  return d;	
 	}
     }
+  //  cout << "FreeDagNode::instantiate2 exit null" << endl;
   return 0;  // unchanged
 }
 

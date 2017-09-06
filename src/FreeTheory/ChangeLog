@@ -1,3 +1,8 @@
+2007-02-09  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeDagNode.cc (instantiate2): fixed bug where we were using
+	wrong index to copy already looked at arguments
+
 2007-01-31  Steven Eker  <eker@goo.csl.sri.com>
 
 	* freeDagNode.cc (unify): clean up
