@@ -27,7 +27,6 @@
 #define _SMT_Symbol_hh_
 #include "freeSymbol.hh"
 #include "SMT_Base.hh"
-
 #include "cvc4/expr/expr_manager.h"
 
 using namespace CVC4;
@@ -35,6 +34,50 @@ using namespace CVC4;
 class SMT_Symbol : public FreeSymbol, public SMT_Base
 {
 public:
+  enum OPERATORS
+    {
+      //
+      //	Boolean stuff.
+      //
+      CONST_TRUE,
+      CONST_FALSE,
+      NOT,
+      AND,
+      OR,
+      XOR,
+      IMPLIES,
+      //
+      //	Polymorphic Boolean stuff.
+      //
+      EQUALS,
+      NOT_EQUALS,
+      ITE,
+      //
+      //	Integer stuff.
+      //
+      UNARY_MINUS,
+      MINUS,
+      PLUS,
+      MULT,
+      DIV,
+      MOD,
+      //
+      //	Integer tests.
+      //
+      LT,
+      LEQ,
+      GT,
+      GEQ,
+      DIVISIBLE,
+      //
+      //	Stuff that is extra to reals.
+      //
+      REAL_DIVISION,
+      TO_REAL,
+      TO_INTEGER,
+      IS_INTEGER
+    };
+
   SMT_Symbol(int id, int arity);
   //
   //	Standard functionality for managing hooks.
@@ -49,16 +92,22 @@ public:
   //
   //	For SMT_Base.
   //
-  void fillOutSortMap(SortIndexToSMT_TypeMap& sortMap);
+  void fillOutSMT_Info(SMT_Info& info);
   //
-  //	CVC4 specific.
+  //	Our main added functionality.
   //
-  Expr dagToCVC4(DagNode* dag, const Vector<Expr>& variables, SortIndexToSMT_TypeMap& sortMap, ExprManager& em);
+  int getOperator() const;
 
 private:
-  static Expr makeRationalConstant(const mpq_class& rational, ExprManager& em);
+  static const char* operatorNames[];
 
   int op;
 };
+
+inline int
+SMT_Symbol::getOperator() const
+{
+  return op;
+}
 
 #endif

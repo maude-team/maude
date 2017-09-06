@@ -37,6 +37,11 @@ Interpreter::printSearchTiming(const Timer& timer,  RewriteSequenceSearch* state
 void
 Interpreter::search(const Vector<Token>& bubble, Int64 limit, Int64 depth, SearchKind searchKind)
 {
+  if (searchKind == SMT_SEARCH)
+    {
+      smtSearch(bubble, limit, depth);
+      return;
+    }
   VisibleModule* fm = currentModule->getFlatModule();
   Term* initial;
   int searchType;
@@ -516,4 +521,50 @@ Interpreter::variantUnify(const Vector<Token>& bubble, Int64 limit, bool debug)
     }
   (void) fm->unprotect();
   UserLevelRewritingContext::clearDebug();
+}
+
+
+#include "SMT_RewriteSearchState.hh"
+
+void
+Interpreter::smtSearch(const Vector<Token>& subject, int limit, int depth)
+{
+  WarningCheck(depth == 1 || depth == NONE,
+	       LineNumber(subject[0].lineNumber()) << " : only depth 1 is supported in current implementation.");
+
+  VisibleModule* fm = currentModule->getFlatModule();
+  if (fm->validForSMT_Rewriting())
+    {
+      if (Term* term = fm->parseTerm(subject))
+	{
+	  DagNode* d = term->term2Dag();
+	  
+	  if (getFlag(SHOW_COMMAND))
+	    {
+	      UserLevelRewritingContext::beginCommand();
+	      cout << "smt-rewrite ";
+	      printModifiers(limit, depth);
+	      cout << d << " ." << endl;
+	    }
+	  startUsingModule(fm);
+
+	  UserLevelRewritingContext* context = new UserLevelRewritingContext(d);
+
+	  const SMT_Info& smtInfo = fm->getSMT_Info();
+	  VariableGenerator vg(smtInfo);
+
+	  SMT_RewriteSearchState smtState(context, smtInfo, vg);
+
+	  int solutionNr = 0;
+	  while (solutionNr != limit && smtState.findNextRewrite())
+	    {
+	      cout << "\nSolution " << ++solutionNr << endl;
+	      cout << smtState.getNewPair() << endl;
+	    }
+
+	  delete context;
+	  term->deepSelfDestruct();
+	  fm->unprotect();
+	}
+    }
 }

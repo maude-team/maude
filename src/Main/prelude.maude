@@ -1957,8 +1957,9 @@ fmod META-LEVEL is
 
 *** success results
   sorts ResultPair ResultTriple Result4Tuple MatchPair TraceStep Trace
-    UnificationPair UnificationTriple Variant .
+    UnificationPair UnificationTriple Variant SmtResult .
   subsort TraceStep < Trace .
+
   op {_,_} : Term Type -> ResultPair [ctor] .
   op {_,_,_} : Term Type Substitution -> ResultTriple [ctor] .
   op {_,_,_,_} : Term Type Substitution Context -> Result4Tuple [ctor] .
@@ -1969,10 +1970,11 @@ fmod META-LEVEL is
   op {_,_,_} : Term Type Rule -> TraceStep [ctor] .
   op nil : -> Trace [ctor] .
   op __ : Trace Trace -> Trace [ctor assoc id: nil format (d n d)] .
+  op {_,_} : Term Nat -> SmtResult [ctor] .
 
 *** failure results
   sorts ResultPair? ResultTriple? Result4Tuple? MatchPair? Substitution? Trace?
-    UnificationPair? UnificationTriple? Variant? .
+    UnificationPair? UnificationTriple? Variant? SmtResult? .
   subsort ResultPair < ResultPair? .
   subsort ResultTriple < ResultTriple? .
   subsort Result4Tuple < Result4Tuple? .
@@ -1982,6 +1984,8 @@ fmod META-LEVEL is
   subsort Variant < Variant? .
   subsort Substitution < Substitution? .
   subsort Trace < Trace? .
+  subsort SmtResult < SmtResult? .
+
   op noParse : Nat -> ResultPair? [ctor] .
   op ambiguity : ResultPair ResultPair -> ResultPair? [ctor] .
   op failure : -> ResultPair? [ctor] .
@@ -1994,6 +1998,7 @@ fmod META-LEVEL is
   op noMatch : -> Substitution? [ctor] .
   op noMatch : -> MatchPair? [ctor] .
   op failure : -> Trace? [ctor] .
+  op failure : -> SmtResult? [ctor] .
 
 *** projection functions
   op getTerm : ResultPair -> Term .
@@ -2193,6 +2198,7 @@ fmod META-LEVEL is
         op-hook unificationPairSymbol	({_,_} : Substitution Nat ~> UnificationPair)
         op-hook unificationTripleSymbol	({_,_,_} : Substitution Substitution Nat ~> UnificationTriple)
         op-hook variantSymbol		({_,_,_} : Term Substitution Nat ~> Variant)
+        op-hook smtResultSymbol		({_,_} : Term Nat ~> SmtResult)
 
         op-hook traceStepSymbol		({_,_,_} : Term Type Rule ~> TraceStep)
         op-hook nilTraceSymbol		(nil : ~> Trace)
@@ -2209,6 +2215,7 @@ fmod META-LEVEL is
         op-hook noMatchSubstSymbol	(noMatch : ~> Substitution?)
         op-hook noMatchPairSymbol	(noMatch : ~> MatchPair?)
         op-hook failureTraceSymbol	(failure : ~> Trace?)
+        op-hook smtFailureSymbol	(failure : ~> SmtResult?)
 
         op-hook mixfixSymbol		(mixfix : ~> PrintOption)
         op-hook withParensSymbol	(with-parens : ~> PrintOption)
@@ -2350,6 +2357,11 @@ fmod META-LEVEL is
   op metaCheck : Module Term ~> Bool 
         [special (
            id-hook MetaLevelOpSymbol	(metaCheck)
+           op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .
+
+  op metaSmtSearch : Module Term Qid Nat Bound Nat ~> SmtResult?
+        [special (
+           id-hook MetaLevelOpSymbol	(metaSmtSearch)
            op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .
 
   op wellFormed : Module -> Bool

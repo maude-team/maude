@@ -121,6 +121,9 @@ public:
 		       DagNode* dagNode,
 		       DagNode* hole,
 		       MixfixModule* m);
+  DagNode* upSmtResult(DagNode* dagNode, const mpz_class& variableNumber, MixfixModule* m);
+  DagNode* upSmtFailure();
+
 
   DagNode* upView(View* view, PointerMap& qidMap);
   DagNode* upModule(bool flat, PreModule* pm, PointerMap& qidMap);

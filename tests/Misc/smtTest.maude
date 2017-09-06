@@ -8,18 +8,18 @@ fmod TEST-B is
   vars W X Y Z : Boolean .
 endfm
 
-check W != X and Y .
-check W = X and Y .
-check X != tt and X != Y and Y != tt .
-check X != tt and X != Y and Y != ff .
-check (X xor tt) and (X xor Y) and (Y xor tt) .
-check (X xor tt) and (X xor Y) and (Y xor ff) .
+check W =/== X and Y .
+check W === X and Y .
+check X =/== true and X =/== Y and Y =/== true .
+check X =/== true and X =/== Y and Y =/== false .
+check (X xor true) and (X xor Y) and (Y xor true) .
+check (X xor true) and (X xor Y) and (Y xor false) .
 check not (X or not X) .
 check not(X implies Y implies X) .
 check (X ? Y : Z) and (Y implies X) and (Z implies X) .
 check (X ? Y : Z) and (Y implies not X) and (Z implies X) .
-check X = Y and Y = Z .
-check X = Y and Y = Z and Z != X .
+check X === Y and Y === Z .
+check X === Y and Y === Z and Z =/== X .
 
 *** Theory of integers
 fmod TEST-I is
@@ -33,21 +33,21 @@ check I > J and J > K and K > I .
 check I < J and J < K .
 check I < J and J < K and K < I .
 check I >= J and J >= I .
-check I >= J and J >= I and I != J .
+check I >= J and J >= I and I =/== J .
 check I <= J and J <= I .
-check I <= J and J <= I and I != J .
+check I <= J and J <= I and I =/== J .
 
-check I = J + K and I > J and I > K .
-check I = J + K and I > J + K .
-check I = J + K and I > J + K + L .
-check I = J - K and I > J + K .
-check - I = J - K and I > J + K .
-check I != J + K and I > J + K .
+check I === J + K and I > J and I > K .
+check I === J + K and I > J + K .
+check I === J + K and I > J + K + L .
+check I === J - K and I > J + K .
+check - I === J - K and I > J + K .
+check I =/== J + K and I > J + K .
 check (I > J ? I : J) >= I and (I > J ? I : J) >= J .
 check (I > J ? I : J) < I .
-check (I > J ? I : J) = I or (I > J ? I : J) = J .
-check not((I > J ? I : J) = I or (I > J ? I : J) = J) .
-check (I > J ? I : J) != I and (I > J ? I : J) != J .
+check (I > J ? I : J) === I or (I > J ? I : J) === J .
+check not((I > J ? I : J) === I or (I > J ? I : J) === J) .
+check (I > J ? I : J) =/== I and (I > J ? I : J) =/== J .
 
 *** Theory of reals
 fmod TEST-R is
@@ -61,21 +61,21 @@ check P > Q and Q > R and R > P .
 check P < Q and Q < R .
 check P < Q and Q < R and R < P .
 check P >= Q and Q >= P .
-check P >= Q and Q >= P and P != Q .
+check P >= Q and Q >= P and P =/== Q .
 check P <= Q and Q <= P .
-check P <= Q and Q <= P and P != Q .
+check P <= Q and Q <= P and P =/== Q .
 
-check P = Q + R and P > Q and P > R .
-check P = Q + R and P > Q + R .
-check P = Q + R and P > Q + R + s .
-check P = Q - R and P > Q + R .
-check - P = Q - R and P > Q + R .
-check P != Q + R and P > Q + R .
+check P === Q + R and P > Q and P > R .
+check P === Q + R and P > Q + R .
+check P === Q + R and P > Q + R + S .
+check P === Q - R and P > Q + R .
+check - P === Q - R and P > Q + R .
+check P =/== Q + R and P > Q + R .
 check (P > Q ? P : Q) >= P and (P > Q ? P : Q) >= Q .
 check (P > Q ? P : Q) < P .
-check (P > Q ? P : Q) = P or (P > Q ? P : Q) = Q .
-check not((P > Q ? P : Q) = P or (P > Q ? P : Q) = Q) .
-check (P > Q ? P : Q) != P and (P > Q ? P : Q) != Q .
+check (P > Q ? P : Q) === P or (P > Q ? P : Q) === Q .
+check not((P > Q ? P : Q) === P or (P > Q ? P : Q) === Q) .
+check (P > Q ? P : Q) =/== P and (P > Q ? P : Q) =/== Q .
 
 *** Theory of reals + integers
 fmod TEST-RI is
@@ -85,18 +85,18 @@ fmod TEST-RI is
   vars P Q R S : Real .
 endfm
 
-check isInteger(toReal(I) + toReal(J)) != ff .
-check isInteger(toReal(I) + toReal(J)) != tt .
-check toInteger(R) + toInteger(P) = toInteger(R + P) .
-check not(toInteger(R) + toInteger(P) = toInteger(R + P)) .
+check isInteger(toReal(I) + toReal(J)) =/== false .
+check isInteger(toReal(I) + toReal(J)) =/== true .
+check toInteger(R) + toInteger(P) === toInteger(R + P) .
+check not(toInteger(R) + toInteger(P) === toInteger(R + P)) .
 
 check 1/2 < P .
 check 1/2 < P and P < 3/4 .
 check 1/2 < P and P < 3/4 and isInteger(P) .
 check -2 < I .
 check -2 < I and -2 * I > -1 .
-check -2 < I and -2 * I > -1 and I != -1 .
-check -2 < I and -2 * I > -1 and I != -1 and I - I != I .
+check -2 < I and -2 * I > -1 and I =/== -1 .
+check -2 < I and -2 * I > -1 and I =/== -1 and I - I =/== I .
 
 *** meta-level version
 select META-LEVEL .
@@ -116,7 +116,92 @@ endfm
 red metaCheck(['META-CHECK], upTerm((I > J ? I : J) < I)) .
 red metaCheck(['META-CHECK], upTerm((I > J ? I : J) > I)) .
 
-red metaCheck(['META-CHECK], upTerm( (I > J ? I : J) = I or (I > J ? I : J) = J  )) .
-red metaCheck(['META-CHECK], upTerm( not((I > J ? I : J) = I or (I > J ? I : J) = J ) )) .
-red metaCheck(['META-CHECK], upTerm( (I > J ? I : J) != I and (I > J ? I : J) != J )) .
-red metaCheck(['META-CHECK], upTerm( (I > J ? I : J) != I or (I > J ? I : J) != J )) .
+red metaCheck(['META-CHECK], upTerm( (I > J ? I : J) === I or (I > J ? I : J) === J  )) .
+red metaCheck(['META-CHECK], upTerm( not((I > J ? I : J) === I or (I > J ? I : J) === J ) )) .
+red metaCheck(['META-CHECK], upTerm( (I > J ? I : J) =/== I and (I > J ? I : J) =/== J )) .
+red metaCheck(['META-CHECK], upTerm( (I > J ? I : J) =/== I or (I > J ? I : J) =/== J )) .
+
+*** 1-step rewriting modulo SMT
+
+mod INTEGER-SOUP is
+  pr INTEGER .
+
+  sorts State Pair .
+  op <_|_> : State Boolean -> Pair [ctor] .
+
+  sort Soup .
+  subsort Integer < Soup .
+  op __ : Soup Soup -> Soup [assoc comm] .
+
+  op f : Soup -> State .
+  op g : Integer Integer -> State .
+
+  vars I J K : Integer .
+  var S : Soup .
+
+  crl f(I J S) => g(I, J) if I === 3 * J = true .
+endm
+
+smt-search [3] in INTEGER-SOUP : < f(1 2 3 4 5 6  7 8 9 10 11 12) | true > .
+smt-search  < f(K 1 2 3 4 5 6  7 8 9 10 11 12) | true > .
+smt-search  < f(K 1 2 3 4 5 6  7 8 9 10 11 12) | K <= 24 > .
+smt-search  < f(K 1 2 3 4 5 6  7 8 9 10 11 12) | K divisible 5 > .
+
+mod INTEGER-SOUP2 is
+  pr INTEGER .
+
+  sorts State Pair .
+  op <_|_> : State Boolean -> Pair [ctor] .
+
+  sort Soup .
+  subsort Integer < Soup .
+  op __ : Soup Soup -> Soup [assoc comm] .
+
+  op f : Soup -> State .
+  op g : Integer Integer -> State .
+
+  vars I J K : Integer .
+  var S : Soup .
+
+  crl f(I S) => g(I, K) if I === 3 * K = true [nonexec] .
+endm
+
+smt-search < f(1 2 3 4 5 6  7 8 9 10 11 12) | true > .
+
+mod TEST is
+  pr INTEGER-SOUP2 .
+  pr META-LEVEL .
+endm
+
+red metaSmtSearch(['INTEGER-SOUP2], upTerm(< f(1 2 3 4 5 6  7 8 9 10 11 12) | true >), '+, 0, 1, 0) .
+red metaSmtSearch(['INTEGER-SOUP2], upTerm(< f(1 2 3 4 5 6  7 8 9 10 11 12) | true >), '+, 0, 1, 1) .
+red metaSmtSearch(['INTEGER-SOUP2], upTerm(< f(1 2 3 4 5 6  7 8 9 10 11 12) | true >), '+, 0, 1, 2) .
+red metaSmtSearch(['INTEGER-SOUP2], upTerm(< f(1 2 3 4 5 6  7 8 9 10 11 12) | true >), '+, 0, 1, 3) .
+red metaSmtSearch(['INTEGER-SOUP2], upTerm(< f(1 2 3 4 5 6  7 8 9 10 11 12) | true >), '+, 0, 1, 5) .
+
+red metaSmtSearch(['INTEGER-SOUP2], upTerm(< f(1 2 3 4 5 6  7 8 9 10 11 12) | true >), '+, 42, 1, 0) .
+
+mod TEST is
+  pr INTEGER-SOUP .
+  pr META-LEVEL .
+
+  vars I J K L : Integer .
+
+  sort SmtResultList .
+  subsort SmtResult < SmtResultList .
+  op nil : -> SmtResultList .
+  op __ : SmtResultList SmtResultList -> SmtResultList [assoc id: nil format (d n d)] .
+
+  var T : Term .
+  var N : Nat .
+
+  op gen : Term Nat -> SmtResultList 
+  eq gen(T, N) = if metaSmtSearch(['INTEGER-SOUP], T, '+, 0, 1, N) == failure then
+       nil
+     else
+       metaSmtSearch(['INTEGER-SOUP], T, '+, 0, 1, N) gen(T, N + 1)
+     fi .
+
+endm
+
+red gen( upTerm(< f(K 1 2 3 4 5 6  7 8 9 10 11 12) | true >) , 0) .

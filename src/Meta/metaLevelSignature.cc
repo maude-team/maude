@@ -226,6 +226,7 @@
      MACRO(traceStepSymbol, FreeSymbol, 0, 3)
      MACRO(nilTraceSymbol, Symbol, 0, 0)
      MACRO(traceSymbol, Symbol, SymbolType::ASSOC, 2)
+     MACRO(smtResultSymbol, FreeSymbol, 0, 2)
      //
      //	Failure constructors.
      //
@@ -240,6 +241,7 @@
      MACRO(noMatchSubstSymbol, Symbol, 0, 0)
      MACRO(noMatchPairSymbol, Symbol, 0, 0)
      MACRO(failureTraceSymbol, Symbol, 0, 0)
+     MACRO(smtFailureSymbol, Symbol, 0, 0)
      //
      //	Print option constructors.
      //

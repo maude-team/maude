@@ -147,7 +147,7 @@ void
 PendingUnificationStack::restore(Marker mark)
 {
   //
-  //	We need to blow away all unifications upto and including unificationStack[mark].
+  //	We need to blow away all unifications up to and including unificationStack[mark].
   //
   for (int i = unificationStack.size() - 1; i >= mark; --i)
     {

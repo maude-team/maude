@@ -1,3 +1,9 @@
+2014-08-14  Steven Eker  <eker@ape.csl.sri.com>
+
+	* tests/Misc/smtTest.maude: use new syntax
+
+===================================Maude104===========================================
+
 2014-04-22  Steven Eker  <eker@ape.csl.sri.com>
 
 	* configure.ac: added configuration for CVC4 and POSIX Realtime

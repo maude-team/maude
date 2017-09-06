@@ -529,6 +529,24 @@ MetaLevel::upAssignment(DagNode* variable,
 }
 
 DagNode*
+MetaLevel::upSmtResult(DagNode* dagNode, const mpz_class& variableNumber, MixfixModule* m)
+{
+  Assert(dagNode != 0, "null dagNode");
+  Vector<DagNode*> args(2);
+  PointerMap qidMap;
+  PointerMap dagNodeMap;
+  args[0] = upDagNode(dagNode, m, qidMap, dagNodeMap);
+  args[1] = succSymbol->makeNatDag(variableNumber);
+  return smtResultSymbol->makeDagNode(args);
+}
+
+DagNode*
+MetaLevel::upSmtFailure()
+{
+  return smtFailureSymbol->makeDagNode();
+}
+
+DagNode*
 MetaLevel::upFailurePair()
 {
   return failure2Symbol->makeDagNode();

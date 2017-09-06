@@ -31,18 +31,15 @@ MetaLevelOpSymbol::getCachedUnificationProblem(MetaModule* m,
 					       UnificationProblem*& unification,
 					       Int64& lastSolutionNr)
 {
-  if (solutionNr > 0)
+  CacheableState* cachedState;
+  if (m->remove(subject, cachedState, lastSolutionNr))
     {
-      CacheableState* cachedState;
-      if (m->remove(subject, cachedState, lastSolutionNr))
+      if (lastSolutionNr <= solutionNr)
 	{
-	  if (lastSolutionNr <= solutionNr)
-	    {
-	      unification = safeCast(UnificationProblem*, cachedState);
-	      return true;
-	    }
-	  delete cachedState;
+	  unification = safeCast(UnificationProblem*, cachedState);
+	  return true;
 	}
+      delete cachedState;
     }
   return false;
 }
@@ -58,7 +55,8 @@ MetaLevelOpSymbol::metaUnify2(FreeDagNode* subject, RewritingContext& context, b
       Int64 solutionNr;
       DagNode* metaVarIndex = subject->getArgument(2);
       if (metaLevel->isNat(metaVarIndex) &&
-	  metaLevel->downSaturate64(subject->getArgument(3), solutionNr))
+	  metaLevel->downSaturate64(subject->getArgument(3), solutionNr) &&
+	  solutionNr >= 0)
 	{
 	  const mpz_class& varIndex = metaLevel->getNat(metaVarIndex);
 	  UnificationProblem* unification;

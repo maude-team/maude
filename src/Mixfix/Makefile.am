@@ -68,6 +68,7 @@ libmixfix_a_SOURCES = \
 	lexer.cc \
 	surface.cc \
 	freshVariableSource.cc \
+	variableGenerator.cc \
 	$(COMPILER_SRC)
 
 EXTRA_libmixfix_a_SOURCES = \
@@ -172,4 +173,5 @@ noinst_HEADERS = \
 	visibleModule.hh \
 	xmlBuffer.hh \
 	syntaxContainer.hh \
-	freshVariableSource.hh
+	freshVariableSource.hh \
+	variableGenerator.hh

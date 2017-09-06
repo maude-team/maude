@@ -27,7 +27,6 @@
 #define _SMT_NumberSymbol_hh_
 #include "NA_Symbol.hh"
 #include "SMT_Base.hh"
-
 #include "cvc4/expr/expr_manager.h"
 
 using namespace CVC4;
@@ -54,7 +53,7 @@ public:
   //
   //	For SMT_Base.
   //
-  void fillOutSortMap(SortIndexToSMT_TypeMap& sortMap);
+  void fillOutSMT_Info(SMT_Info& info);
   //
   //	CVC4 specific.
   //

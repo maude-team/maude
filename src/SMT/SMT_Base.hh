@@ -21,7 +21,8 @@
 */
 
 //
-//      Abstract base class for symbols that carry SMT information.
+//      Abstract base class for SMT symbols. This exists to hold a pure virtual function for such
+//	symbols to all to the accumulation of information on the SMT signature.
 //
 #ifndef _SMT_Base_hh_
 #define _SMT_Base_hh_
@@ -30,20 +31,7 @@
 class SMT_Base
 {
 public:
-  enum SMT_Type
-    {
-      BOOLEAN,
-      INTEGER,
-      REAL
-    };
-
-  typedef map<int, int> SortIndexToSMT_TypeMap;
-  //
-  //	We need to know how Maude sorts map to SMT types, and this information
-  //	is implicity encoded in the SMT operators declarations so we have a function to
-  //	a function to collect it.
-  //
-  virtual void fillOutSortMap(SortIndexToSMT_TypeMap& sortMap) = 0;
+  virtual void fillOutSMT_Info(SMT_Info& info) = 0;
 };
 
 #endif

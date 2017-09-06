@@ -86,7 +86,7 @@ ACU_UnificationSubproblem2::markReachableNodes()
 	d->mark();
     }
   //
-  //	No need to mark  savedSubstitution since its dags are a subset of those in
+  //	No need to mark savedSubstitution since its dags are a subset of those in
   //	preSolveSubstitution; we get from preSolveSubstitution to savedSubstitution by
   //	unsolving bindings.
   //
@@ -289,6 +289,12 @@ ACU_UnificationSubproblem2::solve(bool findFirst, UnificationContext& solution, 
       //
       //	Unsolve any solved forms that are in our theory. This seemingly wasteful step
       //	has to be done in order to avoid nontermination.
+      //
+      //	The idea is that solved forms X = f(...) in our theory were created by us at some
+      //	earlier invokation and represent decisions made about the solution on the current
+      //	path. They must therefore be considered simultaneously with current unification
+      //	subproblems otherwise we might generate an additional binding for X which is
+      //	then resolved by creating yet another f-theory subproblem.
       //
       int nrFragile = solution.nrFragileBindings();
       for (int i = 0; i < nrFragile; ++i)

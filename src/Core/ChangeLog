@@ -6,6 +6,8 @@
 
 	* connectedComponent.hh: added decl for operator<<
 
+===================================Maude103===========================================
+
 2014-02-27  Steven Eker  <eker@ape.csl.sri.com>
 
 	* run.cc (ruleRewrite): removed debugging code that was producing

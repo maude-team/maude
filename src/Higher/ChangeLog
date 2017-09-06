@@ -1,3 +1,12 @@
+2014-08-06  Steven Eker  <eker@ape.csl.sri.com>
+
+	* equalityConditionFragment.hh (ConditionFragment): added decl for
+	buildInstances()
+
+	* equalityConditionFragment.cc (buildInstances): added
+
+===================================Maude104===========================================
+
 2014-03-03  Steven Eker  <eker@ape.csl.sri.com>
 
 	* variantSearch.cc (VariantSearch): don't initialize

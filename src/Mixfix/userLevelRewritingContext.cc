@@ -450,7 +450,7 @@ UserLevelRewritingContext::printSubstitution(const Substitution& substitution,
 	  DagNode* d = substitution.value(i);
 	  DebugAdvisory(static_cast<void*>(v) << " --> " <<
 			static_cast<void*>(d) << " / " <<
-			static_cast<void*>(d->symbol()));
+			((d == 0) ? static_cast<void*>(0) : static_cast<void*>(d->symbol())));
 	  Assert(v != 0, "null variable");
 	  cout << v << " --> ";
 	  if (d == 0)

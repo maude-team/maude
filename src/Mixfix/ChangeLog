@@ -1,3 +1,183 @@
+2014-09-26  Steven Eker  <eker@ape.csl.sri.com>
+
+	* execute.cc (test): turned in to stub
+
+2014-09-25  Steven Eker  <eker@ape.csl.sri.com>
+
+	* variableGenerator.cc (makeFreshVariable): rewritten to use
+	mpz_class
+
+	* variableGenerator.hh (SMT_VariableManager): updated decl for
+	makeFreshVariable()
+
+2014-09-19  Steven Eker  <eker@ape.csl.sri.com>
+
+	* search.cc (smtSearch): no # in solution message to avoid
+	confusion with fresh varaible numbering
+
+2014-09-18  Steven Eker  <eker@ape.csl.sri.com>
+
+	* execute.cc (printModifiers): fixed longstanding bug where we
+	weren't printing the [] notation if number2 was NONE and number
+	was something else
+
+	* interpreter.hh (ViewDatabase): added decl for smtSearch()
+
+	* search.cc (search): call smtSearch()
+	(smtSearch): added
+
+	* interpreter.hh (ViewDatabase): added SMT_SEARCH to enum
+	SearchKind
+
+	* commands.yy (search): added KW_SMT_SEARCH
+
+	* top.yy: added KW_SMT_SEARCH
+
+	* lexer.ll: added smt-search
+
+2014-09-16  Steven Eker  <eker@ape.csl.sri.com>
+
+	* variableGenerator.cc (VariableGenerator): use setOption() call
+
+	* variableGenerator.hh (SMT_VariableManager): deleted data member
+	options
+
+2014-09-15  Steven Eker  <eker@ape.csl.sri.com>
+
+	* variableGenerator.cc (VariableGenerator): set options; create
+	exprManager and smtEngine
+	(~VariableGenerator): added to destruct exprManger and smtEngine
+	(dagToCVC4, makeVariable, assertDag, makeRationalConstant): deref
+	exprManager
+	(assertDag, checkDag): deref smtEngine
+
+	* variableGenerator.hh (SMT_VariableManager): added data member
+	options; made exprManager and smtEngine into pointers; added decl
+	for ~VariableGenerator()
+
+	* userLevelRewritingContext.cc (printSubstitution): fix bug where
+	we trying to dereference a null pointer in a DebugAdvisory() when
+	a variable was unbound
+
+2014-09-12  Steven Eker  <eker@ape.csl.sri.com>
+
+	* variableGenerator.hh (SMT_VariableManager): makeVariable()
+	become private now it is no longer overriding an abstract function
+	in the base class
+
+	* variableGenerator.cc (VariableGenerator, makeVariable): use
+	exprManager
+	(makeBooleanExpr): use our local version of dagToCVC4()
+	(assertDag): use exprManager
+
+2014-09-11  Steven Eker  <eker@ape.csl.sri.com>
+
+	* variableGenerator.hh (SMT_VariableManager): added decls for
+	makeRationalConstant() and dagToCVC4()
+
+	* variableGenerator.cc (dagToCVC4): added
+	(makeRationalConstant): added
+
+	* execute.cc (sreduce): use new VariableGenerator semantics
+
+2014-09-08  Steven Eker  <eker@ape.csl.sri.com>
+
+	* variableGenerator.hh (SMT_VariableManager): added decl for
+	makeBooleanExpr()
+
+	* variableGenerator.cc (VariableGenerator): init smtEngine
+	(assertDag, checkDag): added
+	(makeBooleanExpr): added
+	(assertDag, checkDag): simplified using makeBooleanExpr()
+
+	* variableGenerator.hh (SMT_VariableManager): added declarations
+	for assertDag() and checkDag()
+	(SMT_VariableManager): added data member smtEngine
+
+2014-09-05  Steven Eker  <eker@ape.csl.sri.com>
+
+	* execute.cc (test): use validForSMT_Rewriting()
+
+	* mixfixModule.hh (SharedTokens): added decl for
+	validForSMT_Rewriting()
+
+	* mixfixModule.cc (validForSMT_Rewriting): added
+
+2014-08-13  Steven Eker  <eker@ape.csl.sri.com>
+
+	* execute.cc (test): added
+
+	* interpreter.hh (ViewDatabase): added decl for test
+
+	* commands.yy (command): added actions for KW_TEST
+
+	* top.yy: added KW_TEST
+
+	* lexer.ll: added KW_TEST
+
+2014-08-12  Steven Eker  <eker@ape.csl.sri.com>
+
+	* variableGenerator.cc (makeVariable): use SMT_Info
+	(makeFreshVariable): fleshed out stub
+
+2014-08-11  Steven Eker  <eker@ape.csl.sri.com>
+
+	* mixfixModule.cc (getSMT_NumberToken): use getSMT_Info()
+	(findSMT_NumberSymbol): use getSMT_Info()
+
+	* makeGrammar.cc (makeSymbolProductions): use getSMT_Info()
+
+	* graphPrint.cc (graphPrint): use getSMT_Info()
+
+	* bufferPrint.cc (handleSMT_NumberSymbol): use getSMT_Info()
+
+	* dagNodePrint.cc (handleSMT_Number): use getSMT_Info()
+
+	* termPrint.cc (handleSMT_Number): use getSMT_Info()
+
+	* mixfixModule.hh (SharedTokens): updated decl for findSMT_NumberSymbol()
+
+	* variableGenerator.cc (VariableGenerator): use smtInfo rather
+	than sortMap
+
+	* variableGenerator.hh (SMT_VariableManager): sortMap becomes
+	smtInfo; updated decl for ctor
+
+	* execute.cc (check): use smtInfo rather than sortMap
+
+	* mixfixModule.hh (SharedTokens): decl for getSMT_Info() replaces
+	decl for getSortMap();
+	(SharedTokens): sortMap becomes smtInfo
+
+	* mixfixModule.cc (getSortMap): becomes getSMT_Info()
+
+2014-08-06  Steven Eker  <eker@ape.csl.sri.com>
+
+	* variableGenerator.hh (SMT_VariableManager): added decl for
+	makeFreshVariable()
+
+	* variableGenerator.cc (makeFreshVariable): added
+
+2014-07-30  Steven Eker  <eker@ape.csl.sri.com>
+
+	* execute.cc (check): don't bother indexing variables
+
+2014-07-29  Steven Eker  <eker@ape.csl.sri.com>
+
+	* execute.cc (check): use VariableGenerator
+
+	* SMT_VariableGenerator.cc: becomes variableGenerator.cc
+
+	* SMT_VariableGenerator.hh: becomes variableGenerator.hh
+
+2014-07-28  Steven Eker  <eker@ape.csl.sri.com>
+
+	* SMT_VariableGenerator.cc: created
+
+	* SMT_VariableGenerator.hh: created
+
+===================================Maude104===========================================
+
 2014-06-04  Steven Eker  <eker@ape.csl.sri.com>
 
 	* execute.cc (check): clean up; extra sanity checks
@@ -16439,7 +16619,7 @@ Thu Jun 11 18:26:40 1998  Steven Eker  <eker@lilac.csl.sri.com>
 	(parseSentence): no need to use contains
 
 	* preModule.hh (class PreModule): IntTable -> IntSet
-	
+
 ===================================Engine38==================================================
 
 Mon Jun  8 18:21:46 1998  Steven Eker  <eker@lilac.csl.sri.com>

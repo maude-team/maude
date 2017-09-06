@@ -58,7 +58,7 @@ private:
   struct Theory
   {
     Symbol* controllingSymbol;	// controlling symbol for this theory
-    int firstProblemInTheory;	// index into stack of first problem in this theory isn't active (or NONE)
+    int firstProblemInTheory;	// index into stack of first problem in this theory that isn't active (or NONE)
   };
 
   struct PendingUnification
