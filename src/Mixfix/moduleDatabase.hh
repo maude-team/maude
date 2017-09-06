@@ -33,6 +33,15 @@ class ModuleDatabase
   NO_COPYING(ModuleDatabase);
 
 public:
+  enum ImportMode
+  {
+    PROTECTING,
+    EXTENDING,
+    INCLUDING
+  };
+
+  typedef map<int, ImportMode> ImportMap;
+
   ModuleDatabase(){}
   ~ModuleDatabase();
 
@@ -40,9 +49,9 @@ public:
   PreModule* getModule(int name) const;  // 0 if doesn't exist
   bool deleteModule(int name);  // true if module deleted
 
-  void setInclude(Token name, bool polarity);
+  void setAutoImport(ImportMode importMode, Token name, bool polarity);
   void setOmodInclude(Token name, bool polarity);
-  const IntSet& getIncludes() const;
+  const ImportMap& getAutoImports() const;
   const IntSet& getOmodIncludes() const;
   void showNamedModules() const;
 
@@ -50,14 +59,14 @@ private:
   typedef map<int, PreModule*> ModuleMap;
 
   ModuleMap moduleMap;
-  IntSet defaultIncludes;
+  ImportMap autoImports;
   IntSet defaultOmodIncludes;
 };
 
-inline const IntSet&
-ModuleDatabase::getIncludes() const
+inline const ModuleDatabase::ImportMap&
+ModuleDatabase::getAutoImports() const
 {
-  return defaultIncludes;
+  return autoImports;
 }
 
 inline const IntSet&

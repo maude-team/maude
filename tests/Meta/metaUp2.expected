@@ -80,12 +80,12 @@ subsort 'Type < 'Type? .
 ==========================================
 reduce in META-LEVEL : upImports('META-LEVEL) .
 rewrites: 1
-result ImportList: including 'BOOL .
+result ImportList: protecting 'BOOL .
 protecting 'META-MODULE .
 ==========================================
 reduce in META-LEVEL : upImports('NAT) .
 rewrites: 1
-result Import: including 'BOOL .
+result Import: protecting 'BOOL .
 ==========================================
 reduce in META-LEVEL : upImports('TRUTH-VALUE) .
 rewrites: 1
@@ -125,23 +125,23 @@ op '<Strings> : nil -> 'String [special(
     id-hook('StringSymbol, nil))] .
 op '_&_ : 'KindSet 'KindSet -> 'KindSet [assoc comm ctor id('empty.KindSet)] .
 op '_&_ : 'Nat 'Nat -> 'Nat [assoc comm prec(53) special(
-    id-hook('NumberOpSymbol, '&) 
+    id-hook('ACU_NumberOpSymbol, '&) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
 op '_*_ : 'Nat 'Nat -> 'Nat [assoc comm prec(31) special(
-    id-hook('NumberOpSymbol, '*) 
+    id-hook('ACU_NumberOpSymbol, '*) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
 op '_*_ : 'NzNat 'NzNat -> 'NzNat [assoc comm prec(31) special(
-    id-hook('NumberOpSymbol, '*) 
+    id-hook('ACU_NumberOpSymbol, '*) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
 op '_*`(_`) : 'ModuleExpression 'RenamingSet -> 'ModuleExpression [ctor prec(
     39) format('d 'd 's 'n++i 'n--i 'd)] .
 op '_+_ : 'ModuleExpression 'ModuleExpression -> 'ModuleExpression [assoc comm
     ctor] .
 op '_+_ : 'Nat 'Nat -> 'Nat [assoc comm prec(33) special(
-    id-hook('NumberOpSymbol, '+) 
+    id-hook('ACU_NumberOpSymbol, '+) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
 op '_+_ : 'NzNat 'Nat -> 'NzNat [assoc comm prec(33) special(
-    id-hook('NumberOpSymbol, '+) 
+    id-hook('ACU_NumberOpSymbol, '+) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
 op '_+_ : 'String 'String -> 'String [prec(33) gather('E 'e) special(
     id-hook('StringOpSymbol, '+) 
@@ -265,13 +265,13 @@ op '_rem_ : 'Nat 'NzNat -> 'Nat [prec(31) gather('E 'e) special(
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
 op '_xor_ : 'Bool 'Bool -> 'Bool [assoc comm prec(57)] .
 op '_xor_ : 'Nat 'Nat -> 'Nat [assoc comm prec(55) special(
-    id-hook('NumberOpSymbol, 'xor) 
+    id-hook('ACU_NumberOpSymbol, 'xor) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
 op '_|_ : 'Nat 'Nat -> 'Nat [assoc comm prec(57) special(
-    id-hook('NumberOpSymbol, '|) 
+    id-hook('ACU_NumberOpSymbol, '|) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
 op '_|_ : 'NzNat 'Nat -> 'NzNat [assoc comm prec(57) special(
-    id-hook('NumberOpSymbol, '|) 
+    id-hook('ACU_NumberOpSymbol, '|) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
 op '`[_`] : 'Qid -> 'Module [none] .
 op '`[`] : nil -> 'Context [ctor] .
@@ -329,10 +329,10 @@ op 'format : 'QidList -> 'Attr [ctor] .
 op 'frozen : 'NatList -> 'Attr [ctor] .
 op 'gather : 'QidList -> 'Attr [ctor] .
 op 'gcd : 'Nat 'Nat -> 'Nat [assoc comm special(
-    id-hook('NumberOpSymbol, 'gcd) 
+    id-hook('ACU_NumberOpSymbol, 'gcd) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
 op 'gcd : 'NzNat 'Nat -> 'NzNat [assoc comm special(
-    id-hook('NumberOpSymbol, 'gcd) 
+    id-hook('ACU_NumberOpSymbol, 'gcd) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
 op 'getContext : 'MatchPair -> 'Context [none] .
 op 'getContext : 'Result4Tuple -> 'Context [none] .
@@ -388,10 +388,10 @@ op 'iter : nil -> 'Attr [ctor] .
 op 'label : 'Qid -> 'Attr [ctor] .
 op 'label_to_ : 'Qid 'Qid -> 'Renaming [ctor] .
 op 'lcm : 'Nat 'Nat -> 'Nat [assoc comm special(
-    id-hook('NumberOpSymbol, 'lcm) 
+    id-hook('ACU_NumberOpSymbol, 'lcm) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
 op 'lcm : 'NzNat 'NzNat -> 'NzNat [assoc comm special(
-    id-hook('NumberOpSymbol, 'lcm) 
+    id-hook('ACU_NumberOpSymbol, 'lcm) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
 op 'leastSort : '`[Module`]
     '`[SortSet`,KindSet`,QidList`,Type?`,GTermList`,ModuleExpression`] ->
@@ -670,7 +670,7 @@ op 'sameKind : '`[Module`]
     id-hook('MetaLevelOpSymbol, 'metaSameKind) 
     op-hook('shareWith, 'metaReduce, 'Module 'SortSet, 'ResultPair?))] .
 op 'sd : 'Nat 'Nat -> 'Nat [comm special(
-    id-hook('NumberOpSymbol, 'sd) 
+    id-hook('CUI_NumberOpSymbol, 'sd) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
 op 'sortLeq : '`[Module`]
     '`[SortSet`,KindSet`,QidList`,Type?`,GTermList`,ModuleExpression`]
@@ -1186,23 +1186,23 @@ result FModule: fmod 'META-LEVEL is
   op '_&_ : 'KindSet 'KindSet -> 'KindSet [assoc comm ctor id('empty.KindSet)]
     .
   op '_&_ : 'Nat 'Nat -> 'Nat [assoc comm prec(53) special(
-    id-hook('NumberOpSymbol, '&) 
+    id-hook('ACU_NumberOpSymbol, '&) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op '_*_ : 'Nat 'Nat -> 'Nat [assoc comm prec(31) special(
-    id-hook('NumberOpSymbol, '*) 
+    id-hook('ACU_NumberOpSymbol, '*) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op '_*_ : 'NzNat 'NzNat -> 'NzNat [assoc comm prec(31) special(
-    id-hook('NumberOpSymbol, '*) 
+    id-hook('ACU_NumberOpSymbol, '*) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op '_*`(_`) : 'ModuleExpression 'RenamingSet -> 'ModuleExpression [ctor prec(
     39) format('d 'd 's 'n++i 'n--i 'd)] .
   op '_+_ : 'ModuleExpression 'ModuleExpression -> 'ModuleExpression [assoc
     comm ctor] .
   op '_+_ : 'Nat 'Nat -> 'Nat [assoc comm prec(33) special(
-    id-hook('NumberOpSymbol, '+) 
+    id-hook('ACU_NumberOpSymbol, '+) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op '_+_ : 'NzNat 'Nat -> 'NzNat [assoc comm prec(33) special(
-    id-hook('NumberOpSymbol, '+) 
+    id-hook('ACU_NumberOpSymbol, '+) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op '_+_ : 'String 'String -> 'String [prec(33) gather('E 'e) special(
     id-hook('StringOpSymbol, '+) 
@@ -1326,13 +1326,13 @@ result FModule: fmod 'META-LEVEL is
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op '_xor_ : 'Bool 'Bool -> 'Bool [assoc comm prec(57)] .
   op '_xor_ : 'Nat 'Nat -> 'Nat [assoc comm prec(55) special(
-    id-hook('NumberOpSymbol, 'xor) 
+    id-hook('ACU_NumberOpSymbol, 'xor) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op '_|_ : 'Nat 'Nat -> 'Nat [assoc comm prec(57) special(
-    id-hook('NumberOpSymbol, '|) 
+    id-hook('ACU_NumberOpSymbol, '|) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op '_|_ : 'NzNat 'Nat -> 'NzNat [assoc comm prec(57) special(
-    id-hook('NumberOpSymbol, '|) 
+    id-hook('ACU_NumberOpSymbol, '|) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op '`[_`] : 'Qid -> 'Module [none] .
   op '`[`] : nil -> 'Context [ctor] .
@@ -1390,10 +1390,10 @@ result FModule: fmod 'META-LEVEL is
   op 'frozen : 'NatList -> 'Attr [ctor] .
   op 'gather : 'QidList -> 'Attr [ctor] .
   op 'gcd : 'Nat 'Nat -> 'Nat [assoc comm special(
-    id-hook('NumberOpSymbol, 'gcd) 
+    id-hook('ACU_NumberOpSymbol, 'gcd) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op 'gcd : 'NzNat 'Nat -> 'NzNat [assoc comm special(
-    id-hook('NumberOpSymbol, 'gcd) 
+    id-hook('ACU_NumberOpSymbol, 'gcd) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op 'getContext : 'MatchPair -> 'Context [none] .
   op 'getContext : 'Result4Tuple -> 'Context [none] .
@@ -1449,10 +1449,10 @@ result FModule: fmod 'META-LEVEL is
   op 'label : 'Qid -> 'Attr [ctor] .
   op 'label_to_ : 'Qid 'Qid -> 'Renaming [ctor] .
   op 'lcm : 'Nat 'Nat -> 'Nat [assoc comm special(
-    id-hook('NumberOpSymbol, 'lcm) 
+    id-hook('ACU_NumberOpSymbol, 'lcm) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op 'lcm : 'NzNat 'NzNat -> 'NzNat [assoc comm special(
-    id-hook('NumberOpSymbol, 'lcm) 
+    id-hook('ACU_NumberOpSymbol, 'lcm) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op 'leastSort : '`[Module`]
     '`[SortSet`,KindSet`,QidList`,Type?`,GTermList`,ModuleExpression`] ->
@@ -1731,7 +1731,7 @@ result FModule: fmod 'META-LEVEL is
     id-hook('MetaLevelOpSymbol, 'metaSameKind) 
     op-hook('shareWith, 'metaReduce, 'Module 'SortSet, 'ResultPair?))] .
   op 'sd : 'Nat 'Nat -> 'Nat [comm special(
-    id-hook('NumberOpSymbol, 'sd) 
+    id-hook('CUI_NumberOpSymbol, 'sd) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op 'sortLeq : '`[Module`]
     '`[SortSet`,KindSet`,QidList`,Type?`,GTermList`,ModuleExpression`]
@@ -1916,7 +1916,7 @@ endfm
 reduce in META-LEVEL : upModule('META-LEVEL, false) .
 rewrites: 1
 result FModule: fmod 'META-LEVEL is
-  including 'BOOL .
+  protecting 'BOOL .
   protecting 'META-MODULE .
   sorts 'Bound ; 'KindSet ; 'MatchPair ; 'MatchPair? ; 'Result4Tuple ;
     'Result4Tuple? ; 'ResultPair ; 'ResultPair? ; 'ResultTriple ;
@@ -2391,19 +2391,19 @@ result FModule: fmod 'NAT is
   subsort 'Zero < 'Nat .
   op '0 : nil -> 'Zero [ctor] .
   op '_&_ : 'Nat 'Nat -> 'Nat [assoc comm prec(53) special(
-    id-hook('NumberOpSymbol, '&) 
+    id-hook('ACU_NumberOpSymbol, '&) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op '_*_ : 'Nat 'Nat -> 'Nat [assoc comm prec(31) special(
-    id-hook('NumberOpSymbol, '*) 
+    id-hook('ACU_NumberOpSymbol, '*) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op '_*_ : 'NzNat 'NzNat -> 'NzNat [assoc comm prec(31) special(
-    id-hook('NumberOpSymbol, '*) 
+    id-hook('ACU_NumberOpSymbol, '*) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op '_+_ : 'Nat 'Nat -> 'Nat [assoc comm prec(33) special(
-    id-hook('NumberOpSymbol, '+) 
+    id-hook('ACU_NumberOpSymbol, '+) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op '_+_ : 'NzNat 'Nat -> 'NzNat [assoc comm prec(33) special(
-    id-hook('NumberOpSymbol, '+) 
+    id-hook('ACU_NumberOpSymbol, '+) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op '_<<_ : 'Nat 'Nat -> 'Nat [prec(35) gather('E 'e) special(
     id-hook('NumberOpSymbol, '<<) 
@@ -2461,21 +2461,21 @@ result FModule: fmod 'NAT is
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op '_xor_ : 'Bool 'Bool -> 'Bool [assoc comm prec(57)] .
   op '_xor_ : 'Nat 'Nat -> 'Nat [assoc comm prec(55) special(
-    id-hook('NumberOpSymbol, 'xor) 
+    id-hook('ACU_NumberOpSymbol, 'xor) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op '_|_ : 'Nat 'Nat -> 'Nat [assoc comm prec(57) special(
-    id-hook('NumberOpSymbol, '|) 
+    id-hook('ACU_NumberOpSymbol, '|) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op '_|_ : 'NzNat 'Nat -> 'NzNat [assoc comm prec(57) special(
-    id-hook('NumberOpSymbol, '|) 
+    id-hook('ACU_NumberOpSymbol, '|) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op 'false : nil -> 'Bool [ctor special(
     id-hook('SystemFalse, nil))] .
   op 'gcd : 'Nat 'Nat -> 'Nat [assoc comm special(
-    id-hook('NumberOpSymbol, 'gcd) 
+    id-hook('ACU_NumberOpSymbol, 'gcd) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op 'gcd : 'NzNat 'Nat -> 'NzNat [assoc comm special(
-    id-hook('NumberOpSymbol, 'gcd) 
+    id-hook('ACU_NumberOpSymbol, 'gcd) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op 'if_then_else_fi : 'Bool 'Universal 'Universal -> 'Universal [poly(2 3 0)
     special(
@@ -2483,10 +2483,10 @@ result FModule: fmod 'NAT is
     term-hook('1, 'true.Bool) 
     term-hook('2, 'false.Bool))] .
   op 'lcm : 'Nat 'Nat -> 'Nat [assoc comm special(
-    id-hook('NumberOpSymbol, 'lcm) 
+    id-hook('ACU_NumberOpSymbol, 'lcm) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op 'lcm : 'NzNat 'NzNat -> 'NzNat [assoc comm special(
-    id-hook('NumberOpSymbol, 'lcm) 
+    id-hook('ACU_NumberOpSymbol, 'lcm) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op 'modExp : '`[Nat`] '`[Nat`] '`[Nat`] -> '`[Nat`] [special(
     id-hook('NumberOpSymbol, 'modExp) 
@@ -2496,7 +2496,7 @@ result FModule: fmod 'NAT is
     id-hook('SuccSymbol, nil) 
     term-hook('zeroTerm, '0.Zero))] .
   op 'sd : 'Nat 'Nat -> 'Nat [comm special(
-    id-hook('NumberOpSymbol, 'sd) 
+    id-hook('CUI_NumberOpSymbol, 'sd) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op 'true : nil -> 'Bool [ctor special(
     id-hook('SystemTrue, nil))] .
@@ -2523,25 +2523,25 @@ result ResultPair: {'s_^166['0.Zero],'NzNat}
 reduce in META-LEVEL : upModule('NAT, false) .
 rewrites: 1
 result FModule: fmod 'NAT is
-  including 'BOOL .
+  protecting 'BOOL .
   sorts 'Nat ; 'NzNat ; 'Zero .
   subsort 'NzNat < 'Nat .
   subsort 'Zero < 'Nat .
   op '0 : nil -> 'Zero [ctor] .
   op '_&_ : 'Nat 'Nat -> 'Nat [assoc comm prec(53) special(
-    id-hook('NumberOpSymbol, '&) 
+    id-hook('ACU_NumberOpSymbol, '&) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op '_*_ : 'Nat 'Nat -> 'Nat [assoc comm prec(31) special(
-    id-hook('NumberOpSymbol, '*) 
+    id-hook('ACU_NumberOpSymbol, '*) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op '_*_ : 'NzNat 'NzNat -> 'NzNat [assoc comm prec(31) special(
-    id-hook('NumberOpSymbol, '*) 
+    id-hook('ACU_NumberOpSymbol, '*) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op '_+_ : 'Nat 'Nat -> 'Nat [assoc comm prec(33) special(
-    id-hook('NumberOpSymbol, '+) 
+    id-hook('ACU_NumberOpSymbol, '+) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op '_+_ : 'NzNat 'Nat -> 'NzNat [assoc comm prec(33) special(
-    id-hook('NumberOpSymbol, '+) 
+    id-hook('ACU_NumberOpSymbol, '+) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op '_<<_ : 'Nat 'Nat -> 'Nat [prec(35) gather('E 'e) special(
     id-hook('NumberOpSymbol, '<<) 
@@ -2587,25 +2587,25 @@ result FModule: fmod 'NAT is
     id-hook('NumberOpSymbol, 'rem) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op '_xor_ : 'Nat 'Nat -> 'Nat [assoc comm prec(55) special(
-    id-hook('NumberOpSymbol, 'xor) 
+    id-hook('ACU_NumberOpSymbol, 'xor) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op '_|_ : 'Nat 'Nat -> 'Nat [assoc comm prec(57) special(
-    id-hook('NumberOpSymbol, '|) 
+    id-hook('ACU_NumberOpSymbol, '|) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op '_|_ : 'NzNat 'Nat -> 'NzNat [assoc comm prec(57) special(
-    id-hook('NumberOpSymbol, '|) 
+    id-hook('ACU_NumberOpSymbol, '|) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op 'gcd : 'Nat 'Nat -> 'Nat [assoc comm special(
-    id-hook('NumberOpSymbol, 'gcd) 
+    id-hook('ACU_NumberOpSymbol, 'gcd) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op 'gcd : 'NzNat 'Nat -> 'NzNat [assoc comm special(
-    id-hook('NumberOpSymbol, 'gcd) 
+    id-hook('ACU_NumberOpSymbol, 'gcd) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op 'lcm : 'Nat 'Nat -> 'Nat [assoc comm special(
-    id-hook('NumberOpSymbol, 'lcm) 
+    id-hook('ACU_NumberOpSymbol, 'lcm) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op 'lcm : 'NzNat 'NzNat -> 'NzNat [assoc comm special(
-    id-hook('NumberOpSymbol, 'lcm) 
+    id-hook('ACU_NumberOpSymbol, 'lcm) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op 'modExp : '`[Nat`] '`[Nat`] '`[Nat`] -> '`[Nat`] [special(
     id-hook('NumberOpSymbol, 'modExp) 
@@ -2614,7 +2614,7 @@ result FModule: fmod 'NAT is
     id-hook('SuccSymbol, nil) 
     term-hook('zeroTerm, '0.Zero))] .
   op 'sd : 'Nat 'Nat -> 'Nat [comm special(
-    id-hook('NumberOpSymbol, 'sd) 
+    id-hook('CUI_NumberOpSymbol, 'sd) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   none
   none
@@ -2707,23 +2707,23 @@ result FModule: fmod 'META-LEVEL is
   op '_&_ : 'KindSet 'KindSet -> 'KindSet [assoc comm ctor id('empty.KindSet)]
     .
   op '_&_ : 'Nat 'Nat -> 'Nat [assoc comm prec(53) special(
-    id-hook('NumberOpSymbol, '&) 
+    id-hook('ACU_NumberOpSymbol, '&) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op '_*_ : 'Nat 'Nat -> 'Nat [assoc comm prec(31) special(
-    id-hook('NumberOpSymbol, '*) 
+    id-hook('ACU_NumberOpSymbol, '*) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op '_*_ : 'NzNat 'NzNat -> 'NzNat [assoc comm prec(31) special(
-    id-hook('NumberOpSymbol, '*) 
+    id-hook('ACU_NumberOpSymbol, '*) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op '_*`(_`) : 'ModuleExpression 'RenamingSet -> 'ModuleExpression [ctor prec(
     39) format('d 'd 's 'n++i 'n--i 'd)] .
   op '_+_ : 'ModuleExpression 'ModuleExpression -> 'ModuleExpression [assoc
     comm ctor] .
   op '_+_ : 'Nat 'Nat -> 'Nat [assoc comm prec(33) special(
-    id-hook('NumberOpSymbol, '+) 
+    id-hook('ACU_NumberOpSymbol, '+) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op '_+_ : 'NzNat 'Nat -> 'NzNat [assoc comm prec(33) special(
-    id-hook('NumberOpSymbol, '+) 
+    id-hook('ACU_NumberOpSymbol, '+) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op '_+_ : 'String 'String -> 'String [prec(33) gather('E 'e) special(
     id-hook('StringOpSymbol, '+) 
@@ -2847,13 +2847,13 @@ result FModule: fmod 'META-LEVEL is
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op '_xor_ : 'Bool 'Bool -> 'Bool [assoc comm prec(57)] .
   op '_xor_ : 'Nat 'Nat -> 'Nat [assoc comm prec(55) special(
-    id-hook('NumberOpSymbol, 'xor) 
+    id-hook('ACU_NumberOpSymbol, 'xor) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op '_|_ : 'Nat 'Nat -> 'Nat [assoc comm prec(57) special(
-    id-hook('NumberOpSymbol, '|) 
+    id-hook('ACU_NumberOpSymbol, '|) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op '_|_ : 'NzNat 'Nat -> 'NzNat [assoc comm prec(57) special(
-    id-hook('NumberOpSymbol, '|) 
+    id-hook('ACU_NumberOpSymbol, '|) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op '`[_`] : 'Qid -> 'Module [none] .
   op '`[`] : nil -> 'Context [ctor] .
@@ -2911,10 +2911,10 @@ result FModule: fmod 'META-LEVEL is
   op 'frozen : 'NatList -> 'Attr [ctor] .
   op 'gather : 'QidList -> 'Attr [ctor] .
   op 'gcd : 'Nat 'Nat -> 'Nat [assoc comm special(
-    id-hook('NumberOpSymbol, 'gcd) 
+    id-hook('ACU_NumberOpSymbol, 'gcd) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op 'gcd : 'NzNat 'Nat -> 'NzNat [assoc comm special(
-    id-hook('NumberOpSymbol, 'gcd) 
+    id-hook('ACU_NumberOpSymbol, 'gcd) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op 'getContext : 'MatchPair -> 'Context [none] .
   op 'getContext : 'Result4Tuple -> 'Context [none] .
@@ -2970,10 +2970,10 @@ result FModule: fmod 'META-LEVEL is
   op 'label : 'Qid -> 'Attr [ctor] .
   op 'label_to_ : 'Qid 'Qid -> 'Renaming [ctor] .
   op 'lcm : 'Nat 'Nat -> 'Nat [assoc comm special(
-    id-hook('NumberOpSymbol, 'lcm) 
+    id-hook('ACU_NumberOpSymbol, 'lcm) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op 'lcm : 'NzNat 'NzNat -> 'NzNat [assoc comm special(
-    id-hook('NumberOpSymbol, 'lcm) 
+    id-hook('ACU_NumberOpSymbol, 'lcm) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op 'leastSort : '`[Module`]
     '`[SortSet`,KindSet`,QidList`,Type?`,GTermList`,ModuleExpression`] ->
@@ -3252,7 +3252,7 @@ result FModule: fmod 'META-LEVEL is
     id-hook('MetaLevelOpSymbol, 'metaSameKind) 
     op-hook('shareWith, 'metaReduce, 'Module 'SortSet, 'ResultPair?))] .
   op 'sd : 'Nat 'Nat -> 'Nat [comm special(
-    id-hook('NumberOpSymbol, 'sd) 
+    id-hook('CUI_NumberOpSymbol, 'sd) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op 'sortLeq : '`[Module`]
     '`[SortSet`,KindSet`,QidList`,Type?`,GTermList`,ModuleExpression`]
@@ -3449,19 +3449,19 @@ result FModule: fmod 'STRING is
   op '<Strings> : nil -> 'String [special(
     id-hook('StringSymbol, nil))] .
   op '_&_ : 'Nat 'Nat -> 'Nat [assoc comm prec(53) special(
-    id-hook('NumberOpSymbol, '&) 
+    id-hook('ACU_NumberOpSymbol, '&) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op '_*_ : 'Nat 'Nat -> 'Nat [assoc comm prec(31) special(
-    id-hook('NumberOpSymbol, '*) 
+    id-hook('ACU_NumberOpSymbol, '*) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op '_*_ : 'NzNat 'NzNat -> 'NzNat [assoc comm prec(31) special(
-    id-hook('NumberOpSymbol, '*) 
+    id-hook('ACU_NumberOpSymbol, '*) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op '_+_ : 'Nat 'Nat -> 'Nat [assoc comm prec(33) special(
-    id-hook('NumberOpSymbol, '+) 
+    id-hook('ACU_NumberOpSymbol, '+) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op '_+_ : 'NzNat 'Nat -> 'NzNat [assoc comm prec(33) special(
-    id-hook('NumberOpSymbol, '+) 
+    id-hook('ACU_NumberOpSymbol, '+) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op '_+_ : 'String 'String -> 'String [prec(33) gather('E 'e) special(
     id-hook('StringOpSymbol, '+) 
@@ -3542,13 +3542,13 @@ result FModule: fmod 'STRING is
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op '_xor_ : 'Bool 'Bool -> 'Bool [assoc comm prec(57)] .
   op '_xor_ : 'Nat 'Nat -> 'Nat [assoc comm prec(55) special(
-    id-hook('NumberOpSymbol, 'xor) 
+    id-hook('ACU_NumberOpSymbol, 'xor) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op '_|_ : 'Nat 'Nat -> 'Nat [assoc comm prec(57) special(
-    id-hook('NumberOpSymbol, '|) 
+    id-hook('ACU_NumberOpSymbol, '|) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op '_|_ : 'NzNat 'Nat -> 'NzNat [assoc comm prec(57) special(
-    id-hook('NumberOpSymbol, '|) 
+    id-hook('ACU_NumberOpSymbol, '|) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op 'ascii : 'Char -> 'Nat [special(
     id-hook('StringOpSymbol, 'ascii) 
@@ -3566,10 +3566,10 @@ result FModule: fmod 'STRING is
     op-hook('succSymbol, 's_, 'Nat, 'NzNat) 
     term-hook('notFoundTerm, 'notFound.FindResult))] .
   op 'gcd : 'Nat 'Nat -> 'Nat [assoc comm special(
-    id-hook('NumberOpSymbol, 'gcd) 
+    id-hook('ACU_NumberOpSymbol, 'gcd) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op 'gcd : 'NzNat 'Nat -> 'NzNat [assoc comm special(
-    id-hook('NumberOpSymbol, 'gcd) 
+    id-hook('ACU_NumberOpSymbol, 'gcd) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op 'if_then_else_fi : 'Bool 'Universal 'Universal -> 'Universal [poly(2 3 0)
     special(
@@ -3577,10 +3577,10 @@ result FModule: fmod 'STRING is
     term-hook('1, 'true.Bool) 
     term-hook('2, 'false.Bool))] .
   op 'lcm : 'Nat 'Nat -> 'Nat [assoc comm special(
-    id-hook('NumberOpSymbol, 'lcm) 
+    id-hook('ACU_NumberOpSymbol, 'lcm) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op 'lcm : 'NzNat 'NzNat -> 'NzNat [assoc comm special(
-    id-hook('NumberOpSymbol, 'lcm) 
+    id-hook('ACU_NumberOpSymbol, 'lcm) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op 'length : 'String -> 'Nat [special(
     id-hook('StringOpSymbol, 'length) 
@@ -3601,7 +3601,7 @@ result FModule: fmod 'STRING is
     id-hook('SuccSymbol, nil) 
     term-hook('zeroTerm, '0.Zero))] .
   op 'sd : 'Nat 'Nat -> 'Nat [comm special(
-    id-hook('NumberOpSymbol, 'sd) 
+    id-hook('CUI_NumberOpSymbol, 'sd) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op 'substr : 'String 'Nat 'Nat -> 'String [special(
     id-hook('StringOpSymbol, 'substr) 
@@ -3701,27 +3701,27 @@ result ResultPair: {'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,
     ''KindSet.Sort],''KindSet.Sort,'__['assoc.Attr,'comm.Attr,'ctor.Attr,'id[
     ''empty.KindSet.Constant]]],'op_:_->_`[_`].[''_&_.Sort,'__[''Nat.Sort,
     ''Nat.Sort],''Nat.Sort,'__['assoc.Attr,'comm.Attr,'prec['s_^53['0.Zero]],
-    'special['__['id-hook[''NumberOpSymbol.Sort,''&.Sort],'op-hook[
+    'special['__['id-hook[''ACU_NumberOpSymbol.Sort,''&.Sort],'op-hook[
     ''succSymbol.Sort,''s_.Sort,''Nat.Sort,''NzNat.Sort]]]]],'op_:_->_`[_`].[
     ''_*_.Sort,'__[''Nat.Sort,''Nat.Sort],''Nat.Sort,'__['assoc.Attr,
     'comm.Attr,'prec['s_^31['0.Zero]],'special['__['id-hook[
-    ''NumberOpSymbol.Sort,''*.Sort],'op-hook[''succSymbol.Sort,''s_.Sort,
+    ''ACU_NumberOpSymbol.Sort,''*.Sort],'op-hook[''succSymbol.Sort,''s_.Sort,
     ''Nat.Sort,''NzNat.Sort]]]]],'op_:_->_`[_`].[''_*_.Sort,'__[''NzNat.Sort,
     ''NzNat.Sort],''NzNat.Sort,'__['assoc.Attr,'comm.Attr,'prec['s_^31[
-    '0.Zero]],'special['__['id-hook[''NumberOpSymbol.Sort,''*.Sort],'op-hook[
-    ''succSymbol.Sort,''s_.Sort,''Nat.Sort,''NzNat.Sort]]]]],'op_:_->_`[_`].[
-    ''_*`(_`).Sort,'__[''ModuleExpression.Sort,''RenamingSet.Sort],
-    ''ModuleExpression.Sort,'__['ctor.Attr,'format['__[''d.Sort,''d.Sort,
-    ''s.Sort,''n++i.Sort,''n--i.Sort,''d.Sort]],'prec['s_^39['0.Zero]]]],
-    'op_:_->_`[_`].[''_+_.Sort,'__[''ModuleExpression.Sort,
+    '0.Zero]],'special['__['id-hook[''ACU_NumberOpSymbol.Sort,''*.Sort],
+    'op-hook[''succSymbol.Sort,''s_.Sort,''Nat.Sort,''NzNat.Sort]]]]],
+    'op_:_->_`[_`].[''_*`(_`).Sort,'__[''ModuleExpression.Sort,
+    ''RenamingSet.Sort],''ModuleExpression.Sort,'__['ctor.Attr,'format['__[
+    ''d.Sort,''d.Sort,''s.Sort,''n++i.Sort,''n--i.Sort,''d.Sort]],'prec['s_^39[
+    '0.Zero]]]],'op_:_->_`[_`].[''_+_.Sort,'__[''ModuleExpression.Sort,
     ''ModuleExpression.Sort],''ModuleExpression.Sort,'__['assoc.Attr,
     'comm.Attr,'ctor.Attr]],'op_:_->_`[_`].[''_+_.Sort,'__[''Nat.Sort,
     ''Nat.Sort],''Nat.Sort,'__['assoc.Attr,'comm.Attr,'prec['s_^33['0.Zero]],
-    'special['__['id-hook[''NumberOpSymbol.Sort,''+.Sort],'op-hook[
+    'special['__['id-hook[''ACU_NumberOpSymbol.Sort,''+.Sort],'op-hook[
     ''succSymbol.Sort,''s_.Sort,''Nat.Sort,''NzNat.Sort]]]]],'op_:_->_`[_`].[
     ''_+_.Sort,'__[''NzNat.Sort,''Nat.Sort],''NzNat.Sort,'__['assoc.Attr,
     'comm.Attr,'prec['s_^33['0.Zero]],'special['__['id-hook[
-    ''NumberOpSymbol.Sort,''+.Sort],'op-hook[''succSymbol.Sort,''s_.Sort,
+    ''ACU_NumberOpSymbol.Sort,''+.Sort],'op-hook[''succSymbol.Sort,''s_.Sort,
     ''Nat.Sort,''NzNat.Sort]]]]],'op_:_->_`[_`].[''_+_.Sort,'__[''String.Sort,
     ''String.Sort],''String.Sort,'__['gather['__[''E.Sort,''e.Sort]],'prec[
     's_^33['0.Zero]],'special['__['id-hook[''StringOpSymbol.Sort,''+.Sort],
@@ -3870,14 +3870,14 @@ result ResultPair: {'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,
     ''Bool.Sort],''Bool.Sort,'__['assoc.Attr,'comm.Attr,'prec['s_^57[
     '0.Zero]]]],'op_:_->_`[_`].[''_xor_.Sort,'__[''Nat.Sort,''Nat.Sort],
     ''Nat.Sort,'__['assoc.Attr,'comm.Attr,'prec['s_^55['0.Zero]],'special['__[
-    'id-hook[''NumberOpSymbol.Sort,''xor.Sort],'op-hook[''succSymbol.Sort,
+    'id-hook[''ACU_NumberOpSymbol.Sort,''xor.Sort],'op-hook[''succSymbol.Sort,
     ''s_.Sort,''Nat.Sort,''NzNat.Sort]]]]],'op_:_->_`[_`].[''_|_.Sort,'__[
     ''Nat.Sort,''Nat.Sort],''Nat.Sort,'__['assoc.Attr,'comm.Attr,'prec['s_^57[
-    '0.Zero]],'special['__['id-hook[''NumberOpSymbol.Sort,''|.Sort],'op-hook[
-    ''succSymbol.Sort,''s_.Sort,''Nat.Sort,''NzNat.Sort]]]]],'op_:_->_`[_`].[
-    ''_|_.Sort,'__[''NzNat.Sort,''Nat.Sort],''NzNat.Sort,'__['assoc.Attr,
-    'comm.Attr,'prec['s_^57['0.Zero]],'special['__['id-hook[
-    ''NumberOpSymbol.Sort,''|.Sort],'op-hook[''succSymbol.Sort,''s_.Sort,
+    '0.Zero]],'special['__['id-hook[''ACU_NumberOpSymbol.Sort,''|.Sort],
+    'op-hook[''succSymbol.Sort,''s_.Sort,''Nat.Sort,''NzNat.Sort]]]]],
+    'op_:_->_`[_`].[''_|_.Sort,'__[''NzNat.Sort,''Nat.Sort],''NzNat.Sort,'__[
+    'assoc.Attr,'comm.Attr,'prec['s_^57['0.Zero]],'special['__['id-hook[
+    ''ACU_NumberOpSymbol.Sort,''|.Sort],'op-hook[''succSymbol.Sort,''s_.Sort,
     ''Nat.Sort,''NzNat.Sort]]]]],'op_:_->_`[_`].[''`[_`].Kind,''Qid.Sort,
     ''Module.Sort,'none.AttrSet],'op_:_->_`[_`].[''`[`].Kind,'nil.TypeList,
     ''Context.Sort,'ctor.Attr],'op_:_->_`[_`].[''`{_`,_`,_`,_`}.Qid,'__[
@@ -3946,10 +3946,10 @@ result ResultPair: {'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,
     ''frozen.Sort,''NatList.Sort,''Attr.Sort,'ctor.Attr],'op_:_->_`[_`].[
     ''gather.Sort,''QidList.Sort,''Attr.Sort,'ctor.Attr],'op_:_->_`[_`].[
     ''gcd.Sort,'__[''Nat.Sort,''Nat.Sort],''Nat.Sort,'__['assoc.Attr,
-    'comm.Attr,'special['__['id-hook[''NumberOpSymbol.Sort,''gcd.Sort],
+    'comm.Attr,'special['__['id-hook[''ACU_NumberOpSymbol.Sort,''gcd.Sort],
     'op-hook[''succSymbol.Sort,''s_.Sort,''Nat.Sort,''NzNat.Sort]]]]],
     'op_:_->_`[_`].[''gcd.Sort,'__[''NzNat.Sort,''Nat.Sort],''NzNat.Sort,'__[
-    'assoc.Attr,'comm.Attr,'special['__['id-hook[''NumberOpSymbol.Sort,
+    'assoc.Attr,'comm.Attr,'special['__['id-hook[''ACU_NumberOpSymbol.Sort,
     ''gcd.Sort],'op-hook[''succSymbol.Sort,''s_.Sort,''Nat.Sort,
     ''NzNat.Sort]]]]],'op_:_->_`[_`].[''getContext.Sort,''MatchPair.Sort,
     ''Context.Sort,'none.AttrSet],'op_:_->_`[_`].[''getContext.Sort,
@@ -4010,10 +4010,10 @@ result ResultPair: {'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,
     'ctor.Attr],'op_:_->_`[_`].[''label_to_.Sort,'__[''Qid.Sort,''Qid.Sort],
     ''Renaming.Sort,'ctor.Attr],'op_:_->_`[_`].[''lcm.Sort,'__[''Nat.Sort,
     ''Nat.Sort],''Nat.Sort,'__['assoc.Attr,'comm.Attr,'special['__['id-hook[
-    ''NumberOpSymbol.Sort,''lcm.Sort],'op-hook[''succSymbol.Sort,''s_.Sort,
+    ''ACU_NumberOpSymbol.Sort,''lcm.Sort],'op-hook[''succSymbol.Sort,''s_.Sort,
     ''Nat.Sort,''NzNat.Sort]]]]],'op_:_->_`[_`].[''lcm.Sort,'__[''NzNat.Sort,
     ''NzNat.Sort],''NzNat.Sort,'__['assoc.Attr,'comm.Attr,'special['__[
-    'id-hook[''NumberOpSymbol.Sort,''lcm.Sort],'op-hook[''succSymbol.Sort,
+    'id-hook[''ACU_NumberOpSymbol.Sort,''lcm.Sort],'op-hook[''succSymbol.Sort,
     ''s_.Sort,''Nat.Sort,''NzNat.Sort]]]]],'op_:_->_`[_`].[''leastSort.Sort,
     '__[''`[Module`].Kind,
     ''`[SortSet`,KindSet`,QidList`,Type?`,GTermList`,ModuleExpression`].Kind],
@@ -4323,9 +4323,9 @@ result ResultPair: {'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,
     ''metaSameKind.Sort],'op-hook[''shareWith.Sort,''metaReduce.Sort,'__[
     ''Module.Sort,''SortSet.Sort],''ResultPair?.Sort]]]],'op_:_->_`[_`].[
     ''sd.Sort,'__[''Nat.Sort,''Nat.Sort],''Nat.Sort,'__['comm.Attr,'special[
-    '__['id-hook[''NumberOpSymbol.Sort,''sd.Sort],'op-hook[''succSymbol.Sort,
-    ''s_.Sort,''Nat.Sort,''NzNat.Sort]]]]],'op_:_->_`[_`].[''sortLeq.Sort,'__[
-    ''`[Module`].Kind,
+    '__['id-hook[''CUI_NumberOpSymbol.Sort,''sd.Sort],'op-hook[
+    ''succSymbol.Sort,''s_.Sort,''Nat.Sort,''NzNat.Sort]]]]],'op_:_->_`[_`].[
+    ''sortLeq.Sort,'__[''`[Module`].Kind,
     ''`[SortSet`,KindSet`,QidList`,Type?`,GTermList`,ModuleExpression`].Kind,
     ''`[SortSet`,KindSet`,QidList`,Type?`,GTermList`,ModuleExpression`].Kind],
     ''`[Bool`].Kind,'special['__['id-hook[''MetaLevelOpSymbol.Sort,
@@ -4656,27 +4656,27 @@ result GroundTerm: 'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,'nil.ImportList,
     ''KindSet.Sort],''KindSet.Sort,'__['assoc.Attr,'comm.Attr,'ctor.Attr,'id[
     ''empty.KindSet.Constant]]],'op_:_->_`[_`].[''_&_.Sort,'__[''Nat.Sort,
     ''Nat.Sort],''Nat.Sort,'__['assoc.Attr,'comm.Attr,'prec['s_^53['0.Zero]],
-    'special['__['id-hook[''NumberOpSymbol.Sort,''&.Sort],'op-hook[
+    'special['__['id-hook[''ACU_NumberOpSymbol.Sort,''&.Sort],'op-hook[
     ''succSymbol.Sort,''s_.Sort,''Nat.Sort,''NzNat.Sort]]]]],'op_:_->_`[_`].[
     ''_*_.Sort,'__[''Nat.Sort,''Nat.Sort],''Nat.Sort,'__['assoc.Attr,
     'comm.Attr,'prec['s_^31['0.Zero]],'special['__['id-hook[
-    ''NumberOpSymbol.Sort,''*.Sort],'op-hook[''succSymbol.Sort,''s_.Sort,
+    ''ACU_NumberOpSymbol.Sort,''*.Sort],'op-hook[''succSymbol.Sort,''s_.Sort,
     ''Nat.Sort,''NzNat.Sort]]]]],'op_:_->_`[_`].[''_*_.Sort,'__[''NzNat.Sort,
     ''NzNat.Sort],''NzNat.Sort,'__['assoc.Attr,'comm.Attr,'prec['s_^31[
-    '0.Zero]],'special['__['id-hook[''NumberOpSymbol.Sort,''*.Sort],'op-hook[
-    ''succSymbol.Sort,''s_.Sort,''Nat.Sort,''NzNat.Sort]]]]],'op_:_->_`[_`].[
-    ''_*`(_`).Sort,'__[''ModuleExpression.Sort,''RenamingSet.Sort],
-    ''ModuleExpression.Sort,'__['ctor.Attr,'prec['s_^39['0.Zero]],'format['__[
-    ''d.Sort,''d.Sort,''s.Sort,''n++i.Sort,''n--i.Sort,''d.Sort]]]],
-    'op_:_->_`[_`].[''_+_.Sort,'__[''ModuleExpression.Sort,
+    '0.Zero]],'special['__['id-hook[''ACU_NumberOpSymbol.Sort,''*.Sort],
+    'op-hook[''succSymbol.Sort,''s_.Sort,''Nat.Sort,''NzNat.Sort]]]]],
+    'op_:_->_`[_`].[''_*`(_`).Sort,'__[''ModuleExpression.Sort,
+    ''RenamingSet.Sort],''ModuleExpression.Sort,'__['ctor.Attr,'prec['s_^39[
+    '0.Zero]],'format['__[''d.Sort,''d.Sort,''s.Sort,''n++i.Sort,''n--i.Sort,
+    ''d.Sort]]]],'op_:_->_`[_`].[''_+_.Sort,'__[''ModuleExpression.Sort,
     ''ModuleExpression.Sort],''ModuleExpression.Sort,'__['assoc.Attr,
     'comm.Attr,'ctor.Attr]],'op_:_->_`[_`].[''_+_.Sort,'__[''Nat.Sort,
     ''Nat.Sort],''Nat.Sort,'__['assoc.Attr,'comm.Attr,'prec['s_^33['0.Zero]],
-    'special['__['id-hook[''NumberOpSymbol.Sort,''+.Sort],'op-hook[
+    'special['__['id-hook[''ACU_NumberOpSymbol.Sort,''+.Sort],'op-hook[
     ''succSymbol.Sort,''s_.Sort,''Nat.Sort,''NzNat.Sort]]]]],'op_:_->_`[_`].[
     ''_+_.Sort,'__[''NzNat.Sort,''Nat.Sort],''NzNat.Sort,'__['assoc.Attr,
     'comm.Attr,'prec['s_^33['0.Zero]],'special['__['id-hook[
-    ''NumberOpSymbol.Sort,''+.Sort],'op-hook[''succSymbol.Sort,''s_.Sort,
+    ''ACU_NumberOpSymbol.Sort,''+.Sort],'op-hook[''succSymbol.Sort,''s_.Sort,
     ''Nat.Sort,''NzNat.Sort]]]]],'op_:_->_`[_`].[''_+_.Sort,'__[''String.Sort,
     ''String.Sort],''String.Sort,'__['prec['s_^33['0.Zero]],'gather['__[
     ''E.Sort,''e.Sort]],'special['__['id-hook[''StringOpSymbol.Sort,''+.Sort],
@@ -4825,14 +4825,14 @@ result GroundTerm: 'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,'nil.ImportList,
     ''Bool.Sort],''Bool.Sort,'__['assoc.Attr,'comm.Attr,'prec['s_^57[
     '0.Zero]]]],'op_:_->_`[_`].[''_xor_.Sort,'__[''Nat.Sort,''Nat.Sort],
     ''Nat.Sort,'__['assoc.Attr,'comm.Attr,'prec['s_^55['0.Zero]],'special['__[
-    'id-hook[''NumberOpSymbol.Sort,''xor.Sort],'op-hook[''succSymbol.Sort,
+    'id-hook[''ACU_NumberOpSymbol.Sort,''xor.Sort],'op-hook[''succSymbol.Sort,
     ''s_.Sort,''Nat.Sort,''NzNat.Sort]]]]],'op_:_->_`[_`].[''_|_.Sort,'__[
     ''Nat.Sort,''Nat.Sort],''Nat.Sort,'__['assoc.Attr,'comm.Attr,'prec['s_^57[
-    '0.Zero]],'special['__['id-hook[''NumberOpSymbol.Sort,''|.Sort],'op-hook[
-    ''succSymbol.Sort,''s_.Sort,''Nat.Sort,''NzNat.Sort]]]]],'op_:_->_`[_`].[
-    ''_|_.Sort,'__[''NzNat.Sort,''Nat.Sort],''NzNat.Sort,'__['assoc.Attr,
-    'comm.Attr,'prec['s_^57['0.Zero]],'special['__['id-hook[
-    ''NumberOpSymbol.Sort,''|.Sort],'op-hook[''succSymbol.Sort,''s_.Sort,
+    '0.Zero]],'special['__['id-hook[''ACU_NumberOpSymbol.Sort,''|.Sort],
+    'op-hook[''succSymbol.Sort,''s_.Sort,''Nat.Sort,''NzNat.Sort]]]]],
+    'op_:_->_`[_`].[''_|_.Sort,'__[''NzNat.Sort,''Nat.Sort],''NzNat.Sort,'__[
+    'assoc.Attr,'comm.Attr,'prec['s_^57['0.Zero]],'special['__['id-hook[
+    ''ACU_NumberOpSymbol.Sort,''|.Sort],'op-hook[''succSymbol.Sort,''s_.Sort,
     ''Nat.Sort,''NzNat.Sort]]]]],'op_:_->_`[_`].[''`[_`].Kind,''Qid.Sort,
     ''Module.Sort,'none.AttrSet],'op_:_->_`[_`].[''`[`].Kind,'nil.TypeList,
     ''Context.Sort,'ctor.Attr],'op_:_->_`[_`].[''`{_`,_`,_`,_`}.Qid,'__[
@@ -4901,11 +4901,11 @@ result GroundTerm: 'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,'nil.ImportList,
     'op_:_->_`[_`].[''frozen.Sort,''NatList.Sort,''Attr.Sort,'ctor.Attr],
     'op_:_->_`[_`].[''gather.Sort,''QidList.Sort,''Attr.Sort,'ctor.Attr],
     'op_:_->_`[_`].[''gcd.Sort,'__[''Nat.Sort,''Nat.Sort],''Nat.Sort,'__[
-    'assoc.Attr,'comm.Attr,'special['__['id-hook[''NumberOpSymbol.Sort,
+    'assoc.Attr,'comm.Attr,'special['__['id-hook[''ACU_NumberOpSymbol.Sort,
     ''gcd.Sort],'op-hook[''succSymbol.Sort,''s_.Sort,''Nat.Sort,
     ''NzNat.Sort]]]]],'op_:_->_`[_`].[''gcd.Sort,'__[''NzNat.Sort,''Nat.Sort],
     ''NzNat.Sort,'__['assoc.Attr,'comm.Attr,'special['__['id-hook[
-    ''NumberOpSymbol.Sort,''gcd.Sort],'op-hook[''succSymbol.Sort,''s_.Sort,
+    ''ACU_NumberOpSymbol.Sort,''gcd.Sort],'op-hook[''succSymbol.Sort,''s_.Sort,
     ''Nat.Sort,''NzNat.Sort]]]]],'op_:_->_`[_`].[''getContext.Sort,
     ''MatchPair.Sort,''Context.Sort,'none.AttrSet],'op_:_->_`[_`].[
     ''getContext.Sort,''Result4Tuple.Sort,''Context.Sort,'none.AttrSet],
@@ -4966,10 +4966,10 @@ result GroundTerm: 'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,'nil.ImportList,
     'ctor.Attr],'op_:_->_`[_`].[''label_to_.Sort,'__[''Qid.Sort,''Qid.Sort],
     ''Renaming.Sort,'ctor.Attr],'op_:_->_`[_`].[''lcm.Sort,'__[''Nat.Sort,
     ''Nat.Sort],''Nat.Sort,'__['assoc.Attr,'comm.Attr,'special['__['id-hook[
-    ''NumberOpSymbol.Sort,''lcm.Sort],'op-hook[''succSymbol.Sort,''s_.Sort,
+    ''ACU_NumberOpSymbol.Sort,''lcm.Sort],'op-hook[''succSymbol.Sort,''s_.Sort,
     ''Nat.Sort,''NzNat.Sort]]]]],'op_:_->_`[_`].[''lcm.Sort,'__[''NzNat.Sort,
     ''NzNat.Sort],''NzNat.Sort,'__['assoc.Attr,'comm.Attr,'special['__[
-    'id-hook[''NumberOpSymbol.Sort,''lcm.Sort],'op-hook[''succSymbol.Sort,
+    'id-hook[''ACU_NumberOpSymbol.Sort,''lcm.Sort],'op-hook[''succSymbol.Sort,
     ''s_.Sort,''Nat.Sort,''NzNat.Sort]]]]],'op_:_->_`[_`].[''leastSort.Sort,
     '__[''`[Module`].Kind,
     ''`[SortSet`,KindSet`,QidList`,Type?`,GTermList`,ModuleExpression`].Kind],
@@ -5279,9 +5279,9 @@ result GroundTerm: 'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,'nil.ImportList,
     ''metaSameKind.Sort],'op-hook[''shareWith.Sort,''metaReduce.Sort,'__[
     ''Module.Sort,''SortSet.Sort],''ResultPair?.Sort]]]],'op_:_->_`[_`].[
     ''sd.Sort,'__[''Nat.Sort,''Nat.Sort],''Nat.Sort,'__['comm.Attr,'special[
-    '__['id-hook[''NumberOpSymbol.Sort,''sd.Sort],'op-hook[''succSymbol.Sort,
-    ''s_.Sort,''Nat.Sort,''NzNat.Sort]]]]],'op_:_->_`[_`].[''sortLeq.Sort,'__[
-    ''`[Module`].Kind,
+    '__['id-hook[''CUI_NumberOpSymbol.Sort,''sd.Sort],'op-hook[
+    ''succSymbol.Sort,''s_.Sort,''Nat.Sort,''NzNat.Sort]]]]],'op_:_->_`[_`].[
+    ''sortLeq.Sort,'__[''`[Module`].Kind,
     ''`[SortSet`,KindSet`,QidList`,Type?`,GTermList`,ModuleExpression`].Kind,
     ''`[SortSet`,KindSet`,QidList`,Type?`,GTermList`,ModuleExpression`].Kind],
     ''`[Bool`].Kind,'special['__['id-hook[''MetaLevelOpSymbol.Sort,
@@ -5612,27 +5612,27 @@ result ResultPair: {'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,
     ''KindSet.Sort],''KindSet.Sort,'__['assoc.Attr,'comm.Attr,'ctor.Attr,'id[
     ''empty.KindSet.Constant]]],'op_:_->_`[_`].[''_&_.Sort,'__[''Nat.Sort,
     ''Nat.Sort],''Nat.Sort,'__['assoc.Attr,'comm.Attr,'prec['s_^53['0.Zero]],
-    'special['__['id-hook[''NumberOpSymbol.Sort,''&.Sort],'op-hook[
+    'special['__['id-hook[''ACU_NumberOpSymbol.Sort,''&.Sort],'op-hook[
     ''succSymbol.Sort,''s_.Sort,''Nat.Sort,''NzNat.Sort]]]]],'op_:_->_`[_`].[
     ''_*_.Sort,'__[''Nat.Sort,''Nat.Sort],''Nat.Sort,'__['assoc.Attr,
     'comm.Attr,'prec['s_^31['0.Zero]],'special['__['id-hook[
-    ''NumberOpSymbol.Sort,''*.Sort],'op-hook[''succSymbol.Sort,''s_.Sort,
+    ''ACU_NumberOpSymbol.Sort,''*.Sort],'op-hook[''succSymbol.Sort,''s_.Sort,
     ''Nat.Sort,''NzNat.Sort]]]]],'op_:_->_`[_`].[''_*_.Sort,'__[''NzNat.Sort,
     ''NzNat.Sort],''NzNat.Sort,'__['assoc.Attr,'comm.Attr,'prec['s_^31[
-    '0.Zero]],'special['__['id-hook[''NumberOpSymbol.Sort,''*.Sort],'op-hook[
-    ''succSymbol.Sort,''s_.Sort,''Nat.Sort,''NzNat.Sort]]]]],'op_:_->_`[_`].[
-    ''_*`(_`).Sort,'__[''ModuleExpression.Sort,''RenamingSet.Sort],
-    ''ModuleExpression.Sort,'__['ctor.Attr,'prec['s_^39['0.Zero]],'format['__[
-    ''d.Sort,''d.Sort,''s.Sort,''n++i.Sort,''n--i.Sort,''d.Sort]]]],
-    'op_:_->_`[_`].[''_+_.Sort,'__[''ModuleExpression.Sort,
+    '0.Zero]],'special['__['id-hook[''ACU_NumberOpSymbol.Sort,''*.Sort],
+    'op-hook[''succSymbol.Sort,''s_.Sort,''Nat.Sort,''NzNat.Sort]]]]],
+    'op_:_->_`[_`].[''_*`(_`).Sort,'__[''ModuleExpression.Sort,
+    ''RenamingSet.Sort],''ModuleExpression.Sort,'__['ctor.Attr,'prec['s_^39[
+    '0.Zero]],'format['__[''d.Sort,''d.Sort,''s.Sort,''n++i.Sort,''n--i.Sort,
+    ''d.Sort]]]],'op_:_->_`[_`].[''_+_.Sort,'__[''ModuleExpression.Sort,
     ''ModuleExpression.Sort],''ModuleExpression.Sort,'__['assoc.Attr,
     'comm.Attr,'ctor.Attr]],'op_:_->_`[_`].[''_+_.Sort,'__[''Nat.Sort,
     ''Nat.Sort],''Nat.Sort,'__['assoc.Attr,'comm.Attr,'prec['s_^33['0.Zero]],
-    'special['__['id-hook[''NumberOpSymbol.Sort,''+.Sort],'op-hook[
+    'special['__['id-hook[''ACU_NumberOpSymbol.Sort,''+.Sort],'op-hook[
     ''succSymbol.Sort,''s_.Sort,''Nat.Sort,''NzNat.Sort]]]]],'op_:_->_`[_`].[
     ''_+_.Sort,'__[''NzNat.Sort,''Nat.Sort],''NzNat.Sort,'__['assoc.Attr,
     'comm.Attr,'prec['s_^33['0.Zero]],'special['__['id-hook[
-    ''NumberOpSymbol.Sort,''+.Sort],'op-hook[''succSymbol.Sort,''s_.Sort,
+    ''ACU_NumberOpSymbol.Sort,''+.Sort],'op-hook[''succSymbol.Sort,''s_.Sort,
     ''Nat.Sort,''NzNat.Sort]]]]],'op_:_->_`[_`].[''_+_.Sort,'__[''String.Sort,
     ''String.Sort],''String.Sort,'__['prec['s_^33['0.Zero]],'gather['__[
     ''E.Sort,''e.Sort]],'special['__['id-hook[''StringOpSymbol.Sort,''+.Sort],
@@ -5781,14 +5781,14 @@ result ResultPair: {'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,
     ''Bool.Sort],''Bool.Sort,'__['assoc.Attr,'comm.Attr,'prec['s_^57[
     '0.Zero]]]],'op_:_->_`[_`].[''_xor_.Sort,'__[''Nat.Sort,''Nat.Sort],
     ''Nat.Sort,'__['assoc.Attr,'comm.Attr,'prec['s_^55['0.Zero]],'special['__[
-    'id-hook[''NumberOpSymbol.Sort,''xor.Sort],'op-hook[''succSymbol.Sort,
+    'id-hook[''ACU_NumberOpSymbol.Sort,''xor.Sort],'op-hook[''succSymbol.Sort,
     ''s_.Sort,''Nat.Sort,''NzNat.Sort]]]]],'op_:_->_`[_`].[''_|_.Sort,'__[
     ''Nat.Sort,''Nat.Sort],''Nat.Sort,'__['assoc.Attr,'comm.Attr,'prec['s_^57[
-    '0.Zero]],'special['__['id-hook[''NumberOpSymbol.Sort,''|.Sort],'op-hook[
-    ''succSymbol.Sort,''s_.Sort,''Nat.Sort,''NzNat.Sort]]]]],'op_:_->_`[_`].[
-    ''_|_.Sort,'__[''NzNat.Sort,''Nat.Sort],''NzNat.Sort,'__['assoc.Attr,
-    'comm.Attr,'prec['s_^57['0.Zero]],'special['__['id-hook[
-    ''NumberOpSymbol.Sort,''|.Sort],'op-hook[''succSymbol.Sort,''s_.Sort,
+    '0.Zero]],'special['__['id-hook[''ACU_NumberOpSymbol.Sort,''|.Sort],
+    'op-hook[''succSymbol.Sort,''s_.Sort,''Nat.Sort,''NzNat.Sort]]]]],
+    'op_:_->_`[_`].[''_|_.Sort,'__[''NzNat.Sort,''Nat.Sort],''NzNat.Sort,'__[
+    'assoc.Attr,'comm.Attr,'prec['s_^57['0.Zero]],'special['__['id-hook[
+    ''ACU_NumberOpSymbol.Sort,''|.Sort],'op-hook[''succSymbol.Sort,''s_.Sort,
     ''Nat.Sort,''NzNat.Sort]]]]],'op_:_->_`[_`].[''`[_`].Kind,''Qid.Sort,
     ''Module.Sort,'none.AttrSet],'op_:_->_`[_`].[''`[`].Kind,'nil.TypeList,
     ''Context.Sort,'ctor.Attr],'op_:_->_`[_`].[''`{_`,_`,_`,_`}.Qid,'__[
@@ -5857,11 +5857,11 @@ result ResultPair: {'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,
     'op_:_->_`[_`].[''frozen.Sort,''NatList.Sort,''Attr.Sort,'ctor.Attr],
     'op_:_->_`[_`].[''gather.Sort,''QidList.Sort,''Attr.Sort,'ctor.Attr],
     'op_:_->_`[_`].[''gcd.Sort,'__[''Nat.Sort,''Nat.Sort],''Nat.Sort,'__[
-    'assoc.Attr,'comm.Attr,'special['__['id-hook[''NumberOpSymbol.Sort,
+    'assoc.Attr,'comm.Attr,'special['__['id-hook[''ACU_NumberOpSymbol.Sort,
     ''gcd.Sort],'op-hook[''succSymbol.Sort,''s_.Sort,''Nat.Sort,
     ''NzNat.Sort]]]]],'op_:_->_`[_`].[''gcd.Sort,'__[''NzNat.Sort,''Nat.Sort],
     ''NzNat.Sort,'__['assoc.Attr,'comm.Attr,'special['__['id-hook[
-    ''NumberOpSymbol.Sort,''gcd.Sort],'op-hook[''succSymbol.Sort,''s_.Sort,
+    ''ACU_NumberOpSymbol.Sort,''gcd.Sort],'op-hook[''succSymbol.Sort,''s_.Sort,
     ''Nat.Sort,''NzNat.Sort]]]]],'op_:_->_`[_`].[''getContext.Sort,
     ''MatchPair.Sort,''Context.Sort,'none.AttrSet],'op_:_->_`[_`].[
     ''getContext.Sort,''Result4Tuple.Sort,''Context.Sort,'none.AttrSet],
@@ -5922,10 +5922,10 @@ result ResultPair: {'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,
     'ctor.Attr],'op_:_->_`[_`].[''label_to_.Sort,'__[''Qid.Sort,''Qid.Sort],
     ''Renaming.Sort,'ctor.Attr],'op_:_->_`[_`].[''lcm.Sort,'__[''Nat.Sort,
     ''Nat.Sort],''Nat.Sort,'__['assoc.Attr,'comm.Attr,'special['__['id-hook[
-    ''NumberOpSymbol.Sort,''lcm.Sort],'op-hook[''succSymbol.Sort,''s_.Sort,
+    ''ACU_NumberOpSymbol.Sort,''lcm.Sort],'op-hook[''succSymbol.Sort,''s_.Sort,
     ''Nat.Sort,''NzNat.Sort]]]]],'op_:_->_`[_`].[''lcm.Sort,'__[''NzNat.Sort,
     ''NzNat.Sort],''NzNat.Sort,'__['assoc.Attr,'comm.Attr,'special['__[
-    'id-hook[''NumberOpSymbol.Sort,''lcm.Sort],'op-hook[''succSymbol.Sort,
+    'id-hook[''ACU_NumberOpSymbol.Sort,''lcm.Sort],'op-hook[''succSymbol.Sort,
     ''s_.Sort,''Nat.Sort,''NzNat.Sort]]]]],'op_:_->_`[_`].[''leastSort.Sort,
     '__[''`[Module`].Kind,
     ''`[SortSet`,KindSet`,QidList`,Type?`,GTermList`,ModuleExpression`].Kind],
@@ -6235,9 +6235,9 @@ result ResultPair: {'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,
     ''metaSameKind.Sort],'op-hook[''shareWith.Sort,''metaReduce.Sort,'__[
     ''Module.Sort,''SortSet.Sort],''ResultPair?.Sort]]]],'op_:_->_`[_`].[
     ''sd.Sort,'__[''Nat.Sort,''Nat.Sort],''Nat.Sort,'__['comm.Attr,'special[
-    '__['id-hook[''NumberOpSymbol.Sort,''sd.Sort],'op-hook[''succSymbol.Sort,
-    ''s_.Sort,''Nat.Sort,''NzNat.Sort]]]]],'op_:_->_`[_`].[''sortLeq.Sort,'__[
-    ''`[Module`].Kind,
+    '__['id-hook[''CUI_NumberOpSymbol.Sort,''sd.Sort],'op-hook[
+    ''succSymbol.Sort,''s_.Sort,''Nat.Sort,''NzNat.Sort]]]]],'op_:_->_`[_`].[
+    ''sortLeq.Sort,'__[''`[Module`].Kind,
     ''`[SortSet`,KindSet`,QidList`,Type?`,GTermList`,ModuleExpression`].Kind,
     ''`[SortSet`,KindSet`,QidList`,Type?`,GTermList`,ModuleExpression`].Kind],
     ''`[Bool`].Kind,'special['__['id-hook[''MetaLevelOpSymbol.Sort,

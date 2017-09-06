@@ -222,6 +222,20 @@ MixfixModule::~MixfixModule()
   delete parser;
 }
 
+const char*
+MixfixModule::moduleTypeString(ModuleType type)
+{
+  static const char* typeStrings[] = {"fmod", "mod", "fth", "th"};
+  return typeStrings[type];
+}
+
+const char*
+MixfixModule::moduleEndString(ModuleType type)
+{
+  static const char* typeStrings[] = {"endfm", "endm", "endfth", "endth"};
+  return typeStrings[type];
+}
+
 void 
 MixfixModule::closeSignature()
 {

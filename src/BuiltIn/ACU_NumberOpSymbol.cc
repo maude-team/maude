@@ -96,7 +96,7 @@ ACU_NumberOpSymbol::getDataAttachments(const Vector<Sort*>& opDeclaration,
 {
   int nrDataAttachments = purposes.length();
   purposes.resize(nrDataAttachments + 1);
-  purposes[nrDataAttachments] = "NumberOpSymbol";
+  purposes[nrDataAttachments] = "ACU_NumberOpSymbol";
   data.resize(nrDataAttachments + 1);
   data[nrDataAttachments].resize(1);
   const char*& d = data[nrDataAttachments][0];

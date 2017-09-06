@@ -91,6 +91,7 @@ void cleanUpParser();
   Int64 yyInt64;
   const char* yyString;
   Token yyToken;
+  ModuleDatabase::ImportMode yyImportMode;
 }
 
 %{
@@ -114,7 +115,8 @@ int yylex(YYSTYPE* lvalp);
 %token KW_MODULE KW_MODULES KW_ALL KW_SORTS KW_OPS KW_VARS
 %token KW_MBS KW_EQS KW_RLS KW_SUMMARY KW_KINDS KW_ADVISE KW_VERBOSE
 %token KW_DO KW_CLEAR
-%token KW_INCLUDE KW_EXCLUDE KW_CONCEAL KW_REVEAL KW_COMPILE KW_COUNT
+%token KW_PROTECT KW_EXTEND KW_INCLUDE KW_EXCLUDE
+%token KW_CONCEAL KW_REVEAL KW_COMPILE KW_COUNT
 %token KW_DEBUG KW_RESUME KW_ABORT KW_STEP KW_WHERE KW_CREDUCE KW_DUMP KW_PROFILE
 %token KW_NUMBER KW_RAT KW_COLOR
 %token <yyInt64> SIMPLE_NUMBER
@@ -183,6 +185,10 @@ int yylex(YYSTYPE* lvalp);
  *	Nonterminals that return int.
  */
 %type <yyInt64> optNumber
+/*
+ *	Nonterminals that return ImportMode.
+ */
+%type <yyImportMode> importMode
 
 %start top
 

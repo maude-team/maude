@@ -62,10 +62,7 @@ PreModule::dump()
 void
 PreModule::showModule(ostream& s)
 {
-  
-  if (moduleType == MixfixModule::FUNCTIONAL_MODULE)
-    s << 'f';
-  s << "mod " << this << " is\n";
+  s << MixfixModule::moduleTypeString(moduleType) << ' ' << this << " is\n";
 
   int nrImports = imports.length();
   for (int i = 0; i < nrImports; i++)
@@ -121,7 +118,8 @@ PreModule::showModule(ostream& s)
 	return;
       s << "  " << statements[i] << " .\n";
     }
-  s << ((moduleType == MixfixModule::FUNCTIONAL_MODULE) ? "endfm\n" : "endm\n");
+
+  s << MixfixModule::moduleEndString(moduleType) << '\n';
 }
 
 void
@@ -141,7 +139,6 @@ PreModule::printOpDef(ostream&s, int defIndex)
   printAttributes(s, opDef);
   s << ".\n";
 }
-
 
 void
 PreModule::printAttributes(ostream& s, const OpDef& opDef)

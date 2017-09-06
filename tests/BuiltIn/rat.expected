@@ -198,46 +198,46 @@ fmod FOO is
     id-hook SuccSymbol
     term-hook zeroTerm (0))] .
   op _+_ : NzNat Nat -> NzNat [assoc comm prec 33 gather (e E) special (
-    id-hook NumberOpSymbol (+)
+    id-hook ACU_NumberOpSymbol (+)
     op-hook succSymbol (s_ : Nat ~> NzNat)
     op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
   op _+_ : Nat Nat -> Nat [assoc comm prec 33 gather (e E) special (
-    id-hook NumberOpSymbol (+)
+    id-hook ACU_NumberOpSymbol (+)
     op-hook succSymbol (s_ : Nat ~> NzNat)
     op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
   op _+_ : Int Int -> Int [assoc comm prec 33 gather (e E) special (
-    id-hook NumberOpSymbol (+)
+    id-hook ACU_NumberOpSymbol (+)
     op-hook succSymbol (s_ : Nat ~> NzNat)
     op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
   op _+_ : Rat Rat -> Rat [assoc comm prec 33 gather (e E) special (
-    id-hook NumberOpSymbol (+)
+    id-hook ACU_NumberOpSymbol (+)
     op-hook succSymbol (s_ : Nat ~> NzNat)
     op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
   op sd : Nat Nat -> Nat [comm special (
-    id-hook NumberOpSymbol (sd)
+    id-hook CUI_NumberOpSymbol (sd)
     op-hook succSymbol (s_ : Nat ~> NzNat))] .
   op _*_ : NzNat NzNat -> NzNat [assoc comm prec 31 gather (e E) special (
-    id-hook NumberOpSymbol (*)
+    id-hook ACU_NumberOpSymbol (*)
     op-hook succSymbol (s_ : Nat ~> NzNat)
     op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
   op _*_ : Nat Nat -> Nat [assoc comm prec 31 gather (e E) special (
-    id-hook NumberOpSymbol (*)
+    id-hook ACU_NumberOpSymbol (*)
     op-hook succSymbol (s_ : Nat ~> NzNat)
     op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
   op _*_ : NzInt NzInt -> NzInt [assoc comm prec 31 gather (e E) special (
-    id-hook NumberOpSymbol (*)
+    id-hook ACU_NumberOpSymbol (*)
     op-hook succSymbol (s_ : Nat ~> NzNat)
     op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
   op _*_ : Int Int -> Int [assoc comm prec 31 gather (e E) special (
-    id-hook NumberOpSymbol (*)
+    id-hook ACU_NumberOpSymbol (*)
     op-hook succSymbol (s_ : Nat ~> NzNat)
     op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
   op _*_ : NzRat NzRat -> NzRat [assoc comm prec 31 gather (e E) special (
-    id-hook NumberOpSymbol (*)
+    id-hook ACU_NumberOpSymbol (*)
     op-hook succSymbol (s_ : Nat ~> NzNat)
     op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
   op _*_ : Rat Rat -> Rat [assoc comm prec 31 gather (e E) special (
-    id-hook NumberOpSymbol (*)
+    id-hook ACU_NumberOpSymbol (*)
     op-hook succSymbol (s_ : Nat ~> NzNat)
     op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
   op _quo_ : Nat NzNat -> Nat [prec 31 gather (E e) special (
@@ -292,83 +292,83 @@ fmod FOO is
     id-hook NumberOpSymbol (modExp)
     op-hook succSymbol (s_ : Nat ~> NzNat))] .
   op gcd : NzNat Nat -> NzNat [assoc comm special (
-    id-hook NumberOpSymbol (gcd)
+    id-hook ACU_NumberOpSymbol (gcd)
     op-hook succSymbol (s_ : Nat ~> NzNat)
     op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
   op gcd : Nat Nat -> Nat [assoc comm special (
-    id-hook NumberOpSymbol (gcd)
+    id-hook ACU_NumberOpSymbol (gcd)
     op-hook succSymbol (s_ : Nat ~> NzNat)
     op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
   op gcd : NzInt Int -> NzNat [assoc comm special (
-    id-hook NumberOpSymbol (gcd)
+    id-hook ACU_NumberOpSymbol (gcd)
     op-hook succSymbol (s_ : Nat ~> NzNat)
     op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
   op gcd : Int Int -> Nat [assoc comm special (
-    id-hook NumberOpSymbol (gcd)
+    id-hook ACU_NumberOpSymbol (gcd)
     op-hook succSymbol (s_ : Nat ~> NzNat)
     op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
   op gcd : NzRat Rat -> NzRat [assoc comm special (
-    id-hook NumberOpSymbol (gcd)
+    id-hook ACU_NumberOpSymbol (gcd)
     op-hook succSymbol (s_ : Nat ~> NzNat)
     op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
   op gcd : Rat Rat -> Rat [assoc comm special (
-    id-hook NumberOpSymbol (gcd)
+    id-hook ACU_NumberOpSymbol (gcd)
     op-hook succSymbol (s_ : Nat ~> NzNat)
     op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
   op lcm : NzNat NzNat -> NzNat [assoc comm special (
-    id-hook NumberOpSymbol (lcm)
+    id-hook ACU_NumberOpSymbol (lcm)
     op-hook succSymbol (s_ : Nat ~> NzNat)
     op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
   op lcm : Nat Nat -> Nat [assoc comm special (
-    id-hook NumberOpSymbol (lcm)
+    id-hook ACU_NumberOpSymbol (lcm)
     op-hook succSymbol (s_ : Nat ~> NzNat)
     op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
   op lcm : NzInt NzInt -> NzNat [assoc comm special (
-    id-hook NumberOpSymbol (lcm)
+    id-hook ACU_NumberOpSymbol (lcm)
     op-hook succSymbol (s_ : Nat ~> NzNat)
     op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
   op lcm : Int Int -> Nat [assoc comm special (
-    id-hook NumberOpSymbol (lcm)
+    id-hook ACU_NumberOpSymbol (lcm)
     op-hook succSymbol (s_ : Nat ~> NzNat)
     op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
   op lcm : NzRat NzRat -> NzRat [assoc comm special (
-    id-hook NumberOpSymbol (lcm)
+    id-hook ACU_NumberOpSymbol (lcm)
     op-hook succSymbol (s_ : Nat ~> NzNat)
     op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
   op lcm : Rat Rat -> Rat [assoc comm special (
-    id-hook NumberOpSymbol (lcm)
+    id-hook ACU_NumberOpSymbol (lcm)
     op-hook succSymbol (s_ : Nat ~> NzNat)
     op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
   op _xor_ : Nat Nat -> Nat [assoc comm prec 55 gather (e E) special (
-    id-hook NumberOpSymbol (xor)
+    id-hook ACU_NumberOpSymbol (xor)
     op-hook succSymbol (s_ : Nat ~> NzNat)
     op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
   op _xor_ : Int Int -> Int [assoc comm prec 55 gather (e E) special (
-    id-hook NumberOpSymbol (xor)
+    id-hook ACU_NumberOpSymbol (xor)
     op-hook succSymbol (s_ : Nat ~> NzNat)
     op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
   op _&_ : Nat Nat -> Nat [assoc comm prec 53 gather (e E) special (
-    id-hook NumberOpSymbol (&)
+    id-hook ACU_NumberOpSymbol (&)
     op-hook succSymbol (s_ : Nat ~> NzNat)
     op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
   op _&_ : Int Int -> Int [assoc comm prec 53 gather (e E) special (
-    id-hook NumberOpSymbol (&)
+    id-hook ACU_NumberOpSymbol (&)
     op-hook succSymbol (s_ : Nat ~> NzNat)
     op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
   op _|_ : NzNat Nat -> NzNat [assoc comm prec 57 gather (e E) special (
-    id-hook NumberOpSymbol (|)
+    id-hook ACU_NumberOpSymbol (|)
     op-hook succSymbol (s_ : Nat ~> NzNat)
     op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
   op _|_ : Nat Nat -> Nat [assoc comm prec 57 gather (e E) special (
-    id-hook NumberOpSymbol (|)
+    id-hook ACU_NumberOpSymbol (|)
     op-hook succSymbol (s_ : Nat ~> NzNat)
     op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
   op _|_ : NzInt Int -> NzInt [assoc comm prec 57 gather (e E) special (
-    id-hook NumberOpSymbol (|)
+    id-hook ACU_NumberOpSymbol (|)
     op-hook succSymbol (s_ : Nat ~> NzNat)
     op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
   op _|_ : Int Int -> Int [assoc comm prec 57 gather (e E) special (
-    id-hook NumberOpSymbol (|)
+    id-hook ACU_NumberOpSymbol (|)
     op-hook succSymbol (s_ : Nat ~> NzNat)
     op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
   op _>>_ : Nat Nat -> Nat [prec 35 gather (E e) special (

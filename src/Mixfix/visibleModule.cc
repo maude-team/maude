@@ -161,9 +161,7 @@ VisibleModule::showSortsAndSubsorts(ostream& s) const
 void
 VisibleModule::showModule(ostream& s, bool all) const
 {
-  if (getModuleType() == FUNCTIONAL_MODULE)
-    s << 'f';
-  s << "mod " << this << " is\n";
+  s << moduleTypeString(getModuleType()) << ' ' << this << " is\n";
   showSorts1(s, true, all);
   showSubsorts(s, true, all);
   showPolymorphs(s, true, all);
@@ -174,7 +172,7 @@ VisibleModule::showModule(ostream& s, bool all) const
   showRls(s, true, all);
   if (UserLevelRewritingContext::interrupted())
     return;
-  s << ((getModuleType() == FUNCTIONAL_MODULE) ? "endfm\n" : "endm\n");
+  s << moduleEndString(getModuleType()) << '\n';
 }
 
 void
