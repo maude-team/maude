@@ -344,7 +344,7 @@ MixfixModule::findSymbol(int name,
 		    }
 		  if (sameDomain == true &&
 		      (rangeComponent == 0 ||
-		       rangeComponent == domainAndRange[nrArgs]->component()))
+		       rangeComponent == domainAndRange[2]->component()))
 		    return s;
 		}   
 	    }

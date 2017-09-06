@@ -49,6 +49,7 @@ IterationSetGenerator::IterationSetGenerator(DagNode* start,
     normalForm(normalForm)
 {
   zeroReturnable = zeroAllowed;
+  started = false;
 }
 
 IterationSetGenerator::~IterationSetGenerator()
@@ -68,9 +69,12 @@ IterationSetGenerator::findNextSolution()
 
   if (genQueue.empty())
     {
+      if (started)
+	return 0;  // hack for emptied queue in normal form mode
       genQueue.push_back(SearchNode());
       genQueue.back().generator = strategy->execute(start.getNode(), context);
       genQueue.back().startDag = (zeroAllowed && normalForm) ? start.getNode() : 0;
+      started = true;
     }
 
   do
@@ -90,7 +94,10 @@ IterationSetGenerator::findNextSolution()
 	  genQueue.push_back(SearchNode());
 	  genQueue.back().generator = strategy->execute(d, context);
 	  genQueue.back().startDag = normalForm ? d : 0;
-
+	  //
+	  //	Since we produced a successor we earn our place in the queue but we
+	  //	can never return our start node as a normal form.
+	  //
 	  genQueue.push_back(SearchNode());
 	  genQueue.back().generator = g;
 	  genQueue.back().startDag = 0;
