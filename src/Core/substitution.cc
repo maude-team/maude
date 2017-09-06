@@ -45,8 +45,6 @@
 //	variable class definitions
 #include "variableDagNode.hh"
 
-//int Substitution::allocateSize = 1;
-
 LocalBinding*
 Substitution::operator-(const Substitution& original) const
 {
@@ -77,6 +75,7 @@ Substitution::operator-(const Substitution& original) const
   return result;
 }
 
+/*
 LocalBinding*
 Substitution::makeLocalBinding() const
 {
@@ -176,3 +175,4 @@ Substitution::merge(const Substitution& other, SubproblemAccumulator& subproblem
     }
   return true;
 }
+*/

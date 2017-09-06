@@ -38,14 +38,14 @@
 //	interface class definitions
 #include "symbol.hh"
 #include "dagNode.hh"
-#include "subproblem.hh"
+//#include "subproblem.hh"
 #include "extensionInfo.hh"
 
 //	core class definitions
 #include "module.hh"
 #include "sortBdds.hh"
 #include "connectedComponent.hh"
-#include "subproblemAccumulator.hh"
+//#include "subproblemAccumulator.hh"
 //#include "rewritingContext.hh"
 #include "unificationContext.hh"
 #include "freshVariableGenerator.hh"
@@ -88,15 +88,16 @@ NarrowingUnificationProblem::NarrowingUnificationProblem(Rule* rule,
   //
   //	Solve the underlying many-sorted unification problem.
   //
-  SubproblemAccumulator subproblems;
-  viable = rule->getLhsDag()->computeSolvedForm(target, *unsortedSolution, subproblem, extensionInfo);
-  if (!viable)
-    subproblem = 0;  // for safe destruction
+  //SubproblemAccumulator subproblems;
+  //viable = rule->getLhsDag()->computeSolvedForm(target, *unsortedSolution, subproblem, extensionInfo);
+  viable = rule->getLhsDag()->computeSolvedForm(target, *unsortedSolution, pendingStack);
+  //  if (!viable)
+  //    subproblem = 0;  // for safe destruction
 }
 
 NarrowingUnificationProblem::~NarrowingUnificationProblem()
 {
-  delete subproblem;
+  //delete subproblem;
   delete orderSortedUnifiers;
   delete unsortedSolution;
   delete sortedSolution;
@@ -114,6 +115,7 @@ NarrowingUnificationProblem::markReachableNodes()
 	  d->mark();
       }
   }
+  /*
   {
     int nrFragile = unsortedSolution->nrFragileBindings();
     for (int i = 0; i < nrFragile; i++)
@@ -123,6 +125,7 @@ NarrowingUnificationProblem::markReachableNodes()
 	  d->mark();
       }
   }
+  */
 }
 
 bool
@@ -135,7 +138,8 @@ NarrowingUnificationProblem::findNextUnifier()
       //
       //	First solution.
       //
-      if (subproblem != 0 && !(subproblem->unificationSolve(true, *unsortedSolution)))
+      //      if (subproblem != 0 && !(subproblem->unificationSolve(true, *unsortedSolution)))
+      if (!(pendingStack.solve(true, *unsortedSolution)))
 	  return false;
       if (!extractUnifier())
 	goto nextUnsorted;
@@ -155,7 +159,8 @@ NarrowingUnificationProblem::findNextUnifier()
 	  delete orderSortedUnifiers;
 	  orderSortedUnifiers = 0;
 	nextUnsorted:
-	  if (subproblem == 0 || !(subproblem->unificationSolve(false, *unsortedSolution)))
+	  //	  if (subproblem == 0 || !(subproblem->unificationSolve(false, *unsortedSolution)))
+	  if (!(pendingStack.solve(false, *unsortedSolution)))
 	    return false;
 	  if (!extractUnifier())
 	    goto nextUnsorted;

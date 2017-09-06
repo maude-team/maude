@@ -45,5 +45,10 @@ class RhsAutomaton;
 //
 class Subproblem;
 class ExtensionInfo;
+//
+//	This class must be defined for equational theories that generate
+//	unification subproblems.
+//
+class UnificationSubproblem;
 
 #endif

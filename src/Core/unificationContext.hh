@@ -26,8 +26,9 @@
 #ifndef _unificationContext_hh_
 #define _unificationContext_hh_
 #include "substitution.hh"
+#include "simpleRootContainer.hh"
 
-class UnificationContext : public Substitution
+class UnificationContext : public Substitution, private SimpleRootContainer
 {
 public:
   UnificationContext(FreshVariableGenerator* freshVariableGenerator, int nrOriginalVariables);
@@ -35,10 +36,21 @@ public:
   DagNode* makeFreshVariable(ConnectedComponent* component);
   Sort* getFreshVariableSort(int index) const;
 
+  void unificationBind(VariableDagNode* variable, DagNode* value);
+  VariableDagNode* getVariableDagNode(int index);
+
+protected:
+  //
+  //	We make this protected so that a derived class can override it and then call
+  //	our version.
+  //
+  void markReachableNodes();
+
 private:
   FreshVariableGenerator* const freshVariableGenerator;
   const int nrOriginalVariables;
   Vector<Sort*> freshVariableSorts;
+  Vector<VariableDagNode*> variableDagNodes;
 };
 
 inline Sort*
@@ -47,6 +59,11 @@ UnificationContext::getFreshVariableSort(int index) const
   return freshVariableSorts[index - nrOriginalVariables];
 }
 
-
+inline VariableDagNode*
+UnificationContext::getVariableDagNode(int index)
+{
+  int nrVariableDagNodes = variableDagNodes.size();
+  return (index < nrVariableDagNodes) ? variableDagNodes[index] : 0;
+}
 
 #endif

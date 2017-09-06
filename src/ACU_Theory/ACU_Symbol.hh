@@ -59,6 +59,7 @@ public:
 			      const Vector<int>& realToBdd,
 			      DagNode* subject,
 			      Vector<Bdd>& generalizedSort);
+  UnificationSubproblem* makeUnificationSubproblem();
   //
   //	Member functions special to ACU_Symbol.
   //

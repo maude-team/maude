@@ -1,3 +1,23 @@
+2008-02-08  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeDagNode.cc (computeSolvedForm2): Substitution ->
+	UnificationContext
+
+	* freeDagNode.hh (class FreeDagNode): updated decl for
+	computeSolvedForm2()
+
+2008-02-05  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeDagNode.cc (computeSolvedForm2): rewritten
+
+	* freeDagNode.hh (class FreeDagNode): updated decl for computeSolvedForm2()
+
+2008-01-14  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeDagNode.cc (instantiateWithReplacement): code cleaning
+
+===================================Maude90===========================================
+
 2007-11-01  Steven Eker  <eker@goo.csl.sri.com>
 
 	* freeDagNode.cc (instantiateWithReplacement): handle the case

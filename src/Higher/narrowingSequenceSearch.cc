@@ -2,7 +2,7 @@
 
     This file is part of the Maude 2 interpreter.
 
-    Copyright 1997-2003 SRI International, Menlo Park, CA 94025, USA.
+    Copyright 1997-2008 SRI International, Menlo Park, CA 94025, USA.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 */
 
 //
-//	Implementation for class RewriteSequenceSearch.
+//	Implementation for class NarrowingSequenceSearch.
 //
 
 //	utility stuff
@@ -53,10 +53,12 @@ NarrowingSequenceSearch::NarrowingSequenceSearch(RewritingContext* initial,
 						 SearchType searchType,
 						 Pattern* goal,
 						 int maxDepth,
+						 int narrowingFlags,
 						 FreshVariableGenerator* freshVariableGenerator)
   : initial(initial),
     goal(goal),
     maxDepth((searchType == ONE_STEP) ? 1 : maxDepth),
+    narrowingFlags(narrowingFlags),
     freshVariableGenerator(freshVariableGenerator)
 {
   initial->reduce();
@@ -67,7 +69,7 @@ NarrowingSequenceSearch::NarrowingSequenceSearch(RewritingContext* initial,
   //
   //	initialState becomes responsible for deleting initial.
   //
-  NarrowingSearchState* initialState = new NarrowingSearchState(initial, freshVariableGenerator);
+  NarrowingSearchState* initialState = new NarrowingSearchState(initial, freshVariableGenerator, UNDEFINED, narrowingFlags);
   stateStack.append(initialState);
 
   needToTryInitialState = (searchType == ANY_STEPS);
@@ -153,7 +155,23 @@ NarrowingSequenceSearch::findNextNormalForm()
     {
       if (currentIndex == maxDepth)
 	goto backtrack;
-      DagNode* narrowedDag = currentState->getNarrowedDag();
+      
+      DagNode* replacement;  // will be set by getNarrowedDag()
+      DagNode* narrowedDag = currentState->getNarrowedDag(replacement);
+
+      if (RewritingContext::getTraceStatus())
+	{
+	  RewritingContext* context = currentState->getContext();
+	  context->traceNarrowingStep(currentState->getRule(),
+				      currentState->getDagNode(),
+				      replacement,
+				      &(currentState->getVariableInfo()),
+				      &(currentState->getSubstitution()),
+				      narrowedDag);
+	  if (context->traceAbort())
+	    return false;
+	}
+
       RewritingContext* newContext = initial->makeSubcontext(narrowedDag);
       newContext->reduce();
       if (seenSet.dagNode2Index(newContext->root()) != NONE)
@@ -163,7 +181,7 @@ NarrowingSequenceSearch::findNextNormalForm()
 	  continue;
 	}
       seenSet.insert(newContext->root());
-      currentState = new NarrowingSearchState(newContext, freshVariableGenerator);
+      currentState = new NarrowingSearchState(newContext, freshVariableGenerator, UNDEFINED, narrowingFlags);
       stateStack.append(currentState);
       ++currentIndex;
       topOfStackFresh = true;
@@ -193,19 +211,33 @@ NarrowingSequenceSearch::findNextInterestingState()
       NarrowingSearchState* currentState = stateStack[currentIndex];
       if ((maxDepth == NONE || currentIndex < maxDepth) && currentState->findNextNarrowing())
 	{
-	  DagNode* narrowedDag = currentState->getNarrowedDag();
-	  ////cout << currentState->getDagNode(0) << " narrowed to " << narrowedDag << endl;
+	  DagNode* replacement;  // will be set by getNarrowedDag()
+	  DagNode* narrowedDag = currentState->getNarrowedDag(replacement);
+
+	  if (RewritingContext::getTraceStatus())
+	    {
+	      RewritingContext* context = currentState->getContext();
+	      context->traceNarrowingStep(currentState->getRule(),
+					  currentState->getDagNode(),
+					  replacement,
+					  &(currentState->getVariableInfo()),
+					  &(currentState->getSubstitution()),
+					  narrowedDag);
+	      if (context->traceAbort())
+		return false;
+	    }
 
 	  RewritingContext* newContext = initial->makeSubcontext(narrowedDag);
 	  newContext->reduce();
 	  ////cout << "which reduced to " << newContext->root() << endl;
 	  if (seenSet.dagNode2Index(newContext->root()) != NONE)
 	    {
+	      DebugAdvisory(Tty(Tty::RED) << "DUP state " << Tty(Tty::RESET) << newContext->root());
 	      delete newContext;
 	      continue;
 	    }
 	  seenSet.insert(newContext->root());
-	  stateStack.append(new NarrowingSearchState(newContext, freshVariableGenerator));
+	  stateStack.append(new NarrowingSearchState(newContext, freshVariableGenerator, UNDEFINED, narrowingFlags));
 	  return true;
 	}
       //

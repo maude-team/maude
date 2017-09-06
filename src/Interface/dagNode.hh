@@ -118,6 +118,7 @@ public:
   };
 
   virtual ReturnResult computeBaseSortForGroundSubterms();
+  /*
   bool computeSolvedForm(DagNode* rhs,
 			 Substitution& solution,
 			 Subproblem*& returnedSubproblem,
@@ -126,6 +127,11 @@ public:
 				  Substitution& solution,
 				  Subproblem*& returnedSubproblem,
 				  ExtensionInfo* extensionInfo);
+  */
+
+  bool computeSolvedForm(DagNode* rhs, UnificationContext& solution, PendingUnificationStack& pending);
+  virtual bool computeSolvedForm2(DagNode* rhs, UnificationContext& solution, PendingUnificationStack& pending);
+
   virtual mpz_class nonVariableSize();
   void insertVariables(NatSet& occurs);
   virtual void insertVariables2(NatSet& occurs) {}

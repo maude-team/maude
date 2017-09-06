@@ -1,3 +1,10 @@
+2008-01-22  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: added Bool arg to the XG specific version of
+	metaNarrow
+
+===================================Maude90===========================================
+
 2007-12-04  Steven Eker  <eker@goo.csl.sri.com>
 
 	* prelude.maude: added a failure operator for ResultPair?

@@ -67,6 +67,7 @@ public:
 			      const Vector<int>& realToBdd,
 			      DagNode* subject,
 			      Vector<Bdd>& generalizedSort);
+  UnificationSubproblem* makeUnificationSubproblem();
   //
   //	Member function specific to CUI specific function CUI_Symbol.
   //

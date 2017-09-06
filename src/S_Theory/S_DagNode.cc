@@ -213,23 +213,15 @@ S_DagNode::computeBaseSortForGroundSubterms()
 }
 
 bool
-S_DagNode::computeSolvedForm2(DagNode* rhs,
-			      Substitution& solution,
-			      Subproblem*& returnedSubproblem,
-			      ExtensionInfo* extensionInfo)
+S_DagNode::computeSolvedForm2(DagNode* rhs, UnificationContext& solution, PendingUnificationStack& pending)
 {
-  if (extensionInfo != 0)
-    {
-      IssueWarning("Unification of iter operators with extension is not currently implemented.");
-      return false;
-    }
-   S_Symbol* s = symbol();
+  S_Symbol* s = symbol();
   if (s == rhs->symbol())
     {
       S_DagNode* rhs2 = safeCast(S_DagNode*, rhs);
       mpz_class diff = *(rhs2->number) - *number;
       if (diff == 0)
-	return arg->computeSolvedForm(rhs2->arg, solution, returnedSubproblem);
+	return arg->computeSolvedForm(rhs2->arg, solution, pending);
       if (diff > 0)
 	{
 	  if (dynamic_cast<VariableDagNode*>(arg))
@@ -237,7 +229,7 @@ S_DagNode::computeSolvedForm2(DagNode* rhs,
 	      DagNode* d = new S_DagNode(s, diff, rhs2->arg);
 	      if (rhs2->arg->getSortIndex() != Sort::SORT_UNKNOWN)
 		s->computeBaseSort(d);
-	      return arg->computeSolvedForm(d, solution, returnedSubproblem);
+	      return arg->computeSolvedForm(d, solution, pending);
 	    }
 	}
       else
@@ -247,13 +239,13 @@ S_DagNode::computeSolvedForm2(DagNode* rhs,
 	      DagNode* d = new S_DagNode(s, -diff, arg);
 	      if (arg->getSortIndex() != Sort::SORT_UNKNOWN)
 		s->computeBaseSort(d);
-	      return rhs2->arg->computeSolvedForm(d, solution, returnedSubproblem);
+	      return rhs2->arg->computeSolvedForm(d, solution, pending);
 	    }
 	}
       return 0;
     }
   if (dynamic_cast<VariableDagNode*>(rhs))
-    return rhs->computeSolvedForm(this, solution, returnedSubproblem);
+    return rhs->computeSolvedForm(this, solution, pending);
   return false;
 }
 

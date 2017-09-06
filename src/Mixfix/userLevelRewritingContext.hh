@@ -92,8 +92,17 @@ public:
 			int fragmentIndex,
 			bool success);
 
+  void traceNarrowingStep(Rule* rule,
+			  DagNode* redex,
+			  DagNode* replacement,
+			  const NarrowingVariableInfo* variableInfo,
+			  const Substitution* substitution,
+			  DagNode* newState);
+
   static void printSubstitution(const Substitution& substitution,
 				const VariableInfo& varInfo);
+
+
 
 private:
   static void interruptHandler(int);

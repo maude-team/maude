@@ -44,6 +44,7 @@
 #include "ACU_TreeDagNode.hh"
 #include "ACU_Term.hh"
 #include "ACU_ExtensionInfo.hh"
+#include "ACU_UnificationSubproblem2.hh"
 
 ACU_Symbol::ACU_Symbol(int id,
 		       const Vector<int>& strategy,
@@ -374,11 +375,15 @@ ACU_Symbol::stackArguments(DagNode* subject,
     }
 }
 
+//
+//	Unification code.
+//
+
 void
 ACU_Symbol::computeGeneralizedSort(const SortBdds& sortBdds,
-				    const Vector<int>& realToBdd,
-				    DagNode* subject,
-				    Vector<Bdd>& generalizedSort)
+				   const Vector<int>& realToBdd,
+				   DagNode* subject,
+				   Vector<Bdd>& generalizedSort)
 {
   Assert(safeCast(ACU_BaseDagNode*, subject)->isTree() == false,
 	 "Tree case not implemented: " << subject <<
@@ -420,4 +425,10 @@ ACU_Symbol::computeGeneralizedSort(const SortBdds& sortBdds,
 	}
     }
   bdd_freepair(argMap);
+}
+
+UnificationSubproblem*
+ACU_Symbol::makeUnificationSubproblem()
+{
+  return new ACU_UnificationSubproblem2(this);
 }

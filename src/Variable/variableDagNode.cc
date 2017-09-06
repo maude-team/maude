@@ -40,6 +40,7 @@
 //      core class definitions
 #include "substitution.hh"
 #include "narrowingVariableInfo.hh"
+#include "unificationContext.hh"
 
 //	variable class definitions
 #include "variableSymbol.hh"
@@ -132,17 +133,8 @@ VariableDagNode::computeBaseSortForGroundSubterms()
 }
 
 bool
-VariableDagNode::computeSolvedForm2(DagNode* rhs,
-				    Substitution& solution,
-				    Subproblem*& returnedSubproblem,
-				    ExtensionInfo* extensionInfo)
+VariableDagNode::computeSolvedForm2(DagNode* rhs, UnificationContext& solution, PendingUnificationStack& pending)
 {
-  if (extensionInfo != 0)
-    {
-      IssueWarning("Unification of bare variable with extension is not currently implemented.");
-      return false;
-    }
-  returnedSubproblem = 0;
   VariableDagNode* lv = lastVariableInChain(solution);
   if (VariableDagNode* v = dynamic_cast<VariableDagNode*>(rhs))
     {
@@ -155,13 +147,13 @@ VariableDagNode::computeSolvedForm2(DagNode* rhs,
       DagNode* lt = solution.value(lv->index);
       if (lt == 0)  // left variable unbound
 	{
-	  solution.bind(lv->index, rv);
+	  solution.unificationBind(lv, rv);
 	  return true;
 	}
       DagNode* rt = solution.value(rv->index);
       if (rt == 0)  // right variable unbound
 	{
-	  solution.bind(rv->index, lv);
+	  solution.unificationBind(rv, lv);
 	  return true;
 	}
       //
@@ -172,7 +164,7 @@ VariableDagNode::computeSolvedForm2(DagNode* rhs,
       //	Suppose lt >= rt. Notionally we add lv =? rv to the mix.
       //	Then we have:
       //	  lv =? rv, lv =? lt, rv =? rt
-      //	By coalesce we get:
+      //	By coalesce of lv and rv, we replace lv by rv, recording lv |-> rv and we get:
       //	  lv |-> rv, rv =? lt, rv =? rt
       //	and by merge on rv we get:
       //	  lv |-> rv, rv =? rt, lt =? rt
@@ -181,10 +173,10 @@ VariableDagNode::computeSolvedForm2(DagNode* rhs,
       //	is almost symmetric.
       //	
       if (lt->nonVariableSize() >= rt->nonVariableSize())
-	solution.bind(lv->index, rv);
+	solution.unificationBind(lv, rv);
       else
-	solution.bind(rv->index, lv);
-      return lt->computeSolvedForm(rt, solution, returnedSubproblem);
+	solution.unificationBind(rv, lv);
+      return lt->computeSolvedForm(rt, solution, pending);
     }
   //
   //	Variable against non-variable case
@@ -200,15 +192,15 @@ VariableDagNode::computeSolvedForm2(DagNode* rhs,
   DagNode* lt = solution.value(lv->index);
   if (lt == 0)
     {
-      solution.bind(lv->index, rhs);
+      solution.unificationBind(lv, rhs);
       return true;
     }
   //
   //	Hard case - our variable already has a solved form. We do a merge step.
   //
   if (lt->nonVariableSize() > rhs->nonVariableSize())
-    solution.bind(lv->index, rhs);
-  return lt->computeSolvedForm(rhs, solution, returnedSubproblem);
+    solution.unificationBind(lv, rhs);
+  return lt->computeSolvedForm(rhs, solution, pending);
 }
 
 mpz_class

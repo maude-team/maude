@@ -76,6 +76,7 @@ MetaLevelOpSymbol::makeNarrowingSequenceSearch(MetaModule* m,
 					     searchType,
 					     goal,
 					     maxDepth,
+					     NarrowingSearchState::ALLOW_NONEXEC,
 					     new FreshVariableSource(m, 0));
 	  // not needed unless we support conditions
 	  //g->deepSelfDestruct();
@@ -141,8 +142,10 @@ MetaLevelOpSymbol::makeNarrowingSequenceSearch2(MetaModule* m,
 {
   RewriteSequenceSearch::SearchType searchType;
   int maxDepth;
+  bool singlePosition;
   if (downSearchType(subject->getArgument(2), searchType) &&
-      metaLevel->downBound(subject->getArgument(3), maxDepth))
+      metaLevel->downBound(subject->getArgument(3), maxDepth) &&
+      metaLevel->downBool(subject->getArgument(4), singlePosition))
     {
       if (Term* s = metaLevel->downTerm(subject->getArgument(1), m))
 	{
@@ -153,6 +156,9 @@ MetaLevelOpSymbol::makeNarrowingSequenceSearch2(MetaModule* m,
 					     searchType,
 					     0,
 					     maxDepth,
+					     (singlePosition ?
+					     NarrowingSearchState::ALLOW_NONEXEC | NarrowingSearchState::SINGLE_POSITION :
+					     NarrowingSearchState::ALLOW_NONEXEC),
 					     new FreshVariableSource(m, 0));
 	}
     }
@@ -163,12 +169,12 @@ bool
 MetaLevelOpSymbol::metaNarrow2(FreeDagNode* subject, RewritingContext& context)
 {
   //
-  //	op metaNarrow : Module Term Qid Bound Nat ~> ResultPair? .
+  //	op metaNarrow : Module Term Qid Bound Bool Nat ~> ResultPair? .
   //
   if (MetaModule* m = metaLevel->downModule(subject->getArgument(0)))
     {
       Int64 solutionNr;
-      if (metaLevel->downSaturate64(subject->getArgument(4), solutionNr) &&
+      if (metaLevel->downSaturate64(subject->getArgument(5), solutionNr) &&
 	  solutionNr >= 0)
 	{
 	  NarrowingSequenceSearch* state;

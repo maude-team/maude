@@ -2,7 +2,7 @@
 
     This file is part of the Maude 2 interpreter.
 
-    Copyright 1997-2003 SRI International, Menlo Park, CA 94025, USA.
+    Copyright 1997-2008 SRI International, Menlo Park, CA 94025, USA.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,30 +21,24 @@
 */
 
 //
-//      Forward declarations for ACU theory classes.
+//	Abstract base class for the accumulation and simultaneous solution of subproblems during unification.
 //
-#ifndef _ACU_Theory_hh_
-#define _ACU_Theory_hh_
+#ifndef _unificationSubproblem_hh_
+#define _unificationSubproblem_hh_
 
-class ACU_Symbol;
-class ACU_Term;
-class ACU_ArgumentIterator;
-class ACU_BaseDagNode;
-class ACU_DagNode;
-class ACU_DagArgumentIterator;
-class ACU_TreeDagNode;
-class ACU_TreeDagArgumentIterator;
-class ACU_LhsAutomaton;
-class ACU_CollectorLhsAutomaton;
-class ACU_NGA_LhsAutomaton;
-class ACU_VarLhsAutomaton;
-class ACU_GndLhsAutomaton;
-class ACU_NonLinearLhsAutomaton;
-class ACU_RhsAutomaton;
-class ACU_Subproblem;
-class ACU_ExtensionInfo;
-class ACU_UnificationSubproblem;
-class ACU_UnificationWithUnificationSubproblem;
-class ACU_UnificationSubproblem2;
+class UnificationSubproblem
+{
+public:
+  virtual ~UnificationSubproblem() {}  // deep
+
+  virtual void addUnification(DagNode* lhs, DagNode* rhs) { CantHappen("Not implemented"); }
+  virtual bool solve(bool findFirst, UnificationContext& solution, PendingUnificationStack& pending) { CantHappen("Not implemented"); return false; }
+
+#ifdef DUMP
+  virtual void dump(ostream& s,
+		    const VariableInfo& variableInfo,
+		    int indentLevel = 0) {}  // HACK
+#endif
+};
 
 #endif

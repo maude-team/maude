@@ -40,6 +40,7 @@
 #include "variableInfo.hh"
 #include "substitution.hh"
 #include "simpleRootContainer.hh"
+#include "pendingUnificationStack.hh"
 
 class NarrowingUnificationProblem : private SimpleRootContainer
 {
@@ -75,7 +76,8 @@ private:
   const SortBdds* sortBdds;		// sort computation BDDs for our module
 
   UnificationContext* unsortedSolution;	// for accumulating solved forms and constructing unsorted unifiers
-  Subproblem* subproblem;		// for stuff unresolved by computeSolvedForm() pass
+  //Subproblem* subproblem;		// for stuff unresolved by computeSolvedForm() pass
+  PendingUnificationStack pendingStack;
   bool viable;				// true if problem didn't fail computeSolvedForm() pass
   NatSet freeVariables;	     		// indices (slots) of unbound variables in unsorted unifier
   AllSat* orderSortedUnifiers;		// satisfiability problem encoding sorts for order-sorted unifiers

@@ -58,13 +58,37 @@
 #define RETURN(token) \
   { lvalp->yyToken.tokenize(yytext, lineNumber); return (token); }
 
-#define FIX_UP(token) \
+#define RETURN_FIX_UP(token) \
   { lvalp->yyToken.fixUp(yytext, lineNumber); return (token); }
 
+#define SAVE(token) \
+  { savedToken.tokenize(yytext, lineNumber); savedReturn = token; }
+
+#define SAVE_FIX_UP(token) \
+  { savedToken.fixUp(yytext, lineNumber); savedReturn = token; }
+
+#define RETURN_SAVED(token) \
+  { lvalp->yyToken = savedToken; return (token); }
+
+#define STORE \
+  { Token t; t.tokenize(yytext, lineNumber); lexerBubble.append(t); DebugAdvisory("Stored " << t); }
+#define STORE_FIX_UP \
+  { Token t; t.fixUp(yytext, lineNumber); lexerBubble.append(t); DebugAdvisory("Stored fixUp " << t); }
+
+#define EXIT(token) \
+  { yy_pop_state(); RETURN(token) }
+
+Token savedToken;
+int savedReturn;
 int braceCount;
 int parenCount;
+int terminationSet;
 string accumulator;
 string fileName;
+
+//int terminationCondition;
+int minLength;
+extern Vector<Token> lexerBubble;
 %}
 
 stringContent	([^[:cntrl:]"\\]|("\\"[^[:cntrl:]])|(\\\n))
@@ -76,6 +100,10 @@ maudeId		(({special}|{normalSeq})+)
 
 %s ID_MODE
 %s CMD_MODE
+%s SEEN_DOT
+%s BUBBLE_MODE
+%s END_STATEMENT_MODE
+%s END_COMMAND_MODE
 %x FILE_NAME_MODE
 %x FILE_NAME_QUOTE_MODE
 %x STRING_MODE
@@ -128,6 +156,7 @@ srew|srewrite				return KW_SREWRITE;
 loop					return KW_LOOP;
 cont|continue				return KW_CONTINUE;
 nar|narrow				return KW_NARROW;
+xg-narrow				return KW_XG_NARROW;
 match					return KW_MATCH;
 xmatch					return KW_XMATCH;
 search					return KW_SEARCH;
@@ -221,7 +250,25 @@ rat|rational				return KW_RAT;
                                         }
 [:,()\[\]]				RETURN(*yytext)
 [1-9][0-9]*				RETURN(NUMERIC_ID)
-{maudeId}|[.{},]			FIX_UP(IDENTIFIER)
+[.{}]					RETURN(IDENTIFIER)
+{maudeId}"."				{
+					  SAVE_FIX_UP(ENDS_IN_DOT)
+					  BEGIN(SEEN_DOT);
+					}
+{maudeId}				RETURN_FIX_UP(IDENTIFIER)
+}
+
+<SEEN_DOT>{
+(([ \t\r\f\v]*\n)|([ \t\r\f\v]+("***"|"---")))	{
+					  yyless(0);
+					  BEGIN(CMD_MODE);
+					  RETURN_SAVED(savedReturn)
+					}
+.					{
+					  yyless(0);
+					  BEGIN(CMD_MODE);
+					  RETURN_SAVED(IDENTIFIER)
+					}
 }
 
  /*
@@ -279,8 +326,147 @@ endv					RETURN(KW_ENDV)
 "~>"					RETURN(KW_PARTIAL)
 "::"					RETURN(KW_COLON2)
 [:()\[\]{}.,<=|+*]			RETURN(*yytext)
-{maudeId}"."				FIX_UP(ENDS_IN_DOT)
-{maudeId}				FIX_UP(IDENTIFIER)
+{maudeId}"."				RETURN_FIX_UP(ENDS_IN_DOT)
+{maudeId}				RETURN_FIX_UP(IDENTIFIER)
+}
+
+ /*
+  *	Bubble mode squirrels tokens away in lexerBubble until some termination criteria is met.
+  */
+<BUBBLE_MODE>{
+:					{
+					  if (parenCount == 0 && (terminationSet & BAR_COLON) && lexerBubble.length() >= minLength)
+					    EXIT(*yytext)
+					  else
+					    STORE
+					}
+,					{
+					  if (parenCount == 0 && (terminationSet & BAR_COMMA) && lexerBubble.length() >= minLength)
+					    EXIT(*yytext)
+					  else
+					    STORE
+					}
+\[					{
+					  if (parenCount == 0 && (terminationSet & BAR_LEFT_BRACKET) && lexerBubble.length() >= minLength)
+					    EXIT(*yytext)
+					  else
+					    STORE
+					}
+\]					{
+					  if (parenCount == 0 && (terminationSet & BAR_RIGHT_BRACKET) && lexerBubble.length() >= minLength)
+					    EXIT(*yytext)
+					  else
+					    STORE
+					}
+=					{
+					  if (parenCount == 0 && (terminationSet & BAR_EQUALS) && lexerBubble.length() >= minLength)
+					    EXIT(*yytext)
+					  else
+					    STORE
+					}
+=>					{
+					  if (parenCount == 0 && (terminationSet & BAR_ARROW2) && lexerBubble.length() >= minLength)
+					    EXIT(KW_ARROW2)
+					  else
+					    STORE
+					}
+to					{
+					  if (parenCount == 0 && (terminationSet & BAR_TO) && lexerBubble.length() >= minLength)
+					    EXIT(KW_TO)
+					  else
+					    STORE
+					}
+if					{
+					  if (parenCount == 0 && (terminationSet & BAR_IF) && lexerBubble.length() >= minLength)
+					    EXIT(KW_IF)
+					  else
+					    STORE
+					}
+assoc|associative|comm|commutative|id:|identity:|idem|idempotent|iter|iterated|left|right|prec|precedence|gather|metadata|strat|strategy|frozen|poly|polymorphic|ctor|constructor|latex|special|config|configuration|obj|object|msg|message|ditto|format|memo	{
+					  if (parenCount == 0 && (terminationSet & BAR_OP_ATTRIBUTE) && lexerBubble.length() >= minLength)
+					    {
+					      yyless(0);  // need to re-lex it to get the correct return value
+					      yy_pop_state();
+					    }
+					  else
+					    STORE
+					}
+\(					{
+					  ++parenCount;
+					  STORE
+					}
+\)					{
+					  if (parenCount == 0)
+					    {
+					      if ((terminationSet & BAR_RIGHT_PAREN) && lexerBubble.length() >= minLength)
+					        EXIT(*yytext)
+					      IssueWarning(LineNumber(lineNumber) << ": mismatched parentheses.");
+					    }
+					  else
+					    --parenCount;
+					  STORE
+					}
+[\]{}]					STORE
+\.					{
+					  if (parenCount == 0 &&
+					      lexerBubble.length() >= minLength &&
+					      (terminationSet & (END_STATEMENT | END_COMMAND)))
+					    {
+					      SAVE(*yytext)
+					      BEGIN((terminationSet & END_STATEMENT) ? END_STATEMENT_MODE : END_COMMAND_MODE);
+					    }
+					  else
+					    STORE
+					}
+{maudeId}"."				{
+					  if (parenCount == 0 &&
+					      lexerBubble.length() + 1 >= minLength  &&
+					      (terminationSet & (END_STATEMENT | END_COMMAND)))
+					    {
+					      SAVE_FIX_UP(ENDS_IN_DOT)
+					      BEGIN((terminationSet & END_STATEMENT) ? END_STATEMENT_MODE : END_COMMAND_MODE);
+					    }
+					  else
+					    STORE_FIX_UP
+					}
+{maudeId}				STORE_FIX_UP
+}
+
+ /*
+  *	We have saved something that looks like a statement terminating period. We now lex the next
+  *	token to see if it ends a module or starts a new statement, and if so push the lexed token back
+  *	on to the input stream to be re-lexed in a new mode.
+  */
+<END_STATEMENT_MODE>{
+pr|protecting|ex|extending|us|using|inc|including|sort|sorts|subsort|subsorts|op|ops|var|vars|mb|cmb|eq|cq|ceq|rl|crl|end(th|fth|m|fm|sm|om|o|v)|jbo|msg|msgs|class|classes|subclass|subclasses		{
+					  yyless(0);  // BUG - need to deal with white space and comments after the .
+					  yy_pop_state();
+					  RETURN_SAVED(savedReturn)
+					}
+}
+
+<END_COMMAND_MODE>{
+(([ \t\r\f\v]*\n)|([ \t\r\f\v]+("***"|"---")))	{
+					  yyless(0);
+					  yy_pop_state();
+					  RETURN_SAVED(savedReturn)
+					}
+}
+
+<END_STATEMENT_MODE,END_COMMAND_MODE>{
+\.					{
+					  lexerBubble.append(savedToken);
+					  SAVE(*yytext);
+					}
+{maudeId}"."				{
+					  lexerBubble.append(savedToken);
+					  SAVE_FIX_UP(ENDS_IN_DOT)
+					}
+[^ \n\r\f\t\v]				{
+					  lexerBubble.append(savedToken);
+					  yyless(0);
+					  BEGIN(BUBBLE_MODE);
+					}
 }
 
 <FILE_NAME_MODE>{

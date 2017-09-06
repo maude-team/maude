@@ -79,6 +79,7 @@ NarrowingSearchState::NarrowingSearchState(RewritingContext* context,
     }
   */
   unificationProblem = 0;
+  noFurtherPositions = false;
 }
 
 NarrowingSearchState::~NarrowingSearchState()
@@ -139,13 +140,16 @@ NarrowingSearchState::findNextNarrowing()
 								   freshVariableGenerator,
 								   0 /*getExtensionInfo()*/ );
 	      if (unificationProblem->findNextUnifier())
-		return true;
+		{
+		  noFurtherPositions = getFlags() & SINGLE_POSITION;
+		  return true;
+		}
 	      delete unificationProblem;
 	    }
 	}
       ruleIndex = 0;
     }
-  while (findNextPosition());
+  while (!noFurtherPositions && findNextPosition());
   unificationProblem = 0;
   return false;
 }
@@ -157,11 +161,11 @@ NarrowingSearchState::getRule() const
 }
 
 DagNode*
-NarrowingSearchState::getNarrowedDag() const
+NarrowingSearchState::getNarrowedDag(DagNode*& replacement) const
 {
   Rule* r = getRule();
   Substitution& s = unificationProblem->getSolution();
-  DagNode* d =  r->getRhsBuilder().construct(s);
+  replacement =  r->getRhsBuilder().construct(s);
   //
   //	Need to clear unused entries in solution that we may have touched to avoid confusing
   //	unification algorithm.
@@ -170,7 +174,7 @@ NarrowingSearchState::getNarrowedDag() const
   for (int i = r->getNrProtectedVariables(); i < nrSlots; ++i)
     s.bind(i,0);
   
-  return rebuildAndInstantiateDag(d, s).first;
+  return rebuildAndInstantiateDag(replacement, s).first;
 }
 
 const Substitution&
@@ -178,4 +182,3 @@ NarrowingSearchState::getSubstitution() const
 {
   return unificationProblem->getSolution();
 }
-

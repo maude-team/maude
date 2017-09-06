@@ -1,3 +1,54 @@
+2008-02-12  Steven Eker  <eker@goo.csl.sri.com>
+
+	* CUI_UnificationSubproblem.cc (solve): implemented
+
+	* CUI_UnificationSubproblem.hh (class CUI_UnificationSubproblem):
+	problems becomes a Vector<Problem>; delete ProblemList
+	(class CUI_UnificationSubproblem): lhs, rhs of Problem become
+	CUI_DagNode*
+
+2008-02-11  Steven Eker  <eker@goo.csl.sri.com>
+
+	* CUI_UnificationSubproblem.cc: created
+
+	* CUI_UnificationSubproblem.hh: created
+
+	* CUI_Symbol.cc (makeUnificationSubproblem): added
+
+	* CUI_Symbol.hh (class CUI_Symbol): added decl for
+	makeUnificationSubproblem()
+
+	* CUI_DagNode.cc (computeSolvedForm2): implemented stub
+
+2008-02-08  Steven Eker  <eker@goo.csl.sri.com>
+
+	* CUI_DagNode.cc (computeSolvedForm2): Substitution ->
+	UnificationContext
+
+	* CUI_DagNode.hh (class CUI_DagNode): updated decl for
+	computeSolvedForm2()
+
+2008-02-05  Steven Eker  <eker@goo.csl.sri.com>
+
+	* CUI_DagNode.cc (computeSolvedForm2): converted to stub
+
+	* CUI_DagNode.hh (class CUI_DagNode): updated decl for
+	computeSolvedForm2()
+
+2008-01-17  Steven Eker  <eker@goo.csl.sri.com>
+
+	* CUI_DagNode.cc (computeSolvedForm2): don't pass nrBindings to
+	SolvedFormSubproblemDisjunction
+
+===================================Maude90===========================================
+
+2008-01-11  Steven Eker  <eker@goo.csl.sri.com>
+
+	* CUI_DagNode.cc (computeSolvedForm2): add missing
+	subproblems.add() in reverse order only case
+
+===================================Maude89j===========================================
+
 2007-11-12  Steven Eker  <eker@goo.csl.sri.com>
 
 	* CUI_DagNode.cc (instantiate2): check ground flags of arguments;

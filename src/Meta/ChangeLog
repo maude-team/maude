@@ -1,3 +1,21 @@
+2008-01-22  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaUnify.cc (metaUnify2): added debug advisories to try and
+	discover unification problem that is causing infinite looping
+
+	* descentSignature.cc (MACRO): metaNarrow2 now has 6 arguments
+
+	* metaNarrow.cc (metaNarrow2): solution # is now arg 5
+	(makeNarrowingSequenceSearch2): handle bool arg
+
+2008-01-21  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaNarrow.cc (makeNarrowingSequenceSearch) 
+	(makeNarrowingSequenceSearch2): pass flags arg to
+	NarrowingSequenceSearch()
+
+===================================Maude90===========================================
+
 2007-12-07  Steven Eker  <eker@goo.csl.sri.com>
 
 	* metaLevel.cc (MetaLevel): need to clear variableGenerator in

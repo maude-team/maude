@@ -258,6 +258,10 @@ FreeDagNode::stackArguments(Vector<RedexPosition>& stack,
     }
 }
 
+//
+//	Unification code.
+//
+
 DagNode::ReturnResult
 FreeDagNode::computeBaseSortForGroundSubterms()
 {
@@ -288,29 +292,23 @@ FreeDagNode::computeBaseSortForGroundSubterms()
 }
 
 bool
-FreeDagNode::computeSolvedForm2(DagNode* rhs,
-				Substitution& solution,
-				Subproblem*& returnedSubproblem,
-				ExtensionInfo* /* extensionInfo */)
+FreeDagNode::computeSolvedForm2(DagNode* rhs, UnificationContext& solution, PendingUnificationStack& pending)
 {
   if (symbol() == rhs->symbol())
     {
       int nrArgs = symbol()->arity();
       Assert(nrArgs > 0, "we shouldn't be called on constants " << this);
-      SubproblemAccumulator subproblems;
       DagNode** args = argArray();
       DagNode** rhsArgs = safeCast(FreeDagNode*, rhs)->argArray();
       for (int i = 0; i < nrArgs; ++i)
 	{
-	  if (!(args[i]->computeSolvedForm(rhsArgs[i], solution, returnedSubproblem)))
+	  if (!(args[i]->computeSolvedForm(rhsArgs[i], solution, pending)))
 	    return false;
-	  subproblems.add(returnedSubproblem);
 	}
-      returnedSubproblem = subproblems.extractSubproblem();
       return true;
     }
   if (dynamic_cast<VariableDagNode*>(rhs))
-    return rhs->computeSolvedForm2(this, solution, returnedSubproblem, 0);
+    return rhs->computeSolvedForm2(this, solution, pending);
   return false;
 }
 
@@ -403,6 +401,10 @@ FreeDagNode::instantiate2(const Substitution& substitution)
   return 0;  // unchanged
 }
 
+//
+//	Narrowing code.
+//
+
 bool
 FreeDagNode::indexVariables2(NarrowingVariableInfo& indices, int baseIndex)
 {
@@ -426,18 +428,18 @@ FreeDagNode::instantiateWithReplacement(const Substitution& substitution, int ar
   Assert(argIndex >= 0 && argIndex < nrArgs, "bad argIndex");
   DagNode** p = argArray();
   DagNode** q = d->argArray();
-  for (int i = 0; i < nrArgs; i++, p++, q++)
+  for (int i = 0; i < nrArgs; i++)
     {
       DagNode* n;
       if (i == argIndex)
 	n = newDag;
       else
 	{
-	  n = *p;
+	  n = p[i];
 	  if (DagNode* c = n->instantiate(substitution))  // changed under substitutition
 	    n = c;
 	}
-      *q = n;
+      q[i] = n;
     }
   return d;
 }

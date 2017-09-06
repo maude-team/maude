@@ -59,9 +59,9 @@ public:
   //
   //	These operations are used by unification.
   //
-  LocalBinding* makeLocalBinding() const;
-  bool merge(int index, DagNode* rhs, Subproblem*& returnedSubproblem);
-  bool merge(const Substitution& other, SubproblemAccumulator& subproblems);
+  //LocalBinding* makeLocalBinding() const;
+  //bool merge(int index, DagNode* rhs, Subproblem*& returnedSubproblem);
+  //bool merge(const Substitution& other, SubproblemAccumulator& subproblems);
 
 protected:
   int addNewVariable();
@@ -74,16 +74,18 @@ private:
 inline
 Substitution::Substitution(int size) : values(size)
 {
-  //cout << "size = " << size << endl;
-  Assert(size >= 1, "size must be at least one");
+  Assert(size >= 0, "-ve substitution size" << size);
+  DebugAdvisoryCheck(size != 0, "made a zero length substitution");
   copySize = size;
 }
 
 inline
 Substitution::Substitution(int size, int cSize) : values(size)
 {
-  //cout << "size = " << size << "  cSize = " << cSize << endl;
-  Assert(size >= 1, "size must be at least one");
+  Assert(size >= 0, "-ve substitution size " << size);
+  Assert(cSize >= 0, "-ve substitution cSize " << cSize);
+  Assert(cSize <= size, "cSize > size " << cSize << ' ' << size);
+  DebugAdvisoryCheck(size != 0, "made a zero length substitution");
   copySize = cSize;
 }
 
@@ -92,6 +94,7 @@ Substitution::clear(int size)
 {
   Assert(size >= 0, "-ve size");
   Assert(size <= values.length(), "size > length");
+  Assert(values.length() != 0, "clearing of zero length substitutions is not supported");
   //
   //	We alway clear at least 1 value in order to get a faster loop
   //	since the case size = 0 occurs very infrequently, and clearing
@@ -109,7 +112,7 @@ inline DagNode*
 Substitution::value(int index) const
 {
   Assert(index >= 0, "-ve index " << index);
-  Assert(index < values.size(), "index too big " << index);
+  Assert(index < values.size(), "index too big " << index << " vs " << values.size());
   return values[index];
 }
 

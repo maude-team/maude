@@ -911,7 +911,7 @@ Token::peelParens(Vector<Token>& tokens)
   //	If tokens look like ( ... ) with middle part having balanced parens, peel outer parens.
   //
   int len = tokens.size();
-  if (len < 2)
+  if (len <= 2)
     return;
   int open = encode("(");
   int close = encode(")");

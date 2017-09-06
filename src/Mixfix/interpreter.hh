@@ -42,6 +42,13 @@ class Interpreter
   NO_COPYING(Interpreter);
 
 public:
+  enum SearchKind
+    {
+      SEARCH,
+      NARROW,
+      XG_NARROW
+    };
+
   enum Flags
   {
     //
@@ -158,7 +165,7 @@ public:
 
   void match(const Vector<Token>& bubble, bool withExtension, Int64 limit);
   void unify(const Vector<Token>& bubble, bool withExtension, Int64 limit);
-  void search(const Vector<Token>& bubble, Int64 limit, Int64 depth, bool narrowing);
+  void search(const Vector<Token>& bubble, Int64 limit, Int64 depth, SearchKind searchKind);
   void showSearchPath(int stateNr);
   void showSearchPathLabels(int stateNr);
   void showSearchGraph();

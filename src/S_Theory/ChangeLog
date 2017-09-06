@@ -1,3 +1,19 @@
+2008-02-08  Steven Eker  <eker@goo.csl.sri.com>
+
+	* S_DagNode.cc (computeSolvedForm2): Substitution -> UnificationContext
+
+	* S_DagNode.hh (class S_DagNode): updated decl for
+	computeSolvedForm2()
+
+2008-02-05  Steven Eker  <eker@goo.csl.sri.com>
+
+	* S_DagNode.cc (computeSolvedForm2): rewritten
+
+	* S_DagNode.hh (class S_DagNode): updated decl for
+	computeSolvedForm2()
+
+===================================Maude90===========================================
+
 2007-11-12  Steven Eker  <eker@goo.csl.sri.com>
 
 	* S_DagNode.cc (instantiate2): if our argument is ground, set

@@ -136,5 +136,4 @@ VariableInfo::computeIndexRemapping()
   DebugAdvisory("nrProtectedVariables = " << nrProtectedVariables <<
 		"\tnrColors = " << nrColors);
   */
-  //Substitution::notify(nrProtectedVariables + nrColors);
 }

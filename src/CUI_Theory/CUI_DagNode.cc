@@ -45,9 +45,10 @@
  
 //      core class definitions
 #include "substitution.hh"
-#include "rewritingContext.hh"
-#include "subproblemAccumulator.hh"
-#include "solvedFormSubproblemDisjunction.hh"
+//#include "rewritingContext.hh"
+//#include "subproblemAccumulator.hh"
+//#include "solvedFormSubproblemDisjunction.hh"
+#include "pendingUnificationStack.hh"
 
 //	variable class definitions
 #include "variableDagNode.hh"
@@ -252,11 +253,121 @@ CUI_DagNode::computeBaseSortForGroundSubterms()
   return NONGROUND;
 }
 
+
+bool
+CUI_DagNode::computeSolvedForm2(DagNode* rhs, UnificationContext& solution, PendingUnificationStack& pending)
+{
+  if (symbol() == rhs->symbol())
+    {
+      //
+      //	Both dagnodes are assumed to have their arguments sorted in ascending order. Equality
+      //	between any two of the four arguments eliminates the need for branching.
+      //
+      DagNode** rhsArgs = safeCast(CUI_DagNode*, rhs)->argArray;
+      DagNode* l0 = argArray[0];
+      DagNode* l1 = argArray[1];
+      DagNode* r0 = rhsArgs[0];
+      DagNode* r1 = rhsArgs[1];
+      //
+      //	We know l0 <= l1 and r0 <= r1 because of normal forms. We will decide if at least one of
+      //	the 6 possible equalities holds in at most 4 comparisons.
+      //
+      int r = l0->compare(r0);
+      if (r == 0)
+	return l1->computeSolvedForm(r1, solution, pending);
+      if (r < 0)
+	{
+	  r = l1->compare(r0);
+	  if (r == 0)
+	    return l0->computeSolvedForm(r1, solution, pending);
+	  if (r < 0)
+	    {
+	      //
+	      //	We have l0 <= l1 < r0 <= r1 so we just check the two inequalities.
+	      //
+	      if (l0->equal(l1) || r0->equal(r1))
+		goto dupArg;
+	    }
+	  else
+	    {
+	      r = l1->compare(r1);
+	      if (r == 0)
+		return l0->computeSolvedForm(r0, solution, pending);
+	      if (r < 0)
+		{
+		  //
+		  //	We have l0 < r0 < l1 < r1. No equalities possible.
+		  //
+		}
+	      else
+		{
+		  //
+		  //	We have l0 < r0 < l1 and r1 < l1. So r0 <= r1 is our only possible equality.
+		  //
+		  if (r0->equal(r1))
+		    goto dupArg;
+		}
+	    }
+	  
+	}
+      else
+	{
+	  r = l0->compare(r1);
+	  if (r == 0)
+	    return l1->computeSolvedForm(r0, solution, pending);
+	  if (r < 0)
+	    {
+	      r = l1->compare(r1);
+	      if (r == 0)
+		return l0->computeSolvedForm(r0, solution, pending);
+	      if (r < 0)
+		{
+		  //
+		  //	We have r0 < l0 < r1 and l1 < r1. So l0 <= l1 is our only possible equality.
+		  //
+		  if (l0->equal(l1))
+		    goto dupArg;
+		}
+	      else
+		{
+		  //
+		  //	We have r0 < l0 < r1 < l1. No equalities possible.
+		  //
+		}
+	    }
+	  else
+	    {
+	      //
+	      //	We have r0 <= r1 < l0 <= l1 so we just check the two inequalities.
+	      //
+	      if (l0->equal(l1) || r0->equal(r1))
+		goto dupArg;
+
+	    }
+	}
+      //
+      //	We got here by falling out of one of the branches because no equalities were found. Therefore
+      //	we have two possible ways of unifying that could give a mgu and need to postpone the decision.
+      //
+      pending.push(symbol(), this, rhs);
+      return true;
+    dupArg:
+      //
+      //	We got here because one side of the problem had duplicate arguments.
+      //
+      return l0->computeSolvedForm(r0, solution, pending) && l1->computeSolvedForm(r1, solution, pending);
+    }
+  if (dynamic_cast<VariableDagNode*>(rhs))
+    return rhs->computeSolvedForm(this, solution, pending);
+  return false;
+}
+
+/*
 bool
 CUI_DagNode::computeSolvedForm2(DagNode* rhs,
 				Substitution& solution,
 				Subproblem*& returnedSubproblem,
-				ExtensionInfo* /* extensionInfo */)
+				ExtensionInfo* /* extensionInfo )
 {
   DebugAdvisory("CUI_DagNode::computeSolvedForm2() " << this << " vs " << rhs);
   if (symbol() == rhs->symbol())
@@ -298,7 +409,7 @@ CUI_DagNode::computeSolvedForm2(DagNode* rhs,
 			    //
 			    //	We have two potential solutions so we need to form a disjunction.
 			    //
-			    SolvedFormSubproblemDisjunction* disjunction = new SolvedFormSubproblemDisjunction(nrBindings);
+			    SolvedFormSubproblemDisjunction* disjunction = new SolvedFormSubproblemDisjunction();
 			    disjunction->addOption(local.makeLocalBinding(), subproblems.extractSubproblem());
 			    disjunction->addOption(local2.makeLocalBinding(), subproblems2.extractSubproblem());
 			    returnedSubproblem = disjunction;
@@ -327,6 +438,7 @@ CUI_DagNode::computeSolvedForm2(DagNode* rhs,
 	      subproblems.add(returnedSubproblem);
 	      if (argArray[1]->computeSolvedForm(rhsArgs[0], solution, returnedSubproblem))
 		{
+		  subproblems.add(returnedSubproblem);
 		  returnedSubproblem = subproblems.extractSubproblem();
 		  return true;
 		}
@@ -338,6 +450,8 @@ CUI_DagNode::computeSolvedForm2(DagNode* rhs,
     return rhs->computeSolvedForm(this, solution, returnedSubproblem);
   return false;
 }
+
+*/
 
 mpz_class
 CUI_DagNode::nonVariableSize()

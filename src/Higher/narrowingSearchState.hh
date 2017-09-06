@@ -35,7 +35,8 @@ class NarrowingSearchState : public PositionState
 public:
   enum Flags
   {
-    ALLOW_NONEXEC = 32
+    ALLOW_NONEXEC = 32,		// allow narrowing with nonexecutable rules, unbound variables being treated as fresh
+    SINGLE_POSITION = 64	// once we've found a position to narrow, don't consider other positions
   };
 
   //
@@ -58,10 +59,11 @@ public:
 
   RewritingContext* getContext() const;
   Rule* getRule() const;
-  DagNode* getNarrowedDag() const;
+  DagNode* getNarrowedDag(DagNode*& replacement) const;
   bool findNextNarrowing();
   const Substitution& getSubstitution() const;
   int getNrOfVariablesInSubject() const;
+  const NarrowingVariableInfo& getVariableInfo() const;
 
 private:
   RewritingContext* context;
@@ -74,6 +76,7 @@ private:
   int ruleIndex;  // index of current rule being tried
 
   NarrowingUnificationProblem* unificationProblem;
+  bool noFurtherPositions;
 };
 
 inline RewritingContext*
@@ -86,6 +89,12 @@ inline int
 NarrowingSearchState::getNrOfVariablesInSubject() const
 {
   return variableInfo.getNrVariables();
+}
+
+inline const NarrowingVariableInfo&
+NarrowingSearchState::getVariableInfo() const
+{
+  return variableInfo;
 }
 
 #endif

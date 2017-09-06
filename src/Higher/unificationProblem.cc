@@ -38,7 +38,7 @@
 //	interface class definitions
 #include "symbol.hh"
 #include "dagNode.hh"
-#include "subproblem.hh"
+//#include "subproblem.hh"
 #include "extensionInfo.hh"
 
 //	variable class definitions
@@ -49,7 +49,7 @@
 #include "module.hh"
 #include "sortBdds.hh"
 #include "connectedComponent.hh"
-#include "subproblemAccumulator.hh"
+//#include "subproblemAccumulator.hh"
 //#include "rewritingContext.hh"
 #include "unificationContext.hh"
 #include "freshVariableGenerator.hh"
@@ -133,21 +133,22 @@ UnificationProblem::UnificationProblem(Vector<Term*>& lhs, Vector<Term*>& rhs, F
   for (int i = 0; i < nrEquations; ++i)
     cout << leftHandDags[i] << " =? " << rightHandDags[i] << endl;
 #endif
-  SubproblemAccumulator subproblems;
+  //SubproblemAccumulator subproblems;
   for (int i = 0; i < nrEquations; ++i)
     {
-      if (!(leftHandDags[i]->computeSolvedForm(rightHandDags[i], *unsortedSolution, subproblem, extensionInfo)))
+      //      if (!(leftHandDags[i]->computeSolvedForm(rightHandDags[i], *unsortedSolution, subproblem, extensionInfo)))
+      if (!(leftHandDags[i]->computeSolvedForm(rightHandDags[i], *unsortedSolution, pendingStack)))
 	{
 #if 0
 	  cout << "NO SOLVED FORM" << endl;
 #endif
 	  viable = false;
-	  subproblem = 0;  // for safe destruction
+	  //subproblem = 0;  // for safe destruction
 	  return;
 	}
-      subproblems.add(subproblem);
+      //subproblems.add(subproblem);
     }
-  subproblem = subproblems.extractSubproblem();
+  //subproblem = subproblems.extractSubproblem();
   viable = true;
 }
 
@@ -156,7 +157,7 @@ UnificationProblem::~UnificationProblem()
   delete freshVariableGenerator;
   if (problemOkay)
     {
-      delete subproblem;
+      //delete subproblem;
       delete orderSortedUnifiers;
       delete unsortedSolution;
       delete sortedSolution;
@@ -193,6 +194,7 @@ UnificationProblem::markReachableNodes()
 	  d->mark();
       }
   }
+  /*
   {
     int nrFragile = unsortedSolution->nrFragileBindings();
     for (int i = 0; i < nrFragile; i++)
@@ -202,6 +204,7 @@ UnificationProblem::markReachableNodes()
 	  d->mark();
       }
   }
+  */
 }
 
 bool
@@ -214,7 +217,8 @@ UnificationProblem::findNextUnifier()
       //
       //	First solution.
       //
-      if (subproblem != 0 && !(subproblem->unificationSolve(true, *unsortedSolution)))
+      //      if (subproblem != 0 && !(subproblem->unificationSolve(true, *unsortedSolution)))
+      if (!(pendingStack.solve(true, *unsortedSolution)))
 	{
 #if 0
 	  cout << "No first solution to subproblem" << endl;
@@ -256,7 +260,8 @@ UnificationProblem::findNextUnifier()
 	  delete orderSortedUnifiers;
 	  orderSortedUnifiers = 0;
 	nextUnsorted:
-	  if (subproblem == 0 || !(subproblem->unificationSolve(false, *unsortedSolution)))
+	  //	  if (subproblem == 0 || !(subproblem->unificationSolve(false, *unsortedSolution)))
+	  if (!(pendingStack.solve(false, *unsortedSolution)))
 	    return false;
 	  //cerr << "next unsorted solution";
 	  if (!extractUnifier())

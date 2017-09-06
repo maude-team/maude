@@ -309,6 +309,10 @@ FreeSymbol::stackArguments(DagNode* subject,
     }
 }
 
+//
+//	Unification code.
+//
+
 void
 FreeSymbol::computeGeneralizedSort(const SortBdds& sortBdds,
 				   const Vector<int>& realToBdd,

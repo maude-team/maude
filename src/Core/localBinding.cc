@@ -96,6 +96,7 @@ LocalBinding::retract(Substitution& substitution)
     }
 }
 
+/*
 bool
 LocalBinding::solvedFormAssert(Substitution& substitution, Subproblem*& returnedSubproblem)
 {
@@ -110,6 +111,7 @@ LocalBinding::solvedFormAssert(Substitution& substitution, Subproblem*& returned
   returnedSubproblem = subproblems.extractSubproblem();
   return true;
 }
+*/
 
 #ifdef DUMP
 void
