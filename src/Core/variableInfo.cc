@@ -37,6 +37,9 @@
 #include "substitution.hh"
 #include "variableInfo.hh"
 
+//      variable class definitions
+#include "variableDagNode.hh"
+
 VariableInfo::VariableInfo()
 {
   nrProtectedVariables = 0;
@@ -58,6 +61,19 @@ VariableInfo::variable2Index(VariableTerm* variable)
   variables.append(variable);
   ++nrProtectedVariables;
   return nrRealVariables;
+}
+
+int
+VariableInfo::variable2Index(VariableDagNode* variable) const
+{
+  Assert(variable != 0, "null dag");
+  int nrRealVariables = variables.length();
+  for (int i = 0; i < nrRealVariables; i++)
+    {
+      if (variables[i]->equal(variable))
+	return i;
+    }
+  return NONE;
 }
 
 int

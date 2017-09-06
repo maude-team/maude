@@ -1,3 +1,28 @@
+2016-12-13  Steven Eker  <eker@install.csl.sri.com>
+
+	* prelude.maude: added projection functions for NarrowingResult
+
+2016-12-12  Steven Eker  <eker@install.csl.sri.com>
+
+	* prelude.maude: added failureIncomplete for ResultTriple?
+
+2016-12-09  Steven Eker  <eker@install.csl.sri.com>
+
+	* prelude.maude: switched args for NarrowingResult ctor
+	added format for {_,_,_,_,_,_}
+
+2016-11-23  Steven Eker  <eker@install.csl.sri.com>
+
+	* prelude.maude: added decls for metaNarrowingApply(); sorts NarrowingResult
+	and NarrowingResult?, ctors failure, failureIncomplete and {_,_,_,_,_,_}
+
+2016-10-28  Steven Eker  <eker@install.csl.sri.com>
+
+	* smt.maude: don't set include BOOLEAN on because it
+	causes problems for modules that aren't expecting it.
+
+===================================Maude111===========================================
+
 2016-04-27  Steven Eker  <eker@install.csl.sri.com>
 
 	* main.cc (main): added -print-to-stderr flag

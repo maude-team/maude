@@ -448,7 +448,8 @@ TESTS = \
 	metaPrintAttr \
 	metaMetadata \
 	metaVariantUnify \
-	metaGetVariant
+	metaGetVariant \
+	metaNarrow
 
 MAUDE_FILES = \
 	metaApply.maude \
@@ -477,7 +478,8 @@ MAUDE_FILES = \
 	metaPrintAttr.maude \
 	metaMetadata.maude \
 	metaVariantUnify.maude \
-	metaGetVariant.maude
+	metaGetVariant.maude \
+	metaNarrow.maude 
 
 RESULT_FILES = \
 	metaApply.expected \
@@ -508,7 +510,8 @@ RESULT_FILES = \
 	metaPrintAttr.expected \
 	metaMetadata.expected \
 	metaVariantUnify.expected \
-	metaGetVariant.expected
+	metaGetVariant.expected \
+	metaNarrow.expected
 
 EXTRA_DIST = $(TESTS) $(MAUDE_FILES) $(RESULT_FILES)
 all: all-am
@@ -878,6 +881,13 @@ metaVariantUnify.log: metaVariantUnify
 metaGetVariant.log: metaGetVariant
 	@p='metaGetVariant'; \
 	b='metaGetVariant'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+metaNarrow.log: metaNarrow
+	@p='metaNarrow'; \
+	b='metaNarrow'; \
 	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \

@@ -1,3 +1,11 @@
+2016-11-11  Steven Eker  <eker@install.csl.sri.com>
+
+	* S_DagNode.hh (DagNode): added decl for copyAll2()
+
+	* S_DagNode.cc (copyAll2): added
+
+===================================Maude111===========================================
+
 2016-03-25  Steven Eker  <eker@install.csl.sri.com>
 
 	* S_Symbol.hh (Symbol): added decl for computeGeneralizedSort2()

@@ -1,3 +1,113 @@
+2016-12-19  Steven Eker  <eker@install.csl.sri.com>
+
+	* metaNarrow.cc (metaNarrowingApply): transfer counts from
+	state context to context
+	(metaNarrowingApply): call incrementNarrowingCount() if we
+	make an actual narrowing step
+
+2016-12-16  Steven Eker  <eker@install.csl.sri.com>
+
+	* metaNarrow.cc (metaNarrowingApply): added trace and
+	abort support
+	(metaNarrowingApply): use getActiveContext()
+	(metaNarrowingApply): use getActiveVariableInfo()
+	(metaNarrowingApply): don't trace if we didn't actually
+	make a narrowing step (i.e. we got the result from cache)
+
+2016-12-15  Steven Eker  <eker@install.csl.sri.com>
+
+	* metaNarrow.cc (makeNarrowingSearchState2): fail if the variable
+	family isn't recognized
+
+2016-12-13  Steven Eker  <eker@install.csl.sri.com>
+
+	* metaNarrow.cc (metaNarrowingApply): fix bug where we weren't
+	deleting resutlContext
+
+2016-12-12  Steven Eker  <eker@install.csl.sri.com>
+
+	* metaLevel.hh (M): updated decl fo upFailureTriple()
+
+	* metaUp.cc (upFailureTriple): handle incomplete argument
+
+	* metaNarrow.cc (metaNarrow): call isIncomplete(),
+	pass to upFailureTriple()
+
+	* metaLevelSignature.cc: added failureIncomplete3Symbol
+
+	* metaNarrow.cc (metaNarrowingApply): call isIncomplete()
+
+2016-12-09  Steven Eker  <eker@install.csl.sri.com>
+
+	* metaNarrow.cc (metaNarrowingApply): updated comment to
+	reflect switched args
+
+	* metaUp.cc (upNarrowingResult): switched args
+
+	* metaLevel.hh (M): updated decl for upNarrowingResult()
+
+	* metaUp.cc (upNarrowingResult): new calling convention
+
+	* metaNarrow.cc (metaNarrowingApply): make metaContext first and
+	then reduce narrowedDag
+
+	* metaApply.cc (metaXapply): added comment about dagNodeMap
+
+	* metaNarrow.cc (makeNarrowingSearchState2): reduce subject
+	before passing it to NarrowingSearchState2()
+
+2016-12-08  Steven Eker  <eker@install.csl.sri.com>
+
+	* metaNarrow.cc (makeNarrowingSearchState2): implemented
+
+2016-12-07  Steven Eker  <eker@install.csl.sri.com>
+
+	* metaLevelOpSymbol.hh (FreeSymbol): added decl for
+	makeNarrowingSearchState2()
+
+	* metaNarrow.cc (makeNarrowingSearchState2): added stub
+
+	* metaUp.cc (upSubstitution): reverted old NarrowingVariableInfo
+	version
+	(upNarrowingResult): don't pass firstTargetSlot, nrTargetVariables
+	to upSubstitution()
+
+	* metaLevel.hh (M): added decl for new upSubstitution();
+	reverted decl for old upSubstitution()
+
+	* metaUp.cc (upSubstitution): added new version
+
+	* metaLevelOpSymbol.hh (FreeSymbol): added decl for
+	getCachedNarrowingSearchState2()
+
+	* metaNarrow.cc (getCachedNarrowingSearchState2): added
+
+2016-12-06  Steven Eker  <eker@install.csl.sri.com>
+
+	* metaLevel.hh (M): added decls for upNarrowingResult() and
+	upNarrowingFailure()
+
+	* metaUp.cc (upNarrowingResult): added
+	(upNarrowingFailure): added
+
+	* metaLevel.hh (M): updated decl for upSubstitution()
+
+	* metaUp.cc (upSubstitution): added offset argument
+
+2016-11-23  Steven Eker  <eker@install.csl.sri.com>
+
+	* metaNarrow.cc (metaNarrowingApply): added stub
+
+	* metaLevelSignature.cc: added narrowingResultSymbol, narrowingFailureSymbol,
+	narrowingFailureIncompleteSymbol
+
+2016-11-01  Steven Eker  <eker@install.csl.sri.com>
+
+	* metaVariant.cc (metaVariantUnify2): pass dummy variableFamily to
+	getNextUnifier()
+
+===================================Maude111===========================================
+
 2016-05-17  Steven Eker  <eker@install.csl.sri.com>
 
 	* descentFunctions.cc (metaCheck): call normalize() and markEager()

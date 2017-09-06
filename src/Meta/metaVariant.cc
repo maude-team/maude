@@ -226,7 +226,8 @@ MetaLevelOpSymbol::metaVariantUnify2(FreeDagNode* subject, RewritingContext& con
 	    {
 	      while (lastSolutionNr < solutionNr)
 		{
-		  unifier = vs->getNextUnifier(nrFreeVariables);
+		  int dummy;
+		  unifier = vs->getNextUnifier(nrFreeVariables, dummy);
 		  if (unifier == 0)
 		    {
 		      bool incomplete = vs->isIncomplete();

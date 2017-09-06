@@ -78,6 +78,8 @@ public:
 
   DagNode* copyReducible();
   DagNode* copyEagerUptoReduced();
+  DagNode* copyAll();
+
   void clearCopyPointers();
   DagNode* copyAndReduce(RewritingContext& context);
   void setSortIndex(int index);
@@ -205,6 +207,7 @@ protected:
   //
   virtual DagNode* markArguments() = 0;
   virtual DagNode* copyEagerUptoReduced2() = 0;
+  virtual DagNode* copyAll2() = 0;
   virtual void clearCopyPointers2() = 0;
 
 private:  
@@ -593,6 +596,17 @@ DagNode::copyEagerUptoReduced()
   if (!isCopied())
     {
       copyPointer = copyEagerUptoReduced2();  // this destroys our top symbol
+      setCopied();
+    }
+  return copyPointer;
+}
+
+inline DagNode*
+DagNode::copyAll()
+{
+  if (!isCopied())
+    {
+      copyPointer = copyAll2();  // this destroys our top symbol
       setCopied();
     }
   return copyPointer;

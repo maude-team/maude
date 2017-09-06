@@ -42,7 +42,7 @@ public:
 			      const Vector<DagNode*>& variantSubstitution,
 			      const Vector<DagNode*>& blockerDags,
 			      FreshVariableGenerator* freshVariableGenerator,
-			      bool odd,
+			      int variableFamily,
 			      const NarrowingVariableInfo& originalVariables,
 			      bool unificationMode = false);
   ~VariantNarrowingSearchState();

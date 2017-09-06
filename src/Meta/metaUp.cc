@@ -601,9 +601,9 @@ MetaLevel::upFailurePair()
 }
 
 DagNode*
-MetaLevel::upFailureTriple()
+MetaLevel::upFailureTriple(bool incomplete)
 {
-  return failure3Symbol->makeDagNode();
+  return (incomplete ? failureIncomplete3Symbol : failure3Symbol)->makeDagNode();
 }
 
 DagNode*
@@ -952,4 +952,68 @@ MetaLevel::upSMT_Number(const mpq_class& value, Symbol* symbol, MixfixModule* m,
   Sort* sort = symbol->getRangeSort();
   int id = m->getSMT_NumberToken(value, sort);
   return upJoin(id, sort, '.', qidMap);
+}
+
+DagNode*
+MetaLevel::upSubstitution(const Substitution& substitution,
+			  const NarrowingVariableInfo& narrowingVariableInfo,
+			  MixfixModule* m,
+			  PointerMap& qidMap,
+			  PointerMap& dagNodeMap)
+{
+  //
+  //	Here we up just the part of the substitution identified by variableInfo.
+  //
+  int nrVariables = narrowingVariableInfo.getNrVariables();
+  if (nrVariables == 0)
+    return emptySubstitutionSymbol->makeDagNode();
+
+  int firstTargetSlot = m->getMinimumSubstitutionSize();
+  if (nrVariables == 1)
+    {
+      return upAssignment(narrowingVariableInfo.index2Variable(0),
+			  substitution.value(firstTargetSlot),
+			  m,
+			  qidMap,
+			  dagNodeMap);
+    }
+
+  Vector<DagNode*> args(nrVariables);
+  for (int i = 0; i < nrVariables; ++i)
+    {
+      args[i] = upAssignment(narrowingVariableInfo.index2Variable(i),
+			     substitution.value(firstTargetSlot + i),
+			     m,
+			     qidMap,
+			     dagNodeMap);
+    }
+  return substitutionSymbol->makeDagNode(args);
+}
+
+DagNode*
+MetaLevel::upNarrowingResult(DagNode* dagNode,  // narrowed, reduced dag
+			     DagNode* metaContext,
+			     const Substitution&  unifier,  // unifier on possibly renamed problem
+			     const VariableInfo& ruleVariableInfo,
+			     const NarrowingVariableInfo& narrowingVariableInfo,
+			     int variableFamilyName,
+			     MixfixModule* m)
+{
+  PointerMap qidMap;
+  PointerMap dagNodeMap;
+  Vector<DagNode*> args(6);
+
+  args[0] = upDagNode(dagNode, m, qidMap, dagNodeMap);
+  args[1] = upType(dagNode->getSort(), qidMap);
+  args[2] = upSubstitution(unifier, narrowingVariableInfo, m, qidMap, dagNodeMap);
+  args[3] = upSubstitution(unifier, ruleVariableInfo, m, qidMap, dagNodeMap);
+  args[4] = metaContext;
+  args[5] = upQid(variableFamilyName, qidMap);
+  return narrowingResultSymbol->makeDagNode(args);
+}
+
+DagNode*
+MetaLevel::upNarrowingFailure(bool incomplete)
+{
+  return (incomplete ? narrowingFailureIncompleteSymbol : narrowingFailureSymbol)->makeDagNode();
 }

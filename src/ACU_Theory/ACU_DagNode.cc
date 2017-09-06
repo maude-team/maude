@@ -191,6 +191,20 @@ ACU_DagNode::copyEagerUptoReduced2()
   return n;
 }
 
+DagNode*
+ACU_DagNode::copyAll2()
+{
+  int nrArgs = argArray.length();
+  ACU_Symbol* s = symbol();
+  ACU_DagNode* n = new ACU_DagNode(s, nrArgs);
+  for (int i = 0; i < nrArgs; i++)
+    {
+      n->argArray[i].dagNode = argArray[i].dagNode->copyAll();
+      n->argArray[i].multiplicity = argArray[i].multiplicity;
+    }
+  return n;
+}
+
 void
 ACU_DagNode::clearCopyPointers2()
 {

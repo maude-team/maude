@@ -67,7 +67,7 @@ public:
 			  const VariableInfo& variableInfo,
 			  MixfixModule* m);
   DagNode* upFailurePair();
-  DagNode* upFailureTriple();
+  DagNode* upFailureTriple(bool incomplete = false);
   DagNode* upResult4Tuple(DagNode* dagNode,
 			  const Substitution& substitution,
 			  const VariableInfo& variableInfo,
@@ -123,6 +123,7 @@ public:
 		       DagNode* dagNode,
 		       DagNode* hole,
 		       MixfixModule* m);
+
   DagNode* upSmtResult(DagNode* state,
 		       const Substitution& substitution,
 		       const VariableInfo& variableInfo,
@@ -132,6 +133,14 @@ public:
 		       MixfixModule* m);
   DagNode* upSmtFailure();
 
+  DagNode* upNarrowingResult(DagNode* dagNode,
+			     DagNode* metaContext,
+			     const Substitution&  unifier,
+			     const VariableInfo& ruleVariableInfo,
+			     const NarrowingVariableInfo& narrowingVariableInfo,
+			     int variableFamilyName,
+			     MixfixModule* m);
+  DagNode* upNarrowingFailure(bool incomplete);
 
   DagNode* upView(View* view, PointerMap& qidMap);
   DagNode* upModule(bool flat, PreModule* pm, PointerMap& qidMap);
@@ -363,6 +372,11 @@ private:
 			     MixfixModule* m,
 			     PointerMap& qidMap,
 			     PointerMap& dagNodeMap);
+  DagNode* upSubstitution(const Substitution& substitution,
+			  const NarrowingVariableInfo& narrowingVariableInfo,
+			  MixfixModule* m,
+			  PointerMap& qidMap,
+			  PointerMap& dagNodeMap);
 
   bool downHeader(DagNode* metaHeader, int& id, DagNode*& metaParameterDeclList);
   bool downParameterDeclList(DagNode* metaParameterDeclList, ImportModule* m);

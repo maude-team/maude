@@ -1,5 +1,13 @@
-Overview of Changes in alpha110b
+Overview of Changes in alpha111
 ================================
+* fixed bug where an ambiguity in a term-hook caused crash in
+  sort computation because module isn't semi-compiled at this point
+* new narrowing descent function
+* one of the old narrowing descent functions now supports
+  incompleteness
+
+Overview of Changes in Maude 2.7.1 (alpha110b)
+==============================================
 * fixed typos and copyright date
 * minor configuation fixes
 

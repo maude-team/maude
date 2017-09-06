@@ -55,6 +55,11 @@ public:
   virtual void closeFixUps();
   virtual void closeTheory();
   virtual void stackMachineCompile();
+  //
+  //	Abstract member function to create new internal symbols.
+  //
+  virtual Symbol* createInternalTupleSymbol(const Vector<ConnectedComponent*>& domain, ConnectedComponent* range) = 0;
+
   Environment* getEnvironment();
   Status getStatus() const;
   const Vector<Sort*>& getSorts() const;

@@ -2,7 +2,7 @@
 
     This file is part of the Maude 2 interpreter.
 
-    Copyright 1997-2012 SRI International, Menlo Park, CA 94025, USA.
+    Copyright 1997-2016 SRI International, Menlo Park, CA 94025, USA.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -40,19 +40,26 @@ class VariantSearch : public CacheableState, private SimpleRootContainer
 public:
   //
   //	Initial dag is the root of context. This context should not go away nor should the initial dag be
-  //	rewriten in place while the VariantSearch object is in existence because we rely in the variable dag nodes
-  //	in the dag being protected from garbage collection.
-  //	
+  //	rewritten in place while the VariantSearch object is in existence because we rely in the variable dag nodes
+  //	in the dag being protected from garbage collection. This context is deleted on destruction.
+  //
+  //	Blocker dags are protect from garbage collection.
+  //
+  //	Fresh variable generator can optionally be deleted on destruction (for use in a cached metalevel object).
+  //
   VariantSearch(RewritingContext* context,
 		const Vector<DagNode*>& blockerDags,
 		FreshVariableGenerator* freshVariableGenerator,
 		bool unificationMode,
-		bool irredundantMode);
+		bool irredundantMode,
+		bool deleteFreshVariableGenerator = true,
+		int disallowedVariableFamily = 2, /* default produces old behavior */
+		bool checkVariableNames = true);
   ~VariantSearch();
 
   const NarrowingVariableInfo& getVariableInfo() const;
   const Vector<DagNode*>* getNextVariant(int& nrFreeVariables, int& parentIndex, bool& moreInLayer);
-  const Vector<DagNode*>* getNextUnifier(int& nrFreeVariables);
+  const Vector<DagNode*>* getNextUnifier(int& nrFreeVariables, int& variableFamily);
   RewritingContext* getContext() const;
   bool isIncomplete() const;
   //
@@ -80,7 +87,11 @@ private:
   const Vector<DagNode*> blockerDags;
   FreshVariableGenerator* const freshVariableGenerator;
   const bool unificationMode;
+  const bool deleteFreshVariableGenerator;
+  const int firstVariableFamily;
+  const int secondVariableFamily;
 
+  DagNode* targetCopy;
   bool incompleteFlag;
   NarrowingVariableInfo variableInfo;
   int nrVariantVariables;
@@ -89,11 +100,10 @@ private:
   VariantIndexVec frontier;
   VariantIndexVec newFrontier;
   int currentIndex;
-  bool odd;
+  bool useFirstVariableFamily;
 
   int nrVariantsReturned;
   IntMap internalIndexToExternalIndex;
-
 
   Vector<DagNode*> protectedVariant;
 };

@@ -1,3 +1,10 @@
+2016-10-12  Steven Eker  <eker@install.csl.sri.com>
+
+	* applicationStrategy.cc (ApplicationStrategy): fix
+	signed/unsigned comparison warning in Assert()
+
+===================================Maude111===========================================
+
 2010-09-22  Steven Eker  <eker@rho>
 
 	* applicationProcess.hh (class ApplicationProcess): updated decl

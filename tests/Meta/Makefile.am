@@ -25,7 +25,8 @@ TESTS = \
 	metaPrintAttr \
 	metaMetadata \
 	metaVariantUnify \
-	metaGetVariant
+	metaGetVariant \
+	metaNarrow
 
 MAUDE_FILES = \
 	metaApply.maude \
@@ -54,7 +55,8 @@ MAUDE_FILES = \
 	metaPrintAttr.maude \
 	metaMetadata.maude \
 	metaVariantUnify.maude \
-	metaGetVariant.maude
+	metaGetVariant.maude \
+	metaNarrow.maude 
 
 RESULT_FILES = \
 	metaApply.expected \
@@ -85,6 +87,7 @@ RESULT_FILES = \
 	metaPrintAttr.expected \
 	metaMetadata.expected \
 	metaVariantUnify.expected \
-	metaGetVariant.expected
+	metaGetVariant.expected \
+	metaNarrow.expected
 
 EXTRA_DIST = $(TESTS) $(MAUDE_FILES) $(RESULT_FILES)

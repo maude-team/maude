@@ -193,6 +193,15 @@ ACU_TreeDagNode::copyEagerUptoReduced2()
     new ACU_TreeDagNode(s, tree);
 }
 
+DagNode*
+ACU_TreeDagNode::copyAll2()
+{
+  //
+  //	Don't try to do this copy on tree form.
+  //
+  return treeToArgVec(this)->copyAll2();
+}
+
 void
 ACU_TreeDagNode::clearCopyPointers2()
 {

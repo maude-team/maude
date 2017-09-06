@@ -99,6 +99,7 @@ NarrowingSequenceSearch::NarrowingSequenceSearch(RewritingContext* initial,
   topOfStackFresh = true;
   variableTotalForPreviouslyReturnedStates = 0;
   variableTotalForAllReturnedStates = 0;
+  incompleteFlag = false;
 }
 
 NarrowingSequenceSearch::~NarrowingSequenceSearch()
@@ -162,6 +163,7 @@ NarrowingSequenceSearch::findNextNormalForm()
       //
       //	Backtrack.
       //
+      incompleteFlag |= stateStack[currentIndex]->isIncomplete();
       delete stateStack[currentIndex];
       stateStack.resize(currentIndex);
       --currentIndex;
@@ -273,6 +275,7 @@ NarrowingSequenceSearch::findNextInterestingState()
       //
       //	Backtrack.
       //
+      incompleteFlag |= stateStack[currentIndex]->isIncomplete();
       delete stateStack[currentIndex];
       stateStack.resize(currentIndex);
        --currentIndex;

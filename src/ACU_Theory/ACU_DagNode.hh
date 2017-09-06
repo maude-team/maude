@@ -103,6 +103,7 @@ private:
   //
   DagNode* markArguments();
   DagNode* copyEagerUptoReduced2();
+  DagNode* copyAll2();
   void clearCopyPointers2();
   //
   //	Normalization functions.

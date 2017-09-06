@@ -45,13 +45,14 @@ public:
   VariantFolder();
   ~VariantFolder();
 
-  bool insertVariant(const Vector<DagNode*>& variant, int index, int parentIndex);
+  bool insertVariant(const Vector<DagNode*>& variant, int index, int parentIndex, int variableFamily);
   //
   //	Returns 0 if variant wasn't retained or was later purged.
   //
   const Vector<DagNode*>* getVariant(int index) const;
 
   const Vector<DagNode*>* getNextSurvivingVariant(int& nrFreeVariables,
+						  int& variableFamily,
 						  int* variantNumber = 0,
 						  int* parentNumber = 0,
 						  bool* moreInLayer = 0);
@@ -72,6 +73,7 @@ private:
   
     int nrVariables;  // number of variables needed for matching; includes any abstraction variables
     int nrFreeVariables;  // number of variables occuring in variant
+    int variableFamily;
     int parentIndex;
     Vector<DagNode*> variant;
     Vector<Term*> terms;

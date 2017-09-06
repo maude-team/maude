@@ -118,7 +118,19 @@ AU_DequeDagNode::markArguments()
 DagNode*
 AU_DequeDagNode::copyEagerUptoReduced2()
 {
+  //
+  //	Don't both trying to preserve deque in the case of
+  //	a lazy operator, since we cannot do greedy matching with
+  //	extension we will be forced to ArgVec representation when
+  //	we try to reduce at this node.
+  //
   return dequeToArgVec(this)->copyEagerUptoReduced2();
+}
+
+DagNode*
+AU_DequeDagNode::copyAll2()
+{
+  return dequeToArgVec(this)->copyAll2();
 }
 
 void

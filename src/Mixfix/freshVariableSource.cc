@@ -61,10 +61,10 @@ FreshVariableSource::FreshVariableSource(MixfixModule* module, const mpz_class& 
 }
 
 int
-FreshVariableSource::getFreshVariableName(int index, bool odd)
+FreshVariableSource::getFreshVariableName(int index, int family)
 {
-  Vector<int>& cacheToUse = odd ? oddCache : cache;
-  char charToUse = odd ? '%' : '#';
+  Vector<int>& cacheToUse = caches[family];
+  char charToUse = "#%@"[family];
 
   int nrCached = cacheToUse.size();
   if (index < nrCached)
@@ -75,7 +75,7 @@ FreshVariableSource::getFreshVariableName(int index, bool odd)
     }
   //
   //	In order to avoid allocating the name twice we convert the negative index to a
-  //	string and replace the minus sign with a '#' or '%'.
+  //	string and replace the minus sign with a '#', '%' or '@'
   //
   //	We ultimately map index to (index + baseNumber + 1).
   //
@@ -124,4 +124,45 @@ FreshVariableSource::variableNameConflict(int id)
   //
   mpz_class index(name + 1);
   return index > baseNumber;
+}
+
+int
+FreshVariableSource::getBaseName(int index)
+{
+  const char* rootChars[] = {"#", "%", "@"};
+  return Token::encode(rootChars[index]);
+}
+
+int
+FreshVariableSource::getFamily(int id)
+{
+  const char* name = Token::name(Token::unflaggedCode(id));
+  if (name[0] == '\0')
+    return NONE;  // empty string
+  if (name[1] != '\0')
+    return NONE;  // more than 1 char
+  if (name[0] == '#')
+    return 0;
+  if (name[0] == '%')
+    return 1;
+  if (name[0] == '@')
+    return 2;
+  return NONE;
+}
+
+bool
+FreshVariableSource::belongsToFamily(int id, int family)
+{
+  const char* name = Token::name(id);
+  const char rootChars[] = {'#', '%', '@'};
+  if (name[0] != rootChars[family])
+    return false;
+  if (!(isdigit(name[1]) || name[1] == '0'))
+    return false;
+  for (int i = 2; name[i] != '\0'; ++i)
+    {
+      if (!(isdigit(name[i])))
+	return false;
+    }
+  return true;
 }

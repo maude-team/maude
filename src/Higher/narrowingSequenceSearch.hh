@@ -57,6 +57,7 @@ public:
   RewritingContext* getContext() const;
   DagNode* getStateDag() const;
   int getVariableTotalForPreviouslyReturnedStates() const;
+  bool isIncomplete() const;
 
 private:
   bool findNextInterestingState();
@@ -80,6 +81,7 @@ private:
 
   int variableTotalForPreviouslyReturnedStates;
   int variableTotalForAllReturnedStates;
+  bool incompleteFlag;
 };
 
 inline const Pattern*
@@ -123,6 +125,15 @@ inline int
 NarrowingSequenceSearch::getVariableTotalForPreviouslyReturnedStates() const
 {
   return variableTotalForPreviouslyReturnedStates;
+}
+
+inline bool
+NarrowingSequenceSearch::isIncomplete() const
+{
+  //
+  //	Returns true if any incompleteness has been encountered so far.
+  //
+  return incompleteFlag;
 }
 
 #endif

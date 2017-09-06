@@ -1,3 +1,19 @@
+2016-12-20  Steven Eker  <eker@install.csl.sri.com>
+
+	* ACU_TreeDagNode.cc (copyAll2): added missing return statement
+
+2016-11-10  Steven Eker  <eker@install.csl.sri.com>
+
+	* ACU_TreeDagNode.hh (ACU_BaseDagNode): added decl for copyAll2()
+
+	* ACU_TreeDagNode.cc (copyAll2): added
+
+	* ACU_DagNode.hh (ACU_BaseDagNode): added decl for copyAll2()
+
+	* ACU_DagNode.cc (copyAll2): added
+
+===================================Maude111===========================================
+
 2016-05-18  Steven Eker  <eker@install.csl.sri.com>
 
 	* ACU_UnificationSubproblem2.cc (addUnification): check for subtermIndex
@@ -22,7 +38,7 @@
 
 	* ACU_Symbol.cc (computeGeneralizedSort2): added
 
-===================================Maude110===========================================
+===================================Maude109===========================================
 
 2015-08-07  Steven Eker  <eker@ape.csl.sri.com>
 

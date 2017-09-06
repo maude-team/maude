@@ -1,3 +1,311 @@
+2016-12-20  Steven Eker  <eker@install.csl.sri.com>
+
+	* variantUnificationProblem.cc (findNextUnifier): undo change -
+	we introduced a suble bug by moving a necessary side effect
+	into an Assert()
+
+	* narrowingSearchState2.cc (NarrowingSearchState2): rearrange Assert()
+	to avoid unused variable warning
+
+2016-12-19  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingSearchState2.cc (findNextNarrowing): transfer counts
+	from newContext to context if they differ (2 places)
+
+	* variantUnificationProblem.cc (VariantUnificationProblem): initialize
+	context
+	(VariantUnificationProblem): new data member rather than local
+	variable for newContext
+	(findNextUnifier): tranfer counts from newContext to context
+
+	* variantUnificationProblem.hh (SimpleRootContainer): added data
+	members context and newContext
+
+2016-12-16  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingSearchState2.hh (getNrOfVariablesInSubject): deleted
+
+	* narrowingSearchState2.cc (getNarrowedDag): use stored
+	module pointer
+
+	* narrowingSearchState2.hh (getReplacedDag): added
+	(getActiveContext): added
+	(getActiveVariableInfo): added
+
+2016-12-15  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingSearchState2.hh (SimpleRootContainer): added decl
+	for allVariablesBelongToIncomingFamily();
+	disallowedVariableFamily ->incomingVariableFamily throughout
+	(getRule, getSubstitution): moved here
+
+	* narrowingSearchState2.cc: disallowedVariableFamily ->
+	incomingVariableFamily throughout
+	(allVariablesBelongToIncomingFamily): added
+
+2016-12-14  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingSearchState2.cc (NarrowingSearchState2): fill out
+	freshVariableInfo as we create fresh variables.
+	(findNextNarrowing): pass freshVariableInfo rather than variableInfo
+	to VariantUnificationProblem()
+
+	* narrowingSearchState2.hh (SimpleRootContainer): added data member
+	freshVariableInfo
+
+	* narrowingSearchState2.cc (NarrowingSearchState2): don't
+	initialize PositionState; dynamically create a PositionState
+	object
+	(~NarrowingSearchState2): delete positionState
+	(findNextNarrowing, getNarrowedDag): use positionState
+
+	* narrowingSearchState2.hh (SimpleRootContainer): removed
+	PositionState as a base class; added data member positionState
+
+	* narrowingSearchState2.cc (~NarrowingSearchState2): delete
+	freshVariableGenerator
+
+2016-12-12  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingSequenceSearch.cc (NarrowingSequenceSearch): clear
+	incompleteFlag
+	(findNextInterestingState): update incompleteFlag
+
+	* narrowingSequenceSearch.hh (SequenceSearch): added data
+	member incompleteFlag
+	(isIncomplete): added
+
+	* narrowingSearchState.hh (PositionState): added data
+	member incompleteFlag
+	(isIncomplete): added
+
+	* narrowingSearchState.cc (findNextNarrowing): update
+	incompleteFlag
+	(NarrowingSearchState): clear completeFlag
+
+	* narrowingSearchState2.hh (SimpleRootContainer): added data
+	member incompleteFlag
+
+	* narrowingSearchState2.cc (findNextNarrowing): update
+	incompleteFlag
+	(NarrowingSearchState2): clear incompleteFlag
+
+	* narrowingSearchState2.hh (isIncomplete): added
+
+2016-12-09  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingSearchState2.cc (NarrowingSearchState2): use newContext
+	(findNextNarrowing): use newContext
+	(NarrowingSearchState2): delete newContext
+
+	* narrowingSearchState2.hh (SimpleRootContainer): added data
+	member newContext
+
+	* narrowingSearchState2.cc (getNarrowedDag): make a clone of replacement
+	so metaContexts work
+
+2016-12-08  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingSearchState2.cc (NarrowingSearchState2): new implementation
+	that handles variable renaming and initial reduction
+
+2016-11-23  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingSearchState2.hh (SimpleRootContainer): derive from CacheableState
+
+2016-11-22  Steven Eker  <eker@install.csl.sri.com>
+
+	* variantUnificationProblem.cc (VariantUnificationProblem): don't
+	clear incompleteFlag
+
+	* narrowingSearchState2.cc (findNextNarrowing): pass blockerDags to
+	VariantUnificationProblem()
+
+	* variantUnificationProblem.cc (findNextUnifier): don't update incompleteFlag
+
+	* variantUnificationProblem.hh (isIncomplete): use variantSearch incomplete
+	flag rather than local one
+
+	* variantUnificationProblem.cc (VariantUnificationProblem): handle blockerDags
+	argument
+
+	* variantUnificationProblem.hh (SimpleRootContainer): updated ctor
+
+	* variantSearch.hh (SimpleRootContainer): updated comments
+
+	* narrowingSearchState2.hh (SimpleRootContainer): added decl for
+	markReachableNodes()
+
+	* narrowingSearchState2.cc (NarrowingSearchState2): take blockerDags argument
+
+	* variantSearch.hh (SimpleRootContainer): updated decl for ctor
+
+	* narrowingSearchState2.hh (SimpleRootContainer): private derivation
+	from SimpleRootContainer
+	(SimpleRootContainer): added data member blockerDags
+
+	* narrowingSearchState2.cc (markReachableNodes): added
+
+2016-11-21  Steven Eker  <eker@install.csl.sri.com>
+
+	* variantUnificationProblem.cc (VariantUnificationProblem): pass
+	checkVariableNames = false to avoid checks that are unneeded
+	and might cause an issue
+
+	* variantSearch.cc (VariantSearch): handle checkVariableNames
+	argument
+
+	* variantSearch.hh (SimpleRootContainer): updated decl for ctor
+
+2016-11-18  Steven Eker  <eker@install.csl.sri.com>
+
+	* variantUnificationProblem.cc (VariantUnificationProblem): pass false
+	to VariantSearch deleteFreshVariableGenerator arg
+
+	* variantSearch.cc (VariantSearch): handle deleteFreshVariableGenerator
+	arg
+	(VariantSearch): conditionally delete freshVariableGenerator
+
+	* variantSearch.hh (SimpleRootContainer): added data member
+	deleteFreshVariableGenerator; updated decl for ctor
+
+2016-11-17  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingSearchState2.hh (PositionState): default to REPECT_FROZEN
+
+	* variantUnificationProblem.cc (findNextUnifier): fix bug where
+	we weren't creating fresh variables to bind to unbound variables
+	from the preEquation
+	(findNextUnifier): increment nrFreeVariables after, rather than
+	before fresh variable is created so that numbering is correct
+
+2016-11-16  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingSearchState2.cc (findNextNarrowing): don't narrow
+	at variable positions
+	(findNextNarrowing): check that rule has the right kind on top
+
+	* narrowingSearchState.cc (findNextNarrowing): don't narrow at
+	variable positions
+
+2016-11-15  Steven Eker  <eker@install.csl.sri.com>
+
+	* variantUnificationProblem.cc (findNextUnifier): use new
+	VariableInfo::variable2Index() member function to translate
+	variable from preEquation
+	(VariantUnificationProblem): save pointer to preEquation
+	(findNextUnifier): fix multiple bugs in manipulation of indices
+
+2016-11-14  Steven Eker  <eker@install.csl.sri.com>
+
+	* higher.hh: added class VariantUnificationProblem,
+	class NarrowingSearchState2
+
+2016-11-11  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingSearchState2.hh: created
+
+	* narrowingSearchState2.cc: created
+
+	* variantSearch.hh (SimpleRootContainer): added data member targetCopy
+
+	* variantSearch.cc (markReachableNodes): mark targetCopy
+	(VariantSearch): use copyAll() to make a complete copy of the target
+	dag
+
+2016-11-09  Steven Eker  <eker@install.csl.sri.com>
+
+	* variantUnificationProblem.hh (SimpleRootContainer): added data member
+	nrPreEquationVariables
+
+	* variantUnificationProblem.cc (findNextUnifier): avoid binding slots that
+	fall in the hole between preEquation variables and target variables
+	(VariantUnificationProblem): store nrPreEquationVariables
+
+2016-11-08  Steven Eker  <eker@install.csl.sri.com>
+
+	* variantUnificationProblem.hh: created
+
+	* variantUnificationProblem.cc: created
+
+2016-11-04  Steven Eker  <eker@install.csl.sri.com>
+
+	* variantSearch.hh (SimpleRootContainer): updated decl for ctor
+
+	* variantSearch.cc (VariantSearch): take disallowedVariableFamily
+	arg rather than firstVariableFamily, secondVariableFamily args
+
+	* variantFolder.cc: deleted commented out version of getNextSurvivingVariant()
+
+2016-11-03  Steven Eker  <eker@install.csl.sri.com>
+
+	* variantSearch.cc (VariantSearch): need to pass firstVariableFamily when we
+	create fresh variables for initial substitution
+
+2016-11-02  Steven Eker  <eker@install.csl.sri.com>
+
+	* variantSearch.cc (expandVariant): pass variableFamily to insertVariant()
+	(VariantSearch): pass UNDEFINED as variableFamily to insertVariant()
+	(getNextUnifier): Assert() check for UNDEFINED variableFamily
+
+	* variantFolder.hh (SimpleRootContainer): updated decl for insertVariant()
+
+	* variantFolder.cc (getNextSurvivingVariant): fill out variableFamily
+	(insertVariant): take variableFamily argument and copy it into RetainedVariant
+
+	* variantFolder.hh (SimpleRootContainer): added data member variableFamily
+	to struct RetainedVariant
+
+	* variantSearch.cc (getNextUnifier): pass variableFamily argument to
+	getNextSurvivingVariant()
+	(getNextVariant): pass dummy variableFamily argument to
+	getNextSurvivingVariant()
+
+	* variantFolder.cc (getNextSurvivingVariant): added variableFamily
+	argument
+
+	* variantFolder.hh (SimpleRootContainer): updaed decl for
+	getNextSurvivingVariant()
+
+2016-11-01  Steven Eker  <eker@install.csl.sri.com>
+
+	* variantSearch.hh (SimpleRootContainer): updated decl for getNextUnifier()
+
+2016-10-28  Steven Eker  <eker@install.csl.sri.com>
+
+	* variantSearch.hh (SimpleRootContainer): updated ctor;
+	odd -> useFirstVariableFamily
+
+	* variantSearch.cc (VariantSearch): take arguments
+	firstVariableFamily, secondVariableFamily
+	(expandVariant, VariantSearch): odd -> useFirstVariableFamily
+
+	* variantSearch.hh (SimpleRootContainer): added data members
+	firstVariableFamily, secondVariableFamily
+
+	* variantNarrowingSearchState.hh (PositionState): updated decl
+	for ctor
+
+	* variantNarrowingSearchState.cc (VariantNarrowingSearchState): odd
+	becomes variableFamily throughout
+
+2016-10-26  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingUnificationProblem.cc: odd -> variableFamily throughout
+
+	* narrowingUnificationProblem.hh (SimpleRootContainer): data member
+	odd becomes int variableFamily; updated ctor decls
+
+2016-10-19  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingUnificationProblem.cc (classifyVariables): simplified
+	to make use of the invariant that variables occuring in a binding
+	to an original variable must themselves be unbound (otherwise
+	they would have been instiatiated away by PendingUnificationStack)
+	(findNextUnifier): removed commented out code
+
+===================================Maude111===========================================
+
 2016-05-17  Steven Eker  <eker@install.csl.sri.com>
 
 	* equalityConditionFragment.hh (normalize): added
@@ -1444,7 +1752,7 @@
 	(findNextUnifier): use variableInfo
 	(findOrderSortedUnifiers): use variableInfo
 	(extractUnifier): use variableInfo
-	
+
 	* unificationProblem.hh (class UnificationProblem): added many
 	commments
 	(getVariableInfo): added
@@ -1866,7 +2174,7 @@
 2003-07-14  Steven Eker  <eker@goo.csl.sri.com>
 
 	* temporalSymbol.cc (build): TRUE -> LTL_TRUE, FALSE -> LTL_FALSE
-	
+
 ===================================Maude81===========================================
 
 2003-05-23  Steven Eker  <eker@goo.csl.sri.com>
@@ -1887,7 +2195,7 @@
 	* positionState.hh (class PositionState): added data member
 	extensionInfoValid
 	(getExtensionInfo): call makeExtensionInfo() on demand
-	
+
 ===================================Maude80===========================================
 
 2003-02-26  Steven Eker  <eker@goo.csl.sri.com>
@@ -1966,7 +2274,7 @@
 	* assignmentConditionFragment.cc: removed #pragma
 
 	* assignmentConditionFragment.hh: removed #pragma
-	
+
 ===================================Maude79===========================================
 
 2003-02-20  Steven Eker  <eker@goo.csl.sri.com>
@@ -1985,7 +2293,7 @@
 	(eqRewrite): use satisfiesSymbol
 
 ===================================Maude78=====================================
-	
+
 2002-11-25  Steven Eker  <eker@goo.csl.sri.com>
 
 	* positionState.cc (PositionState): switch initializer order to
@@ -2001,7 +2309,7 @@
 
 	* positionState.cc (exploreNextPosition): pass respectFrozen arg
 	to stackArguments()
-	
+
 ===================================Maude76==================================================
 
 2002-08-23  Steven Eker  <eker@goo.csl.sri.com>
@@ -2039,7 +2347,7 @@
 	introduced by the coloring of constrcution indices: we need to
 	call useIndex() to stop lhsIndex and rhsIndex from being shared
 	via index coloring
-	
+
 ===================================Maude75==================================================
 
 2002-06-12  Steven Eker  <eker@goo.csl.sri.com>
@@ -2064,7 +2372,7 @@
 
 	* modelCheckerSymbol.cc (makeTransition): simplified now that
 	makeDagNode() takes a default argument
-	
+
 ===================================Maude71a==================================================
 
 2002-02-28  Steven Eker  <eker@goo.csl.sri.com>
@@ -2214,7 +2522,7 @@
 
 	* modelSymbol.hh (class ModelSymbol): deleted static data member
 	eagerStrategy
-	
+
 ===================================Maude70==================================================
 
 2002-01-25  Steven Eker  <eker@goo.csl.sri.com>
@@ -2346,7 +2654,7 @@
 
 	* modelSymbol.hh: cleaned up includes; delete class LogicFormula
 	hack
-	
+
 ===================================Maude69==================================================
 
 2001-12-06  Steven Eker  <eker@goo.csl.sri.com>

@@ -100,6 +100,7 @@ private:
   DagNode** argArray() const;
   DagNode* markArguments();
   DagNode* copyEagerUptoReduced2();  
+  DagNode* copyAll2();  
   void clearCopyPointers2();
   //
   //	Unification stuff

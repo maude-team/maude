@@ -1,0 +1,223 @@
+set show timing off .
+set show advisories off .
+
+***
+***	Check handling of unification incompleteness.
+***
+
+mod FOO is
+  sort Foo .
+  op f : Foo Foo -> Foo [assoc] .
+  ops g h : Foo -> Foo .
+  ops a b c d e : -> Foo .
+
+vars X Y Z W : Foo .
+  rl g(f(X, X)) => h(X) [label nar].
+endm
+
+*** 4 unifiers + incompleteness
+unify f(X, X) =? f(Y, Z, Z) .
+
+*** metaNarrow()
+
+red in META-LEVEL :
+  metaNarrow(
+    ['FOO],
+    'g['f['Y:Foo, 'Z:Foo, 'Z:Foo]],
+    'W:Foo,
+    '+,
+    unbounded,
+    0) .
+
+red in META-LEVEL :
+  metaNarrow(
+    ['FOO],
+    'g['f['Y:Foo, 'Z:Foo, 'Z:Foo]],
+    'W:Foo,
+    '+,
+    unbounded,
+    1) .
+
+red in META-LEVEL :
+  metaNarrow(
+    ['FOO],
+    'g['f['Y:Foo, 'Z:Foo, 'Z:Foo]],
+    'W:Foo,
+    '+,
+    unbounded,
+    2) .
+
+red in META-LEVEL :
+  metaNarrow(
+    ['FOO],
+    'g['f['Y:Foo, 'Z:Foo, 'Z:Foo]],
+    'W:Foo,
+    '+,
+    unbounded,
+    3) .
+
+red in META-LEVEL :
+  metaNarrow(
+    ['FOO],
+    'g['f['Y:Foo, 'Z:Foo, 'Z:Foo]],
+    'W:Foo,
+    '+,
+    unbounded,
+    4) .
+
+*** metaNarrowingApply()
+
+red in META-LEVEL :
+  metaNarrowingApply(
+    ['FOO],
+    'g['f['Y:Foo, 'Z:Foo, 'Z:Foo]],
+    'nar,
+    empty,
+    '#,
+    0) .
+
+red in META-LEVEL :
+  metaNarrowingApply(
+    ['FOO],
+    'g['f['Y:Foo, 'Z:Foo, 'Z:Foo]],
+    'nar,
+    empty,
+    '#,
+    1) .
+
+red in META-LEVEL :
+  metaNarrowingApply(
+    ['FOO],
+    'g['f['Y:Foo, 'Z:Foo, 'Z:Foo]],
+    'nar,
+    empty,
+    '#,
+    2) .
+
+red in META-LEVEL :
+  metaNarrowingApply(
+    ['FOO],
+    'g['f['Y:Foo, 'Z:Foo, 'Z:Foo]],
+    'nar,
+    empty,
+    '#,
+    3) .
+
+red in META-LEVEL :
+  metaNarrowingApply(
+    ['FOO],
+    'g['f['Y:Foo, 'Z:Foo, 'Z:Foo]],
+    'nar,
+    empty,
+    '#,
+    4) .
+
+*** using # variables
+
+red in META-LEVEL :
+  metaNarrowingApply(
+    ['FOO],
+    'g['f['#22:Foo, '#23:Foo, '#23:Foo]],
+    'nar,
+    empty,
+    '#,
+    0) .
+
+red in META-LEVEL :
+  metaNarrowingApply(
+    ['FOO],
+    'g['f['#22:Foo, '#23:Foo, '#23:Foo]],
+    'nar,
+    empty,
+    '#,
+    1) .
+
+
+red in META-LEVEL :
+  metaNarrowingApply(
+    ['FOO],
+    'g['f['#22:Foo, '#23:Foo, '#23:Foo]],
+    'nar,
+    empty,
+    '#,
+    2) .
+
+red in META-LEVEL :
+  metaNarrowingApply(
+    ['FOO],
+    'g['f['#22:Foo, '#23:Foo, '#23:Foo]],
+    'nar,
+    empty,
+    '#,
+    3) .
+
+red in META-LEVEL :
+  metaNarrowingApply(
+    ['FOO],
+    'g['f['#22:Foo, '#23:Foo, '#23:Foo]],
+    'nar,
+    empty,
+    '#,
+    4) .
+
+***
+***	Now with the incompleteness arising from a variant equation.
+***
+
+mod BAR is
+  sort Foo .
+  op f : Foo Foo -> Foo [assoc] .
+  ops g h i : Foo -> Foo .
+  ops a b c d e : -> Foo .
+
+vars X Y Z W : Foo .
+  eq g(f(X, X)) = h(X) [variant].
+  rl h(X) => i(X) [label nar] .
+endm
+
+variant unify h(X) =? g(f(Y, Z, Z)) .
+
+red in META-LEVEL :
+  metaNarrowingApply(
+    ['BAR],
+    'g['f['Y:Foo, 'Z:Foo, 'Z:Foo]],
+    'nar,
+    empty,
+    '#,
+    0) .
+
+red in META-LEVEL :
+  metaNarrowingApply(
+    ['BAR],
+    'g['f['Y:Foo, 'Z:Foo, 'Z:Foo]],
+    'nar,
+    empty,
+    '#,
+    1) .
+
+red in META-LEVEL :
+  metaNarrowingApply(
+    ['BAR],
+    'g['f['Y:Foo, 'Z:Foo, 'Z:Foo]],
+    'nar,
+    empty,
+    '#,
+    2) .
+
+red in META-LEVEL :
+  metaNarrowingApply(
+    ['BAR],
+    'g['f['Y:Foo, 'Z:Foo, 'Z:Foo]],
+    'nar,
+    empty,
+    '#,
+    3) .
+
+red in META-LEVEL :
+  metaNarrowingApply(
+    ['BAR],
+    'g['f['Y:Foo, 'Z:Foo, 'Z:Foo]],
+    'nar,
+    empty,
+    '#,
+    4) .

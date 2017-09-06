@@ -1,3 +1,44 @@
+2016-12-19  Steven Eker  <eker@install.csl.sri.com>
+
+	* rewritingContext.hh (clearCount): clear narrowingCount and
+	variantNarrowingCount
+
+2016-12-15  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingVariableInfo.hh (N): use NO_COPYING macro
+	(N): added ctor
+
+	* freshVariableGenerator.hh (F): added decl for belongsToFamily()
+
+2016-11-15  Steven Eker  <eker@install.csl.sri.com>
+
+	* variableInfo.hh (V): added decl for new variable2Index()
+
+	* variableInfo.cc (variable2Index): added VariableDagNode* version
+
+2016-11-08  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingVariableInfo.hh (N): added decl for variable2IndexNoAdd()
+
+	* narrowingVariableInfo.cc (variable2IndexNoAdd): added
+
+2016-10-26  Steven Eker  <eker@install.csl.sri.com>
+
+	* unificationContext.cc (UnificationContext, makeFreshVariable): odd ->
+	variableFamily
+
+	* unificationContext.hh (SimpleRootContainer): updated decl for ctor
+	(SimpleRootContainer): data member odd becomes int variableFamily
+
+	* freshVariableGenerator.hh (F): updated decl for getFreshVariableName()
+
+2016-10-13  Steven Eker  <eker@install.csl.sri.com>
+
+	* rule.hh (PreEquation): added enum Flags for NARROWING
+	(isNarrowing, setNarrowing): added
+
+===================================Maude111===========================================
+
 2016-06-27  Steven Eker  <eker@install.csl.sri.com>
 
 	* pendingUnificationStack.hh (flagAsIncomplete): fixed typo

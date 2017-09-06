@@ -1,3 +1,10 @@
+2016-10-12  Steven Eker  <eker@install.csl.sri.com>
+
+	* intSystem.cc (initializeUpperBounds): fix warning about
+	signed/unsigned comparison in Assert()
+
+===================================Maude111===========================================
+
 2016-06-27  Steven Eker  <eker@install.csl.sri.com>
 
 	* pigPug-cycleDetection.cc (arrive): fixed type

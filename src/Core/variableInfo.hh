@@ -27,6 +27,7 @@
 #ifndef _variableInfo_hh_
 #define _variableInfo_hh_
 #include "natSet.hh"
+#include "variable.hh"
 #include "variableTerm.hh"
 
 class VariableInfo
@@ -37,9 +38,10 @@ public:
   int getNrRealVariables() const;
   int getNrProtectedVariables() const;
   //
-  //	These two functions map between indexes and real variables.
+  //	These three functions map between indexes and real variables.
   //
   int variable2Index(VariableTerm* variableTerm);
+  int variable2Index(VariableDagNode* variable) const;
   Term* index2Variable(int index) const;
   //
   //	The following function makes a new variable which will be

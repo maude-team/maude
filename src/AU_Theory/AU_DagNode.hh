@@ -99,6 +99,7 @@ private:
   //
   DagNode* markArguments();
   DagNode* copyEagerUptoReduced2();
+  DagNode* copyAll2();
   void clearCopyPointers2();
   //
   //	Functions particular to AU_DagNode.

@@ -55,10 +55,22 @@ MixfixModule::parseTerm(const Vector<Token>& bubble,
   Term* t1;
   Term* t2;
   parser->makeTerms(t1, t2);
+  /*
+  cerr << "t1 = " << t1 << endl;
+  if (r > 1)
+    cout << "t2 = " << t2 << endl;
+  */
   if (r > 1)
     {
-      t1->symbol()->fillInSortInfo(t1);
-      t2->symbol()->fillInSortInfo(t2);
+      if (getStatus() >= THEORY_CLOSED)
+	{
+	  //
+	  //	We have semi-compiled operator declarations so sort
+	  //	diagrams are valid and sort computations can safely be done.
+	  //
+	  t1->symbol()->fillInSortInfo(t1);
+	  t2->symbol()->fillInSortInfo(t2);
+	}
       IssueWarning(LineNumber(bubble[0].lineNumber()) <<
 		   ": ambiguous term, two parses are:\n" << t1 <<
 		   "\n-versus-\n" << t2 <<

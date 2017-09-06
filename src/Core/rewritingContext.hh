@@ -295,6 +295,9 @@ RewritingContext::clearCount()
   mbCount = 0;
   eqCount = 0;
   rlCount = 0;
+
+  narrowingCount = 0;
+  variantNarrowingCount = 0;
 }
 
 inline void

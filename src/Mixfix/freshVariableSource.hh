@@ -33,15 +33,26 @@ class FreshVariableSource : public FreshVariableGenerator
 public:
   FreshVariableSource(MixfixModule* module);
   FreshVariableSource(MixfixModule* module, const mpz_class& baseNumber);
-  int getFreshVariableName(int index, bool odd);
+
+  int getFreshVariableName(int index, int family);
   Symbol* getBaseVariableSymbol(Sort* sort);
   bool variableNameConflict(int id);
+  bool belongsToFamily(int id, int family);
+
+  static int getBaseName(int index);
+  static int getFamily(int id);
 
 private:
+  enum Special
+    {
+      NR_FAMILIES = 3
+    };
+
+  typedef Vector<int> Cache;
+
   MixfixModule* const module;
   mpz_class baseNumber;
-  Vector<int> cache;
-  Vector<int> oddCache;
+  Cache caches[NR_FAMILIES];
 };
 
 #endif

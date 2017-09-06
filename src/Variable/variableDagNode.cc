@@ -76,6 +76,12 @@ VariableDagNode::copyEagerUptoReduced2()
   return new VariableDagNode(symbol(), id(), index);
 }
 
+DagNode*
+VariableDagNode::copyAll2()
+{
+  return new VariableDagNode(symbol(), id(), index);
+}
+
 void
 VariableDagNode::clearCopyPointers2()
 {
