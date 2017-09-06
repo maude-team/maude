@@ -72,7 +72,7 @@ maude_DEPENDENCIES = ../Mixfix/libmixfix.a \
 	../IO_Stuff/libIO_Stuff.a $(am__DEPENDENCIES_1) \
 	../Utility/libutility.a $(am__DEPENDENCIES_2) \
 	$(am__DEPENDENCIES_2) $(am__DEPENDENCIES_2) \
-	$(am__DEPENDENCIES_3)
+	$(am__DEPENDENCIES_2) $(am__DEPENDENCIES_3)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -124,6 +124,7 @@ INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
 LDFLAGS = @LDFLAGS@
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
+LIBSIGSEGV_LIB = @LIBSIGSEGV_LIB@
 LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
 OBJEXT = @OBJEXT@
@@ -242,6 +243,7 @@ maude_LDADD = \
 	../Utility/libutility.a \
 	$(BUDDY_LIB) \
 	$(TECLA_LIBS) \
+	$(LIBSIGSEGV_LIB) \
 	$(GMP_LIBS) \
 	$(DLMALLOC_LIB)
 

@@ -49,9 +49,6 @@ libcore_a_SOURCES = \
 	protectedDagNodeSet.cc \
 	pendingUnificationStack.cc
 
-#	solvedFormSubproblemDisjunction.cc
-
-
 EXTRA_DIST = \
 	run.cc \
 	ctorDiagram.cc \
@@ -106,7 +103,6 @@ noinst_HEADERS = \
 	strategy.hh \
 	subproblemAccumulator.hh \
 	subproblemDisjunction.hh \
-	solvedFormSubproblemDisjunction.hh \
 	subproblemSequence.hh \
 	substitution.hh \
 	symbolMap.hh \

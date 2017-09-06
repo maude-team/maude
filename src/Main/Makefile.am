@@ -60,6 +60,7 @@ maude_LDADD = \
 	../Utility/libutility.a \
 	$(BUDDY_LIB) \
 	$(TECLA_LIBS) \
+	$(LIBSIGSEGV_LIB) \
 	$(GMP_LIBS) \
 	$(DLMALLOC_LIB)
 

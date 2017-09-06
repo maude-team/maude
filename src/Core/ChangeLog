@@ -1,3 +1,19 @@
+2008-03-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* solvedFormSubproblemDisjunction.cc: deleted
+
+	* solvedFormSubproblemDisjunction.hh: deleted
+
+	* core.hh: removed class SolvedFormSubproblemDisjunction
+
+2008-03-13  Steven Eker  <eker@goo.csl.sri.com>
+
+	* variableInfo.cc (computeIndexRemapping): keep a vector of
+	conflict candidates to avoid quadratic behavior for large examples
+	with trival structure
+
+===================================Maude90a===========================================
+
 2008-02-12  Steven Eker  <eker@goo.csl.sri.com>
 
 	* unificationContext.cc (markReachableNodes): added to fix bug

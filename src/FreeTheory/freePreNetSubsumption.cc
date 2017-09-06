@@ -39,6 +39,10 @@ FreePreNet::subsumesWrtReducedFringe(Term* subsumer,
 {
   if (!(reducedFringe.contains(currentPositionIndex)))
     {
+      //
+      //	We haven't reached the fringe so we must be in part of the term that
+      //	has been matched on our current arc.
+      //
       if (FreeTerm* sf = dynamic_cast<FreeTerm*>(subsumer))
 	{
 	  //
@@ -104,6 +108,10 @@ FreePreNet::subsumesWrtReducedFringe(Term* subsumer,
 {
   if (!(reducedFringe.contains(currentPositionIndex)))
     {
+      //
+      //	We haven't reached the fringe so we must be in part of the term that
+      //	has been matched on our current arc.
+      //
       if (dynamic_cast<FreeTerm*>(subsumer) != 0)
 	{
 	  Symbol* symbol = subsumer->symbol();

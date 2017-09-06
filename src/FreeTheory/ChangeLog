@@ -1,3 +1,73 @@
+2008-03-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeDagNode.hh (class FreeDagNode): removed commented out
+	declaration for old version of computeSolvedForm2()
+
+	* freePreNetFullCompiler.cc (allocateVariables, slotMapUnion) 
+	(generateNode): use NetMap
+	(generateCode): use net.empty()
+
+	* freePreNetSemiCompiler.cc (semiCompile, semiCompileNode): use NetMap
+
+	* freePreNet.cc (dump): updated
+
+	* freePreNet.hh (class FreePreNet): updated decl for
+	findBestPosition(); added data member netVec
+
+	* freePreNet.cc (findBestPosition): updated
+	(makeNode): use NodeMap
+
+	* freePreNet.hh (operator<): added
+	(class FreePreNet): added structs NodeIndex and NodeBody; added
+	typedef NodeMap
+
+2008-03-21  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freePreNet.cc (makeNode): make use of sets return by
+	partitionLiveSet() to speed up generation of new live sets
+	(buildNet): added potentialSubsumers optimization
+
+	* freePreNet.hh (class FreePreNet): findLiveSets() ->
+	partitionLiveSet()
+
+	* freePreNet.cc (partitionLiveSet): converted from findLiveSets()
+
+	* freePreNetSubsumption.cc (subsumesWrtReducedFringe): added
+	comments to both versions
+
+2008-03-19  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freePreNet.cc (findLiveSets): added
+
+2008-03-14  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeNet.cc (addRemainderList, buildRemainders): update with new
+	PatternSet data structure
+	(dump): update with new PatternSet data structure
+
+	* freeNet.hh (class FreeNet): added typedef PatternSet; updated
+	decls
+
+	* freePreNet.hh (class FreePreNet): pattternsUsed becomes a
+	LiveSet
+
+	* freePreNetSemiCompiler.cc (semiCompileNode, setVisitedFlags) 
+	(allocateSlot): update with new LiveSet data structure
+
+	* freePreNet.cc (buildNet, makeNode, reduceFringe, findLiveSet) 
+	(partiallySubsumed, findBestPosition): update with new LiveSet
+	data structure
+	(dumpLiveSet): added
+
+	* freePreNet.hh (class FreePreNet): addeded typedef LiveSet;
+	updated other decls
+
+2008-03-12  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeTerm.cc (compileRhs3): compile subterms in the order largest first
+
+===================================Maude90a===========================================
+
 2008-02-08  Steven Eker  <eker@goo.csl.sri.com>
 
 	* freeDagNode.cc (computeSolvedForm2): Substitution ->

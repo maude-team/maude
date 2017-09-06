@@ -117,18 +117,8 @@ public:
     UNIMPLEMENTED
   };
 
-  virtual ReturnResult computeBaseSortForGroundSubterms();
-  /*
-  bool computeSolvedForm(DagNode* rhs,
-			 Substitution& solution,
-			 Subproblem*& returnedSubproblem,
-			 ExtensionInfo* extensionInfo = 0);
-  virtual bool computeSolvedForm2(DagNode* rhs,
-				  Substitution& solution,
-				  Subproblem*& returnedSubproblem,
-				  ExtensionInfo* extensionInfo);
-  */
-
+  virtual ReturnResult computeBaseSortForGroundSubterms(
+);
   bool computeSolvedForm(DagNode* rhs, UnificationContext& solution, PendingUnificationStack& pending);
   virtual bool computeSolvedForm2(DagNode* rhs, UnificationContext& solution, PendingUnificationStack& pending);
 

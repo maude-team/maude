@@ -159,6 +159,19 @@ Term::indexVariables(VariableInfo& indicies)
     }
 }
 
+int
+Term::computeSize()
+{
+  if (cachedSize == UNDEFINED)
+    {
+      int size = 1;
+      for (ArgumentIterator a(*this); a.valid(); a.next())
+	size += a.argument()->computeSize();
+      cachedSize = size;
+    }
+  return cachedSize;
+}
+
 void
 Term::determineContextVariables()
 {

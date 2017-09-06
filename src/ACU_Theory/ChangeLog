@@ -1,3 +1,27 @@
+2008-03-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_DagNode.hh (class ACU_DagNode): ACU_UnificationSubproblem,
+	ACU_UnificationWithExtensionSubproblem no longer friends
+
+	* ACU_UnificationWithExtensionSubproblem.cc: deleted
+
+	* ACU_UnificationWithExtensionSubproblem.hh: deleted
+
+	* ACU_UnificationWithExtensionSubproblem.cc: deleted
+
+	* ACU_UnificationWithExtensionSubproblem.hh: deleted
+
+	* ACU_Theory.hh: removed classes ACU_UnificationSubproblem,
+	ACU_UnificationWithUnificationSubproblem
+
+	* ACU_DagNode.hh (class ACU_DagNode): deleted commented out decl
+	for old version of computeSolvedForm2()
+
+	* ACU_DagNode.cc (computeSolvedForm2): deleted commented out old
+	version
+
+===================================Maude90a===========================================
+
 2008-02-08  Steven Eker  <eker@goo.csl.sri.com>
 
 	* ACU_UnificationSubproblem2.hh (class

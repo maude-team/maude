@@ -1,3 +1,10 @@
+2008-03-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* S_DagNode.hh (class S_DagNode): deleted commented out decl for
+	computeSolvedForm2()
+
+===================================Maude90a===========================================
+
 2008-02-08  Steven Eker  <eker@goo.csl.sri.com>
 
 	* S_DagNode.cc (computeSolvedForm2): Substitution -> UnificationContext

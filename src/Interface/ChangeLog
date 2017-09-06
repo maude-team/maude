@@ -1,3 +1,18 @@
+2008-03-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* dagNode.hh (class DagNode): deleted decls for old versions of
+	computeSolvedForm() and computeSolvedForm2()
+
+2008-03-12  Steven Eker  <eker@goo.csl.sri.com>
+
+	* term.cc (computeSize): added
+
+	* term.hh (class Term): added data member cachedSize
+	(Term): initialize cachedSize
+	(class Term): added decl for computeSize()
+
+===================================Maude90a==========================================
+
 2008-02-08  Steven Eker  <eker@goo.csl.sri.com>
 
 	* dagNode.cc (computeSolvedForm, computeSolvedForm2): use

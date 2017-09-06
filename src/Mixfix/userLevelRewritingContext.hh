@@ -25,6 +25,10 @@
 //
 #ifndef _userLevelRewritingContext_hh_
 #define _userLevelRewritingContext_hh_
+#include <signal.h>
+#ifdef USE_LIBSIGSEGV
+#include "sigsegv.h"
+#endif
 #include "objectSystemRewritingContext.hh"
 #include "module.hh"
 #include "rule.hh"
@@ -107,7 +111,13 @@ public:
 private:
   static void interruptHandler(int);
   static void interruptHandler2(...);
-  static void segmentationFaultHandler(int);
+
+#ifdef USE_LIBSIGSEGV
+  static void stackOverflowHandler(int emergency, stackoverflow_context_t scp);
+  static int sigsegvHandler(void *fault_address, int serious);
+#endif
+  static void internalErrorHandler(int signalNr);
+
   static void changePrompt();
   static bool dontTrace(const DagNode* redex, const PreEquation* pe);
   bool handleDebug(const DagNode* subject, const PreEquation* pe);

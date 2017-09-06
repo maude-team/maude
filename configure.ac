@@ -3,7 +3,7 @@
 #
 #	Initialize autoconf stuff.
 #
-AC_INIT(Maude, alpha90, [maude-bugs@maude.cs.uiuc.edu])
+AC_INIT(Maude, 2.4, [maude-bugs@maude.cs.uiuc.edu])
 #
 #	Allow directory names that look like macros.
 #
@@ -16,7 +16,7 @@ AC_CANONICAL_HOST
 #
 #	Initialize automake stuff.
 #
-AM_INIT_AUTOMAKE(Maude, alpha90)
+AM_INIT_AUTOMAKE(Maude, 2.4)
 #
 #	Cause defines to be put in a header file rather than passed as
 #	compiler flags.
@@ -93,6 +93,27 @@ else
   TECLA_LIBS=""
 fi
 AC_SUBST(TECLA_LIBS)
+#
+#	Check to see if we should use libsigsegv to handle segmentation faults.
+#
+AC_ARG_WITH(libsigsegv,
+	    AC_HELP_STRING([--with-libsigsegv],
+                           [use libsigsegv to handle segmentation faults [default=yes]]),
+			   [WITH_LIBSIGSEGV=$withval],
+			   [WITH_LIBSIGSEGV=yes])
+if (test $WITH_LIBSIGSEGV = yes) then
+#
+#	Check if user set particular libsigsegv to use and if
+#	not set default.
+#
+  AC_DEFINE([USE_LIBSIGSEGV], [], [use libsigsegv to handle segmentation faults])
+  if (test -z "$LIBSIGSEGV_LIB") then
+    LIBSIGSEGV_LIB="-lsigsegv"
+  fi
+else
+  LIBSIGSEGV_LIB=""
+fi
+AC_SUBST(LIBSIGSEGV_LIB)
 #
 #	Check if user set particular GMP libraries to use and if
 #	not set defaults.
