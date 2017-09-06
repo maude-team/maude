@@ -63,7 +63,6 @@ UnificationProblem::UnificationProblem(Vector<Term*>& lhs, Vector<Term*>& rhs, F
   Assert(lhs.size() == rhs.size(), "lhs/rhs size clash");
   leftHandSides.swap(lhs);
   rightHandSides.swap(rhs);
-  subproblem = 0;  // safety in case we return early
   sortBdds = leftHandSides[0]->symbol()->getModule()->getSortBdds();
   //
   //	Preprocess terms .
@@ -127,12 +126,14 @@ UnificationProblem::UnificationProblem(Vector<Term*>& lhs, Vector<Term*>& rhs, F
   //
   //	Solve the underlying many-sorted unification problem.
   //
+  // cout << leftHandDags[0] << " =? " << rightHandDags[0] << endl;
   SubproblemAccumulator subproblems;
   for (int i = 0; i < nrEquations; ++i)
     {
       if (!(leftHandDags[i]->computeSolvedForm(rightHandDags[i], *unsortedSolution, subproblem, extensionInfo)))
 	{
 	  viable = false;
+	  subproblem = 0;  // for safe destruction
 	  return;
 	}
       subproblems.add(subproblem);
@@ -206,9 +207,11 @@ UnificationProblem::findNextUnifier()
       //
       if (subproblem != 0 && !(subproblem->unificationSolve(true, *unsortedSolution)))
 	return false;
+
+
       //cerr << "first unsorted solution";
       //cout << "=== final solved form ===" << endl;
-      //int nrRealVariables = getNrProtectedVariables();
+      int nrRealVariables = getNrProtectedVariables();
       /*
       cout << "total variables = " << unsortedSolution->nrFragileBindings() << endl;
       for (int i = 0; i < nrRealVariables; ++i)

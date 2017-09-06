@@ -1,10 +1,18 @@
+2007-08-06  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unificationProblem.cc (UnificationProblem): fix bug where we
+	were failing but leaving old subproblem ptr around for a double
+	deletion
+
+===================================Maude89e===========================================
+
 2007-07-23  Steven Eker  <eker@goo.csl.sri.com>
 
 	* unificationProblem.cc (findOrderSortedUnifiers): fix bug where
 	we were not telling the BDD package about the BDD variables we
 	allocate to represent the sorts of real variables
 
-===================================Maude89c===========================================
+===================================Maude89d===========================================
 
 2007-07-09  Steven Eker  <eker@goo.csl.sri.com>
 
