@@ -1,3 +1,61 @@
+2014-02-06  Steven Eker  <eker@ape.csl.sri.com>
+
+	* stackMachineRhsCompiler.cc (dump): drastically simplified
+	(recordFunctionEval): don't initialize deleted data members
+
+	* stackMachineRhsCompiler.hh (S): deleted data members
+	needContiguous, contiguousSlot and copies from struct
+	FunctionEval; removed structs Copy, VirtualSlot
+	(addCopy): deleted
+	(S): deleted typedefs VirtualSlotMap, IntMap, SlotSet
+	(S): removed data members virtualSlots and lastUsed
+	(S): deleted decls for internal functions
+
+	* stackMachineRhsCompiler.cc (compileInstructionSequence): deleted
+	unused variable nrArgs
+	(recordFunctionEval): delete commented out code
+
+2014-02-04  Steven Eker  <eker@ape.csl.sri.com>
+
+	* dagNodeSet.hh (PointerSet): use using syntax for member
+	functions exported from base class
+
+	* termSet.hh (PointerSet): use using syntax for member functions
+	exported from base class
+
+2014-01-31  Steven Eker  <eker@ape.csl.sri.com>
+
+	* module.hh (BadFlag): added decl for stackMachineCompile()
+
+	* module.cc (stackMachineCompile): added
+
+	* module.hh (BadFlag): added STACK_MACHINE_COMPILED to enum Status
+
+	* equation.cc (compile): don't do stack machine compilation here
+	any more
+	(stackMachineCompile): added
+
+	* stackMachineRhsCompiler.hh (S): updated decl for
+	compileInstructionSequence()
+
+	* stackMachineRhsCompiler.cc (compileInstructionSequence): don't
+	take argument
+
+2013-12-20  Steven Eker  <eker@ape.csl.sri.com>
+
+	* equation.cc (compile): remap indices before doing stack machine
+	compilation
+
+	* stackMachineRhsCompiler.cc (recordFunctionEval): rewritten
+	(compileInstructionSequence): rewritten; rely on slots generated
+	by remap indices
+
+2013-11-21  Steven Eker  <eker@ape.csl.sri.com>
+
+	* sort.hh (fastGeqSufficient, fastGeq): added
+
+===================================Maude100a===========================================
+
 2013-10-27  Steven Eker  <eker@ape.csl.sri.com>
 
 	* equation.cc (Equation): init instructionSequence to 0

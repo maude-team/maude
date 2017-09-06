@@ -1,3 +1,13 @@
+Overview of Changes in Maude 2.7 (alpha100a)
+============================================
+* dlmalloc removed (already disabled on most platforms)
+* MVM now supports non-linear variables
+* fixed bug with debug text being output during variant narrowing
+* (binary) Mac version now compiled with Mac Ports toolchain which
+  resolves several issues caused by Apple gcc and flex bugs, including
+  hanging on an end-of-file inside a comment
+* code cleaning to remove unused code and avoid many compiler warnings
+
 Overview of Changes in Maude alpha100 (source trees 97, 98, 99 abandoned)
 ==========================================================================
 * added crude Maude VM based interpreter (sreduce)

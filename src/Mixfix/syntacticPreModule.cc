@@ -130,7 +130,7 @@ VisibleModule*
 SyntacticPreModule::getFlatModule()
 {
   VisibleModule* m = getFlatSignature();
-  if (m->getStatus() != Module::THEORY_CLOSED)
+  if (m->getStatus() < Module::THEORY_CLOSED)
     {
       //IssueWarning("module " << *m << " with status " << m->getStatus() << " being flattened and compiled");  //HACK
       //

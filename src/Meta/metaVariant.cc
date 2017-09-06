@@ -102,6 +102,7 @@ MetaLevelOpSymbol::metaGetVariant(FreeDagNode* subject, RewritingContext& contex
 	  DagNode* result;
 	  const Vector<DagNode*>* variant;
 	  int nrFreeVariables;
+	  Assert(lastSolutionNr < solutionNr, "bad solution number");
 	  while (lastSolutionNr < solutionNr)
 	    {
 	      variant = vs->getNextVariant(nrFreeVariables);
@@ -182,6 +183,7 @@ MetaLevelOpSymbol::metaVariantUnify2(FreeDagNode* subject, RewritingContext& con
 	  DagNode* result;
 	  const Vector<DagNode*>* unifier;
 	  int nrFreeVariables;
+	  Assert(lastSolutionNr < solutionNr, "bad solution number");
 	  while (lastSolutionNr < solutionNr)
 	    {
 	      unifier = vs->getNextUnifier(nrFreeVariables);
@@ -199,7 +201,6 @@ MetaLevelOpSymbol::metaVariantUnify2(FreeDagNode* subject, RewritingContext& con
 	    m->insert(subject, vs, solutionNr);
 	    mpz_class lastVarIndex = varIndex + nrFreeVariables;
 	    result = disjoint ?
-	      //  0 : 0;
 	      metaLevel->upUnificationTriple(*unifier, vs->getVariableInfo(), lastVarIndex, m) :
 	      metaLevel->upUnificationPair(*unifier, vs->getVariableInfo(), lastVarIndex, m);
 	  }
@@ -218,7 +219,6 @@ MetaLevelOpSymbol::metaVariantUnify(FreeDagNode* subject, RewritingContext& cont
   //	op metaVariantUnify : Module UnificationProblem TermList Nat Nat ~> UnificationPair? .
   //
   return metaVariantUnify2(subject, context, false);
-  //return context.builtInReplace(subject, metaLevel->upNoUnifierPair());  // stub
 }
 
 bool
@@ -228,5 +228,4 @@ MetaLevelOpSymbol::metaVariantDisjointUnify(FreeDagNode* subject, RewritingConte
   //	op metaVariantDisjointUnify : Module UnificationProblem TermList Nat Nat ~> UnificationTriple? .
   //
   return metaVariantUnify2(subject, context, true);
-  //return context.builtInReplace(subject, metaLevel->upNoUnifierTriple());  // stub
 }

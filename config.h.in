@@ -138,9 +138,6 @@
 /* use libsigsegv to handle segmentation faults */
 #undef USE_LIBSIGSEGV
 
-/* use hacked up version of Mac rope implementation */
-#undef USE_ROPE_UGLY_HACK
-
 /* use Tecla command line editing library */
 #undef USE_TECLA
 

@@ -84,7 +84,7 @@ FreeGeneralExtorFinal::execute(StackMachine* machine) const
       const FreeRemainder* r = *p;
       do
 	{
-	  if (r->fastCheckAndBind(binding, net.stack))  // should really use generalCheckAndBind()
+	  if (r->generalCheckAndBind(binding, net.stack))
 	    {
 	      frame->setNextInstruction(r->getFirstInstruction());
 	      machine->incrementEqCount();

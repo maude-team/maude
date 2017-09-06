@@ -889,7 +889,6 @@ MixfixParser::makeAttributePart(int node,
 void
 MixfixParser::makePrintList(int node, Vector<int>& names, Vector<Sort*>& sorts)
 {
-  typedef pair<int, int> IntPair;  // HACK
   for (int listNode = node;; listNode = parser.getChild(listNode, 1))
     {
       //

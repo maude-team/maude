@@ -1,3 +1,17 @@
+2014-02-06  Steven Eker  <eker@ape.csl.sri.com>
+
+	* metaVariant.cc (metaGetVariant, metaVariantUnify2): added
+	Asserts() on solutionNr
+	(metaVariantUnify, metaVariantDisjointUnify): removed stub code
+	(metaVariantUnify2): removed commented out code
+
+	* metaMatch.cc (makeMatchSearchState2): return 0 rather than false
+	in fail case
+
+	* metaUpModule.cc (upGather): initialize s to avoid warning
+
+===================================Maude100a===========================================
+
 2012-07-31  Steven Eker  <eker@ape.csl.sri.com>
 
 	* metaVariant.cc (metaVariantUnify2): use upUnificationTriple(),

@@ -412,6 +412,12 @@ Interpreter::sreduce(const Vector<Token>& subject)
       TermBag dummyTerms;
       s->compileTopRhs(dummyBuilder, dummyVariableInfo, dummyTerms);
       
+      //
+      //	Convert abstract slot indices into concrete indices.
+      //
+      dummyVariableInfo.computeIndexRemapping();
+      dummyBuilder.remapIndices(dummyVariableInfo);
+
       StackMachineRhsCompiler compiler;
       if (!dummyBuilder.recordInfo(compiler))
 	{
@@ -419,8 +425,7 @@ Interpreter::sreduce(const Vector<Token>& subject)
 	  return;
 	}
 
-      int nrSlots = 0;
-      Instruction* instructionSequence = compiler.compileInstructionSequence(nrSlots);
+      Instruction* instructionSequence = compiler.compileInstructionSequence();
       if (instructionSequence == 0)
 	{
 	  IssueWarning("sreduce unsupported operator (Maude VM compiler).");
@@ -430,6 +435,8 @@ Interpreter::sreduce(const Vector<Token>& subject)
       //	Now run the sequence in a stack machine.
       //
       VisibleModule* fm = currentModule->getFlatModule();
+      fm->stackMachineCompile();
+
       startUsingModule(fm);
       Timer timer(getFlag(SHOW_TIMING));
 
@@ -462,63 +469,3 @@ Interpreter::sreduce(const Vector<Token>& subject)
       (void) fm->unprotect();
     }
 }
-
-#if 0
-
-void
-Interpreter::sreduce(const Vector<Token>& subject)
-{
-  if (DagNode* d = makeDag(subject))
-    {
-      if (getFlag(SHOW_COMMAND))
-	{
-	  UserLevelRewritingContext::beginCommand();
-	  cout << "sreduce in " << currentModule << " : " << d << " ." << endl;
-	}
-
-      VisibleModule* fm = currentModule->getFlatModule();
-      startUsingModule(fm);
-      Timer timer(getFlag(SHOW_TIMING));
-      //
-      //	Start of stack based reduction
-      //
-
-      /*
-      DagNode* r = d;  // HACK - don't have implementation yet
-      */
-      /*
-      DagNode* r;
-      StackMachine sm;
-      Frame* f = sm.newFrame(100);
-      f->setNextInstruction(d->symbol()->getEquations()[0]->getInstructionSequence());
-      f->setReturnAddress(&r);
-      f->setAncestorWithValidNextInstruction(0);
-      sm.execute();
-      int nrRewrites = sm.getEqCount();
-      */
-
-      StackMachine sm;
-      DagNode* r = sm.execute(d->symbol()->getEquations()[0]->getInstructionSequence());
-      Int64 nrRewrites = sm.getEqCount();
-
-      //int nrRewrites = 0;
-      //
-      //	End of stack based reduction.
-      //
-      if (getFlag(SHOW_STATS))
-	{
-	  cout << "rewrites: " << nrRewrites;
-	  Int64 real;
-	  Int64 virt;
-	  Int64 prof;
-	  if (getFlag(SHOW_TIMING) && timer.getTimes(real, virt, prof))
-	    printTiming(nrRewrites, prof, real);
-	  cout << '\n';
-	}
-      cout << "result " << r->getSort() << ": " << r << '\n';
-      cout.flush();
-      (void) fm->unprotect();
-    }
-}
-
-#endif

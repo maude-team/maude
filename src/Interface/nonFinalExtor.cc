@@ -48,7 +48,7 @@ NonFinalExtor::setActiveSlots(const NatSet& slots)
     maxSlotToPreserve = 0;
   SlotIndex destinationIndex = getDestinationIndex();
   DebugAdvisory("maxSlotToPreserve = " << maxSlotToPreserve << " destinationIndex " << destinationIndex);
-  if (destinationIndex > maxSlotToPreserve)
+  if (destinationIndex > static_cast<SlotIndex>(maxSlotToPreserve))
     maxSlotToPreserve = destinationIndex;
   frameLift = StackMachine::makeFrameLift(maxSlotToPreserve + 1);
   //

@@ -66,7 +66,7 @@ maude_DEPENDENCIES = ../Mixfix/libmixfix.a \
 	../IO_Stuff/libIO_Stuff.a $(FULL_COMPILER_LIB) \
 	../Utility/libutility.a $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1) $(DLMALLOC_LIB)
+	$(am__DEPENDENCIES_1)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -134,6 +134,7 @@ ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
 FLEX = @FLEX@
+GCC_LIBS = @GCC_LIBS@
 GMP_LIBS = @GMP_LIBS@
 GREP = @GREP@
 INSTALL = @INSTALL@
@@ -215,7 +216,6 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 @BUILD_COMPILER_TRUE@FULL_COMPILER_LIB = ../FullCompiler/libfullCompiler.a
-@USE_DLMALLOC_TRUE@DLMALLOC_LIB = ../3rdParty/libdlmalloc.a
 maude_CPPFLAGS = \
 	-I$(top_srcdir)/src/Utility \
 	-I$(top_srcdir)/src/Temporal \

@@ -43,7 +43,8 @@ public:
     SORT_SET_CLOSED,
     SIGNATURE_CLOSED,
     FIX_UPS_CLOSED,
-    THEORY_CLOSED
+    THEORY_CLOSED,
+    STACK_MACHINE_COMPILED
   };
 
   Module(int id);
@@ -53,6 +54,7 @@ public:
   virtual void closeSignature();
   virtual void closeFixUps();
   virtual void closeTheory();
+  virtual void stackMachineCompile();
   Environment* getEnvironment();
   Status getStatus() const;
   const Vector<Sort*>& getSorts() const;
