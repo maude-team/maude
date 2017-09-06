@@ -1,3 +1,10 @@
+2005-11-10  Steven Eker  <eker@goo.csl.sri.com>
+
+	* module.cc (insertLateSymbol): do interSymbolPass() and
+	postOpDeclarationPass() now that we have identities in polymorphs
+
+===================================Maude86d===========================================
+
 2005-07-13  Steven Eker  <eker@goo.csl.sri.com>
 
 	* sort.hh (class Sort): added FIRST_USER_SORT to enum SpecialSorts

@@ -64,11 +64,7 @@ View::View(Token viewName)
 
 View::~View()
 {
-  FOR_EACH_CONST(i, OpTermMap, opTermMap)
-    {
-      i->second.first->deepSelfDestruct();
-      i->second.second->deepSelfDestruct();
-    }
+  clearOpTermMap();
   if (fromTheory != 0)
     fromTheory->removeUser(this);
   if (toModule != 0)
@@ -80,6 +76,17 @@ View::~View()
   fromExpr->deepSelfDestruct();
   toExpr->deepSelfDestruct();
   informUsers();
+}
+
+void
+View::clearOpTermMap()
+{
+  FOR_EACH_CONST(i, OpTermMap, opTermMap)
+    {
+      i->second.first->deepSelfDestruct();
+      i->second.second->deepSelfDestruct();
+    }
+  opTermMap.clear();
 }
 
 void
@@ -128,6 +135,7 @@ View::regretToInform(Entity* doomedEntity)
   //
   //	Something we depended on changed so self destruct all calculated stuff.
   //
+  clearOpTermMap();
   if (fromTheory != 0)
     {
       fromTheory->removeUser(this);

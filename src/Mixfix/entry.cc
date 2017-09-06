@@ -506,7 +506,8 @@ MixfixModule::newFancySymbol(Token prefixName,
       return new SatSolverSymbol(name);
     case SymbolType::SUCC_SYMBOL:
       {
-	if (!(kindsWithSucc.insert(kindIndex).second))
+	pair<set<int>::iterator, bool> p = kindsWithSucc.insert(kindIndex);
+	if (!(p.second))
 	  {
 	    IssueWarning(LineNumber(prefixName.lineNumber()) <<
 	      ": multiple SuccSymbols in same kind will cause pretty printing problems.");
@@ -515,7 +516,8 @@ MixfixModule::newFancySymbol(Token prefixName,
       }
     case SymbolType::MINUS_SYMBOL:
       {
-	if (!(kindsWithMinus.insert(kindIndex).second))
+	pair<set<int>::iterator, bool> p = kindsWithMinus.insert(kindIndex);
+	if (!(p.second))
 	  {
 	    IssueWarning(LineNumber(prefixName.lineNumber()) <<
 	      ": multiple MinusSymbols in same kind will cause pretty printing problems.");
@@ -528,7 +530,8 @@ MixfixModule::newFancySymbol(Token prefixName,
       return new ACU_NumberOpSymbol(name);
     case SymbolType::DIVISION_SYMBOL:
       {
-	if (!(kindsWithDivision.insert(kindIndex).second))
+	pair<set<int>::iterator, bool> p = kindsWithDivision.insert(kindIndex);
+	if (!(p.second))
 	  {
 	    IssueWarning(LineNumber(prefixName.lineNumber()) <<
 	    ": multiple DivisionSymbols in same kind will cause pretty printing problems.");

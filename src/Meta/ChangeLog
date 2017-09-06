@@ -1,3 +1,17 @@
+2005-11-16  Steven Eker  <eker@goo.csl.sri.com>
+
+	* descentFunctions.cc (metaLesserSorts): use downType() rather
+	than downSimpleSort() to fix a bug
+	(metaSortLeq): use downType() rather than downSimpleSort() (2
+	places)
+
+2005-11-14  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaModuleCache.cc (regretToInform): fix longstanding bug where
+	we moving cached pairs the wrong way after a deletion
+
+===================================Maude86d===========================================
+
 2005-09-20  Steven Eker  <eker@goo.csl.sri.com>
 
 	* metaDownRenamings.cc (downModuleExpression): allow bound

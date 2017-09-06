@@ -101,6 +101,7 @@ private:
   bool handleOpTermMappings();
   bool checkOps();
   bool checkPolymorphicOps();
+  void clearOpTermMap();
 
   Status status;
   ModuleExpression* fromExpr;

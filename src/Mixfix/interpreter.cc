@@ -83,6 +83,11 @@ Interpreter::Interpreter()
 
 Interpreter::~Interpreter()
 {
+  //
+  //	Must delete modules before other destruction takes place to avoid
+  //	accessing free'd stuff.
+  //
+  deleteNamedModules();
   delete xmlBuffer;
   delete xmlLog;
 }
@@ -298,9 +303,9 @@ Interpreter::showView() const
 void
 Interpreter::showModules(bool all) const
 {
-  showNamedModules();
+  showNamedModules(cout);
   if (all)
-    showCreatedModules();
+    showCreatedModules(cout);
 }
 
 void

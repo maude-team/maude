@@ -1,3 +1,88 @@
+2005-11-17  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: op nil : -> HookList  is now a ctor; EmptyQidList
+	deleted; EmptyCommaList added; fixed confusion between __ and _,_
+	based lists of Qids
+
+===================================Maude86d2===========================================
+
+2005-11-16  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: sortLeq now defined on types
+
+	* interact.cc (commandLoop): fix bad endXmlLog() call
+
+2005-11-10  Steven Eker  <eker@goo.csl.sri.com>
+
+	* mixfixModule.cc (MixfixModule): fix memory leak:
+	deepSelfDestruct() identities
+
+	* prelude.maude: added QID-SET; use QID-SET in META-MODULE; added
+	extra sorts and declarations to achieve preregularity and
+	associativity of _;_
+
+2005-11-09  Steven Eker  <eker@goo.csl.sri.com>
+
+	* interact.cc (commandLoop): call endXmlLog()
+
+2005-11-08  Steven Eker  <eker@goo.csl.sri.com>
+
+	* moduleDatabase.hh (class ModuleDatabase): delete decl for
+	~ModuleDatabase(); add decl for deleteNamedModules()
+
+	* moduleDatabase.cc (deleteNamedModules): added
+	(~ModuleDatabase): deleted
+
+	* interact.cc (commandLoop): delete interpreter here
+
+	* preModule.cc (~PreModule): fix memory leak where we weren't
+	deleting module expressions for parameter theories
+
+	* viewDatabase.cc (~ViewDatabase): delete views
+
+2005-11-07  Steven Eker  <eker@goo.csl.sri.com>
+
+	* moduleCache.hh (User): updated decl for showCreatedModules()
+
+	* moduleDatabase.hh (class ModuleDatabase): updated decl for
+	showNamedModules()
+
+	* moduleDatabase.cc (showNamedModules): take ostream& parameter
+
+	* moduleCache.cc (showCreatedModules): take ostream& parameter
+
+	* interpreter.cc (showModules): pass cout to showNamedModules()
+	and showCreatedModules()
+
+	* main.hh: update decl for interpreter
+
+	* main.cc: make interpreter a reference to chase down memory leak
+
+2005-11-02  Steven Eker  <eker@goo.csl.sri.com>
+
+	* view.cc (clearOpTermMap): added
+	(~View): use clearOpTermMap()
+	(regretToInform): use clearOpTermMap() for fix stale term bug
+
+2005-10-26  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: fixed large number of white space issues; in
+	particular line no longer start with tab which messes with tecla
+
+	* renameModule.cc (donateOps2): fixed nasty scoping bug that left
+	format uninitialized in if branch
+
+2005-10-25  Steven Eker  <eker@goo.csl.sri.com>
+
+	* entry.cc (newFancySymbol): put pairs returned by insert() into
+	local variables to appease purify (3 places)
+
+2005-10-14  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: use protecting rather than inc in LIST-AND-SET
+
+===================================Maude86d===========================================
+
 2005-10-07  Steven Eker  <eker@goo.csl.sri.com>
 
 	* prelude.maude: added view TRIV

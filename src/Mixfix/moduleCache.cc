@@ -277,11 +277,11 @@ ModuleCache::destructUnusedModules()
 }
 
 void
-ModuleCache::showCreatedModules() const
+ModuleCache::showCreatedModules(ostream& s) const
 {
   FOR_EACH_CONST(i, ModuleMap, moduleMap)
     {
       MixfixModule* m = i->second;
-      cout << MixfixModule::moduleTypeString(m->getModuleType()) << ' ' << m << '\n';
+      s << MixfixModule::moduleTypeString(m->getModuleType()) << ' ' << m << '\n';
     }
 }

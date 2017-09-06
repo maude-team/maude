@@ -193,8 +193,27 @@ UserLevelRewritingContext::commandLoop()
 		break;
 	      }
 	    case QUIT:
-	      cout << "Bye.\n";
-	      exit(0);
+	      {
+		//
+		//	This is the only normal exit() that can be taken.
+		//
+		cout << "Bye.\n";
+#ifndef NO_ASSERT
+		//
+		//	Look for memory bugs.
+		//
+		delete &interpreter;
+#else
+		//
+		//	If we are not going to delete the interpreter
+		//	in the interests of a quick exit, at least clean
+		//	up any XML log we may have started.
+		//
+		interpreter.endXmlLog();
+#endif
+
+		exit(0);
+	      }
 	    }
 	}
     }
