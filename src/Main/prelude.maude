@@ -22,7 +22,7 @@
 
 ***
 ***	Maude interpreter standard prelude.
-***	Version alpha89i.
+***	Version alpha90.
 ***
 ***	Some of the overall structure is taken from the OBJ3
 ***	interpreter standard prelude.
@@ -2197,7 +2197,7 @@ fmod META-LEVEL is
            id-hook MetaLevelOpSymbol	(metaNarrow)
            op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .
 
-  op metaNarrow : Module Term Qid Bound Nat ~> ResultPair?
+  op metaNarrow : Module Term Qid Bound Bool Nat ~> ResultPair?
         [special (
            id-hook MetaLevelOpSymbol	(metaNarrow2)
            op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .

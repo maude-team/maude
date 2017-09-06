@@ -1,3 +1,265 @@
+2008-02-28  Steven Eker  <eker@goo.csl.sri.com>
+
+	* lexer.ll (END_STATEMENT_MODE): treat whitespace after "." as
+	something that is left to global rule
+
+2008-02-27  Steven Eker  <eker@goo.csl.sri.com>
+
+	* lexer.ll: flag a nasty bug - we need to deal with white
+	space and comments after the end of statement . before we see a
+	keyword that tells us it is in fact the end of statement
+
+2008-02-26  Steven Eker  <eker@goo.csl.sri.com>
+
+	* lexer.ll (END_COMMAND_MODE,END_STATEMENT_MODE): handle .
+	combined common code
+	(END_COMMAND_MODE,END_STATEMENT_MODE): if we see a regular token
+	we need to push it back on the input and parse it in bubble mode
+	since it might have some special properties in bubble mode
+
+2008-02-25  Steven Eker  <eker@goo.csl.sri.com>
+
+	* commands.yy (opSelect, endSelect, badSelect): added
+	(command): use opSelect
+
+	* modules.yy (endBubble): use missingSpace()
+	(moduleExprDot, sortDot, dot, badType): use missingSpace()
+
+	* commands.yy (miscEndBubble): use missingSpace()
+
+	* top.yy: added decl for missingSpace();
+
+	* bottom.yy: added
+
+	* modules.yy (endBubble): better error message for missing space
+
+	* commands.yy: allow ENS_IN _DOT everywhere IDENTIFIER is used
+
+	* lexer.ll: added SEEN_DOT mode
+
+	* commands.yy (initialEndBubble): added
+	(moduleAndTerm, numberModuleTerm, numbersModuleTerm): use
+	initialEndBubble
+
+2008-02-22  Steven Eker  <eker@goo.csl.sri.com>
+
+	* modules.yy (badType): use singleton
+	(typeName): use singleton
+	(simpleOpName): use singleton
+
+	* commands.yy (cSimpleOpName): use singleton
+
+	* top.yy: added variable singleton
+
+	* commands.yy (miscEndBubble): added; use throughout
+
+	* top.yy: declare badType to return token
+
+	* modules.yy (domainRangeAttr): dra3 -> dra2
+	(rangeAttr): added
+	(dra2): use rangeAttr
+	(dra2): fuse empty and nonempty typeList cases
+	(domainRangeAttr): use rangeAttr
+	(badType): return token
+
+2008-02-21  Steven Eker  <eker@goo.csl.sri.com>
+
+	* top.yy: deleted cToken cTokenBarDot 
+
+	* commands.yy (command): use lexBubble() for select/dump
+	(command): use parenBubble to handle (...) commands
+	(cSimpleOpName): use parenBubble
+	(cToken, cTokenBarDot, cTokens, cTokensBarDot): deleted
+
+	* lexerAux.hh: updated decl for lexContinueBubble()
+
+	* lexerAux.cc (lexContinueBubble): take pCount arg
+
+	* top.yy: deleted cTokenBarDotColon
+
+	* lexerAux.hh: update decl for lexBubble()
+
+	* lexerAux.cc (lexBubble): check to see if first token is "("
+	(lexBubble): support pCount argument instead
+
+	* commands.yy (command): use lexerBubble for
+	rewrite/srewrite/match/unify
+	(numbersModuleTerm*): 7 nonterminals rewritten
+	(command): use lexerBubble for frewrite/erewrite/search
+
+	* lexerAux.hh: added decls for lexSave(), lexContinueSave()
+
+	* lexerAux.cc (lexSave, lexContinueSave): added
+
+	* commands.yy (command): use lexerBubble for parse/cred/red
+	commands
+	(moduleAndTerm, inEnd): rewritten using lexBubble()
+	(command): use lexerBubble for loop
+	(numberModuleTerm, numberModuleTerm1, numberModuleTerm2):
+	rewritten using lexBubble()
+
+	* lexer.ll (id): support switching to END_COMMAND_MODE
+
+	* lexerAux.hh (enum TERMINATION_TOKENS): added END_COMMAND
+
+	* lexer.ll (id): handle identifiers ending in "." in
+	END_STATEMENT_MODE; added END_COMMAND_MODE
+
+2008-02-20  Steven Eker  <eker@goo.csl.sri.com>
+
+	* lexer.ll: END_BUBBLE_MODE -> END_STATEMENT_MODE
+
+	* lexerAux.hh: deleted decl for lexerTokenTreeMode()
+
+	* lexerAux.cc (lexerTokenTreeMode): deleted
+
+	* lexer.ll (id): delete TOKEN_TREE_MODE
+	(id): delete END_STATEMENT_MODE
+
+	* commands.yy (command): bubble -> tokenSequence
+
+	* modules.yy: bubble -> tokenSequence
+
+	* top.yy: added FORCE_LOOKAHEAD; deleted identityChunk; bubble
+	becomes tokenSequence
+
+	* modules.yy (attribute): reimplement identity attribute using
+	lexerBubble
+	(tokenTree): deleted
+
+	* lexerAux.hh (enum TERMINATION_TOKENS): added BAR_RIGHT_BRACKET
+
+	* lexer.ll (id): added BAR_RIGHT_BRACKET case
+
+	* token.cc (peelParens): don't peel bubbles of size 2
+
+2008-02-19  Steven Eker  <eker@goo.csl.sri.com>
+
+	* lexer.ll (id): added BAR_OP_ATTRIBUTE case
+
+	* modules.yy (declaration): use lexerBubble for cmb/eq/ceq/rl/crl
+	(endTree): deleted
+	(parenBubble): added
+	(opName, simpleOpName): use parenBubble
+	(declaration): moved : into op/msg decls
+	(domainRangeAttr): deleted
+	(dra2): becomes domainRangeAttr
+	(declaration): use lexBubble() instead of opName for op/msg decls
+	(declaration): need to use peelParens()
+	(opName): deleted
+	(hook): use parenBubble rather than parenTree
+	(parenTree): deleted
+	(neTokenTree): deleted
+
+	* lexerAux.hh: added decl for lexContinueBubble()
+
+	* lexerAux.cc (lexContinueBubble): added
+
+	* modules.yy (declaration): use lexerBubble for mb
+
+	* lexerAux.hh: added decl for new version of lexerBubble()
+
+	* lexerAux.cc (lexBubble): added new version that allows an
+	initial token to be placed in the bubble
+
+	* modules.yy (endBubble): added
+	(viewEndOpMap): use endBubble (2 places)
+
+	* lexer.ll (id): do lexerBubble length checks in . and ENDS_IN_DOT
+	cases
+
+2008-02-15  Steven Eker  <eker@goo.csl.sri.com>
+
+	* modules.yy (mapping): use lexBubble(); delete fromOpName and toOpName
+
+	* top.yy: added decl for lexerBubble
+
+	* lexerAux.hh: added decl for lexBuble()
+
+	* lexer.ll: FIX_UP() -> RETURN_FIX_UP(); don't fix up .{} in
+	command mode; removed redundant code that would pass , as an
+	IDENTIFIER
+
+2008-02-14  Steven Eker  <eker@goo.csl.sri.com>
+
+	* modules.yy (identityChunk): use tokenTree
+	(tokens): deleted
+
+	* top.yy: deleted decls for tokenBarEqual tokenBarIf
+	tokenBarArrow2 endToken tokenBarCommaLeft tokenBarColonTo
+
+	* modules.yy (viewDeclaration): use neTokenTree
+	(opName): use tokenTree/neTokenTree
+	(parenTree): added
+	(fromOpName, toOpName, opName, simpleOpName): use parenTree
+	(hook): use parenTree
+	(endStatement, tokensBarColon, tokensBarColonTo) 
+	(tokensBarCommaLeft, tokensBarEqual): deleted
+	(noTrailingDot, endTokens, tokensBarIf, tokensBarArrow2): deleted
+	(endToken): deleted
+	(tokenBarEqual, tokenBarIf, tokenBarColonTo, tokenBarCommaLeft): deleted
+	(tokenBarArrow2): deleted
+
+	* lexerAux.hh (enum TERMINATION_TOKENS): added BAR_RIGHT_PAREN
+
+	* lexer.ll (id): support BAR_RIGHT_PAREN; fix BAR_LEFT_BRACKET
+
+	* modules.yy (endTree): added
+	(declaration): use tokenTree/endTree
+	(viewEndOpMap): use endTree
+	(fromOpName): use tokenTree
+
+	* search.cc (search): fix missing space in show cmd output
+
+	* lexer.ll (id): added END_STATEMENT_MODE; SAVE(), SAVE_FIX_UP(),
+	RETURN_SAVED() macros; savedToken, savedReturn variables
+
+2008-02-13  Steven Eker  <eker@goo.csl.sri.com>
+
+	* lexerAux.hh: added decl for lexerLatexMode()
+
+	* modules.yy (tokenTree): added
+
+	* lexerAux.cc (lexerTokenTreeMode): added
+
+	* lexerAux.hh (enum EXCLUDE_TOKENS): added
+	added decl for lexerTokenTreeMode()
+
+	* lexer.ll (id): added token tree mode
+
+2008-01-21  Steven Eker  <eker@goo.csl.sri.com>
+
+	* top.yy: added yySearchKind to %union; updated decl for search
+
+	* lexer.ll: added keyword xg-narrow
+
+	* commands.yy (conceal): support xg-narrow
+
+	* interpreter.hh (endif): updated decl for search()
+
+	* search.cc (search): added support for xg-narrow
+
+	* interpreter.hh (endif): added enum SearchKind
+
+	* search.cc (search): pass flags arg to NarrowingSequenceSearch
+
+	* banner.cc (printBanner): update copyright date
+
+	* userLevelRewritingContext.cc (traceNarrowingStep): rewritten to
+	support trace options
+
+	* userLevelRewritingContext.hh (class UserLevelRewritingContext):
+	update decl for traceNarrowingStep()
+
+2008-01-18  Steven Eker  <eker@goo.csl.sri.com>
+
+	* userLevelRewritingContext.cc (traceNarrowingStep): added
+
+	* userLevelRewritingContext.hh (class UserLevelRewritingContext):
+	added decl for traceNarrowingStep()
+
+===================================Maude90===========================================
+
 2007-11-27  Steven Eker  <eker@goo.csl.sri.com>
 
 	* freshVariableSource.hh (class FreshVariableSource): added cache

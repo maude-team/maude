@@ -45,6 +45,7 @@ public:
 			  SearchType searchType,
 			  Pattern* goal,
 			  int maxDepth,
+			  int narrowingFlags,
 			  FreshVariableGenerator* freshVariableGenerator);
   ~NarrowingSequenceSearch();
 
@@ -64,6 +65,7 @@ private:
   RewritingContext* initial;
   Pattern* const goal;
   const int maxDepth;
+  const int narrowingFlags;
   FreshVariableGenerator* freshVariableGenerator;
 
   bool needToTryInitialState;

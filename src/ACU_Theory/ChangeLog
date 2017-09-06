@@ -1,3 +1,44 @@
+2008-02-08  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_UnificationSubproblem2.hh (class
+	ACU_UnificationSubproblem2): added date member
+	preSolveSubstitution; added decl for unsolve()
+
+	* ACU_UnificationSubproblem2.cc (solve): unsolve solved forms in
+	our theory
+	(unsolve): added
+
+	* ACU_DagNode.cc (computeSolvedForm2): Substitution ->
+	UnificationContext
+
+	* ACU_DagNode.hh (class ACU_DagNode): updated decl for
+	computeSolvedForm2()
+
+2008-02-05  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_Symbol.cc (makeUnificationSubproblem): added
+
+	* ACU_Symbol.hh (class ACU_Symbol): added decl for
+	makeUnificationSubproblem()
+
+	* ACU_DagNode.hh (class ACU_DagNode): updated decl for computeSolvedForm2()
+
+	* ACU_DagNode.cc (computeSolvedForm2): rewritten
+
+2008-02-04  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_UnificationSubproblem2.cc: created
+
+	* ACU_UnificationSubproblem2.hh: created
+
+2008-01-17  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_UnificationSubproblem.cc (ACU_UnificationSubproblem):
+	initialize savedSubstitution with 0 entries rather than with a
+	single entry (that will end up being marked in GC)
+
+===================================Maude90===========================================
+
 2007-11-20  Steven Eker  <eker@goo.csl.sri.com>
 
 	* ACU_UnificationSubproblem.cc (ACU_UnificationSubproblem):

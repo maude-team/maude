@@ -94,6 +94,50 @@ lexerIdMode()
 }
 
 void
+lexBubble(int termination, int minLen)
+{
+  terminationSet = termination;
+  parenCount = 0;
+  minLength = minLen;
+  lexerBubble.clear();
+  yy_push_state(BUBBLE_MODE);
+}
+
+void
+lexBubble(const Token& first, int termination, int minLen, int pCount)
+{
+  terminationSet = termination;
+  parenCount = pCount;
+  minLength = minLen;
+  lexerBubble.clear();
+  lexerBubble.append(first);
+  yy_push_state(BUBBLE_MODE);
+}
+
+void
+lexContinueBubble(const Token& next, int termination, int minLen, int pCount)
+{
+  terminationSet = termination;
+  parenCount = pCount;
+  lexerBubble.append(next);
+  minLength = minLen + lexerBubble.length();
+  yy_push_state(BUBBLE_MODE);
+}
+
+void
+lexSave(const Token& first)
+{
+  lexerBubble.clear();
+  lexerBubble.append(first);
+}
+
+void
+lexContinueSave(const Token& next)
+{
+  lexerBubble.append(next);
+}
+
+void
 lexerCmdMode()
 {
   BEGIN(CMD_MODE);

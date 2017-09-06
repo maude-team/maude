@@ -31,7 +31,7 @@
 class SolvedFormSubproblemDisjunction : public Subproblem, private SimpleRootContainer
 {
 public:
-  SolvedFormSubproblemDisjunction(int nrBindings);
+  SolvedFormSubproblemDisjunction();
   ~SolvedFormSubproblemDisjunction();
 
   void addOption(LocalBinding* difference,

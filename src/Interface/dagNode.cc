@@ -189,35 +189,29 @@ DagNode::computeBaseSortForGroundSubterms()
 }
 
 bool
-DagNode::computeSolvedForm(DagNode* rhs,
-			   Substitution& solution,
-			   Subproblem*& returnedSubproblem,
-			   ExtensionInfo* extensionInfo)
+DagNode::computeSolvedForm(DagNode* rhs, UnificationContext& solution, PendingUnificationStack& pending)
 {
+  DebugAdvisory("computeSolvedForm() lhs = " << this << " rhs = " << rhs);
   //
-  //	If extensionInfo exists or we are nonground we dispatch the theory specific algorithm.
+  //	If we are nonground we dispatch the theory specific algorithm.
   //
-  if (extensionInfo != 0 || !isGround())
-    return computeSolvedForm2(rhs, solution, returnedSubproblem, extensionInfo);
+  if (!isGround())
+    return computeSolvedForm2(rhs, solution, pending);
   //
   //	No extension and ground. If the other unificand is nonground, call its algorithm.
   //
   if (!(rhs->isGround()))
-    return rhs->computeSolvedForm2(this, solution, returnedSubproblem, 0);
+    return rhs->computeSolvedForm2(this, solution, pending);
   //
   //
   //	We have two ground terms and no extension so we can just compare them without the
   //	need for an unification algorithm.
   //
-  returnedSubproblem = 0;
   return equal(rhs);
 }
 
 bool
-DagNode::computeSolvedForm2(DagNode* /* rhs */,
-			    Substitution& /* solution */,
-			    Subproblem*& /* returnedSubproblem */,
-			    ExtensionInfo* /* extensionInfo */)
+DagNode::computeSolvedForm2(DagNode* /* rhs */, UnificationContext& /* solution */, PendingUnificationStack& /* pending */)
 {
   IssueWarning("Unification modulo the theory of operator " << QUOTE(this->topSymbol) << " is not currently supported.");
   return false;
@@ -251,7 +245,6 @@ DagNode::computeGeneralizedSort(const SortBdds& sortBdds,
   else
     symbol()->computeGeneralizedSort(sortBdds, realToBdd, this, generalizedSort);
 }
-
 
 //
 //	Narrowing code.

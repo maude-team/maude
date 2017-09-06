@@ -1,3 +1,95 @@
+2008-02-12  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unificationContext.cc (markReachableNodes): added to fix bug
+	that our variable dags were being collected
+
+	* unificationContext.hh (class UnificationContext): derive from
+	SimpleRootContainer; added decl for markReachableNodes()
+
+	* pendingUnificationStack.cc (solve): check for empty case
+
+2008-02-08  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unificationContext.cc (unificationBind): added
+
+	* unificationContext.hh (class UnificationContext): added decls
+	for unificationBind() and getVariableDagNode(); added data member
+	variableDagNodes
+	(getVariableDagNode): added
+
+2008-02-05  Steven Eker  <eker@goo.csl.sri.com>
+
+	* pendingUnificationStack.cc (push): fix == instead of = bug
+
+	* localBinding.hh (class LocalBinding): commented out
+	solvedFormAssert()
+
+	* localBinding.cc (solvedFormAssert): commented out
+
+	* substitution.cc: commented out makeLocalBinding(), merge() (both
+	versions)
+
+	* substitution.hh (class Substitution): commented out decls for
+	makeLocalBinding(), merge() (both versions)
+
+2008-01-31  Steven Eker  <eker@goo.csl.sri.com>
+
+	* dagNodeSet.cc (insert): return index
+
+	* dagNodeSet.hh (class DagNodeSet): have insert() return index
+
+	* core.hh: added class PendingUnificationStack
+
+2008-01-29  Steven Eker  <eker@goo.csl.sri.com>
+
+	* pendingUnificationStack.hh: created
+
+2008-01-21  Steven Eker  <eker@goo.csl.sri.com>
+
+	* rewritingContext.cc (traceNarrowingStep): take new args
+
+	* rewritingContext.hh (class RewritingContext): updated decl for
+	traceNarrowingStep()
+
+2008-01-17  Steven Eker  <eker@goo.csl.sri.com>
+
+	* rewritingContext.hh (class RewritingContext): added decl for
+	traceNarrowingStep()
+
+	* substitution.cc: deleted commented out allocateSize
+	initialization
+
+	* solvedFormSubproblemDisjunction.hh (class
+	SolvedFormSubproblemDisjunction): updated decl for ctor
+
+	* solvedFormSubproblemDisjunction.cc
+	(SolvedFormSubproblemDisjunction): don't take
+	argument; initialize savedSubstitution with 0 length to avoid
+	marking uninitialized entries - this was a worry because the
+	uninitialized entries could stay uninitialized across rewriting if
+	the subproblem was itself on currently unvisited path in a another
+	subproblem disjunction
+
+	* substitution.hh (clear): added Assert() to prevent clearing of
+	substitutions with zero length vectors
+	(Substitution): allow zero length substitutions (both versions)
+	(value): have Assert() print out values size
+
+2008-01-15  Steven Eker  <eker@goo.csl.sri.com>
+
+	* variableInfo.cc (computeIndexRemapping): delete commented out
+	call to Substitution::notify()
+
+===================================Maude90===========================================
+
+2008-01-11  Steven Eker  <eker@goo.csl.sri.com>
+
+	* solvedFormSubproblemDisjunction.cc (unificationSolve): replaced
+	copy() with clone() as a quick hack to see what is going wrong
+	with C unification
+
+===================================Maude89j===========================================
+
 2007-11-21  Steven Eker  <eker@goo.csl.sri.com>
 
 	* rule.cc (compile): pessimize the compilation of unconditional

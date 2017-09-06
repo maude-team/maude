@@ -80,5 +80,6 @@ class FreshVariableGenerator;
 class SolvedFormSubproblemDisjunction;
 class NarrowingVariableInfo;
 class ProtectedDagNodeSet;
+class PendingUnificationStack;
 
 #endif

@@ -28,7 +28,6 @@ libcore_a_SOURCES = \
 	localBinding.cc \
 	subproblemSequence.cc \
 	subproblemDisjunction.cc \
-	solvedFormSubproblemDisjunction.cc \
 	sortCheckSubproblem.cc \
 	disjunctiveSubproblemAccumulator.cc \
 	preEquation.cc \
@@ -47,7 +46,11 @@ libcore_a_SOURCES = \
 	rootContainer.cc \
 	sortBdds.cc \
 	unificationContext.cc \
-	protectedDagNodeSet.cc
+	protectedDagNodeSet.cc \
+	pendingUnificationStack.cc
+
+#	solvedFormSubproblemDisjunction.cc
+
 
 EXTRA_DIST = \
 	run.cc \
@@ -115,4 +118,5 @@ noinst_HEADERS = \
 	narrowingVariableInfo.hh \
 	unificationContext.hh \
 	freshVariableGenerator.hh \
-	protectedDagNodeSet.hh
+	protectedDagNodeSet.hh \
+	pendingUnificationStack.hh

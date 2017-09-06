@@ -69,6 +69,7 @@ MetaLevelOpSymbol::metaUnify2(FreeDagNode* subject, RewritingContext& context, b
 	      Vector<Term*> rhs;
 	      if (!metaLevel->downUnificationProblem(subject->getArgument(1), lhs, rhs, m, disjoint))
 		return false;
+	      DebugAdvisory("metaUnify2() - making unification problem for " << subject);
 	      unification = new UnificationProblem(lhs, rhs, new FreshVariableSource(m, varIndex));
 	      if (!(unification->problemOK()))
 		{
@@ -77,6 +78,8 @@ MetaLevelOpSymbol::metaUnify2(FreeDagNode* subject, RewritingContext& context, b
 		}
 	      lastSolutionNr = -1;
 	    }
+	  else
+	    DebugAdvisory("metaUnify2() - using existing unification problem for " << subject);
 
 	  DagNode* result;
 	  m->protect();

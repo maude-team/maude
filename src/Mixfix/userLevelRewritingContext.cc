@@ -51,9 +51,11 @@
 #include "sortConstraint.hh"
 #include "equation.hh"
 #include "rule.hh"
+#include "narrowingVariableInfo.hh"
 
 //      variable class definitions
 #include "variableTerm.hh"
+#include "variableDagNode.hh"
 
 //	front end class definitions
 #include "token.hh"
@@ -228,6 +230,57 @@ UserLevelRewritingContext::tracePostRuleRewrite(DagNode* replacement)
       if (interpreter.getFlag(Interpreter::TRACE_WHOLE))
 	cout << "New: " << root() << '\n';
     }
+}
+
+void
+UserLevelRewritingContext:: traceNarrowingStep(Rule* rule,
+					       DagNode* redex,
+					       DagNode* replacement,
+					       const NarrowingVariableInfo* variableInfo,
+					       const Substitution* substitution,
+					       DagNode* newState)
+{
+  if (handleDebug(redex, rule) ||
+      !localTraceFlag ||
+      !(interpreter.getFlag(Interpreter::TRACE_RL)) ||
+      dontTrace(redex, rule))
+    return;
+
+  if (interpreter.getFlag(Interpreter::TRACE_BODY))
+    {
+      cout << Tty(Tty::MAGENTA) << header << "narrowing step\n" << Tty(Tty::RESET) << rule << '\n';
+      if (interpreter.getFlag(Interpreter::TRACE_SUBSTITUTION))
+	{
+	  cout << "Rule variable bindings:\n";
+	  printSubstitution(*substitution, *rule);
+
+	  cout << "Subject variable bindings:\n";
+	  int nrSubjectVariables = variableInfo->getNrVariables();
+	  if (nrSubjectVariables == 0)
+	    cout << "empty substitution\n";
+	  else
+	    {
+	      int variableBase = rule->getModule()->getMinimumSubstitutionSize();
+	      for (int i = 0; i < nrSubjectVariables; ++i)
+		{
+		  DagNode* v = variableInfo->index2Variable(i);
+		  DagNode* d = substitution->value(variableBase + i);
+		  Assert(v != 0, "null variable");
+		  cout << v << " --> ";
+		  if (d == 0)
+		    cout << "(unbound)\n";
+		  else
+		    cout << d << '\n';
+		}
+	    }
+	}
+    }
+  if (interpreter.getFlag(Interpreter::TRACE_WHOLE))
+    cout << "Old: " << root() << '\n';
+  if (interpreter.getFlag(Interpreter::TRACE_REWRITE))
+    cout << redex << "\n--->\n" << replacement << '\n';
+  if (interpreter.getFlag(Interpreter::TRACE_WHOLE))
+    cout << "New: " << newState << '\n';
 }
 
 void

@@ -51,10 +51,13 @@ public:
   //	Unification member functions.
   //
   ReturnResult computeBaseSortForGroundSubterms();
+  /*
   bool computeSolvedForm2(DagNode* rhs,
 			  Substitution& solution,
 			  Subproblem*& returnedSubproblem,
 			  ExtensionInfo* extensionInfo);
+  */
+  bool computeSolvedForm2(DagNode* rhs, UnificationContext& solution, PendingUnificationStack& pending);
   mpz_class nonVariableSize();
   void insertVariables2(NatSet& occurs);
   DagNode* instantiate2(const Substitution& substitution);

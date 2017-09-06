@@ -102,6 +102,13 @@ public:
 				int fragmentIndex,
 				bool success);
 
+  virtual void traceNarrowingStep(Rule* rule,
+				  DagNode* redex,
+				  DagNode* replacement,
+				  const NarrowingVariableInfo* variableInfo,
+				  const Substitution* substitution,
+				  DagNode* newState);
+
 #ifdef DUMP
   static void dumpStack(ostream& s, const Vector<RedexPosition>& stack);
 #endif

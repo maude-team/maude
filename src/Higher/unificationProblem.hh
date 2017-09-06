@@ -29,6 +29,7 @@
 #include "simpleRootContainer.hh"
 #include "variableInfo.hh"
 #include "substitution.hh"
+#include "pendingUnificationStack.hh"
 
 class UnificationProblem : public CacheableState, private SimpleRootContainer
 {
@@ -68,7 +69,8 @@ private:
 
   ExtensionInfo* extensionInfo;
   UnificationContext* unsortedSolution;	// for accumulating solved forms and constructing unsorted unifiers
-  Subproblem* subproblem;		// for stuff unresolved by computeSolvedForm() pass
+  PendingUnificationStack pendingStack;
+  //Subproblem* subproblem;		// for stuff unresolved by computeSolvedForm() pass
   bool problemOkay;			// true if problem didn't violate ctor invariants
   bool viable;				// true if problem didn't fail computeSolvedForm() pass
   Vector<int> freeVariables;	     	// indices (slots) of unbound variables in unsorted unifier

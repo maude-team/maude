@@ -1,3 +1,21 @@
+2008-02-08  Steven Eker  <eker@goo.csl.sri.com>
+
+	* variableDagNode.cc (computeSolvedForm2): use unificationBind()
+	(5 places)
+	(computeSolvedForm2): missed one!
+
+	* variableDagNode.hh (class VariableDagNode): updated decl for
+	computeSolvedForm2()
+
+2008-02-05  Steven Eker  <eker@goo.csl.sri.com>
+
+	* variableDagNode.cc (computeSolvedForm2): rewritten
+
+	* variableDagNode.hh (class VariableDagNode): updated decl for
+	computeSolvedForm2()
+
+===================================Maude90===========================================
+
 2007-11-01  Steven Eker  <eker@goo.csl.sri.com>
 
 	* variableDagNode.cc (instantiate2): updated

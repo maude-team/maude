@@ -52,6 +52,29 @@ UnificationContext::UnificationContext(FreshVariableGenerator* freshVariableGene
 {
 }
 
+void
+UnificationContext::markReachableNodes()
+{
+  //
+  //	Protect our bindings.
+  //
+  int nrFragile = nrFragileBindings();
+  for (int i = 0; i < nrFragile; ++i)
+    {
+      if (DagNode* d = value(i))
+	d->mark();
+    }
+  //
+  //	Protect the variables that we've tracked for each slot.
+  //
+  int nrVariableDagNodes = variableDagNodes.size();
+  for (int i = 0; i < nrVariableDagNodes; ++i)
+    {
+      if (DagNode* v = variableDagNodes[i])
+	v->mark();
+    }
+}
+
 DagNode*
 UnificationContext::makeFreshVariable(ConnectedComponent* component)
 {
@@ -65,4 +88,27 @@ UnificationContext::makeFreshVariable(ConnectedComponent* component)
   DagNode* v = new VariableDagNode(vs, name, index);
   //cout << "created " << v << endl;
   return v;
+}
+
+void
+UnificationContext::unificationBind(VariableDagNode* variable, DagNode* value)
+{
+  int index = variable->getIndex();
+  DebugAdvisory("unificationBind() index = " << index << '\t' << safeCast(DagNode*, variable) << " <- " << value);
+  bind(index, value);
+
+  int nrVariableDagNodes = variableDagNodes.size();
+  if (index >= nrVariableDagNodes)
+    {
+      variableDagNodes.resize(index + 1);
+      for (int i = nrVariableDagNodes; i < index; ++i)
+	variableDagNodes[i] = 0;  // for GC safety
+    }
+  else
+    {
+      Assert(variableDagNodes[index] == 0 || variableDagNodes[index]->equal(variable),
+	     "inconsistancy for index " << index << ' ' <<
+	     safeCast(DagNode*, variableDagNodes[index]) << " vs " << safeCast(DagNode*, variable));
+    }
+  variableDagNodes[index] = variable;
 }

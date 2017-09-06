@@ -41,6 +41,7 @@
 
 //      core class definitions
 #include "substitution.hh"
+#include "pendingUnificationStack.hh"
 
 //	variable class definitions
 #include "variableSymbol.hh"
@@ -513,6 +514,24 @@ ACU_DagNode::computeBaseSortForGroundSubterms()
 }
 
 bool
+ACU_DagNode::computeSolvedForm2(DagNode* rhs, UnificationContext& solution, PendingUnificationStack& pending)
+{
+  if (symbol() == rhs->symbol())
+    {
+      //
+      //	AC unification problems with the same top symbol need to be collected and solved
+      //	simultaneously for termination reasons.
+      //
+      pending.push(symbol(), this, rhs);
+      return true;
+    }
+  if (dynamic_cast<VariableDagNode*>(rhs))
+    return rhs->computeSolvedForm(this, solution, pending);
+  return false;
+}
+
+/*
+bool
 ACU_DagNode::computeSolvedForm2(DagNode* rhs,
 				Substitution& solution,
 				Subproblem*& returnedSubproblem,
@@ -635,6 +654,7 @@ ACU_DagNode::computeSolvedForm2(DagNode* rhs,
     return rhs->computeSolvedForm(this, solution, returnedSubproblem);
   return false;
 }
+*/
 
 mpz_class
 ACU_DagNode::nonVariableSize()

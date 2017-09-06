@@ -1,3 +1,16 @@
+Overview of Changes in Maude alpha90
+====================================
+* new unification combination scheme to avoid AC cycling bug
+* C unification is smarter about avoiding redundant unifiers
+* reorganized surface syntax parser to allow deeply nested terms
+* more overparsing 
+
+Overview of Changes in Maude alpha89j (not released)
+====================================================
+* fixed bug that cause solved form subproblems to be lost in
+  commutative unification
+* added single redex per state narrowing option
+
 Overview of Changes in Maude alpha89i
 =====================================
 * fixed two bugs which caused narrowing structures not to be deleted

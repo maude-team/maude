@@ -35,7 +35,7 @@ Interpreter::printSearchTiming(const Timer& timer,  RewriteSequenceSearch* state
 }
 
 void
-Interpreter::search(const Vector<Token>& bubble, Int64 limit, Int64 depth, bool narrowing)
+Interpreter::search(const Vector<Token>& bubble, Int64 limit, Int64 depth, SearchKind searchKind)
 {
   VisibleModule* fm = currentModule->getFlatModule();
   Term* initial;
@@ -44,7 +44,7 @@ Interpreter::search(const Vector<Token>& bubble, Int64 limit, Int64 depth, bool 
   Vector<ConditionFragment*> condition;
   if (!(fm->parseSearchCommand(bubble, initial, searchType, target, condition)))
     return;
-  if (narrowing && !condition.empty())
+  if (searchKind != SEARCH && !condition.empty())
     {
       IssueWarning(*target << ": conditions are not currently supported for narrowing");
       return;
@@ -65,8 +65,10 @@ Interpreter::search(const Vector<Token>& bubble, Int64 limit, Int64 depth, bool 
   static char* searchTypeSymbol[] = { "=>1", "=>+", "=>*", "=>!" };
   if (getFlag(SHOW_COMMAND))
     {
+      static char* searchKindName[] = { "search", "narrow", "xg-narrow" };
+
       UserLevelRewritingContext::beginCommand();
-      cout << (narrowing ? "narrow " : "search ");
+      cout << searchKindName[searchKind] << ' ';
       printModifiers(limit, depth);
       cout << subjectDag << ' ' << searchTypeSymbol[searchType] << ' ' << pattern->getLhs();
       if (!condition.empty())
@@ -79,72 +81,13 @@ Interpreter::search(const Vector<Token>& bubble, Int64 limit, Int64 depth, bool 
 	xmlBuffer->generateSearch(subjectDag, pattern, searchTypeSymbol[searchType], limit, depth);
     }
 
-  /*
-  if (narrowing)
-    {
-
-      NarrowingSequenceSearch n(new UserLevelRewritingContext(subjectDag),
-				NarrowingSequenceSearch::ANY_STEPS,
-				pattern,
-				5,
-				new FreshVariableSource(fm));
-
-      while (n.findNextMatch())
-	{
-	  //	  const Substitution& s = *(n.getSubstitution());
-	  UserLevelRewritingContext::printSubstitution(*(n.getSubstitution()), *pattern);
-	  
-	  for (int i = 0; i < s.nrFragileBindings(); ++i)
-	    {
-	      cout << i << '\t';
-	      if (s.value(i) != 0)
-		cout << s.value(i) << endl;
-	      else
-		cout << "unbound\n";
-	    }
-	  
-	}
-
-      
-      NarrowingSearchState n(new UserLevelRewritingContext(subjectDag), new FreshVariableSource(fm), UNDEFINED, NarrowingSearchState::ALLOW_NONEXEC);
-
-      while (n.findNextNarrowing())
-	{
-	  const Substitution& s = n.getSubstitution();
-	  for (int i = 0; i < s.nrFragileBindings(); ++i)
-	    {
-	      cout << i << '\t';
-	      if (s.value(i) != 0)
-		cout << s.value(i) << endl;
-	      else
-		cout << "unbound\n";
-	    }
-	  cout << "rhs = " << n.getNarrowedDag() << endl;
-	  cout << "=============" << endl;
-	}
-      
-
-      return;
-    }
-*/
-
   startUsingModule(fm);
 
 #ifdef QUANTIFY_REWRITING
   quantify_start_recording_data();
 #endif
   
-  if (narrowing)
-    {
-      NarrowingSequenceSearch* state = new NarrowingSequenceSearch(new UserLevelRewritingContext(subjectDag),
-								   static_cast<NarrowingSequenceSearch::SearchType>(searchType),  // HACK
-								   pattern,
-								   depth,
-								   new FreshVariableSource(fm));
-      Timer timer(getFlag(SHOW_TIMING));
-      doNarrowing(timer, fm, state, 0, limit);
-    }
-  else
+  if (searchKind == SEARCH)
     {
       RewriteSequenceSearch* state =
 	new RewriteSequenceSearch(new UserLevelRewritingContext(subjectDag),
@@ -153,6 +96,20 @@ Interpreter::search(const Vector<Token>& bubble, Int64 limit, Int64 depth, bool 
 				  depth);
       Timer timer(getFlag(SHOW_TIMING));
       doSearching(timer, fm, state, 0, limit);
+    }
+  else
+    {
+      
+      NarrowingSequenceSearch* state = new NarrowingSequenceSearch(new UserLevelRewritingContext(subjectDag),
+								   static_cast<NarrowingSequenceSearch::SearchType>(searchType),  // HACK
+								   pattern,
+								   depth,
+								   (searchKind == XG_NARROW ?
+								    NarrowingSearchState::ALLOW_NONEXEC | NarrowingSearchState::SINGLE_POSITION :
+								    NarrowingSearchState::ALLOW_NONEXEC),
+								   new FreshVariableSource(fm));
+      Timer timer(getFlag(SHOW_TIMING));
+      doNarrowing(timer, fm, state, 0, limit);
     }
 }
 
