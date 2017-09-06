@@ -277,7 +277,8 @@ CUI_DagNode::instantiate2(Substitution& substitution)
 bool
 CUI_DagNode::computeSolvedForm(DagNode* rhs,
 			       Substitution& solution,
-			       Subproblem*& returnedSubproblem)
+			       Subproblem*& returnedSubproblem,
+			       ExtensionInfo* /* extensionInfo */)
 {
   if (symbol() == rhs->symbol())
     {

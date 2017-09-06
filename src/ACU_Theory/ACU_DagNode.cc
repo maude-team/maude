@@ -673,8 +673,9 @@ ACU_DagNode::instantiate2(Substitution& substitution)
 	  //	Normalize the new dagnode; if it doesn't collapse and
 	  //	all its arguments are ground we compute its base sort.
 	  //
-	  if (!(d->normalizeAtTop()) && ground)
+	  if (!(d->dumbNormalizeAtTop()) && ground)
 	    s->computeBaseSort(d);
+	  Assert(d->isTree() == false, "Oops we got a tree! " << d);
 	  return d;	
 	}
     }

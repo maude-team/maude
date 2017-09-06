@@ -225,7 +225,8 @@ ACU_UnificationSubproblem::buildSolution(UnificationContext& solution)
 		  ++pos;
 		}
 	    }
-	  a->normalizeAtTop();  // UGLY!
+	  a->dumbNormalizeAtTop();  // UGLY!
+	  Assert(a->isTree() == false, "Oops we got a tree! " << a);
 	  d = a;
 	}
       //cout << subterms[i] << " =? " << d << endl;
