@@ -1,7 +1,3 @@
-Overview of Changes in Maude alpha93d2
-======================================
-* BOOL-OPS split off BOOL in prelude
-
 Overview of Changes in Maude alpha93d
 =====================================
 * fixed bug where fail term attachments to polymorphs cause crash

@@ -36,25 +36,6 @@ fmod TRUTH-VALUE is
   op false : -> Bool [ctor special (id-hook SystemFalse)] .
 endfm
 
-fmod BOOL-OPS is
-  protecting TRUTH-VALUE .
-  op _and_ : Bool Bool -> Bool [assoc comm prec 55] .
-  op _or_ : Bool Bool -> Bool [assoc comm prec 59] .
-  op _xor_ : Bool Bool -> Bool [assoc comm prec 57] .
-  op not_ : Bool -> Bool [prec 53] .
-  op _implies_ : Bool Bool -> Bool [gather (e E) prec 61] .
-  vars A B C : Bool .
-  eq true and A = A .
-  eq false and A = false .
-  eq A and A = A .
-  eq false xor A = A .
-  eq A xor A = false .
-  eq A and (B xor C) = A and B xor A and C .
-  eq not A = A xor true .
-  eq A or B = A and B xor A xor B .
-  eq A implies B = not(A xor A and B) .
-endfm
-
 fmod TRUTH is
   protecting TRUTH-VALUE .
   op if_then_else_fi : Bool Universal Universal -> Universal 
@@ -77,8 +58,22 @@ fmod TRUTH is
 endfm
 
 fmod BOOL is
-  protecting BOOL-OPS .
   protecting TRUTH .
+  op _and_ : Bool Bool -> Bool [assoc comm prec 55] .
+  op _or_ : Bool Bool -> Bool [assoc comm prec 59] .
+  op _xor_ : Bool Bool -> Bool [assoc comm prec 57] .
+  op not_ : Bool -> Bool [prec 53] .
+  op _implies_ : Bool Bool -> Bool [gather (e E) prec 61] .
+  vars A B C : Bool .
+  eq true and A = A .
+  eq false and A = false .
+  eq A and A = A .
+  eq false xor A = A .
+  eq A xor A = false .
+  eq A and (B xor C) = A and B xor A and C .
+  eq not A = A xor true .
+  eq A or B = A and B xor A xor B .
+  eq A implies B = not(A xor A and B) .
 endfm
 
 fmod EXT-BOOL is
