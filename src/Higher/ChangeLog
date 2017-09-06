@@ -1,3 +1,18 @@
+2006-11-14  Steven Eker  <eker@goo.csl.sri.com>
+
+	* rewriteSequenceSearch.cc (findNextInterestingState): rewritten
+	to use new flags and to allow cycles to the initial state in the
+	=>1 and =>+ cases
+
+	* rewriteSequenceSearch.hh (class RewriteSequenceSearch): deleted
+	data member searchType; added data members reachingInitialStateOK
+	and normalFormNeeded
+
+	* rewriteSequenceSearch.cc (RewriteSequenceSearch): don't save
+	searchType; initialize reachingInitialStateOK and normalFormNeeded
+
+===================================Maude88c===========================================
+
 2006-11-09  Steven Eker  <eker@goo.csl.sri.com>
 
 	* equalityConditionFragment.cc (solve): comment out state variable

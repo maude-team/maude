@@ -1,3 +1,24 @@
+2006-11-20  Steven Eker  <eker@goo.csl.sri.com>
+
+	* bufferPrint.cc (printKind): fix bug where we were printing all
+	but the first sort twice
+
+	* erewrite.cc (doExternalRewriting): rewritten using fairTraversal()
+	(eRewrite): rewritten using fairStart()
+	(eRewriteCont): don't use fairContinue()
+
+2006-11-15  Steven Eker  <eker@goo.csl.sri.com>
+
+	* interpreter.hh (endif): added decl for doExternalRewriting()
+
+	* erewrite.cc (eRewrite): moved here
+	(eRewriteCont): moved here
+	(eRewriteCont): rewritten using doExternalRewriting()
+	(doExternalRewriting): added
+	(eRewrite): rewritten using doExternalRewriting()
+
+===================================Maude88c===========================================
+
 2006-11-10  Steven Eker  <eker@goo.csl.sri.com>
 
 	* userLevelRewritingContext.cc (makeSubcontext): fix bug where we

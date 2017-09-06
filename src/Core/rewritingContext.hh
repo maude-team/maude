@@ -73,6 +73,8 @@ public:
   void ruleRewrite(Int64 limit = NONE);
   void fairRewrite(Int64 limit = NONE, Int64 gas = 1);
   void fairContinue(Int64 limit = NONE);
+  void fairStart(Int64 gas);
+  bool fairTraversal(Int64& limit);
   bool builtInReplace(DagNode* old, DagNode* replacement);
 
   virtual RewritingContext* makeSubcontext(DagNode* root, int purpose = OTHER);
@@ -121,7 +123,7 @@ private:
   bool ascend();
   void descend();
   bool doRewriting(bool argsUnstackable);
-  bool fairTraversal(bool newTraversal);
+  bool fairTraversal();
 
   static bool traceFlag;
 

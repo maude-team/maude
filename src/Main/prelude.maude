@@ -583,6 +583,14 @@ fmod FLOAT is
         [special (id-hook FloatOpSymbol (ceiling)
                   op-hook floatSymbol (<Floats> : ~> Float))] .
 
+  op min : Float Float -> Float
+        [special (id-hook FloatOpSymbol (min)
+                  op-hook floatSymbol (<Floats> : ~> Float))] .
+
+  op max : Float Float -> Float
+        [special (id-hook FloatOpSymbol (max)
+                  op-hook floatSymbol (<Floats> : ~> Float))] .
+
   op sqrt : Float ~> Float
         [special (id-hook FloatOpSymbol (sqrt)
                   op-hook floatSymbol (<Floats> : ~> Float))] .
@@ -1795,6 +1803,9 @@ fmod META-MODULE is
 
 *** projection functions
   var Q : Qid .
+  var PDL : ParameterDeclList .
+  var H : Header .
+  var M : Module .
   var IL : ImportList .
   var SS : SortSet .
   var SSDS : SubsortDeclSet .
@@ -1806,48 +1817,50 @@ fmod META-MODULE is
   op getName : Module -> Qid .
   eq getName(fmod Q is IL sorts SS . SSDS OPDS MAS EQS endfm) = Q .
   eq getName(mod Q is IL sorts SS . SSDS OPDS MAS EQS RLS endm) = Q .
+  eq getName(fmod Q{PDL} is IL sorts SS . SSDS OPDS MAS EQS endfm) = Q .
+  eq getName(mod Q{PDL} is IL sorts SS . SSDS OPDS MAS EQS RLS endm) = Q .
   eq getName(fth Q is IL sorts SS . SSDS OPDS MAS EQS endfth) = Q .
   eq getName(th Q is IL sorts SS . SSDS OPDS MAS EQS RLS endth) = Q .
 
   op getImports : Module -> ImportList .
-  eq getImports(fmod Q is IL sorts SS . SSDS OPDS MAS EQS endfm) = IL .
-  eq getImports(mod Q is IL sorts SS . SSDS OPDS MAS EQS RLS endm) = IL .
+  eq getImports(fmod H is IL sorts SS . SSDS OPDS MAS EQS endfm) = IL .
+  eq getImports(mod H is IL sorts SS . SSDS OPDS MAS EQS RLS endm) = IL .
   eq getImports(fth Q is IL sorts SS . SSDS OPDS MAS EQS endfth) = IL .
   eq getImports(th Q is IL sorts SS . SSDS OPDS MAS EQS RLS endth) = IL .
 
   op getSorts : Module -> SortSet .
-  eq getSorts(fmod Q is IL sorts SS . SSDS OPDS MAS EQS endfm) = SS .
-  eq getSorts(mod Q is IL sorts SS . SSDS OPDS MAS EQS RLS endm) = SS .
+  eq getSorts(fmod H is IL sorts SS . SSDS OPDS MAS EQS endfm) = SS .
+  eq getSorts(mod H is IL sorts SS . SSDS OPDS MAS EQS RLS endm) = SS .
   eq getSorts(fth Q is IL sorts SS . SSDS OPDS MAS EQS endfth) = SS .
   eq getSorts(th Q is IL sorts SS . SSDS OPDS MAS EQS RLS endth) = SS .
 
   op getSubsorts : Module -> SubsortDeclSet .
-  eq getSubsorts(fmod Q is IL sorts SS . SSDS OPDS MAS EQS endfm) = SSDS .
-  eq getSubsorts(mod Q is IL sorts SS . SSDS OPDS MAS EQS RLS endm) = SSDS .
+  eq getSubsorts(fmod H is IL sorts SS . SSDS OPDS MAS EQS endfm) = SSDS .
+  eq getSubsorts(mod H is IL sorts SS . SSDS OPDS MAS EQS RLS endm) = SSDS .
   eq getSubsorts(fth Q is IL sorts SS . SSDS OPDS MAS EQS endfth) = SSDS .
   eq getSubsorts(th Q is IL sorts SS . SSDS OPDS MAS EQS RLS endth) = SSDS .
 
   op getOps : Module -> OpDeclSet .
-  eq getOps(fmod Q is IL sorts SS . SSDS OPDS MAS EQS endfm) = OPDS .
-  eq getOps(mod Q is IL sorts SS . SSDS OPDS MAS EQS RLS endm) = OPDS .
+  eq getOps(fmod H is IL sorts SS . SSDS OPDS MAS EQS endfm) = OPDS .
+  eq getOps(mod H is IL sorts SS . SSDS OPDS MAS EQS RLS endm) = OPDS .
   eq getOps(fth Q is IL sorts SS . SSDS OPDS MAS EQS endfth) = OPDS .
   eq getOps(th Q is IL sorts SS . SSDS OPDS MAS EQS RLS endth) = OPDS .
 
   op getMbs : Module -> MembAxSet .
-  eq getMbs(fmod Q is IL sorts SS . SSDS OPDS MAS EQS endfm) = MAS .
-  eq getMbs(mod Q is IL sorts SS . SSDS OPDS MAS EQS RLS endm) = MAS .
+  eq getMbs(fmod H is IL sorts SS . SSDS OPDS MAS EQS endfm) = MAS .
+  eq getMbs(mod H is IL sorts SS . SSDS OPDS MAS EQS RLS endm) = MAS .
   eq getMbs(fth Q is IL sorts SS . SSDS OPDS MAS EQS endfth) = MAS .
   eq getMbs(th Q is IL sorts SS . SSDS OPDS MAS EQS RLS endth) = MAS .
 
   op getEqs : Module -> EquationSet .
-  eq getEqs(fmod Q is IL sorts SS . SSDS OPDS MAS EQS endfm) = EQS .
-  eq getEqs(mod Q is IL sorts SS . SSDS OPDS MAS EQS RLS endm) = EQS .
+  eq getEqs(fmod H is IL sorts SS . SSDS OPDS MAS EQS endfm) = EQS .
+  eq getEqs(mod H is IL sorts SS . SSDS OPDS MAS EQS RLS endm) = EQS .
   eq getEqs(fth Q is IL sorts SS . SSDS OPDS MAS EQS endfth) = EQS .
   eq getEqs(th Q is IL sorts SS . SSDS OPDS MAS EQS RLS endth) = EQS .
 
   op getRls : Module -> RuleSet .
-  eq getRls(fmod Q is IL sorts SS . SSDS OPDS MAS EQS endfm) = none .
-  eq getRls(mod Q is IL sorts SS . SSDS OPDS MAS EQS RLS endm) = RLS .
+  eq getRls(fmod H is IL sorts SS . SSDS OPDS MAS EQS endfm) = none .
+  eq getRls(mod H is IL sorts SS . SSDS OPDS MAS EQS RLS endm) = RLS .
   eq getRls(fth Q is IL sorts SS . SSDS OPDS MAS EQS endfth) = none .
   eq getRls(th Q is IL sorts SS . SSDS OPDS MAS EQS RLS endth) = RLS .
 endfm

@@ -68,6 +68,7 @@
 #include "match.cc"
 #include "search.cc"
 #include "loopMode.cc"
+#include "erewrite.cc"
 #include "srewrite.cc"
 
 Interpreter::Interpreter()
