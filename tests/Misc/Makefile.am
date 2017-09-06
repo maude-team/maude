@@ -13,6 +13,7 @@ TESTS = \
 	variantUnification \
 	variantNarrowing \
 	CU_Unification \
+	assocUnification \
 	sreduce
 
 MAUDE_FILES = \
@@ -30,6 +31,7 @@ MAUDE_FILES = \
 	variantUnification.maude \
 	variantNarrowing.maude \
 	CU_Unification.maude \
+	assocUnification.maude \
 	sreduce.maude
 
 RESULT_FILES = \
@@ -47,6 +49,7 @@ RESULT_FILES = \
 	variantUnification.expected \
 	variantNarrowing.expected \
 	CU_Unification.expected \
+	assocUnification.expected \
 	sreduce.expected
 
 EXTRA_DIST = $(TESTS) $(MAUDE_FILES) $(RESULT_FILES)

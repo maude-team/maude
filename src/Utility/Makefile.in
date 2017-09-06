@@ -66,7 +66,8 @@ am_libutility_a_OBJECTS = libutility_a-macros.$(OBJEXT) \
 	libutility_a-tty.$(OBJEXT) libutility_a-bdd.$(OBJEXT) \
 	libutility_a-timer.$(OBJEXT) libutility_a-ropeStuff.$(OBJEXT) \
 	libutility_a-mpzSystem.$(OBJEXT) \
-	libutility_a-intSystem.$(OBJEXT) libutility_a-allSat.$(OBJEXT)
+	libutility_a-intSystem.$(OBJEXT) libutility_a-allSat.$(OBJEXT) \
+	libutility_a-sequenceAssignment.$(OBJEXT)
 libutility_a_OBJECTS = $(am_libutility_a_OBJECTS)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
@@ -216,7 +217,8 @@ libutility_a_SOURCES = \
 	ropeStuff.cc \
 	mpzSystem.cc \
 	intSystem.cc \
-	allSat.cc
+	allSat.cc \
+	sequenceAssignment.cc
 
 noinst_HEADERS = \
 	bdd.hh \
@@ -248,7 +250,8 @@ noinst_HEADERS = \
 	ropeStuff.hh \
 	mpzSystem.hh \
 	intSystem.hh \
-	allSat.hh
+	allSat.hh \
+	sequenceAssignment.hh
 
 EXTRA_DIST = \
 	intContejeanDevie.cc \
@@ -323,6 +326,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libutility_a-pointerSet.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libutility_a-preVector.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libutility_a-ropeStuff.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libutility_a-sequenceAssignment.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libutility_a-sequencePartition.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libutility_a-stringTable.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libutility_a-timer.Po@am__quote@
@@ -664,6 +668,20 @@ libutility_a-allSat.obj: allSat.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='allSat.cc' object='libutility_a-allSat.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libutility_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libutility_a-allSat.obj `if test -f 'allSat.cc'; then $(CYGPATH_W) 'allSat.cc'; else $(CYGPATH_W) '$(srcdir)/allSat.cc'; fi`
+
+libutility_a-sequenceAssignment.o: sequenceAssignment.cc
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libutility_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libutility_a-sequenceAssignment.o -MD -MP -MF $(DEPDIR)/libutility_a-sequenceAssignment.Tpo -c -o libutility_a-sequenceAssignment.o `test -f 'sequenceAssignment.cc' || echo '$(srcdir)/'`sequenceAssignment.cc
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libutility_a-sequenceAssignment.Tpo $(DEPDIR)/libutility_a-sequenceAssignment.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='sequenceAssignment.cc' object='libutility_a-sequenceAssignment.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libutility_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libutility_a-sequenceAssignment.o `test -f 'sequenceAssignment.cc' || echo '$(srcdir)/'`sequenceAssignment.cc
+
+libutility_a-sequenceAssignment.obj: sequenceAssignment.cc
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libutility_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libutility_a-sequenceAssignment.obj -MD -MP -MF $(DEPDIR)/libutility_a-sequenceAssignment.Tpo -c -o libutility_a-sequenceAssignment.obj `if test -f 'sequenceAssignment.cc'; then $(CYGPATH_W) 'sequenceAssignment.cc'; else $(CYGPATH_W) '$(srcdir)/sequenceAssignment.cc'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libutility_a-sequenceAssignment.Tpo $(DEPDIR)/libutility_a-sequenceAssignment.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='sequenceAssignment.cc' object='libutility_a-sequenceAssignment.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libutility_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libutility_a-sequenceAssignment.obj `if test -f 'sequenceAssignment.cc'; then $(CYGPATH_W) 'sequenceAssignment.cc'; else $(CYGPATH_W) '$(srcdir)/sequenceAssignment.cc'; fi`
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \

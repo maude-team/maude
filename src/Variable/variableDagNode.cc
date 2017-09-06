@@ -181,7 +181,7 @@ VariableDagNode::safeVirtualReplacement(VariableDagNode* oldVar, VariableDagNode
   //	we look for the last variable in the chain, accessing oldVar will give us newVar.
   //
   //	There is however a problem. If newVar is bound and its binding contains oldVar
-  //	(or a variable equivalent to it) we gererate an implicit occur check issue. We
+  //	(or a variable equivalent to it) we generate an implicit occur check issue. We
   //    could un-solve and re-solve its binding, but if there is no occur check issue,
   //	re-solving could give us a similar variable replacement problem, also resulting in
   //	non-termination.

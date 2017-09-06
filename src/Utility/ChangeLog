@@ -1,3 +1,40 @@
+2014-04-01  Steven Eker  <eker@ape.csl.sri.com>
+
+	* sequenceAssignment.cc (findNextSolution): fix a bug where we
+	were not initializing moveIndex in the findFirst == false case
+
+	* sequenceAssignment.hh (S): updated decl for findNextSolution()
+
+	* sequenceAssignment.cc (findNextSolution): take findFirst and use
+	it to determine when to initialize state
+
+2014-03-25  Steven Eker  <eker@ape.csl.sri.com>
+
+	* sequenceAssignment.cc (checkAndMakeMove): fixed bug where we
+	were using boundSum rather than bounds
+
+2014-03-24  Steven Eker  <eker@ape.csl.sri.com>
+
+	* sequenceAssignment.cc (findNextSolution): fixed bug where we
+	were  using lhsBoundSum.size() rather than rhsBoundSum.size()
+	(checkAndMakeMove): added
+	(unmakeMove): added
+
+2014-03-20  Steven Eker  <eker@ape.csl.sri.com>
+
+	* sequenceAssignment.cc: rewritten
+
+	* sequenceAssignment.hh: rewritten using "grid move" approach to
+	state representation
+
+2014-03-05  Steven Eker  <eker@ape.csl.sri.com>
+
+	* sequenceAssignment.cc: created
+
+	* sequenceAssignment.hh: created
+
+===================================Maude102===========================================
+
 2013-11-21  Steven Eker  <eker@ape.csl.sri.com>
 
 	* natSet.hh (containsSmall): added

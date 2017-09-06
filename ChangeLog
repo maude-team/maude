@@ -1,3 +1,14 @@
+2014-04-04  Steven Eker  <eker@ape.csl.sri.com>
+
+	* tests/Misc/assocUnification (MAUDE_LIB): created
+
+	* tests/Misc/assocUnification.maude: created
+
+	* tests/Misc/unification.maude: change assoc to assoc id: in TEST2
+	since assoc is now partially supported
+
+===================================Maude100a===========================================
+
 2014-02-06  Steven Eker  <eker@ape.csl.sri.com>
 
 	* configure.ac: removed rope_UGLY_HACK option

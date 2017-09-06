@@ -1,3 +1,7 @@
+Overview of Changes in alpha102
+===============================
+* experimental support for linear associative unification
+
 Overview of Changes in Maude 2.7 (alpha101)
 ===========================================
 * fixed bug with debug text being output during rewriting
