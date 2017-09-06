@@ -25,18 +25,21 @@
 //
 #ifndef _freshVariableSource_hh_
 #define _freshVariableSource_hh_
+#include <gmpxx.h>
 #include "freshVariableGenerator.hh"
 
 class FreshVariableSource : public FreshVariableGenerator
 {
 public:
   FreshVariableSource(MixfixModule* module);
+  FreshVariableSource(MixfixModule* module, const mpz_class& baseNumber);
   int getFreshVariableName(int index);
   Symbol* getBaseVariableSymbol(Sort* sort);
+  bool variableNameConflict(int id);
 
 private:
   MixfixModule* const module;
-  char name[1 + INT_TEXT_SIZE + 1];
+  mpz_class baseNumber;
 };
 
 #endif

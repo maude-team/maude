@@ -1,3 +1,12 @@
+Overview of Changes in Maude alpha89c
+=====================================
+* fixed bug iter theory matching with extension could return a match
+  where the matched portion was alien
+* added unification with extension
+* reimplement meta-unification interface to support control over fresh
+  variable names and disjoint unification
+* allow spaces in file names using \ and "" conventions
+
 Overview of Changes in Maude alpha89b
 =====================================
 * fixed bug where early unifcation failure caused memory corruption

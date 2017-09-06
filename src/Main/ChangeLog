@@ -1,3 +1,24 @@
+2007-06-27  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: added metaXunify(), metaDisjointXunify() and
+	associated declarations
+
+2007-06-19  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: add UnificationProblem constructors; use for
+	metaUnify() and metaDisjointUnify()
+
+2007-06-14  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: added UnificationPair and ctors; updated decl for
+	metaUnify()
+
+2007-06-07  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: added UnificationTriple and ctors
+
+===================================Maude89c===========================================
+
 2007-03-14  Steven Eker  <eker@goo.csl.sri.com>
 
 	* main.cc (main): call checkForPending() if the -no-prelude flag

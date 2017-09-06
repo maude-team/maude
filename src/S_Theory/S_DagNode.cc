@@ -184,12 +184,18 @@ S_DagNode::matchVariableWithExtension(int index,
 				      Subproblem*& returnedSubproblem,
 				      ExtensionInfo* extensionInfo)
 {
+  //
+  //	Because we have not matched a S_Theory operator, we cannot put
+  //	put all the S_Theory operator into the extension and therefore we
+  //	pass mustMatchAtLeast = 1 rather than the default value of 0.
+  //
   returnedSubproblem =
     new S_Subproblem(this,
 		     *number,
 		     index,
 		     sort,
-		     safeCast(S_ExtensionInfo*, extensionInfo));
+		     safeCast(S_ExtensionInfo*, extensionInfo),
+		     1);
   return true;
 }
 
@@ -228,9 +234,15 @@ S_DagNode::instantiate2(Substitution& substitution)
 bool
 S_DagNode::computeSolvedForm(DagNode* rhs,
 			     Substitution& solution,
-			     Subproblem*& returnedSubproblem)
+			     Subproblem*& returnedSubproblem,
+			     ExtensionInfo* extensionInfo)
 {
-  S_Symbol* s = symbol();
+  if (extensionInfo != 0)
+    {
+      IssueWarning("Unification of iter operators with extension is not currently implemented.");
+      return false;
+    }
+   S_Symbol* s = symbol();
   if (s == rhs->symbol())
     {
       S_DagNode* rhs2 = safeCast(S_DagNode*, rhs);

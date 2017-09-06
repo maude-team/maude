@@ -49,23 +49,53 @@
 #include "freshVariableSource.hh"
 
 FreshVariableSource::FreshVariableSource(MixfixModule* module)
-  : module(module)
+  : module(module),
+    baseNumber(0)
 {
-  name[1 + INT_TEXT_SIZE] = '\0';
+}
+
+FreshVariableSource::FreshVariableSource(MixfixModule* module, const mpz_class& baseNumber)
+  : module(module),
+    baseNumber(baseNumber)
+{
 }
 
 int
 FreshVariableSource::getFreshVariableName(int index)
 {
-  char* p = name + INT_TEXT_SIZE;
-  for (++index; index != 0; index /= 10, --p)
-    *p = '0' + index % 10;
-  *p = '#';
-  return Token::encode(p);
+  //
+  //	In order to avoid allocating the name twice we convert the negative index to a
+  //	string and replace the minus sign with a '#'.
+  //
+  int negIndex = -(index + 1);
+  mpz_class negativeIndex = negIndex - baseNumber;
+  char* name = mpz_get_str (0, 10, negativeIndex.get_mpz_t());
+  name[0] = '#';
+  int code = Token::encode(name);
+  free(name);
+  return code;
 }
 
 Symbol*
 FreshVariableSource::getBaseVariableSymbol(Sort* sort)
 {
   return module->instantiateVariable(sort);
+}
+
+bool
+FreshVariableSource::variableNameConflict(int id)
+{
+  const char* name = Token::name(Token::unflaggedCode(id));
+  if (name[0] != '#' || name[1] == '0' || name[1] == '\0')
+    return false;
+  for (const char* p = name + 1; *p; ++p)
+    {
+      if (!isdigit(*p))
+	return false;
+    }
+  //
+  //	name looks like a fresh variable name so we need to get its index.
+  //
+  mpz_class index(name + 1);
+  return index > baseNumber;
 }

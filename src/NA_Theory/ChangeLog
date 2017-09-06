@@ -1,3 +1,12 @@
+2007-06-28  Steven Eker  <eker@goo.csl.sri.com>
+
+	* NA_DagNode.hh (class NA_DagNode): updated decl for
+	computeSolvedForm()
+
+	* NA_DagNode.cc (computeSolvedForm): added extensionInfo arg
+
+===================================Maude89c===========================================
+
 2007-03-16  Steven Eker  <eker@goo.csl.sri.com>
 
 	* NA_DagNode.cc (unify): deleted

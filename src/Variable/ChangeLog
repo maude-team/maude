@@ -1,3 +1,17 @@
+2007-07-09  Steven Eker  <eker@goo.csl.sri.com>
+
+	* variableDagNode.cc (computeSolvedForm): detect and warn about
+	unimplemented bare variable case
+
+2007-06-28  Steven Eker  <eker@goo.csl.sri.com>
+
+	* variableDagNode.cc (computeSolvedForm): added extensionInfo arg
+
+	* variableDagNode.hh (class VariableDagNode): updated decl for
+	computeSolvedForm()
+
+===================================Maude89c===========================================
+
 2007-03-16  Steven Eker  <eker@goo.csl.sri.com>
 
 	* variableDagNode.cc (occurs2, unify): deleted

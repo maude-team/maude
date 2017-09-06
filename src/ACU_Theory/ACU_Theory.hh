@@ -44,5 +44,6 @@ class ACU_RhsAutomaton;
 class ACU_Subproblem;
 class ACU_ExtensionInfo;
 class ACU_UnificationSubproblem;
+class ACU_UnificationWithUnificationSubproblem;
 
 #endif

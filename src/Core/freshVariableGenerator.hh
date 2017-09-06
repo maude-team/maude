@@ -32,6 +32,11 @@ public:
   virtual ~FreshVariableGenerator() {}
   virtual int getFreshVariableName(int index) = 0;
   virtual Symbol* getBaseVariableSymbol(Sort* sort) = 0;
+  //
+  //	The following member function checks if a given variable name could conflict
+  //	with a future fresh variable that might generate.
+  //
+  virtual bool variableNameConflict(int id) = 0;
 };
 
 #endif

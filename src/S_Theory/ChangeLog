@@ -1,3 +1,28 @@
+2007-07-09  Steven Eker  <eker@goo.csl.sri.com>
+
+	* S_DagNode.cc (computeSolvedForm): give a warning that we don't
+	support extension
+
+	* S_LhsAutomaton.cc (match): added commments
+
+	* S_Subproblem.cc (S_Subproblem): handle mustMatchAtLeast arg
+	(solve): simplified; handle mustMatchAtLeast
+
+	* S_DagNode.cc (matchVariableWithExtension): pass mustMatchAtLeast
+	as 1
+
+	* S_Subproblem.hh (class S_Subproblem): added data member
+	mustMatchAtLeast; updated decl for ctor
+
+2007-06-28  Steven Eker  <eker@goo.csl.sri.com>
+
+	* S_DagNode.cc (computeSolvedForm): added extensionInfo arg
+
+	* S_DagNode.hh (class S_DagNode): updated decl for
+	computeSolvedForm()
+
+===================================Maude89c===========================================
+
 2007-03-16  Steven Eker  <eker@goo.csl.sri.com>
 
 	* S_DagNode.cc (occurs2, unify): deleted

@@ -135,8 +135,14 @@ VariableDagNode::instantiate2(Substitution& substitution)
 bool
 VariableDagNode::computeSolvedForm(DagNode* rhs,
 				   Substitution& solution,
-				   Subproblem*& returnedSubproblem)
+				   Subproblem*& returnedSubproblem,
+				   ExtensionInfo* extensionInfo)
 {
+  if (extensionInfo != 0)
+    {
+      IssueWarning("Unification of bare variable with extension is not currently implemented.");
+      return false;
+    }
   returnedSubproblem = 0;
   VariableDagNode* lv = lastVariableInChain(solution);
   if (VariableDagNode* v = dynamic_cast<VariableDagNode*>(rhs))

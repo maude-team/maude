@@ -1,3 +1,12 @@
+2007-06-28  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeDagNode.hh (class FreeDagNode): updated decl for
+	computeSolvedForm()
+
+	* freeDagNode.cc (computeSolvedForm): added extensionInfo arg
+
+===================================Maude89c===========================================
+
 2007-03-16  Steven Eker  <eker@goo.csl.sri.com>
 
 	* freeDagNode.cc (unify, occurs2): deleted

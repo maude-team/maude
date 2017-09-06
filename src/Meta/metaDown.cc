@@ -877,16 +877,93 @@ MetaLevel::downTermAndSort(DagNode* metaTerm ,
 }
 
 bool
+MetaLevel::downUnificationProblem(DagNode* metaUnificationProblem,
+				  Vector<Term*>& leftHandSides,
+				  Vector<Term*>& rightHandSides,
+				  MixfixModule* m,
+				  bool makeDisjoint)
+{
+  leftHandSides.clear();
+  rightHandSides.clear();
+  Symbol* mu = metaUnificationProblem->symbol();
+  Term* lhs;
+  Term* rhs;
+  if (mu == unificationConjunctionSymbol)
+    {
+      for (DagArgumentIterator i(metaUnificationProblem); i.valid(); i.next())
+	{
+	  if (!downUnificandPair(i.argument(), lhs, rhs, m, makeDisjoint))
+	    {
+	      {
+		FOR_EACH_CONST(j, Vector<Term*>, leftHandSides)
+		  delete *j;
+	      }
+	      {
+		FOR_EACH_CONST(j, Vector<Term*>, rightHandSides)
+		  delete *j;
+	      }
+	      return false;
+	    }
+	  leftHandSides.append(lhs);
+	  rightHandSides.append(rhs);
+	}
+    }
+  else if (downUnificandPair(metaUnificationProblem, lhs, rhs, m, makeDisjoint))
+    {
+      leftHandSides.append(lhs);
+      rightHandSides.append(rhs);
+    }
+  else
+    return false;
+  return true;
+}
+
+bool
+MetaLevel::downUnificandPair(DagNode* metaUnificandPair,
+			     Term*& lhs,
+			     Term*& rhs,
+			     MixfixModule* m,
+			     bool makeDisjoint)
+{
+  Symbol* mu = metaUnificandPair->symbol();
+  if (mu == unificandPairSymbol)
+    {
+      FreeDagNode* f = safeCast(FreeDagNode*, metaUnificandPair);
+      lhs = downTerm(f->getArgument(0), m);
+      if (lhs != 0)
+	{
+	  flagVariables = makeDisjoint;
+	  rhs = downTerm(f->getArgument(1), m);
+	  flagVariables = false;
+	  if (rhs != 0)
+	    {
+	      if (lhs->symbol()->rangeComponent() ==
+		  rhs->symbol()->rangeComponent())
+		return true;
+	      IssueAdvisory("kind clash for unificand pair" << QUOTE(metaUnificandPair) <<
+			    " in meta-module " << QUOTE(m) << '.');
+	      rhs->deepSelfDestruct();
+	    }
+	  lhs->deepSelfDestruct();
+	}
+    }
+  return false;
+}
+
+bool
 MetaLevel::downTermPair(DagNode* metaTerm1,
 			DagNode* metaTerm2, 
 			Term*& term1,
 			Term*& term2,
-			MixfixModule* m)
+			MixfixModule* m,
+			bool makeDisjoint)
 {
   term1 = downTerm(metaTerm1, m);
   if (term1 != 0)
     {
+      flagVariables = makeDisjoint;
       term2 = downTerm(metaTerm2, m);
+      flagVariables = false;
       if (term2 != 0)
 	{
 	  if (term1->symbol()->rangeComponent() ==
@@ -955,6 +1032,8 @@ MetaLevel::downTerm(DagNode* metaTerm, MixfixModule* m)
 	      {
 		VariableSymbol* symbol = safeCast(VariableSymbol*,
 						  m->instantiateVariable(sort));
+		if (flagVariables)
+		  varName = Token::flaggedCode(varName);
 		return new VariableTerm(symbol, varName);
 	      }
 	    IssueAdvisory("could not find sort " << QUOTE(Token::name(sortName)) <<

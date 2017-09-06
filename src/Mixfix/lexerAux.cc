@@ -108,6 +108,7 @@ lexerInitialMode()
 void
 lexerFileNameMode()
 {
+  accumulator.erase();
   yy_push_state(FILE_NAME_MODE);
 }
 
@@ -122,7 +123,7 @@ lexerLatexMode()
 {
   braceCount = 0;
   parenCount = 1;
-  latexCode.erase();
+  accumulator.erase();
   yy_push_state(LATEX_MODE);
 }
 

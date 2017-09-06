@@ -27,7 +27,8 @@ libACU_Theory_a_SOURCES = \
 	ACU_DagArgumentIterator.cc \
 	ACU_TreeDagArgumentIterator.cc \
 	ACU_LazySubproblem.cc \
-	ACU_UnificationSubproblem.cc
+	ACU_UnificationSubproblem.cc \
+	ACU_UnificationWithExtensionSubproblem.cc
 
 EXTRA_DIST = \
 	ACU_LhsCompiler0.cc \
@@ -64,4 +65,5 @@ noinst_HEADERS = \
 	ACU_TreeDagArgumentIterator.hh \
 	ACU_TreeDagNode.hh \
 	ACU_VarLhsAutomaton.hh \
-	ACU_UnificationSubproblem.hh
+	ACU_UnificationSubproblem.hh \
+	ACU_UnificationWithExtensionSubproblem.hh

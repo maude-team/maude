@@ -43,7 +43,6 @@
      MACRO(emptySubstitutionSymbol, Symbol, 0, 0)
      MACRO(substitutionSymbol, Symbol, SymbolType::ASSOC | SymbolType::COMM, 2)
      MACRO(holeSymbol, Symbol, 0, 0)
-
      //
      //	META-MODULE stuff:
      //
@@ -101,7 +100,7 @@
      MACRO(sumSymbol, Symbol, SymbolType::ASSOC | SymbolType::COMM, 2)
      MACRO(renamingSymbol, FreeSymbol, 0, 2)
      MACRO(instantiationSymbol, FreeSymbol, 0, 1)
-    //
+     //
      //	Hook constructors.
      //
      MACRO(termHookSymbol, FreeSymbol, 0, 2)
@@ -181,7 +180,6 @@
      MACRO(fthSymbol, FreeSymbol, 0, 7)
      MACRO(modSymbol, FreeSymbol, 0, 8)
      MACRO(thSymbol, FreeSymbol, 0, 8)
-
      //
      //	META-LEVEL stuff:
      //
@@ -190,12 +188,21 @@
      //  
      MACRO(anyTypeSymbol, Symbol, 0, 0)
      //
+     //	Unification problem constructors
+     //
+     MACRO(unificandPairSymbol, FreeSymbol, 0, 2)
+     MACRO(unificationConjunctionSymbol, Symbol, SymbolType::ASSOC | SymbolType::COMM, 2)
+     //
      //	Success constructors.
      //
      MACRO(resultPairSymbol, FreeSymbol, 0, 2)
      MACRO(resultTripleSymbol, FreeSymbol, 0, 3)
      MACRO(result4TupleSymbol, FreeSymbol, 0, 4)
      MACRO(matchPairSymbol, FreeSymbol, 0, 2)
+     MACRO(unificationPairSymbol, FreeSymbol, 0, 2)
+     MACRO(unificationTripleSymbol, FreeSymbol, 0, 3)
+     MACRO(unificationContextTripleSymbol, FreeSymbol, 0, 3)
+     MACRO(unificationContext4TupleSymbol, FreeSymbol, 0, 4)
      MACRO(traceStepSymbol, FreeSymbol, 0, 3)
      MACRO(nilTraceSymbol, Symbol, 0, 0)
      MACRO(traceSymbol, Symbol, SymbolType::ASSOC, 2)
@@ -206,6 +213,10 @@
      MACRO(ambiguitySymbol, Symbol, 0, 2)
      MACRO(failure3Symbol, Symbol, 0, 0)
      MACRO(failure4Symbol, Symbol, 0, 0)
+     MACRO(noUnifierPairSymbol, Symbol, 0, 0)
+     MACRO(noUnifierTripleSymbol, Symbol, 0, 0)
+     MACRO(noUnifierContextTripleSymbol, Symbol, 0, 0)
+     MACRO(noUnifierContext4TupleSymbol, Symbol, 0, 0)
      MACRO(noMatchSubstSymbol, Symbol, 0, 0)
      MACRO(noMatchPairSymbol, Symbol, 0, 0)
      MACRO(failureTraceSymbol, Symbol, 0, 0)

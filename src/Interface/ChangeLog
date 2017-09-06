@@ -1,3 +1,10 @@
+2007-06-28  Steven Eker  <eker@goo.csl.sri.com>
+
+	* dagNode.hh (class DagNode): added extensionInfo arg to decl for
+	computeSolvedForm()
+
+===================================Maude89c==========================================
+
 2007-03-16  Steven Eker  <eker@goo.csl.sri.com>
 
 	* dagNode.hh (class DagNode): deleted decls for unify(), occurs(),
