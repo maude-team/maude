@@ -1,3 +1,54 @@
+2010-09-30  Steven Eker  <eker@rho>
+
+	* memoMap.cc: created
+
+	* memoTable.hh: complete rewrite using MemoMap
+
+	* memoTable.cc: complete rewrite using MemoMap
+
+	* module.cc (Module::clearMemo): now delete memoMap rather that
+	calling clearMemo() on each symbol
+	(Module::getMemoMap): added
+	(Module::Module): initialize memoMap
+
+	* module.hh (class Module): added data member memoMap and decl for
+	getMemoMap()
+
+	* core.hh: added class MemoMap
+
+	* memoMap.hh: created
+
+	* memoTable.hh (class MemoTable): derive from ModuleItem
+
+2010-09-29  Steven Eker  <eker@rho>
+
+	* hashConsSet.hh (HashConsSet::getCanonicalCopyEagerUptoReduced):
+	added
+
+	* hashConsSet.cc (HashConsSet::insertCopyEagerUptoReduced):
+	rewritten so that makeCanonicalCopyEagerUptoReduced() is only
+	called on unreduced nodes
+
+2010-09-28  Steven Eker  <eker@rho>
+
+	* hashConsSet.hh (class HashConsSet): added decl for
+	insertCopyEagerUptoReduced()
+
+2010-09-16  Steven Eker  <eker@rho>
+
+	* core.hh: deleted class DagNodeCache
+
+	* dagNodeCache.cc: deleted
+
+	* dagNodeCache.hh: deleted
+
+	* hashConsSet.cc (HashConsSet::markReachableNodes): added
+
+	* hashConsSet.hh (class HashConsSet): derive from
+	SimpleRootContainer; added decl for markReachableNodes()
+
+===================================Maude95===========================================
+
 2010-08-11  Steven Eker  <eker@rho>
 
 	* unificationSubproblemDisjunction.cc

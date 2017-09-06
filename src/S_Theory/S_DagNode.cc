@@ -284,12 +284,6 @@ S_DagNode::computeSolvedForm2(DagNode* rhs, UnificationContext& solution, Pendin
   return pending.resolveTheoryClash(this, rhs);
 }
 
-mpz_class
-S_DagNode::nonVariableSize()
-{
-  return *number + arg->nonVariableSize();
-}
-
 void
 S_DagNode::insertVariables2(NatSet& occurs)
 {

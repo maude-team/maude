@@ -1,3 +1,44 @@
+2010-09-16  Steven Eker  <eker@rho>
+
+	* modelCheckerSymbol.cc (SystemAutomaton::checkProposition): reverted
+
+	* satSolverSymbol.cc: reverted
+
+	* satSolverSymbol.hh (class SatSolverSymbol): reverted
+
+	* temporalSymbol.cc (TemporalSymbol::build): reverted - we need
+	proposition indices to be contiguous which is not guaranteed by
+	HashConsSet
+
+	* temporalSymbol.hh (class TemporalSymbol): reverted
+
+	* modelCheckerSymbol.cc (SystemAutomaton::checkProposition): use
+	HashConsSet
+
+	* modelCheckerSymbol.hh (class ModelCheckerSymbol): DagNodeSet ->
+	HashConsSet
+
+	* satSolverSymbol.cc (SatSolverSymbol::eqRewrite)
+	(SatSolverSymbol::makeModel, SatSolverSymbol::makeFormulaList)
+	(SatSolverSymbol::makeFormula): use HashConsSet
+
+	* satSolverSymbol.hh (class SatSolverSymbol): DagNodeSet ->
+	HashConsSet
+
+	* temporalSymbol.cc (TemporalSymbol::build): simplified using
+	HashConsSet
+
+	* temporalSymbol.hh (class TemporalSymbol): DagNodeSet -> HashConsSet
+
+	* stateTransitionGraph.cc (StateTransitionGraph::markReachableNodes): deleted
+
+	* stateTransitionGraph.hh (class StateTransitionGraph): remove
+	derivation from SimpleRootContainer
+	(class StateTransitionGraph): deleted decl for
+	markReachableNodes()
+
+===================================Maude95===========================================
+
 2010-07-20  Steven Eker  <eker@rho>
 
 	* unificationProblem.cc (UnificationProblem::findNextUnifier): use

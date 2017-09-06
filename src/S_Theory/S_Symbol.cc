@@ -418,3 +418,17 @@ S_Symbol::makeCanonical(DagNode* original, HashConsSet* hcs)
   n->setSortIndex(original->getSortIndex());
   return n;
 }
+
+DagNode*
+S_Symbol::makeCanonicalCopyEagerUptoReduced(DagNode* original, HashConsSet* hcs)
+{
+  //
+  //	We have a unreduced node - copy forced.
+  //
+  S_DagNode* s = safeCast(S_DagNode*, original);
+  DagNode* c = hcs->getCanonicalCopyEagerUptoReduced(standardStrategy(), s->getArgument());
+  S_DagNode* n = new S_DagNode(this, s->getNumber(), c);
+  n->copySetRewritingFlags(original);
+  n->setSortIndex(original->getSortIndex());
+  return n;
+}

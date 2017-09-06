@@ -438,12 +438,6 @@ CUI_DagNode::computeSolvedForm2(DagNode* rhs, UnificationContext& solution, Pend
   return pending.resolveTheoryClash(this, rhs);
 }
 
-mpz_class
-CUI_DagNode::nonVariableSize()
-{
-  return 1 + argArray[0]->nonVariableSize() + argArray[1]->nonVariableSize();
-}
-
 void
 CUI_DagNode::insertVariables2(NatSet& occurs)
 {

@@ -1,3 +1,34 @@
+2010-09-30  Steven Eker  <eker@rho>
+
+	* symbol.hh (class Symbol): removed derivation from ModuleItem now
+	that MemoTable is derived from this
+
+2010-09-28  Steven Eker  <eker@rho>
+
+	* symbol.hh (class Symbol): added decl for
+	makeCanonicalCopyEagerUptoReduced()
+
+2010-09-09  Steven Eker  <eker@rho>
+
+	* binarySymbol.hh (BinarySymbol::hasUnequalLeftIdentityCollapse):
+	added
+	(BinarySymbol::hasUnequaRightIdentityCollapse): added
+	(class BinarySymbol): added data members unequalLeftIdCollapse and
+	unequalRightIdCollapse
+
+	* binarySymbol.cc (BinarySymbol::leftIdentitySortCheck): set
+	unequalLeftIdCollapse 
+	(BinarySymbol::rightIdentitySortCheck): set
+	unequalRightIdCollapse
+
+2010-08-18  Steven Eker  <eker@rho>
+
+	* dagNode.cc (DagNode::nonVariableSize): deleted
+
+	* dagNode.hh (class DagNode): deleted decl for nonVariableSize()
+
+===================================Maude95==========================================
+
 2010-08-11  Steven Eker  <eker@rho>
 
 	* binarySymbol.hh (BinarySymbol::setIdentity): set cyclicIdentity

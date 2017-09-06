@@ -42,8 +42,8 @@ libcore_a_SOURCES = \
 	extensionMatchSubproblem.cc \
 	dagNodeSet.cc \
 	hashConsSet.cc \
-	dagNodeCache.cc \
 	memoTable.cc \
+	memoMap.cc \
 	rootContainer.cc \
 	sortBdds.cc \
 	unificationContext.cc \
@@ -73,7 +73,6 @@ noinst_HEADERS = \
 	dagArgumentIterator.hh \
 	dagNodeSet.hh \
 	hashConsSet.hh \
-	dagNodeCache.hh \
 	dagRoot.hh \
 	disjunctiveSubproblemAccumulator.hh \
 	equalitySubproblem.hh \
@@ -84,6 +83,7 @@ noinst_HEADERS = \
 	lineNumber.hh \
 	localBinding.hh \
 	memoTable.hh \
+	memoMap.hh \
 	memoryCell.hh \
 	module.hh \
 	moduleItem.hh \

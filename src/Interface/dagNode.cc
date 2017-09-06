@@ -276,16 +276,6 @@ DagNode::computeSolvedForm2(DagNode* rhs, UnificationContext& solution, PendingU
   return false;
 }
 
-mpz_class
-DagNode::nonVariableSize()
-{
-  //
-  //	terms in unimplemented theories should be ground and will be treated as constants.
-  //
-  Assert(isGround(), "expected ground " << this);
-  return 1;
-}
-
 void
 DagNode::computeGeneralizedSort(const SortBdds& sortBdds,
 				const Vector<int>& realToBdd,

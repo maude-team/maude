@@ -43,7 +43,6 @@ class Symbol
   : public RuleTable,
     public NamedEntity,
     public LineNumber,
-    public ModuleItem,
     public SortTable,
     public SortConstraintTable,
     public EquationTable,
@@ -147,6 +146,7 @@ public:
   //	Interface for hash consing.
   //
   virtual DagNode* makeCanonical(DagNode* original, HashConsSet* hcs) = 0;
+  virtual DagNode* makeCanonicalCopyEagerUptoReduced(DagNode* original, HashConsSet* hcs) = 0;
 
 #ifdef COMPILER
   void fullCompile(CompilationContext& context, bool inLine) const;

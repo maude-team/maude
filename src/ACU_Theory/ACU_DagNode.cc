@@ -535,16 +535,6 @@ ACU_DagNode::computeSolvedForm2(DagNode* rhs, UnificationContext& solution, Pend
   return pending.resolveTheoryClash(this, rhs);
 }
 
-mpz_class
-ACU_DagNode::nonVariableSize()
-{
-  mpz_class total = -1;
-  int nrArgs = argArray.length();
-  for (int i = 0; i < nrArgs; i++)
-    total += argArray[i].multiplicity * (argArray[i].dagNode->nonVariableSize() + 1);
-  return total;
-}
-
 void
 ACU_DagNode::insertVariables2(NatSet& occurs)
 {

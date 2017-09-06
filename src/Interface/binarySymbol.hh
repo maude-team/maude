@@ -55,6 +55,8 @@ public:
   void setIdentity(Term* id);
   Term* getIdentity() const;
   bool hasIdentity() const;
+  bool hasUnequalLeftIdentityCollapse() const;
+  bool hasUnequalRightIdentityCollapse() const;
   bool hasCyclicIdentity() const;
   DagNode* getIdentityDag();
   bool mightMatchOurIdentity(const Term* subterm) const;
@@ -88,7 +90,19 @@ private:
 
   PermuteStrategy permuteStrategy;
   CachedDag identityTerm;
-  mutable int cyclicIdentity;  // used for breaking non-disjoint cycles in unification
+  //
+  //	These flags record if we detected a collapse from one sort to another.
+  //	Collapsing to a lower sort is legal but complicates unification.
+  //
+  bool unequalLeftIdCollapse;
+  bool unequalRightIdCollapse;
+  //
+  //	This flag records if we can reach find a cycle of symbols by examining identities of symbols.
+  //	We need this information for breaking non-disjoint cycles during unification.
+  //	Because it is potentially expensive to compute we only compute it if needed and therefore
+  //	store it as an int so we can have an undecided state.
+  //
+  mutable int cyclicIdentity;
 };
 
 inline BinarySymbol::PermuteStrategy
@@ -126,6 +140,18 @@ BinarySymbol::hasCyclicIdentity() const
       cyclicIdentity = lookForCycle(getIdentity(), examinedIds);
     }
   return cyclicIdentity;
+}
+
+inline bool
+BinarySymbol::hasUnequalLeftIdentityCollapse() const
+{
+  return unequalLeftIdCollapse;
+}
+
+inline bool
+BinarySymbol::hasUnequalRightIdentityCollapse() const
+{
+  return unequalRightIdCollapse;
 }
 
 inline bool

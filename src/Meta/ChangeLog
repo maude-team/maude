@@ -1,3 +1,15 @@
+2010-10-06  Steven Eker  <eker@rho>
+
+	* metaDownRenamings.cc (MetaLevel::downModuleExpression): new
+	makeSummation() convention for bad modules
+	(MetaLevel::downModuleExpression): new makeRenamedCopy()
+	convention for bad modules
+
+2010-10-05  Steven Eker  <eker@rho>
+
+	* metaDownRenamings.cc (MetaLevel::downModuleExpression): new
+	makeInstatiation() convention for bad modules
+
 2010-08-12  Steven Eker  <eker@rho>
 
 	* metaDownFixUps.cc (MetaLevel::downOpHook): use downOpName()

@@ -60,6 +60,7 @@ public:
   //	Hash cons stuff.
   //
   DagNode* makeCanonical(DagNode* original, HashConsSet* hcs);
+  DagNode* makeCanonicalCopyEagerUptoReduced(DagNode* original, HashConsSet* hcs);
 
 #ifdef COMPILER
   void generateCode(CompilationContext& context) const;

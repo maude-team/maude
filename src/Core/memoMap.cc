@@ -21,30 +21,30 @@
 */
 
 //
-//	Class for floating point number symbols.
+//      Implementation for class MemoTable.
 //
-#ifndef _floatSymbol_hh_
-#define _floatSymbol_hh_
-#include "NA_Symbol.hh"
 
-class FloatSymbol : public NA_Symbol
+//	utility stuff
+#include "macros.hh"
+#include "vector.hh"
+
+//      forward declarations
+#include "interface.hh"
+#include "core.hh"
+
+//      core class definitions"
+#include "memoMap.hh"
+
+int
+MemoMap::getFromIndex(DagNode* fromDag)
 {
-public:
-  FloatSymbol(int id);
-
-  void fillInSortInfo(Term* subject);
-  void computeBaseSort(DagNode* subject);
-  void compileOpDeclarations();
-  bool isConstructor(DagNode* subject);
-  bool rewriteToFloat(DagNode* subject,
-		      RewritingContext& context,
-		      double result);
-
-  DagNode* makeCanonicalCopyEagerUptoReduced(DagNode* original, HashConsSet* /* hcs */);
-
-private:
-  Sort* sort;
-  Sort* finiteSort;
-};
-
-#endif
+  int fromIndex =  dags.insertCopyEagerUptoReduced(fromDag);
+  int nrToDags = toIndices.size();
+  if (fromIndex >= nrToDags)
+    {
+      toIndices.resize(fromIndex + 1);
+      for (int i = nrToDags; i <= fromIndex; ++i)
+	toIndices[i] = NONE;
+    }
+  return fromIndex;
+}

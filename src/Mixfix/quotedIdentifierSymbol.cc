@@ -195,3 +195,19 @@ QuotedIdentifierSymbol::compileOpDeclarations()
 	baseSort = s;  // set baseSort to largest (smallest index) declared sort
     }
 }
+
+//
+//	Hash cons code.
+//
+
+DagNode*
+QuotedIdentifierSymbol::makeCanonicalCopyEagerUptoReduced(DagNode* original, HashConsSet* /* hcs */)
+{
+  //
+  //	We have a unreduced node - copy forced -  in principle qid could rewrite to something else!
+  //
+  QuotedIdentifierDagNode* n = new QuotedIdentifierDagNode(this, safeCast(QuotedIdentifierDagNode*, original)->getIdIndex());
+  n->copySetRewritingFlags(original);
+  n->setSortIndex(original->getSortIndex());
+  return n;
+}

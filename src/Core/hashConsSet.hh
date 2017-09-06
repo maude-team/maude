@@ -26,8 +26,9 @@
 #ifndef _hashConsSet_hh_
 #define _hashConsSet_hh_
 #include "pointerSet.hh"
+#include "simpleRootContainer.hh"
 
-class HashConsSet : private PointerSet
+class HashConsSet : private PointerSet, private SimpleRootContainer
 {
 public:
 #ifndef NO_ASSERT
@@ -49,9 +50,19 @@ public:
   //
   int insert(DagNode* d);
   //
+  //	As above, but unreduced eager dag nodes are always
+  //	copied and can never become canonical.
+  //
+  int insertCopyEagerUptoReduced(DagNode* d);
+  //
   //	Returns the canonical dag node for the index.
   //
   DagNode* getCanonical(int index) const;
+  //
+  //	Returns the canonical dag node for a given dag node, with forced copying
+  //	of unreduced eager stuff if a dag node is inserted.
+  //
+  DagNode* getCanonicalCopyEagerUptoReduced(bool eagerContext, DagNode* original);
 
 private:
   //
@@ -59,12 +70,23 @@ private:
   //
   unsigned int hash(void* pointer) const;
   bool isEqual(void* pointer1, void* pointer2) const;
+  //
+  //	To protect hash cons'd dagnodes from garbage collection.
+  //
+  void markReachableNodes();
 };
 
 inline DagNode*
 HashConsSet::getCanonical(int index) const
 {
   return static_cast<DagNode*>(index2Pointer(index));
+}
+
+inline DagNode*
+HashConsSet::getCanonicalCopyEagerUptoReduced(bool eagerContext, DagNode* original)
+{
+  return getCanonical(eagerContext ? insertCopyEagerUptoReduced(original) :
+		      insert(original));
 }
 
 #endif

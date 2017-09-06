@@ -1,3 +1,18 @@
+2010-09-29  Steven Eker  <eker@rho>
+
+	* stringSymbol.hh (class StringSymbol): added decl for
+	makeCanonicalCopyEagerUptoReduced()
+
+	* stringSymbol.cc (StringSymbol::makeCanonicalCopyEagerUptoReduced): added
+
+	* floatSymbol.hh (class FloatSymbol): added decl for
+	makeCanonicalCopyEagerUptoReduced()
+
+	* floatSymbol.cc (FloatSymbol::makeCanonicalCopyEagerUptoReduced):
+	added
+
+===================================Maude95===========================================
+
 2010-05-07  Steven Eker  <eker@rho>
 
 	* branchSymbol.cc (BranchSymbol::attachTerm): added

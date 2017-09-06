@@ -464,7 +464,11 @@ pr|protecting|ex|extending|us|using|inc|including|sort|sorts|subsort|subsorts|op
 					  lexerBubble.append(savedToken);
 					  SAVE_FIX_UP(ENDS_IN_DOT)
 					}
-[^ \n\r\f\t\v]				{
+{maudeId}|[^ \n\r\f\t\v]		{
+	     				  //
+					  //	We need {maudeId} here so that an identifier such
+					  //	as .foo doesn't get split by the first rule.
+					  //
 					  lexerBubble.append(savedToken);
 					  yyless(0);
 					  BEGIN(BUBBLE_MODE);
