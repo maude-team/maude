@@ -245,4 +245,8 @@ SymbolType::isCreatedOnTheFly() const
   return hasFlag(POLY) || t == VARIABLE || t == SORT_TEST;
 }
 
+#ifndef NO_ASSERT
+ostream& operator<<(ostream& s, SymbolType st);
+#endif
+
 #endif

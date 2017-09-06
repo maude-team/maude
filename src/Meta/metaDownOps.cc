@@ -273,6 +273,7 @@ MetaLevel::downAttr(DagNode* metaAttr, AttributeInfo& ai)
     {
       if (!(succSymbol->getSignedInt(safeCast(FreeDagNode*, metaAttr)->getArgument(0), ai.prec)))
 	return false;
+      ai.symbolType.setFlags(SymbolType::PREC);
     }
   else if (ma == gatherSymbol)
     {
