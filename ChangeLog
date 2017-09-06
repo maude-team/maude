@@ -1,3 +1,11 @@
+2016-02-26  Steven Eker  <eker@install.csl.sri.com>
+
+	* tests/Misc/meseguerFiniteVariant.maude: created
+
+	* tests/Misc/meseguerFiniteVariant: created
+
+===================================Maude109===========================================
+
 2014-11-19  Steven Eker  <eker@ape.csl.sri.com>
 
 	* tests/Misc/assocUnification.maude: added examples to test new capabilities

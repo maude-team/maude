@@ -23,7 +23,7 @@ CVC4		http://cvc4.cs.nyu.edu/web/
 
 Configuring the 3rd party packages
 ==================================
-Because of C++ ABI incompatibilities, GNU gmp and BuDDy must be
+Because of C++ ABI incompatibilities, GNU gmp, BuDDy and CVC4 must be
 compiled with the same compiler you will use for Maude.
 
 GNU gmp	must be configured with --enable-cxx to generate the C++

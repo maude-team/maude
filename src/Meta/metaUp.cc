@@ -922,16 +922,21 @@ DagNode*
 MetaLevel::upVariant(const Vector<DagNode*>& variant, 
 		     const NarrowingVariableInfo& variableInfo,
 		     const mpz_class& variableIndex,
+		     const mpz_class& parentIndex,
+		     bool moreInLayer,
 		     MixfixModule* m)
 {
   PointerMap qidMap;
   PointerMap dagNodeMap;
-  Vector<DagNode*> args(3);
+  Vector<DagNode*> args(5);
 
   int nrVariables = variant.size() - 1;
   args[0] = upDagNode(variant[nrVariables], m, qidMap, dagNodeMap);
   args[1] = upSubstitution(variant, variableInfo, nrVariables, m, qidMap, dagNodeMap);
   args[2] = succSymbol->makeNatDag(variableIndex);
+  args[3] = (parentIndex >= 0) ? succSymbol->makeNatDag(parentIndex) :
+    noParentSymbol->makeDagNode();
+  args[4] = upBool(moreInLayer);
   return variantSymbol->makeDagNode(args);
 }
 

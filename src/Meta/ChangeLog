@@ -1,3 +1,25 @@
+2016-02-04  Steven Eker  <eker@install.csl.sri.com>
+
+	* metaUp.cc (upVariant): fix arg vector size
+
+	* metaVariant.cc (metaGetVariant2): use new getNextVariant() interface
+
+2016-02-03  Steven Eker  <eker@install.csl.sri.com>
+
+	* metaVariant.cc (metaGetVariant2): pass 2 dummy args to upVariant() for
+	the moment
+
+	* metaLevel.hh (M): updated decl for upVariant()
+
+	* metaUp.cc (upVariant): handle parentIndex and moreInLayer flag
+
+2016-01-29  Steven Eker  <eker@install.csl.sri.com>
+
+	* metaLevelSignature.cc: added noParentSymbol; updated
+	variantSymbol
+
+===================================Maude109===========================================
+
 2015-08-21  Steven Eker  <eker@ape.csl.sri.com>
 
 	* metaVariant.cc (metaGetVariant2): fix a bug where we were

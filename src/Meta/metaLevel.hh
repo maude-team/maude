@@ -87,6 +87,8 @@ public:
   DagNode* upVariant(const Vector<DagNode*>& variant, 
 		     const NarrowingVariableInfo& variableInfo,
 		     const mpz_class& variableIndex,
+		     const mpz_class& parentIndex,
+		     bool moreInLayer,
 		     MixfixModule* m);
   DagNode* upNoVariant(bool incomplete);
 

@@ -99,19 +99,22 @@ MetaLevelOpSymbol::metaGetVariant2(FreeDagNode* subject, RewritingContext& conte
 	  DagNode* result;
 	  const Vector<DagNode*>* variant;
 	  int nrFreeVariables;
+	  int parentIndex = -1;  // dummy
+	  bool moreInLayer = false;  // dummy
+
 	  if (lastSolutionNr == solutionNr)
 	    {
 	      //
 	      //	So the user can ask for the same variant over and over again without
 	      //	a horrible loss of performance.
 	      //
-	      variant = vs->getLastReturnedVariant(nrFreeVariables);
+	      variant = vs->getLastReturnedVariant(nrFreeVariables, parentIndex, moreInLayer);
 	    }
 	  else
 	    {
 	      while (lastSolutionNr < solutionNr)
 		{
-		  variant = vs->getNextVariant(nrFreeVariables);
+		  variant = vs->getNextVariant(nrFreeVariables, parentIndex, moreInLayer);
 		  if (variant == 0)
 		    {
 		      bool incomplete = vs->isIncomplete();
@@ -127,7 +130,8 @@ MetaLevelOpSymbol::metaGetVariant2(FreeDagNode* subject, RewritingContext& conte
 	  {
 	    m->insert(subject, vs, solutionNr);
 	    mpz_class lastVarIndex = varIndex + nrFreeVariables;
-	    result = metaLevel->upVariant(*variant, vs->getVariableInfo(), lastVarIndex, m);
+	    mpz_class parentIndexBig(parentIndex);
+	    result = metaLevel->upVariant(*variant, vs->getVariableInfo(), lastVarIndex, parentIndexBig, moreInLayer, m); // dummy args
 	  }
 	fail:
 	  (void) m->unprotect();

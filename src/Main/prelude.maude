@@ -22,7 +22,7 @@
 
 ***
 ***	Maude interpreter standard prelude.
-***	Version alpha108
+***	Version alpha109
 ***
 ***	Some of the overall structure is taken from the OBJ3
 ***	interpreter standard prelude.
@@ -1937,6 +1937,11 @@ fmod META-LEVEL is
   subsort Nat < Bound .
   op unbounded : -> Bound [ctor] .
 
+*** parents
+  sort Parent .
+  subsort Nat < Parent .
+  op none : -> Parent .
+
 *** argument values
   sort Type? .
   subsort Type < Type? .
@@ -1966,7 +1971,7 @@ fmod META-LEVEL is
   op {_,_} : Substitution Context -> MatchPair [ctor] .
   op {_,_} : Substitution Nat -> UnificationPair [ctor] .
   op {_,_,_} : Substitution Substitution Nat -> UnificationTriple [ctor] .
-  op {_,_,_} : Term Substitution Nat -> Variant [ctor] .
+  op {_,_,_,_,_} : Term Substitution Nat Parent Bool -> Variant [ctor] .
   op {_,_,_} : Term Type Rule -> TraceStep [ctor] .
   op nil : -> Trace [ctor] .
   op __ : Trace Trace -> Trace [ctor assoc id: nil format (d n d)] .
@@ -2087,6 +2092,7 @@ fmod META-LEVEL is
         op-hook succSymbol		(s_ : Nat ~> NzNat)
         op-hook natListSymbol		(__ : NeNatList NeNatList ~> NeNatList)
         op-hook unboundedSymbol		(unbounded : ~> Bound)
+        op-hook noParentSymbol		(none : ~> Parent)
 
         op-hook stringSymbol		(<Strings> : ~> String)
         op-hook idHookSymbol		(id-hook : Qid QidList ~> Hook)
@@ -2200,7 +2206,7 @@ fmod META-LEVEL is
         op-hook matchPairSymbol		({_,_} : Substitution Context ~> MatchPair)
         op-hook unificationPairSymbol	({_,_} : Substitution Nat ~> UnificationPair)
         op-hook unificationTripleSymbol	({_,_,_} : Substitution Substitution Nat ~> UnificationTriple)
-        op-hook variantSymbol		({_,_,_} : Term Substitution Nat ~> Variant)
+        op-hook variantSymbol		({_,_,_,_,_} : Term Substitution Nat Parent Bool ~> Variant)
         op-hook smtResultSymbol		({_,_,_,_} : Term Substitution Term Nat ~> SmtResult)
 
         op-hook traceStepSymbol		({_,_,_} : Term Type Rule ~> TraceStep)
