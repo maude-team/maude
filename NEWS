@@ -1,3 +1,16 @@
+Overview of Changes in Maude alpha91a
+=====================================
+* Now solve diophantine equations over ints rather than mpzs for
+  unification
+* Extended unify command to handle systems
+* Added print attribute
+* Fixed Diophantine solver bug for results over 2^31 - 1
+* Install .maude files in the data directory
+* Fixed free theory discrimination net subsumption bug
+* Fixed gcc4 incompatibilities
+* Outlawed overloading operations from a parameter theory
+* Fixed longstanding stdout/stderr synchonization bugs
+
 Overview of Changes in Maude alpha91
 ====================================
 * fixed bug where natSystemSolve() would lose hooks during importation

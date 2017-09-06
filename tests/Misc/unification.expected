@@ -724,13 +724,13 @@ Solution 1
 X:String --> #1:Char + string(pi)
 Y:Char --> #1:Char
 Z:String --> #1:Char
-Warning: unsafe variable name #1:Nat in unification problem.
 ==========================================
 unify in NAT : X:Nat ^ #1:Nat =? #2:Nat .
-Warning: Term f(X:Nat, Y:Nat, Z:Nat) is non-ground and unification for its top
-    symbol is not currently supported.
+Warning: unsafe variable name #1:Nat in unification problem.
 ==========================================
 unify in TEST2 : f(f(X:Nat, Y:Nat), Z:Nat) =? f(A:Nat, B:Nat) .
+Warning: Term f(X:Nat, Y:Nat, Z:Nat) is non-ground and unification for its top
+    symbol is not currently supported.
 ==========================================
 unify in TEST2 : X:Nat + f(41, 42) =? Y:Nat + f(41, 42) .
 
@@ -4895,4 +4895,31 @@ U --> #1:Set
 V --> f(#2:Set, #3:Elt)
 W --> #4:Set
 A --> #3:Elt
+==========================================
+unify in SIMULT : g(X:Foo) =? g(Y:Foo) /\ h(X:Foo) =? h(Z:Foo) .
+
+Solution 1
+X:Foo --> #1:Foo
+Y:Foo --> #1:Foo
+Z:Foo --> #1:Foo
+==========================================
+unify in SIMULT : g(X:Foo) =? Y:Foo /\ h(X:Foo) =? h(Z:Foo) .
+
+Solution 1
+X:Foo --> #1:Foo
+Y:Foo --> g(#1:Foo)
+Z:Foo --> #1:Foo
+==========================================
+unify in SIMULT : g(X:Foo) =? Y:Foo /\ h(X:Foo) =? h(Y:Foo) .
+No unifier.
+==========================================
+unify in SIMULT : g(X:Foo) =? Y:Foo /\ X:Foo =? h(Y:Foo) .
+No unifier.
+==========================================
+unify [1] in SIMULT : g(X:Foo) =? Y:Foo /\ h(X:Foo) =? h(Z:Foo) .
+
+Solution 1
+X:Foo --> #1:Foo
+Y:Foo --> g(#1:Foo)
+Z:Foo --> #1:Foo
 Maude> Bye.

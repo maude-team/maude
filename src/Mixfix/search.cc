@@ -62,10 +62,10 @@ Interpreter::search(const Vector<Token>& bubble, Int64 limit, Int64 depth, Searc
     }
   DagNode* subjectDag = makeDag(initial);
   
-  static char* searchTypeSymbol[] = { "=>1", "=>+", "=>*", "=>!" };
+  static const char* searchTypeSymbol[] = { "=>1", "=>+", "=>*", "=>!" };
   if (getFlag(SHOW_COMMAND))
     {
-      static char* searchKindName[] = { "search", "narrow", "xg-narrow" };
+      static const char* searchKindName[] = { "search", "narrow", "xg-narrow" };
 
       UserLevelRewritingContext::beginCommand();
       cout << searchKindName[searchKind] << ' ';
@@ -76,7 +76,7 @@ Interpreter::search(const Vector<Token>& bubble, Int64 limit, Int64 depth, Searc
 	  cout << " such that ";
 	  MixfixModule::printCondition(cout, condition);	  
 	}
-      cout << " .\n";
+      cout << " ." << endl;
       if (xmlBuffer != 0)
 	xmlBuffer->generateSearch(subjectDag, pattern, searchTypeSymbol[searchType], limit, depth);
     }
@@ -99,7 +99,6 @@ Interpreter::search(const Vector<Token>& bubble, Int64 limit, Int64 depth, Searc
     }
   else
     {
-      
       NarrowingSequenceSearch* state = new NarrowingSequenceSearch(new UserLevelRewritingContext(subjectDag),
 								   static_cast<NarrowingSequenceSearch::SearchType>(searchType),  // HACK
 								   pattern,

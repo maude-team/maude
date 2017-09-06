@@ -1,3 +1,26 @@
+2008-09-16  Steven Eker  <eker@goo.csl.sri.com>
+
+	* rootContainer.hh (class RootContainer): added empty virtual dtor
+	for future safety
+
+	* symbolMap.hh (class SymbolMap): added empty virtual dtor for
+	future safety
+
+2008-09-11  Steven Eker  <eker@goo.csl.sri.com>
+
+	* disjunctiveSubproblemAccumulator.cc (extract): added #ifdef
+	NO_ASSERT to avoid unused variable warning
+
+	* sortTable.cc (compileOpDeclarations): added #ifndef NO_ASSERT to
+	avoid unused variable warning
+
+2008-06-11  Steven Eker  <eker@goo.csl.sri.com>
+
+	* equationTable.cc (applyReplace): added DebugAdvisory() for slow
+	case
+
+===================================Maude91a===========================================
+
 2008-04-27  Steven Eker  <eker@goo.csl.sri.com>
 
 	* pendingUnificationStack.cc (makeNewSubproblem): ifdef out new

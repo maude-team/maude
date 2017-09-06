@@ -146,8 +146,12 @@ NarrowingUnificationProblem::findNextUnifier()
       findOrderSortedUnifiers();
       if (orderSortedUnifiers == 0)
 	goto nextUnsorted;
+#ifdef NO_ASSERT
+      (void) orderSortedUnifiers->nextAssignment();
+#else
       bool t = orderSortedUnifiers->nextAssignment();
       Assert(t, "no first order sorted unifier");
+#endif
     }
   else
     {
@@ -168,8 +172,12 @@ NarrowingUnificationProblem::findNextUnifier()
 	  findOrderSortedUnifiers();
 	  if (orderSortedUnifiers == 0)
 	    goto nextUnsorted;
+#ifdef NO_ASSERT
+	  (void) orderSortedUnifiers->nextAssignment();
+#else
 	  bool t = orderSortedUnifiers->nextAssignment();
 	  Assert(t, "no first order sorted unifier");
+#endif
 	}
     }
 
@@ -303,12 +311,11 @@ NarrowingUnificationProblem::findOrderSortedUnifiers()
   //	Now compute a BDD that tells us if a unifier has maximal sort assignments to free
   //	variables.
   //
-  //	maximal(X1,...,  Xn) = unifier(X1,..., Xn) /\ 
+  //	maximal(X1,...,  Xn) = unifier(X1,..., Xn) &
   //	  for each i in 1 ... n
-  //	    not(exists Yi .[gt(Yi,Xi) /\ unifier(X1,..., Y1,...., Xn)])
+  //	    not(exists Yi .[gt(Yi,Xi) & unifier(X1,..., Y1,...., Xn)])
   //
   Bdd maximal = unifier;
-  int nrFreeVariables = freeVariables.size();
   int secondBase = sortBdds->getFirstAvailableVariable();
   FOR_EACH_CONST(i, NatSet, freeVariables)
     {

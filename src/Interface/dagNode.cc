@@ -181,6 +181,8 @@ DagNode::computeBaseSortForGroundSubterms()
 	  // fall thru
 	case UNIMPLEMENTED:
 	  return UNIMPLEMENTED;
+	default:
+	  ;  // to avoid compiler warning
 	}
     }
   topSymbol->computeBaseSort(this);

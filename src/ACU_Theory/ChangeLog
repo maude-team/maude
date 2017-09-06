@@ -1,3 +1,17 @@
+2008-09-11  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_DagNode.cc (computeBaseSortForGroundSubterms): added default
+	case to avoid compiler warning
+
+2008-05-08  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_UnificationSubproblem2.cc (buildAndSolveDiophantineSystem):
+	use IntSystem rather than MpzSystem
+	(buildAndSolveDiophantineSystem): use new IntSystem semantics to
+	avoid making a zero padded copy of each equation
+
+===================================Maude91a===========================================
+
 2008-04-18  Steven Eker  <eker@goo.csl.sri.com>
 
 	* ACU_Symbol.hh (class ACU_Symbol): added decl for unificationPriority()

@@ -235,9 +235,9 @@ UnificationProblem::findNextUnifier()
 
       //cerr << "first unsorted solution";
       //cout << "=== final solved form ===" << endl;
-      int nrRealVariables = variableInfo.getNrProtectedVariables();
 #if 0
       cout << "total variables = " << unsortedSolution->nrFragileBindings() << endl;
+      int nrRealVariables = variableInfo.getNrProtectedVariables();
       for (int i = 0; i < nrRealVariables; ++i)
 	{
 	  cout << index2Variable(i) << " =? ";
@@ -253,8 +253,12 @@ UnificationProblem::findNextUnifier()
       findOrderSortedUnifiers();
       if (orderSortedUnifiers == 0)
 	goto nextUnsorted;
+#ifdef NO_ASSERT
+      orderSortedUnifiers->nextAssignment();
+#else
       bool t = orderSortedUnifiers->nextAssignment();
       Assert(t, "no first order sorted unifier");
+#endif
     }
   else
     {
@@ -276,8 +280,12 @@ UnificationProblem::findNextUnifier()
 	  findOrderSortedUnifiers();
 	  if (orderSortedUnifiers == 0)
 	    goto nextUnsorted;
+#ifdef NO_ASSERT
+	  orderSortedUnifiers->nextAssignment();
+#else
 	  bool t = orderSortedUnifiers->nextAssignment();
 	  Assert(t, "no first order sorted unifier");
+#endif
 	}
     }
 
@@ -385,9 +393,9 @@ UnificationProblem::findOrderSortedUnifiers()
   //	Now compute a BDD that tells us if a unifier has maximal sort assignments to free
   //	variables.
   //
-  //	maximal(X1,...,  Xn) = unifier(X1,..., Xn) /\ 
+  //	maximal(X1,...,  Xn) = unifier(X1,..., Xn) &
   //	  for each i in 1 ... n
-  //	    not(exists Yi .[gt(Yi,Xi) /\ unifier(X1,..., Y1,...., Xn)])
+  //	    not(exists Yi .[gt(Yi,Xi) & unifier(X1,..., Y1,...., Xn)])
   //
   Bdd maximal = unifier;
   int nrFreeVariables = freeVariables.size();

@@ -1,3 +1,10 @@
+2008-09-11  Steven Eker  <eker@goo.csl.sri.com>
+
+	* AU_Matcher.cc (determineRigidBlocks): initialized firstMatch
+	field to avoid compiler warning
+
+===================================Maude91a===========================================
+
 2007-11-20  Steven Eker  <eker@goo.csl.sri.com>
 
 	* AU_Term.cc (normalize): fix memory leak by calling

@@ -125,3 +125,20 @@ endfm
 unify f(g(X, Y), g(X, Z), U) =? f(g(Y, Z), V) .
 
 unify  g(f(X, Y), f(X, U, Z)) =? g(f(U, V), f(W, A)) .
+
+*** simultaneous unification
+
+fmod SIMULT is
+  sort Foo .
+  ops g h : Foo -> Foo .
+endfm
+
+unify g(X:Foo) =? g(Y:Foo) /\ h(X:Foo) =? h(Z:Foo) .
+
+unify g(X:Foo) =? Y:Foo /\ h(X:Foo) =? h(Z:Foo) .
+
+unify g(X:Foo) =? Y:Foo /\ h(X:Foo) =? h(Y:Foo) .
+
+unify g(X:Foo) =? Y:Foo /\ X:Foo =? h(Y:Foo) .
+
+unify [1] in SIMULT : g(X:Foo) =? Y:Foo /\ h(X:Foo) =? h(Z:Foo) .

@@ -232,10 +232,11 @@ ApplicationProcess::resolveRemainingConditionFragments(StrategicSearch& searchOb
 						       StrategicProcess* other)
 {
   const Vector<ConditionFragment*>& fragments = rule->getCondition();
-  for (int nrFragments = fragments.size(); fragmentNr < nrFragments; ++fragmentNr)
+  int nrFragments = fragments.size();
+  for (; fragmentNr < nrFragments; ++fragmentNr)
     {
       ConditionFragment* fragment = fragments[fragmentNr];
-      if (RewriteConditionFragment* rf = dynamic_cast<RewriteConditionFragment*>(fragment))
+      if (dynamic_cast<RewriteConditionFragment*>(fragment) != 0)
 	{
 	  (void) new RewriteTask(searchObject,
 				 rewriteState,
@@ -251,12 +252,8 @@ ApplicationProcess::resolveRemainingConditionFragments(StrategicSearch& searchOb
 				 other);
 	  return SURVIVE;
 	}
-      else if (AssignmentConditionFragment* af = dynamic_cast<AssignmentConditionFragment*>(fragment))
+      else if (AssignmentConditionFragment* acf = dynamic_cast<AssignmentConditionFragment*>(fragment))
 	{
-	  //
-	  //	Find the L := R fragment that we are going to test.
-	  //
-	  AssignmentConditionFragment* acf = safeCast(AssignmentConditionFragment*, (rule->getCondition())[fragmentNr]);
 	  //
 	  //	Make a subcontext, construct and evalutate the instance of R.
 	  //

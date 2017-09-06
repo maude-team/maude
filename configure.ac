@@ -24,13 +24,13 @@ AM_INIT_AUTOMAKE(Maude, 2.4)
 AC_CONFIG_HEADER(config.h)
 #
 #	If the user set CFLAGS or CXXFLAGS we leave them alone.
-#	Otherwise we set them to -g to stop AC_PROG_CC and
+#	Otherwise we set them to -g -Wall to stop AC_PROG_CC and
 #	AC_PROG_CXX from setting them.
 #
 USER_SET_CFLAGS=yes
 if (test -z "$CFLAGS") then
   USER_SET_CFLAGS=no
-  CFLAGS="-g"
+  CFLAGS="-g -Wall"
 fi
 USER_SET_CXXFLAGS=yes
 if (test -z "$CXXFLAGS") then

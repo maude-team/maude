@@ -30,7 +30,6 @@
 #include <list>
 #include "unificationSubproblem.hh"
 #include "simpleRootContainer.hh"
-#include "mpzSystem.hh"
 #include "natSet.hh"
 #include "dagNode.hh"
 //#include "dagNodeSet.hh"

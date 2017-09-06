@@ -1,3 +1,18 @@
+2008-09-11  Steven Eker  <eker@goo.csl.sri.com>
+
+	* narrowingUnificationProblem.cc (findOrderSortedUnifiers): use &
+	rather that /\ in comment to avoid multi-line comment warning
+	(findOrderSortedUnifiers): delete nrFreeVariable
+	(findNextUnifier): added #if NO_ASSERT to avoid compiler warning
+	(2 places)
+
+	* unificationProblem.cc (findOrderSortedUnifiers): use & rather
+	that /\ in comment to avoid multi-line comment warning
+	(findNextUnifier): added #if NO_ASSERT to avoid compiler warning
+	(2 places)
+
+===================================Maude91a===========================================
+
 2008-04-10  Steven Eker  <eker@goo.csl.sri.com>
 
 	* unificationProblem.cc (UnificationProblem): change variable name

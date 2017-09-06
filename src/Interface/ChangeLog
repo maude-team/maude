@@ -1,3 +1,10 @@
+2008-09-11  Steven Eker  <eker@goo.csl.sri.com>
+
+	* dagNode.cc (computeBaseSortForGroundSubterms): added default
+	case to avoid compiler warning
+
+===================================Maude91a==========================================
+
 2008-04-18  Steven Eker  <eker@goo.csl.sri.com>
 
 	* symbol.cc (unificationPriority): added

@@ -227,6 +227,7 @@ Token::tokenize(const char* tokenString, int lineNumber)
 inline void
 Token::tokenize(int code, int lineNumber)
 {
+  Assert(code >= 0, "bad code = " << code);
   codeNr = code;
   lineNr = lineNumber;
 }

@@ -30,7 +30,7 @@
 #include "sigsegv.h"
 #endif
 #include "objectSystemRewritingContext.hh"
-#include "module.hh"
+#include "metadataStore.hh"
 #include "rule.hh"
 class Token;  // HACK
 
@@ -120,6 +120,7 @@ private:
 
   static void changePrompt();
   static bool dontTrace(const DagNode* redex, const PreEquation* pe);
+  void checkForPrintAttribute(MetadataStore::ItemType itemType, const PreEquation* item);
   bool handleDebug(const DagNode* subject, const PreEquation* pe);
   void where();
 

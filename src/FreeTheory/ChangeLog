@@ -1,3 +1,17 @@
+2008-09-11  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeDagNode.cc (computeBaseSortForGroundSubterms): added default
+	case to avoid compiler warning
+
+	* freePreNet.cc (buildNet): fix bug where we were not updating
+	potentialSubsumers
+
+	* freePreNetSubsumption.cc (subsumesWrtReducedFringe): pull
+	assignment out of if statement of avoid compiler warning about
+	unused variable
+
+===================================Maude91a===========================================
+
 2008-03-23  Steven Eker  <eker@goo.csl.sri.com>
 
 	* freeDagNode.hh (class FreeDagNode): removed commented out
