@@ -28,7 +28,6 @@
 #include "namedEntity.hh"
 #include "lineNumber.hh"
 #include "badFlag.hh"
-//#include "environment.hh"
 #include "sort.hh"
 #include "connectedComponent.hh"
 #include "symbol.hh"

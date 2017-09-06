@@ -252,7 +252,7 @@ ConnectedComponent*
 ImportModule::translateComponent(const Renaming* renaming, const ConnectedComponent* component) const
 {
   Sort* sort = findSort(renaming->renameSort(component->sort(Sort::FIRST_USER_SORT)->id()));
-  Assert(sort != 0, cerr << "no sort translation for " << component->sort(Sort::FIRST_USER_SORT));
+  Assert(sort != 0, "no sort translation for " << component->sort(Sort::FIRST_USER_SORT));
   return sort->component();
 }
 

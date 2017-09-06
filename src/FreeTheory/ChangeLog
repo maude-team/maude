@@ -1,3 +1,50 @@
+2010-03-18  Steven Eker  <eker@rho>
+
+	* freeRemainder.cc (FreeRemainder::FreeRemainder): don't set
+	nrFreeVariables
+
+	* freeRemainder.hh (FreeRemainder::fastMatchReplace): retrench to
+	original version
+	(FreeRemainder::fastMatchReplace): code cleaning
+	(class FreeRemainder): delete data member nrFreeVariables
+
+	* freeRemainder.cc (FreeRemainder::slowMatchReplace2): code cleaning
+
+2010-03-12  Steven Eker  <eker@rho>
+
+	* freeTerm.cc (FreeTerm::compileRhs3): clean up code
+
+2010-03-11  Steven Eker  <eker@rho>
+
+	* freeRhsAutomaton.cc (FreeRhsAutomaton::fillOutArgs): tried
+	turning loop into a count down to 0 loop
+	(FreeRhsAutomaton::construct, FreeRhsAutomaton::replace): use
+	count down to 0 loops; eliminate temporary
+	(FreeRhsAutomaton::construct, FreeRhsAutomaton::replace): code cleaning
+
+2010-03-10  Steven Eker  <eker@rho>
+
+	* freeRemainder.hh (FreeRemainder::fastMatchReplace): rewritten
+	after looking at asm output
+
+	* freeRemainder.cc (FreeRemainder::FreeRemainder): don't store
+	nrFreeVariables until we have processed pseudo variables which
+	might change the value
+
+	* freeNet.cc (FreeNet::buildRemainders): fix critical bug where we
+	were resize rems twice
+
+	* freeRemainder.cc (FreeRemainder::FreeRemainder): init foreign,
+	nrFreeVariables, equation
+
+	* freeRemainder.hh (class FreeRemainder): added data member
+	nrFreeVariables; made foreign const
+
+	* freeLhsStructs.hh (class FreeLhsStructs): made position and
+	argIndex short in all structs
+
+===================================Maude93===========================================
+
 2010-03-05  Steven Eker  <eker@rho>
 
 	* freeNet.cc (FreeNet::buildRemainders): try not zero terminating

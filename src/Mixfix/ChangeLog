@@ -1,3 +1,29 @@
+2010-03-18  Steven Eker  <eker@rho>
+
+	* token.cc (Token::bubbleToPrefixNameCode): removed r1 branch
+	since we only ever return r2
+
+	* parameterization.cc (ImportModule::translateComponent): removed
+	cerr from Assert()
+
+	* bottom.yy (cleanUpParser): delete commented out broken code
+
+	* entry.cc (MixfixModule::addOpDeclaration): print number of
+	underscore in warning
+	(MixfixModule::addPolymorph): ditto
+
+	* token.cc (operator<<): removed commented out code
+	(Token::getInt): removed commented out version
+	(Token::checkForSpecialProperty): removed commented out Int64 code
+	(Token::extractMixfix): treat mixfixSyntax of size 1 to be not
+	mixfix syntax after all
+
+	* lexer.ll: allow \t in stringContent for overparsing
+
+	* token.cc (Token::fixUp): handle tab characters
+
+===================================Maude93===========================================
+
 2010-03-05  Steven Eker  <eker@rho>
 
 	* bufferPrint.cc (MixfixModule::printTails): bug where we were

@@ -611,51 +611,49 @@ ACU_Term::compileRhs2(RhsBuilder& rhsBuilder,
 		      bool eagerContext)
 {
   int nrArgs = argArray.length();
-  ACU_RhsAutomaton* automaton = new ACU_RhsAutomaton(symbol(), nrArgs);
-  bool argEager = eagerContext && symbol()->getPermuteStrategy() == BinarySymbol::EAGER;
-  Vector<int> sources;
-  /*
-  if (nrArgs == 2 && argArray[1].term->symbol() == symbol())
-    {
-      //
-      //	1/6/10
-      //	Special case code to catch clt's right nesting and build in reverse order.
-      //
-      int rIndex = argArray[1].term->compileRhs(rhsBuilder,
-						variableInfo,
-						availableTerms,
-						argEager);
-      int lIndex = argArray[0].term->compileRhs(rhsBuilder,
-						variableInfo,
-						availableTerms,
-						argEager);
-      automaton->addArgument(lIndex, argArray[0].multiplicity);
-      sources.append(lIndex);
-      automaton->addArgument(rIndex, argArray[1].multiplicity);
-      sources.append(rIndex);
-    }
-  else
-  */
-    { 
-      for (int i = 0; i < nrArgs; i++)
-	{
-	  int index = argArray[i].term->compileRhs(rhsBuilder,
-						   variableInfo,
-						   availableTerms,
-						   argEager);
-
-	  automaton->addArgument(index, argArray[i].multiplicity);
-	  sources.append(index);
-	}
-    }
   //
-  //	Need to flag last use of each source.
+  //	We want to minimize conflict between slots to avoid quadratic number of
+  //	conflict arcs on giant right hand sides. The heuristic we use is crude:
+  //	we sort in order of arguments by number of symbol occurences, and build
+  //	largest first.
   //
+  typedef Vector<pair<int, int> > PairVec;
+  PairVec order(nrArgs);
   for (int i = 0; i < nrArgs; i++)
-    variableInfo.useIndex(sources[i]);
-
-  int index = variableInfo.makeConstructionIndex();
-  automaton->close(index);
+    {
+      order[i].first = - argArray[i].term->computeSize();  // larger terms to the front
+      order[i].second = i;
+    }
+  sort(order.begin(), order.end());
+  //
+  //	Compile each argument in largest first order.
+  //
+  bool argEager = eagerContext && symbol()->getPermuteStrategy() == BinarySymbol::EAGER;
+  Vector<int> sources(nrArgs);
+  FOR_EACH_CONST(i, PairVec, order)
+    {
+      int j = i->second;
+      sources[j] = argArray[j].term->compileRhs(rhsBuilder,
+						variableInfo,
+						availableTerms,
+						argEager);
+    }
+  //
+  //	Now add sources to automaton in original order, and flag last use
+  //	of each source for conflict arc generation.
+  //
+  ACU_RhsAutomaton* automaton = new ACU_RhsAutomaton(symbol(), nrArgs);
+  for (int i = 0; i < nrArgs; i++)
+    {
+      int index = sources[i];
+      automaton->addArgument(index, argArray[i].multiplicity);
+      variableInfo.useIndex(index);
+    }
+  //
+  //	Complete the automaton and add it  to the rhs builder.
+  //
+  int destination = variableInfo.makeConstructionIndex();
+  automaton->close(destination);
   rhsBuilder.addRhsAutomaton(automaton);
-  return index;
+  return destination;
 }

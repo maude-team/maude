@@ -325,7 +325,7 @@ MixfixModule::addOpDeclaration(Token prefixName,
       if (nrArgs != nrUnderscores)
 	{
 	  IssueWarning(*symbol <<
-		       ": number of underscores does not match " <<
+		       ": number of underscores (" << nrUnderscores << ") does not match " <<
 		       "number of arguments (" << nrArgs << ") for operator " <<
 		       QUOTE(symbol) << '.');
 	  si.mixfixSyntax.contractTo(0);
@@ -751,8 +751,8 @@ MixfixModule::addPolymorph(Token prefixName,
       if (domainAndRange.length() - 1 != nrUnderscores)
 	{
 	  IssueWarning(LineNumber(prefixName.lineNumber()) <<
-		       ": number of underscores does not match " <<
-		       "number of arguments (" << domainAndRange.length() - 1 <<
+		       ": number of underscores does not match (" << nrUnderscores <<
+		       ") number of arguments (" << domainAndRange.length() - 1 <<
 		       ") for operator " <<
 		       QUOTE(prefixName) << '.');
 	  p.symbolInfo.mixfixSyntax.contractTo(0);

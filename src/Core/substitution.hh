@@ -2,7 +2,7 @@
 
     This file is part of the Maude 2 interpreter.
 
-    Copyright 1997-2003 SRI International, Menlo Park, CA 94025, USA.
+    Copyright 1997-2010 SRI International, Menlo Park, CA 94025, USA.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -54,14 +54,7 @@ public:
   void copy(const Substitution& original);
   void clone(const Substitution& original);
   LocalBinding* operator-(const Substitution& original) const;
-
   int nrFragileBindings() const;
-  //
-  //	These operations are used by unification.
-  //
-  //LocalBinding* makeLocalBinding() const;
-  //bool merge(int index, DagNode* rhs, Subproblem*& returnedSubproblem);
-  //bool merge(const Substitution& other, SubproblemAccumulator& subproblems);
 
 protected:
   int addNewVariable();
@@ -88,6 +81,7 @@ Substitution::Substitution(int size, int cSize) : values(size)
   DebugAdvisoryCheck(size != 0, "made a zero length substitution");
   copySize = cSize;
 }
+
 
 inline void
 Substitution::clear(long size)
@@ -209,7 +203,6 @@ Substitution::addNewVariable()
   //
   if (copySize > values.length())
     values.expandTo(copySize);
-  values.resize(copySize);  // looks wrong?
   values[index] = 0;
   return index;
 }

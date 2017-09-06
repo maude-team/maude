@@ -161,50 +161,12 @@ FreeNet::buildRemainders(const Vector<Equation*>& equations,
       PatternSet& liveSet = applicable[i];
       Vector<FreeRemainder*>& rems = fastApplicable[i];
       rems.resize(liveSet.size() + 1);
-      rems.resize(liveSet.size());
       Vector<FreeRemainder*>::iterator r = rems.begin();
       FOR_EACH_CONST(j, PatternSet, liveSet)
 	*r++ = remainders[*j];
       *r = 0;
     }
 }
-
-/*
-void
-FreeNet::buildRemainders(const Vector<Equation*>& equations,
-			 const PatternSet& patternsUsed,
-			 const Vector<int>& slotTranslation)
-{
-  int nrEquations = equations.length();
-  remainders.expandTo(nrEquations);
-  for (int i = 0; i < nrEquations; i++)
-    remainders[i] = 0;
-  FOR_EACH_CONST(i, PatternSet, patternsUsed)
-    {
-      Equation* e = equations[*i];
-      if (FreeTerm* f = dynamic_cast<FreeTerm*>(e->getLhs()))
-	remainders[*i] = f->compileRemainder(e, slotTranslation);
-      else
-	remainders[*i] = new FreeRemainder(e);  // remainder for "foreign" equation
-    }
-  //
-  //	Build null terminated pointer version of applicable for added speed.
-  //
-  int nrApplicables = applicable.length();
-  fastApplicable.resize(nrApplicables);
-  for (int i = 0; i < nrApplicables; i++)
-    {
-      PatternSet& liveSet = applicable[i];
-      Vector<FreeRemainder*>& rems = fastApplicable[i];
-      rems.resize(liveSet.size() + 1);
-      Vector<FreeRemainder*>::iterator r = rems.begin();
-      FOR_EACH_CONST(j, PatternSet, liveSet)
-	*r++ = remainders[*j];
-      *r = 0;
-    }
-}
-*/
-
 
 local_inline bool
 FreeNet::tripleLt(const Triple& p1, const Triple& p2)

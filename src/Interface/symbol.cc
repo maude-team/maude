@@ -454,7 +454,7 @@ Symbol::isConstructor(DagNode* subject)
 }
 
 //
-//	Putting this stuff here rather than the header file avoids gcc creating seperate instances
+//	Putting this stuff here rather than the header file avoids gcc creating separate instances
 //	for derived classes tht don't define their own versions.
 //
 

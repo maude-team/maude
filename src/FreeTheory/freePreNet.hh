@@ -227,7 +227,6 @@ private:
 
   NodeMap net;
   Vector<NodeMap::iterator> netVec;
-  //Vector<Node> net;
   FreePositionTable positions;
   FreeSymbol* topSymbol;
   int topPositionIndex;
