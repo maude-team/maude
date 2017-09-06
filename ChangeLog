@@ -1,3 +1,8 @@
+2010-03-19  Steven Eker  <eker@rho>
+
+	* configure.ac: don't bother with -fomit-frame-pointer
+	-fforce-addr; check for gcc 4.*
+
 2009-12-23  Steven Eker  <eker@goo.csl.sri.com>
 
 	* tests/ResolvedBugs/CUIbug12-22-09 (MAUDE_LIB): added; removed

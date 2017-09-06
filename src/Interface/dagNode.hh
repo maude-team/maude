@@ -2,7 +2,7 @@
 
     This file is part of the Maude 2 interpreter.
 
-    Copyright 1997-2003 SRI International, Menlo Park, CA 94025, USA.
+    Copyright 1997-2010 SRI International, Menlo Park, CA 94025, USA.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -429,11 +429,9 @@ DagNode::reduce(RewritingContext& context)
 {
   while (!isReduced())
     {
-      Symbol* s = topSymbol;  // to avoid reloading this after a call to eqRewrite() returns false
-      if (!(s->eqRewrite(this, context)))
+      if (!(topSymbol->eqRewrite(this, context)))
 	{
 	  setReduced();
-	  //s->fastComputeTrueSort(this, context);
 	  topSymbol->fastComputeTrueSort(this, context);
 	  break;
 	}

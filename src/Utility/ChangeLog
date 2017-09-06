@@ -1,3 +1,9 @@
+2010-03-11  Steven Eker  <eker@rho>
+
+	* vector.hh: use != rather than < in for loops
+
+===================================Maude93===========================================
+
 2010-03-01  Steven Eker  <eker@rho>
 
 	* natSet.hh (class NatSet): added decl for getShift()

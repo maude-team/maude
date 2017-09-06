@@ -1,3 +1,14 @@
+Overview of Changes in Maude alpha93
+====================================
+* fixed performance bug with huge AC/ACU right hand sides
+* fixed symmetric performace bug in A/AU theory
+* fixed a A/AU rewriting with extension bug
+* graceful recovery from tabs in string literals
+* optimizations for construction of rhs instances
+* bug where single token op names containing a string part were
+  considered to have mixfix syntax
+* unification code cleanup and potential bug fixed
+
 Overview of Changes in Maude alpha92c
 =====================================
 * fixed metaPrettyPrint() bug in assoc, with paren case

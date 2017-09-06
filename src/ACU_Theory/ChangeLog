@@ -1,3 +1,22 @@
+2010-03-12  Steven Eker  <eker@rho>
+
+	* ACU_RhsAutomaton.cc (ACU_RhsAutomaton::buildArguments): use
+	nrArguments
+
+	* ACU_Term.cc (ACU_Term::compileRhs2): rewritten to compile/build
+	larger subterms first, to avoid quadratic conflict arcs on clt's
+	example
+
+	* ACU_RhsAutomaton.cc (ACU_RhsAutomaton::close): set nrArguments
+	(ACU_RhsAutomaton::construct, ACU_RhsAutomaton::replace): use
+	nrArguments rather than arguments.size() to avoid checking for a
+	null Vector
+
+	* ACU_RhsAutomaton.hh (class ACU_RhsAutomaton): added date element
+	nrArguments
+
+===================================Maude93===========================================
+
 2010-02-26  Steven Eker  <eker@rho>
 
 	* ACU_DagOperations.cc (ACU_DagNode::binarySearch): removed
@@ -8,7 +27,6 @@
 
 	* ACU_Normalize.cc (ACU_DagNode::copyAndBinaryInsert): use new
 	binarySearch() convention
-
 
 2010-02-19  Steven Eker  <eker@rho>
 

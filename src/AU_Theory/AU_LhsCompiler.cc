@@ -353,7 +353,7 @@ AU_Term::findConstraintPropagationSequence(const NatSet& boundUniquely,
 					   CP_Sequence& bestSequence) const
 {
   DebugAdvisory("toplevel findConstraintPropagationSequence() - array length = " << argArray.length() <<
-		"subterm = " << this);
+		"  subterm = " << this);
   Vector<Bool> currentSequence;
   bestSequence.cardinality = -1;
   findConstraintPropagationSequence(currentSequence, boundUniquely,

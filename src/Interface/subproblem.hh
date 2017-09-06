@@ -43,7 +43,6 @@ public:
   virtual ~Subproblem() {}  // deep
 #endif
   virtual bool solve(bool findFirst, RewritingContext& solution) { CantHappen("Not implemented"); return false; }
-  virtual bool unificationSolve(bool findFirst, UnificationContext& solution) { CantHappen("Not implemented"); return false; }
 
 #ifdef DUMP
   virtual void dump(ostream& s,
