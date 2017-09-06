@@ -69,12 +69,6 @@ StringTerm::deepCopy2(SymbolMap* map) const
 }
 
 Term*
-StringTerm::instantiate2(const Vector<Term*>& varBindings, SymbolMap* translator)
-{
-  return new StringTerm(safeCast(StringSymbol*, translator->findTargetVersionOfSymbol(symbol())), value);
-}
-
-Term*
 StringTerm::normalize(bool /* full */, bool& changed)
 {
   changed = false;

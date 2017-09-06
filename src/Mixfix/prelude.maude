@@ -22,7 +22,7 @@
 
 ***
 ***	Maude interpreter standard prelude.
-***	Version 2.2.
+***	Version alpha88.
 ***
 ***	Some of the overall structure is taken from the OBJ3
 ***	interpreter standard prelude.
@@ -1580,7 +1580,7 @@ fmod META-MODULE is
   subsorts FTheory < STheory < Module .
   sort Header .
   subsort Qid < Header .
-  op _{_}  : Qid ParameterDeclList -> Header .
+  op _{_}  : Qid ParameterDeclList -> Header [ctor] .
   op fmod_is_sorts_.____endfm : Header ImportList SortSet SubsortDeclSet
     OpDeclSet MembAxSet EquationSet -> FModule [ctor gather (& & & & & & &)
      format (d d s n++i ni d d ni ni ni ni n--i d)] .
@@ -1901,6 +1901,11 @@ fmod META-LEVEL is
 
         term-hook trueTerm		(true)
         term-hook falseTerm		(false))] .
+
+  op metaNormalize : Module Term ~> ResultPair
+        [special (
+           id-hook MetaLevelOpSymbol	(metaNormalize)
+           op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .
 
   op metaRewrite : Module Term Bound ~> ResultPair
         [special (

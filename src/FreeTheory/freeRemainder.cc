@@ -350,7 +350,6 @@ FreeRemainder::dump(ostream& s, int indentLevel)
 {
   s << Indent(indentLevel) << "Begin{FreeRemainder}\n";
   ++indentLevel;
-  equation->dump(s, indentLevel);
   s << Indent(indentLevel) << "fast = " << fast << "\tforeign = " << foreign << '\n';
   s << Indent(indentLevel) << "freeVariables:\n";
   ++indentLevel;

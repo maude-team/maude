@@ -230,7 +230,7 @@ MetaLevel::upRenaming(const Renaming* r, PointerMap& qidMap)
 	  }
       }
   }
-  return (args.size() > 1) ? renamingSetSymbol->makeDagNode(args) : args[0];
+  return renamingSetSymbol->makeDagNode(args);
 }
 
 DagNode*

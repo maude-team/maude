@@ -36,15 +36,10 @@ class SearchState : public PositionState
 public:
   enum Flags
   {
-    GC_CONTEXT = 2,		// delete context in our dtor
-    GC_SUBSTITUTION = 4,	// delete substitution in our dtor
-    IGNORE_CONDITION = 8	// ignore conditions of conditional PreEquations
+    GC_CONTEXT = 2,	// delete context in our dtor
+    GC_SUBSTITUTION = 4	// delete substitution in our dtor
   };
 
-  //
-  //	SearchState uses the provided context for constructing matches,
-  //	resolving conditions and accumulating rewrite counts.
-  //
   SearchState(RewritingContext* context,
 	      int flags = 0,
 	      int minDepth = 0,
@@ -61,7 +56,6 @@ public:
 
 private:
   bool initSubstitution(const VariableInfo& varInfo);
-  bool hasCondition(const PreEquation* preEqn);
 
   RewritingContext* const context;
   const PreEquation* preEquation;

@@ -123,12 +123,7 @@ Rule::compile(bool compileLhs)
     return;
   setCompiled();
   TermBag availableTerms;  // terms available for reuse
-  //
-  //	Since rules can be applied in non-eager subterms, if we have
-  //	a condition we must consider all variables to be non-eager
-  //	to avoid having a condition reduce a lazy subterm.
-  //
-  compileBuild(availableTerms, !hasCondition());
+  compileBuild(availableTerms, false);
   rhs->compileTopRhs(builder, *this, availableTerms);
   compileMatch(compileLhs, true);
   builder.remapIndices(*this);

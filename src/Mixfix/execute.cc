@@ -33,11 +33,9 @@ Interpreter::clearContinueInfo()
   delete savedContext;
   delete savedMatchSearchState;
   delete savedRewriteSequenceSearch;
-  delete savedStrategicSearch;
   savedContext = 0;
   savedMatchSearchState = 0;
   savedRewriteSequenceSearch = 0;
-  savedStrategicSearch = 0;
   continueFunc = 0;
   if (savedModule != 0)
     {
@@ -372,6 +370,59 @@ Interpreter::eRewrite(const Vector<Token>& subject, Int64 limit, Int64 gas, bool
 	}
       endRewriting(timer, context, fm, &Interpreter::eRewriteCont);
     }
+}
+
+void
+Interpreter::sRewrite(const Vector<Token>& subjectAndStrategy, Int64 limit, bool debug)
+{
+  VisibleModule* fm = currentModule->getFlatModule();
+  Term* subject;
+  StrategyExpression* strategy;
+  if (!(fm->parseStrategyCommand(subjectAndStrategy, subject, strategy)))
+    return;
+  //cout << "Subject: " << subject << endl;
+
+  DagNode* subjectDag = makeDag(subject);
+  
+  if (getFlag(SHOW_COMMAND))
+    {
+      UserLevelRewritingContext::beginCommand();
+      cout << "srewrite ";
+      if (limit != NONE)
+	cout << '[' << limit << "] ";
+
+      cout << "in " << currentModule << " : " << subjectAndStrategy << " .\n";  // HACK
+    }
+
+  startUsingModule(fm);
+  UserLevelRewritingContext* context = new UserLevelRewritingContext(subjectDag);
+  context->reduce();
+  if (context->traceAbort())
+    {
+      delete context;
+      delete strategy;
+      (void) fm->unprotect();
+      UserLevelRewritingContext::clearDebug();
+      return;
+    }
+  SetGenerator* gen = strategy->execute(subjectDag, *context);
+  for (Int64 i = 0; i != limit; ++i)  // limit could be -1 for "no limit"
+    {
+      DagNode* d = gen->findNextSolution();
+      if (context->traceAbort())
+	break;
+      if (d == 0)
+	{
+	  cout << "No more solutions.\n";
+	  break;
+	}
+      cout << d << endl;
+    }
+  delete context;
+  delete gen;
+  delete strategy;
+  (void) fm->unprotect();
+  UserLevelRewritingContext::clearDebug();
 }
 
 void

@@ -22,7 +22,7 @@
 
 ***
 ***	Maude LTL satisfiability solver and model checker.
-***	Version 2.0.
+***	Version alpha88.
 ***
 
 fmod LTL is
@@ -229,7 +229,7 @@ fmod MODEL-CHECKER is
   subsort Transition < TransitionList .
   subsort Bool < ModelCheckResult .
   ops unlabeled deadlock : -> RuleName .
-  op {_,_} : State RuleName -> Transition .
+  op {_,_} : State RuleName -> Transition [ctor] .
   op nil : -> TransitionList [ctor] .
   op __ : TransitionList TransitionList -> TransitionList [ctor assoc id: nil] .
   op counterexample : TransitionList TransitionList -> ModelCheckResult [ctor] .

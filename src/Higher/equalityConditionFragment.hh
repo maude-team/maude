@@ -47,10 +47,6 @@ public:
   Term* getLhs() const;
   Term* getRhs() const;
 
-#ifdef DUMP
-  void dump(ostream& s, const VariableInfo& variableInfo, int indentLevel);
-#endif
-
 private:
   Term* lhs;
   Term* rhs;

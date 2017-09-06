@@ -63,7 +63,6 @@ class DagRoot;
 class SymbolMap;
 class CachedDag;
 class DagNodeSet;
-class DagNodeCache;
 class RootContainer;
 class SimpleRootContainer;
 class BindingLhsAutomaton;

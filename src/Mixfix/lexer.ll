@@ -44,7 +44,7 @@
 #include "directoryManager.hh"
 #include "preModule.hh"
 #include "lexerAux.hh"
-#include "global.hh"
+#include "main.hh"
 #include "userLevelRewritingContext.hh"
 #include "interpreter.hh"
 

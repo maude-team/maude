@@ -70,7 +70,7 @@
 #include "preModule.hh"
 #include "interpreter.hh"
 #include "maudemlBuffer.hh"
-#include "global.hh"  // HACK shouldn't be accessing global variables
+#include "main.hh"  // HACK shouldn't be accessing global variables
 
 #ifdef QUANTIFY_PROCESSING
 #include "quantify.h"
@@ -208,14 +208,6 @@ PreModule::OpDef::OpDef()
 void
 PreModule::addParameter(Token name, ModuleExpression* theory)
 {
-  if (MixfixModule::isTheory(moduleType))
-    {
-      IssueWarning(LineNumber(name.lineNumber()) <<
-		   ": parmaeterized theories are not supported; recovering by ignoring parameter " <<
-		   QUOTE(name) << '.');
-      delete theory;
-      return;
-    }
   int nrParameters = parameters.length();
   parameters.resize(nrParameters + 1);
   parameters[nrParameters].name = name;

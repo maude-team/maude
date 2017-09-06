@@ -37,10 +37,8 @@
 #include "term.hh"
 
 //	strategy language class definitions
-#include "strategicSearch.hh"
 #include "applicationStrategy.hh"
-#include "applicationProcess.hh"
-#include "decompositionProcess.hh"
+#include "applicationSetGenerator.hh"
 
 ApplicationStrategy::ApplicationStrategy(int label,
 					 const Vector<Term*>& variables,
@@ -74,14 +72,8 @@ ApplicationStrategy::~ApplicationStrategy()
     delete strategies[i];
 }
 
-StrategicExecution::Survival
-ApplicationStrategy::decompose(StrategicSearch& searchObject, DecompositionProcess* remainder)
+SetGenerator*
+ApplicationStrategy::execute(DagNode* subject, RewritingContext& context)
 {
-  (void) new ApplicationProcess(searchObject,
-				remainder->getDag(),
-				this,
-				remainder->getPending(),
-				remainder, // working for same task
-				remainder);  // place in process queue ahead of old process
-  return StrategicExecution::DIE;  // request deletion of DecompositionProcess
+  return new ApplicationSetGenerator(subject, context, label, top, variables, valueDags);
 }

@@ -63,8 +63,7 @@ public:
   void incrementEqCount(Int64 i = 1);
   void incrementRlCount(Int64 i = 1);
   void clearCount();
-  void addInCount(const RewritingContext& other);
-  void transferCount(RewritingContext& other);
+  void addInCount(RewritingContext& other);
   Int64 getTotalCount() const;
   Int64 getMbCount() const;
   Int64 getEqCount() const;
@@ -227,22 +226,11 @@ RewritingContext::clearCount()
 }
 
 inline void
-RewritingContext::addInCount(const RewritingContext& other)
+RewritingContext::addInCount(RewritingContext& other)
 {
   mbCount += other.mbCount;
   eqCount += other.eqCount;
   rlCount += other.rlCount;
-}
-
-inline void
-RewritingContext::transferCount(RewritingContext& other)
-{
-  mbCount += other.mbCount;
-  other.mbCount = 0;
-  eqCount += other.eqCount;
-  other.eqCount = 0;
-  rlCount += other.rlCount;
-  other.rlCount = 0;
 }
 
 inline bool

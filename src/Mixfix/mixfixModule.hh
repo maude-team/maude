@@ -244,11 +244,9 @@ public:  // HACK
     //	Precedences for strategy language.
     //
     ASSIGNMENT_PREC = 75,
-    STRAT_TEST_PREC = 93,
     STRAT_SEQ_PREC = 95,
     STRAT_UNION_PREC = 97,
-    STRAT_ORELSE_PREC = 99,
-    STRAT_BRANCH_PREC = 101
+    STRAT_BRANCH_PREC = 99
   };
 
 private:
@@ -329,9 +327,7 @@ private:
     ASSIGNMENT = -37,
     SUBSTITUTION = -38,
 
-    STRATEGY_LIST = -39,
-
-    COMPLEX_BASE = -40
+    COMPLEX_BASE = -39
   };
 
   enum NonTerminalType
@@ -692,15 +688,11 @@ private:
 		   const ConnectedComponent* rightCaptureComponent,
 		   bool rangeKnown);
 
-  static bool prettyPrint(ostream& s, StrategyExpression* strategy, int requiredPrec);
-
-
   NatSet objectSymbols;
   NatSet messageSymbols;
 
   friend ostream& operator<<(ostream& s, const Term* term);
   friend ostream& operator<<(ostream& s, DagNode* dagNode);
-  friend ostream& operator<<(ostream& s, StrategyExpression* strategy);
 };
 
 inline SymbolType

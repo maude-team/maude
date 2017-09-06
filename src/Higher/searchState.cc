@@ -45,16 +45,6 @@
 #include "dagRoot.hh"
 #include "searchState.hh"
 
-
-local_inline bool
-SearchState::hasCondition(const PreEquation* preEqn)
-{
-  //
-  //	First test most likely to fail so we do it first.
-  //
-  return preEqn->hasCondition() && !(getFlags() & IGNORE_CONDITION);
-}
-
 SearchState::SearchState(RewritingContext* context,
 			 int flags,
 			 int minDepth,
@@ -98,28 +88,21 @@ SearchState::findFirstSolution(const PreEquation* preEqn, LhsAutomaton* automato
   delete matchingSubproblem;
   matchingSubproblem = 0;
   DagNode* subject = getDagNode();
-  //
-  //	If we're searching with nonzero maxDepth it is reasonable for pattern
-  //	and subject to be in different components.
-  //
-  if (preEqn->getLhs()->getComponent() == subject->symbol()->rangeComponent())
+  context->clear(preEqn->getNrProtectedVariables());
+  if (initSubstitution(*preEqn) &&
+      automaton->match(subject, *context, matchingSubproblem, getExtensionInfo()) &&
+      (matchingSubproblem == 0 ||
+       matchingSubproblem->solve(true, *context)) &&
+      (!(preEqn->hasCondition()) ||
+       preEqn->checkCondition(true,
+			      subject,
+			      *context,
+			      matchingSubproblem,
+			      trialRef,
+			      conditionStack)))
     {
-      context->clear(preEqn->getNrProtectedVariables());
-      if (initSubstitution(*preEqn) &&
-	  automaton->match(subject, *context, matchingSubproblem, getExtensionInfo()) &&
-	  (matchingSubproblem == 0 ||
-	   matchingSubproblem->solve(true, *context)) &&
-	  (!hasCondition(preEqn) ||
-	   preEqn->checkCondition(true,
-				  subject,
-				  *context,
-				  matchingSubproblem,
-				  trialRef,
-				  conditionStack)))
-	{
-	  preEquation = preEqn;
-	  return true;
-	}
+      preEquation = preEqn;
+      return true;
     }
   return false;
 }
@@ -127,7 +110,7 @@ SearchState::findFirstSolution(const PreEquation* preEqn, LhsAutomaton* automato
 bool
 SearchState::findNextSolution()
 {
-  if (hasCondition(preEquation))
+  if (preEquation->hasCondition())
     {
       return preEquation->checkCondition(false,
 					 getDagNode(),
