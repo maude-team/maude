@@ -31,8 +31,8 @@ MetaLevelOpSymbol::metaSortLeq(FreeDagNode* subject, RewritingContext& context)
     {
       Sort* s1;
       Sort* s2;
-      if (metaLevel->downSimpleSort(subject->getArgument(1), m, s1) &&
-	  metaLevel->downSimpleSort(subject->getArgument(2), m, s2))
+      if (metaLevel->downType(subject->getArgument(1), m, s1) &&
+	  metaLevel->downType(subject->getArgument(2), m, s2))
 	{
 	  return context.builtInReplace(subject,
 					metaLevel->upBool(s1->component() == s2->component()
@@ -241,7 +241,7 @@ MetaLevelOpSymbol::metaLesserSorts(FreeDagNode* subject, RewritingContext& conte
   if (MixfixModule* m = metaLevel->downModule(subject->getArgument(0)))
     {
       Sort* s;
-      if (metaLevel->downSimpleSort(subject->getArgument(1), m, s))
+      if (metaLevel->downType(subject->getArgument(1), m, s))
 	{
 	  ConnectedComponent* component = s->component();
 	  int nrSorts = component->nrSorts();

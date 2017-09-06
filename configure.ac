@@ -202,6 +202,15 @@ else
     fi
     ;;
 #
+#	The x86-64 supports conditional moves and gcc will use
+#	them without being given additional flags. Smallest legal
+#	stack alignment is 4.
+#
+  x86_64-*)
+    TWEAKFLAGS="-mpreferred-stack-boundary=4"
+    AC_DEFINE([HAVE_CMOV], [], [have conditional move instruction])
+    ;;
+#
 #	The DEC Alpha supports conditional moves and gcc will use
 #	them without being given additional flags.
 #
@@ -232,20 +241,27 @@ AC_ARG_WITH(dlmalloc,
 FIXFLAGS=""
 case $host in
 
-  alpha*)
 #
 #	Needed to handle +/- infinity and underflow without
 #	causing a SIGFPE.
 #
+  alpha*)
     FIXFLAGS="-mieee"
     ;;
-
-  *-darwin*)
-    AC_DEFINE([DARWIN], [], [enable Darwin specific fixes])
+#
+#	gcc on x86-64 on linux doesn't seem to be able to link an
+#	external malloc with conflicting with the one defined in
+#	lib64/libc.a
+#
+  x86_64-*-linux-*)
+    WITH_DLMALLOC=no
+    ;;
 #
 #	Doug Lea's malloc() is unstable on Darwin - presumably because
 #	of brk()/sbrk() issues.
 #    
+  *-darwin*)
+    AC_DEFINE([DARWIN], [], [enable Darwin specific fixes])
     WITH_DLMALLOC=no
     ;;
 

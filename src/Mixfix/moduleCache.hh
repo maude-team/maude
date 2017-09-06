@@ -40,7 +40,7 @@ public:
   ImportModule* makeInstatiation(ImportModule* module, const Vector<View*>& views, const Vector<int>& parameterArgs);
 
   void destructUnusedModules();
-  void showCreatedModules() const;
+  void showCreatedModules(ostream& s) const;
 
 private:
   typedef map<int, ImportModule*> ModuleMap;

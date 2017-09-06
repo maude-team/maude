@@ -105,8 +105,14 @@ PreModule::~PreModule()
 {
   if (flatModule != 0)
     flatModule->deepSelfDestruct();
-  FOR_EACH_CONST(i, Vector<Import>, imports)
-    i->expr->deepSelfDestruct();
+  {
+    FOR_EACH_CONST(i, Vector<Import>, imports)
+      i->expr->deepSelfDestruct();
+  }
+  {
+    FOR_EACH_CONST(i, Vector<Parameter>, parameters)
+      i->theory->deepSelfDestruct();
+  }
 }
 
 void

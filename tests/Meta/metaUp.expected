@@ -88,21 +88,37 @@ rl 'rules.RuleSet => 'upRls[''INTROSPECTION.Sort,'false.Bool] [none] .
 ==========================================
 reduce in META-LEVEL : upEqs('META-LEVEL, true) .
 rewrites: 1
-result EquationSet: eq '$reverse['nil.EmptyQidList,'A:QidList] = 'A:QidList [
-    none] .
+result EquationSet: eq '$card['none.EmptyTypeSet,'C:Nat] = 'C:Nat [none] .
+eq '$card['_;_['E:Qid,'S:QidSet],'C:Nat] = '$card['S:QidSet,'_+_['C:Nat,'s_[
+    '0.Zero]]] [owise] .
+eq '$card['_;_['N:NeQidSet,'N:NeQidSet,'S:QidSet],'C:Nat] = '$card['_;_[
+    'N:NeQidSet,'S:QidSet],'C:Nat] [none] .
+eq '$diff['none.EmptyTypeSet,'S':QidSet,'A:QidSet] = 'A:QidSet [none] .
+eq '$diff['_;_['E:Qid,'S:QidSet],'S':QidSet,'A:QidSet] = '$diff['S:QidSet,
+    'S':QidSet,'if_then_else_fi['_in_['E:Qid,'S':QidSet],'A:QidSet,'_;_['E:Qid,
+    'A:QidSet]]] [none] .
+eq '$intersect['none.EmptyTypeSet,'S':QidSet,'A:QidSet] = 'A:QidSet [none] .
+eq '$intersect['_;_['E:Qid,'S:QidSet],'S':QidSet,'A:QidSet] = '$intersect[
+    'S:QidSet,'S':QidSet,'if_then_else_fi['_in_['E:Qid,'S':QidSet],'_;_['E:Qid,
+    'A:QidSet],'A:QidSet]] [none] .
 eq '$reverse['nil.NatList,'A:NatList] = 'A:NatList [none] .
+eq '$reverse['nil.TypeList,'A:QidList] = 'A:QidList [none] .
 eq '$reverse['__['E:Nat,'L:NatList],'A:NatList] = '$reverse['L:NatList,'__[
     'E:Nat,'A:NatList]] [none] .
 eq '$reverse['__['E:Qid,'L:QidList],'A:QidList] = '$reverse['L:QidList,'__[
     'E:Qid,'A:QidList]] [none] .
-eq '$size['nil.EmptyQidList,'C:Nat] = 'C:Nat [none] .
 eq '$size['nil.NatList,'C:Nat] = 'C:Nat [none] .
+eq '$size['nil.TypeList,'C:Nat] = 'C:Nat [none] .
 eq '$size['__['E:Nat,'L:NatList],'C:Nat] = '$size['L:NatList,'_+_['C:Nat,'s_[
     '0.Zero]]] [none] .
 eq '$size['__['E:Qid,'L:QidList],'C:Nat] = '$size['L:QidList,'_+_['C:Nat,'s_[
     '0.Zero]]] [none] .
 eq '_;_['A:Assignment,'A:Assignment] = 'A:Assignment [none] .
+eq '_;_['N:NeQidSet,'N:NeQidSet] = 'N:NeQidSet [none] .
 eq '_;_['T:TypeList,'T:TypeList] = 'T:TypeList [none] .
+eq '_\_['S:QidSet,'N:NeQidSet] = '$diff['S:QidSet,'N:NeQidSet,
+    'none.EmptyTypeSet] [none] .
+eq '_\_['S:QidSet,'none.EmptyTypeSet] = 'S:QidSet [none] .
 eq '__['A:Attr,'A:Attr] = 'A:Attr [none] .
 eq '__['E:Equation,'E:Equation] = 'E:Equation [none] .
 eq '__['M:MembAx,'M:MembAx] = 'M:MembAx [none] .
@@ -116,6 +132,8 @@ eq '_and_['false.Bool,'A:Bool] = 'false.Bool [none] .
 eq '_and_['true.Bool,'A:Bool] = 'A:Bool [none] .
 eq '_implies_['A:Bool,'B:Bool] = 'not_['_xor_['A:Bool,'_and_['A:Bool,'B:Bool]]]
     [none] .
+eq '_in_['E:Qid,'S:QidSet] = 'false.Bool [owise] .
+eq '_in_['E:Qid,'_;_['E:Qid,'S:QidSet]] = 'true.Bool [none] .
 eq '_or_['A:Bool,'B:Bool] = '_xor_['_and_['A:Bool,'B:Bool],'_xor_['A:Bool,
     'B:Bool]] [none] .
 eq '_xor_['A:Bool,'A:Bool] = 'false.Bool [none] .
@@ -125,6 +143,8 @@ eq '`[_`]['Q:Qid] = 'th_is_sorts_._____endth['Q:Qid,'including_.['Q:Qid],
     'none.EquationSet,'none.RuleSet] [none] .
 eq 'append['A:NatList,'L:NatList] = '__['A:NatList,'L:NatList] [none] .
 eq 'append['A:QidList,'L:QidList] = '__['A:QidList,'L:QidList] [none] .
+eq 'delete['E:Qid,'S:QidSet] = 'S:QidSet [owise] .
+eq 'delete['E:Qid,'_;_['E:Qid,'S:QidSet]] = 'delete['E:Qid,'S:QidSet] [none] .
 eq 'front['__['L:NatList,'E:Nat]] = 'L:NatList [none] .
 eq 'front['__['L:QidList,'E:Qid]] = 'L:QidList [none] .
 eq 'getContext['`{_`,_`,_`,_`}['T:Term,'T:Type,'S:Substitution,'C:Context]] =
@@ -252,6 +272,10 @@ eq 'getType['`{_`,_`,_`}['T:Term,'T:Type,'S:Substitution]] = 'T:Type [none] .
 eq 'getType['`{_`,_`}['T:Term,'T:Type]] = 'T:Type [none] .
 eq 'head['__['E:Nat,'L:NatList]] = 'E:Nat [none] .
 eq 'head['__['E:Qid,'L:QidList]] = 'E:Qid [none] .
+eq 'insert['E:Qid,'S:QidSet] = '_;_['E:Qid,'S:QidSet] [none] .
+eq 'intersection['S:QidSet,'N:NeQidSet] = '$intersect['S:QidSet,'N:NeQidSet,
+    'none.EmptyTypeSet] [none] .
+eq 'intersection['S:QidSet,'none.EmptyTypeSet] = 'none.EmptyTypeSet [none] .
 eq 'last['__['L:NatList,'E:Nat]] = 'E:Nat [none] .
 eq 'last['__['L:QidList,'E:Qid]] = 'E:Qid [none] .
 eq 'metaPrettyPrint['M:Module,'T:Term] = 'metaPrettyPrint['M:Module,'T:Term,
@@ -261,13 +285,15 @@ eq 'not_['A:Bool] = '_xor_['true.Bool,'A:Bool] [none] .
 eq 'occurs['E:Nat,'nil.NatList] = 'false.Bool [none] .
 eq 'occurs['E:Nat,'__['E':Nat,'L:NatList]] = 'if_then_else_fi['_==_['E:Nat,
     'E':Nat],'true.Bool,'occurs['E:Nat,'L:NatList]] [none] .
-eq 'occurs['E:Qid,'nil.EmptyQidList] = 'false.Bool [none] .
+eq 'occurs['E:Qid,'nil.TypeList] = 'false.Bool [none] .
 eq 'occurs['E:Qid,'__['E':Qid,'L:QidList]] = 'if_then_else_fi['_==_['E:Qid,
     'E':Qid],'true.Bool,'occurs['E:Qid,'L:QidList]] [none] .
 eq 'reverse['L:NatList] = '$reverse['L:NatList,'nil.NatList] [none] .
-eq 'reverse['L:QidList] = '$reverse['L:QidList,'nil.EmptyQidList] [none] .
+eq 'reverse['L:QidList] = '$reverse['L:QidList,'nil.TypeList] [none] .
 eq 'size['L:NatList] = '$size['L:NatList,'0.Zero] [none] .
 eq 'size['L:QidList] = '$size['L:QidList,'0.Zero] [none] .
 eq 'tail['__['E:Nat,'L:NatList]] = 'L:NatList [none] .
 eq 'tail['__['E:Qid,'L:QidList]] = 'L:QidList [none] .
+eq 'union['S:QidSet,'S':QidSet] = '_;_['S:QidSet,'S':QidSet] [none] .
+eq '|_|['S:QidSet] = '$card['S:QidSet,'0.Zero] [none] .
 Maude> Bye.

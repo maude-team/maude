@@ -39,17 +39,13 @@
 
 ViewDatabase::~ViewDatabase()
 {
-#ifndef NO_ASSERT
   //
   //	Cleaning up makes for a slow exit, but it helps catch
   //	dangling pointers and leaked memory when debugging.
   //
-  /* NEED TO FIX
-  const ModuleMap::const_iterator e = moduleMap.end();
-  for (ModuleMap::const_iterator i = moduleMap.begin(); i != e; ++i)
+  const ViewMap::const_iterator e = viewMap.end();
+  for (ViewMap::const_iterator i = viewMap.begin(); i != e; ++i)
     delete i->second;
-  */
-#endif
 }
 
 bool

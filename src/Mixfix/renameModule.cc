@@ -276,7 +276,7 @@ ImportModule::donateOps2(ImportModule* copy, Renaming* renaming)
 	    getPolymorphGather(i, gather);
 	  else
 	    gather.clear();
-	  const Vector<int>* format = &(getPolymorphFormat(i));
+	  format = &(getPolymorphFormat(i));
 	}
       else
 	{

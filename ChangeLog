@@ -1,3 +1,14 @@
+2005-11-16  Steven Eker  <eker@goo.csl.sri.com>
+
+	* configure.ac: don't use Doug Lea's malloc() on x86-64/linux
+	because of linking issues
+
+2005-11-15  Steven Eker  <eker@goo.csl.sri.com>
+
+	* configure.ac: x86-64 specific stuff
+
+===================================Maude86d===========================================
+
 2005-10-06  Steven Eker  <eker@goo.csl.sri.com>
 
 	* tests/Misc/diophantine.maude: created

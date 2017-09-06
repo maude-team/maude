@@ -39,9 +39,8 @@ with the command:
 
 to avoid linking issues on various platforms.
 
-BuDDy is configured by editing the config file in the top
-directory. If you are using gcc you should uncomment the line
-# BUDDYUINT64 = -DBUDDYUINT64="long long"
+As of 2.4 BuDDy has moved to autoconf. The option --disable-shared is
+recommended to avoid linking issues on various platforms.
 
 
 Building Maude

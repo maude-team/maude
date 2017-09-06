@@ -72,7 +72,8 @@
 int lineNumber = 1;
 FileTable fileTable;
 DirectoryManager directoryManager;
-Interpreter interpreter;
+Interpreter& interpreter = *(new Interpreter);
+//Interpreter interpreter;
 IO_Manager ioManager;
 
 string executableDirectory;

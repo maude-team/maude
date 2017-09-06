@@ -217,7 +217,10 @@ MixfixModule::~MixfixModule()
   int nrPolymorphs = polymorphs.length();
   for (int i = 0; i < nrPolymorphs; i++)
     {
-      Vector<TermHook>& termHooks = polymorphs[i].termHooks;
+      Polymorph& p = polymorphs[i];
+      if (p.identity != 0)
+	p.identity->deepSelfDestruct();
+      Vector<TermHook>& termHooks = p.termHooks;
       int nrTermHooks = termHooks.length();
       for (int j = 0; j < nrTermHooks; j++)
 	termHooks[j].term->deepSelfDestruct();

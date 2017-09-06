@@ -1,3 +1,15 @@
+Overview of Changes in Maude alpha86d
+=====================================
+* fixed stale pointer bug in view reevaluation
+* minor fixes to prelude.maude
+* fixed uninitialized format attribute bug
+* fixed parameter theory module expression memory leak
+* fixed polymorph identity memory leak
+* fixed polymorph identity processing bug
+* added and used QID-SET fmod
+* fixed metamodule cache deletion bug
+* sortLeq and lesserSort now work on types
+
 Overview of Changes in Maude alpha86c
 =====================================
 * improved recovery from surface syntax errors
