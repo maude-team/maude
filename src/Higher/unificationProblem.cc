@@ -38,9 +38,6 @@
 //	interface class definitions
 #include "symbol.hh"
 #include "dagNode.hh"
-//#include "subproblem.hh"
-#include "extensionInfo.hh"
-
 //	variable class definitions
 #include "variableDagNode.hh"
 #include "variableTerm.hh"
@@ -49,8 +46,6 @@
 #include "module.hh"
 #include "sortBdds.hh"
 #include "connectedComponent.hh"
-//#include "subproblemAccumulator.hh"
-//#include "rewritingContext.hh"
 #include "unificationContext.hh"
 #include "freshVariableGenerator.hh"
 
@@ -59,8 +54,7 @@
 
 UnificationProblem::UnificationProblem(Vector<Term*>& lhs,
 				       Vector<Term*>& rhs,
-				       FreshVariableGenerator* freshVariableGenerator,
-				       bool withExtension)
+				       FreshVariableGenerator* freshVariableGenerator)
   : freshVariableGenerator(freshVariableGenerator)
 {
   //cerr << this << " UnificationProblem " << lhs[0] << " " << rhs[0] << endl;
@@ -111,14 +105,6 @@ UnificationProblem::UnificationProblem(Vector<Term*>& lhs,
     }
   problemOkay = true;
   //
-  //	Created extensionInfo object if needed.
-  //
-  extensionInfo = 0;
-  if (withExtension)
-    {
-      Assert(nrEquations == 1, "multiple equations with extension");
-      extensionInfo = rightHandDags[0]->makeExtensionInfo();
-    }
   //	Initialize the sorted and unsorted solutions.
   //
   orderSortedUnifiers = 0;
@@ -137,22 +123,17 @@ UnificationProblem::UnificationProblem(Vector<Term*>& lhs,
   for (int i = 0; i < nrEquations; ++i)
     cout << leftHandDags[i] << " =? " << rightHandDags[i] << endl;
 #endif
-  //SubproblemAccumulator subproblems;
   for (int i = 0; i < nrEquations; ++i)
     {
-      //      if (!(leftHandDags[i]->computeSolvedForm(rightHandDags[i], *unsortedSolution, subproblem, extensionInfo)))
       if (!(leftHandDags[i]->computeSolvedForm(rightHandDags[i], *unsortedSolution, pendingStack)))
 	{
 #if 0
 	  cout << "NO SOLVED FORM" << endl;
 #endif
 	  viable = false;
-	  //subproblem = 0;  // for safe destruction
 	  return;
 	}
-      //subproblems.add(subproblem);
     }
-  //subproblem = subproblems.extractSubproblem();
   viable = true;
 }
 
@@ -162,11 +143,9 @@ UnificationProblem::~UnificationProblem()
   delete freshVariableGenerator;
   if (problemOkay)
     {
-      //delete subproblem;
       delete orderSortedUnifiers;
       delete unsortedSolution;
       delete sortedSolution;
-      delete extensionInfo;
     }
   //
   //	Only now can we safely destruct these as they are needed by VariableInfo.
@@ -200,17 +179,6 @@ UnificationProblem::markReachableNodes()
 	  d->mark();
       }
   }
-  /*
-  {
-    int nrFragile = unsortedSolution->nrFragileBindings();
-    for (int i = 0; i < nrFragile; i++)
-      {
-	DagNode* d = unsortedSolution->value(i);
-	if (d != 0)
-	  d->mark();
-      }
-  }
-  */
 }
 
 bool
@@ -223,7 +191,6 @@ UnificationProblem::findNextUnifier()
       //
       //	First solution.
       //
-      //      if (subproblem != 0 && !(subproblem->unificationSolve(true, *unsortedSolution)))
       if (!(pendingStack.solve(true, *unsortedSolution)))
 	{
 #if 0
@@ -270,7 +237,6 @@ UnificationProblem::findNextUnifier()
 	  delete orderSortedUnifiers;
 	  orderSortedUnifiers = 0;
 	nextUnsorted:
-	  //	  if (subproblem == 0 || !(subproblem->unificationSolve(false, *unsortedSolution)))
 	  if (!(pendingStack.solve(false, *unsortedSolution)))
 	    return false;
 	  //cerr << "next unsorted solution";
@@ -578,12 +544,4 @@ UnificationProblem::explore(int index)
   order.append(index);
   done.insert(index);
   return true; 
-}
-
-DagNode*
-UnificationProblem::makeContext(DagNode* filler) const
-{
-  if (extensionInfo != 0 && !(extensionInfo->matchedWhole()))
-    filler = rightHandDags[0]->partialConstruct(filler, extensionInfo);
-  return filler;
 }

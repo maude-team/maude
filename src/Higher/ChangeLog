@@ -1,3 +1,52 @@
+2010-04-01  Steven Eker  <eker@rho>
+
+	* unificationProblem.cc (UnificationProblem::markReachableNodes):
+	deleted commented out unsortedSolution marking code
+
+	* narrowingUnificationProblem.cc
+	(NarrowingUnificationProblem::markReachableNodes): deleted
+	commented out unsortedSolution marking code
+
+	* narrowingSearchState.cc
+	(NarrowingSearchState::findNextNarrowing): don't pass
+	extensionInfo to NarrowingUnificationProblem()
+
+	* narrowingUnificationProblem.hh (class
+	NarrowingUnificationProblem): updated ctor decl; deleted
+	extensionInfo data member; deleted subproblem commented out data
+	member
+
+	* narrowingUnificationProblem.cc
+	(NarrowingUnificationProblem::NarrowingUnificationProblem):
+	deleted commented out subproblem and extension unification code
+	(~NarrowingUnificationProblem): deleted commented out subproblem
+	code
+	(NarrowingUnificationProblem::findNextUnifier): deleted commented
+	out subproblem code
+	(NarrowingUnificationProblem::NarrowingUnificationProblem):
+	deleted extensionInfo argument
+
+	* unificationProblem.cc (UnificationProblem::UnificationProblem):
+	remove withExtension arg
+	(UnificationProblem::UnificationProblem): deleted commented out
+	subproblem code
+	(UnificationProblem::findNextUnifier): ditto
+
+	* unificationProblem.hh (class UnificationProblem): remove
+	withExtension arg from ctor
+
+	* unificationProblem.cc (UnificationProblem::UnificationProblem):
+	deleted extension handling code
+	(~UnificationProblem): don't delete extensionInfo
+	(UnificationProblem::makeContext): deleted
+
+	* unificationProblem.hh (class UnificationProblem): deleted decls
+	for makeContext(), getExtensionInfo(), getLeftHandSides(); deleted
+	data member extensionInfo and commented out data member subproblem
+	(UnificationProblem::getExtensionInfo, Vector): deleted
+
+===================================Maude93a===========================================
+
 2009-12-24  Steven Eker  <eker@goo.csl.sri.com>
 
 	* stateTransitionGraph.cc (getNextState): pass SET_UNREWRITABLE

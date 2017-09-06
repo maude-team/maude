@@ -1,3 +1,31 @@
+2010-04-16  Steven Eker  <eker@rho>
+
+	* freeLhsCompiler.cc
+	(FreeTerm::findConstraintPropagationSequence): remove const (both
+	versions)
+
+	* freeTerm.hh (class FreeTerm): make both versions of
+	findConstraintPropagationSequence() static
+
+	* freeLhsCompiler.cc
+	(FreeTerm::findConstraintPropagationSequence): rewritten to save
+	results of first pass, and avoid searching once we detect we can
+	propagate any more bound uniquely variables
+
+2010-04-15  Steven Eker  <eker@rho>
+
+	* freeTerm.hh (class FreeTerm): added decl for
+	remainingAliensContain()
+
+	* freeLhsCompiler.cc
+	(FreeTerm::findConstraintPropagationSequence): rewritten to reduce
+	likelihood of exponential blow up
+	(FreeTerm::remainingAliensContain): added
+	(FreeTerm::findConstraintPropagationSequence): simplified using
+	remainingAliensContain()
+
+===================================Maude93a===========================================
+
 2010-03-18  Steven Eker  <eker@rho>
 
 	* freeRemainder.cc (FreeRemainder::FreeRemainder): don't set

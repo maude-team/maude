@@ -1,3 +1,32 @@
+2010-04-16  Steven Eker  <eker@rho>
+
+	* natSet.hh (class NatSet): added decl for getMaskSmall()
+
+	* natSet.cc (NatSet::getMask): fix bug where we were shifting a
+	32-bit 1
+	(NatSet::topBit): fix symmetric bug
+	(NatSet::insert, NatSet::subtract): fix symmetric bugs
+	(NatSet::getMaskSmall): added
+	(NatSet::topBit, NatSet::getMask, NatSet::insert)
+	(NatSet::subtract): use getMaskSmall()
+
+	* natSet.hh (NatSet::swap): fix bug where we were using an int as
+	a temporary rather than a Word
+
+	* natSet.cc (NatSet::topBit, NatSet::getShift, NatSet::getMask):
+	use BITS_PER_WORD
+	(NatSet::arrayMin, NatSet::insert, NatSet::subtract): use
+	BITS_PER_WORD
+	(NatSet::getWordNr): divide by unsigned value by BITS_PER_WORD
+	rather than right shift by LOG_WORD_SIZE
+
+	* natSet.hh (class NatSet): make Word a long; define BITS_PER_WORD
+	(NatSet::contains): use BITS_PER_WORD rather than WORD_SIZE
+	(NatSet::max): multiply by BITS_PER_WORD rather than shift by
+	LOG_WORD_SIZE
+
+===================================Maude93a===========================================
+
 2010-03-11  Steven Eker  <eker@rho>
 
 	* vector.hh: use != rather than < in for loops

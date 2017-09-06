@@ -1,3 +1,10 @@
+2010-04-01  Steven Eker  <eker@rho>
+
+	* unify.cc (Interpreter::unify): don't pass withExtension flag to
+	UnificationProblem() ctor
+
+===================================Maude93a===========================================
+
 2010-03-18  Steven Eker  <eker@rho>
 
 	* token.cc (Token::bubbleToPrefixNameCode): removed r1 branch

@@ -90,14 +90,19 @@ private:
 
   struct CP_Sequence;
 
-  void findConstraintPropagationSequence(const Vector<FreeOccurrence>& aliens,
-					 const NatSet& boundUniquely,
-					 CP_Sequence& bestSequence) const;
-  void findConstraintPropagationSequence(const Vector<FreeOccurrence>& aliens,
-					 Vector<int>& currentSequence,
-					 const NatSet& boundUniquely,
-					 int step,
-					 CP_Sequence& bestSequence) const;
+  static void findConstraintPropagationSequence(const Vector<FreeOccurrence>& aliens,
+						const NatSet& boundUniquely,
+						CP_Sequence& bestSequence);
+  static void findConstraintPropagationSequence(const Vector<FreeOccurrence>& aliens,
+						Vector<int>& currentSequence,
+						const NatSet& boundUniquely,
+						int step,
+						CP_Sequence& bestSequence);
+  static bool remainingAliensContain(const Vector<FreeOccurrence>& aliens,
+				     Vector<int>& currentSequence,
+				     int step,
+				     int us,
+				     const NatSet& interestingVariables);
   void scanFreeSkeleton(Vector<FreeOccurrence>& freeSymbols,
 			Vector<FreeOccurrence>& otherSymbols,
 			int parent = -1,
