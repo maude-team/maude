@@ -65,6 +65,8 @@ public:
   CUI_Symbol* symbol() const;
   DagNode* getArgument(int i) const;
 
+  CUI_DagNode* makePurifiedVersion(UnificationContext& solution, PendingUnificationStack& pending);
+
 private:
   //
   //	Theory interface functions.
@@ -77,6 +79,10 @@ private:
   //
   void collapseTo(int argNr);
   bool normalizeAtTop();
+  //
+  //	Private unification stuff.
+  //
+  bool computeSolvedFormCommutativeCase(CUI_DagNode* rhs, UnificationContext& solution, PendingUnificationStack& pending);
   //
   //	Arguments under CUI symbol.
   //

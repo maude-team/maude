@@ -25,7 +25,7 @@
 //	each inserted variant so that caller knows whether to keep exanding the variant.
 //
 //	To simpify the code we treat a variant as a vector of dags; we don't distinguish between the term and
-//	the substitution since both will be check for subsumption.
+//	the substitution since both will be checked for subsumption.
 //
 //	The caller gives each variant an index, and for each new variant gives the index of the parent variant or NONE if
 //	it is the root variant search. A variants index is required to be larger than that of its parent.
@@ -58,6 +58,7 @@ private:
   {
     RetainedVariant(const Vector<DagNode*> original);
     ~RetainedVariant();
+    void dump();
   
     int nrVariables;  // number of variables needed for matching; includes any abstraction variables
     int nrFreeVariables;  // number of variables occuring in variant

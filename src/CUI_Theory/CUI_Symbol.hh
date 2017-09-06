@@ -69,6 +69,7 @@ public:
 			      DagNode* subject,
 			      Vector<Bdd>& generalizedSort);
   UnificationSubproblem* makeUnificationSubproblem();
+  bool canResolveTheoryClash();
   //
   //	Hash cons stuff.
   //

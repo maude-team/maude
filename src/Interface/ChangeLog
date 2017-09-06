@@ -1,3 +1,11 @@
+2013-01-07  Steven Eker  <eker@ape.csl.sri.com>
+
+	* interface.hh: added forward decl for class Instruction
+
+	* instruction.hh: created
+
+===================================Maude96c==========================================
+
 2012-07-13  Steven Eker  <eker@ape.csl.sri.com>
 
 	* dagNode.hh (D): added decl for reducibleByVariantEquation()

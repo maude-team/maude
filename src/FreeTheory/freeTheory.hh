@@ -39,4 +39,8 @@ class FreeRemainder;
 class FreePositionTable;
 class FreeLhsStructs;
 
+class FreeBinaryCtor;
+class FreeBinaryCtorFinal;
+class FreeBinaryFastExtor;
+
 #endif

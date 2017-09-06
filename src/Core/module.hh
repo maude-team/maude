@@ -157,7 +157,7 @@ Module::getRules() const
 inline void
 Module::insertSort(Sort* sort)
 {
-  Assert(status == OPEN, cerr << "bad status");
+  Assert(status == OPEN, "bad status");
   sort->setModuleInfo(this, sorts.length());
   sorts.append(sort);
 }

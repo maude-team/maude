@@ -77,6 +77,8 @@ private:
   DagNode* copyEagerUptoReduced2();
   void clearCopyPointers2();
 
+  bool safeVirtualReplacement(VariableDagNode* oldVar, VariableDagNode* newVar, UnificationContext& solution, PendingUnificationStack& pending);
+
   int index;
 };
 

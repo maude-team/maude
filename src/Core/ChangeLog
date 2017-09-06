@@ -1,3 +1,67 @@
+2013-03-08  Steven Eker  <eker@ape.csl.sri.com>
+
+	* unificationContext.cc (unificationBind): use Assert() rather
+	than abort()
+
+	* module.hh (insertSort, insertSymbol): Assert() doesn't need cerr
+
+	* argVec.hh (ArgVec): Assert() doesn't need cerr
+
+2013-01-18  Steven Eker  <eker@ape.csl.sri.com>
+
+	* stackMachine.hh (popToFrame): added
+	(incrementEqCount): added
+
+	* frame.hh: NO_COPYING
+	(getArgumentListPtr): added
+
+	* stackMachine.hh: NO_COPYING
+
+2013-01-09  Steven Eker  <eker@ape.csl.sri.com>
+
+	* stackMachine.hh (S): added decls for StackMachine() and
+	~StackMachine()
+
+	* stackMachine.cc: created
+
+	* stackMachine.hh (newFrame, popDeadFrames): added
+	(S): added data member memoryBase
+
+	* frame.hh (setAncestorWithValidNextInstruction)
+	(getAncestorWithValidNextInstruction): added
+
+2013-01-07  Steven Eker  <eker@ape.csl.sri.com>
+
+	* core.hh: added forward decls for Frame and StackMachine
+
+	* stackMachine.hh: created
+
+	* frame.hh: created
+
+2012-12-14  Steven Eker  <eker@ape.csl.sri.com>
+
+	* pendingUnificationStack.cc (resolveTheoryClash): pass marked =
+	true to push() for safety though eventually we would like the make
+	the marked flag implicit
+
+2012-12-13  Steven Eker  <eker@ape.csl.sri.com>
+
+	* unificationContext.hh (SimpleRootContainer): added more comments
+	to explain what data members are used for
+
+2012-12-12  Steven Eker  <eker@ape.csl.sri.com>
+
+	* pendingUnificationStack.hh (SimpleRootContainer): added comments
+	to explain variableStatus and variableOrder
+
+	* pendingUnificationStack.cc (solve2): commented out - it was
+	purely debugging code
+
+	* pendingUnificationStack.hh (SimpleRootContainer): commented out
+	declaration for solve2()
+
+===================================Maude96c===========================================
+
 2012-07-09  Steven Eker  <eker@ape.csl.sri.com>
 
 	* unificationContext.cc (UnificationContext): take odd argument

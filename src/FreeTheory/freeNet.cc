@@ -66,6 +66,7 @@
 #include "freeTerm.hh"
 #include "freeRemainder.hh"
 
+#include "freeNetExec.hh"
 #include "freeNetExec.cc"
 
 FreeNet::~FreeNet()

@@ -29,4 +29,5 @@ noinst_HEADERS = \
 	symbol.hh \
 	symbol2.hh \
 	term.hh \
-	delayedSubproblem.hh
+	delayedSubproblem.hh \
+	instruction.hh

@@ -34,6 +34,8 @@
 
 class FreePreNet
 {
+  NO_COPYING(FreePreNet);
+
 public:
   FreePreNet(bool expandRemainderNodes);
 
@@ -246,7 +248,6 @@ private:
   int nrFailVisits;
   Vector<int> slotTranslation;
 };
-
 
 inline bool
 FreePreNet::NodeIndex::operator<(const NodeIndex& other) const

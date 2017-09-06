@@ -53,6 +53,7 @@
 #include "CUI_DagNode.hh"
 #include "CUI_Term.hh"
 #include "CUI_UnificationSubproblem.hh"
+#include "CUI_UnificationSubproblem2.hh"
 
 CUI_Symbol::CUI_Symbol(int id,
 		       const Vector<int>& strategy,
@@ -346,7 +347,15 @@ CUI_Symbol::computeGeneralizedSort(const SortBdds& sortBdds,
 UnificationSubproblem*
 CUI_Symbol::makeUnificationSubproblem()
 {
+  if (leftId() || rightId())
+    return new CUI_UnificationSubproblem2();
   return new CUI_UnificationSubproblem();
+}
+
+bool
+CUI_Symbol::canResolveTheoryClash()
+{
+  return leftId() || rightId();
 }
 
 //

@@ -85,4 +85,7 @@ class UnificationSubproblemDisjunction;
 class CompoundCycleSubproblem;
 class MemoMap;
 
+class Frame;
+class StackMachine;
+
 #endif

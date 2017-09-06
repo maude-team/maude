@@ -32,6 +32,11 @@ class FreeDagNode : public DagNode
 {
 public:
   FreeDagNode(Symbol* symbol);
+  //
+  //	For stack based execution.
+  //
+  FreeDagNode(Symbol* symbol, DagNode* a0, DagNode* a1);
+
   ~FreeDagNode();
 
   RawDagArgumentIterator* arguments();
@@ -130,6 +135,14 @@ FreeDagNode::FreeDagNode(Symbol* symbol) : DagNode(symbol)
       external = new DagNode*[nrArgs];
     }
 }
+
+inline
+FreeDagNode::FreeDagNode(Symbol* symbol, DagNode* a0, DagNode* a1) : DagNode(symbol)
+{
+  internal[0] = a0;
+  internal[1] = a1;
+}
+
 
 inline DagNode*
 FreeDagNode::getArgument(int i) const

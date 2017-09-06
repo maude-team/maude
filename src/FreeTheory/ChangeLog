@@ -1,3 +1,58 @@
+2013-03-07  Steven Eker  <eker@ape.csl.sri.com>
+
+	* freeSymbol.cc (compileEquations): call resetSlotIndices(), and
+	then call setSlotIndex() to avoid using bad slot indices if the
+	lhs gets compiled for variant equation reducibility purposes
+
+	* freeTerm.hh (Term): added decl for resetSlotIndices()
+
+	* freeTerm.cc (resetSlotIndices): added
+
+	* freePreNet.hh (F): added call to NO_COPYING() macro
+
+2013-01-18  Steven Eker  <eker@ape.csl.sri.com>
+
+	* freeRemainder.hh (fastCheckAndBind, getFirstInstruction): added
+	(FreeLhsStructs): added data member firstInstruction
+
+	* freeNet.hh (F): added decl for findRemainderListIndex()
+
+	* freeNetExec.hh: created
+
+	* freeBinaryCtor.cc (execute): code cleaning
+
+	* freeBinaryCtor.hh (Instruction): FreeBinarySymbol* becomes
+	FreeSymbol
+
+	* freeBinaryCtorFinal.cc (execute): code cleaning
+
+	* freeBinaryCtorFinal.hh (Instruction): FreeBinarySymbol* becomes
+	FreeSymbol since we will eventually obsolete these subclasses
+
+2013-01-09  Steven Eker  <eker@ape.csl.sri.com>
+
+	* freeBinaryCtorFinal.cc: created
+
+	* freeBinaryCtorFinal.hh: created
+
+	* freeTheory.hh: added forward decl for freeBinaryCtorFinal
+
+2013-01-08  Steven Eker  <eker@ape.csl.sri.com>
+
+	* freeBinaryCtor.cc (execute): use traverse() instead of sortTable
+
+	* freeBinaryCtor.hh (Instruction): deleted data member sortTable
+
+2013-01-07  Steven Eker  <eker@ape.csl.sri.com>
+
+	* freeDagNode.hh (FreeDagNode): added binary ctor
+
+	* freeBinaryCtor.cc: created
+
+	* freeBinaryCtor.hh: created
+
+===================================Maude96c===========================================
+
 2012-04-13  Steven Eker  <eker@ape.csl.sri.com>
 
 	* freeDagNode.hh (DagNode): updated decl for

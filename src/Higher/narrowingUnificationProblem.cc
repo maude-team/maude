@@ -67,6 +67,10 @@ NarrowingUnificationProblem::NarrowingUnificationProblem(PreEquation* preEquatio
     freshVariableGenerator(freshVariableGenerator),
     odd(odd)
 {
+  //
+  //	This is the normal constructor where we are trying to narrow target with a rule or equation
+  //	given by preEquation.
+  //
   Module* module = preEquation->getModule();
   firstTargetSlot = module->getMinimumSubstitutionSize();
   substitutionSize = firstTargetSlot + variableInfo.getNrVariables();
@@ -81,7 +85,12 @@ NarrowingUnificationProblem::NarrowingUnificationProblem(PreEquation* preEquatio
   for (int i = 0; i < substitutionSize; ++i)
     {
       sortedSolution->bind(i, 0);  // so GC doesn't barf
-      unsortedSolution->bind(i, 0);  // HACK
+      //
+      //	At very least the gap between the preEquation variables and the target variables
+      //	must be zero'd out so that PendingUnificationStack cycle detection doesn't look at garbage.
+      //	Also UnificationContext protects its slots from GC so they need to be safe values.
+      //
+      unsortedSolution->bind(i, 0);
     }
   //
   //	Solve the underlying many-sorted unification problem.
@@ -100,6 +109,12 @@ NarrowingUnificationProblem::NarrowingUnificationProblem(DagNode* lhs,
     freshVariableGenerator(freshVariableGenerator),
     odd(odd)
 {
+  //
+  //	This is a special constructor used for the final lhs =? rhs step in variant unification.
+  //	There is no rule or equation here. However we have indexed dagnodes rather than terms, and
+  //	need the non-destructive unifier generation and odd/even fresh variable naming capabilities
+  //	of this class. Thus we can't use class UnificationProblem.
+  //
   //cout << lhs << " =? " << rhs << endl;
   Module* module = lhs->symbol()->getModule();
   //cout << "module: " << module << endl;
@@ -322,11 +337,15 @@ NarrowingUnificationProblem::findOrderSortedUnifiers()
     FOR_EACH_CONST(i, NatSet, sortConstrainedVariables)
       {
 	int fv = *i;
+	//cout << "variable with index " << fv << endl;
 	realToBdd[fv] = nextBddVariable;
 	Sort* sort = variableIndexToSort(fv);
 	nextBddVariable += sortBdds->getNrVariables(sort->component()->getIndexWithinModule());
+	//cout << "allocated bdds" << endl;
       }
   }
+  //cout << "allocated " << nextBddVariable << " BDD variables" << endl;
+  //cout << "sc vars " << sortConstrainedVariables.size() << " freeVariables " << freeVariables.size() << endl;
   //
   //	Make sure BDD package has enough variables allocated.
   //

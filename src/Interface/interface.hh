@@ -55,5 +55,10 @@ class UnificationSubproblem;
 //	delay and batch	subproblems in the hope of reducing the search space.
 //
 class DelayedSubproblem;
+//
+//	This class can be should be derived from for theories supported by
+//	the stack based interpreter.
+//
+class Instruction;
 
 #endif
