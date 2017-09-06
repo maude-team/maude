@@ -121,7 +121,13 @@ public:
 		       DagNode* dagNode,
 		       DagNode* hole,
 		       MixfixModule* m);
-  DagNode* upSmtResult(DagNode* dagNode, const mpz_class& variableNumber, MixfixModule* m);
+  DagNode* upSmtResult(DagNode* state,
+		       const Substitution& substitution,
+		       const VariableInfo& variableInfo,
+		       const NatSet& smtVariables,
+		       DagNode* constraint,
+		       const mpz_class& variableNumber,
+		       MixfixModule* m);
   DagNode* upSmtFailure();
 
 
@@ -348,6 +354,13 @@ private:
 			       PointerMap& dagNodeMap,
 			       DagNode*& left,
 			       DagNode*& right);
+
+  DagNode* upSmtSubstitution(const Substitution& substitution,
+			     const VariableInfo& variableInfo,
+			     const NatSet& smtVariables,
+			     MixfixModule* m,
+			     PointerMap& qidMap,
+			     PointerMap& dagNodeMap);
 
   bool downHeader(DagNode* metaHeader, int& id, DagNode*& metaParameterDeclList);
   bool downParameterDeclList(DagNode* metaParameterDeclList, ImportModule* m);

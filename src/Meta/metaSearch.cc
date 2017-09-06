@@ -202,14 +202,14 @@ MetaLevelOpSymbol::metaSearchPath(FreeDagNode* subject, RewritingContext& contex
 
 #include "SMT_Info.hh"
 #include "variableGenerator.hh"
-#include "SMT_RewriteSearchState.hh"
+#include "SMT_RewriteSequenceSearch.hh"
 
 local_inline bool
-MetaLevelOpSymbol::getCachedSMT_RewriteSearchState(MetaModule* m,
+MetaLevelOpSymbol::getCachedSMT_RewriteSequenceSearch(MetaModule* m,
 						   FreeDagNode* subject,
 						   RewritingContext& context,
 						   Int64 solutionNr,
-						   SMT_RewriteSearchState*& search,
+						   SMT_RewriteSequenceSearch*& search,
 						   Int64& lastSolutionNr)
 {
   CacheableState* cachedState;
@@ -217,15 +217,14 @@ MetaLevelOpSymbol::getCachedSMT_RewriteSearchState(MetaModule* m,
     {
       if (lastSolutionNr <= solutionNr)
 	{
-	  search = safeCast(SMT_RewriteSearchState*, cachedState);
+	  search = safeCast(SMT_RewriteSequenceSearch*, cachedState);
 	  //
 	  //	The parent context pointer of the root context in the
 	  //	NarrowingSequenceSearch is possibly stale.
 	  //
-	  // FIX ME
-	  safeCast(UserLevelRewritingContext*, search->getContext())->
+	  safeCast(UserLevelRewritingContext*, search->getRootContext())->
 	    beAdoptedBy(safeCast(UserLevelRewritingContext*, &context));
-	  DebugAdvisory("   !!! Found cached SMT_RewriteSearchState !!!");
+	  DebugAdvisory("   !!! Found cached SMT_RewriteSequenceSearch !!!");
 	  return true;
 	}
       delete cachedState;
@@ -233,34 +232,43 @@ MetaLevelOpSymbol::getCachedSMT_RewriteSearchState(MetaModule* m,
   return false;
 }
 
-SMT_RewriteSearchState*
-MetaLevelOpSymbol::makeSMT_RewriteSearchState(MetaModule* m,
-					      FreeDagNode* subject,
-					      RewritingContext& context) const
+SMT_RewriteSequenceSearch*
+MetaLevelOpSymbol::makeSMT_RewriteSequenceSearch(MetaModule* m,
+						 FreeDagNode* subject,
+						 RewritingContext& context) const
 {
-  DagNode* metaVarNumber = subject->getArgument(3);
-  RewriteSequenceSearch::SearchType searchType;  // HACK
+  DagNode* metaVarNumber = subject->getArgument(5);
+  RewriteSequenceSearch::SearchType searchType;
   int maxDepth;
   if (metaLevel->isNat(metaVarNumber) &&
-      downSearchType(subject->getArgument(2), searchType) &&
-      searchType == RewriteSequenceSearch::AT_LEAST_ONE_STEP &&  // HACK
-      metaLevel->downBound(subject->getArgument(4), maxDepth) &&
-      maxDepth == 1)
+      downSearchType(subject->getArgument(4), searchType) &&
+      searchType != SequenceSearch::NORMAL_FORM &&
+      metaLevel->downBound(subject->getArgument(6), maxDepth))
     {
-      if (Term* term = metaLevel->downTerm(subject->getArgument(1), m))
+      Term* startTerm;
+      Term* target;
+      if (metaLevel->downTermPair(subject->getArgument(1), subject->getArgument(2), startTerm, target, m))
 	{
-	  m->protect();
-	  const mpz_class& varNumber = metaLevel->getNat(metaVarNumber);
-	  RewritingContext* subjectContext = term2RewritingContext(term, context);
+	  Vector<ConditionFragment*> condition;
+	  if (metaLevel->downCondition(subject->getArgument(3), m, condition))
+	    {
+	      m->protect();
 
-	  const SMT_Info& smtInfo = m->getSMT_Info();
-	  VariableGenerator* vg = new VariableGenerator(smtInfo);
-	  DebugAdvisory("   !!! Made cached SMT_RewriteSearchState !!!");
-	  return new SMT_RewriteSearchState(subjectContext,
-					    smtInfo,
-					    *vg,
-					    varNumber,
-					    SMT_RewriteSearchState::GC_ENGINE | SMT_RewriteSearchState::GC_CONTEXT);
+	      const mpz_class& varNumber = metaLevel->getNat(metaVarNumber);
+	      RewritingContext* startContext = term2RewritingContext(startTerm, context);
+	      const SMT_Info& smtInfo = m->getSMT_Info();
+	      VariableGenerator* vg = new VariableGenerator(smtInfo);
+	      DebugAdvisory("   !!! Made cached SMT_RewriteSequenceSearch !!!");
+
+	      return new SMT_RewriteSequenceSearch(startContext,  // pass responsibility for deletion
+						   searchType,
+						   target,  // pass responsibility for deletion
+						   condition,  // pass responsibility for deletion
+						   smtInfo,
+						   vg,  // pass responsibility for deletion
+						   maxDepth,
+						   varNumber);
+	    }
 	}
     }
   return 0;
@@ -270,21 +278,21 @@ bool
 MetaLevelOpSymbol::metaSmtSearch(FreeDagNode* subject, RewritingContext& context)
 {
   //
-  //	op metaSmtSearch : Module Term Qid Nat Bound Nat ~> SmtResult? 
+  //	op metaSmtSearch : Module Term Term Condition Qid Nat Bound Nat ~> SmtResult?
   //
   if (MetaModule* m = metaLevel->downModule(subject->getArgument(0)))
     {
       if (m->validForSMT_Rewriting())
 	{
 	  Int64 solutionNr;
-	  if (metaLevel->downSaturate64(subject->getArgument(5), solutionNr) &&
+	  if (metaLevel->downSaturate64(subject->getArgument(7), solutionNr) &&
 	      solutionNr >= 0)
 	    {
-	      SMT_RewriteSearchState* smtState;
+	      SMT_RewriteSequenceSearch* smtState;
 	      Int64 lastSolutionNr;
-	      if (getCachedSMT_RewriteSearchState(m, subject, context, solutionNr, smtState, lastSolutionNr))
+	      if (getCachedSMT_RewriteSequenceSearch(m, subject, context, solutionNr, smtState, lastSolutionNr))
 		m->protect();  // Use cached state
-	      else if ((smtState = makeSMT_RewriteSearchState(m, subject, context)))
+	      else if ((smtState = makeSMT_RewriteSequenceSearch(m, subject, context)))
 		lastSolutionNr = -1;
 	      else
 		return false;
@@ -292,7 +300,7 @@ MetaLevelOpSymbol::metaSmtSearch(FreeDagNode* subject, RewritingContext& context
 	      DagNode* result;
 	      while (lastSolutionNr < solutionNr)
 		{
-		  bool success = smtState->findNextRewrite();
+		  bool success = smtState->findNextMatch();
 		  if (!success)
 		    {
 		      delete smtState;
@@ -304,7 +312,28 @@ MetaLevelOpSymbol::metaSmtSearch(FreeDagNode* subject, RewritingContext& context
 		}
 	      m->insert(subject, smtState, solutionNr);
 	      {
-		result = metaLevel->upSmtResult(smtState->getNewPair(),
+		/*
+		DagNode* state = smtState->getState(smtState->getCurrentStateNumber());
+		const Substitution& substitution = *(smtState->getSubstitution());
+		const VariableInfo& variableInfo = *smtState;
+		const NatSet& smtVariables = smtState->getSMT_VarIndices();
+		DagNode* constraint = smtState->getFinalConstraint();
+		const mpz_class& variableNumber = smtState->getMaxVariableNumber();
+
+		result = metaLevel->upSmtResult(state,
+						substitution,
+						variableInfo,
+						smtVariables,
+						constraint,
+						variableNumber,
+						m);
+		*/
+
+		result = metaLevel->upSmtResult(smtState->getState(smtState->getCurrentStateNumber()),
+						*(smtState->getSubstitution()),
+						*smtState,
+						smtState->getSMT_VarIndices(),
+						smtState->getFinalConstraint(),
 						smtState->getMaxVariableNumber(),
 						m);
 	      }

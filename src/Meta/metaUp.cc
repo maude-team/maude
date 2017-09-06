@@ -529,14 +529,62 @@ MetaLevel::upAssignment(DagNode* variable,
 }
 
 DagNode*
-MetaLevel::upSmtResult(DagNode* dagNode, const mpz_class& variableNumber, MixfixModule* m)
+MetaLevel::upSmtSubstitution(const Substitution& substitution,
+			     const VariableInfo& variableInfo,
+			     const NatSet& smtVariables,
+			     MixfixModule* m,
+			     PointerMap& qidMap,
+			     PointerMap& dagNodeMap)
 {
-  Assert(dagNode != 0, "null dagNode");
-  Vector<DagNode*> args(2);
+  int nrVariables = variableInfo.getNrRealVariables();
+  Vector<DagNode*> args;
+
+  for (int i = 0; i < nrVariables; i++)
+    {
+      //
+      //	SMT variables are constrained rather than bound.
+      //
+      if (!smtVariables.contains(i))
+	{
+	  args.append(upAssignment(variableInfo.index2Variable(0),
+				   substitution.value(0),
+				   m,
+				   qidMap,
+				   dagNodeMap));
+	}
+    }
+
+  int nrBindings = args.size();
+  if (nrBindings == 0)
+    return emptySubstitutionSymbol->makeDagNode();
+  if (nrBindings == 1)
+    return args[0];
+  return substitutionSymbol->makeDagNode(args);
+}
+
+DagNode*
+MetaLevel::upSmtResult(DagNode* state,
+		       const Substitution& substitution,
+		       const VariableInfo& variableInfo,
+		       const NatSet& smtVariables,
+		       DagNode* constraint,
+		       const mpz_class& variableNumber,
+		       MixfixModule* m)
+{
+  Assert(state != 0, "null state");
+  Assert(constraint != 0, "null constraint");
+  Vector<DagNode*> args(4);
   PointerMap qidMap;
   PointerMap dagNodeMap;
-  args[0] = upDagNode(dagNode, m, qidMap, dagNodeMap);
-  args[1] = succSymbol->makeNatDag(variableNumber);
+  args[0] = upDagNode(state, m, qidMap, dagNodeMap);
+  args[1] = upSmtSubstitution(substitution,
+			     variableInfo,
+			     smtVariables,
+			     m,
+			     qidMap,
+			      dagNodeMap);
+  args[2] = upDagNode(constraint, m, qidMap, dagNodeMap);
+  args[3] = succSymbol->makeNatDag(variableNumber);
   return smtResultSymbol->makeDagNode(args);
 }
 

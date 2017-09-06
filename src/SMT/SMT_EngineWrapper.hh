@@ -21,17 +21,37 @@
 */
 
 //
-//      Abstract base class for SMT symbols. This exists to hold a pure virtual function for such
-//	symbols to all to the accumulation of information on the SMT signature.
+//      Abstract base class for wrapping SMT engines.
 //
-#ifndef _SMT_Base_hh_
-#define _SMT_Base_hh_
-#include <map>
+#ifndef _SMT_EngineWrapper_hh_
+#define _SMT_EngineWrapper_hh_
+#include "gmpxx.h"
 
-class SMT_Base
+class SMT_EngineWrapper
 {
 public:
-  virtual void fillOutSMT_Info(SMT_Info& info) = 0;
+  enum Result
+    {
+      BAD_DAG = -2,
+      SAT_UNKNOWN = -1,
+      UNSAT = 0,
+      SAT = 1
+    };
+
+  virtual ~SMT_EngineWrapper() {}
+
+  //
+  //	Extra functionality for when we do full abstraction of SMT solving.
+  //
+  virtual Result assertDag(DagNode* dag) = 0;
+  virtual Result checkDag(DagNode* dag) = 0;
+  virtual void clearAssertions() = 0;
+  virtual void push() = 0;
+  virtual void pop() = 0;
+  //
+  //	Make a Maude variable corresponding to a fresh SMT variable.
+  //
+  virtual VariableDagNode* makeFreshVariable(Term* baseVariable, const mpz_class& number) = 0;
 };
 
 #endif

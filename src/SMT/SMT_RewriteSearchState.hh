@@ -42,14 +42,16 @@ public:
   };
 
   SMT_RewriteSearchState(RewritingContext* context,
+			 DagNode* constraint,
 			 const SMT_Info& smtInfo,
-			 SMT_VariableManager& variableManager,
+			 SMT_EngineWrapper* engine,
 			 const mpz_class& avoidVariableNumber = 0,  // variable numbers <= this will be avoided
-			 int flags = 0 /* UGLY HACK */);
+			 int flags = 0);
   ~SMT_RewriteSearchState();
 
   bool findNextRewrite();
-  DagNode* getNewPair() const;
+  DagNode* getNewState() const;
+  DagNode* getNewConstraint() const;
   const mpz_class& getMaxVariableNumber() const;  // max variable number in new pair
   RewritingContext* getContext() const;
 
@@ -62,15 +64,15 @@ private:
   bool instantiateCondition(const Vector<ConditionFragment*>& condition, DagNode*& instantiation);
 
   RewritingContext* const context;  // context with substitution
+  DagNode* const constraint;
   const SMT_Info& smtInfo;  // information about SMT sort; might get folded into wrapper
-  SMT_VariableManager& variableManager;  // wrapper to call the SMT engine
+  SMT_EngineWrapper* const engine;  // wrapper to call the SMT engine
   const mpz_class avoidVariableNumber;
+  const int flags;
   //
   //	Information extracted from starting pair.
   //
   DagNode* state;
-  DagNode* constraint;
-  FreeSymbol* pairingSymbol;  // determined from initial state
   //
   //	Current state of search.
   //
@@ -81,12 +83,9 @@ private:
   //
   //	Most recent result.
   //
-  mpz_class newVariableNumber;  // number that is greater than that of any generated variable in nextPair
-  DagNode* nextPair;  // valid after findNextRewrite() returns true
-  //
-  //	Temporary Hack
-  //
-  const int flags;
+  mpz_class newVariableNumber;  // number of largest fresh variables that appears in newState
+  DagNode* newState;  // valid after findNextRewrite() returns true
+  DagNode* newConstraint;
 };
 
 inline RewritingContext*
@@ -96,9 +95,15 @@ SMT_RewriteSearchState::getContext() const
 }
 
 inline DagNode*
-SMT_RewriteSearchState::getNewPair() const
+SMT_RewriteSearchState::getNewState() const
 {
-  return nextPair;
+  return newState;
+}
+
+inline DagNode*
+SMT_RewriteSearchState::getNewConstraint() const
+{
+  return newConstraint;
 }
 
 inline const mpz_class&

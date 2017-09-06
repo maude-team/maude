@@ -27,9 +27,6 @@
 #define _SMT_NumberSymbol_hh_
 #include "NA_Symbol.hh"
 #include "SMT_Base.hh"
-#include "cvc4/expr/expr_manager.h"
-
-using namespace CVC4;
 
 class SMT_NumberSymbol : public NA_Symbol, public SMT_Base
 {
@@ -54,10 +51,6 @@ public:
   //	For SMT_Base.
   //
   void fillOutSMT_Info(SMT_Info& info);
-  //
-  //	CVC4 specific.
-  //
-  //Expr dagToCVC4(DagNode* dag, const Vector<Expr>& variables, SortIndexToSMT_TypeMap& sortMap, ExprManager& em);
 
 private:
   int numberSystem;

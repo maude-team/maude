@@ -1,3 +1,9 @@
+2014-10-29  Steven Eker  <eker@ape.csl.sri.com>
+
+	* tests/Misc/smtTest.maude: updated with new syntax and examples
+
+===================================Maude105===========================================
+
 2014-08-14  Steven Eker  <eker@ape.csl.sri.com>
 
 	* tests/Misc/smtTest.maude: use new syntax

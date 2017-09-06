@@ -74,4 +74,4 @@
   MACRO(metaUpTerm, 1)
   MACRO(metaDownTerm, 2)
   MACRO(metaCheck, 2)
-  MACRO(metaSmtSearch, 6)
+  MACRO(metaSmtSearch, 8)

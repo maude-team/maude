@@ -114,7 +114,8 @@ public:
 				 const NarrowingVariableInfo& originalVariables);
 
   static void printSubstitution(const Substitution& substitution,
-				const VariableInfo& varInfo);
+				const VariableInfo& varInfo,
+				const NatSet& ignoredIndices = NatSet());
 
 
 

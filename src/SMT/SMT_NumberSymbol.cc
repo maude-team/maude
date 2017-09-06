@@ -75,8 +75,8 @@ SMT_NumberSymbol::copyAttachments(Symbol* original, SymbolMap* map)
 
 void
 SMT_NumberSymbol::getDataAttachments(const Vector<Sort*>& opDeclaration,
-			       Vector<const char*>& purposes,
-			       Vector<Vector<const char*> >& data)
+				     Vector<const char*>& purposes,
+				     Vector<Vector<const char*> >& data)
 {
   if (numberSystem != NONE)
     {

@@ -58,31 +58,33 @@
 
 //	SMT stuff
 #include "SMT_Info.hh"
-#include "SMT_VariableManager.hh"
+#include "SMT_EngineWrapper.hh"
 #include "SMT_RewriteSearchState.hh"
 
 SMT_RewriteSearchState::SMT_RewriteSearchState(RewritingContext* context,
+					       DagNode* constraint,
 					       const SMT_Info& smtInfo,
-					       SMT_VariableManager& variableManager,
+					       SMT_EngineWrapper* engine,
 					       const mpz_class& avoidVariableNumber,
 					       int flags)
   : context(context),
+    constraint(constraint),
     smtInfo(smtInfo),
-    variableManager(variableManager),
+    engine(engine),
     avoidVariableNumber(avoidVariableNumber),
     flags(flags)
 {
   ruleIndex = -1;
   matchingSubproblem = 0;
-  nextPair = 0;
+  newState = 0;
+  newConstraint = 0;
 }
-
 
 SMT_RewriteSearchState::~SMT_RewriteSearchState()
 {
   delete matchingSubproblem;
   if (flags & GC_ENGINE)
-    delete &variableManager;
+    delete engine;
   if (flags & GC_CONTEXT)
     delete context;
 }
@@ -90,8 +92,11 @@ SMT_RewriteSearchState::~SMT_RewriteSearchState()
 void
 SMT_RewriteSearchState::markReachableNodes()
 {
-  if (nextPair)
-    nextPair->mark();
+  constraint->mark();
+  if (newConstraint)
+    newConstraint->mark();
+  if (newState)
+    newState->mark();
 }
 
 bool
@@ -99,6 +104,10 @@ SMT_RewriteSearchState::findNextRewrite()
 {
   if (ruleIndex > -1)
     {
+      //
+      //	Get rid of assertions from last solution.
+      //
+      engine->pop();
       //
       //	We already selected a rule and matched it in at least one way; see if
       //	it can be matched in another way.
@@ -134,7 +143,18 @@ SMT_RewriteSearchState::findNextRewrite()
 	  if (matchingSubproblem == 0 || matchingSubproblem->solve(true, *context))
 	    {
 	      if (checkConsistancy())
-		return true;
+		{
+		  if (RewritingContext::getTraceStatus())
+		    {
+		      context->tracePreRuleRewrite(state, currentRule);
+		      if (context->traceAbort())
+			return false;
+		      context->tracePostRuleRewrite(newState);
+		      if (context->traceAbort())
+			return false;
+		    }
+		  return true;
+		}
 	      DebugAdvisory("first match failed consistancy check");
 	      if (nextSolution())
 		return true;
@@ -195,7 +215,7 @@ SMT_RewriteSearchState::checkConsistancy()
       if (binding == 0)
 	{
 	  ++newVariableNumber;
-	  DagNode* newVariable = variableManager.makeFreshVariable(currentRule->index2Variable(i), newVariableNumber);
+	  DagNode* newVariable = engine->makeFreshVariable(currentRule->index2Variable(i), newVariableNumber);
 	  context->bind(i, newVariable);
 	  DebugAdvisory("variable " << currentRule->index2Variable(i) << " is unbound and so is bound to fresh variable " << newVariable);
 	  boundToFresh.insert(i);
@@ -203,6 +223,7 @@ SMT_RewriteSearchState::checkConsistancy()
       else
 	DebugAdvisory("variable " << currentRule->index2Variable(i) << " is bound to " << binding);
     }
+  engine->push();
   //
   //	There is no requirement that a rule has a condition. But if it has we need to instantiate it
   //	and check it.
@@ -211,52 +232,53 @@ SMT_RewriteSearchState::checkConsistancy()
   if (currentRule->hasCondition())
     {
       if (!instantiateCondition(currentRule->getCondition(), condition))
-	return false;
+	{
+	  engine->pop();
+	  return false;
+	}
       //
       //	If condition was optimized away it will be zero.
       //
-      if (condition != 0 && variableManager.checkDag(condition) != SMT_VariableManager::SAT)
-	return false;
+      if (condition != 0 && engine->assertDag(condition) != SMT_EngineWrapper::SAT)
+	{
+	  engine->pop();  // get rid of failed SMT state
+	  return false;
+	}
     }
   //
   //	Either there was no condition or the new constraint which it generated was satisfiable in the presence
-  //	of the accumulated constraints to date. We need to generate a new pair consisting of the rewritten
-  //	state and conjuncted state.
+  //	of the accumulated constraints to date. We need to generate a new state and a new constraint.
   //
-  Symbol* pairingSymbol = context->root()->symbol();
-  Vector<DagNode*> args(2);
-  args[1] = constraint;
-  if (condition != 0)
+  newState = currentRule->getRhsBuilder().construct(*context);
+  if (condition == 0)
     {
-      if (constraint->symbol() == smtInfo.getTrueSymbol())
-	{
-	  //
-	  //	Replace true clause by condition.
-	  //
-	  args[1] = condition;
-	}
-      else
-	{
-	  //
-	  //	Conjunct constraint and condition.
-	  //
-	  args[0] = condition;
-	  DebugAdvisory("condition = " << args[0]);
-	  DebugAdvisory("old constraint = " << args[1]);
-	  args[1] = smtInfo.getConjunctionOperator()->makeDagNode(args);
-	  DebugAdvisory("New constraint = " << args[1]);
-	}
+      //
+      //	No condition so new constraint is old constraint.
+      //
+      newConstraint = constraint;
     }
-  args[0] = currentRule->getRhsBuilder().construct(*context);
-  //
-  //	Finally we form a new <state, constraint> pair.
-  //
-  nextPair = pairingSymbol->makeDagNode(args);
-  DebugAdvisory("New state = " << args[0]);
-  DebugAdvisory("New constraint = " << args[1]);
-  DebugAdvisory("Result = " << nextPair);
-  nextPair->computeTrueSort(*context);
-  DebugAdvisory("After normalization = " << nextPair);
+  else if (constraint->symbol() == smtInfo.getTrueSymbol())
+    {
+      //
+      //	Old constraint is trivial so new constraint is condition.
+      //
+      newConstraint = condition;
+    }
+  else
+    {
+      //
+      //	Have both a non-trivial constraint and a condition so conjunct them.
+      //
+        Vector<DagNode*> args(2);
+	args[0] = constraint;
+	args[1] = condition;
+	newConstraint = smtInfo.getConjunctionOperator()->makeDagNode(args);
+    }
+  DebugAdvisory("New state = " << newState);
+  DebugAdvisory("New constraint = " << newConstraint);
+
+  newState->computeTrueSort(*context);
+  newConstraint->computeTrueSort(*context);
   //
   //	No equation rewriting should happen during rewriting module SMT so we
   //	call garbage collector here if needed.
@@ -268,25 +290,10 @@ SMT_RewriteSearchState::checkConsistancy()
 bool
 SMT_RewriteSearchState::checkAndConvertState()
 {
-  DagNode* root = context->root();
-  root->computeTrueSort(*context);
-  //
-  //	Pair needs to be a free binary symbol. First argument is assumed to be state
-  //	where we will attempt a rewrite at top. Second argument is assumed to be
-  //	an SMT constraint that we will use to initialize an SMT engine instance.
-  //
-  if (FreeDagNode* pair = dynamic_cast<FreeDagNode*>(root))
-    {
-      pairingSymbol = pair->symbol();
-      if (pairingSymbol->arity() == 2)
-	{
-	  state = pair->getArgument(0);
-	  constraint = pair->getArgument(1);
-	  return variableManager.assertDag(constraint) == SMT_VariableManager::SAT;
-	}
-    }
-  IssueWarning("Expecting an SMT rewriting pair but saw " << QUOTE(root) << '.');
-  return false;
+  state = context->root();
+  state->computeTrueSort(*context);
+  constraint->computeTrueSort(*context);
+  return engine->assertDag(constraint) == SMT_EngineWrapper::SAT;
 }
 
 bool

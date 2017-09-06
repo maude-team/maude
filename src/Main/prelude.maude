@@ -22,7 +22,7 @@
 
 ***
 ***	Maude interpreter standard prelude.
-***	Version 2.7.
+***	Version alpha105
 ***
 ***	Some of the overall structure is taken from the OBJ3
 ***	interpreter standard prelude.
@@ -1970,7 +1970,7 @@ fmod META-LEVEL is
   op {_,_,_} : Term Type Rule -> TraceStep [ctor] .
   op nil : -> Trace [ctor] .
   op __ : Trace Trace -> Trace [ctor assoc id: nil format (d n d)] .
-  op {_,_} : Term Nat -> SmtResult [ctor] .
+  op {_,_,_,_} : Term Substitution Term Nat -> SmtResult [ctor] .
 
 *** failure results
   sorts ResultPair? ResultTriple? Result4Tuple? MatchPair? Substitution? Trace?
@@ -2198,7 +2198,7 @@ fmod META-LEVEL is
         op-hook unificationPairSymbol	({_,_} : Substitution Nat ~> UnificationPair)
         op-hook unificationTripleSymbol	({_,_,_} : Substitution Substitution Nat ~> UnificationTriple)
         op-hook variantSymbol		({_,_,_} : Term Substitution Nat ~> Variant)
-        op-hook smtResultSymbol		({_,_} : Term Nat ~> SmtResult)
+        op-hook smtResultSymbol		({_,_,_,_} : Term Substitution Term Nat ~> SmtResult)
 
         op-hook traceStepSymbol		({_,_,_} : Term Type Rule ~> TraceStep)
         op-hook nilTraceSymbol		(nil : ~> Trace)
@@ -2359,7 +2359,7 @@ fmod META-LEVEL is
            id-hook MetaLevelOpSymbol	(metaCheck)
            op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .
 
-  op metaSmtSearch : Module Term Qid Nat Bound Nat ~> SmtResult?
+  op metaSmtSearch : Module Term Term Condition Qid Nat Bound Nat ~> SmtResult?
         [special (
            id-hook MetaLevelOpSymbol	(metaSmtSearch)
            op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .

@@ -27,9 +27,6 @@
 #define _SMT_Symbol_hh_
 #include "freeSymbol.hh"
 #include "SMT_Base.hh"
-#include "cvc4/expr/expr_manager.h"
-
-using namespace CVC4;
 
 class SMT_Symbol : public FreeSymbol, public SMT_Base
 {
