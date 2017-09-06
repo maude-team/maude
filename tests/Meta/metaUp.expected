@@ -159,37 +159,37 @@ eq 'front['__['L:QidList,'E:Qid]] = 'L:QidList [none] .
 eq 'getContext['`{_`,_`,_`,_`}['T:Term,'T:Type,'S:Substitution,'C:Context]] =
     'C:Context [none] .
 eq 'getContext['`{_`,_`}['S:Substitution,'C:Context]] = 'C:Context [none] .
-eq 'getEqs['fmod_is_sorts_.____endfm['Q:Qid,'IL:ImportList,'SS:SortSet,
+eq 'getEqs['fmod_is_sorts_.____endfm['H:Header,'IL:ImportList,'SS:SortSet,
     'SSDS:SubsortDeclSet,'OPDS:OpDeclSet,'MAS:MembAxSet,'EQS:EquationSet]] =
     'EQS:EquationSet [none] .
 eq 'getEqs['fth_is_sorts_.____endfth['Q:Qid,'IL:ImportList,'SS:SortSet,
     'SSDS:SubsortDeclSet,'OPDS:OpDeclSet,'MAS:MembAxSet,'EQS:EquationSet]] =
     'EQS:EquationSet [none] .
-eq 'getEqs['mod_is_sorts_._____endm['Q:Qid,'IL:ImportList,'SS:SortSet,
+eq 'getEqs['mod_is_sorts_._____endm['H:Header,'IL:ImportList,'SS:SortSet,
     'SSDS:SubsortDeclSet,'OPDS:OpDeclSet,'MAS:MembAxSet,'EQS:EquationSet,
     'RLS:RuleSet]] = 'EQS:EquationSet [none] .
 eq 'getEqs['th_is_sorts_._____endth['Q:Qid,'IL:ImportList,'SS:SortSet,
     'SSDS:SubsortDeclSet,'OPDS:OpDeclSet,'MAS:MembAxSet,'EQS:EquationSet,
     'RLS:RuleSet]] = 'EQS:EquationSet [none] .
-eq 'getImports['fmod_is_sorts_.____endfm['Q:Qid,'IL:ImportList,'SS:SortSet,
+eq 'getImports['fmod_is_sorts_.____endfm['H:Header,'IL:ImportList,'SS:SortSet,
     'SSDS:SubsortDeclSet,'OPDS:OpDeclSet,'MAS:MembAxSet,'EQS:EquationSet]] =
     'IL:ImportList [none] .
 eq 'getImports['fth_is_sorts_.____endfth['Q:Qid,'IL:ImportList,'SS:SortSet,
     'SSDS:SubsortDeclSet,'OPDS:OpDeclSet,'MAS:MembAxSet,'EQS:EquationSet]] =
     'IL:ImportList [none] .
-eq 'getImports['mod_is_sorts_._____endm['Q:Qid,'IL:ImportList,'SS:SortSet,
+eq 'getImports['mod_is_sorts_._____endm['H:Header,'IL:ImportList,'SS:SortSet,
     'SSDS:SubsortDeclSet,'OPDS:OpDeclSet,'MAS:MembAxSet,'EQS:EquationSet,
     'RLS:RuleSet]] = 'IL:ImportList [none] .
 eq 'getImports['th_is_sorts_._____endth['Q:Qid,'IL:ImportList,'SS:SortSet,
     'SSDS:SubsortDeclSet,'OPDS:OpDeclSet,'MAS:MembAxSet,'EQS:EquationSet,
     'RLS:RuleSet]] = 'IL:ImportList [none] .
-eq 'getMbs['fmod_is_sorts_.____endfm['Q:Qid,'IL:ImportList,'SS:SortSet,
+eq 'getMbs['fmod_is_sorts_.____endfm['H:Header,'IL:ImportList,'SS:SortSet,
     'SSDS:SubsortDeclSet,'OPDS:OpDeclSet,'MAS:MembAxSet,'EQS:EquationSet]] =
     'MAS:MembAxSet [none] .
 eq 'getMbs['fth_is_sorts_.____endfth['Q:Qid,'IL:ImportList,'SS:SortSet,
     'SSDS:SubsortDeclSet,'OPDS:OpDeclSet,'MAS:MembAxSet,'EQS:EquationSet]] =
     'MAS:MembAxSet [none] .
-eq 'getMbs['mod_is_sorts_._____endm['Q:Qid,'IL:ImportList,'SS:SortSet,
+eq 'getMbs['mod_is_sorts_._____endm['H:Header,'IL:ImportList,'SS:SortSet,
     'SSDS:SubsortDeclSet,'OPDS:OpDeclSet,'MAS:MembAxSet,'EQS:EquationSet,
     'RLS:RuleSet]] = 'MAS:MembAxSet [none] .
 eq 'getMbs['th_is_sorts_._____endth['Q:Qid,'IL:ImportList,'SS:SortSet,
@@ -202,58 +202,64 @@ eq 'getName['V:Variable] = 'qid['substr['string['V:Variable],'0.Zero,'rfind[
 eq 'getName['fmod_is_sorts_.____endfm['Q:Qid,'IL:ImportList,'SS:SortSet,
     'SSDS:SubsortDeclSet,'OPDS:OpDeclSet,'MAS:MembAxSet,'EQS:EquationSet]] =
     'Q:Qid [none] .
+eq 'getName['fmod_is_sorts_.____endfm['_`{_`}['Q:Qid,'PDL:ParameterDeclList],
+    'IL:ImportList,'SS:SortSet,'SSDS:SubsortDeclSet,'OPDS:OpDeclSet,
+    'MAS:MembAxSet,'EQS:EquationSet]] = 'Q:Qid [none] .
 eq 'getName['fth_is_sorts_.____endfth['Q:Qid,'IL:ImportList,'SS:SortSet,
     'SSDS:SubsortDeclSet,'OPDS:OpDeclSet,'MAS:MembAxSet,'EQS:EquationSet]] =
     'Q:Qid [none] .
 eq 'getName['mod_is_sorts_._____endm['Q:Qid,'IL:ImportList,'SS:SortSet,
     'SSDS:SubsortDeclSet,'OPDS:OpDeclSet,'MAS:MembAxSet,'EQS:EquationSet,
     'RLS:RuleSet]] = 'Q:Qid [none] .
+eq 'getName['mod_is_sorts_._____endm['_`{_`}['Q:Qid,'PDL:ParameterDeclList],
+    'IL:ImportList,'SS:SortSet,'SSDS:SubsortDeclSet,'OPDS:OpDeclSet,
+    'MAS:MembAxSet,'EQS:EquationSet,'RLS:RuleSet]] = 'Q:Qid [none] .
 eq 'getName['th_is_sorts_._____endth['Q:Qid,'IL:ImportList,'SS:SortSet,
     'SSDS:SubsortDeclSet,'OPDS:OpDeclSet,'MAS:MembAxSet,'EQS:EquationSet,
     'RLS:RuleSet]] = 'Q:Qid [none] .
-eq 'getOps['fmod_is_sorts_.____endfm['Q:Qid,'IL:ImportList,'SS:SortSet,
+eq 'getOps['fmod_is_sorts_.____endfm['H:Header,'IL:ImportList,'SS:SortSet,
     'SSDS:SubsortDeclSet,'OPDS:OpDeclSet,'MAS:MembAxSet,'EQS:EquationSet]] =
     'OPDS:OpDeclSet [none] .
 eq 'getOps['fth_is_sorts_.____endfth['Q:Qid,'IL:ImportList,'SS:SortSet,
     'SSDS:SubsortDeclSet,'OPDS:OpDeclSet,'MAS:MembAxSet,'EQS:EquationSet]] =
     'OPDS:OpDeclSet [none] .
-eq 'getOps['mod_is_sorts_._____endm['Q:Qid,'IL:ImportList,'SS:SortSet,
+eq 'getOps['mod_is_sorts_._____endm['H:Header,'IL:ImportList,'SS:SortSet,
     'SSDS:SubsortDeclSet,'OPDS:OpDeclSet,'MAS:MembAxSet,'EQS:EquationSet,
     'RLS:RuleSet]] = 'OPDS:OpDeclSet [none] .
 eq 'getOps['th_is_sorts_._____endth['Q:Qid,'IL:ImportList,'SS:SortSet,
     'SSDS:SubsortDeclSet,'OPDS:OpDeclSet,'MAS:MembAxSet,'EQS:EquationSet,
     'RLS:RuleSet]] = 'OPDS:OpDeclSet [none] .
-eq 'getRls['fmod_is_sorts_.____endfm['Q:Qid,'IL:ImportList,'SS:SortSet,
+eq 'getRls['fmod_is_sorts_.____endfm['H:Header,'IL:ImportList,'SS:SortSet,
     'SSDS:SubsortDeclSet,'OPDS:OpDeclSet,'MAS:MembAxSet,'EQS:EquationSet]] =
     'none.RuleSet [none] .
 eq 'getRls['fth_is_sorts_.____endfth['Q:Qid,'IL:ImportList,'SS:SortSet,
     'SSDS:SubsortDeclSet,'OPDS:OpDeclSet,'MAS:MembAxSet,'EQS:EquationSet]] =
     'none.RuleSet [none] .
-eq 'getRls['mod_is_sorts_._____endm['Q:Qid,'IL:ImportList,'SS:SortSet,
+eq 'getRls['mod_is_sorts_._____endm['H:Header,'IL:ImportList,'SS:SortSet,
     'SSDS:SubsortDeclSet,'OPDS:OpDeclSet,'MAS:MembAxSet,'EQS:EquationSet,
     'RLS:RuleSet]] = 'RLS:RuleSet [none] .
 eq 'getRls['th_is_sorts_._____endth['Q:Qid,'IL:ImportList,'SS:SortSet,
     'SSDS:SubsortDeclSet,'OPDS:OpDeclSet,'MAS:MembAxSet,'EQS:EquationSet,
     'RLS:RuleSet]] = 'RLS:RuleSet [none] .
-eq 'getSorts['fmod_is_sorts_.____endfm['Q:Qid,'IL:ImportList,'SS:SortSet,
+eq 'getSorts['fmod_is_sorts_.____endfm['H:Header,'IL:ImportList,'SS:SortSet,
     'SSDS:SubsortDeclSet,'OPDS:OpDeclSet,'MAS:MembAxSet,'EQS:EquationSet]] =
     'SS:SortSet [none] .
 eq 'getSorts['fth_is_sorts_.____endfth['Q:Qid,'IL:ImportList,'SS:SortSet,
     'SSDS:SubsortDeclSet,'OPDS:OpDeclSet,'MAS:MembAxSet,'EQS:EquationSet]] =
     'SS:SortSet [none] .
-eq 'getSorts['mod_is_sorts_._____endm['Q:Qid,'IL:ImportList,'SS:SortSet,
+eq 'getSorts['mod_is_sorts_._____endm['H:Header,'IL:ImportList,'SS:SortSet,
     'SSDS:SubsortDeclSet,'OPDS:OpDeclSet,'MAS:MembAxSet,'EQS:EquationSet,
     'RLS:RuleSet]] = 'SS:SortSet [none] .
 eq 'getSorts['th_is_sorts_._____endth['Q:Qid,'IL:ImportList,'SS:SortSet,
     'SSDS:SubsortDeclSet,'OPDS:OpDeclSet,'MAS:MembAxSet,'EQS:EquationSet,
     'RLS:RuleSet]] = 'SS:SortSet [none] .
-eq 'getSubsorts['fmod_is_sorts_.____endfm['Q:Qid,'IL:ImportList,'SS:SortSet,
+eq 'getSubsorts['fmod_is_sorts_.____endfm['H:Header,'IL:ImportList,'SS:SortSet,
     'SSDS:SubsortDeclSet,'OPDS:OpDeclSet,'MAS:MembAxSet,'EQS:EquationSet]] =
     'SSDS:SubsortDeclSet [none] .
 eq 'getSubsorts['fth_is_sorts_.____endfth['Q:Qid,'IL:ImportList,'SS:SortSet,
     'SSDS:SubsortDeclSet,'OPDS:OpDeclSet,'MAS:MembAxSet,'EQS:EquationSet]] =
     'SSDS:SubsortDeclSet [none] .
-eq 'getSubsorts['mod_is_sorts_._____endm['Q:Qid,'IL:ImportList,'SS:SortSet,
+eq 'getSubsorts['mod_is_sorts_._____endm['H:Header,'IL:ImportList,'SS:SortSet,
     'SSDS:SubsortDeclSet,'OPDS:OpDeclSet,'MAS:MembAxSet,'EQS:EquationSet,
     'RLS:RuleSet]] = 'SSDS:SubsortDeclSet [none] .
 eq 'getSubsorts['th_is_sorts_._____endth['Q:Qid,'IL:ImportList,'SS:SortSet,

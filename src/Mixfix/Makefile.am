@@ -122,6 +122,7 @@ EXTRA_DIST = \
 	loopMode.cc \
 	search.cc \
 	srewrite.cc \
+	erewrite.cc \
 	match.cc \
 	top.yy \
 	modules.yy \

@@ -328,6 +328,7 @@ Interpreter::fRewriteCont(Int64 limit, bool debug)
   endRewriting(timer, context, fm, &Interpreter::fRewriteCont);
 }
 
+/*
 void
 Interpreter::eRewrite(const Vector<Token>& subject, Int64 limit, Int64 gas, bool debug)
 {
@@ -353,7 +354,7 @@ Interpreter::eRewrite(const Vector<Token>& subject, Int64 limit, Int64 gas, bool
       Timer timer(getFlag(SHOW_TIMING));
       for (;;)
 	{
-	  context->fairRewrite(NONE /* HACK: should be limit */, (gas == NONE) ? 1 : gas);
+	context->fairRewrite(NONE // HACK: should be limit, (gas == NONE) ? 1 : gas);
 	  DebugAdvisory("calling PseudoThread::eventLoop()");
 	  int r = PseudoThread::eventLoop();
 	  DebugAdvisory("PseudoThread::eventLoop() returned " << r);
@@ -390,6 +391,7 @@ Interpreter::eRewriteCont(Int64 limit, bool debug)
   context->fairContinue(limit);
   endRewriting(timer, context, fm, &Interpreter::eRewriteCont);
 }
+*/
 
 void
 Interpreter::cont(Int64 limit, bool debug)

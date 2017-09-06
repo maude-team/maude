@@ -1,3 +1,12 @@
+Overview of Changes in Maude alpha88c
+=====================================
+* extra advisories in metalevel
+* min/max operators in FLOAT
+* slight change to search semantics
+* metalevel projection functions now support parameterized metamodules
+* fixed kind printing bug in metaPrettyPrint()
+* erwrite supports limit and continue
+
 Overview of Changes in Maude alpha88b
 =====================================
 * minor syntactic changes to appease gcc 4.1
@@ -18,14 +27,14 @@ Overview of Changes in Maude alpha88a
 * fixed upModule() bug affecting renamings
 * fixed metaXmatch() kind bug introduced by alpha86 fix
 * subset tests for SET and SET*
-* predefined term ordering
+* predefined term ordering module
 
 Overview of Changes in Maude alpha88
 ====================================
 * fixed more sufficient completeness issues
 * search command now takes a depth bound
 * added metaNormalize()
-* added machine ints
+* added machine ints module
 
 Overview of Changes in Maude alpha87a
 =====================================

@@ -217,6 +217,7 @@ private:
 		   RewriteSequenceSearch* state,
 		   int solutionCount,
 		   int limit);
+  void doExternalRewriting(UserLevelRewritingContext* context, Int64 limit);
   void doStrategicSearch(Timer& timer,
 			 VisibleModule* module,
 			 StrategicSearch* state,

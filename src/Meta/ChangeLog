@@ -1,3 +1,10 @@
+2006-11-15  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaDownRenamings.cc: IssueAdvisory()s in the case of an
+	unusable or nonexistent module
+	
+===================================Maude88c===========================================
+
 2006-10-26  Steven Eker  <eker@goo.csl.sri.com>
 
 	* metaMatch.cc (metaXmatch): use new rebuildDag() semantics
@@ -5,6 +12,8 @@
 	* metaApply.cc (metaXapply): use new rebuildDag() semantics to fix
 	trace bug
 	(metaApply): use new rebuildDag() semantics
+
+===================================Maude88b===========================================
 
 2006-10-05  Steven Eker  <eker@goo.csl.sri.com>
 
