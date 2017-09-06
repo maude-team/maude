@@ -1,3 +1,18 @@
+2007-03-05  Steven Eker  <eker@goo.csl.sri.com>
+
+	* S_DagNode.cc (nonVariableSize): return mpz_class
+
+	* S_DagNode.hh (class S_DagNode): nonVariableSize() now returns
+	mpz_class
+
+	* S_DagNode.cc (computeSolvedForm, nonVariableSize) 
+	(insertVariables2): added
+
+	* S_DagNode.hh (class S_DagNode): added decls for
+	computeSolvedForm(), nonVariableSize(), insertVariables2()
+
+===================================Maude89===========================================
+
 2007-02-14  Steven Eker  <eker@goo.csl.sri.com>
 
 	* S_Symbol.cc (computeGeneralizedSort): use computeSortIndex()

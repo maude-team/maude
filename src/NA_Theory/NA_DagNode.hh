@@ -56,6 +56,13 @@ public:
 	     Subproblem*& returnedSubproblem,
 	     ExtensionInfo* extensionInfo);
   bool computeBaseSortForGroundSubterms();
+  //
+  //	Alternative interface for unification experiments.
+  //
+  virtual bool computeSolvedForm(DagNode* rhs,
+				 Substitution& solution,
+				 Subproblem*& returnedSubproblem);
+  virtual mpz_class nonVariableSize();
 
 private:
   DagNode* markArguments();

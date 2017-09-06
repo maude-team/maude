@@ -1,3 +1,26 @@
+2007-03-05  Steven Eker  <eker@goo.csl.sri.com>
+
+	* CUI_DagNode.cc (nonVariableSize): return mpz_class
+
+	* CUI_DagNode.hh (class CUI_DagNode): nonVariableSize() now
+	returns mpz_class
+
+2007-03-02  Steven Eker  <eker@goo.csl.sri.com>
+
+	* CUI_DagNode.cc (computeSolvedForm): use merge(); don't copy
+	parent substitution
+	(computeSolvedForm): use class SolvedFormSubproblemDisjunction
+
+2007-03-01  Steven Eker  <eker@goo.csl.sri.com>
+
+	* CUI_DagNode.cc (nonVariableSize, insertVariables2): added
+	(computeSolvedForm): added
+
+	* CUI_DagNode.hh (class CUI_DagNode): added decls for
+	computeSolvedForm(), nonVariableSize() and insertVariables2()
+
+===================================Maude89===========================================
+
 2007-02-09  Steven Eker  <eker@goo.csl.sri.com>
 
 	* CUI_DagNode.cc (instantiate2): normalize wrt to comm

@@ -1,3 +1,25 @@
+2007-02-27  Steven Eker  <eker@goo.csl.sri.com>
+
+	* variableDagNode.cc (insertVariables2): added
+
+	* variableDagNode.hh (class VariableDagNode): added decl for
+	insertVariables2()
+
+2007-02-26  Steven Eker  <eker@goo.csl.sri.com>
+
+	* variableDagNode.cc (computeSolvedForm): fix sortIndex != bug
+
+	* variableDagNode.hh (class VariableDagNode): added decl for
+	lastVariableInChain()
+
+	* variableDagNode.cc (lastVariableInChain): added
+	(computeSolvedForm): added
+
+	* variableDagNode.hh (class VariableDagNode): added decl for
+	computeSolvedForm()
+
+===================================Maude89===========================================
+
 2007-02-02  Steven Eker  <eker@goo.csl.sri.com>
 
 	* variableDagNode.cc: use unificationBind(); this fixes the bug

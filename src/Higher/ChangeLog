@@ -1,3 +1,68 @@
+2007-03-14  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unificationProblem.cc (UnificationProblem): don't call
+	Substitution::notify(); make sortedSolution a specific size
+	(findOrderSortedUnifiers): use actual variables rather than
+	original variables to determine the number of free variables
+	(extractUnifier): nrRealVariables -> nrOriginalVariables
+	(findOrderSortedUnifiers): use acutal variables rather than
+	original variables when binding free variables to fresh variables
+	(findOrderSortedUnifiers): use getFreshVariableSort() to get the
+	sort of fresh variables so we know how many BDD variables to
+	allocate them
+	(findOrderSortedUnifiers): same fix in two other places
+	(UnificationProblem): don't use Substitution::clear() since we may
+	have a large subsitution than has been notified
+	(markReachableNodes): split marking of sortedSolution and
+	unsortedSolution for safety
+	(UnificationProblem): zero sortedSolution to prevent barfing on GC
+
+2007-03-13  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unificationProblem.cc (findNextUnifier): don't call
+	FreshVariableGenerator::reset()
+	(findOrderSortedUnifiers): new FreshVariableGenerator semantics
+
+2007-03-09  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unificationProblem.hh (class UnificationProblem):
+	unsortedSolution becomes a UnificationContext*
+
+	* unificationProblem.cc (findNextUnifier): use unificationSolve()
+	(UnificationProblem): use UnificationContext
+	(markReachableNodes): mark lhsDag and unsortedSolution
+
+2007-02-28  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unificationProblem.cc (extractUnifier): need to bind unsortedSolution
+
+	* unificationProblem.hh (class UnificationProblem): decl for
+	extractUnifier() replaces decl for orderVariables()
+
+	* unificationProblem.cc (orderVariables): becomes extractUnifier()
+	(findNextUnifier, UnificationProblem): support solved form
+
+2007-02-27  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unificationProblem.cc (findNextUnifier): fix bug in that we are
+	not looking for another unsorted solution if our current unsorted
+	solution fails to have at least on sorted solution
+
+	* unificationProblem.hh (class UnificationProblem): added data
+	members order, done and pending
+	(class UnificationProblem): added decls for orderVariables() and
+	explore()
+
+	* unificationProblem.cc (orderVariables): added
+	(explore): added
+
+2007-02-26  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unificationProblem.cc (UnificationProblem): added solved form
+	hack for experimentation
+
+===================================Maude89===========================================
+
 2007-02-13  Steven Eker  <eker@goo.csl.sri.com>
 
 	* unificationProblem.cc (findOrderSortedUnifiers): use

@@ -2,7 +2,7 @@
 
     This file is part of the Maude 2 interpreter.
 
-    Copyright 1997-2007 SRI International, Menlo Park, CA 94025, USA.
+    Copyright 1997-2003 SRI International, Menlo Park, CA 94025, USA.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,22 +21,17 @@
 */
 
 //
-//      Class for creating fresh variables for unification.
+//	Abstract base class for fresh variable generation.
 //
-#ifndef _freshVariableSource_hh_
-#define _freshVariableSource_hh_
-#include "freshVariableGenerator.hh"
+#ifndef _freshVariableGenerator_hh_
+#define _freshVariableGenerator_hh_
 
-class FreshVariableSource : public FreshVariableGenerator
+class FreshVariableGenerator
 {
 public:
-  FreshVariableSource(MixfixModule* module);
-  int getFreshVariableName(int index);
-  Symbol* getBaseVariableSymbol(Sort* sort);
-
-private:
-  MixfixModule* const module;
-  char name[1 + INT_TEXT_SIZE + 1];
+  virtual ~FreshVariableGenerator() {}
+  virtual int getFreshVariableName(int index) = 0;
+  virtual Symbol* getBaseVariableSymbol(Sort* sort) = 0;
 };
 
 #endif

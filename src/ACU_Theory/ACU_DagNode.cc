@@ -27,15 +27,24 @@
 //	utility stuff
 #include "macros.hh"
 #include "vector.hh"
+#include "mpzSystem.hh"
  
 //      forward declarations
 #include "interface.hh"
 #include "core.hh"
+#include "variable.hh"
 #include "ACU_Theory.hh"
 #include "ACU_Persistent.hh"
 
 //      interface class definitions
 #include "term.hh"
+
+//      core class definitions
+#include "substitution.hh"
+
+//	variable class definitions
+#include "variableSymbol.hh"
+#include "variableDagNode.hh"
 
 //      ACU theory class definitions
 #include "ACU_Symbol.hh"
@@ -43,6 +52,7 @@
 #include "ACU_DagArgumentIterator.hh"
 #include "ACU_ExtensionInfo.hh"
 #include "ACU_Subproblem.hh"
+#include "ACU_UnificationSubproblem.hh"
 
 //	ACU Red-Black class definitions
 #include "ACU_TreeDagNode.hh"
@@ -461,3 +471,205 @@ ACU_DagNode::argVecComputeBaseSort() const
     }
   return sortIndex;
 }
+
+bool
+ACU_DagNode::computeSolvedForm(DagNode* rhs,
+			       Substitution& solution,
+			       Subproblem*& returnedSubproblem)
+{
+  if (symbol() == rhs->symbol())
+    {
+      //
+      //	We merge together the two aguments lists to get the
+      //	list of abstracted terms in the Diophantine problem.
+      //
+      ACU_DagNode* other = safeCast(ACU_DagNode*, rhs);
+      int nrArgs = argArray.length();
+      int nrArgs2 = other->argArray.length();
+      int i = 0;
+      int j = 0;
+      Vector<DagNode*> abstracted;
+      MpzSystem::IntVec multiplicities;
+      for (;;)
+	{
+	  int r;
+	  if (i == nrArgs)
+	    {
+	      if (j == nrArgs2)
+		break;
+	      r = 1;
+	    }
+	  else
+	    r = (j == nrArgs2) ? -1 : argArray[i].dagNode->compare(other->argArray[j].dagNode);
+
+	  if (r < 0)
+	    {
+	      abstracted.append(argArray[i].dagNode);
+	      multiplicities.append(argArray[i].multiplicity);
+	      ++i;
+	    }
+	  else if (r > 0)
+	    {
+	      abstracted.append(other->argArray[j].dagNode);
+	      multiplicities.append(- other->argArray[j].multiplicity);
+	      ++j;
+	    }
+	  else
+	    {
+	      int diff = argArray[i].multiplicity - other->argArray[j].multiplicity;
+	      if (diff != 0)
+		{
+		  abstracted.append(argArray[i].dagNode);
+		  multiplicities.append(diff);
+		}
+	      ++i;
+	      ++j;
+	    }      
+	}
+      int nrDioVars = multiplicities.size();
+      if (nrDioVars == 0)
+	{
+	  returnedSubproblem = 0;
+	  return true;  // equal terms
+	}
+      if (nrDioVars == 1)
+	return false;  // trivial failure
+
+      MpzSystem system;
+      system.insertEqn(multiplicities);
+
+      ACU_Symbol* s = symbol();
+      MpzSystem::IntVec upperBounds(nrDioVars);
+      for (int i = 0; i < nrDioVars; ++i)
+	{
+	  DagNode* d = abstracted[i];
+	  if (VariableDagNode* v = dynamic_cast<VariableDagNode*>(d))
+	    {
+	      DagNode* b = solution.value(v->lastVariableInChain(solution)->getIndex());
+	      upperBounds[i] = (b != 0 && b->symbol() != s) ? 1 :  // bound to alien
+		s->sortBound(static_cast<VariableSymbol*>(v->symbol())->getSort());
+	    }
+	  else
+	    upperBounds[i] = 1;  // non-variable alien
+	  //cout << upperBounds[i] << '\t';
+	}
+      //cout << endl;
+      system.setUpperBounds(upperBounds);
+      /*
+      for (int i = 0; i < nrDioVars; ++i)
+	cout << abstracted[i] << '\t';
+      cout << endl;
+      */
+      MpzSystem::IntVec dioSol;
+      ACU_UnificationSubproblem* sp = new ACU_UnificationSubproblem(symbol(), abstracted);
+      while (system.findNextMinimalSolution(dioSol))
+	{
+	  sp->addBasisElement(dioSol);
+
+	  //for (int i = 0; i < nrDioVars; ++i)
+	  //  cout << dioSol[i] << '\t';
+	  //cout << endl;
+	}
+      if (!(sp->coverable()))
+	{
+	  delete sp;
+	  return false;
+	}
+      returnedSubproblem = sp;
+      return true;
+      
+    }
+  if (dynamic_cast<VariableDagNode*>(rhs))
+    return rhs->computeSolvedForm(this, solution, returnedSubproblem);
+  return false;
+}
+
+mpz_class
+ACU_DagNode::nonVariableSize()
+{
+  mpz_class total = -1;
+  int nrArgs = argArray.length();
+  for (int i = 0; i < nrArgs; i++)
+    total += argArray[i].multiplicity * (argArray[i].dagNode->nonVariableSize() + 1);
+  return total;
+}
+
+void
+ACU_DagNode::insertVariables2(NatSet& occurs)
+{
+  int nrArgs = argArray.length();
+  for (int i = 0; i < nrArgs; i++)
+    argArray[i].dagNode->insertVariables(occurs);
+}
+
+bool
+ACU_DagNode::computeBaseSortForGroundSubterms()
+{
+  bool ground = true;
+  int nrArgs = argArray.length();
+  for (int i = 0; i < nrArgs; ++i)
+    {
+      if (!(argArray[i].dagNode->computeBaseSortForGroundSubterms()))
+	ground = false;
+    }
+  if (ground)
+    symbol()->computeBaseSort(this);  // HACK
+  return ground;
+}
+
+DagNode*
+ACU_DagNode::instantiate2(Substitution& substitution)
+{
+  ACU_Symbol* s = symbol();
+  int nrArgs = argArray.length();
+  for (int i = 0; i < nrArgs; ++i)
+    {
+      if (DagNode* n = argArray[i].dagNode->instantiate(substitution))
+	{
+	  //
+	  //	Argument changed under instantiation - need to make a new
+	  //	dagnode.
+	  //
+	  bool ground = true;
+	  ACU_DagNode* d = new ACU_DagNode(s, nrArgs);
+	  //
+	  //	Copy the arguments we already looked at.
+	  //
+	  for (int j = 0; j < i; ++j)
+	    {
+	      if (argArray[j].dagNode->getSortIndex() == Sort::SORT_UNKNOWN)
+		ground = false;
+	      d->argArray[j] = argArray[j];	
+	    }
+	  //
+	  //	Handle current argument.
+	  //
+	  d->argArray[i].dagNode = n;
+	  d->argArray[i].multiplicity = argArray[i].multiplicity;
+	  if (n->getSortIndex() == Sort::SORT_UNKNOWN)
+	    ground = false;
+	  //
+	  //	Handle remaining arguments.
+	  //
+	  for (++i; i < nrArgs; ++i)
+	    {
+	      DagNode* a = argArray[i].dagNode;
+	      if (DagNode* n = a->instantiate(substitution))
+		a = n;
+	      if (a->getSortIndex() == Sort::SORT_UNKNOWN)
+		ground = false;
+	      d->argArray[i].dagNode = a;
+	      d->argArray[i].multiplicity = argArray[i].multiplicity;
+	    }
+	  //
+	  //	Normalize the new dagnode; if it doesn't collapse and
+	  //	all its arguments are ground we compute its base sort.
+	  //
+	  if (!(d->normalizeAtTop()) && ground)
+	    s->computeBaseSort(d);
+	  return d;	
+	}
+    }
+  return 0;  // unchanged
+}
+

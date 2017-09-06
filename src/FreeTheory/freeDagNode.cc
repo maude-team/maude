@@ -381,3 +381,57 @@ FreeDagNode::occurs2(int index)
     }
   return false;
 }
+
+bool
+FreeDagNode::computeSolvedForm(DagNode* rhs,
+			       Substitution& solution,
+			       Subproblem*& returnedSubproblem)
+{
+  if (symbol() == rhs->symbol())
+    {
+      int nrArgs = symbol()->arity();
+      if (nrArgs != 0)
+	{
+	  SubproblemAccumulator subproblems;
+	  DagNode** args = argArray();
+	  DagNode** rhsArgs = safeCast(FreeDagNode*, rhs)->argArray();
+	  for (int i = 0; i < nrArgs; ++i)
+	    {
+	      if (!(args[i]->computeSolvedForm(rhsArgs[i], solution, returnedSubproblem)))
+		return false;
+	      subproblems.add(returnedSubproblem);
+	    }
+	  returnedSubproblem = subproblems.extractSubproblem();
+	}
+      else
+	returnedSubproblem = 0;
+      return true;
+    }
+  if (dynamic_cast<VariableDagNode*>(rhs))
+    return rhs->computeSolvedForm(this, solution, returnedSubproblem);
+  return false;
+}
+
+mpz_class
+FreeDagNode::nonVariableSize()
+{
+  mpz_class s = 1;
+  int i = symbol()->arity();
+  if (i > 0)
+    {
+      for (DagNode** p = argArray(); i > 0; i--, p++)
+	s += (*p)->nonVariableSize();
+    }
+  return s;
+}
+
+void
+FreeDagNode::insertVariables2(NatSet& occurs)
+{
+  int i = symbol()->arity();
+  if (i > 0)
+    {
+      for (DagNode** p = argArray(); i > 0; i--, p++)
+	(*p)->insertVariables(occurs);
+    }
+}

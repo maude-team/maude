@@ -57,8 +57,18 @@ public:
   bool computeBaseSortForGroundSubterms();
   DagNode* instantiate2(Substitution& substitution);
   bool occurs2(int index);
-
+  //
+  //	Alternative interface for unification experiments.
+  //
+  bool computeSolvedForm(DagNode* rhs,
+			 Substitution& solution,
+			 Subproblem*& returnedSubproblem);
+  void insertVariables2(NatSet& occurs);
+  //
+  //	Functions specific to VariableDagNode.
+  //
   int getIndex() const;
+  VariableDagNode* lastVariableInChain(Substitution& solution);
 
 private:
   DagNode* markArguments();

@@ -48,6 +48,7 @@
 #include "rewritingContext.hh"
 #include "subproblemAccumulator.hh"
 #include "unificationSubproblemDisjunction.hh"
+#include "solvedFormSubproblemDisjunction.hh"
 
 //	variable class definitions
 #include "variableDagNode.hh"
@@ -359,4 +360,99 @@ bool
 CUI_DagNode::occurs2(int index)
 {
   return argArray[0]->occurs(index) || argArray[1]->occurs(index);
+}
+
+bool
+CUI_DagNode::computeSolvedForm(DagNode* rhs,
+			       Substitution& solution,
+			       Subproblem*& returnedSubproblem)
+{
+  if (symbol() == rhs->symbol())
+    {
+      int nrBindings = solution.nrFragileBindings();
+      DagNode** rhsArgs = safeCast(CUI_DagNode*, rhs)->argArray;
+      {
+	//
+	//	Try in-order solution.
+	//
+	Substitution local(nrBindings);
+	//local.copy(solution);
+	SubproblemAccumulator subproblems;
+	if (argArray[0]->computeSolvedForm(rhsArgs[0], local, returnedSubproblem))
+	  {
+	    subproblems.add(returnedSubproblem);
+	    if (argArray[1]->computeSolvedForm(rhsArgs[1], local, returnedSubproblem))
+	      {
+		subproblems.add(returnedSubproblem);
+		if (!(argArray[0]->equal(argArray[1])) && !(rhsArgs[0]->equal(rhsArgs[1])))
+		  {
+		    //
+		    //	We have one potential solution - now check the
+		    //	reverse order alternative.
+		    //
+		    Substitution local2(nrBindings);
+		    //local2.copy(solution);
+		    SubproblemAccumulator subproblems2;
+		    if (argArray[0]->computeSolvedForm(rhsArgs[1], local2, returnedSubproblem))
+		      {
+			subproblems2.add(returnedSubproblem);
+			if (argArray[1]->computeSolvedForm(rhsArgs[0], local2, returnedSubproblem))
+			  {
+			    subproblems2.add(returnedSubproblem);
+			    //
+			    //	We have two potential solutions so we need to form a disjunction.
+			    //
+			    SolvedFormSubproblemDisjunction* disjunction = new SolvedFormSubproblemDisjunction(nrBindings);
+			    disjunction->addOption(local.makeLocalBinding(), subproblems.extractSubproblem());
+			    disjunction->addOption(local2.makeLocalBinding(), subproblems2.extractSubproblem());
+			    returnedSubproblem = disjunction;
+			    return true;
+			  }
+		      }
+		  }
+		//
+		//	Only the in-order solution is viable so return it.
+		//
+		if (!(solution.merge(local, subproblems)))
+		  return false;
+		returnedSubproblem = subproblems.extractSubproblem();
+		return true;
+	      }
+	  }
+      }
+      if (!(argArray[0]->equal(argArray[1])) && !(rhsArgs[0]->equal(rhsArgs[1])))
+	{
+	  //
+	  //	Try reverse order solution.
+	  //
+	  SubproblemAccumulator subproblems;
+	  if (argArray[0]->computeSolvedForm(rhsArgs[1], solution, returnedSubproblem))
+	    {
+	      subproblems.add(returnedSubproblem);
+	      if (argArray[1]->computeSolvedForm(rhsArgs[0], solution, returnedSubproblem))
+		{
+		  returnedSubproblem = subproblems.extractSubproblem();
+		  return true;
+		}
+	    }
+	}
+      return false;
+    }
+  if (dynamic_cast<VariableDagNode*>(rhs))
+    return rhs->computeSolvedForm(this, solution, returnedSubproblem);
+  return false;
+}
+
+
+mpz_class
+CUI_DagNode::nonVariableSize()
+{
+  return 1 + argArray[0]->nonVariableSize() + argArray[1]->nonVariableSize();
+}
+
+void
+CUI_DagNode::insertVariables2(NatSet& occurs)
+{
+  argArray[0]->insertVariables(occurs);
+  argArray[1]->insertVariables(occurs);
 }

@@ -75,5 +75,7 @@ class ConditionFragment;
 class ConditionState;
 class OpDeclaration;
 class SortBdds;
+class UnificationContext;
+class FreshVariableGenerator;
 
 #endif

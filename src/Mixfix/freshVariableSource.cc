@@ -51,17 +51,15 @@
 FreshVariableSource::FreshVariableSource(MixfixModule* module)
   : module(module)
 {
-  counter = 0;
   name[1 + INT_TEXT_SIZE] = '\0';
 }
 
 int
-FreshVariableSource::getFreshVariableName()
+FreshVariableSource::getFreshVariableName(int index)
 {
   char* p = name + INT_TEXT_SIZE;
-  ++counter;
-  for (int i = counter; i != 0; i /= 10, --p)
-    *p = '0' + i % 10;
+  for (++index; index != 0; index /= 10, --p)
+    *p = '0' + index % 10;
   *p = '#';
   return Token::encode(p);
 }
@@ -70,10 +68,4 @@ Symbol*
 FreshVariableSource::getBaseVariableSymbol(Sort* sort)
 {
   return module->instantiateVariable(sort);
-}
-
-void
-FreshVariableSource::reset()
-{
-  counter = 0;
 }

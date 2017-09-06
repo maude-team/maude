@@ -64,6 +64,17 @@ public:
 				  ExtensionInfo* extensionInfo);
   void partialReplace(DagNode* replacement, ExtensionInfo* extensionInfo);
   DagNode* partialConstruct(DagNode* replacement, ExtensionInfo* extensionInfo);
+
+  DagNode* instantiate2(Substitution& substitution);
+  //
+  //	Alternative interface for unification experiments.
+  //
+  bool computeSolvedForm(DagNode* rhs,
+				 Substitution& solution,
+				 Subproblem*& returnedSubproblem);
+  mpz_class nonVariableSize();
+  void insertVariables2(NatSet& occurs);
+  bool computeBaseSortForGroundSubterms();
   //
   //    Functions particular to ACU_DagNode.
   //
@@ -147,6 +158,7 @@ private:
   friend class ACU_NonLinearLhsAutomaton;	// for matching DAG subject
   friend class ACU_RhsAutomaton;	// for constructing replacement DAG
   friend class ACU_Subproblem;		// for constructing substitution
+  friend class ACU_UnificationSubproblem;	// for constructing substitution
   friend class ACU_ExtensionInfo;	// for constructing matched portion
   friend class ACU_DagArgumentIterator;	// to accesss Pair
 

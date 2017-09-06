@@ -28,6 +28,7 @@ libcore_a_SOURCES = \
 	subproblemSequence.cc \
 	subproblemDisjunction.cc \
 	unificationSubproblemDisjunction.cc \
+	solvedFormSubproblemDisjunction.cc \
 	sortCheckSubproblem.cc \
 	disjunctiveSubproblemAccumulator.cc \
 	preEquation.cc \
@@ -44,7 +45,8 @@ libcore_a_SOURCES = \
 	dagNodeCache.cc \
 	memoTable.cc \
 	rootContainer.cc \
-	sortBdds.cc
+	sortBdds.cc \
+	unificationContext.cc
 
 EXTRA_DIST = \
 	run.cc \
@@ -101,6 +103,7 @@ noinst_HEADERS = \
 	subproblemAccumulator.hh \
 	subproblemDisjunction.hh \
 	unificationSubproblemDisjunction.hh \
+	solvedFormSubproblemDisjunction.hh \
 	subproblemSequence.hh \
 	substitution.hh \
 	symbolMap.hh \
@@ -108,4 +111,6 @@ noinst_HEADERS = \
 	termSet.hh \
 	trivialRhsAutomaton.hh \
 	variableAbstractionSubproblem.hh \
-	variableInfo.hh
+	variableInfo.hh \
+	unificationContext.hh \
+	freshVariableGenerator.hh

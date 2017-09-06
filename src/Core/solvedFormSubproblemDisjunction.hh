@@ -21,22 +21,40 @@
 */
 
 //
-//      Class for creating fresh variables for unification.
+//      Class for disjunctions of subproblems.
 //
-#ifndef _freshVariableSource_hh_
-#define _freshVariableSource_hh_
-#include "freshVariableGenerator.hh"
+#ifndef _solvedFormSubproblemDisjunction_hh_
+#define _solvedFormSubproblemDisjunction_hh_
+#include "subproblem.hh"
+#include "simpleRootContainer.hh"
 
-class FreshVariableSource : public FreshVariableGenerator
+class SolvedFormSubproblemDisjunction : public Subproblem, private SimpleRootContainer
 {
 public:
-  FreshVariableSource(MixfixModule* module);
-  int getFreshVariableName(int index);
-  Symbol* getBaseVariableSymbol(Sort* sort);
+  SolvedFormSubproblemDisjunction(int nrBindings);
+  ~SolvedFormSubproblemDisjunction();
+
+  void addOption(LocalBinding* difference,
+		 Subproblem* subproblem,
+		 ExtensionInfo* extensionInfo = 0);
+  bool unificationSolve(bool findFirst, UnificationContext& solution);
 
 private:
-  MixfixModule* const module;
-  char name[1 + INT_TEXT_SIZE + 1];
+  struct Option
+    {
+      LocalBinding* difference;
+      Subproblem* subproblem;
+      ExtensionInfo* extensionInfo;
+    };
+  
+  void markReachableNodes();
+
+  ExtensionInfo* realExtensionInfo;
+  Vector<Option> options;
+  int selectedOption;
+
+  Substitution savedSubstitution;
+  Subproblem* assertionSubproblem;
 };
 
 #endif

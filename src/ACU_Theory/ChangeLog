@@ -1,3 +1,79 @@
+2007-03-14  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_UnificationSubproblem.hh (class ACU_UnificationSubproblem):
+	added decl for markReachableNodes()
+
+	* ACU_UnificationSubproblem.cc (markReachableNodes): added
+
+	* ACU_UnificationSubproblem.hh (class ACU_UnificationSubproblem):
+	derive from SimpleRootContainer
+
+	* ACU_UnificationSubproblem.cc (ACU_UnificationSubproblem):
+	initialize savedSubstitution
+	(unificationSolve): don't call deallocateFreshVariables(); restore
+	original substitution after we're done with selection
+
+2007-03-13  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_Symbol.cc (computeGeneralizedSort): added
+
+	* ACU_Symbol.hh (class ACU_Symbol): added decl for
+	computeGeneralizedSort()
+
+	* ACU_DagNode.hh (class ACU_DagNode): added decl for
+	instantiate2()
+
+	* ACU_DagNode.cc (instantiate2): added
+
+	* ACU_UnificationSubproblem.cc (unificationSolve): keep a copy of
+	the solution and restore is each time we give up on the current
+	basis selection
+
+	* ACU_UnificationSubproblem.hh (class ACU_UnificationSubproblem):
+	added data member savedSubstitution
+
+	* ACU_UnificationSubproblem.cc (buildSolution): added
+	(unificationSolve): fix bug that we were clearing selection that
+	we needed for backtracking
+
+	* ACU_UnificationSubproblem.hh (class ACU_UnificationSubproblem):
+	added decl for buildSolution()
+
+	* ACU_DagNode.hh (class ACU_DagNode): ACU_UnificationSubproblem
+	becomes a friend
+
+	* ACU_Theory.hh: added class ACU_UnificationSubproblem
+
+2007-03-12  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_DagNode.cc (computeSolvedForm): use coverable() check
+
+	* ACU_UnificationSubproblem.cc (coverable): added
+
+	* ACU_DagNode.cc (computeSolvedForm): use
+	ACU_UnificationSubproblem
+
+	* ACU_UnificationSubproblem.cc: created
+
+	* ACU_UnificationSubproblem.hh: created
+
+2007-03-09  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_DagNode.cc (computeBaseSortForGroundSubterms): added
+	(computeSolvedForm): take car of upper bounds
+
+	* ACU_DagNode.hh (class ACU_DagNode): added decl for
+	computeBaseSortForGroundSubterms()
+
+	* ACU_DagNode.cc (nonVariableSize): added
+	(insertVariables2): added
+	(computeSolvedForm): added stub
+
+	* ACU_DagNode.hh (class ACU_DagNode): added decls for
+	computeSolvedForm(), nonVariableSize(), insertVariables2()
+
+===================================Maude89===========================================
+
 2006-10-10  Steven Eker  <eker@goo.csl.sri.com>
 
 	* ACU_DagNode.hh: added declaration for getACU_DagNode() to

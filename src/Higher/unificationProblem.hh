@@ -34,15 +34,6 @@ class UnificationProblem : public VariableInfo, private SimpleRootContainer
   NO_COPYING(UnificationProblem);
 
 public:
-  class FreshVariableGenerator
-  {
-  public:
-    virtual ~FreshVariableGenerator() {}
-    virtual int getFreshVariableName() = 0;
-    virtual Symbol* getBaseVariableSymbol(Sort* sort) = 0;
-    virtual void reset() = 0;
-  };
-
   UnificationProblem(Term* lhs, Term* rhs, FreshVariableGenerator* freshVariableGenerator);
   ~UnificationProblem();
 
@@ -52,6 +43,8 @@ public:
 private:
   void markReachableNodes();
   void findOrderSortedUnifiers();
+  bool extractUnifier();
+  bool explore(int index);
 
   Term* lhs;
   Term* rhs;
@@ -61,12 +54,18 @@ private:
   DagNode* lhsDag;
   DagNode* rhsDag;
 
-  RewritingContext* unsortedSolution;
+  UnificationContext* unsortedSolution;
   Subproblem* subproblem;
   bool viable;
   Vector<int> freeVariables;
   AllSat* orderSortedUnifiers;
   Substitution* sortedSolution;
+  //
+  //	Stuff for resolving dependencies in solved form.
+  //
+  Vector<int> order;
+  NatSet done;
+  NatSet pending;
 };
 
 inline const Substitution&

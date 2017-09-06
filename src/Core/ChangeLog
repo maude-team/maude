@@ -1,3 +1,85 @@
+2007-03-14  Steven Eker  <eker@goo.csl.sri.com>
+
+	* solvedFormSubproblemDisjunction.cc (markReachableNodes): added
+
+	* solvedFormSubproblemDisjunction.hh (class
+	SolvedFormSubproblemDisjunction): derive from SimpleRootContainer
+	(class SolvedFormSubproblemDisjunction): added decl for
+	markReachableNodes()
+
+	* unificationContext.cc (makeFreshVariable): record sort of fresh
+	variable
+
+	* unificationContext.hh (getFreshVariableSort): added
+
+	* unificationContext.cc (makeFreshVariable): fix off by one error
+	in value passed to getFreshVariableName()
+
+	* substitution.hh (clone): resize values
+	(bind): make Assert()s more verbose
+	(value): make Assert()s more verbose
+	(addNewVariable): added
+
+	* unificationContext.cc (UnificationContext): firstFreeIndex ->
+	nrOriginalVariables; initialize base class; don't initialize
+	nextName
+	(deallocateFreshVariables): deleted
+	(makeFreshVariable): rewritten
+
+	* unificationContext.hh (class UnificationContext): firstFreeIndex
+	becomes nrOriginalVariables; decl for deallocateFreshVariables()
+	deleted; data member nextName deleted
+
+2007-03-13  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unificationContext.cc: created
+	(UnificationContext): fixed bug where we were zeroing local
+	nextName variable
+	(makeFreshVariable): clear fresh variable to support reuse
+
+	* unificationContext.hh (class UnificationContext): rewritten
+
+2007-03-09  Steven Eker  <eker@goo.csl.sri.com>
+
+	* solvedFormSubproblemDisjunction.cc (solve): become unificationSolve()
+
+	* solvedFormSubproblemDisjunction.hh (class
+	SolvedFormSubproblemDisjunction): define unificationSolve() rather
+	than solve()
+
+	* subproblemSequence.hh (class SubproblemSequence): added decl for
+	unificationSolve()
+
+	* subproblemSequence.cc (unificationSolve): added
+
+	* unificationContext.hh (class UnificationContext): created
+
+2007-03-02  Steven Eker  <eker@goo.csl.sri.com>
+
+	* solvedFormSubproblemDisjunction.hh: created
+
+	* solvedFormSubproblemDisjunction.cc: created
+
+	* localBinding.hh (class LocalBinding): added decl for
+	solvedFormAssert()
+
+	* localBinding.cc (unificationAssert): fix bug where we were
+	extracting subproblem too soon
+	(solvedFormAssert): added
+
+	* substitution.cc (merge): added Substitution& version
+
+	* substitution.hh (class Substitution): added dec for merge()
+
+	* substitution.cc (merge): added
+
+	* substitution.hh (class Substitution): added decl for
+	makeLocalBinding()
+
+	* substitution.cc (makeLocalBinding): added
+
+===================================Maude89===========================================
+
 2007-02-13  Steven Eker  <eker@goo.csl.sri.com>
 
 	* substitution.hh (value): check against valued.size() rather than

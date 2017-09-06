@@ -1,3 +1,19 @@
+2007-03-14  Steven Eker  <eker@goo.csl.sri.com>
+
+	* lexerAux.hh: added decl for checkForPending()
+
+	* lexerAux.cc (checkForPending): added
+
+===================================Maude89===========================================
+
+2007-03-13  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freshVariableSource.cc (reset): deleted
+	(getFreshVariableName): rewritten
+	(FreshVariableSource): don't clear counter
+
+	* freshVariableSource.hh (class FreshVariableSource): rewritten
+
 2007-02-13  Steven Eker  <eker@goo.csl.sri.com>
 
 	* unify.cc (doUnification): use getSolution()

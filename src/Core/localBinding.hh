@@ -40,6 +40,7 @@ public:
   void retract(Substitution& substitution);
 
   bool unificationAssert(Substitution& substitution, Subproblem*& returnedSubproblem);
+  bool solvedFormAssert(Substitution& substitution, Subproblem*& returnedSubproblem);
 
 #ifdef DUMP
   void dump(ostream& s, const VariableInfo& variableInfo, int indentLevel) const;

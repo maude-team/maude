@@ -38,3 +38,4 @@ bool includeFile(const string& directory, const string& fileName, bool silent, i
 bool handleEof();
 void eatComment(bool firstNonWhite);
 void cleanUpLexer();
+void checkForPending();

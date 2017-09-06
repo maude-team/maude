@@ -57,6 +57,14 @@ public:
   DagNode* instantiate2(Substitution& substitution);
   bool occurs2(int index);
   //
+  //	Alternative interface for unification experiments.
+  //
+  bool computeSolvedForm(DagNode* rhs,
+			 Substitution& solution,
+			 Subproblem*& returnedSubproblem);
+  mpz_class nonVariableSize();
+  void insertVariables2(NatSet& occurs);
+  //
   //    Functions particular to CUI_DagNode.
   //
   CUI_Symbol* symbol() const;
