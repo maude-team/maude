@@ -375,6 +375,23 @@ MetaLevelOpSymbol::metaReduce(FreeDagNode* subject, RewritingContext& context)
 }
 
 bool
+MetaLevelOpSymbol::metaNormalize(FreeDagNode* subject, RewritingContext& context)
+{
+  if (ImportModule* m = metaLevel->downModule(subject->getArgument(0)))
+    {
+      if (Term* t = metaLevel->downTerm(subject->getArgument(1), m))
+	{
+	  t = t->normalize(true);
+	  t->symbol()->fillInSortInfo(t);
+	  DagNode* d = metaLevel->upResultPair(t, m);
+	  t->deepSelfDestruct();
+	  return context.builtInReplace(subject, d);
+	}
+    }
+  return false;
+}
+
+bool
 MetaLevelOpSymbol::metaRewrite(FreeDagNode* subject, RewritingContext& context)
 {
   if (ImportModule* m = metaLevel->downModule(subject->getArgument(0)))

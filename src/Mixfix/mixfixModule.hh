@@ -30,14 +30,14 @@
 #include <map>
 #include "profileModule.hh"
 #include "metadataStore.hh"
-#include "commonTokens.hh"
+#include "sharedTokens.hh"
 #include "freeTheory.hh"
 #include "builtIn.hh"
 #include "token.hh"
 #include "pointerSet.hh"
 #include "symbolType.hh"
 
-class MixfixModule : public ProfileModule, public MetadataStore, protected CommonTokens
+class MixfixModule : public ProfileModule, public MetadataStore, protected SharedTokens
 {
   NO_COPYING(MixfixModule);
 
@@ -244,9 +244,11 @@ public:  // HACK
     //	Precedences for strategy language.
     //
     ASSIGNMENT_PREC = 75,
+    STRAT_TEST_PREC = 93,
     STRAT_SEQ_PREC = 95,
     STRAT_UNION_PREC = 97,
-    STRAT_BRANCH_PREC = 99
+    STRAT_ORELSE_PREC = 99,
+    STRAT_BRANCH_PREC = 101
   };
 
 private:
@@ -327,7 +329,9 @@ private:
     ASSIGNMENT = -37,
     SUBSTITUTION = -38,
 
-    COMPLEX_BASE = -39
+    STRATEGY_LIST = -39,
+
+    COMPLEX_BASE = -40
   };
 
   enum NonTerminalType
@@ -688,11 +692,15 @@ private:
 		   const ConnectedComponent* rightCaptureComponent,
 		   bool rangeKnown);
 
+  static bool prettyPrint(ostream& s, StrategyExpression* strategy, int requiredPrec);
+
+
   NatSet objectSymbols;
   NatSet messageSymbols;
 
   friend ostream& operator<<(ostream& s, const Term* term);
   friend ostream& operator<<(ostream& s, DagNode* dagNode);
+  friend ostream& operator<<(ostream& s, StrategyExpression* strategy);
 };
 
 inline SymbolType

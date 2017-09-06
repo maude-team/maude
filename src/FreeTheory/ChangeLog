@@ -1,3 +1,14 @@
+2006-10-18  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeRemainder.cc (dump): dump equation
+
+2006-10-10  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeNet.hh (class FreeNet): removed extraneous quantifier to
+	appease gcc 4.1
+
+===================================Maude88b===========================================
+
 2005-07-28  Steven Eker  <eker@goo.csl.sri.com>
 
 	* freeTerm.cc (findEagerVariables, markEagerArguments): removed
@@ -3133,4 +3144,3 @@ Fri Oct 13 17:45:10 1995  Steven Eker  <eker@ponder.csl.sri.com>
 
 	(analyseConstraintPropagation): removed getVariable()
 	replaced all (Variable*)s with downCast()s
-

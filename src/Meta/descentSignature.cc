@@ -29,6 +29,7 @@
 //		MACRO(symbols name, number of args)
 //
   MACRO(metaReduce, 2)
+  MACRO(metaNormalize, 2)
   MACRO(metaRewrite, 3)
   MACRO(metaFrewrite, 4)
   MACRO(metaApply, 5)

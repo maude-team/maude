@@ -156,7 +156,7 @@ public:
   void cont(Int64 limit, bool debug);
 
   void match(const Vector<Token>& bubble, bool withExtension, Int64 limit);
-  void search(const Vector<Token>& bubble, Int64 limit);
+  void search(const Vector<Token>& bubble, Int64 limit, Int64 depth);
   void showSearchPath(int stateNr);
   void showSearchPathLabels(int stateNr);
   void showSearchGraph();
@@ -199,6 +199,7 @@ private:
   void clearContinueInfo();
   DagNode* makeDag(const Vector<Token>& subject);
   void startUsingModule(VisibleModule* module);
+  void printModifiers(Int64 number, Int64 number2);
   void printStats(const Timer& timer, RewritingContext& context, bool timingFlag);
   void endRewriting(Timer& timer,
 		    UserLevelRewritingContext* context,
@@ -210,11 +211,17 @@ private:
   bool contLoop2(const Vector<Token>& input);
   void doLoop(DagNode* d, VisibleModule* module);
   void searchCont(Int64 limit, bool debug);
+  void sRewriteCont(Int64 limit, bool debug);
   void doSearching(Timer& timer,
 		   VisibleModule* module,
 		   RewriteSequenceSearch* state,
 		   int solutionCount,
 		   int limit);
+  void doStrategicSearch(Timer& timer,
+			 VisibleModule* module,
+			 StrategicSearch* state,
+			 int solutionCount,
+			 int limit);
   void printMatchTiming(const Timer& timer);
   void printSearchTiming(const Timer& timer,  RewriteSequenceSearch* state);
   void doMatching(Timer& timer,
@@ -238,6 +245,7 @@ private:
   UserLevelRewritingContext* savedContext;
   MatchSearchState* savedMatchSearchState;
   RewriteSequenceSearch* savedRewriteSequenceSearch;
+  StrategicSearch* savedStrategicSearch;
   int savedSolutionCount;
   VisibleModule* savedModule;
   ContinueFuncPtr continueFunc;

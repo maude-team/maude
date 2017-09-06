@@ -73,14 +73,14 @@
 #include "assignmentConditionFragment.hh"
 #include "rewriteConditionFragment.hh"
 
-//	strategy languages definitions
+//	strategy languages class definitions
 #include "trivialStrategy.hh"
 #include "applicationStrategy.hh"
 #include "concatenationStrategy.hh"
 #include "unionStrategy.hh"
 #include "iterationStrategy.hh"
 #include "branchStrategy.hh"
-#include "unaryStrategy.hh"
+#include "testStrategy.hh"
 
 //	front end class definitions
 #include "mixfixModule.hh"
@@ -419,16 +419,14 @@ MixfixParser::makeStrategy(int node)
 	Vector<Term*> variables;
 	Vector<Term*> values;
 	Vector<StrategyExpression*> strategies;
-	s = new ApplicationStrategy(label, variables, values, strategies);
-	break;
-      }
-    case MAKE_APPLICATION_WITH_SUBSTITUTION:
-      {
-	int label = actions[parser.getProductionNumber(parser.getChild(node, 0))].data;
-	Vector<Term*> variables;
-	Vector<Term*> values;
-	makeSubstitution(parser.getChild(node, 1), variables, values);
-	Vector<StrategyExpression*> strategies;
+	int child = 1;
+	if (a.data)
+	  {
+	    makeSubstitution(parser.getChild(node, 1), variables, values);
+	    ++child;
+	  }
+	if (a.data2)
+	  makeStrategyList(parser.getChild(node, child), strategies);
 	s = new ApplicationStrategy(label, variables, values, strategies);
 	break;
       }
@@ -465,21 +463,31 @@ MixfixParser::makeStrategy(int node)
     case MAKE_ITERATION:
       {
 	s = new IterationStrategy(makeStrategy(parser.getChild(node, 0)),
-				  actions[parser.getProductionNumber(node)].data,
-				  actions[parser.getProductionNumber(node)].data2);
+				  actions[parser.getProductionNumber(node)].data);
 	break;
       }
     case MAKE_BRANCH:
       {
+	BranchStrategy::Action successAction = static_cast<BranchStrategy::Action>(actions[parser.getProductionNumber(node)].data);
+	BranchStrategy::Action failureAction = static_cast<BranchStrategy::Action>(actions[parser.getProductionNumber(node)].data2);
+	int child = 0;
+	StrategyExpression* successStrategy =
+	  (successAction == BranchStrategy::NEW_STRATEGY) ? makeStrategy(parser.getChild(node, ++child)) : 0;
+	StrategyExpression* failureStrategy =
+	  (failureAction == BranchStrategy::NEW_STRATEGY) ? makeStrategy(parser.getChild(node, ++child)) : 0;
 	s = new BranchStrategy(makeStrategy(parser.getChild(node, 0)),
-                               makeStrategy(parser.getChild(node, 1)),
-                               makeStrategy(parser.getChild(node, 2)));
+			       successAction,
+			       successStrategy,
+			       failureAction,
+			       failureStrategy);
 	break;
       }
-    case MAKE_UNARY:
+    case MAKE_TEST:
       {
-	s = new UnaryStrategy(makeStrategy(parser.getChild(node, 0)),
-			      static_cast<UnaryStrategy::StrategyType>(actions[parser.getProductionNumber(node)].data));
+	Vector<ConditionFragment*> condition;
+	if (parser.getNumberOfChildren(node) > 1)  // such that clause
+	  makeCondition(parser.getChild(node, 2), condition);
+	s = new TestStrategy(makeTerm(parser.getChild(node, 0)), actions[parser.getProductionNumber(node)].data, condition);
 	break;
       }
     default:
@@ -489,6 +497,18 @@ MixfixParser::makeStrategy(int node)
       }
     }
   return s;
+}
+
+void
+MixfixParser::makeStrategyList(int node, Vector<StrategyExpression*>& strategies)
+{
+  while (actions[parser.getProductionNumber(node)].action == MAKE_STRATEGY_LIST)
+    {
+      strategies.append(makeStrategy(parser.getChild(node, 0)));
+      node = parser.getChild(node, 1);
+    }
+  Assert(actions[parser.getProductionNumber(node)].action == PASS_THRU, "unexpected action");
+  strategies.append(makeStrategy(parser.getChild(node, 0)));
 }
 
 Sort*
@@ -691,6 +711,11 @@ MixfixParser::makeConditionFragment(int node)
   Action& a = actions[parser.getProductionNumber(node)];
   switch (a.action)
     {
+    case PASS_THRU:
+      {
+	f = makeConditionFragment(parser.getChild(node, 0));
+	break;
+      }
     case MAKE_TRUE:
       {
 	f = new EqualityConditionFragment(makeTerm(parser.getChild(node, 0)),

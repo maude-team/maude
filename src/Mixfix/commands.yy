@@ -137,12 +137,13 @@ command		:	KW_SELECT		{ lexerCmdMode(); clear(); }
 			  clear();
 			  moduleExpr.contractTo(0);
 			  number = NONE;
+			  number2 = NONE;
 			}
-			numberModuleTerm
+			numbersModuleTerm
 			{
 			  lexerInitialMode();
 			  if (interpreter.setCurrentModule(moduleExpr, 1))
-			    interpreter.search(bubble, number);
+			    interpreter.search(bubble, number, number2);
 			}
 		|	match
 			{
@@ -527,6 +528,7 @@ inEnd		:	':'			{ moduleExpr = bubble; clear(); }
  *	by term, followed by dot.
  *	{"[" <number> "]"} {"in" <module expression> ":"} <term> "."
  */
+
 numberModuleTerm
 		:	'['			{ store($1); }
 			numberModuleTerm1
@@ -561,6 +563,10 @@ numberModuleTerm2
  *	expression, followed by term, followed by dot.
  *	{"[" <number> "]"} {"in" <module expression> ":"} <term> "."
  */
+
+/*
+ *	Seen <command>; looking for "[", "in", or start of term.
+ */
 numbersModuleTerm
 		:	'['			{ store($1); }
 			numbersModuleTerm1
@@ -570,14 +576,24 @@ numbersModuleTerm
 			cTokensBarDot '.'
 		;
 
+/*
+ *	Seen <command> "["; looking for <number>, ",", continuation of
+ *	term or "." to end command.
+ */
 numbersModuleTerm1
 		:	NUMERIC_ID		{ store($1); }
 			numbersModuleTerm2
-		|	cTokenBarDotNumber	{ store($1); }
+		|	','			{ store($1); }
+			numbersModuleTerm5
+		|	cTokenBarDotCommaNumber	{ store($1); }
 			cTokensBarDot '.'
 		|	'.'			{}
 		;
 
+/*
+ *	Seen <command> "[" <number>; looking for "]", ",",
+ *	continuation of term or "." to end command.
+ */
 numbersModuleTerm2
 		:	']'
 			{
@@ -592,6 +608,10 @@ numbersModuleTerm2
 		|	'.'			{}
 		;
 
+/*
+ *	Seen <command> "[" <number> ","; looking for <number>,
+ *	continuation of term or "." to end command.
+ */
 numbersModuleTerm3
 		:	NUMERIC_ID		{ store($1); }
 			numbersModuleTerm4
@@ -600,11 +620,43 @@ numbersModuleTerm3
 		|	'.'			{}
 		;
 
+/*
+ *	Seen <command> "[" <number> "," <number>; looking for "]",
+ *	continuation of term or "." to end command.
+ */
 numbersModuleTerm4
 		:	']'
 			{
 			  number = Token::codeToInt64(bubble[1].code());
 			  number2 = Token::codeToInt64(bubble[3].code());
+			  clear();
+			}
+			moduleAndTerm
+		|	cTokenBarDotRight	{ store($1); }
+			cTokensBarDot '.'
+		|	'.'			{}
+		;
+
+/*
+ *	Seen <command> "[" ","; looking for <number>, continuation of
+ *	term or "." to end command. 
+ */
+numbersModuleTerm5
+		:	NUMERIC_ID	{ store($1); }
+			numbersModuleTerm6
+		|	cTokenBarDotNumber	{ store($1); }
+			cTokensBarDot '.'
+		|	'.'			{}
+		;
+
+/*
+ *	Seen <command> "[" "," <number>; looking for "]", continuation
+ *	of term or "." to end command. 
+ */
+numbersModuleTerm6
+		:	']'
+			{
+			  number2 = Token::codeToInt64(bubble[2].code());
 			  clear();
 			}
 			moduleAndTerm
@@ -676,6 +728,11 @@ cTokenBarDotCommaRight
 			cTokens ')'		{ $$ = $4; }
 		;
 
+cTokenBarDotCommaNumber
+		:	IDENTIFIER | '[' | ']' | KW_IN | ':'
+		|	'('			{ store($1); }
+			cTokens ')'		{ $$ = $4; }
+		;
 /*
  *	Lists of operator names.
  */

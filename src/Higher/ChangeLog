@@ -1,3 +1,104 @@
+2006-11-09  Steven Eker  <eker@goo.csl.sri.com>
+
+	* equalityConditionFragment.cc (solve): comment out state variable
+
+	* sortTestConditionFragment.cc (solve): comment out state variable
+
+2006-11-06  Steven Eker  <eker@goo.csl.sri.com>
+
+	* assignmentConditionFragment.cc (makeRhsInstance): take
+	Substitution& rather than RewritingContext&
+
+	* assignmentConditionFragment.hh (class
+	AssignmentConditionFragment): updated decl for makeRhsInstance()
+
+	* rewriteConditionFragment.hh (class RewriteConditionFragment):
+	updated decl for makeLhsInstance()
+
+	* rewriteConditionFragment.cc (makeLhsInstance): take
+	Substitution& rather than RewritingContext&
+
+2006-10-30  Steven Eker  <eker@goo.csl.sri.com>
+
+	* rewriteConditionFragment.cc (makeLhsInstance): added
+	(matchRoot): added
+
+	* rewriteConditionFragment.hh (class RewriteConditionFragment):
+	added decls for makeLhsInstance() and matchRoot()
+
+2006-10-26  Steven Eker  <eker@goo.csl.sri.com>
+
+	* stateTransitionGraph3.cc (getNextState): fix trace bug using new
+	rebuildDag() semantics
+
+	* positionState.cc (rebuildDag): now return DagPair
+
+	* positionState.hh (class PositionState): added typedef DagPair;
+	both rebuildDag() functions now return DagPair
+
+2006-10-25  Steven Eker  <eker@goo.csl.sri.com>
+
+	* positionState.hh (getDagNode): added PositionIndex version
+
+2006-10-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* assignmentConditionFragment.cc (makeRhsInstance, matchRoot):
+	moved here
+
+2006-10-20  Steven Eker  <eker@goo.csl.sri.com>
+
+	* assignmentConditionFragment.hh (matchRoot): added
+	(makeRhsInstance): added
+
+2006-10-18  Steven Eker  <eker@goo.csl.sri.com>
+
+	* equalityConditionFragment.cc (dump): added
+
+	* equalityConditionFragment.hh (class EqualityConditionFragment):
+	added decl for dump()
+
+===================================Maude88b===========================================
+
+2006-10-05  Steven Eker  <eker@goo.csl.sri.com>
+
+	* searchState.cc (findFirstSolution): check that pattern and
+	subject are in the same component
+
+2006-09-29  Steven Eker  <eker@goo.csl.sri.com>
+
+	* positionState.hh (rebuildDag): added simplified version
+	(getPositionIndex): added
+	(class PositionState): added typedef for PositionIndex
+
+	* positionState.cc (rebuildDag): rewritten to take external
+	extension info and position index
+
+2006-09-25  Steven Eker  <eker@goo.csl.sri.com>
+
+	* searchState.cc (hasCondition): added
+	(findNextSolution): use local version of hasCondition()
+	(findFirstSolution): use local version of hasCondition()
+	(hasCondition): use getFlags()
+
+	* searchState.hh (class SearchState): added decl for
+	hasCondition()
+
+	* rewriteSearchState.hh (class RewriteSearchState): renumbered
+	ALLOW_NONEXEC in enum Flags
+
+	* matchSearchState.hh (class MatchSearchState): renumbered
+	GC_PATTERN in enum Flags
+
+	* searchState.hh (class SearchState): added IGNORE_CONDITION to
+	enum Flags
+
+2006-09-14  Steven Eker  <eker@goo.csl.sri.com>
+
+	* positionState.hh (class PositionState): added explanation of
+	maxDepth edge cases
+
+===================================Maude88a===========================================
+
 2006-04-05  Steven Eker  <eker@goo.csl.sri.com>
 
 	* rewriteSearchState.hh (class RewriteSearchState): add default
