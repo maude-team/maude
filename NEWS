@@ -1,3 +1,10 @@
+Overview of Changes in Maude alpha96b
+=====================================
+* fixed bug in variant narrowing of ground terms
+* fixed memory corruption bug in sockets
+* the print attribute now flushes its output
+* fixed a long standing bug where sockets could appear to be dropped on Mac
+
 Overview of Changes in Maude alpha96a
 =====================================
 * hack to allow building 64-bit binaries under Darwin

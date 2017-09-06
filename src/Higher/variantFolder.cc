@@ -170,6 +170,7 @@ VariantFolder::getNextSurvivingVariant(int& nrFreeVariables)
 bool
 VariantFolder::subsumes(const RetainedVariant* retainedVariant, const Vector<DagNode*>& variant)
 {
+  MemoryCell::okToCollectGarbage();  // otherwise we have huge accumulation of junk from matching
   //
   //	We check if retained variant is at least as general as a new variant.
   //

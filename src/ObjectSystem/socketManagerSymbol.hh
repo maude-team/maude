@@ -81,6 +81,7 @@ private:
 
   struct ActiveSocket
   {
+    ActiveSocket();
     ~ActiveSocket();
 
     int state;
@@ -107,7 +108,7 @@ private:
   typedef map<int, ActiveSocket> SocketMap;
 
   bool getPort(DagNode* protocolArg, int& protocol);
-  bool getActiveSocket(DagNode* socketArg, int& socketId);
+  bool getActiveSocket(DagNode* socketArg, int& socketId, ActiveSocket*& asp);
   bool getText(DagNode* textArg, crope& text);
   bool setNonblockingFlag(int fd, FreeDagNode* message, ObjectSystemRewritingContext& context);
 

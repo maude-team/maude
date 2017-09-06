@@ -121,6 +121,7 @@ UnifierFilter::insertUnifier(const Substitution& unifier, int positionIndex, int
   newUnifier->positionIndex = positionIndex;
   newUnifier->equationIndex = equationIndex;
   mostGeneralSoFar.push_back(newUnifier);
+  //cout << "nr unifiers = " << mostGeneralSoFar.size() << ' ';
 }
 
 bool
@@ -147,6 +148,7 @@ UnifierFilter::getNextSurvivingUnifier(Substitution*& unifier, int& positionInde
 bool
 UnifierFilter::subsumes(const RetainedUnifier* retainedUnifier, const Substitution& unifier)
 {
+  MemoryCell::okToCollectGarbage();  // otherwise we have huge accumulation of junk from matching
   //
   //	We check if retained unifier is at least as general as unifier on variables of interest.
   //

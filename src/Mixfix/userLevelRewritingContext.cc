@@ -124,6 +124,7 @@ UserLevelRewritingContext::checkForPrintAttribute(MixfixModule::ItemType itemTyp
 	  pa->print(cout, *this);
 	  if (interpreter.getFlag(Interpreter::PRINT_ATTRIBUTE_NEWLINE))
 	    cout << '\n';
+	  cout.flush();
 	}
     }
 }
