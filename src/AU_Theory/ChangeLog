@@ -1,3 +1,88 @@
+2014-04-04  Steven Eker  <eker@ape.csl.sri.com>
+
+	* AU_UnificationSubproblem.cc (checkAndInsertVariable): check for
+	bound variables
+	(markReachableNodes): implemented
+
+	* AU_UnificationSubproblem.hh (SimpleRootContainer): added decls
+	for checkAndInsertVariable(), checkArgumentList(),
+	checkForCollapseAndNonLinearVariables()
+
+	* AU_UnificationSubproblem.cc (checkAndInsertVariable)
+	(checkArgumentList, checkForCollapseAndNonLinearVariables): added
+	(solve): call checkForCollapseAndNonLinearVariables()
+
+2014-04-03  Steven Eker  <eker@ape.csl.sri.com>
+
+	* AU_DagNode.cc (computeSolvedForm2): bail in the case we have an
+	identity element
+
+	* AU_UnificationSubproblem.hh (SimpleRootContainer): added data
+	member preSolveState
+
+	* AU_UnificationSubproblem.cc (solve): support unifications of the
+	form f(...) = X
+	(solve): save and restore preSolveState - this is because
+	purification may create problems on the pending stack that must
+	retracted
+
+2014-04-01  Steven Eker  <eker@ape.csl.sri.com>
+
+	* AU_UnificationSubproblem.hh (SimpleRootContainer): added decls
+	for findNextSolution() and new buildSolution()
+
+	* AU_UnificationSubproblem.cc (AU_UnificationSubproblem): delete
+	problems from struct Unification and not main object
+	(AU_UnificationSubproblem): don't clear problem field
+	(addUnification): clear problem field
+	(buildSolution): added 3 arg version
+	(findNextSolution): added
+
+	* AU_UnificationSubproblem.hh (SimpleRootContainer): added problem
+	member to struct Unification; removed problem field from class
+
+	* AU_UnificationSubproblem.cc (solve): pass findFirst to
+	findNextSolution()
+	(resolve): avoid binding a variable to itself
+
+2014-03-31  Steven Eker  <eker@ape.csl.sri.com>
+
+	* AU_UnificationSubproblem.cc (resolve): added
+	(buildSolution): added
+
+	* AU_UnificationSubproblem.hh (SimpleRootContainer): added decls
+	for buildSolution(), resolve(); added data members
+	savesSubstitution, preSolveSubstitution, savedPendingState
+
+2014-03-28  Steven Eker  <eker@ape.csl.sri.com>
+
+	* AU_UnificationSubproblem.cc (findUpperBound): added
+
+	* AU_UnificationSubproblem.hh (SimpleRootContainer): added decl
+	for findUpperBound()
+
+	* AU_DagNode.cc (computeBaseSortForGroundSubterms): added
+	(computeSolvedForm2): added
+	(insertVariables2): added
+
+	* AU_DagNode.hh (AU_BaseDagNode): added decls for
+	computeBaseSortForGroundSubterms(), computeSolvedForm2(),
+	insertVariables2()
+
+	* AU_UnificationSubproblem.cc: created a stub
+
+	* AU_Symbol.hh (AssociativeSymbol): added decls for
+	computeGeneralizedSort(), makeUnificationSubproblem()
+
+	* AU_Theory.hh: added AU_UnificationSubproblem
+
+	* AU_UnificationSubproblem.hh: created a stub
+
+	* AU_Symbol.cc (computeGeneralizedSort): added
+	(makeUnificationSubproblem): added
+
+===================================Maude102===========================================
+
 2012-04-13  Steven Eker  <eker@ape.csl.sri.com>
 
 	* AU_DagNode.hh (AU_BaseDagNode): added decl for

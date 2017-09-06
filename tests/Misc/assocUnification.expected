@@ -1,0 +1,3716 @@
+Maude> ==========================================
+unify in A-UNIF : A B =? X .
+
+Solution 1
+A --> #1:List
+B --> #2:List
+X --> #1:List #2:List
+==========================================
+unify in A-UNIF : A B =? X Y .
+
+Solution 1
+A --> #1:List #2:List
+B --> #3:List
+X --> #1:List
+Y --> #2:List #3:List
+
+Solution 2
+A --> #1:List
+B --> #2:List #3:List
+X --> #1:List #2:List
+Y --> #3:List
+
+Solution 3
+A --> #1:List
+B --> #2:List
+X --> #1:List
+Y --> #2:List
+==========================================
+unify in A-UNIF : A B C =? X Y .
+
+Solution 1
+A --> #1:List #2:List
+B --> #3:List
+C --> #4:List
+X --> #1:List
+Y --> #2:List #3:List #4:List
+
+Solution 2
+A --> #1:List
+B --> #2:List #3:List
+C --> #4:List
+X --> #1:List #2:List
+Y --> #3:List #4:List
+
+Solution 3
+A --> #1:List
+B --> #2:List
+C --> #3:List #4:List
+X --> #1:List #2:List #3:List
+Y --> #4:List
+
+Solution 4
+A --> #1:List
+B --> #2:List
+C --> #3:List
+X --> #1:List #2:List
+Y --> #3:List
+
+Solution 5
+A --> #1:List
+B --> #2:List
+C --> #3:List
+X --> #1:List
+Y --> #2:List #3:List
+==========================================
+unify in A-UNIF : A B C =? X Y Z .
+
+Solution 1
+A --> #1:List #2:List #3:List
+B --> #4:List
+C --> #5:List
+X --> #1:List
+Y --> #2:List
+Z --> #3:List #4:List #5:List
+
+Solution 2
+A --> #1:List #2:List
+B --> #3:List #4:List
+C --> #5:List
+X --> #1:List
+Y --> #2:List #3:List
+Z --> #4:List #5:List
+
+Solution 3
+A --> #1:List #2:List
+B --> #3:List
+C --> #4:List #5:List
+X --> #1:List
+Y --> #2:List #3:List #4:List
+Z --> #5:List
+
+Solution 4
+A --> #1:List #2:List
+B --> #3:List
+C --> #4:List
+X --> #1:List
+Y --> #2:List #3:List
+Z --> #4:List
+
+Solution 5
+A --> #1:List #2:List
+B --> #3:List
+C --> #4:List
+X --> #1:List
+Y --> #2:List
+Z --> #3:List #4:List
+
+Solution 6
+A --> #1:List
+B --> #2:List #3:List #4:List
+C --> #5:List
+X --> #1:List #2:List
+Y --> #3:List
+Z --> #4:List #5:List
+
+Solution 7
+A --> #1:List
+B --> #2:List #3:List
+C --> #4:List #5:List
+X --> #1:List #2:List
+Y --> #3:List #4:List
+Z --> #5:List
+
+Solution 8
+A --> #1:List
+B --> #2:List #3:List
+C --> #4:List
+X --> #1:List #2:List
+Y --> #3:List
+Z --> #4:List
+
+Solution 9
+A --> #1:List
+B --> #2:List
+C --> #3:List #4:List #5:List
+X --> #1:List #2:List #3:List
+Y --> #4:List
+Z --> #5:List
+
+Solution 10
+A --> #1:List
+B --> #2:List
+C --> #3:List #4:List
+X --> #1:List #2:List
+Y --> #3:List
+Z --> #4:List
+
+Solution 11
+A --> #1:List
+B --> #2:List #3:List
+C --> #4:List
+X --> #1:List
+Y --> #2:List
+Z --> #3:List #4:List
+
+Solution 12
+A --> #1:List
+B --> #2:List
+C --> #3:List #4:List
+X --> #1:List
+Y --> #2:List #3:List
+Z --> #4:List
+
+Solution 13
+A --> #1:List
+B --> #2:List
+C --> #3:List
+X --> #1:List
+Y --> #2:List
+Z --> #3:List
+==========================================
+unify in A-UNIF : A B C D =? X Y Z .
+
+Solution 1
+A --> #1:List #2:List #3:List
+B --> #4:List
+C --> #5:List
+D --> #6:List
+X --> #1:List
+Y --> #2:List
+Z --> #3:List #4:List #5:List #6:List
+
+Solution 2
+A --> #1:List #2:List
+B --> #3:List #4:List
+C --> #5:List
+D --> #6:List
+X --> #1:List
+Y --> #2:List #3:List
+Z --> #4:List #5:List #6:List
+
+Solution 3
+A --> #1:List #2:List
+B --> #3:List
+C --> #4:List #5:List
+D --> #6:List
+X --> #1:List
+Y --> #2:List #3:List #4:List
+Z --> #5:List #6:List
+
+Solution 4
+A --> #1:List #2:List
+B --> #3:List
+C --> #4:List
+D --> #5:List #6:List
+X --> #1:List
+Y --> #2:List #3:List #4:List #5:List
+Z --> #6:List
+
+Solution 5
+A --> #1:List #2:List
+B --> #3:List
+C --> #4:List
+D --> #5:List
+X --> #1:List
+Y --> #2:List #3:List #4:List
+Z --> #5:List
+
+Solution 6
+A --> #1:List #2:List
+B --> #3:List
+C --> #4:List
+D --> #5:List
+X --> #1:List
+Y --> #2:List #3:List
+Z --> #4:List #5:List
+
+Solution 7
+A --> #1:List #2:List
+B --> #3:List
+C --> #4:List
+D --> #5:List
+X --> #1:List
+Y --> #2:List
+Z --> #3:List #4:List #5:List
+
+Solution 8
+A --> #1:List
+B --> #2:List #3:List #4:List
+C --> #5:List
+D --> #6:List
+X --> #1:List #2:List
+Y --> #3:List
+Z --> #4:List #5:List #6:List
+
+Solution 9
+A --> #1:List
+B --> #2:List #3:List
+C --> #4:List #5:List
+D --> #6:List
+X --> #1:List #2:List
+Y --> #3:List #4:List
+Z --> #5:List #6:List
+
+Solution 10
+A --> #1:List
+B --> #2:List #3:List
+C --> #4:List
+D --> #5:List #6:List
+X --> #1:List #2:List
+Y --> #3:List #4:List #5:List
+Z --> #6:List
+
+Solution 11
+A --> #1:List
+B --> #2:List #3:List
+C --> #4:List
+D --> #5:List
+X --> #1:List #2:List
+Y --> #3:List #4:List
+Z --> #5:List
+
+Solution 12
+A --> #1:List
+B --> #2:List #3:List
+C --> #4:List
+D --> #5:List
+X --> #1:List #2:List
+Y --> #3:List
+Z --> #4:List #5:List
+
+Solution 13
+A --> #1:List
+B --> #2:List
+C --> #3:List #4:List #5:List
+D --> #6:List
+X --> #1:List #2:List #3:List
+Y --> #4:List
+Z --> #5:List #6:List
+
+Solution 14
+A --> #1:List
+B --> #2:List
+C --> #3:List #4:List
+D --> #5:List #6:List
+X --> #1:List #2:List #3:List
+Y --> #4:List #5:List
+Z --> #6:List
+
+Solution 15
+A --> #1:List
+B --> #2:List
+C --> #3:List #4:List
+D --> #5:List
+X --> #1:List #2:List #3:List
+Y --> #4:List
+Z --> #5:List
+
+Solution 16
+A --> #1:List
+B --> #2:List
+C --> #3:List
+D --> #4:List #5:List #6:List
+X --> #1:List #2:List #3:List #4:List
+Y --> #5:List
+Z --> #6:List
+
+Solution 17
+A --> #1:List
+B --> #2:List
+C --> #3:List
+D --> #4:List #5:List
+X --> #1:List #2:List #3:List
+Y --> #4:List
+Z --> #5:List
+
+Solution 18
+A --> #1:List
+B --> #2:List
+C --> #3:List #4:List
+D --> #5:List
+X --> #1:List #2:List
+Y --> #3:List
+Z --> #4:List #5:List
+
+Solution 19
+A --> #1:List
+B --> #2:List
+C --> #3:List
+D --> #4:List #5:List
+X --> #1:List #2:List
+Y --> #3:List #4:List
+Z --> #5:List
+
+Solution 20
+A --> #1:List
+B --> #2:List
+C --> #3:List
+D --> #4:List
+X --> #1:List #2:List
+Y --> #3:List
+Z --> #4:List
+
+Solution 21
+A --> #1:List
+B --> #2:List #3:List
+C --> #4:List
+D --> #5:List
+X --> #1:List
+Y --> #2:List
+Z --> #3:List #4:List #5:List
+
+Solution 22
+A --> #1:List
+B --> #2:List
+C --> #3:List #4:List
+D --> #5:List
+X --> #1:List
+Y --> #2:List #3:List
+Z --> #4:List #5:List
+
+Solution 23
+A --> #1:List
+B --> #2:List
+C --> #3:List
+D --> #4:List #5:List
+X --> #1:List
+Y --> #2:List #3:List #4:List
+Z --> #5:List
+
+Solution 24
+A --> #1:List
+B --> #2:List
+C --> #3:List
+D --> #4:List
+X --> #1:List
+Y --> #2:List #3:List
+Z --> #4:List
+
+Solution 25
+A --> #1:List
+B --> #2:List
+C --> #3:List
+D --> #4:List
+X --> #1:List
+Y --> #2:List
+Z --> #3:List #4:List
+==========================================
+unify in A-UNIF : A B C D G =? X Y Z .
+
+Solution 1
+A --> #1:List #2:List #3:List
+B --> #4:List
+C --> #5:List
+D --> #6:List
+G --> #7:List
+X --> #1:List
+Y --> #2:List
+Z --> #3:List #4:List #5:List #6:List #7:List
+
+Solution 2
+A --> #1:List #2:List
+B --> #3:List #4:List
+C --> #5:List
+D --> #6:List
+G --> #7:List
+X --> #1:List
+Y --> #2:List #3:List
+Z --> #4:List #5:List #6:List #7:List
+
+Solution 3
+A --> #1:List #2:List
+B --> #3:List
+C --> #4:List #5:List
+D --> #6:List
+G --> #7:List
+X --> #1:List
+Y --> #2:List #3:List #4:List
+Z --> #5:List #6:List #7:List
+
+Solution 4
+A --> #1:List #2:List
+B --> #3:List
+C --> #4:List
+D --> #5:List #6:List
+G --> #7:List
+X --> #1:List
+Y --> #2:List #3:List #4:List #5:List
+Z --> #6:List #7:List
+
+Solution 5
+A --> #1:List #2:List
+B --> #3:List
+C --> #4:List
+D --> #5:List
+G --> #6:List #7:List
+X --> #1:List
+Y --> #2:List #3:List #4:List #5:List #6:List
+Z --> #7:List
+
+Solution 6
+A --> #1:List #2:List
+B --> #3:List
+C --> #4:List
+D --> #5:List
+G --> #6:List
+X --> #1:List
+Y --> #2:List #3:List #4:List #5:List
+Z --> #6:List
+
+Solution 7
+A --> #1:List #2:List
+B --> #3:List
+C --> #4:List
+D --> #5:List
+G --> #6:List
+X --> #1:List
+Y --> #2:List #3:List #4:List
+Z --> #5:List #6:List
+
+Solution 8
+A --> #1:List #2:List
+B --> #3:List
+C --> #4:List
+D --> #5:List
+G --> #6:List
+X --> #1:List
+Y --> #2:List #3:List
+Z --> #4:List #5:List #6:List
+
+Solution 9
+A --> #1:List #2:List
+B --> #3:List
+C --> #4:List
+D --> #5:List
+G --> #6:List
+X --> #1:List
+Y --> #2:List
+Z --> #3:List #4:List #5:List #6:List
+
+Solution 10
+A --> #1:List
+B --> #2:List #3:List #4:List
+C --> #5:List
+D --> #6:List
+G --> #7:List
+X --> #1:List #2:List
+Y --> #3:List
+Z --> #4:List #5:List #6:List #7:List
+
+Solution 11
+A --> #1:List
+B --> #2:List #3:List
+C --> #4:List #5:List
+D --> #6:List
+G --> #7:List
+X --> #1:List #2:List
+Y --> #3:List #4:List
+Z --> #5:List #6:List #7:List
+
+Solution 12
+A --> #1:List
+B --> #2:List #3:List
+C --> #4:List
+D --> #5:List #6:List
+G --> #7:List
+X --> #1:List #2:List
+Y --> #3:List #4:List #5:List
+Z --> #6:List #7:List
+
+Solution 13
+A --> #1:List
+B --> #2:List #3:List
+C --> #4:List
+D --> #5:List
+G --> #6:List #7:List
+X --> #1:List #2:List
+Y --> #3:List #4:List #5:List #6:List
+Z --> #7:List
+
+Solution 14
+A --> #1:List
+B --> #2:List #3:List
+C --> #4:List
+D --> #5:List
+G --> #6:List
+X --> #1:List #2:List
+Y --> #3:List #4:List #5:List
+Z --> #6:List
+
+Solution 15
+A --> #1:List
+B --> #2:List #3:List
+C --> #4:List
+D --> #5:List
+G --> #6:List
+X --> #1:List #2:List
+Y --> #3:List #4:List
+Z --> #5:List #6:List
+
+Solution 16
+A --> #1:List
+B --> #2:List #3:List
+C --> #4:List
+D --> #5:List
+G --> #6:List
+X --> #1:List #2:List
+Y --> #3:List
+Z --> #4:List #5:List #6:List
+
+Solution 17
+A --> #1:List
+B --> #2:List
+C --> #3:List #4:List #5:List
+D --> #6:List
+G --> #7:List
+X --> #1:List #2:List #3:List
+Y --> #4:List
+Z --> #5:List #6:List #7:List
+
+Solution 18
+A --> #1:List
+B --> #2:List
+C --> #3:List #4:List
+D --> #5:List #6:List
+G --> #7:List
+X --> #1:List #2:List #3:List
+Y --> #4:List #5:List
+Z --> #6:List #7:List
+
+Solution 19
+A --> #1:List
+B --> #2:List
+C --> #3:List #4:List
+D --> #5:List
+G --> #6:List #7:List
+X --> #1:List #2:List #3:List
+Y --> #4:List #5:List #6:List
+Z --> #7:List
+
+Solution 20
+A --> #1:List
+B --> #2:List
+C --> #3:List #4:List
+D --> #5:List
+G --> #6:List
+X --> #1:List #2:List #3:List
+Y --> #4:List #5:List
+Z --> #6:List
+
+Solution 21
+A --> #1:List
+B --> #2:List
+C --> #3:List #4:List
+D --> #5:List
+G --> #6:List
+X --> #1:List #2:List #3:List
+Y --> #4:List
+Z --> #5:List #6:List
+
+Solution 22
+A --> #1:List
+B --> #2:List
+C --> #3:List
+D --> #4:List #5:List #6:List
+G --> #7:List
+X --> #1:List #2:List #3:List #4:List
+Y --> #5:List
+Z --> #6:List #7:List
+
+Solution 23
+A --> #1:List
+B --> #2:List
+C --> #3:List
+D --> #4:List #5:List
+G --> #6:List #7:List
+X --> #1:List #2:List #3:List #4:List
+Y --> #5:List #6:List
+Z --> #7:List
+
+Solution 24
+A --> #1:List
+B --> #2:List
+C --> #3:List
+D --> #4:List #5:List
+G --> #6:List
+X --> #1:List #2:List #3:List #4:List
+Y --> #5:List
+Z --> #6:List
+
+Solution 25
+A --> #1:List
+B --> #2:List
+C --> #3:List
+D --> #4:List
+G --> #5:List #6:List #7:List
+X --> #1:List #2:List #3:List #4:List #5:List
+Y --> #6:List
+Z --> #7:List
+
+Solution 26
+A --> #1:List
+B --> #2:List
+C --> #3:List
+D --> #4:List
+G --> #5:List #6:List
+X --> #1:List #2:List #3:List #4:List
+Y --> #5:List
+Z --> #6:List
+
+Solution 27
+A --> #1:List
+B --> #2:List
+C --> #3:List
+D --> #4:List #5:List
+G --> #6:List
+X --> #1:List #2:List #3:List
+Y --> #4:List
+Z --> #5:List #6:List
+
+Solution 28
+A --> #1:List
+B --> #2:List
+C --> #3:List
+D --> #4:List
+G --> #5:List #6:List
+X --> #1:List #2:List #3:List
+Y --> #4:List #5:List
+Z --> #6:List
+
+Solution 29
+A --> #1:List
+B --> #2:List
+C --> #3:List
+D --> #4:List
+G --> #5:List
+X --> #1:List #2:List #3:List
+Y --> #4:List
+Z --> #5:List
+
+Solution 30
+A --> #1:List
+B --> #2:List
+C --> #3:List #4:List
+D --> #5:List
+G --> #6:List
+X --> #1:List #2:List
+Y --> #3:List
+Z --> #4:List #5:List #6:List
+
+Solution 31
+A --> #1:List
+B --> #2:List
+C --> #3:List
+D --> #4:List #5:List
+G --> #6:List
+X --> #1:List #2:List
+Y --> #3:List #4:List
+Z --> #5:List #6:List
+
+Solution 32
+A --> #1:List
+B --> #2:List
+C --> #3:List
+D --> #4:List
+G --> #5:List #6:List
+X --> #1:List #2:List
+Y --> #3:List #4:List #5:List
+Z --> #6:List
+
+Solution 33
+A --> #1:List
+B --> #2:List
+C --> #3:List
+D --> #4:List
+G --> #5:List
+X --> #1:List #2:List
+Y --> #3:List #4:List
+Z --> #5:List
+
+Solution 34
+A --> #1:List
+B --> #2:List
+C --> #3:List
+D --> #4:List
+G --> #5:List
+X --> #1:List #2:List
+Y --> #3:List
+Z --> #4:List #5:List
+
+Solution 35
+A --> #1:List
+B --> #2:List #3:List
+C --> #4:List
+D --> #5:List
+G --> #6:List
+X --> #1:List
+Y --> #2:List
+Z --> #3:List #4:List #5:List #6:List
+
+Solution 36
+A --> #1:List
+B --> #2:List
+C --> #3:List #4:List
+D --> #5:List
+G --> #6:List
+X --> #1:List
+Y --> #2:List #3:List
+Z --> #4:List #5:List #6:List
+
+Solution 37
+A --> #1:List
+B --> #2:List
+C --> #3:List
+D --> #4:List #5:List
+G --> #6:List
+X --> #1:List
+Y --> #2:List #3:List #4:List
+Z --> #5:List #6:List
+
+Solution 38
+A --> #1:List
+B --> #2:List
+C --> #3:List
+D --> #4:List
+G --> #5:List #6:List
+X --> #1:List
+Y --> #2:List #3:List #4:List #5:List
+Z --> #6:List
+
+Solution 39
+A --> #1:List
+B --> #2:List
+C --> #3:List
+D --> #4:List
+G --> #5:List
+X --> #1:List
+Y --> #2:List #3:List #4:List
+Z --> #5:List
+
+Solution 40
+A --> #1:List
+B --> #2:List
+C --> #3:List
+D --> #4:List
+G --> #5:List
+X --> #1:List
+Y --> #2:List #3:List
+Z --> #4:List #5:List
+
+Solution 41
+A --> #1:List
+B --> #2:List
+C --> #3:List
+D --> #4:List
+G --> #5:List
+X --> #1:List
+Y --> #2:List
+Z --> #3:List #4:List #5:List
+==========================================
+unify in A-UNIF : A B C =? X Y Z /\ G H I =? M N .
+
+Solution 1
+A --> #5:List #6:List #7:List
+B --> #8:List
+C --> #9:List
+X --> #5:List
+Y --> #6:List
+Z --> #7:List #8:List #9:List
+G --> #1:List #2:List
+H --> #3:List
+I --> #4:List
+M --> #1:List
+N --> #2:List #3:List #4:List
+
+Solution 2
+A --> #5:List #6:List
+B --> #7:List #8:List
+C --> #9:List
+X --> #5:List
+Y --> #6:List #7:List
+Z --> #8:List #9:List
+G --> #1:List #2:List
+H --> #3:List
+I --> #4:List
+M --> #1:List
+N --> #2:List #3:List #4:List
+
+Solution 3
+A --> #5:List #6:List
+B --> #7:List
+C --> #8:List #9:List
+X --> #5:List
+Y --> #6:List #7:List #8:List
+Z --> #9:List
+G --> #1:List #2:List
+H --> #3:List
+I --> #4:List
+M --> #1:List
+N --> #2:List #3:List #4:List
+
+Solution 4
+A --> #5:List #6:List
+B --> #7:List
+C --> #8:List
+X --> #5:List
+Y --> #6:List #7:List
+Z --> #8:List
+G --> #1:List #2:List
+H --> #3:List
+I --> #4:List
+M --> #1:List
+N --> #2:List #3:List #4:List
+
+Solution 5
+A --> #5:List #6:List
+B --> #7:List
+C --> #8:List
+X --> #5:List
+Y --> #6:List
+Z --> #7:List #8:List
+G --> #1:List #2:List
+H --> #3:List
+I --> #4:List
+M --> #1:List
+N --> #2:List #3:List #4:List
+
+Solution 6
+A --> #5:List
+B --> #6:List #7:List #8:List
+C --> #9:List
+X --> #5:List #6:List
+Y --> #7:List
+Z --> #8:List #9:List
+G --> #1:List #2:List
+H --> #3:List
+I --> #4:List
+M --> #1:List
+N --> #2:List #3:List #4:List
+
+Solution 7
+A --> #5:List
+B --> #6:List #7:List
+C --> #8:List #9:List
+X --> #5:List #6:List
+Y --> #7:List #8:List
+Z --> #9:List
+G --> #1:List #2:List
+H --> #3:List
+I --> #4:List
+M --> #1:List
+N --> #2:List #3:List #4:List
+
+Solution 8
+A --> #5:List
+B --> #6:List #7:List
+C --> #8:List
+X --> #5:List #6:List
+Y --> #7:List
+Z --> #8:List
+G --> #1:List #2:List
+H --> #3:List
+I --> #4:List
+M --> #1:List
+N --> #2:List #3:List #4:List
+
+Solution 9
+A --> #5:List
+B --> #6:List
+C --> #7:List #8:List #9:List
+X --> #5:List #6:List #7:List
+Y --> #8:List
+Z --> #9:List
+G --> #1:List #2:List
+H --> #3:List
+I --> #4:List
+M --> #1:List
+N --> #2:List #3:List #4:List
+
+Solution 10
+A --> #5:List
+B --> #6:List
+C --> #7:List #8:List
+X --> #5:List #6:List
+Y --> #7:List
+Z --> #8:List
+G --> #1:List #2:List
+H --> #3:List
+I --> #4:List
+M --> #1:List
+N --> #2:List #3:List #4:List
+
+Solution 11
+A --> #5:List
+B --> #6:List #7:List
+C --> #8:List
+X --> #5:List
+Y --> #6:List
+Z --> #7:List #8:List
+G --> #1:List #2:List
+H --> #3:List
+I --> #4:List
+M --> #1:List
+N --> #2:List #3:List #4:List
+
+Solution 12
+A --> #5:List
+B --> #6:List
+C --> #7:List #8:List
+X --> #5:List
+Y --> #6:List #7:List
+Z --> #8:List
+G --> #1:List #2:List
+H --> #3:List
+I --> #4:List
+M --> #1:List
+N --> #2:List #3:List #4:List
+
+Solution 13
+A --> #5:List
+B --> #6:List
+C --> #7:List
+X --> #5:List
+Y --> #6:List
+Z --> #7:List
+G --> #1:List #2:List
+H --> #3:List
+I --> #4:List
+M --> #1:List
+N --> #2:List #3:List #4:List
+
+Solution 14
+A --> #5:List #6:List #7:List
+B --> #8:List
+C --> #9:List
+X --> #5:List
+Y --> #6:List
+Z --> #7:List #8:List #9:List
+G --> #1:List
+H --> #2:List #3:List
+I --> #4:List
+M --> #1:List #2:List
+N --> #3:List #4:List
+
+Solution 15
+A --> #5:List #6:List
+B --> #7:List #8:List
+C --> #9:List
+X --> #5:List
+Y --> #6:List #7:List
+Z --> #8:List #9:List
+G --> #1:List
+H --> #2:List #3:List
+I --> #4:List
+M --> #1:List #2:List
+N --> #3:List #4:List
+
+Solution 16
+A --> #5:List #6:List
+B --> #7:List
+C --> #8:List #9:List
+X --> #5:List
+Y --> #6:List #7:List #8:List
+Z --> #9:List
+G --> #1:List
+H --> #2:List #3:List
+I --> #4:List
+M --> #1:List #2:List
+N --> #3:List #4:List
+
+Solution 17
+A --> #5:List #6:List
+B --> #7:List
+C --> #8:List
+X --> #5:List
+Y --> #6:List #7:List
+Z --> #8:List
+G --> #1:List
+H --> #2:List #3:List
+I --> #4:List
+M --> #1:List #2:List
+N --> #3:List #4:List
+
+Solution 18
+A --> #5:List #6:List
+B --> #7:List
+C --> #8:List
+X --> #5:List
+Y --> #6:List
+Z --> #7:List #8:List
+G --> #1:List
+H --> #2:List #3:List
+I --> #4:List
+M --> #1:List #2:List
+N --> #3:List #4:List
+
+Solution 19
+A --> #5:List
+B --> #6:List #7:List #8:List
+C --> #9:List
+X --> #5:List #6:List
+Y --> #7:List
+Z --> #8:List #9:List
+G --> #1:List
+H --> #2:List #3:List
+I --> #4:List
+M --> #1:List #2:List
+N --> #3:List #4:List
+
+Solution 20
+A --> #5:List
+B --> #6:List #7:List
+C --> #8:List #9:List
+X --> #5:List #6:List
+Y --> #7:List #8:List
+Z --> #9:List
+G --> #1:List
+H --> #2:List #3:List
+I --> #4:List
+M --> #1:List #2:List
+N --> #3:List #4:List
+
+Solution 21
+A --> #5:List
+B --> #6:List #7:List
+C --> #8:List
+X --> #5:List #6:List
+Y --> #7:List
+Z --> #8:List
+G --> #1:List
+H --> #2:List #3:List
+I --> #4:List
+M --> #1:List #2:List
+N --> #3:List #4:List
+
+Solution 22
+A --> #5:List
+B --> #6:List
+C --> #7:List #8:List #9:List
+X --> #5:List #6:List #7:List
+Y --> #8:List
+Z --> #9:List
+G --> #1:List
+H --> #2:List #3:List
+I --> #4:List
+M --> #1:List #2:List
+N --> #3:List #4:List
+
+Solution 23
+A --> #5:List
+B --> #6:List
+C --> #7:List #8:List
+X --> #5:List #6:List
+Y --> #7:List
+Z --> #8:List
+G --> #1:List
+H --> #2:List #3:List
+I --> #4:List
+M --> #1:List #2:List
+N --> #3:List #4:List
+
+Solution 24
+A --> #5:List
+B --> #6:List #7:List
+C --> #8:List
+X --> #5:List
+Y --> #6:List
+Z --> #7:List #8:List
+G --> #1:List
+H --> #2:List #3:List
+I --> #4:List
+M --> #1:List #2:List
+N --> #3:List #4:List
+
+Solution 25
+A --> #5:List
+B --> #6:List
+C --> #7:List #8:List
+X --> #5:List
+Y --> #6:List #7:List
+Z --> #8:List
+G --> #1:List
+H --> #2:List #3:List
+I --> #4:List
+M --> #1:List #2:List
+N --> #3:List #4:List
+
+Solution 26
+A --> #5:List
+B --> #6:List
+C --> #7:List
+X --> #5:List
+Y --> #6:List
+Z --> #7:List
+G --> #1:List
+H --> #2:List #3:List
+I --> #4:List
+M --> #1:List #2:List
+N --> #3:List #4:List
+
+Solution 27
+A --> #5:List #6:List #7:List
+B --> #8:List
+C --> #9:List
+X --> #5:List
+Y --> #6:List
+Z --> #7:List #8:List #9:List
+G --> #1:List
+H --> #2:List
+I --> #3:List #4:List
+M --> #1:List #2:List #3:List
+N --> #4:List
+
+Solution 28
+A --> #5:List #6:List
+B --> #7:List #8:List
+C --> #9:List
+X --> #5:List
+Y --> #6:List #7:List
+Z --> #8:List #9:List
+G --> #1:List
+H --> #2:List
+I --> #3:List #4:List
+M --> #1:List #2:List #3:List
+N --> #4:List
+
+Solution 29
+A --> #5:List #6:List
+B --> #7:List
+C --> #8:List #9:List
+X --> #5:List
+Y --> #6:List #7:List #8:List
+Z --> #9:List
+G --> #1:List
+H --> #2:List
+I --> #3:List #4:List
+M --> #1:List #2:List #3:List
+N --> #4:List
+
+Solution 30
+A --> #5:List #6:List
+B --> #7:List
+C --> #8:List
+X --> #5:List
+Y --> #6:List #7:List
+Z --> #8:List
+G --> #1:List
+H --> #2:List
+I --> #3:List #4:List
+M --> #1:List #2:List #3:List
+N --> #4:List
+
+Solution 31
+A --> #5:List #6:List
+B --> #7:List
+C --> #8:List
+X --> #5:List
+Y --> #6:List
+Z --> #7:List #8:List
+G --> #1:List
+H --> #2:List
+I --> #3:List #4:List
+M --> #1:List #2:List #3:List
+N --> #4:List
+
+Solution 32
+A --> #5:List
+B --> #6:List #7:List #8:List
+C --> #9:List
+X --> #5:List #6:List
+Y --> #7:List
+Z --> #8:List #9:List
+G --> #1:List
+H --> #2:List
+I --> #3:List #4:List
+M --> #1:List #2:List #3:List
+N --> #4:List
+
+Solution 33
+A --> #5:List
+B --> #6:List #7:List
+C --> #8:List #9:List
+X --> #5:List #6:List
+Y --> #7:List #8:List
+Z --> #9:List
+G --> #1:List
+H --> #2:List
+I --> #3:List #4:List
+M --> #1:List #2:List #3:List
+N --> #4:List
+
+Solution 34
+A --> #5:List
+B --> #6:List #7:List
+C --> #8:List
+X --> #5:List #6:List
+Y --> #7:List
+Z --> #8:List
+G --> #1:List
+H --> #2:List
+I --> #3:List #4:List
+M --> #1:List #2:List #3:List
+N --> #4:List
+
+Solution 35
+A --> #5:List
+B --> #6:List
+C --> #7:List #8:List #9:List
+X --> #5:List #6:List #7:List
+Y --> #8:List
+Z --> #9:List
+G --> #1:List
+H --> #2:List
+I --> #3:List #4:List
+M --> #1:List #2:List #3:List
+N --> #4:List
+
+Solution 36
+A --> #5:List
+B --> #6:List
+C --> #7:List #8:List
+X --> #5:List #6:List
+Y --> #7:List
+Z --> #8:List
+G --> #1:List
+H --> #2:List
+I --> #3:List #4:List
+M --> #1:List #2:List #3:List
+N --> #4:List
+
+Solution 37
+A --> #5:List
+B --> #6:List #7:List
+C --> #8:List
+X --> #5:List
+Y --> #6:List
+Z --> #7:List #8:List
+G --> #1:List
+H --> #2:List
+I --> #3:List #4:List
+M --> #1:List #2:List #3:List
+N --> #4:List
+
+Solution 38
+A --> #5:List
+B --> #6:List
+C --> #7:List #8:List
+X --> #5:List
+Y --> #6:List #7:List
+Z --> #8:List
+G --> #1:List
+H --> #2:List
+I --> #3:List #4:List
+M --> #1:List #2:List #3:List
+N --> #4:List
+
+Solution 39
+A --> #5:List
+B --> #6:List
+C --> #7:List
+X --> #5:List
+Y --> #6:List
+Z --> #7:List
+G --> #1:List
+H --> #2:List
+I --> #3:List #4:List
+M --> #1:List #2:List #3:List
+N --> #4:List
+
+Solution 40
+A --> #4:List #5:List #6:List
+B --> #7:List
+C --> #8:List
+X --> #4:List
+Y --> #5:List
+Z --> #6:List #7:List #8:List
+G --> #1:List
+H --> #2:List
+I --> #3:List
+M --> #1:List #2:List
+N --> #3:List
+
+Solution 41
+A --> #4:List #5:List
+B --> #6:List #7:List
+C --> #8:List
+X --> #4:List
+Y --> #5:List #6:List
+Z --> #7:List #8:List
+G --> #1:List
+H --> #2:List
+I --> #3:List
+M --> #1:List #2:List
+N --> #3:List
+
+Solution 42
+A --> #4:List #5:List
+B --> #6:List
+C --> #7:List #8:List
+X --> #4:List
+Y --> #5:List #6:List #7:List
+Z --> #8:List
+G --> #1:List
+H --> #2:List
+I --> #3:List
+M --> #1:List #2:List
+N --> #3:List
+
+Solution 43
+A --> #4:List #5:List
+B --> #6:List
+C --> #7:List
+X --> #4:List
+Y --> #5:List #6:List
+Z --> #7:List
+G --> #1:List
+H --> #2:List
+I --> #3:List
+M --> #1:List #2:List
+N --> #3:List
+
+Solution 44
+A --> #4:List #5:List
+B --> #6:List
+C --> #7:List
+X --> #4:List
+Y --> #5:List
+Z --> #6:List #7:List
+G --> #1:List
+H --> #2:List
+I --> #3:List
+M --> #1:List #2:List
+N --> #3:List
+
+Solution 45
+A --> #4:List
+B --> #5:List #6:List #7:List
+C --> #8:List
+X --> #4:List #5:List
+Y --> #6:List
+Z --> #7:List #8:List
+G --> #1:List
+H --> #2:List
+I --> #3:List
+M --> #1:List #2:List
+N --> #3:List
+
+Solution 46
+A --> #4:List
+B --> #5:List #6:List
+C --> #7:List #8:List
+X --> #4:List #5:List
+Y --> #6:List #7:List
+Z --> #8:List
+G --> #1:List
+H --> #2:List
+I --> #3:List
+M --> #1:List #2:List
+N --> #3:List
+
+Solution 47
+A --> #4:List
+B --> #5:List #6:List
+C --> #7:List
+X --> #4:List #5:List
+Y --> #6:List
+Z --> #7:List
+G --> #1:List
+H --> #2:List
+I --> #3:List
+M --> #1:List #2:List
+N --> #3:List
+
+Solution 48
+A --> #4:List
+B --> #5:List
+C --> #6:List #7:List #8:List
+X --> #4:List #5:List #6:List
+Y --> #7:List
+Z --> #8:List
+G --> #1:List
+H --> #2:List
+I --> #3:List
+M --> #1:List #2:List
+N --> #3:List
+
+Solution 49
+A --> #4:List
+B --> #5:List
+C --> #6:List #7:List
+X --> #4:List #5:List
+Y --> #6:List
+Z --> #7:List
+G --> #1:List
+H --> #2:List
+I --> #3:List
+M --> #1:List #2:List
+N --> #3:List
+
+Solution 50
+A --> #4:List
+B --> #5:List #6:List
+C --> #7:List
+X --> #4:List
+Y --> #5:List
+Z --> #6:List #7:List
+G --> #1:List
+H --> #2:List
+I --> #3:List
+M --> #1:List #2:List
+N --> #3:List
+
+Solution 51
+A --> #4:List
+B --> #5:List
+C --> #6:List #7:List
+X --> #4:List
+Y --> #5:List #6:List
+Z --> #7:List
+G --> #1:List
+H --> #2:List
+I --> #3:List
+M --> #1:List #2:List
+N --> #3:List
+
+Solution 52
+A --> #4:List
+B --> #5:List
+C --> #6:List
+X --> #4:List
+Y --> #5:List
+Z --> #6:List
+G --> #1:List
+H --> #2:List
+I --> #3:List
+M --> #1:List #2:List
+N --> #3:List
+
+Solution 53
+A --> #4:List #5:List #6:List
+B --> #7:List
+C --> #8:List
+X --> #4:List
+Y --> #5:List
+Z --> #6:List #7:List #8:List
+G --> #1:List
+H --> #2:List
+I --> #3:List
+M --> #1:List
+N --> #2:List #3:List
+
+Solution 54
+A --> #4:List #5:List
+B --> #6:List #7:List
+C --> #8:List
+X --> #4:List
+Y --> #5:List #6:List
+Z --> #7:List #8:List
+G --> #1:List
+H --> #2:List
+I --> #3:List
+M --> #1:List
+N --> #2:List #3:List
+
+Solution 55
+A --> #4:List #5:List
+B --> #6:List
+C --> #7:List #8:List
+X --> #4:List
+Y --> #5:List #6:List #7:List
+Z --> #8:List
+G --> #1:List
+H --> #2:List
+I --> #3:List
+M --> #1:List
+N --> #2:List #3:List
+
+Solution 56
+A --> #4:List #5:List
+B --> #6:List
+C --> #7:List
+X --> #4:List
+Y --> #5:List #6:List
+Z --> #7:List
+G --> #1:List
+H --> #2:List
+I --> #3:List
+M --> #1:List
+N --> #2:List #3:List
+
+Solution 57
+A --> #4:List #5:List
+B --> #6:List
+C --> #7:List
+X --> #4:List
+Y --> #5:List
+Z --> #6:List #7:List
+G --> #1:List
+H --> #2:List
+I --> #3:List
+M --> #1:List
+N --> #2:List #3:List
+
+Solution 58
+A --> #4:List
+B --> #5:List #6:List #7:List
+C --> #8:List
+X --> #4:List #5:List
+Y --> #6:List
+Z --> #7:List #8:List
+G --> #1:List
+H --> #2:List
+I --> #3:List
+M --> #1:List
+N --> #2:List #3:List
+
+Solution 59
+A --> #4:List
+B --> #5:List #6:List
+C --> #7:List #8:List
+X --> #4:List #5:List
+Y --> #6:List #7:List
+Z --> #8:List
+G --> #1:List
+H --> #2:List
+I --> #3:List
+M --> #1:List
+N --> #2:List #3:List
+
+Solution 60
+A --> #4:List
+B --> #5:List #6:List
+C --> #7:List
+X --> #4:List #5:List
+Y --> #6:List
+Z --> #7:List
+G --> #1:List
+H --> #2:List
+I --> #3:List
+M --> #1:List
+N --> #2:List #3:List
+
+Solution 61
+A --> #4:List
+B --> #5:List
+C --> #6:List #7:List #8:List
+X --> #4:List #5:List #6:List
+Y --> #7:List
+Z --> #8:List
+G --> #1:List
+H --> #2:List
+I --> #3:List
+M --> #1:List
+N --> #2:List #3:List
+
+Solution 62
+A --> #4:List
+B --> #5:List
+C --> #6:List #7:List
+X --> #4:List #5:List
+Y --> #6:List
+Z --> #7:List
+G --> #1:List
+H --> #2:List
+I --> #3:List
+M --> #1:List
+N --> #2:List #3:List
+
+Solution 63
+A --> #4:List
+B --> #5:List #6:List
+C --> #7:List
+X --> #4:List
+Y --> #5:List
+Z --> #6:List #7:List
+G --> #1:List
+H --> #2:List
+I --> #3:List
+M --> #1:List
+N --> #2:List #3:List
+
+Solution 64
+A --> #4:List
+B --> #5:List
+C --> #6:List #7:List
+X --> #4:List
+Y --> #5:List #6:List
+Z --> #7:List
+G --> #1:List
+H --> #2:List
+I --> #3:List
+M --> #1:List
+N --> #2:List #3:List
+
+Solution 65
+A --> #4:List
+B --> #5:List
+C --> #6:List
+X --> #4:List
+Y --> #5:List
+Z --> #6:List
+G --> #1:List
+H --> #2:List
+I --> #3:List
+M --> #1:List
+N --> #2:List #3:List
+==========================================
+unify in A-UNIF : A B =? B C .
+Warning: Associative unification failing due to non-linear variable B
+No unifier.
+==========================================
+unify in A-UNIF : a A a =? B a C .
+
+Solution 1
+A --> #1:List a #2:List
+B --> a #1:List
+C --> #2:List a
+
+Solution 2
+A --> #1:List a
+B --> a #1:List
+C --> a
+
+Solution 3
+A --> a #1:List
+B --> a
+C --> #1:List a
+
+Solution 4
+A --> a
+B --> a
+C --> a
+==========================================
+unify in A-UNIF : a A b =? B c C .
+
+Solution 1
+A --> #1:List c #2:List
+B --> a #1:List
+C --> #2:List b
+
+Solution 2
+A --> #1:List c
+B --> a #1:List
+C --> b
+
+Solution 3
+A --> c #1:List
+B --> a
+C --> #1:List b
+
+Solution 4
+A --> c
+B --> a
+C --> b
+==========================================
+unify in A-UNIF : a A a =? B a C a D .
+
+Solution 1
+A --> #1:List a #2:List a #3:List
+B --> a #1:List
+C --> #2:List
+D --> #3:List a
+
+Solution 2
+A --> #1:List a #2:List a
+B --> a #1:List
+C --> #2:List
+D --> a
+
+Solution 3
+A --> a #1:List a #2:List
+B --> a
+C --> #1:List
+D --> #2:List a
+
+Solution 4
+A --> a #1:List a
+B --> a
+C --> #1:List
+D --> a
+==========================================
+unify in A-UNIF : a A b =? B c C d D .
+
+Solution 1
+A --> #1:List c #2:List d #3:List
+B --> a #1:List
+C --> #2:List
+D --> #3:List b
+
+Solution 2
+A --> #1:List c #2:List d
+B --> a #1:List
+C --> #2:List
+D --> b
+
+Solution 3
+A --> c #1:List d #2:List
+B --> a
+C --> #1:List
+D --> #2:List b
+
+Solution 4
+A --> c #1:List d
+B --> a
+C --> #1:List
+D --> b
+==========================================
+unify in A-UNIF : h(A, B, B) C h(G, H) =? I h(J, i(K)) L .
+
+Solution 1
+A --> #7:List
+B --> #8:List
+C --> #2:List h(#6:List, i(#1:List)) #3:List
+H --> #4:List
+G --> #5:List
+I --> h(#7:List, #8:List, #8:List) #2:List
+J --> #6:List
+K --> #1:List
+L --> #3:List h(#4:List, #5:List)
+
+Solution 2
+A --> #6:List
+B --> #7:List
+C --> #2:List h(#5:List, i(#1:List))
+H --> #3:List
+G --> #4:List
+I --> h(#6:List, #7:List, #7:List) #2:List
+J --> #5:List
+K --> #1:List
+L --> h(#3:List, #4:List)
+
+Solution 3
+A --> #6:List
+B --> #7:List
+C --> h(#5:List, i(#1:List)) #2:List
+H --> #3:List
+G --> #4:List
+I --> h(#6:List, #7:List, #7:List)
+J --> #5:List
+K --> #1:List
+L --> #2:List h(#3:List, #4:List)
+
+Solution 4
+A --> #5:List
+B --> #6:List
+C --> h(#4:List, i(#1:List))
+H --> #2:List
+G --> #3:List
+I --> h(#5:List, #6:List, #6:List)
+J --> #4:List
+K --> #1:List
+L --> h(#2:List, #3:List)
+==========================================
+unify in A-UNIF : h(A, B) C h(G, H) =? I h(J, J) L h(M, M) N .
+
+Solution 1
+A --> #8:List
+B --> #9:List
+C --> #1:List h(#7:List, #7:List) #2:List h(#6:List, #6:List) #3:List
+H --> #4:List
+G --> #5:List
+I --> h(#8:List, #9:List) #1:List
+J --> #7:List
+L --> #2:List
+M --> #6:List
+N --> #3:List h(#4:List, #5:List)
+
+Solution 2
+A --> #7:List
+B --> #8:List
+C --> #1:List h(#6:List, #6:List) #2:List h(#5:List, #5:List)
+H --> #3:List
+G --> #4:List
+I --> h(#7:List, #8:List) #1:List
+J --> #6:List
+L --> #2:List
+M --> #5:List
+N --> h(#3:List, #4:List)
+
+Solution 3
+A --> #7:List
+B --> #8:List
+C --> h(#6:List, #6:List) #1:List h(#5:List, #5:List) #2:List
+H --> #3:List
+G --> #4:List
+I --> h(#7:List, #8:List)
+J --> #6:List
+L --> #1:List
+M --> #5:List
+N --> #2:List h(#3:List, #4:List)
+
+Solution 4
+A --> #6:List
+B --> #7:List
+C --> h(#5:List, #5:List) #1:List h(#4:List, #4:List)
+H --> #2:List
+G --> #3:List
+I --> h(#6:List, #7:List)
+J --> #5:List
+L --> #1:List
+M --> #4:List
+N --> h(#2:List, #3:List)
+==========================================
+unify in A-UNIF : A h(X, Y) B =? C h(U, V) D h(U, U) G .
+
+Solution 1
+A --> #1:List h(#7:List, #8:List) #2:List h(#7:List, #7:List) #3:List
+X --> #5:List
+Y --> #6:List
+B --> #4:List
+C --> #1:List
+V --> #8:List
+U --> #7:List
+D --> #2:List
+G --> #3:List h(#5:List, #6:List) #4:List
+
+Solution 2
+A --> #1:List h(#6:List, #7:List) #2:List h(#6:List, #6:List)
+X --> #4:List
+Y --> #5:List
+B --> #3:List
+C --> #1:List
+V --> #7:List
+U --> #6:List
+D --> #2:List
+G --> h(#4:List, #5:List) #3:List
+
+Solution 3
+A --> #1:List h(#5:List, #8:List) #2:List
+X --> #6:List
+Y --> #7:List
+B --> #3:List h(#5:List, #5:List) #4:List
+C --> #1:List
+V --> #8:List
+U --> #5:List
+D --> #2:List h(#6:List, #7:List) #3:List
+G --> #4:List
+
+Solution 4
+A --> #1:List h(#4:List, #7:List) #2:List
+X --> #5:List
+Y --> #6:List
+B --> h(#4:List, #4:List) #3:List
+C --> #1:List
+V --> #7:List
+U --> #4:List
+D --> #2:List h(#5:List, #6:List)
+G --> #3:List
+
+Solution 5
+A --> #1:List h(#4:List, #5:List, #6:List, #7:List) #2:List
+X --> h(#4:List, #4:List, #5:List)
+Y --> h(#5:List, #6:List, #6:List)
+B --> #3:List
+C --> #1:List
+V --> #7:List
+U --> h(#4:List, #5:List, #6:List)
+D --> #2:List
+G --> #3:List
+
+Solution 6
+A --> #1:List h(#4:List, #5:List, #6:List) #2:List
+X --> h(#4:List, #4:List, #5:List)
+Y --> #5:List
+B --> #3:List
+C --> #1:List
+V --> #6:List
+U --> h(#4:List, #5:List)
+D --> #2:List
+G --> #3:List
+
+Solution 7
+A --> #1:List h(#4:List, #5:List, #6:List) #2:List
+X --> h(#4:List, #4:List)
+Y --> h(#5:List, #5:List)
+B --> #3:List
+C --> #1:List
+V --> #6:List
+U --> h(#4:List, #5:List)
+D --> #2:List
+G --> #3:List
+
+Solution 8
+A --> #1:List h(#4:List, #5:List, #6:List) #2:List
+X --> #4:List
+Y --> h(#4:List, #5:List, #5:List)
+B --> #3:List
+C --> #1:List
+V --> #6:List
+U --> h(#4:List, #5:List)
+D --> #2:List
+G --> #3:List
+
+Solution 9
+A --> #1:List h(#4:List, #5:List) #2:List
+X --> #4:List
+Y --> #4:List
+B --> #3:List
+C --> #1:List
+V --> #5:List
+U --> #4:List
+D --> #2:List
+G --> #3:List
+
+Solution 10
+A --> #1:List h(#4:List, #7:List)
+X --> #5:List
+Y --> #6:List
+B --> #2:List h(#4:List, #4:List) #3:List
+C --> #1:List
+V --> #7:List
+U --> #4:List
+D --> h(#5:List, #6:List) #2:List
+G --> #3:List
+
+Solution 11
+A --> #1:List h(#3:List, #6:List)
+X --> #4:List
+Y --> #5:List
+B --> h(#3:List, #3:List) #2:List
+C --> #1:List
+V --> #6:List
+U --> #3:List
+D --> h(#4:List, #5:List)
+G --> #2:List
+
+Solution 12
+A --> #1:List
+X --> #7:List
+Y --> #8:List
+B --> #2:List h(#5:List, #6:List) #3:List h(#5:List, #5:List) #4:List
+C --> #1:List h(#7:List, #8:List) #2:List
+V --> #6:List
+U --> #5:List
+D --> #3:List
+G --> #4:List
+
+Solution 13
+A --> #1:List
+X --> #6:List
+Y --> #7:List
+B --> h(#4:List, #5:List) #2:List h(#4:List, #4:List) #3:List
+C --> #1:List h(#6:List, #7:List)
+V --> #5:List
+U --> #4:List
+D --> #2:List
+G --> #3:List
+
+Solution 14
+A --> #1:List
+X --> h(#4:List, #6:List)
+Y --> h(#5:List, #7:List)
+B --> #2:List h(#4:List, #4:List, #5:List, #5:List) #3:List
+C --> #1:List
+V --> h(#6:List, #7:List)
+U --> h(#4:List, #5:List)
+D --> #2:List
+G --> #3:List
+
+Solution 15
+A --> #1:List
+X --> h(#4:List, #6:List)
+Y --> #5:List
+B --> #2:List h(#4:List, #4:List, #5:List, #5:List) #3:List
+C --> #1:List
+V --> #6:List
+U --> h(#4:List, #5:List)
+D --> #2:List
+G --> #3:List
+
+Solution 16
+A --> #1:List
+X --> #4:List
+Y --> h(#5:List, #6:List)
+B --> #2:List h(#4:List, #4:List, #5:List, #5:List) #3:List
+C --> #1:List
+V --> #6:List
+U --> h(#4:List, #5:List)
+D --> #2:List
+G --> #3:List
+
+Solution 17
+A --> #1:List
+X --> h(#4:List, #5:List)
+Y --> #6:List
+B --> #2:List h(#4:List, #4:List) #3:List
+C --> #1:List
+V --> h(#5:List, #6:List)
+U --> #4:List
+D --> #2:List
+G --> #3:List
+
+Solution 18
+A --> #1:List
+X --> #4:List
+Y --> #5:List
+B --> #2:List h(#4:List, #4:List) #3:List
+C --> #1:List
+V --> #5:List
+U --> #4:List
+D --> #2:List
+G --> #3:List
+
+Solution 19
+A --> #1:List
+X --> #5:List
+Y --> h(#4:List, #6:List)
+B --> #2:List h(#4:List, #4:List) #3:List
+C --> #1:List
+V --> h(#5:List, #6:List)
+U --> #4:List
+D --> #2:List
+G --> #3:List
+
+Solution 20
+A --> #1:List
+X --> #5:List
+Y --> #4:List
+B --> #2:List h(#4:List, #4:List) #3:List
+C --> #1:List
+V --> #5:List
+U --> #4:List
+D --> #2:List
+G --> #3:List
+==========================================
+unify in A-UNIF : g(h(A, B, B) C h(G, H), X Y a Z) =? g(I h(J, i(K)) L, U b V
+    W) .
+
+Solution 1
+A --> #12:List
+B --> #13:List
+C --> #7:List h(#11:List, i(#1:List)) #8:List
+H --> #9:List
+G --> #10:List
+X --> #2:List b #3:List #4:List
+Y --> #5:List
+Z --> #6:List
+I --> h(#12:List, #13:List, #13:List) #7:List
+J --> #11:List
+K --> #1:List
+L --> #8:List h(#9:List, #10:List)
+U --> #2:List
+V --> #3:List
+W --> #4:List #5:List a #6:List
+
+Solution 2
+A --> #11:List
+B --> #12:List
+C --> #7:List h(#10:List, i(#1:List))
+H --> #8:List
+G --> #9:List
+X --> #2:List b #3:List #4:List
+Y --> #5:List
+Z --> #6:List
+I --> h(#11:List, #12:List, #12:List) #7:List
+J --> #10:List
+K --> #1:List
+L --> h(#8:List, #9:List)
+U --> #2:List
+V --> #3:List
+W --> #4:List #5:List a #6:List
+
+Solution 3
+A --> #11:List
+B --> #12:List
+C --> h(#10:List, i(#1:List)) #7:List
+H --> #8:List
+G --> #9:List
+X --> #2:List b #3:List #4:List
+Y --> #5:List
+Z --> #6:List
+I --> h(#11:List, #12:List, #12:List)
+J --> #10:List
+K --> #1:List
+L --> #7:List h(#8:List, #9:List)
+U --> #2:List
+V --> #3:List
+W --> #4:List #5:List a #6:List
+
+Solution 4
+A --> #10:List
+B --> #11:List
+C --> h(#9:List, i(#1:List))
+H --> #7:List
+G --> #8:List
+X --> #2:List b #3:List #4:List
+Y --> #5:List
+Z --> #6:List
+I --> h(#10:List, #11:List, #11:List)
+J --> #9:List
+K --> #1:List
+L --> h(#7:List, #8:List)
+U --> #2:List
+V --> #3:List
+W --> #4:List #5:List a #6:List
+
+Solution 5
+A --> #12:List
+B --> #13:List
+C --> #7:List h(#11:List, i(#1:List)) #8:List
+H --> #9:List
+G --> #10:List
+X --> #2:List b #3:List
+Y --> #4:List #5:List
+Z --> #6:List
+I --> h(#12:List, #13:List, #13:List) #7:List
+J --> #11:List
+K --> #1:List
+L --> #8:List h(#9:List, #10:List)
+U --> #2:List
+V --> #3:List #4:List
+W --> #5:List a #6:List
+
+Solution 6
+A --> #11:List
+B --> #12:List
+C --> #7:List h(#10:List, i(#1:List))
+H --> #8:List
+G --> #9:List
+X --> #2:List b #3:List
+Y --> #4:List #5:List
+Z --> #6:List
+I --> h(#11:List, #12:List, #12:List) #7:List
+J --> #10:List
+K --> #1:List
+L --> h(#8:List, #9:List)
+U --> #2:List
+V --> #3:List #4:List
+W --> #5:List a #6:List
+
+Solution 7
+A --> #11:List
+B --> #12:List
+C --> h(#10:List, i(#1:List)) #7:List
+H --> #8:List
+G --> #9:List
+X --> #2:List b #3:List
+Y --> #4:List #5:List
+Z --> #6:List
+I --> h(#11:List, #12:List, #12:List)
+J --> #10:List
+K --> #1:List
+L --> #7:List h(#8:List, #9:List)
+U --> #2:List
+V --> #3:List #4:List
+W --> #5:List a #6:List
+
+Solution 8
+A --> #10:List
+B --> #11:List
+C --> h(#9:List, i(#1:List))
+H --> #7:List
+G --> #8:List
+X --> #2:List b #3:List
+Y --> #4:List #5:List
+Z --> #6:List
+I --> h(#10:List, #11:List, #11:List)
+J --> #9:List
+K --> #1:List
+L --> h(#7:List, #8:List)
+U --> #2:List
+V --> #3:List #4:List
+W --> #5:List a #6:List
+
+Solution 9
+A --> #12:List
+B --> #13:List
+C --> #7:List h(#11:List, i(#1:List)) #8:List
+H --> #9:List
+G --> #10:List
+X --> #2:List b #3:List
+Y --> #4:List
+Z --> #5:List #6:List
+I --> h(#12:List, #13:List, #13:List) #7:List
+J --> #11:List
+K --> #1:List
+L --> #8:List h(#9:List, #10:List)
+U --> #2:List
+V --> #3:List #4:List a #5:List
+W --> #6:List
+
+Solution 10
+A --> #11:List
+B --> #12:List
+C --> #7:List h(#10:List, i(#1:List))
+H --> #8:List
+G --> #9:List
+X --> #2:List b #3:List
+Y --> #4:List
+Z --> #5:List #6:List
+I --> h(#11:List, #12:List, #12:List) #7:List
+J --> #10:List
+K --> #1:List
+L --> h(#8:List, #9:List)
+U --> #2:List
+V --> #3:List #4:List a #5:List
+W --> #6:List
+
+Solution 11
+A --> #11:List
+B --> #12:List
+C --> h(#10:List, i(#1:List)) #7:List
+H --> #8:List
+G --> #9:List
+X --> #2:List b #3:List
+Y --> #4:List
+Z --> #5:List #6:List
+I --> h(#11:List, #12:List, #12:List)
+J --> #10:List
+K --> #1:List
+L --> #7:List h(#8:List, #9:List)
+U --> #2:List
+V --> #3:List #4:List a #5:List
+W --> #6:List
+
+Solution 12
+A --> #10:List
+B --> #11:List
+C --> h(#9:List, i(#1:List))
+H --> #7:List
+G --> #8:List
+X --> #2:List b #3:List
+Y --> #4:List
+Z --> #5:List #6:List
+I --> h(#10:List, #11:List, #11:List)
+J --> #9:List
+K --> #1:List
+L --> h(#7:List, #8:List)
+U --> #2:List
+V --> #3:List #4:List a #5:List
+W --> #6:List
+
+Solution 13
+A --> #11:List
+B --> #12:List
+C --> #6:List h(#10:List, i(#1:List)) #7:List
+H --> #8:List
+G --> #9:List
+X --> #2:List b #3:List
+Y --> #4:List
+Z --> #5:List
+I --> h(#11:List, #12:List, #12:List) #6:List
+J --> #10:List
+K --> #1:List
+L --> #7:List h(#8:List, #9:List)
+U --> #2:List
+V --> #3:List #4:List a
+W --> #5:List
+
+Solution 14
+A --> #10:List
+B --> #11:List
+C --> #6:List h(#9:List, i(#1:List))
+H --> #7:List
+G --> #8:List
+X --> #2:List b #3:List
+Y --> #4:List
+Z --> #5:List
+I --> h(#10:List, #11:List, #11:List) #6:List
+J --> #9:List
+K --> #1:List
+L --> h(#7:List, #8:List)
+U --> #2:List
+V --> #3:List #4:List a
+W --> #5:List
+
+Solution 15
+A --> #10:List
+B --> #11:List
+C --> h(#9:List, i(#1:List)) #6:List
+H --> #7:List
+G --> #8:List
+X --> #2:List b #3:List
+Y --> #4:List
+Z --> #5:List
+I --> h(#10:List, #11:List, #11:List)
+J --> #9:List
+K --> #1:List
+L --> #6:List h(#7:List, #8:List)
+U --> #2:List
+V --> #3:List #4:List a
+W --> #5:List
+
+Solution 16
+A --> #9:List
+B --> #10:List
+C --> h(#8:List, i(#1:List))
+H --> #6:List
+G --> #7:List
+X --> #2:List b #3:List
+Y --> #4:List
+Z --> #5:List
+I --> h(#9:List, #10:List, #10:List)
+J --> #8:List
+K --> #1:List
+L --> h(#6:List, #7:List)
+U --> #2:List
+V --> #3:List #4:List a
+W --> #5:List
+
+Solution 17
+A --> #11:List
+B --> #12:List
+C --> #6:List h(#10:List, i(#1:List)) #7:List
+H --> #8:List
+G --> #9:List
+X --> #2:List b #3:List
+Y --> #4:List
+Z --> #5:List
+I --> h(#11:List, #12:List, #12:List) #6:List
+J --> #10:List
+K --> #1:List
+L --> #7:List h(#8:List, #9:List)
+U --> #2:List
+V --> #3:List #4:List
+W --> a #5:List
+
+Solution 18
+A --> #10:List
+B --> #11:List
+C --> #6:List h(#9:List, i(#1:List))
+H --> #7:List
+G --> #8:List
+X --> #2:List b #3:List
+Y --> #4:List
+Z --> #5:List
+I --> h(#10:List, #11:List, #11:List) #6:List
+J --> #9:List
+K --> #1:List
+L --> h(#7:List, #8:List)
+U --> #2:List
+V --> #3:List #4:List
+W --> a #5:List
+
+Solution 19
+A --> #10:List
+B --> #11:List
+C --> h(#9:List, i(#1:List)) #6:List
+H --> #7:List
+G --> #8:List
+X --> #2:List b #3:List
+Y --> #4:List
+Z --> #5:List
+I --> h(#10:List, #11:List, #11:List)
+J --> #9:List
+K --> #1:List
+L --> #6:List h(#7:List, #8:List)
+U --> #2:List
+V --> #3:List #4:List
+W --> a #5:List
+
+Solution 20
+A --> #9:List
+B --> #10:List
+C --> h(#8:List, i(#1:List))
+H --> #6:List
+G --> #7:List
+X --> #2:List b #3:List
+Y --> #4:List
+Z --> #5:List
+I --> h(#9:List, #10:List, #10:List)
+J --> #8:List
+K --> #1:List
+L --> h(#6:List, #7:List)
+U --> #2:List
+V --> #3:List #4:List
+W --> a #5:List
+
+Solution 21
+A --> #11:List
+B --> #12:List
+C --> #6:List h(#10:List, i(#1:List)) #7:List
+H --> #8:List
+G --> #9:List
+X --> #2:List b #3:List
+Y --> #4:List
+Z --> #5:List
+I --> h(#11:List, #12:List, #12:List) #6:List
+J --> #10:List
+K --> #1:List
+L --> #7:List h(#8:List, #9:List)
+U --> #2:List
+V --> #3:List
+W --> #4:List a #5:List
+
+Solution 22
+A --> #10:List
+B --> #11:List
+C --> #6:List h(#9:List, i(#1:List))
+H --> #7:List
+G --> #8:List
+X --> #2:List b #3:List
+Y --> #4:List
+Z --> #5:List
+I --> h(#10:List, #11:List, #11:List) #6:List
+J --> #9:List
+K --> #1:List
+L --> h(#7:List, #8:List)
+U --> #2:List
+V --> #3:List
+W --> #4:List a #5:List
+
+Solution 23
+A --> #10:List
+B --> #11:List
+C --> h(#9:List, i(#1:List)) #6:List
+H --> #7:List
+G --> #8:List
+X --> #2:List b #3:List
+Y --> #4:List
+Z --> #5:List
+I --> h(#10:List, #11:List, #11:List)
+J --> #9:List
+K --> #1:List
+L --> #6:List h(#7:List, #8:List)
+U --> #2:List
+V --> #3:List
+W --> #4:List a #5:List
+
+Solution 24
+A --> #9:List
+B --> #10:List
+C --> h(#8:List, i(#1:List))
+H --> #6:List
+G --> #7:List
+X --> #2:List b #3:List
+Y --> #4:List
+Z --> #5:List
+I --> h(#9:List, #10:List, #10:List)
+J --> #8:List
+K --> #1:List
+L --> h(#6:List, #7:List)
+U --> #2:List
+V --> #3:List
+W --> #4:List a #5:List
+
+Solution 25
+A --> #11:List
+B --> #12:List
+C --> #6:List h(#10:List, i(#1:List)) #7:List
+H --> #8:List
+G --> #9:List
+X --> #2:List b
+Y --> #3:List #4:List
+Z --> #5:List
+I --> h(#11:List, #12:List, #12:List) #6:List
+J --> #10:List
+K --> #1:List
+L --> #7:List h(#8:List, #9:List)
+U --> #2:List
+V --> #3:List
+W --> #4:List a #5:List
+
+Solution 26
+A --> #10:List
+B --> #11:List
+C --> #6:List h(#9:List, i(#1:List))
+H --> #7:List
+G --> #8:List
+X --> #2:List b
+Y --> #3:List #4:List
+Z --> #5:List
+I --> h(#10:List, #11:List, #11:List) #6:List
+J --> #9:List
+K --> #1:List
+L --> h(#7:List, #8:List)
+U --> #2:List
+V --> #3:List
+W --> #4:List a #5:List
+
+Solution 27
+A --> #10:List
+B --> #11:List
+C --> h(#9:List, i(#1:List)) #6:List
+H --> #7:List
+G --> #8:List
+X --> #2:List b
+Y --> #3:List #4:List
+Z --> #5:List
+I --> h(#10:List, #11:List, #11:List)
+J --> #9:List
+K --> #1:List
+L --> #6:List h(#7:List, #8:List)
+U --> #2:List
+V --> #3:List
+W --> #4:List a #5:List
+
+Solution 28
+A --> #9:List
+B --> #10:List
+C --> h(#8:List, i(#1:List))
+H --> #6:List
+G --> #7:List
+X --> #2:List b
+Y --> #3:List #4:List
+Z --> #5:List
+I --> h(#9:List, #10:List, #10:List)
+J --> #8:List
+K --> #1:List
+L --> h(#6:List, #7:List)
+U --> #2:List
+V --> #3:List
+W --> #4:List a #5:List
+
+Solution 29
+A --> #11:List
+B --> #12:List
+C --> #6:List h(#10:List, i(#1:List)) #7:List
+H --> #8:List
+G --> #9:List
+X --> #2:List b
+Y --> #3:List
+Z --> #4:List #5:List
+I --> h(#11:List, #12:List, #12:List) #6:List
+J --> #10:List
+K --> #1:List
+L --> #7:List h(#8:List, #9:List)
+U --> #2:List
+V --> #3:List a #4:List
+W --> #5:List
+
+Solution 30
+A --> #10:List
+B --> #11:List
+C --> #6:List h(#9:List, i(#1:List))
+H --> #7:List
+G --> #8:List
+X --> #2:List b
+Y --> #3:List
+Z --> #4:List #5:List
+I --> h(#10:List, #11:List, #11:List) #6:List
+J --> #9:List
+K --> #1:List
+L --> h(#7:List, #8:List)
+U --> #2:List
+V --> #3:List a #4:List
+W --> #5:List
+
+Solution 31
+A --> #10:List
+B --> #11:List
+C --> h(#9:List, i(#1:List)) #6:List
+H --> #7:List
+G --> #8:List
+X --> #2:List b
+Y --> #3:List
+Z --> #4:List #5:List
+I --> h(#10:List, #11:List, #11:List)
+J --> #9:List
+K --> #1:List
+L --> #6:List h(#7:List, #8:List)
+U --> #2:List
+V --> #3:List a #4:List
+W --> #5:List
+
+Solution 32
+A --> #9:List
+B --> #10:List
+C --> h(#8:List, i(#1:List))
+H --> #6:List
+G --> #7:List
+X --> #2:List b
+Y --> #3:List
+Z --> #4:List #5:List
+I --> h(#9:List, #10:List, #10:List)
+J --> #8:List
+K --> #1:List
+L --> h(#6:List, #7:List)
+U --> #2:List
+V --> #3:List a #4:List
+W --> #5:List
+
+Solution 33
+A --> #10:List
+B --> #11:List
+C --> #5:List h(#9:List, i(#1:List)) #6:List
+H --> #7:List
+G --> #8:List
+X --> #2:List b
+Y --> #3:List
+Z --> #4:List
+I --> h(#10:List, #11:List, #11:List) #5:List
+J --> #9:List
+K --> #1:List
+L --> #6:List h(#7:List, #8:List)
+U --> #2:List
+V --> #3:List a
+W --> #4:List
+
+Solution 34
+A --> #9:List
+B --> #10:List
+C --> #5:List h(#8:List, i(#1:List))
+H --> #6:List
+G --> #7:List
+X --> #2:List b
+Y --> #3:List
+Z --> #4:List
+I --> h(#9:List, #10:List, #10:List) #5:List
+J --> #8:List
+K --> #1:List
+L --> h(#6:List, #7:List)
+U --> #2:List
+V --> #3:List a
+W --> #4:List
+
+Solution 35
+A --> #9:List
+B --> #10:List
+C --> h(#8:List, i(#1:List)) #5:List
+H --> #6:List
+G --> #7:List
+X --> #2:List b
+Y --> #3:List
+Z --> #4:List
+I --> h(#9:List, #10:List, #10:List)
+J --> #8:List
+K --> #1:List
+L --> #5:List h(#6:List, #7:List)
+U --> #2:List
+V --> #3:List a
+W --> #4:List
+
+Solution 36
+A --> #8:List
+B --> #9:List
+C --> h(#7:List, i(#1:List))
+H --> #5:List
+G --> #6:List
+X --> #2:List b
+Y --> #3:List
+Z --> #4:List
+I --> h(#8:List, #9:List, #9:List)
+J --> #7:List
+K --> #1:List
+L --> h(#5:List, #6:List)
+U --> #2:List
+V --> #3:List a
+W --> #4:List
+
+Solution 37
+A --> #10:List
+B --> #11:List
+C --> #5:List h(#9:List, i(#1:List)) #6:List
+H --> #7:List
+G --> #8:List
+X --> #2:List b
+Y --> #3:List
+Z --> #4:List
+I --> h(#10:List, #11:List, #11:List) #5:List
+J --> #9:List
+K --> #1:List
+L --> #6:List h(#7:List, #8:List)
+U --> #2:List
+V --> #3:List
+W --> a #4:List
+
+Solution 38
+A --> #9:List
+B --> #10:List
+C --> #5:List h(#8:List, i(#1:List))
+H --> #6:List
+G --> #7:List
+X --> #2:List b
+Y --> #3:List
+Z --> #4:List
+I --> h(#9:List, #10:List, #10:List) #5:List
+J --> #8:List
+K --> #1:List
+L --> h(#6:List, #7:List)
+U --> #2:List
+V --> #3:List
+W --> a #4:List
+
+Solution 39
+A --> #9:List
+B --> #10:List
+C --> h(#8:List, i(#1:List)) #5:List
+H --> #6:List
+G --> #7:List
+X --> #2:List b
+Y --> #3:List
+Z --> #4:List
+I --> h(#9:List, #10:List, #10:List)
+J --> #8:List
+K --> #1:List
+L --> #5:List h(#6:List, #7:List)
+U --> #2:List
+V --> #3:List
+W --> a #4:List
+
+Solution 40
+A --> #8:List
+B --> #9:List
+C --> h(#7:List, i(#1:List))
+H --> #5:List
+G --> #6:List
+X --> #2:List b
+Y --> #3:List
+Z --> #4:List
+I --> h(#8:List, #9:List, #9:List)
+J --> #7:List
+K --> #1:List
+L --> h(#5:List, #6:List)
+U --> #2:List
+V --> #3:List
+W --> a #4:List
+
+Solution 41
+A --> #12:List
+B --> #13:List
+C --> #7:List h(#11:List, i(#1:List)) #8:List
+H --> #9:List
+G --> #10:List
+X --> #2:List
+Y --> #3:List b #4:List #5:List
+Z --> #6:List
+I --> h(#12:List, #13:List, #13:List) #7:List
+J --> #11:List
+K --> #1:List
+L --> #8:List h(#9:List, #10:List)
+U --> #2:List #3:List
+V --> #4:List
+W --> #5:List a #6:List
+
+Solution 42
+A --> #11:List
+B --> #12:List
+C --> #7:List h(#10:List, i(#1:List))
+H --> #8:List
+G --> #9:List
+X --> #2:List
+Y --> #3:List b #4:List #5:List
+Z --> #6:List
+I --> h(#11:List, #12:List, #12:List) #7:List
+J --> #10:List
+K --> #1:List
+L --> h(#8:List, #9:List)
+U --> #2:List #3:List
+V --> #4:List
+W --> #5:List a #6:List
+
+Solution 43
+A --> #11:List
+B --> #12:List
+C --> h(#10:List, i(#1:List)) #7:List
+H --> #8:List
+G --> #9:List
+X --> #2:List
+Y --> #3:List b #4:List #5:List
+Z --> #6:List
+I --> h(#11:List, #12:List, #12:List)
+J --> #10:List
+K --> #1:List
+L --> #7:List h(#8:List, #9:List)
+U --> #2:List #3:List
+V --> #4:List
+W --> #5:List a #6:List
+
+Solution 44
+A --> #10:List
+B --> #11:List
+C --> h(#9:List, i(#1:List))
+H --> #7:List
+G --> #8:List
+X --> #2:List
+Y --> #3:List b #4:List #5:List
+Z --> #6:List
+I --> h(#10:List, #11:List, #11:List)
+J --> #9:List
+K --> #1:List
+L --> h(#7:List, #8:List)
+U --> #2:List #3:List
+V --> #4:List
+W --> #5:List a #6:List
+
+Solution 45
+A --> #12:List
+B --> #13:List
+C --> #7:List h(#11:List, i(#1:List)) #8:List
+H --> #9:List
+G --> #10:List
+X --> #2:List
+Y --> #3:List b #4:List
+Z --> #5:List #6:List
+I --> h(#12:List, #13:List, #13:List) #7:List
+J --> #11:List
+K --> #1:List
+L --> #8:List h(#9:List, #10:List)
+U --> #2:List #3:List
+V --> #4:List a #5:List
+W --> #6:List
+
+Solution 46
+A --> #11:List
+B --> #12:List
+C --> #7:List h(#10:List, i(#1:List))
+H --> #8:List
+G --> #9:List
+X --> #2:List
+Y --> #3:List b #4:List
+Z --> #5:List #6:List
+I --> h(#11:List, #12:List, #12:List) #7:List
+J --> #10:List
+K --> #1:List
+L --> h(#8:List, #9:List)
+U --> #2:List #3:List
+V --> #4:List a #5:List
+W --> #6:List
+
+Solution 47
+A --> #11:List
+B --> #12:List
+C --> h(#10:List, i(#1:List)) #7:List
+H --> #8:List
+G --> #9:List
+X --> #2:List
+Y --> #3:List b #4:List
+Z --> #5:List #6:List
+I --> h(#11:List, #12:List, #12:List)
+J --> #10:List
+K --> #1:List
+L --> #7:List h(#8:List, #9:List)
+U --> #2:List #3:List
+V --> #4:List a #5:List
+W --> #6:List
+
+Solution 48
+A --> #10:List
+B --> #11:List
+C --> h(#9:List, i(#1:List))
+H --> #7:List
+G --> #8:List
+X --> #2:List
+Y --> #3:List b #4:List
+Z --> #5:List #6:List
+I --> h(#10:List, #11:List, #11:List)
+J --> #9:List
+K --> #1:List
+L --> h(#7:List, #8:List)
+U --> #2:List #3:List
+V --> #4:List a #5:List
+W --> #6:List
+
+Solution 49
+A --> #11:List
+B --> #12:List
+C --> #6:List h(#10:List, i(#1:List)) #7:List
+H --> #8:List
+G --> #9:List
+X --> #2:List
+Y --> #3:List b #4:List
+Z --> #5:List
+I --> h(#11:List, #12:List, #12:List) #6:List
+J --> #10:List
+K --> #1:List
+L --> #7:List h(#8:List, #9:List)
+U --> #2:List #3:List
+V --> #4:List a
+W --> #5:List
+
+Solution 50
+A --> #10:List
+B --> #11:List
+C --> #6:List h(#9:List, i(#1:List))
+H --> #7:List
+G --> #8:List
+X --> #2:List
+Y --> #3:List b #4:List
+Z --> #5:List
+I --> h(#10:List, #11:List, #11:List) #6:List
+J --> #9:List
+K --> #1:List
+L --> h(#7:List, #8:List)
+U --> #2:List #3:List
+V --> #4:List a
+W --> #5:List
+
+Solution 51
+A --> #10:List
+B --> #11:List
+C --> h(#9:List, i(#1:List)) #6:List
+H --> #7:List
+G --> #8:List
+X --> #2:List
+Y --> #3:List b #4:List
+Z --> #5:List
+I --> h(#10:List, #11:List, #11:List)
+J --> #9:List
+K --> #1:List
+L --> #6:List h(#7:List, #8:List)
+U --> #2:List #3:List
+V --> #4:List a
+W --> #5:List
+
+Solution 52
+A --> #9:List
+B --> #10:List
+C --> h(#8:List, i(#1:List))
+H --> #6:List
+G --> #7:List
+X --> #2:List
+Y --> #3:List b #4:List
+Z --> #5:List
+I --> h(#9:List, #10:List, #10:List)
+J --> #8:List
+K --> #1:List
+L --> h(#6:List, #7:List)
+U --> #2:List #3:List
+V --> #4:List a
+W --> #5:List
+
+Solution 53
+A --> #11:List
+B --> #12:List
+C --> #6:List h(#10:List, i(#1:List)) #7:List
+H --> #8:List
+G --> #9:List
+X --> #2:List
+Y --> #3:List b #4:List
+Z --> #5:List
+I --> h(#11:List, #12:List, #12:List) #6:List
+J --> #10:List
+K --> #1:List
+L --> #7:List h(#8:List, #9:List)
+U --> #2:List #3:List
+V --> #4:List
+W --> a #5:List
+
+Solution 54
+A --> #10:List
+B --> #11:List
+C --> #6:List h(#9:List, i(#1:List))
+H --> #7:List
+G --> #8:List
+X --> #2:List
+Y --> #3:List b #4:List
+Z --> #5:List
+I --> h(#10:List, #11:List, #11:List) #6:List
+J --> #9:List
+K --> #1:List
+L --> h(#7:List, #8:List)
+U --> #2:List #3:List
+V --> #4:List
+W --> a #5:List
+
+Solution 55
+A --> #10:List
+B --> #11:List
+C --> h(#9:List, i(#1:List)) #6:List
+H --> #7:List
+G --> #8:List
+X --> #2:List
+Y --> #3:List b #4:List
+Z --> #5:List
+I --> h(#10:List, #11:List, #11:List)
+J --> #9:List
+K --> #1:List
+L --> #6:List h(#7:List, #8:List)
+U --> #2:List #3:List
+V --> #4:List
+W --> a #5:List
+
+Solution 56
+A --> #9:List
+B --> #10:List
+C --> h(#8:List, i(#1:List))
+H --> #6:List
+G --> #7:List
+X --> #2:List
+Y --> #3:List b #4:List
+Z --> #5:List
+I --> h(#9:List, #10:List, #10:List)
+J --> #8:List
+K --> #1:List
+L --> h(#6:List, #7:List)
+U --> #2:List #3:List
+V --> #4:List
+W --> a #5:List
+
+Solution 57
+A --> #11:List
+B --> #12:List
+C --> #6:List h(#10:List, i(#1:List)) #7:List
+H --> #8:List
+G --> #9:List
+X --> #2:List
+Y --> #3:List b
+Z --> #4:List #5:List
+I --> h(#11:List, #12:List, #12:List) #6:List
+J --> #10:List
+K --> #1:List
+L --> #7:List h(#8:List, #9:List)
+U --> #2:List #3:List
+V --> a #4:List
+W --> #5:List
+
+Solution 58
+A --> #10:List
+B --> #11:List
+C --> #6:List h(#9:List, i(#1:List))
+H --> #7:List
+G --> #8:List
+X --> #2:List
+Y --> #3:List b
+Z --> #4:List #5:List
+I --> h(#10:List, #11:List, #11:List) #6:List
+J --> #9:List
+K --> #1:List
+L --> h(#7:List, #8:List)
+U --> #2:List #3:List
+V --> a #4:List
+W --> #5:List
+
+Solution 59
+A --> #10:List
+B --> #11:List
+C --> h(#9:List, i(#1:List)) #6:List
+H --> #7:List
+G --> #8:List
+X --> #2:List
+Y --> #3:List b
+Z --> #4:List #5:List
+I --> h(#10:List, #11:List, #11:List)
+J --> #9:List
+K --> #1:List
+L --> #6:List h(#7:List, #8:List)
+U --> #2:List #3:List
+V --> a #4:List
+W --> #5:List
+
+Solution 60
+A --> #9:List
+B --> #10:List
+C --> h(#8:List, i(#1:List))
+H --> #6:List
+G --> #7:List
+X --> #2:List
+Y --> #3:List b
+Z --> #4:List #5:List
+I --> h(#9:List, #10:List, #10:List)
+J --> #8:List
+K --> #1:List
+L --> h(#6:List, #7:List)
+U --> #2:List #3:List
+V --> a #4:List
+W --> #5:List
+
+Solution 61
+A --> #10:List
+B --> #11:List
+C --> #5:List h(#9:List, i(#1:List)) #6:List
+H --> #7:List
+G --> #8:List
+X --> #2:List
+Y --> #3:List b
+Z --> #4:List
+I --> h(#10:List, #11:List, #11:List) #5:List
+J --> #9:List
+K --> #1:List
+L --> #6:List h(#7:List, #8:List)
+U --> #2:List #3:List
+V --> a
+W --> #4:List
+
+Solution 62
+A --> #9:List
+B --> #10:List
+C --> #5:List h(#8:List, i(#1:List))
+H --> #6:List
+G --> #7:List
+X --> #2:List
+Y --> #3:List b
+Z --> #4:List
+I --> h(#9:List, #10:List, #10:List) #5:List
+J --> #8:List
+K --> #1:List
+L --> h(#6:List, #7:List)
+U --> #2:List #3:List
+V --> a
+W --> #4:List
+
+Solution 63
+A --> #9:List
+B --> #10:List
+C --> h(#8:List, i(#1:List)) #5:List
+H --> #6:List
+G --> #7:List
+X --> #2:List
+Y --> #3:List b
+Z --> #4:List
+I --> h(#9:List, #10:List, #10:List)
+J --> #8:List
+K --> #1:List
+L --> #5:List h(#6:List, #7:List)
+U --> #2:List #3:List
+V --> a
+W --> #4:List
+
+Solution 64
+A --> #8:List
+B --> #9:List
+C --> h(#7:List, i(#1:List))
+H --> #5:List
+G --> #6:List
+X --> #2:List
+Y --> #3:List b
+Z --> #4:List
+I --> h(#8:List, #9:List, #9:List)
+J --> #7:List
+K --> #1:List
+L --> h(#5:List, #6:List)
+U --> #2:List #3:List
+V --> a
+W --> #4:List
+
+Solution 65
+A --> #12:List
+B --> #13:List
+C --> #7:List h(#11:List, i(#1:List)) #8:List
+H --> #9:List
+G --> #10:List
+X --> #2:List
+Y --> #3:List
+Z --> #4:List b #5:List #6:List
+I --> h(#12:List, #13:List, #13:List) #7:List
+J --> #11:List
+K --> #1:List
+L --> #8:List h(#9:List, #10:List)
+U --> #2:List #3:List a #4:List
+V --> #5:List
+W --> #6:List
+
+Solution 66
+A --> #11:List
+B --> #12:List
+C --> #7:List h(#10:List, i(#1:List))
+H --> #8:List
+G --> #9:List
+X --> #2:List
+Y --> #3:List
+Z --> #4:List b #5:List #6:List
+I --> h(#11:List, #12:List, #12:List) #7:List
+J --> #10:List
+K --> #1:List
+L --> h(#8:List, #9:List)
+U --> #2:List #3:List a #4:List
+V --> #5:List
+W --> #6:List
+
+Solution 67
+A --> #11:List
+B --> #12:List
+C --> h(#10:List, i(#1:List)) #7:List
+H --> #8:List
+G --> #9:List
+X --> #2:List
+Y --> #3:List
+Z --> #4:List b #5:List #6:List
+I --> h(#11:List, #12:List, #12:List)
+J --> #10:List
+K --> #1:List
+L --> #7:List h(#8:List, #9:List)
+U --> #2:List #3:List a #4:List
+V --> #5:List
+W --> #6:List
+
+Solution 68
+A --> #10:List
+B --> #11:List
+C --> h(#9:List, i(#1:List))
+H --> #7:List
+G --> #8:List
+X --> #2:List
+Y --> #3:List
+Z --> #4:List b #5:List #6:List
+I --> h(#10:List, #11:List, #11:List)
+J --> #9:List
+K --> #1:List
+L --> h(#7:List, #8:List)
+U --> #2:List #3:List a #4:List
+V --> #5:List
+W --> #6:List
+
+Solution 69
+A --> #11:List
+B --> #12:List
+C --> #6:List h(#10:List, i(#1:List)) #7:List
+H --> #8:List
+G --> #9:List
+X --> #2:List
+Y --> #3:List
+Z --> b #4:List #5:List
+I --> h(#11:List, #12:List, #12:List) #6:List
+J --> #10:List
+K --> #1:List
+L --> #7:List h(#8:List, #9:List)
+U --> #2:List #3:List a
+V --> #4:List
+W --> #5:List
+
+Solution 70
+A --> #10:List
+B --> #11:List
+C --> #6:List h(#9:List, i(#1:List))
+H --> #7:List
+G --> #8:List
+X --> #2:List
+Y --> #3:List
+Z --> b #4:List #5:List
+I --> h(#10:List, #11:List, #11:List) #6:List
+J --> #9:List
+K --> #1:List
+L --> h(#7:List, #8:List)
+U --> #2:List #3:List a
+V --> #4:List
+W --> #5:List
+
+Solution 71
+A --> #10:List
+B --> #11:List
+C --> h(#9:List, i(#1:List)) #6:List
+H --> #7:List
+G --> #8:List
+X --> #2:List
+Y --> #3:List
+Z --> b #4:List #5:List
+I --> h(#10:List, #11:List, #11:List)
+J --> #9:List
+K --> #1:List
+L --> #6:List h(#7:List, #8:List)
+U --> #2:List #3:List a
+V --> #4:List
+W --> #5:List
+
+Solution 72
+A --> #9:List
+B --> #10:List
+C --> h(#8:List, i(#1:List))
+H --> #6:List
+G --> #7:List
+X --> #2:List
+Y --> #3:List
+Z --> b #4:List #5:List
+I --> h(#9:List, #10:List, #10:List)
+J --> #8:List
+K --> #1:List
+L --> h(#6:List, #7:List)
+U --> #2:List #3:List a
+V --> #4:List
+W --> #5:List
+
+Solution 73
+A --> #11:List
+B --> #12:List
+C --> #6:List h(#10:List, i(#1:List)) #7:List
+H --> #8:List
+G --> #9:List
+X --> #2:List
+Y --> b #3:List #4:List
+Z --> #5:List
+I --> h(#11:List, #12:List, #12:List) #6:List
+J --> #10:List
+K --> #1:List
+L --> #7:List h(#8:List, #9:List)
+U --> #2:List
+V --> #3:List
+W --> #4:List a #5:List
+
+Solution 74
+A --> #10:List
+B --> #11:List
+C --> #6:List h(#9:List, i(#1:List))
+H --> #7:List
+G --> #8:List
+X --> #2:List
+Y --> b #3:List #4:List
+Z --> #5:List
+I --> h(#10:List, #11:List, #11:List) #6:List
+J --> #9:List
+K --> #1:List
+L --> h(#7:List, #8:List)
+U --> #2:List
+V --> #3:List
+W --> #4:List a #5:List
+
+Solution 75
+A --> #10:List
+B --> #11:List
+C --> h(#9:List, i(#1:List)) #6:List
+H --> #7:List
+G --> #8:List
+X --> #2:List
+Y --> b #3:List #4:List
+Z --> #5:List
+I --> h(#10:List, #11:List, #11:List)
+J --> #9:List
+K --> #1:List
+L --> #6:List h(#7:List, #8:List)
+U --> #2:List
+V --> #3:List
+W --> #4:List a #5:List
+
+Solution 76
+A --> #9:List
+B --> #10:List
+C --> h(#8:List, i(#1:List))
+H --> #6:List
+G --> #7:List
+X --> #2:List
+Y --> b #3:List #4:List
+Z --> #5:List
+I --> h(#9:List, #10:List, #10:List)
+J --> #8:List
+K --> #1:List
+L --> h(#6:List, #7:List)
+U --> #2:List
+V --> #3:List
+W --> #4:List a #5:List
+
+Solution 77
+A --> #11:List
+B --> #12:List
+C --> #6:List h(#10:List, i(#1:List)) #7:List
+H --> #8:List
+G --> #9:List
+X --> #2:List
+Y --> b #3:List
+Z --> #4:List #5:List
+I --> h(#11:List, #12:List, #12:List) #6:List
+J --> #10:List
+K --> #1:List
+L --> #7:List h(#8:List, #9:List)
+U --> #2:List
+V --> #3:List a #4:List
+W --> #5:List
+
+Solution 78
+A --> #10:List
+B --> #11:List
+C --> #6:List h(#9:List, i(#1:List))
+H --> #7:List
+G --> #8:List
+X --> #2:List
+Y --> b #3:List
+Z --> #4:List #5:List
+I --> h(#10:List, #11:List, #11:List) #6:List
+J --> #9:List
+K --> #1:List
+L --> h(#7:List, #8:List)
+U --> #2:List
+V --> #3:List a #4:List
+W --> #5:List
+
+Solution 79
+A --> #10:List
+B --> #11:List
+C --> h(#9:List, i(#1:List)) #6:List
+H --> #7:List
+G --> #8:List
+X --> #2:List
+Y --> b #3:List
+Z --> #4:List #5:List
+I --> h(#10:List, #11:List, #11:List)
+J --> #9:List
+K --> #1:List
+L --> #6:List h(#7:List, #8:List)
+U --> #2:List
+V --> #3:List a #4:List
+W --> #5:List
+
+Solution 80
+A --> #9:List
+B --> #10:List
+C --> h(#8:List, i(#1:List))
+H --> #6:List
+G --> #7:List
+X --> #2:List
+Y --> b #3:List
+Z --> #4:List #5:List
+I --> h(#9:List, #10:List, #10:List)
+J --> #8:List
+K --> #1:List
+L --> h(#6:List, #7:List)
+U --> #2:List
+V --> #3:List a #4:List
+W --> #5:List
+
+Solution 81
+A --> #10:List
+B --> #11:List
+C --> #5:List h(#9:List, i(#1:List)) #6:List
+H --> #7:List
+G --> #8:List
+X --> #2:List
+Y --> b #3:List
+Z --> #4:List
+I --> h(#10:List, #11:List, #11:List) #5:List
+J --> #9:List
+K --> #1:List
+L --> #6:List h(#7:List, #8:List)
+U --> #2:List
+V --> #3:List a
+W --> #4:List
+
+Solution 82
+A --> #9:List
+B --> #10:List
+C --> #5:List h(#8:List, i(#1:List))
+H --> #6:List
+G --> #7:List
+X --> #2:List
+Y --> b #3:List
+Z --> #4:List
+I --> h(#9:List, #10:List, #10:List) #5:List
+J --> #8:List
+K --> #1:List
+L --> h(#6:List, #7:List)
+U --> #2:List
+V --> #3:List a
+W --> #4:List
+
+Solution 83
+A --> #9:List
+B --> #10:List
+C --> h(#8:List, i(#1:List)) #5:List
+H --> #6:List
+G --> #7:List
+X --> #2:List
+Y --> b #3:List
+Z --> #4:List
+I --> h(#9:List, #10:List, #10:List)
+J --> #8:List
+K --> #1:List
+L --> #5:List h(#6:List, #7:List)
+U --> #2:List
+V --> #3:List a
+W --> #4:List
+
+Solution 84
+A --> #8:List
+B --> #9:List
+C --> h(#7:List, i(#1:List))
+H --> #5:List
+G --> #6:List
+X --> #2:List
+Y --> b #3:List
+Z --> #4:List
+I --> h(#8:List, #9:List, #9:List)
+J --> #7:List
+K --> #1:List
+L --> h(#5:List, #6:List)
+U --> #2:List
+V --> #3:List a
+W --> #4:List
+
+Solution 85
+A --> #10:List
+B --> #11:List
+C --> #5:List h(#9:List, i(#1:List)) #6:List
+H --> #7:List
+G --> #8:List
+X --> #2:List
+Y --> b #3:List
+Z --> #4:List
+I --> h(#10:List, #11:List, #11:List) #5:List
+J --> #9:List
+K --> #1:List
+L --> #6:List h(#7:List, #8:List)
+U --> #2:List
+V --> #3:List
+W --> a #4:List
+
+Solution 86
+A --> #9:List
+B --> #10:List
+C --> #5:List h(#8:List, i(#1:List))
+H --> #6:List
+G --> #7:List
+X --> #2:List
+Y --> b #3:List
+Z --> #4:List
+I --> h(#9:List, #10:List, #10:List) #5:List
+J --> #8:List
+K --> #1:List
+L --> h(#6:List, #7:List)
+U --> #2:List
+V --> #3:List
+W --> a #4:List
+
+Solution 87
+A --> #9:List
+B --> #10:List
+C --> h(#8:List, i(#1:List)) #5:List
+H --> #6:List
+G --> #7:List
+X --> #2:List
+Y --> b #3:List
+Z --> #4:List
+I --> h(#9:List, #10:List, #10:List)
+J --> #8:List
+K --> #1:List
+L --> #5:List h(#6:List, #7:List)
+U --> #2:List
+V --> #3:List
+W --> a #4:List
+
+Solution 88
+A --> #8:List
+B --> #9:List
+C --> h(#7:List, i(#1:List))
+H --> #5:List
+G --> #6:List
+X --> #2:List
+Y --> b #3:List
+Z --> #4:List
+I --> h(#8:List, #9:List, #9:List)
+J --> #7:List
+K --> #1:List
+L --> h(#5:List, #6:List)
+U --> #2:List
+V --> #3:List
+W --> a #4:List
+
+Solution 89
+A --> #10:List
+B --> #11:List
+C --> #5:List h(#9:List, i(#1:List)) #6:List
+H --> #7:List
+G --> #8:List
+X --> #2:List
+Y --> b
+Z --> #3:List #4:List
+I --> h(#10:List, #11:List, #11:List) #5:List
+J --> #9:List
+K --> #1:List
+L --> #6:List h(#7:List, #8:List)
+U --> #2:List
+V --> a #3:List
+W --> #4:List
+
+Solution 90
+A --> #9:List
+B --> #10:List
+C --> #5:List h(#8:List, i(#1:List))
+H --> #6:List
+G --> #7:List
+X --> #2:List
+Y --> b
+Z --> #3:List #4:List
+I --> h(#9:List, #10:List, #10:List) #5:List
+J --> #8:List
+K --> #1:List
+L --> h(#6:List, #7:List)
+U --> #2:List
+V --> a #3:List
+W --> #4:List
+
+Solution 91
+A --> #9:List
+B --> #10:List
+C --> h(#8:List, i(#1:List)) #5:List
+H --> #6:List
+G --> #7:List
+X --> #2:List
+Y --> b
+Z --> #3:List #4:List
+I --> h(#9:List, #10:List, #10:List)
+J --> #8:List
+K --> #1:List
+L --> #5:List h(#6:List, #7:List)
+U --> #2:List
+V --> a #3:List
+W --> #4:List
+
+Solution 92
+A --> #8:List
+B --> #9:List
+C --> h(#7:List, i(#1:List))
+H --> #5:List
+G --> #6:List
+X --> #2:List
+Y --> b
+Z --> #3:List #4:List
+I --> h(#8:List, #9:List, #9:List)
+J --> #7:List
+K --> #1:List
+L --> h(#5:List, #6:List)
+U --> #2:List
+V --> a #3:List
+W --> #4:List
+
+Solution 93
+A --> #9:List
+B --> #10:List
+C --> #4:List h(#8:List, i(#1:List)) #5:List
+H --> #6:List
+G --> #7:List
+X --> #2:List
+Y --> b
+Z --> #3:List
+I --> h(#9:List, #10:List, #10:List) #4:List
+J --> #8:List
+K --> #1:List
+L --> #5:List h(#6:List, #7:List)
+U --> #2:List
+V --> a
+W --> #3:List
+
+Solution 94
+A --> #8:List
+B --> #9:List
+C --> #4:List h(#7:List, i(#1:List))
+H --> #5:List
+G --> #6:List
+X --> #2:List
+Y --> b
+Z --> #3:List
+I --> h(#8:List, #9:List, #9:List) #4:List
+J --> #7:List
+K --> #1:List
+L --> h(#5:List, #6:List)
+U --> #2:List
+V --> a
+W --> #3:List
+
+Solution 95
+A --> #8:List
+B --> #9:List
+C --> h(#7:List, i(#1:List)) #4:List
+H --> #5:List
+G --> #6:List
+X --> #2:List
+Y --> b
+Z --> #3:List
+I --> h(#8:List, #9:List, #9:List)
+J --> #7:List
+K --> #1:List
+L --> #4:List h(#5:List, #6:List)
+U --> #2:List
+V --> a
+W --> #3:List
+
+Solution 96
+A --> #7:List
+B --> #8:List
+C --> h(#6:List, i(#1:List))
+H --> #4:List
+G --> #5:List
+X --> #2:List
+Y --> b
+Z --> #3:List
+I --> h(#7:List, #8:List, #8:List)
+J --> #6:List
+K --> #1:List
+L --> h(#4:List, #5:List)
+U --> #2:List
+V --> a
+W --> #3:List
+==========================================
+unify in A-UNIF : h(h(A, B, B) C h(G, H), X Y a Z) =? h(I h(J, i(K)) L, U b V
+    W) .
+Warning: Associative unification failing due to non-linear variable #2:[List]
+Warning: Associative unification failing due to non-linear variable #2:[List]
+No unifier.
+Maude> Bye.

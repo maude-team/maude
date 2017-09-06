@@ -66,6 +66,9 @@
 int
 main(int argc, char* argv[])
 {
+  void testSeq();
+
+  //testSeq();
   //
   //	Global function declatations
   //
@@ -284,3 +287,128 @@ findPrelude(string& directory, string& fileName)
 	       ": unable to locate file: " << QUOTE(fileName));
   return false;
 }
+
+#include "sequenceAssignment.hh"
+
+int delannoy(int m, int n);
+int countAssignments(int nrLhsVars, int nrRhsVars);
+
+void
+testSeq()
+{
+  int lhsMax = 10;
+  int rhsMax = 10;
+
+  for (int i = 0; i < lhsMax; ++i)
+    {
+      for (int j = 0; j < rhsMax; ++j)
+	{
+	  int d = delannoy(i, j);
+	  int a = countAssignments(i + 1, j + 1);
+	  if (a == d)
+	    cout << "correct " << d << endl;
+	  else
+	    cout << "fail " << a << " vs " << d << endl;
+	}
+      cout << endl;
+    }
+}
+
+
+int
+countAssignments(int nrLhsVars, int nrRhsVars)
+{
+  SequenceAssignment s(nrLhsVars, nrRhsVars);
+
+  int nrSols = 0;
+  while (s.findNextSolution(nrSols == 0))
+    ++nrSols;
+
+  return nrSols;
+}
+
+  /*
+  int nrLhsVars = 5;
+  int nrRhsVars = 4;
+
+  SequenceAssignment s(nrLhsVars, nrRhsVars);
+
+  s.setLhsBound(2, 1);
+  s.setRhsBound(1, 1);
+  s.setRhsBound(2, 1);
+
+  int solNr = 1;
+  while (s.findNextSolution())
+    {
+      Vector<Vector<int> > lhsAssign(nrLhsVars);
+      Vector<Vector<int> > rhsAssign(nrRhsVars);
+
+      int freeVarIndex = 0;
+      int lIndex = 0;
+      int rIndex = 0;
+
+      lhsAssign[lIndex].append(freeVarIndex);
+      rhsAssign[rIndex].append(freeVarIndex);
+
+      const SequenceAssignment::Solution& sol = s.getSolution();
+      cout << "(sol " << solNr << ") ";
+      FOR_EACH_CONST(i, SequenceAssignment::Solution, sol)
+	{
+	  cout << " " << *i;
+	  ++freeVarIndex;
+	  lIndex += SequenceAssignment::leftDelta(*i);
+	  rIndex += SequenceAssignment::rightDelta(*i);
+	  lhsAssign[lIndex].append(freeVarIndex);
+	  rhsAssign[rIndex].append(freeVarIndex);
+	}
+      cout << endl;
+      {
+	int v = 0;
+	FOR_EACH_CONST(j, Vector<Vector<int> >, lhsAssign)
+	  {
+	    cout << "L" << v << " <-";
+	    FOR_EACH_CONST(k, Vector<int>, *j)
+	      cout << " X" << *k;
+	    cout << endl;
+	    ++v;
+	  }
+      }
+      {
+	int v = 0;
+	FOR_EACH_CONST(j, Vector<Vector<int> >, rhsAssign)
+	  {
+	    cout << "R" << v << " <-";
+	    FOR_EACH_CONST(k, Vector<int>, *j)
+	      cout << " X" << *k;
+	    cout << endl;
+	    ++v;
+	  }
+      }
+
+      cout << endl;
+      ++solNr;
+    }
+  */
+
+#include <map>
+
+int
+delannoy(int m, int n)
+{
+  typedef pair<int, int> Pair;
+  typedef map<Pair, int> Memo;
+  static Memo memo;
+
+  if (m == 0 || n == 0)
+    return 1;
+
+  Pair p(m, n);
+  Memo::const_iterator i = memo.find(p);
+  if (i != memo.end())
+    return i->second;
+
+  int d = delannoy(m - 1, n) + delannoy(m - 1, n - 1) + delannoy(m, n - 1);
+  memo.insert(Memo::value_type(p, d));
+  return d;
+}
+
