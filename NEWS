@@ -1,3 +1,7 @@
+Overview of Changes in Maude alpha93b
+=====================================
+* fixed bug in handing of metaRenamings
+
 Overview of Changes in Maude alpha93a
 =====================================
 * changed AC constraint propagation algorithm to reduce the risk of

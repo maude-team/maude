@@ -145,7 +145,7 @@ MetaLevel::downParameterDecl(DagNode* metaParameterDecl, ImportModule* m)
       int name;
       ImportModule* theory;
       if (downQid(f->getArgument(0), name) &&
-	  downModuleExpression(f->getArgument(1), 0, theory) &&
+	  downModuleExpression(f->getArgument(1), m, theory) &&
 	  theory->isTheory())
 	{
 	  Token t;
@@ -163,8 +163,16 @@ MetaLevel::downModule(DagNode* metaModule, bool cacheMetaModule, Interpreter* ow
 {
   if (owner == 0)
     owner = &interpreter;  // NASTY HACK - should get default owner from metaModule rather than global variable
+  /*
+    Ideally we should get a symbol from metaModule, a module from symbol, and an owner from that module,
+    so that if an interpreter is not given we use the one containing the metaModule's, top symbol's module.
+    Currently we can't do this because only the MetaModule class supports ownership.
+  */
 
   MetaModule* cm = cache.find(metaModule);  // BUG - could be in another interpreter
+  /*
+    Currently we side step this bug by not caching metaModules belonging to metaIntepreters.
+   */
   if (cm != 0)
     return cm;
   Symbol* ms = metaModule->symbol();
