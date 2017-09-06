@@ -1,3 +1,10 @@
+2015-12-23  Steven Eker  <eker@ape.csl.sri.com>
+
+	* main.cc (main): add a tie between cout and cerr so streams don't
+	get out of sync on orion
+
+===================================Maude108a===========================================
+
 2015-08-14  Steven Eker  <eker@ape.csl.sri.com>
 
 	* prelude.maude: added constant noVariantIncomplete
@@ -5,6 +12,8 @@
 2015-07-23  Steven Eker  <eker@ape.csl.sri.com>
 
 	* prelude.maude: added two constants noUnifierIncomplete
+
+===================================Maude108===========================================
 
 2014-10-28  Steven Eker  <eker@ape.csl.sri.com>
 

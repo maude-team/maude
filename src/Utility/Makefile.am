@@ -23,14 +23,14 @@ libutility_a_SOURCES = \
 	tty.cc \
 	bdd.cc \
 	timer.cc \
-	ropeStuff.cc \
 	mpzSystem.cc \
 	intSystem.cc \
 	allSat.cc \
 	sequenceAssignment.cc \
 	pigPug.cc \
 	wordLevel.cc \
-	wordSystem.cc
+	wordSystem.cc \
+	rope.cc
 
 noinst_HEADERS = \
 	bdd.hh \
@@ -59,14 +59,14 @@ noinst_HEADERS = \
 	vector.hh \
 	timeStuff.hh \
 	mathStuff.hh \
-	ropeStuff.hh \
 	mpzSystem.hh \
 	intSystem.hh \
 	allSat.hh \
 	sequenceAssignment.hh \
 	pigPug.hh \
 	wordLevel.hh \
-	wordSystem.hh
+	wordSystem.hh \
+	rope.hh
 
 EXTRA_DIST = \
 	intContejeanDevie.cc \

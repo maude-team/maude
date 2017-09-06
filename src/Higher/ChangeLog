@@ -1,3 +1,14 @@
+2015-10-16  Steven Eker  <eker@ape.csl.sri.com>
+
+	* unifierFilter.cc (subsumes): symmetric change to below
+
+	* variantFolder.cc (subsumes): allocate at least one slot, but
+	clear the correct number of variables (even if it is 0) so that we
+	don't get a size mismatch with local substitutions in matching
+	automata
+
+===================================Maude108a===========================================
+
 2015-09-17  Steven Eker  <eker@ape.csl.sri.com>
 
 	* variantNarrowingSearchState.cc (VariantNarrowingSearchState):

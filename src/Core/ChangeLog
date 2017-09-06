@@ -1,3 +1,10 @@
+2015-12-23  Steven Eker  <eker@ape.csl.sri.com>
+
+	* equation.hh (PreEquation): commented out nrSlots member since we
+	don't appear to use it
+
+===================================Maude108a===========================================
+
 2015-09-18  Steven Eker  <eker@ape.csl.sri.com>
 
 	* compoundCycleSubproblem.hh (SimpleRootContainer): declare but

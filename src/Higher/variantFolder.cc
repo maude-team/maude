@@ -192,9 +192,10 @@ VariantFolder::subsumes(const RetainedVariant* retainedVariant, const Vector<Dag
   //	We check if retained variant is at least as general as a new variant.
   //
   int nrVariablesToUse = retainedVariant->nrVariables;
-  if (nrVariablesToUse == 0)
-    nrVariablesToUse = 1;  // substitutions always expect to have at least one variable
-  RewritingContext matcher(nrVariablesToUse);
+  int nrSlotsToAllocate = nrVariablesToUse;
+  if (nrSlotsToAllocate == 0)
+    nrSlotsToAllocate = 1;  // substitutions subject to clear() must always have at least one slot
+  RewritingContext matcher(nrSlotsToAllocate);
   matcher.clear(nrVariablesToUse);
   SubproblemAccumulator subproblems;
 

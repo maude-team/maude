@@ -1,3 +1,34 @@
+2015-12-18  Steven Eker  <eker@ape.csl.sri.com>
+
+	* matrixOpSymbol.cc (downAlgorithm): use Rope
+
+	* stringDagNode.cc (getHashValue): use prefix Rope::const_iterator
+	increment
+
+	* stringTerm.cc (normalize): use prefix Rope::const_iterator
+	increment
+
+	* stringOpSymbol.cc (ropeToNumber): use new
+	makeZeroTerminatedString() member function
+	(eqRewrite): use new makeZeroTerminatedString() member function
+	(ropeToNumber): use two argument substr()
+
+	* stringOpSymbol.hh: crope -> Rope throughout
+
+	* stringOpSymbol.cc: crope -> Rope throughout
+
+2015-12-17  Steven Eker  <eker@ape.csl.sri.com>
+
+	* stringDagNode.cc: crope -> Rope throughout
+
+	* stringDagNode.hh: crope -> Rope throughout
+
+	* stringTerm.cc: crope -> Rope throughout
+
+	* stringTerm.hh: crope -> Rope throughout
+
+===================================Maude108a===========================================
+
 2014-05-19  Steven Eker  <eker@ape.csl.sri.com>
 
 	* divisionSymbol.cc (makeRatDag): allow 0/n

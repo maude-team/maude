@@ -1,3 +1,30 @@
+2015-12-23  Steven Eker  <eker@ape.csl.sri.com>
+
+	* token.cc (codeToRope): += rather than append()
+
+	* auxProperty.cc: crope -> Rope throughout
+
+	* moduleCache.cc (makeRenamedCopy, makeParameterCopy)
+	(makeInstatiation, makeSummation): use Token::ropeToCode()
+
+	* token.hh (T): added decl for ropeToCode()
+
+	* token.cc (ropeToCode): added
+
+	* renaming.hh: include "rope.hh" rather than "ropeStuff.hh"
+
+	* moduleCache.cc: crope -> Rope throughout
+
+	* renaming.hh: crope -> Rope throughout
+
+	* renaming.cc: crope -> Rope throughout
+
+	* token.cc: crope -> Rope throughout
+
+	* token.hh: crope -> Rope throughout
+
+===================================Maude108a===========================================
+
 2015-09-11  Steven Eker  <eker@ape.csl.sri.com>
 
 	* prettyPrint.cc (<<): handle null DagNode* gracefully
