@@ -36,20 +36,10 @@
 //	strategy language class definitions
 #include "decompositionProcess.hh"
 #include "strategyExpression.hh"
-
-DecompositionProcess::DecompositionProcess(DagNode* start,
-					   StrategyExpression* strategy,
-					   StrategicExecution* taskSibling,
-					   StrategicProcess* other)
-  : StrategicProcess(taskSibling, other),
-    dag(start)
-{
-  Assert(start != 0, "null dag");
-  pending.push(strategy);
-}
+#include "strategicSearch.hh"
 
 DecompositionProcess::DecompositionProcess(DagNode* dag,
-					   const StrategyStack& pending,
+					   StrategyStackManager::StackId pending,
 					   StrategicExecution* taskSibling,
 					   StrategicProcess* other)
   : StrategicProcess(taskSibling, other),
@@ -57,6 +47,7 @@ DecompositionProcess::DecompositionProcess(DagNode* dag,
     pending(pending)
 {
   Assert(dag != 0, "null dag");
+  Assert(pending >= 0, "bad pending stack id " << pending);
 }
 
 DecompositionProcess::DecompositionProcess(DecompositionProcess* original)
@@ -67,15 +58,20 @@ DecompositionProcess::DecompositionProcess(DecompositionProcess* original)
   //
   //	A copy of a process will be owned by same task as original and will
   //	get put in the process queue just ahead of original. It will share
-  //	dag and get a copy of the pending stack.
+  //	dag and will share the persistant pending stack.
   //
 }
 
 StrategicExecution::Survival
 DecompositionProcess::run(StrategicSearch& searchObject)
 {
-  //cout << "DecompositionProcess::run(): pending.size() = " <<  pending.size() << endl;
-  if (pending.empty())
+  if (getOwner()->alreadySeen(searchObject.dagNode2Index(dag), pending))
+    {
+      finished(this);
+      return DIE;
+    }
+  
+  if (pending == StrategyStackManager::EMPTY_STACK)
     {
       //
       //	Report our success.
@@ -86,8 +82,8 @@ DecompositionProcess::run(StrategicSearch& searchObject)
       //
       return DIE;
     }
-  StrategyExpression* s = pending.top();
-  pending.pop();
+  StrategyExpression* s = searchObject.top(pending);
+  pending = searchObject.pop(pending);
   Survival r = s->decompose(searchObject, this);
   if (r == DIE)
     finished(this);

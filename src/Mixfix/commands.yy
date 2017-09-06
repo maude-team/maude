@@ -158,6 +158,19 @@ command		:	KW_SELECT		{ lexerCmdMode(); clear(); }
 			  if (interpreter.setCurrentModule(moduleExpr, 1))
 			    interpreter.match(bubble, $1, number);
 			}
+		|	unify
+			{
+			  lexerCmdMode();
+			  clear();
+			  moduleExpr.contractTo(0);
+			  number = NONE;
+			}
+			numberModuleTerm
+			{
+			  lexerInitialMode();
+			  if (interpreter.setCurrentModule(moduleExpr, 1))
+			    interpreter.unify(bubble, $1, number);
+			}
 		|	optDebug KW_CONTINUE optNumber '.'
 			{
 			  interpreter.cont($3, $1);
@@ -471,6 +484,7 @@ traceOption	:				{ $$ = Interpreter::TRACE; }
 		|	KW_RLS			{ $$ = Interpreter::TRACE_RL; }
 		|	KW_REWRITE		{ $$ = Interpreter::TRACE_REWRITE; }
 		|	KW_BODY			{ $$ = Interpreter::TRACE_BODY; }
+		|	KW_BUILTIN		{ $$ = Interpreter::TRACE_BUILTIN; }
 		;
 
 polarity	:	KW_ON			{ $$ = true; }
@@ -491,6 +505,10 @@ conceal		:	KW_CONCEAL		{ $$ = true; }
 
 match		:	KW_XMATCH		{ $$ = true; }
 		|	KW_MATCH		{ $$ = false; }
+		;
+
+unify		:	KW_XUNIFY		{ $$ = true; }
+		|	KW_UNIFY		{ $$ = false; }
 		;
 
 optDebug       	:	KW_DEBUG 	       	{ $$ = true; }

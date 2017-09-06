@@ -71,3 +71,22 @@ Substitution::operator-(const Substitution& original) const
     }
   return result;
 }
+
+void
+Substitution::update(int index, DagNode* value)
+{
+  bind(index, value);
+  for (int i = 0; i < copySize; ++i)
+    {
+      if (i != index)
+	{
+	  DagNode* v = values[i];
+	  if (v != 0)
+	    {
+	      v = v->instantiate(*this);
+	      if (v != 0)
+		values[i] = v;
+	    }
+	}
+    }
+}

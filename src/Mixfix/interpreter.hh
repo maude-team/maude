@@ -82,6 +82,7 @@ public:
     TRACE_RL = 0x80000,
     TRACE_REWRITE = 0x100000,
     TRACE_BODY = 0x200000,
+    TRACE_BUILTIN = 0x400000,
     //
     //	Counter flags.
     //
@@ -97,7 +98,7 @@ public:
 
     DEFAULT_FLAGS = SHOW_COMMAND | SHOW_STATS | SHOW_TIMING | SHOW_LOOP_TIMING |
     COMPILE_COUNT |
-    TRACE_CONDITION | TRACE_SUBSTITUTION | TRACE_MB | TRACE_EQ | TRACE_RL | TRACE_REWRITE | TRACE_BODY |
+    TRACE_CONDITION | TRACE_SUBSTITUTION | TRACE_MB | TRACE_EQ | TRACE_RL | TRACE_REWRITE | TRACE_BODY | TRACE_BUILTIN |
     AUTO_CLEAR_PROFILE | AUTO_CLEAR_RULES
   };
 
@@ -156,6 +157,7 @@ public:
   void cont(Int64 limit, bool debug);
 
   void match(const Vector<Token>& bubble, bool withExtension, Int64 limit);
+  void unify(const Vector<Token>& bubble, bool withExtension, Int64 limit);
   void search(const Vector<Token>& bubble, Int64 limit, Int64 depth);
   void showSearchPath(int stateNr);
   void showSearchPathLabels(int stateNr);
@@ -223,14 +225,21 @@ private:
 			 StrategicSearch* state,
 			 int solutionCount,
 			 int limit);
-  void printMatchTiming(const Timer& timer);
+  void printDecisionTime(const Timer& timer);
   void printSearchTiming(const Timer& timer,  RewriteSequenceSearch* state);
   void doMatching(Timer& timer,
 		  VisibleModule* module,
 		  MatchSearchState* state,
 		  int solutionCount,
 		  int limit);
+
   void matchCont(Int64 limit, bool debug);
+  void doUnification(Timer& timer,
+		     VisibleModule* module,
+		     UnificationProblem* problem,
+		     int solutionCount,
+		     int limit);
+  void unifyCont(Int64 limit, bool debug);
   void updateSet(set<int>& target, bool add);
 
   ofstream* xmlLog;
@@ -245,6 +254,7 @@ private:
   //
   UserLevelRewritingContext* savedContext;
   MatchSearchState* savedMatchSearchState;
+  UnificationProblem* savedUnificationProblem;
   RewriteSequenceSearch* savedRewriteSequenceSearch;
   StrategicSearch* savedStrategicSearch;
   int savedSolutionCount;

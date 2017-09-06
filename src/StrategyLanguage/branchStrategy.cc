@@ -37,6 +37,7 @@
 #include "branchStrategy.hh"
 #include "branchTask.hh"
 #include "decompositionProcess.hh"
+#include "strategicSearch.hh"
 
 BranchStrategy::BranchStrategy(StrategyExpression* initialStrategy,
 			       Action successAction,
@@ -66,7 +67,8 @@ BranchStrategy::~BranchStrategy()
 StrategicExecution::Survival
 BranchStrategy::decompose(StrategicSearch& searchObject, DecompositionProcess* remainder)
 {
-  (void) new BranchTask(remainder,
+  (void) new BranchTask(searchObject,
+			remainder,
 			remainder->getDag(),
 			initialStrategy,
 			successAction,

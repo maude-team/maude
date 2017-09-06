@@ -74,5 +74,6 @@ class RhsBuilder;
 class ConditionFragment;
 class ConditionState;
 class OpDeclaration;
+class SortBdds;
 
 #endif

@@ -37,16 +37,18 @@
 #include "branchTask.hh"
 #include "decompositionProcess.hh"
 
-BranchTask::BranchTask(StrategicExecution* sibling,
+BranchTask::BranchTask(StrategyStackManager& strategyStackManager,
+		       StrategicExecution* sibling,
 		       DagNode* startDag,
 		       StrategyExpression* initialStrategy,
 		       BranchStrategy::Action successAction,
 		       StrategyExpression* successStrategy,
 		       BranchStrategy::Action failureAction,
 		       StrategyExpression* failureStrategy,
-		       const StrategyStack& pending,
+		       StrategyStackManager::StackId pending,
 		       StrategicProcess* insertionPoint)
   : StrategicTask(sibling),
+    strategyStackManager(strategyStackManager),
     startDag(startDag),
     initialStrategy(initialStrategy),
     successAction(successAction),
@@ -56,7 +58,10 @@ BranchTask::BranchTask(StrategicExecution* sibling,
     pending(pending)
 {
   success = false;
-  (void) new DecompositionProcess(startDag, initialStrategy, getDummyExecution(), insertionPoint);
+  (void) new DecompositionProcess(startDag,
+				  strategyStackManager.push(StrategyStackManager::EMPTY_STACK, initialStrategy),
+				  getDummyExecution(),
+				  insertionPoint);
 }
 
 StrategicExecution::Survival
@@ -84,7 +89,7 @@ BranchTask::executionSucceeded(DagNode* result, StrategicProcess* insertionPoint
 	//	strategies to the result. It will report to our owner.
 	//
 	DecompositionProcess* p = new DecompositionProcess(result, pending, this, insertionPoint);
-	p->pushStrategy(successStrategy);
+	p->pushStrategy(strategyStackManager, successStrategy);
 	break;
       }
     case BranchStrategy::ITERATE:
@@ -93,7 +98,8 @@ BranchTask::executionSucceeded(DagNode* result, StrategicProcess* insertionPoint
 	//	We set up another branch task on the new result and we stay alive to
 	//	process any new results.
 	//
-	  (void) new BranchTask(this,
+	  (void) new BranchTask(strategyStackManager,
+				this,
 				result,
 				initialStrategy,
 				successAction,
@@ -134,7 +140,7 @@ BranchTask::executionsExhausted(StrategicProcess* insertionPoint)
 	    //	strategies to the original term. It will report to our owner.
 	    //
 	    DecompositionProcess* p = new DecompositionProcess(startDag, pending, this, insertionPoint);
-	    p->pushStrategy(failureStrategy);
+	    p->pushStrategy(strategyStackManager, failureStrategy);
 	    break;
 	  }
 	default:

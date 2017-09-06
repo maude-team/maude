@@ -1,3 +1,11 @@
+2007-01-18  Steven Eker  <eker@goo.csl.sri.com>
+
+	* branchSymbol.cc (compileOpDeclarations): call
+	FreeSymbol::compileOpDeclarations() as a quick hack to get
+	unification working
+
+===================================Maude88d===========================================
+
 2006-11-14  Steven Eker  <eker@goo.csl.sri.com>
 
 	* floatOpSymbol.cc (getDataAttachments): added min and max cases

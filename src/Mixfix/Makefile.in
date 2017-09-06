@@ -64,7 +64,7 @@ am__libmixfix_a_SOURCES_DIST = syntaxContainer.cc renaming.cc view.cc \
 	xmlBuffer.cc maudemlBuffer.cc interpreter.cc moduleDatabase.cc \
 	viewDatabase.cc profileModule.cc mixfixParser.cc \
 	visibleModule.cc sharedTokens.cc metadataStore.cc banner.cc \
-	lexer.cc surface.cc compiler.cc
+	lexer.cc surface.cc freshVariableSource.cc compiler.cc
 @BUILD_COMPILER_TRUE@am__objects_1 = libmixfix_a-compiler.$(OBJEXT)
 am_libmixfix_a_OBJECTS = libmixfix_a-syntaxContainer.$(OBJEXT) \
 	libmixfix_a-renaming.$(OBJEXT) libmixfix_a-view.$(OBJEXT) \
@@ -94,7 +94,8 @@ am_libmixfix_a_OBJECTS = libmixfix_a-syntaxContainer.$(OBJEXT) \
 	libmixfix_a-sharedTokens.$(OBJEXT) \
 	libmixfix_a-metadataStore.$(OBJEXT) \
 	libmixfix_a-banner.$(OBJEXT) libmixfix_a-lexer.$(OBJEXT) \
-	libmixfix_a-surface.$(OBJEXT) $(am__objects_1)
+	libmixfix_a-surface.$(OBJEXT) \
+	libmixfix_a-freshVariableSource.$(OBJEXT) $(am__objects_1)
 libmixfix_a_OBJECTS = $(am_libmixfix_a_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
@@ -269,6 +270,7 @@ libmixfix_a_SOURCES = \
 	banner.cc \
 	lexer.cc \
 	surface.cc \
+	freshVariableSource.cc \
 	$(COMPILER_SRC)
 
 EXTRA_libmixfix_a_SOURCES = \
@@ -305,6 +307,7 @@ EXTRA_DIST = \
 	srewrite.cc \
 	erewrite.cc \
 	match.cc \
+	unify.cc \
 	top.yy \
 	modules.yy \
 	commands.yy \
@@ -346,7 +349,8 @@ noinst_HEADERS = \
 	userLevelRewritingContext.hh \
 	visibleModule.hh \
 	xmlBuffer.hh \
-	syntaxContainer.hh
+	syntaxContainer.hh \
+	freshVariableSource.hh
 
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -400,6 +404,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-compiler.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-entity.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-fileTable.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-freshVariableSource.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-global.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-importModule.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-importTranslation.Po@am__quote@
@@ -906,6 +911,20 @@ libmixfix_a-surface.obj: surface.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='surface.cc' object='libmixfix_a-surface.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-surface.obj `if test -f 'surface.cc'; then $(CYGPATH_W) 'surface.cc'; else $(CYGPATH_W) '$(srcdir)/surface.cc'; fi`
+
+libmixfix_a-freshVariableSource.o: freshVariableSource.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-freshVariableSource.o -MD -MP -MF "$(DEPDIR)/libmixfix_a-freshVariableSource.Tpo" -c -o libmixfix_a-freshVariableSource.o `test -f 'freshVariableSource.cc' || echo '$(srcdir)/'`freshVariableSource.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-freshVariableSource.Tpo" "$(DEPDIR)/libmixfix_a-freshVariableSource.Po"; else rm -f "$(DEPDIR)/libmixfix_a-freshVariableSource.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='freshVariableSource.cc' object='libmixfix_a-freshVariableSource.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-freshVariableSource.o `test -f 'freshVariableSource.cc' || echo '$(srcdir)/'`freshVariableSource.cc
+
+libmixfix_a-freshVariableSource.obj: freshVariableSource.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-freshVariableSource.obj -MD -MP -MF "$(DEPDIR)/libmixfix_a-freshVariableSource.Tpo" -c -o libmixfix_a-freshVariableSource.obj `if test -f 'freshVariableSource.cc'; then $(CYGPATH_W) 'freshVariableSource.cc'; else $(CYGPATH_W) '$(srcdir)/freshVariableSource.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-freshVariableSource.Tpo" "$(DEPDIR)/libmixfix_a-freshVariableSource.Po"; else rm -f "$(DEPDIR)/libmixfix_a-freshVariableSource.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='freshVariableSource.cc' object='libmixfix_a-freshVariableSource.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-freshVariableSource.obj `if test -f 'freshVariableSource.cc'; then $(CYGPATH_W) 'freshVariableSource.cc'; else $(CYGPATH_W) '$(srcdir)/freshVariableSource.cc'; fi`
 
 libmixfix_a-compiler.o: compiler.cc
 @am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-compiler.o -MD -MP -MF "$(DEPDIR)/libmixfix_a-compiler.Tpo" -c -o libmixfix_a-compiler.o `test -f 'compiler.cc' || echo '$(srcdir)/'`compiler.cc; \

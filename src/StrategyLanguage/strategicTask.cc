@@ -61,3 +61,20 @@ StrategicTask::~StrategicTask()
       delete i;
     }
 }
+
+/*
+bool
+StrategicTask::alreadySeen(int dagIndex, StrategyStackManager::StackId stackId)
+{
+  State s(dagIndex, stackId);
+  return !(seenSet.insert(s).second);
+}
+*/
+
+bool
+StrategicTask::alreadySeen(int dagIndex, StrategyStackManager::StackId stackId)
+{
+  State s(dagIndex, stackId);
+  pair<SeenSet::iterator, bool> p = seenSet.insert(s);  // to avoid UMR in purify
+  return !(p.second);
+}

@@ -36,6 +36,7 @@
 //	strategy language class definitions
 #include "unionStrategy.hh"
 #include "decompositionProcess.hh"
+#include "strategicSearch.hh"
 
 UnionStrategy::UnionStrategy(const Vector<StrategyExpression*>& strategies)
   : strategies(strategies)
@@ -51,14 +52,14 @@ UnionStrategy::~UnionStrategy()
 }
 
 StrategicExecution::Survival
-UnionStrategy::decompose(StrategicSearch& /* searchObject */, DecompositionProcess* remainder)
+UnionStrategy::decompose(StrategicSearch& searchObject, DecompositionProcess* remainder)
 {
   int last = strategies.size() - 1;
   for (int i = 0; i < last; ++i)
     {
       DecompositionProcess* p = new DecompositionProcess(remainder);  // clone remainder
-      p->pushStrategy(strategies[i]);
+      p->pushStrategy(searchObject, strategies[i]);
     }
-  remainder->pushStrategy(strategies[last]);
+  remainder->pushStrategy(searchObject, strategies[last]);
   return StrategicExecution::SURVIVE;  // remainder should not request deletion
 }

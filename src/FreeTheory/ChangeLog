@@ -1,3 +1,26 @@
+2007-01-05  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeSymbol.cc (computeGeneralizedSort): added
+
+	* freeSymbol.hh (class FreeSymbol): added decl for
+	computeGeneralizedSort()
+
+2006-12-11  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeDagNode.hh (class FreeDagNode): added decls for
+	instantiate() and occurs()
+
+	* freeDagNode.cc (instantiate): added
+	(occurs): added
+
+2006-12-08  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeDagNode.cc (unify): added
+
+	* freeDagNode.hh (class FreeDagNode): added decl for unify()
+
+===================================Maude88d===========================================
+
 2006-10-18  Steven Eker  <eker@goo.csl.sri.com>
 
 	* freeRemainder.cc (dump): dump equation

@@ -105,7 +105,8 @@ UserLevelRewritingContext::dontTrace(const DagNode* redex, const PreEquation* pe
   return (interpreter.getFlag(Interpreter::TRACE_SELECT) &&
 	  !(interpreter.traceId(symbol->id()) ||
 	    (pe != 0 && interpreter.traceId(pe->getLabel().id())))) ||
-    interpreter.excludedModule(symbol->getModule()->id());
+    interpreter.excludedModule(symbol->getModule()->id()) ||
+    (pe == 0 && !interpreter.getFlag(Interpreter::TRACE_BUILTIN));
 }
 
 void

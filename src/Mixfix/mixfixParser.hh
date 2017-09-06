@@ -148,6 +148,7 @@ public:
   void makeMatchCommand(Term*& pattern,
 			Term*& subject,
 			Vector<ConditionFragment*>& condition);
+  void makeUnifyCommand(Term*& lhs, Term*& rhs);
   void makeSearchCommand(Term*& initial,
 			 int& searchType,
 			 Term*& target,

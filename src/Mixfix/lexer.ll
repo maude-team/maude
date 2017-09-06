@@ -141,6 +141,7 @@ verbose					return KW_VERBOSE;
 do					return KW_DO;
 clear					return KW_CLEAR;
 body					return KW_BODY;
+builtin					return KW_BUILTIN;
 whole					return KW_WHOLE;
 select					return KW_SELECT;
 deselect				return KW_DESELECT;

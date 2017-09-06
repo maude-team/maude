@@ -69,7 +69,8 @@ am_libhigher_a_OBJECTS = libhigher_a-rewriteSearchState.$(OBJEXT) \
 	libhigher_a-assignmentConditionState.$(OBJEXT) \
 	libhigher_a-rewriteConditionState.$(OBJEXT) \
 	libhigher_a-temporalSymbol.$(OBJEXT) \
-	libhigher_a-satSolverSymbol.$(OBJEXT)
+	libhigher_a-satSolverSymbol.$(OBJEXT) \
+	libhigher_a-unificationProblem.$(OBJEXT)
 libhigher_a_OBJECTS = $(am_libhigher_a_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
@@ -210,7 +211,8 @@ libhigher_a_SOURCES = \
 	assignmentConditionState.cc \
 	rewriteConditionState.cc \
 	temporalSymbol.cc \
-	satSolverSymbol.cc
+	satSolverSymbol.cc \
+	unificationProblem.cc
 
 noinst_HEADERS = \
 	assignmentConditionFragment.hh \
@@ -229,7 +231,8 @@ noinst_HEADERS = \
 	searchState.hh \
 	sortTestConditionFragment.hh \
 	stateTransitionGraph3.hh \
-	temporalSymbol.hh
+	temporalSymbol.hh \
+	unificationProblem.hh
 
 all: all-am
 
@@ -294,6 +297,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libhigher_a-sortTestConditionFragment.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libhigher_a-stateTransitionGraph3.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libhigher_a-temporalSymbol.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libhigher_a-unificationProblem.Po@am__quote@
 
 .cc.o:
 @am__fastdepCXX_TRUE@	if $(CXXCOMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -c -o $@ $<; \
@@ -532,6 +536,20 @@ libhigher_a-satSolverSymbol.obj: satSolverSymbol.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='satSolverSymbol.cc' object='libhigher_a-satSolverSymbol.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libhigher_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libhigher_a-satSolverSymbol.obj `if test -f 'satSolverSymbol.cc'; then $(CYGPATH_W) 'satSolverSymbol.cc'; else $(CYGPATH_W) '$(srcdir)/satSolverSymbol.cc'; fi`
+
+libhigher_a-unificationProblem.o: unificationProblem.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libhigher_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libhigher_a-unificationProblem.o -MD -MP -MF "$(DEPDIR)/libhigher_a-unificationProblem.Tpo" -c -o libhigher_a-unificationProblem.o `test -f 'unificationProblem.cc' || echo '$(srcdir)/'`unificationProblem.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libhigher_a-unificationProblem.Tpo" "$(DEPDIR)/libhigher_a-unificationProblem.Po"; else rm -f "$(DEPDIR)/libhigher_a-unificationProblem.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='unificationProblem.cc' object='libhigher_a-unificationProblem.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libhigher_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libhigher_a-unificationProblem.o `test -f 'unificationProblem.cc' || echo '$(srcdir)/'`unificationProblem.cc
+
+libhigher_a-unificationProblem.obj: unificationProblem.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libhigher_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libhigher_a-unificationProblem.obj -MD -MP -MF "$(DEPDIR)/libhigher_a-unificationProblem.Tpo" -c -o libhigher_a-unificationProblem.obj `if test -f 'unificationProblem.cc'; then $(CYGPATH_W) 'unificationProblem.cc'; else $(CYGPATH_W) '$(srcdir)/unificationProblem.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libhigher_a-unificationProblem.Tpo" "$(DEPDIR)/libhigher_a-unificationProblem.Po"; else rm -f "$(DEPDIR)/libhigher_a-unificationProblem.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='unificationProblem.cc' object='libhigher_a-unificationProblem.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libhigher_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libhigher_a-unificationProblem.obj `if test -f 'unificationProblem.cc'; then $(CYGPATH_W) 'unificationProblem.cc'; else $(CYGPATH_W) '$(srcdir)/unificationProblem.cc'; fi`
 uninstall-info-am:
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)

@@ -332,6 +332,16 @@ MixfixParser::makeMatchCommand(Term*& pattern,
 }
 
 void
+MixfixParser::makeUnifyCommand(Term*& lhs, Term*& rhs)
+{
+  Assert(nrParses > 0, "no parses");
+  int node = ROOT_NODE;
+  int unifyPair = parser.getChild(node, 0);
+  lhs = makeTerm(parser.getChild(unifyPair, 0));
+  rhs = makeTerm(parser.getChild(unifyPair, 1));
+}
+
+void
 MixfixParser::makeSearchCommand(Term*& initial,
 				int& searchType,
 				Term*& target,

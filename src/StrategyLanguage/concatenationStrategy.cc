@@ -36,6 +36,7 @@
 //	strategy language class definitions
 #include "concatenationStrategy.hh"
 #include "decompositionProcess.hh"
+#include "strategicSearch.hh"
 
 ConcatenationStrategy::ConcatenationStrategy(const Vector<StrategyExpression*> strategies)
   : strategies(strategies)
@@ -51,9 +52,9 @@ ConcatenationStrategy::~ConcatenationStrategy()
 }
 
 StrategicExecution::Survival
-ConcatenationStrategy::decompose(StrategicSearch& /* searchObject */, DecompositionProcess* remainder)
+ConcatenationStrategy::decompose(StrategicSearch& searchObject, DecompositionProcess* remainder)
 {
   for (int i = strategies.size() - 1; i >= 0; --i)
-    remainder->pushStrategy(strategies[i]);
+    remainder->pushStrategy(searchObject, strategies[i]);
   return StrategicExecution::SURVIVE;  // remainder should not request deletion
 }

@@ -27,6 +27,7 @@
 #ifndef _rewriteTask_hh_
 #define _rewriteTask_hh_
 #include "strategicTask.hh"
+#include "strategyStackManager.hh"
 
 class RewriteTask : public StrategicTask
 {
@@ -42,7 +43,7 @@ public:
 	      int fragmentNr,
 	      const Vector<StrategyExpression*>& strategies,
 	      int strategyNr,
-	      const StrategyStack& pending,
+	      StrategyStackManager::StackId pending,
 	      StrategicExecution* taskSibling,
 	      StrategicProcess* insertionPoint);
   ~RewriteTask();
@@ -60,7 +61,7 @@ private:
   const int fragmentNr;					// number of condition fragment within rule
   const Vector<StrategyExpression*>& strategies;	// vector of strategies for rewrite fragments
   const int strategyNr;					// number of next strategy to use
-  const StrategyStack pending;				// continuation once we finally do a rewrite
+  StrategyStackManager::StackId pending;       		// continuation once we finally do a rewrite
 
   RewriteConditionFragment* rcf;
   //

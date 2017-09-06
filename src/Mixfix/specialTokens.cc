@@ -103,6 +103,7 @@
   MACRO(bang, "!")
   MACRO(query, "?")
   MACRO(matches, "<=?")
+  MACRO(unifies, "=?")
   MACRO(assignment, "<-")
   MACRO(orelse, "or-else")
   MACRO(match, "match")

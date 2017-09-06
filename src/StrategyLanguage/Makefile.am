@@ -25,7 +25,8 @@ libstrategyLanguage_a_SOURCES = \
 	strategicSearch.cc \
 	sharedRewriteSearchState.cc \
 	matchProcess.cc \
-	rewriteTask.cc
+	rewriteTask.cc \
+	strategyStackManager.cc
 
 noinst_HEADERS = \
 	strategyLanguage.hh \
@@ -46,4 +47,5 @@ noinst_HEADERS = \
 	strategicSearch.hh \
 	sharedRewriteSearchState.hh \
 	matchProcess.hh \
-	rewriteTask.hh
+	rewriteTask.hh \
+	strategyStackManager.hh

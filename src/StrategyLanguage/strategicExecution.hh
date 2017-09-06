@@ -25,7 +25,6 @@
 //
 #ifndef _strategicExecution_hh_
 #define _strategicExecution_hh_
-#include <stack>
 
 class StrategicExecution
 {
@@ -41,10 +40,6 @@ public:
       DIE,
       SURVIVE
     };
-  //
-  //	Stacks of strategies are needed by various derived classes.
-  //
-  typedef stack<StrategyExpression*> StrategyStack;
 
   StrategicExecution(StrategicTask* owner);
   StrategicExecution(StrategicExecution* other);
@@ -58,6 +53,8 @@ public:
   void finished(StrategicProcess* insertionPoint);
   void succeeded(DagNode* result, StrategicProcess* insertionPoint);
 
+  StrategicTask* getOwner() const;
+
 private:
   StrategicTask* const owner;	// our owner
   StrategicExecution* prev;	// previous execution belonging to owner
@@ -68,6 +65,12 @@ inline StrategicExecution*
 StrategicExecution::getNextSlave() const
 {
   return next;
+}
+
+inline StrategicTask*
+StrategicExecution::getOwner() const
+{
+  return owner;
 }
 
 #endif

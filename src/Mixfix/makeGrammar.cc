@@ -134,6 +134,8 @@ MixfixModule::makeComplexProductions()
 
   rhs[0] = MATCH_PAIR;
   parser->insertProduction(MATCH_COMMAND, rhs, 0, gatherAny);
+  rhs[0] = UNIFY_PAIR;
+  parser->insertProduction(UNIFY_COMMAND, rhs, 0, gatherAny);
   rhs[0] = SEARCH_PAIR;
   parser->insertProduction(SEARCH_COMMAND, rhs, 0, gatherAny);
 
@@ -707,6 +709,8 @@ MixfixModule::makeComponentProductions()
 	  //
 	  rhsPair[1] = matches;
 	  parser->insertProduction(MATCH_PAIR, rhsPair, 0, gatherAnyAny);
+	  rhsPair[1] = unifies;
+	  parser->insertProduction(UNIFY_PAIR, rhsPair, 0, gatherAnyAny);
 	  rhsPair[1] = SEARCH_CONNECTIVE;
 	  parser->insertProduction(SEARCH_PAIR, rhsPair, 0, gatherAnyAnyAny);
 	  rhsPair[1] = assignment;

@@ -1,3 +1,10 @@
+2007-01-17  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: moved set include BOOL on to after last module;
+	added syntax for metaUnify()
+	
+===================================Maude88d===========================================
+
 2006-11-20  Steven Eker  <eker@goo.csl.sri.com>
 
 	* prelude.maude: rm getHeader() since this doesn't make sense with

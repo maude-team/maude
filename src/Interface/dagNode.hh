@@ -85,6 +85,11 @@ public:
 		     Subproblem*& returnedSubproblem,
 		     ExtensionInfo* extensionInfo);
   //
+  //	Currently only used as an efficiency measure in changing the sorts
+  //	of fresh variables introduced by unification.
+  //
+  void replaceSymbol(Symbol* newSymbol);
+  //
   //	These member functions must be defined for each derived class.
   //
   virtual RawDagArgumentIterator* arguments() = 0;
@@ -99,6 +104,19 @@ public:
   virtual void stackArguments(Vector<RedexPosition>& redexStack,
 			      int parentIndex,
 			      bool respectFrozen) = 0;
+
+  //
+  //	Temporary interface for unification experiments.
+  //
+  virtual bool unify(DagNode* rhs,
+		     Substitution& solution,
+		     Subproblem*& returnedSubproblem,
+		     ExtensionInfo* extensionInfo = 0) { CantHappen("Not implemented"); return false; }
+  //
+  //	instantiate() returns 0 if instantiation does not change term.
+  //
+  virtual DagNode* instantiate(Substitution& substitution) { CantHappen("Not implemented"); return 0; }
+  virtual bool occurs(int index) { CantHappen("Not implemented"); return true; }
   //
   //	These member functions must be defined for each derived class in theories
   //	that need extension
@@ -218,6 +236,12 @@ inline void
 DagNode::setSortIndex(int index)
 {
   getMemoryCell()->setHalfWord(index);
+}
+
+inline void
+DagNode::replaceSymbol(Symbol* newSymbol)
+{
+  topSymbol = newSymbol;
 }
 
 inline void

@@ -27,6 +27,7 @@
 #define _matchProcess_hh_
 #include "strategicProcess.hh"
 #include "sharedRewriteSearchState.hh"
+#include "strategyStackManager.hh"
 
 class MatchProcess : public StrategicProcess
 {
@@ -42,7 +43,7 @@ public:
 	       int fragmentNr,
 	       const Vector<StrategyExpression*>& strategies,
 	       int strategyNr,
-	       const StrategyStack& pending,
+	       StrategyStackManager::StackId pending,
 	       StrategicExecution* taskSibling,
 	       StrategicProcess* insertionPoint);
   ~MatchProcess();
@@ -59,7 +60,7 @@ private:
   const int fragmentNr;					// number of condition fragment within rule
   const Vector<StrategyExpression*>& strategies;	// vector of strategies for rewrite fragments
   const int strategyNr;					// number of next strategy to use
-  const StrategyStack pending;				// continuation once we finally do a rewrite
+  StrategyStackManager::StackId pending;       		// continuation once we finally do a rewrite
   bool findFirst;					// are we looking for a first solution to fragment match?
 };
 

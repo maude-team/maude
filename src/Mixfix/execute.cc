@@ -32,10 +32,12 @@ Interpreter::clearContinueInfo()
 {
   delete savedContext;
   delete savedMatchSearchState;
+  delete savedUnificationProblem;
   delete savedRewriteSequenceSearch;
   delete savedStrategicSearch;
   savedContext = 0;
   savedMatchSearchState = 0;
+  savedUnificationProblem = 0;
   savedRewriteSequenceSearch = 0;
   savedStrategicSearch = 0;
   continueFunc = 0;

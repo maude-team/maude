@@ -42,7 +42,8 @@ libcore_a_SOURCES = \
 	dagNodeSet.cc \
 	dagNodeCache.cc \
 	memoTable.cc \
-	rootContainer.cc
+	rootContainer.cc \
+	sortBdds.cc
 
 EXTRA_DIST = \
 	run.cc \
@@ -90,6 +91,7 @@ noinst_HEADERS = \
 	ruleTable.hh \
 	simpleRootContainer.hh \
 	sort.hh \
+	sortBdds.hh \
 	sortCheckSubproblem.hh \
 	sortConstraint.hh \
 	sortConstraintTable.hh \

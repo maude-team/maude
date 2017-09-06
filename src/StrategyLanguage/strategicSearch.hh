@@ -28,9 +28,9 @@
 #include<list>
 #include "dagNodeCache.hh"
 #include "strategicTask.hh"
-//#include "strategicProcess.hh"
+#include "strategyStackManager.hh"
 
-class StrategicSearch : public DagNodeCache, private StrategicTask
+class StrategicSearch : public DagNodeCache, public StrategyStackManager, private StrategicTask
 {
   NO_COPYING(StrategicSearch);
 

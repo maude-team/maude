@@ -130,6 +130,28 @@ MixfixModule::parseMatchCommand(const Vector<Token>& bubble,
 }
 
 bool
+MixfixModule::parseUnifyCommand(const Vector<Token>& bubble,
+				Term*& lhs,
+				Term*& rhs)
+{
+  makeGrammar(true);
+  int r = parseSentence(bubble, UNIFY_COMMAND);
+  if (r <= 0)
+    {
+      IssueWarning(LineNumber(bubble[0].lineNumber()) <<
+		   ": no parse for command.");
+      return false;
+    }
+  if (r > 1)
+    {
+      IssueWarning(LineNumber(bubble[0].lineNumber()) <<
+		   ": multiple distinct parses for command.");
+    }
+  parser->makeUnifyCommand(lhs, rhs);
+  return true;
+}
+
+bool
 MixfixModule::parseSearchCommand(const Vector<Token>& bubble,
 				 Term*& initial,
 				 int& searchType,

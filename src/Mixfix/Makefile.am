@@ -64,6 +64,7 @@ libmixfix_a_SOURCES = \
 	banner.cc \
 	lexer.cc \
 	surface.cc \
+	freshVariableSource.cc \
 	$(COMPILER_SRC)
 
 EXTRA_libmixfix_a_SOURCES = \
@@ -124,6 +125,7 @@ EXTRA_DIST = \
 	srewrite.cc \
 	erewrite.cc \
 	match.cc \
+	unify.cc \
 	top.yy \
 	modules.yy \
 	commands.yy \
@@ -165,4 +167,5 @@ noinst_HEADERS = \
 	userLevelRewritingContext.hh \
 	visibleModule.hh \
 	xmlBuffer.hh \
-	syntaxContainer.hh
+	syntaxContainer.hh \
+	freshVariableSource.hh
