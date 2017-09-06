@@ -82,13 +82,6 @@ VariableSymbol::normalizeAndComputeTrueSort(DagNode* subject, RewritingContext& 
   fastComputeTrueSort(subject, context);
 }
 
-void
-VariableSymbol::stackArguments(DagNode* /* subject */,
-			       Vector<RedexPosition>& /* stack */,
-			       int /* parentIndex */)
-{
-}
-
 Term*
 VariableSymbol::termify(DagNode* dagNode)
 {

@@ -1,3 +1,126 @@
+2017-03-10  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingSequenceSearch.hh (getContext): don't Assert() that
+	stateStack.size() > 0
+
+	* narrowingSequenceSearch.cc (findNextInterestingState): call
+	incrementNarrowingCount()
+
+2017-03-09  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingSequenceSearch2.cc (NarrowingSequenceSearch2): initialize
+	currentDepth
+	(findNextInterestingState): respect maxDepth in the non-normal form
+	case
+	(findNextInterestingState): respect maxDepth in normal form case
+
+2017-03-03  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingSequenceSearch2.hh (getUnifierVariableFamily): added
+
+	* narrowingSequenceSearch2.cc (findNextUnifier): use getStateDag(),
+	getStateVariableFamily()
+
+	* narrowingSequenceSearch2.hh (SequenceSearch): added data members
+	expansionSuccessful, expansionFinished
+	(getStateDag, getVariableFamily): handle normalFormNeeded flag
+	(getStateVariableFamily): renamed from getVariableFamily()
+
+	* narrowingSequenceSearch2.cc (NarrowingSequenceSearch2): set
+	expansionFinished = true so we don't expand a nonexistent state
+	(findNextInterestingState): reorganized using expansionSuccessful
+	and expansionFinished flags; handle normalFormNeeded
+	(~NarrowingSequenceSearch2): hand responsibility for deleting context
+	of state just expanded to stateBeingExpanded object
+
+	* narrowingSequenceSearch2.hh (isIncomplete): added
+	(getVariableFamily): added
+
+	* narrowingSequenceSearch2.cc (findNextUnifier): propagate incompleteness
+	from VariantSearch object
+	(findNextInterestingState): propagate incompleteness from
+	NarrowingSearchState2 object
+
+2017-03-02  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingSequenceSearch2.cc (allVariablesBelongToIncomingFamily): added
+	(NarrowingSequenceSearch2): support renaming if variables from outside
+	of family are detected
+	(findNextInterestingState): transfer reduce and narrowing step counts to
+	initial
+	(NarrowingSequenceSearch2): transfer reduce count to initial
+	(findNextInterestingState): call incrementNarrowingCount() after each
+	successful narrowing step
+	(findNextUnifier): transfer count from context in VariantSearch object
+	(NarrowingSequenceSearch2): fix bug where we weren't initializing
+	nextToExpand
+
+2017-03-01  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingSequenceSearch2.cc (findNextInterestingState): added support
+	for tracing and abort
+
+2017-02-28  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingSequenceSearch2.hh (getVariableInfo): added
+
+2017-02-27  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingSequenceSearch2.hh: created
+
+	* narrowingSequenceSearch2.cc: created
+
+	* higher.hh: added class NarrowingSequenceSearch2
+
+2017-02-21  Steven Eker  <eker@install.csl.sri.com>
+
+	* positionState.cc (rebuildAndInstantiateDag): use new
+	instantiateWithReplacement() convention
+
+2017-02-17  Steven Eker  <eker@install.csl.sri.com>
+
+	* positionState.cc (exploreNextPosition): use Symbol version of
+	stackArguments()
+	(PositionState): pass eager flag to RedexPosition
+	(exploreNextPosition): pass eagerContext flag to stackArguments()
+	(rebuildAndInstantiateDag): use eager flag to decide which bindings
+	to pass to instantiateWithReplacement()
+
+2017-01-27  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingSearchState2.hh (SimpleRootContainer): added GC_VAR_GEN to
+	enum Flags; pass it by default
+
+	* positionState.hh (P): made flags an int for safety
+
+	* narrowingSearchState2.cc (NarrowingSearchState2): added simplified
+	ctor that assumes all variables are in-family and there are no
+	blocker dags
+	(NarrowingSearchState2): only delete the variable generator if the flag
+	was passed
+
+2017-01-11  Steven Eker  <eker@install.csl.sri.com>
+
+	* rewriteConditionFragment.cc (solve): stack<> -> Stack<>
+
+	* rewriteConditionFragment.hh: stack<> -> Stack<>
+
+	* assignmentConditionFragment.cc (solve): stack<> -> Stack<>
+
+	* assignmentConditionFragment.hh: stack<> -> Stack<>
+
+	* sortTestConditionFragment.cc (solve): stack<> -> Stack<>
+
+	* sortTestConditionFragment.hh: stack<> -> Stack<>
+
+	* equalityConditionFragment.cc (solve): stack<> -> Stack<>
+
+	* equalityConditionFragment.hh: stack<> -> Stack<>
+
+	* searchState.hh: stack<> -> Stack<>
+
+===================================Maude111b===========================================
+
 2017-01-06  Steven Eker  <eker@install.csl.sri.com>
 
 	* narrowingSearchState2.cc (NarrowingSearchState2): index blockerDags

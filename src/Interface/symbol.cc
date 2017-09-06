@@ -181,6 +181,18 @@ Symbol::fillInSortInfo(Term* subject)
   subject->setSortInfo(component, step);
 }
 
+void
+Symbol::stackArguments(DagNode* /* subject */,
+		       Vector<RedexPosition>& /* stack */,
+		       int /* parentIndex */,
+		       bool /* respectFrozen */,
+		       bool /* eagerContext */)
+{
+  //
+  //	Default version does nothing and can be used for symbols that have no arguments.
+  //
+}
+
 bool
 Symbol::interSymbolPass()
 {
@@ -196,21 +208,6 @@ void
 Symbol::postOpDeclarationPass()
 {
 }
-
-/*
-Term*
-Symbol::termify(DagNode* dagNode)
-{
-  Vector<Term*> args;
-
-  for (DagArgumentIterator a(*dagNode); a.valid(); a.next())
-    {
-      DagNode* d = a.argument();
-      args.append(d->symbol()->termify(d));
-    }
-  return makeTerm(args);
-}
-*/
 
 void
 Symbol::finalizeSortInfo()

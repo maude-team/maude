@@ -158,7 +158,7 @@ eq 'delete['E:Qid,'S:QidSet] = 'S:QidSet [owise] .
 eq 'delete['E:Qid,'_;_['E:Qid,'S:QidSet]] = 'delete['E:Qid,'S:QidSet] [none] .
 eq 'front['__['L:NatList,'E:Nat]] = 'L:NatList [none] .
 eq 'front['__['L:QidList,'E:Qid]] = 'L:QidList [none] .
-eq 'getContext['`{_`,_`,_`,_`,_`,_`}['T:Term,'T:Type,'TS:Substitution,
+eq 'getContext['`[_`,_`,_`,_`,_`,_`]['T:Term,'T:Type,'TS:Substitution,
     'RS:Substitution,'C:Context,'V:Qid]] = 'C:Context [none] .
 eq 'getContext['`{_`,_`,_`,_`}['T:Term,'T:Type,'S:Substitution,'C:Context]] =
     'C:Context [none] .
@@ -254,7 +254,7 @@ eq 'getRls['mod_is_sorts_._____endm['H:Header,'IL:ImportList,'SS:SortSet,
 eq 'getRls['th_is_sorts_._____endth['Q:Qid,'IL:ImportList,'SS:SortSet,
     'SSDS:SubsortDeclSet,'OPDS:OpDeclSet,'MAS:MembAxSet,'EQS:EquationSet,
     'RLS:RuleSet]] = 'RLS:RuleSet [none] .
-eq 'getRuleSubstitution['`{_`,_`,_`,_`,_`,_`}['T:Term,'T:Type,'TS:Substitution,
+eq 'getRuleSubstitution['`[_`,_`,_`,_`,_`,_`]['T:Term,'T:Type,'TS:Substitution,
     'RS:Substitution,'C:Context,'V:Qid]] = 'RS:Substitution [none] .
 eq 'getSortMappings['view_from_to_is__endv['Q:Qid,'ME:ModuleExpression,
     'ME':ModuleExpression,'SMS:SortMappingSet,'OMS:OpMappingSet]] =
@@ -289,14 +289,18 @@ eq 'getSubstitution['`{_`,_`,_`}['T:Term,'T:Type,'S:Substitution]] =
     'S:Substitution [none] .
 eq 'getSubstitution['`{_`,_`}['S:Substitution,'C:Context]] = 'S:Substitution [
     none] .
-eq 'getTerm['`{_`,_`,_`,_`,_`,_`}['T:Term,'T:Type,'TS:Substitution,
+eq 'getTerm['`[_`,_`,_`,_`,_`,_`]['T:Term,'T:Type,'TS:Substitution,
     'RS:Substitution,'C:Context,'V:Qid]] = 'T:Term [none] .
+eq 'getTerm['`[_`,_`,_`,_`,_`]['T:Term,'T:Type,'U:Substitution,'TV:Qid,
+    'UV:Qid]] = 'T:Term [none] .
 eq 'getTerm['`{_`,_`,_`,_`}['T:Term,'T:Type,'S:Substitution,'C:Context]] =
     'T:Term [none] .
 eq 'getTerm['`{_`,_`,_`}['T:Term,'T:Type,'S:Substitution]] = 'T:Term [none] .
 eq 'getTerm['`{_`,_`}['T:Term,'T:Type]] = 'T:Term [none] .
-eq 'getTermSubstitution['`{_`,_`,_`,_`,_`,_`}['T:Term,'T:Type,'TS:Substitution,
+eq 'getTermSubstitution['`[_`,_`,_`,_`,_`,_`]['T:Term,'T:Type,'TS:Substitution,
     'RS:Substitution,'C:Context,'V:Qid]] = 'TS:Substitution [none] .
+eq 'getTermVariableFamily['`[_`,_`,_`,_`,_`]['T:Term,'T:Type,'U:Substitution,
+    'TV:Qid,'UV:Qid]] = 'TV:Qid [none] .
 eq 'getTo['view_from_to_is__endv['Q:Qid,'ME:ModuleExpression,
     'ME':ModuleExpression,'SMS:SortMappingSet,'OMS:OpMappingSet]] =
     'ME':ModuleExpression [none] .
@@ -306,13 +310,19 @@ eq 'getType['C:Constant] = 'qid['substr['string['C:Constant],'_+_['s_['0.Zero],
 eq 'getType['V:Variable] = 'qid['substr['string['V:Variable],'_+_['s_['0.Zero],
     'rfind['string['V:Variable],'":".Char,'length['string['V:Variable]]]],
     'length['string['V:Variable]]]] [none] .
-eq 'getType['`{_`,_`,_`,_`,_`,_`}['T:Term,'T:Type,'TS:Substitution,
+eq 'getType['`[_`,_`,_`,_`,_`,_`]['T:Term,'T:Type,'TS:Substitution,
     'RS:Substitution,'C:Context,'V:Qid]] = 'T:Type [none] .
+eq 'getType['`[_`,_`,_`,_`,_`]['T:Term,'T:Type,'U:Substitution,'TV:Qid,
+    'UV:Qid]] = 'T:Type [none] .
 eq 'getType['`{_`,_`,_`,_`}['T:Term,'T:Type,'S:Substitution,'C:Context]] =
     'T:Type [none] .
 eq 'getType['`{_`,_`,_`}['T:Term,'T:Type,'S:Substitution]] = 'T:Type [none] .
 eq 'getType['`{_`,_`}['T:Term,'T:Type]] = 'T:Type [none] .
-eq 'getVariableFamily['`{_`,_`,_`,_`,_`,_`}['T:Term,'T:Type,'TS:Substitution,
+eq 'getUnifier['`[_`,_`,_`,_`,_`]['T:Term,'T:Type,'U:Substitution,'TV:Qid,
+    'UV:Qid]] = 'U:Substitution [none] .
+eq 'getUnifierVariableFamily['`[_`,_`,_`,_`,_`]['T:Term,'T:Type,
+    'U:Substitution,'TV:Qid,'UV:Qid]] = 'UV:Qid [none] .
+eq 'getVariableFamily['`[_`,_`,_`,_`,_`,_`]['T:Term,'T:Type,'TS:Substitution,
     'RS:Substitution,'C:Context,'V:Qid]] = 'V:Qid [none] .
 eq 'head['__['E:Nat,'L:NatList]] = 'E:Nat [none] .
 eq 'head['__['E:Qid,'L:QidList]] = 'E:Qid [none] .

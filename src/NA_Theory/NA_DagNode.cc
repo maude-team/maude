@@ -85,10 +85,3 @@ NA_DagNode::copyWithReplacement(Vector<RedexPosition>& /* redexStack  */,
   CantHappen("should never be called");
   return 0;
 }
-
-void
-NA_DagNode::stackArguments(Vector<RedexPosition>& /* stack */,
-			   int /* parentIndex */,
-			   bool /* respectFrozen */)
-{
-}

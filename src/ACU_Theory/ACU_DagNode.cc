@@ -360,22 +360,6 @@ ACU_DagNode::copyWithReplacement(Vector<RedexPosition>& redexStack,
 }
 
 void
-ACU_DagNode::stackArguments(Vector<RedexPosition>& stack,
-			    int parentIndex,
-			    bool respectFrozen)
-{
-  if (respectFrozen && !(symbol()->getFrozen().empty()))
-    return;
-  int nrArgs = argArray.length();
-  for (int i = 0; i < nrArgs; i++)
-    {
-      DagNode* d = argArray[i].dagNode;
-      if (!(d->isUnstackable()))
-	stack.append(RedexPosition(d, parentIndex, i));
-    }
-}
-
-void
 ACU_DagNode::partialReplace(DagNode* replacement, ExtensionInfo* extensionInfo)
 {
   ACU_ExtensionInfo* e = safeCast(ACU_ExtensionInfo*, extensionInfo);
@@ -636,11 +620,14 @@ ACU_DagNode::indexVariables2(NarrowingVariableInfo& indices, int baseIndex)
 }
 
 DagNode*
-ACU_DagNode::instantiateWithReplacement(const Substitution& substitution, const Vector<DagNode*>& eagerCopies, int argIndex, DagNode* newDag)
+ACU_DagNode::instantiateWithReplacement(const Substitution& substitution,
+					const Vector<DagNode*>* eagerCopies,
+					int argIndex,
+					DagNode* newDag)
 {
   int nrArgs = argArray.length();
   ACU_Symbol* s = symbol();
-  bool eager = symbol()->getPermuteStrategy() == BinarySymbol::EAGER;
+  bool eager = (eagerCopies != 0) && symbol()->getPermuteStrategy() == BinarySymbol::EAGER;
   ACU_DagNode* n = new ACU_DagNode(s, nrArgs);
   ArgVec<ACU_DagNode::Pair>& args2 = n->argArray;
   int p = 0;
@@ -655,7 +642,7 @@ ACU_DagNode::instantiateWithReplacement(const Substitution& substitution, const 
 	    continue;
 	}
       DagNode* d = argArray[i].dagNode;
-      SAFE_INSTANTIATE(d, eager, substitution, eagerCopies);
+      SAFE_INSTANTIATE(d, eager, substitution, *eagerCopies);
       args2[p].dagNode = d;
       args2[p].multiplicity = m;
       ++p;
@@ -686,15 +673,15 @@ ACU_DagNode::instantiateWithCopies2(const Substitution& substitution, const Vect
 	  //	Argument changed under instantiation - need to make a new
 	  //	dagnode.
 	  //
-	  bool ground = true;
+	  //bool ground = true;
 	  ACU_DagNode* d = new ACU_DagNode(s, nrArgs);
 	  //
 	  //	Copy the arguments we already looked at.
 	  //
 	  for (int j = 0; j < i; ++j)
 	    {
-	      if (!(argArray[j].dagNode->isGround()))
-		ground = false;
+	      //if (!(argArray[j].dagNode->isGround()))
+	      //	ground = false;
 	      d->argArray[j] = argArray[j];	
 	    }
 	  //
@@ -702,8 +689,8 @@ ACU_DagNode::instantiateWithCopies2(const Substitution& substitution, const Vect
 	  //
 	  d->argArray[i].dagNode = n;
 	  d->argArray[i].multiplicity = argArray[i].multiplicity;
-	  if (!(n->isGround()))
-	    ground = false;
+	  //if (!(n->isGround()))
+	  //  ground = false;
 	  //
 	  //	Handle remaining arguments.
 	  //
@@ -711,21 +698,30 @@ ACU_DagNode::instantiateWithCopies2(const Substitution& substitution, const Vect
 	    {
 	      DagNode* a = argArray[i].dagNode;
 	      SAFE_INSTANTIATE(a, eager, substitution, eagerCopies);
-	      if (!(a->isGround()))
-		ground = false;
+	      //if (!(a->isGround()))
+	      //	ground = false;
 	      d->argArray[i].dagNode = a;
 	      d->argArray[i].multiplicity = argArray[i].multiplicity;
 	    }
 	  //
-	  //	Normalize the new dagnode; if it doesn't collapse and
-	  //	all its arguments are ground we compute its base sort.
+	  //	Currently the only user of this function is PositionState::rebuildAndInstantiateDag()
+	  //	via instantiateWithCopies(), SAFE_INSTANTIATE() and instantiateWithReplacement(),
+	  //	and this is only used for various kinds of narrowing steps. These are followed
+	  //	by reduction so we don't need to worry about:
+	  //	  normal forms
+	  //	  sort computations
+	  //	  ground flags
 	  //
+	  //	If this changes in the future the following will be needed:
+	  //
+#if 0
 	  if (!(d->dumbNormalizeAtTop()) && ground)
 	    {
-	      s->computeBaseSort(d);  // FIXME: is this a good idea in the narrowing sense?
+	      s->computeBaseSort(d);
 	      d->setGround();
 	    }
 	  Assert(d->isTree() == false, "Oops we got a tree! " << d);
+#endif
 	  return d;	
 	}
     }

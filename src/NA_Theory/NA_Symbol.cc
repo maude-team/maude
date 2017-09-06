@@ -76,13 +76,6 @@ NA_Symbol::normalizeAndComputeTrueSort(DagNode* subject, RewritingContext& conte
   fastComputeTrueSort(subject, context);
 }
 
-void
-NA_Symbol::stackArguments(DagNode* /* subject */,
-			  Vector<RedexPosition>& /* stack */,
-			  int /* parentIndex */)
-{
-}
-
 bool
 NA_Symbol::isStable() const
 {

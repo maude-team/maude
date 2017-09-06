@@ -47,9 +47,6 @@ public:
   DagNode* copyWithReplacement(Vector<RedexPosition>& redexStack,
 			       int first,
 			       int last);
-  void stackArguments(Vector<RedexPosition>& stack,
-		      int parentIndex,
-		      bool respectFrozen);
   //
   //	Functions required to handle extension information.
   //
@@ -72,7 +69,10 @@ public:
   //
   //	Narrowing member functions.
   //
-  DagNode* instantiateWithReplacement(const Substitution& substitution, const Vector<DagNode*>& eagerCopies, int argIndex, DagNode* newDag);
+  DagNode* instantiateWithReplacement(const Substitution& substitution,
+				      const Vector<DagNode*>* eagerCopies,
+				      int argIndex,
+				      DagNode* newDag);
   DagNode* instantiateWithCopies2(const Substitution& substitution, const Vector<DagNode*>& eagerCopies);
   //
   //	Functions specific to S_DagNode.

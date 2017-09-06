@@ -25,7 +25,7 @@
 //
 #ifndef _SearchState_hh_
 #define _SearchState_hh_
-#include <stack>
+#include "stack.hh"
 #include "cacheableState.hh"
 #include "positionState.hh"
 #include "rewritingContext.hh"
@@ -79,7 +79,7 @@ private:
   //	For backtracking of solutions to a rule condition.
   //
   int trialRef;
-  stack<ConditionState*> conditionStack;
+  Stack<ConditionState*> conditionStack;
 };
 
 inline RewritingContext*

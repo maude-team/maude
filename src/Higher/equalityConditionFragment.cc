@@ -112,7 +112,7 @@ EqualityConditionFragment::compileMatch(VariableInfo& variableInfo, NatSet& boun
 bool
 EqualityConditionFragment::solve(bool findFirst,
 				 RewritingContext& solution,
-				 stack<ConditionState*>& /* state */)
+				 Stack<ConditionState*>& /* state */)
 {
   if (!findFirst)
     return false;

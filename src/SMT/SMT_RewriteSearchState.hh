@@ -54,6 +54,7 @@ public:
   DagNode* getNewConstraint() const;
   const mpz_class& getMaxVariableNumber() const;  // max variable number in new pair
   RewritingContext* getContext() const;
+  Rule* getRule() const;
 
 private:
   void markReachableNodes();
@@ -110,6 +111,12 @@ inline const mpz_class&
 SMT_RewriteSearchState::getMaxVariableNumber() const
 {
   return newVariableNumber;
+}
+
+inline Rule*
+SMT_RewriteSearchState::getRule() const
+{
+  return currentRule;
 }
 
 #endif

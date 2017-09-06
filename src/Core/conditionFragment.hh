@@ -25,7 +25,7 @@
 //
 #ifndef _conditionFragment_hh_
 #define _conditionFragment_hh_
-#include <stack>
+#include "stack.hh"
 #include "rhsBuilder.hh"
 #include "conditionState.hh"
 
@@ -40,7 +40,7 @@ public:
   virtual void compileMatch(VariableInfo& variableInfo, NatSet& boundUniquely) = 0;
   virtual bool solve(bool findFirst,
 		     RewritingContext& solution,
-		     stack<ConditionState*>& state) = 0;
+		     Stack<ConditionState*>& state) = 0;
 
 #ifdef DUMP
   virtual void dump(ostream& s, const VariableInfo& variableInfo, int indentLevel) {}

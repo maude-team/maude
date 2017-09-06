@@ -113,9 +113,6 @@ public:
   virtual DagNode* copyWithReplacement(Vector<RedexPosition>& redexStack,
 				       int first,
 				       int last) = 0;
-  virtual void stackArguments(Vector<RedexPosition>& redexStack,
-			      int parentIndex,
-			      bool respectFrozen) = 0;
   //
   //	Interface for unification.
   //
@@ -154,7 +151,10 @@ public:
   //
   bool indexVariables(NarrowingVariableInfo& indices, int baseIndex);
   virtual bool indexVariables2(NarrowingVariableInfo& indices, int baseIndex);
-  virtual DagNode* instantiateWithReplacement(const Substitution& substitution, const Vector<DagNode*>& eagerCopies, int argIndex, DagNode* newDag)
+  virtual DagNode* instantiateWithReplacement(const Substitution& substitution,
+					      const Vector<DagNode*>* eagerCopies,  // null = lazy context
+					      int argIndex,
+					      DagNode* newDag)
     { CantHappen("Not implemented"); return 0; }
   //
   //	These member functions must be defined for each derived class in theories
@@ -245,9 +245,9 @@ private:
 };
 
 #define SAFE_INSTANTIATE(dagNode, eagerFlag, substitution, eagerCopies) \
-if (DagNode* _t = (eagerFlag ?						\
-		   dagNode->instantiateWithCopies(substitution, eagerCopies) : \
-		   dagNode->instantiate(substitution)))			\
+  if (DagNode* _t = (eagerFlag ?					\
+		     dagNode->instantiateWithCopies(substitution, eagerCopies) : \
+		     dagNode->instantiate(substitution)))		\
   dagNode = _t
 
 //
@@ -661,8 +661,13 @@ DagNode::insertVariables(NatSet& occurs)
 inline bool
 DagNode::indexVariables(NarrowingVariableInfo& indices, int baseIndex)
 {
-  if (isGround())
-    return true;  // no variables below us to index
+  //
+  //	We can't trust the ground flag because we could have in-place reduction below
+  //	us that removed ground flags below us and these need to be replaced for
+  //	safe unification.
+  //
+  //if (isGround())
+  //  return true;  // no variables below us to index
   bool ground = indexVariables2(indices, baseIndex);
   if (ground)
     setGround();

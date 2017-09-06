@@ -308,7 +308,7 @@ ApplicationProcess::resolveRemainingConditionFragments(StrategicSearch& searchOb
       //	We use clone() rather than copy() because newContext will have copy size 0.
       //
       solveContext->clone(*substitutionSoFar);
-      stack<ConditionState*> dummy;
+      Stack<ConditionState*> dummy;
       bool success = fragment->solve(true, *solveContext, dummy);
       searchObject.getContext()->addInCount(*solveContext);
       if (!success)

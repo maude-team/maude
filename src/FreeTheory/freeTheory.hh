@@ -37,7 +37,15 @@ class FreeArgumentIterator;
 class FreeDagNode;
 class FreeDagArgumentIterator;
 class FreeLhsAutomaton;
+
 class FreeRhsAutomaton;
+class FreeNullaryRhsAutomaton;
+class FreeUnaryRhsAutomaton;
+class FreeBinaryRhsAutomaton;
+class FreeTernaryRhsAutomaton;
+class FreeFast2RhsAutomaton;
+class FreeFast3RhsAutomaton;
+
 class FreeOccurrence;
 class FreeNet;
 class FreeRemainder;

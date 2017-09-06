@@ -63,5 +63,6 @@ class VariantFolder;
 
 class VariantUnificationProblem;
 class NarrowingSearchState2;
+class NarrowingSequenceSearch2;
 
 #endif

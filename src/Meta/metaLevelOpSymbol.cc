@@ -69,6 +69,7 @@
 #include "unificationProblem.hh"
 #include "variantSearch.hh"
 #include "narrowingSearchState2.hh"
+#include "narrowingSequenceSearch2.hh"
 
 //      free theory class definitions
 #include "freeNet.hh"
@@ -106,6 +107,7 @@
 #include "metaUnify.cc"
 #include "metaVariant.cc"
 #include "metaNarrow.cc"
+#include "metaNewNarrow.cc"
 
 MetaLevelOpSymbol::MetaLevelOpSymbol(int id, int nrArgs, const Vector<int>& strategy)
   : FreeSymbol(id, nrArgs, strategy)

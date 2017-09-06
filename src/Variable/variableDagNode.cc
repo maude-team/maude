@@ -121,13 +121,6 @@ VariableDagNode::copyWithReplacement(Vector<RedexPosition>& /* redexStack  */,
   return 0;
 }
 
-void
-VariableDagNode::stackArguments(Vector<RedexPosition>& /* stack */,
-				int /* parentIndex */,
-				bool /* respectFrozen */)
-{
-}
-
 //
 //	Unification code.
 //

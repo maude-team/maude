@@ -170,22 +170,6 @@ AU_DequeDagNode::copyWithReplacement(Vector<RedexPosition>& redexStack,
   return dequeToArgVec(this)->copyWithReplacement(redexStack, first, last);
 }
 
-void
-AU_DequeDagNode::stackArguments(Vector<RedexPosition>& stack,
-				int parentIndex,
-				bool respectFrozen)
-{
-  if (respectFrozen && !(symbol()->getFrozen().empty()))
-    return;
-  int j = 0;
-  for (AU_DequeIter i(deque); i.valid(); i.next(), ++j)
-    {
-       DagNode* d = i.getDagNode();
-      if (!(d->isUnstackable()))
-	stack.append(RedexPosition(d, parentIndex, j));
-    }
-}
-
 ExtensionInfo*
 AU_DequeDagNode::makeExtensionInfo()
 {

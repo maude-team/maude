@@ -97,7 +97,7 @@ SortTestConditionFragment::compileMatch(VariableInfo& variableInfo, NatSet& boun
 bool
 SortTestConditionFragment::solve(bool findFirst,
 				 RewritingContext& solution,
-				 stack<ConditionState*>& /* state */)
+				 Stack<ConditionState*>& /* state */)
 {
   if (!findFirst)
     return false;

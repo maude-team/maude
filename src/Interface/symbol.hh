@@ -78,10 +78,15 @@ public:
   virtual void normalizeAndComputeTrueSort(DagNode* subject, RewritingContext& context) = 0;
   virtual Term* makeTerm(const Vector<Term*>& args) = 0;
   virtual DagNode* makeDagNode(const Vector<DagNode*>& args = noArgs) = 0;
+  virtual Term* termify(DagNode* dagNode) = 0;
+  //
+  //	This function must be defined for symbols that have arity > 0.
+  //
   virtual void stackArguments(DagNode* subject,
 			      Vector<RedexPosition>& stack,
-			      int parentIndex) = 0;
-  virtual Term* termify(DagNode* dagNode) = 0;
+			      int parentIndex,
+			      bool respectFrozen = true,
+			      bool eagerContext = true);
   //
   //	These functions may be redefined for each derived class.
   //

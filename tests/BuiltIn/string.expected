@@ -203,9 +203,9 @@ reduce in STRING : "A" .
 rewrites: 0
 result Char: "A"
 Warning: <standard input>, line 80: ambiguous term, two parses are:
-("this is not a string").Foo
+Foo : ("this is not a string").Foo
 -versus-
-("this is not a string").String
+String : ("this is not a string").String
 
 Arbitrarily taking the first as correct.
 ==========================================

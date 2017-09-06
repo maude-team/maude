@@ -142,6 +142,15 @@ public:
 			     MixfixModule* m);
   DagNode* upNarrowingFailure(bool incomplete);
 
+  DagNode* upNarrowingSearchResult(DagNode* dagNode,
+				   const Vector<DagNode*>&  unifier,
+				   const NarrowingVariableInfo& unifierVariableInfo,
+				   int variableFamilyName,
+				   int unifierVariableFamilyName,
+				   MixfixModule* m);
+
+  DagNode* upNarrowingSearchFailure(bool incomplete);
+
   DagNode* upView(View* view, PointerMap& qidMap);
   DagNode* upModule(bool flat, PreModule* pm, PointerMap& qidMap);
   DagNode* upImports(PreModule* pm, PointerMap& qidMap);

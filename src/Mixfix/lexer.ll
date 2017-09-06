@@ -238,6 +238,7 @@ number					return KW_NUMBER;
 rat|rational				return KW_RAT;
 test					return KW_TEST;
 smt-search				return KW_SMT_SEARCH;
+vu-narrow				return KW_VU_NARROW;
 [.\[\]()]				return *yytext;
 0|([1-9][0-9]*)				{
 					  bool dummy;

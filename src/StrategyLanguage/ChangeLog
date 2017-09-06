@@ -1,3 +1,9 @@
+2017-01-11  Steven Eker  <eker@install.csl.sri.com>
+
+	* applicationProcess.cc (resolveRemainingConditionFragments): stack<> -> Stack<>
+
+===================================Maude111b===========================================
+
 2016-10-12  Steven Eker  <eker@install.csl.sri.com>
 
 	* applicationStrategy.cc (ApplicationStrategy): fix

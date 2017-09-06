@@ -39,25 +39,37 @@ public:
   enum Flags
   {
     ALLOW_NONEXEC = 32,		// allow narrowing with nonexecutable rules, unbound variables being treated as fresh
+    GC_VAR_GEN = 64,		// delete freshVariableGenerator in dtor
   };
-  //
   //
   //	label may be UNDEFINED to make any rule usable.
   //
-  //	maxDepth may be NONE to force at top narrowing steps without extension;
-  //	otherwise narrowing is done with extension and maxDepth may be
+  //	Narrowing is done without extension and maxDepth may be
   //	UNBOUNDED to indicate no bound.
   //
-  //	Takes over responsibility for deleting context and freshVariableGenerator on destruction.
+  //	Takes over responsibility for deleting context and on destruction.
+  //	Can also take responsibility for deleting variable generator if flag given.
   //
   NarrowingSearchState2(RewritingContext* context,
 			const Vector<DagNode*>& blockerDagsArg,
 			FreshVariableGenerator* freshVariableGenerator,
 			int incomingVariableFamily,
 			int label = UNDEFINED,
-			int flags = ALLOW_NONEXEC | PositionState::RESPECT_FROZEN,
+			int flags = ALLOW_NONEXEC | GC_VAR_GEN | PositionState::RESPECT_FROZEN,
 			int minDepth = 0,
 			int maxDepth = UNBOUNDED);
+  //
+  //	Simplified version that assumes variables are in-family and there are
+  //	no blocker dags.
+  //
+  NarrowingSearchState2(RewritingContext* context,
+			FreshVariableGenerator* freshVariableGenerator,
+			int incomingVariableFamily,
+			int label = UNDEFINED,
+			int flags = ALLOW_NONEXEC | GC_VAR_GEN | PositionState::RESPECT_FROZEN,
+			int minDepth = 0,
+			int maxDepth = UNBOUNDED);
+
   ~NarrowingSearchState2();
 
   bool findNextNarrowing();

@@ -132,7 +132,6 @@ red in META-LEVEL :
     '#,
     1) .
 
-
 red in META-LEVEL :
   metaNarrowingApply(
     ['FOO],
@@ -346,3 +345,111 @@ red in META-LEVEL :
     '#,
    12) .
 
+*** metaNarrowingSearch()
+
+mod FOO is
+  sort Foo .
+  ops f g h : Foo -> Foo .
+  ops i j k : Foo Foo -> Foo .
+
+vars X Y Z W A B C D : Foo .
+  eq j(f(X), Y) = i(f(Y), X) [variant] .
+  rl g(i(X, k(Y, Z))) => f(k(Z, X)) [label nar] .
+endm
+
+reduce in META-LEVEL :
+metaNarrowingSearch(['FOO], 'g['j['#1:Foo, '#2:Foo]], 'C:Foo,
+  '*, unbounded, 'nar, '#, 0) .
+
+reduce in META-LEVEL :
+metaNarrowingSearch(['FOO], 'g['j['#1:Foo, '#2:Foo]], 'C:Foo,
+  '*, unbounded, 'nar, '#, 1) .
+
+reduce in META-LEVEL :
+metaNarrowingSearch(['FOO], 'g['j['#1:Foo, '#2:Foo]], 'C:Foo,
+  '*, unbounded, 'nar, '#, 2) .
+
+reduce in META-LEVEL :
+metaNarrowingSearch(['FOO], 'g['j['#1:Foo, '#2:Foo]], 'C:Foo,
+  '*, unbounded, 'nar, '#, 3) .
+
+mod BAR is
+  sort Foo .
+  op f : Foo Foo -> Foo [assoc] .
+  ops g h : Foo -> Foo .
+  ops a b c d e : -> Foo .
+
+vars X Y Z W : Foo .
+  rl g(f(X, X)) => h(X) [label nar].
+endm
+
+reduce in META-LEVEL :
+metaNarrowingSearch(['BAR], 'g['f['#1:Foo, '#2:Foo, '#2:Foo]], 'W:Foo,
+  '*, unbounded, 'nar, '#, 0) .
+
+reduce in META-LEVEL :
+metaNarrowingSearch(['BAR], 'g['f['#1:Foo, '#2:Foo, '#2:Foo]], 'W:Foo,
+  '*, unbounded, 'nar, '#, 1) .
+
+reduce in META-LEVEL :
+metaNarrowingSearch(['BAR], 'g['f['#1:Foo, '#2:Foo, '#2:Foo]], 'W:Foo,
+  '*, unbounded, 'nar, '#, 2) .
+
+reduce in META-LEVEL :
+metaNarrowingSearch(['BAR], 'g['f['#1:Foo, '#2:Foo, '#2:Foo]], 'W:Foo,
+  '*, unbounded, 'nar, '#, 3) .
+
+reduce in META-LEVEL :
+metaNarrowingSearch(['BAR], 'g['f['#1:Foo, '#2:Foo, '#2:Foo]], 'W:Foo,
+  '*, unbounded, 'nar, '#, 4) .
+
+reduce in META-LEVEL :
+metaNarrowingSearch(['BAR], 'g['f['#1:Foo, '#2:Foo, '#2:Foo]], 'W:Foo,
+  '*, unbounded, 'nar, '#, 5) .
+
+reduce in META-LEVEL :
+metaNarrowingSearch(['BAR], 'g['f['#1:Foo, '#2:Foo, '#2:Foo]], 'W:Foo,
+  '!, unbounded, 'nar, '#, 0) .
+
+reduce in META-LEVEL :
+metaNarrowingSearch(['BAR], 'g['f['#1:Foo, '#2:Foo, '#2:Foo]], 'W:Foo,
+  '!, unbounded, 'nar, '#, 1) .
+
+reduce in META-LEVEL :
+metaNarrowingSearch(['BAR], 'g['f['#1:Foo, '#2:Foo, '#2:Foo]], 'W:Foo,
+  '!, unbounded, 'nar, '#, 2) .
+
+reduce in META-LEVEL :
+metaNarrowingSearch(['BAR], 'g['f['#1:Foo, '#2:Foo, '#2:Foo]], 'W:Foo,
+  '!, unbounded, 'nar, '#, 3) .
+
+reduce in META-LEVEL :
+metaNarrowingSearch(['BAR], 'g['f['#1:Foo, '#2:Foo, '#2:Foo]], 'W:Foo,
+  '!, unbounded, 'nar, '#, 4) .
+
+mod BAZ is
+  sort Foo .
+  ops f g h : Foo -> Foo .
+  ops i j k : Foo Foo -> Foo .
+
+vars X Y Z W A B C D : Foo .
+  eq j(f(X), Y) = i(f(Y), X) [variant] .
+  rl g(i(X, k(Y, Z))) => f(k(Z, X)) [label nar] .
+  rl f(k(X, X)) => h(X)  [label nar] .
+endm
+
+reduce in META-LEVEL :
+metaNarrowingSearch(['BAZ], 'g['j['#1:Foo, '#2:Foo]], 'C:Foo,
+  '!, unbounded, 'nar, '#, 0) .
+
+reduce in META-LEVEL :
+metaNarrowingSearch(['BAZ], 'g['j['#1:Foo, '#2:Foo]], 'C:Foo,
+  '!, unbounded, 'nar, '#, 1) .
+
+reduce in META-LEVEL :
+metaNarrowingSearch(['BAZ], 'g['j['#1:Foo, '#2:Foo]], 'C:Foo,
+  '!, unbounded, 'nar, '#, 2) .
+
+reduce in META-LEVEL :
+metaNarrowingSearch(['BAZ], 'g['j['A:Foo, 'B:Foo]], 'C:Foo,
+  '!, unbounded, 'nar, '#, 0) .

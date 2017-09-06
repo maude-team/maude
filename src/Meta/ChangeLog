@@ -1,3 +1,101 @@
+2017-03-14  Steven Eker  <eker@install.csl.sri.com>
+
+	* metaNewNarrow.cc (metaNarrowingSearch): reverted use of
+	upNarrowingSearchResult()
+
+	* metaLevel.hh (M): reverted decl for upNarrowingSearchResult()
+
+	* metaUp.cc (upNarrowingSearchResult): reverted
+
+	* metaNewNarrow.cc (metaNarrowingSearch): use new upNarrowingSearchResult()
+	convention
+
+	* metaLevel.hh (M): updated decl for upNarrowingSearchResult()
+
+	* metaUp.cc (upNarrowingSearchResult): changed order of arguments
+
+	* metaDown.cc (downParameterDecl): check that parameter type is legal
+	and issue advisory otherwise
+
+2017-03-10  Steven Eker  <eker@install.csl.sri.com>
+
+	* metaNarrow.cc (metaNarrow, metaNarrow2): transfer count
+
+2017-03-09  Steven Eker  <eker@install.csl.sri.com>
+
+	* metaLevelOpSymbol.hh (FreeSymbol): deleted decls for
+	getCachedNarrowingSearchState2() and getCachedNarrowingSequenceSearch2()
+
+	* metaNewNarrow.cc (metaNarrowingSearch): use getCachedStateObject()
+	function template
+	(metaNarrowingApply): use use getCachedStateObject() function template
+	(getCachedNarrowingSearchState2): deleted
+	(getCachedNarrowingSequenceSearch2): deleted
+
+2017-03-08  Steven Eker  <eker@install.csl.sri.com>
+
+	* metaLevelOpSymbol.hh (getCachedStateObject): added function
+	template
+
+	* metaLevelOpSymbol.hh (FreeSymbol): old makeNarrowingSequenceSearch2()
+	becomes makeNarrowingSequenceSearchAlt()
+
+	* metaNarrow.cc (makeNarrowingSequenceSearch2): changed to
+	makeNarrowingSequenceSearchAlt()
+	(metaNarrow2): use makeNarrowingSequenceSearchAlt()
+
+	* metaNewNarrow.cc (metaNarrowingSearch): implemented
+
+	* metaLevelOpSymbol.hh (FreeSymbol): added decl for makeNarrowingSearchState2()
+
+	* metaNewNarrow.cc (makeNarrowingSearchState2): added
+
+	* metaNarrow.cc (makeNarrowingSequenceSearch): fix out of date comments
+
+	* metaLevelOpSymbol.hh (FreeSymbol): added decl for
+	getCachedNarrowingSequenceSearch2()
+
+	* metaNewNarrow.cc (getCachedNarrowingSequenceSearch2): added
+
+2017-03-07  Steven Eker  <eker@install.csl.sri.com>
+
+	* metaLevel.hh (M): updated decl for upNarrowingSearchResult()
+
+	* metaUp.cc (upNarrowingSearchResult): changed unifier argument
+	from Substitution& to Vector<DagNode*>&
+
+2017-02-06  Steven Eker  <eker@install.csl.sri.com>
+
+	* metaLevel.hh (M): added decl for upNarrowingSearchResult()
+
+	* metaUp.cc (upNarrowingSearchResult): added
+
+	* metaLevel.hh (M): added decl for upNarrowingSearchFailure()
+
+	* metaUp.cc (upNarrowingSearchFailure): added
+
+	* metaLevelSignature.cc: delete failureIncomplete4Symbol; add
+	back narrowingSearchResultSymbol, narrowingSearchFailureSymbol,
+	narrowingSearchFailureIncompleteSymbol
+
+2017-02-03  Steven Eker  <eker@install.csl.sri.com>
+
+	* metaLevelSignature.cc: added failureIncomplete4Symbol; deleted
+	narrowingSearchResultSymbol, narrowingSearchFailureSymbol,
+	narrowingSearchFailureIncompleteSymbol
+
+	* metaNewNarrow.cc (metaNarrowingSearch): added stub
+
+	* metaLevelSignature.cc: added narrowingSearchResultSymbol,
+	narrowingSearchFailureSymbol, narrowingSearchFailureIncompleteSymbol
+
+	* descentSignature.cc: added metaNarrowingSearch
+
+	* metaNewNarrow.cc (getCachedNarrowingSearchState2)
+	(makeNarrowingSearchState2, metaNarrowingApply): moved here
+
+===================================Maude111b===========================================
+
 2017-01-03  Steven Eker  <eker@install.csl.sri.com>
 
 	* metaNarrow.cc (metaNarrowingApply): use new getNarrowedDag()

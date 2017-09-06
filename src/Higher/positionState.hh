@@ -21,7 +21,7 @@
 */
 
 //
-//	Class for storing position and extension information during a search.
+//	Class for storing position and extension information during a breadth-first search.
 //
 //	Note that position indicies are persistent and can be saved, along with
 //	a copy of extension info for a rebuildDag() after more searching.
@@ -70,11 +70,11 @@ public:
 private:
   bool exploreNextPosition();
 
-  const short flags;
+  const int flags;
   const int minDepth;
   const int maxDepth;
-  ExtensionInfo* extensionInfo;
   bool extensionInfoValid;	// need separate flag because 0 is a valid extensionInfo value
+  ExtensionInfo* extensionInfo;
   //
   //	For breathfirst traversal over positions.
   //

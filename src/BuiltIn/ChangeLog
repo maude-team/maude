@@ -1,3 +1,12 @@
+2017-03-10  Steven Eker  <eker@install.csl.sri.com>
+
+	* branchSymbol.hh (FreeSymbol): updated decl for stackArguments()
+
+	* branchSymbol.cc (stackArguments): handle respectFrozen and
+	eagerContext arguments
+
+===================================Maude111b===========================================
+
 2015-12-18  Steven Eker  <eker@ape.csl.sri.com>
 
 	* matrixOpSymbol.cc (downAlgorithm): use Rope

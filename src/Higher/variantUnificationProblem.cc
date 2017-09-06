@@ -101,7 +101,14 @@ VariantUnificationProblem::VariantUnificationProblem(RewritingContext* context,
   //
   //	VariantSearch actually does the work.
   //
-  variantSearch = new VariantSearch(newContext, blockerDags, freshVariableGenerator, true, false, false, disallowedVariableFamily, false);
+  variantSearch = new VariantSearch(newContext,
+				    blockerDags,
+				    freshVariableGenerator,
+				    true,
+				    false,
+				    false,
+				    disallowedVariableFamily,
+				    false);
 
   firstTargetSlot = module->getMinimumSubstitutionSize();  // first slot after variables reserved for preEquation
   substitutionSize = firstTargetSlot + variableInfo.getNrVariables();  // add the number of variables in target

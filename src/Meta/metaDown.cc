@@ -158,14 +158,25 @@ MetaLevel::downParameterDecl(DagNode* metaParameterDecl, ImportModule* m)
       int name;
       ImportModule* theory;
       if (downQid(f->getArgument(0), name) &&
-	  downModuleExpression(f->getArgument(1), m, theory) &&
-	  theory->isTheory())
+	  downModuleExpression(f->getArgument(1), m, theory))
 	{
-	  Token t;
-	  t.tokenize(name, FileTable::META_LEVEL_CREATED);
-	  Interpreter* owner = safeCast(MetaModule*, m)->getOwner();  // HACK - probably all modules should have owners
-	  m->addParameter(t, owner->makeParameterCopy(name, theory));
-	  return true;
+	  if (MixfixModule::canHaveAsParameter(m->getModuleType(), theory->getModuleType()))
+	    {
+	      Token t;
+	      t.tokenize(name, FileTable::META_LEVEL_CREATED);
+	      Interpreter* owner = safeCast(MetaModule*, m)->getOwner();  // HACK - probably all modules should have owners
+	      m->addParameter(t, owner->makeParameterCopy(name, theory));
+	      return true;
+	    }
+	  else
+	    {
+	      IssueAdvisory(LineNumber(FileTable::META_LEVEL_CREATED) <<
+			    ": parameterization of " << 
+			    QUOTE(MixfixModule::moduleTypeString(m->getModuleType())) <<
+			    " " << m << " by " <<
+			    QUOTE(MixfixModule::moduleTypeString(theory->getModuleType())) <<
+			    " " << theory << " is not allowed.");
+	    }
 	}
     }
   return false;

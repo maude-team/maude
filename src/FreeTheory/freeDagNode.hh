@@ -33,6 +33,10 @@ class FreeDagNode : public DagNode
 public:
   FreeDagNode(Symbol* symbol);
   //
+  //	For # args <= 3 case.
+  //
+  FreeDagNode(Symbol* symbol, char /* dummy */);
+  //
   //	For stack based execution.
   //
   FreeDagNode(Symbol* symbol, int dummy);
@@ -55,10 +59,6 @@ public:
 			       int first,
 			       int last);
   DagNode* copyWithReplacement(int argIndex, DagNode* replacement);
-  void stackArguments(Vector<RedexPosition>& stack,
-		      int parentIndex,
-		      bool respectFrozen);
-
   //
   //	Unification member functions.
   //
@@ -70,7 +70,10 @@ public:
   //	Narrowing member functions.
   //
   bool indexVariables2(NarrowingVariableInfo& indices, int baseIndex);
-  DagNode* instantiateWithReplacement(const Substitution& substitution, const Vector<DagNode*>& eagerCopies, int argIndex, DagNode* newDag);
+  DagNode* instantiateWithReplacement(const Substitution& substitution,
+				      const Vector<DagNode*>* eagerCopies,
+				      int argIndex,
+				      DagNode* newDag);
   DagNode* instantiateWithCopies2(const Substitution& substitution, const Vector<DagNode*>& eagerCopies);
   //
   //	Functions particular to free dag nodes.
@@ -125,6 +128,11 @@ private:
   friend class FreeLhsAutomaton;	// for matching DAG subject
   friend class FreeNet;			// for matching DAG subject
   friend class FreeRhsAutomaton;	// for constructing replacement DAG
+  friend class FreeFast3RhsAutomaton;	// for constructing replacement DAG
+  friend class FreeFast2RhsAutomaton;	// for constructing replacement DAG
+  friend class FreeUnaryRhsAutomaton;	// for constructing replacement DAG
+  friend class FreeBinaryRhsAutomaton;	// for constructing replacement DAG
+  friend class FreeTernaryRhsAutomaton;	// for constructing replacement DAG
 
   friend class FreeGeneralCtor;
   friend class FreeGeneralCtorFinal;
@@ -148,6 +156,12 @@ FreeDagNode::FreeDagNode(Symbol* symbol) : DagNode(symbol)
       setCallDtor();  // need our dtor called when garbage collected so we can free arg array
       external = new DagNode*[nrArgs];
     }
+}
+
+inline
+FreeDagNode::FreeDagNode(Symbol* symbol, char /* dummy */)
+  : DagNode(symbol)
+{
 }
 
 inline

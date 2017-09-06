@@ -43,7 +43,6 @@
 #include "rewriteSearchState.hh"
 #include "rewriteSequenceSearch.hh"
 
-
 RewriteSequenceSearch::RewriteSequenceSearch(RewritingContext* initial,
 					     SearchType searchType,
 					     Pattern* goal,
@@ -100,7 +99,7 @@ RewriteSequenceSearch::findNextInterestingState()
   if (needToTryInitialState)
     {
       //
-      //	Special case: return the initail state.
+      //	Special case: return the initial state.
       //
       needToTryInitialState = false;  // don't do this again
       return 0;

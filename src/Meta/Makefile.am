@@ -44,6 +44,7 @@ EXTRA_DIST = \
 	metaUnify.cc \
 	metaSearch.cc \
 	metaNarrow.cc \
+	metaNewNarrow.cc \
 	descentSignature.cc \
 	interpreterSignature.cc \
 	metaUpView.cc \

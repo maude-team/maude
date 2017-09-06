@@ -1,3 +1,18 @@
+Overview of Changes in alpha111b
+================================
+* optimized handling of stacks of states in conditions
+* optimized construction of free right hand sides
+* fixed bug where 0 step rewrites module SMT could return
+  unsatisfiable constraints
+* fixed bug where bindings were being shared between eager and
+  lazy places in both regular narrowing and variant narrowing
+* fixed bug where narrowing steps and equational rewrites
+  weren't being counted in metaNarrow()
+* vu-narrow command added
+* metaNarrowingSearch() descent function added
+* fixed bug where illegally parameterizing a module by a
+  parameterized module caused a crash
+
 Overview of Changes in alpha111a
 ================================
 * fixed bug where variables occuring only in a irreducibility
