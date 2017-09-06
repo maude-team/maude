@@ -30,15 +30,28 @@
 class IterationStrategy : public StrategyExpression
 {
 public:
-  IterationStrategy(StrategyExpression* child, bool zeroAllowed, bool normalForm);
+  IterationStrategy(StrategyExpression* child, bool zeroAllowed);
   ~IterationStrategy();
 
-  SetGenerator* execute(DagNode* subject, RewritingContext& context);
+  StrategyExpression* getStrategy() const;
+  bool getZeroAllowed() const;
+  StrategicExecution::Survival decompose(StrategicSearch& searchObject, DecompositionProcess* remainder);
 
 private:
   StrategyExpression* const child;
-  const bool zeroAllowed;
-  const bool normalForm;
+  StrategyExpression* const star;  // for a s+ expression we keep an s* expression here for decomposition
 };
+
+inline StrategyExpression*
+IterationStrategy::getStrategy() const
+{
+  return child;
+}
+
+inline bool
+IterationStrategy::getZeroAllowed() const
+{
+  return star == 0;
+}
 
 #endif

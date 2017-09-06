@@ -10,37 +10,40 @@ libstrategyLanguage_a_CPPFLAGS = \
 
 libstrategyLanguage_a_SOURCES = \
 	trivialStrategy.cc \
-	trivialSetGenerator.cc \
 	applicationStrategy.cc \
-	applicationSetGenerator.cc \
 	concatenationStrategy.cc \
-	concatenationSetGenerator.cc \
 	iterationStrategy.cc \
-	iterationSetGenerator.cc \
 	branchStrategy.cc \
-	branchSetGenerator.cc \
 	unionStrategy.cc \
-	unionSetGenerator.cc \
-	unaryStrategy.cc \
-	unarySetGenerator.cc \
-	stateCache.cc
+	testStrategy.cc \
+	strategicExecution.cc \
+	strategicTask.cc \
+	branchTask.cc \
+	strategicProcess.cc \
+	decompositionProcess.cc \
+	applicationProcess.cc \
+	strategicSearch.cc \
+	sharedRewriteSearchState.cc \
+	matchProcess.cc \
+	rewriteTask.cc
 
 noinst_HEADERS = \
 	strategyLanguage.hh \
 	strategyExpression.hh \
-	setGenerator.hh \
 	trivialStrategy.hh \
-	trivialSetGenerator.hh \
 	applicationStrategy.hh \
-	applicationSetGenerator.hh \
 	concatenationStrategy.hh \
-	concatenationSetGenerator.hh \
 	iterationStrategy.hh \
-	iterationSetGenerator.hh \
 	branchStrategy.hh \
-	branchSetGenerator.hh \
 	unionStrategy.hh \
-	unionSetGenerator.hh \
-	unaryStrategy.hh \
-	unarySetGenerator.hh \
-	stateCache.hh
+	testStrategy.hh \
+	strategicExecution.hh \
+	strategicTask.hh \
+	branchTask.hh \
+	strategicProcess.hh \
+	decompositionProcess.hh \
+	applicationProcess.hh \
+	strategicSearch.hh \
+	sharedRewriteSearchState.hh \
+	matchProcess.hh \
+	rewriteTask.hh

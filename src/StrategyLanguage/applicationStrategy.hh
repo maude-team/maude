@@ -31,6 +31,9 @@
 class ApplicationStrategy : public StrategyExpression
 {
 public:
+  //
+  //	label == NONE means try all rules, labeled or not.
+  //
   ApplicationStrategy(int label,
 		      const Vector<Term*>& variables,
 		      const Vector<Term*>& values,
@@ -38,12 +41,17 @@ public:
   ~ApplicationStrategy();
 
   void setTop();
+  bool getTop() const;
+  int getLabel() const;
+  const Vector<Term*>& getVariables() const;
+  Vector<CachedDag>& getValues();
+  const Vector<StrategyExpression*>& getStrategies() const;
 
-  SetGenerator* execute(DagNode* subject, RewritingContext& context);
+  StrategicExecution::Survival decompose(StrategicSearch& searchObject, DecompositionProcess* remainder);
 
 private:
   bool top;  					// restrict rewrites to top of term
-  const int label;				// NONE == all labels in module
+  const int label;
   Vector<Term*> variables;			// substitution
   Vector<CachedDag> valueDags;
   Vector<StrategyExpression*> strategies;	// strategies for searches in conditions
@@ -53,6 +61,36 @@ inline void
 ApplicationStrategy::setTop()
 {
   top = true;
+}
+
+inline bool
+ApplicationStrategy::getTop() const
+{
+  return top;
+}
+
+inline int
+ApplicationStrategy::getLabel() const
+{
+  return label;
+}
+
+inline const Vector<Term*>&
+ApplicationStrategy::getVariables() const
+{
+  return variables;
+}
+
+inline Vector<CachedDag>&
+ApplicationStrategy::getValues()
+{
+  return valueDags;
+}
+
+inline const Vector<StrategyExpression*>&
+ApplicationStrategy::getStrategies() const
+{
+  return strategies;
 }
 
 #endif

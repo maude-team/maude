@@ -33,9 +33,11 @@ Interpreter::clearContinueInfo()
   delete savedContext;
   delete savedMatchSearchState;
   delete savedRewriteSequenceSearch;
+  delete savedStrategicSearch;
   savedContext = 0;
   savedMatchSearchState = 0;
   savedRewriteSequenceSearch = 0;
+  savedStrategicSearch = 0;
   continueFunc = 0;
   if (savedModule != 0)
     {
@@ -84,6 +86,21 @@ Interpreter::beginRewriting(bool debug)
 #ifdef QUANTIFY_REWRITING
   quantify_start_recording_data();
 #endif
+}
+
+void
+Interpreter::printModifiers(Int64 number, Int64 number2)
+{
+  if (number2 != NONE || number2 != NONE)
+    {
+      cout << '[';
+      if (number != NONE)
+	cout << number;
+      if (number2 != NONE)
+	cout << ", " << number2;
+      cout << "] ";
+    }
+  cout << "in " << currentModule << " : ";
 }
 
 void
@@ -275,14 +292,8 @@ Interpreter::fRewrite(const Vector<Token>& subject, Int64 limit, Int64 gas, bool
 	{
 	  UserLevelRewritingContext::beginCommand();
 	  cout << "frewrite ";
-	  if (limit != NONE)
-	    {
-	      if (gas == NONE)
-		cout  << '[' << limit << "] ";
-	      else
-		cout  << '[' << limit << ", " << gas << "] ";
-	    }
-	  cout << "in " << currentModule << " : " << d << " .\n";
+	  printModifiers(limit, gas);
+	  cout << d << " .\n";
 	  if (xmlBuffer != 0)
 	    xmlBuffer->generateFrewrite(d, limit, gas);
 	}
@@ -326,14 +337,8 @@ Interpreter::eRewrite(const Vector<Token>& subject, Int64 limit, Int64 gas, bool
 	{
 	  UserLevelRewritingContext::beginCommand();
 	  cout << "erewrite ";
-	  if (limit != NONE)
-	    {
-	      if (gas == NONE)
-		cout << '[' << limit << "] ";
-	      else
-		cout << '[' << limit << ", " << gas << "] ";
-	    }
-	  cout << "in " << currentModule << " : " << d << " .\n";
+	  printModifiers(limit, gas);
+	  cout << d << " .\n";
 	  if (xmlBuffer != 0)
 	    xmlBuffer->generateErewrite(d, limit, gas);
 	}
@@ -367,59 +372,6 @@ Interpreter::eRewrite(const Vector<Token>& subject, Int64 limit, Int64 gas, bool
 	}
       endRewriting(timer, context, fm, &Interpreter::eRewriteCont);
     }
-}
-
-void
-Interpreter::sRewrite(const Vector<Token>& subjectAndStrategy, Int64 limit, bool debug)
-{
-  VisibleModule* fm = currentModule->getFlatModule();
-  Term* subject;
-  StrategyExpression* strategy;
-  if (!(fm->parseStrategyCommand(subjectAndStrategy, subject, strategy)))
-    return;
-  //cout << "Subject: " << subject << endl;
-
-  DagNode* subjectDag = makeDag(subject);
-  
-  if (getFlag(SHOW_COMMAND))
-    {
-      UserLevelRewritingContext::beginCommand();
-      cout << "srewrite ";
-      if (limit != NONE)
-	cout << '[' << limit << "] ";
-
-      cout << "in " << currentModule << " : " << subjectAndStrategy << " .\n";  // HACK
-    }
-
-  startUsingModule(fm);
-  UserLevelRewritingContext* context = new UserLevelRewritingContext(subjectDag);
-  context->reduce();
-  if (context->traceAbort())
-    {
-      delete context;
-      delete strategy;
-      (void) fm->unprotect();
-      UserLevelRewritingContext::clearDebug();
-      return;
-    }
-  SetGenerator* gen = strategy->execute(subjectDag, *context);
-  for (Int64 i = 0; i != limit; ++i)  // limit could be -1 for "no limit"
-    {
-      DagNode* d = gen->findNextSolution();
-      if (context->traceAbort())
-	break;
-      if (d == 0)
-	{
-	  cout << "No more solutions.\n";
-	  break;
-	}
-      cout << d << endl;
-    }
-  delete context;
-  delete gen;
-  delete strategy;
-  (void) fm->unprotect();
-  UserLevelRewritingContext::clearDebug();
 }
 
 void

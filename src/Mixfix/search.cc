@@ -35,7 +35,7 @@ Interpreter::printSearchTiming(const Timer& timer,  RewriteSequenceSearch* state
 }
 
 void
-Interpreter::search(const Vector<Token>& bubble, Int64 limit)
+Interpreter::search(const Vector<Token>& bubble, Int64 limit, Int64 depth)
 {
   VisibleModule* fm = currentModule->getFlatModule();
   Term* initial;
@@ -62,10 +62,8 @@ Interpreter::search(const Vector<Token>& bubble, Int64 limit)
     {
       UserLevelRewritingContext::beginCommand();
       cout << "search ";
-      if (limit != NONE)
-	cout << '[' << limit << "] ";
-      cout << "in " << currentModule << " : " << subjectDag << ' ' <<
-	searchTypeSymbol[searchType] << ' ' << pattern->getLhs();
+      printModifiers(limit, depth);
+      cout << subjectDag << ' ' << searchTypeSymbol[searchType] << ' ' << pattern->getLhs();
       if (condition.length() > 0)
 	{
 	  cout << " such that ";
@@ -73,14 +71,15 @@ Interpreter::search(const Vector<Token>& bubble, Int64 limit)
 	}
       cout << " .\n";
       if (xmlBuffer != 0)
-	xmlBuffer->generateSearch(subjectDag, pattern, searchTypeSymbol[searchType], limit);
+	xmlBuffer->generateSearch(subjectDag, pattern, searchTypeSymbol[searchType], limit, depth);
     }
 
   startUsingModule(fm);
   RewriteSequenceSearch* state =
     new RewriteSequenceSearch(new UserLevelRewritingContext(subjectDag),
 			      static_cast<RewriteSequenceSearch::SearchType>(searchType),
-			      pattern);
+			      pattern,
+			      depth);
 
 #ifdef QUANTIFY_REWRITING
   quantify_start_recording_data();

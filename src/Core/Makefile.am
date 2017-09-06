@@ -40,6 +40,7 @@ libcore_a_SOURCES = \
 	cachedDag.cc \
 	extensionMatchSubproblem.cc \
 	dagNodeSet.cc \
+	dagNodeCache.cc \
 	memoTable.cc \
 	rootContainer.cc
 
@@ -63,6 +64,7 @@ noinst_HEADERS = \
 	core.hh \
 	dagArgumentIterator.hh \
 	dagNodeSet.hh \
+	dagNodeCache.hh \
 	dagRoot.hh \
 	disjunctiveSubproblemAccumulator.hh \
 	equalitySubproblem.hh \

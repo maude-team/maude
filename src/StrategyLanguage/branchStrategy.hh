@@ -30,17 +30,66 @@
 class BranchStrategy : public StrategyExpression
 {
 public:
-  BranchStrategy(StrategyExpression* test,
-		 StrategyExpression* success,
-		 StrategyExpression* failure);
+  enum Action
+    {
+      FAIL,		// no results
+      IDLE,		// original term
+      PASS_THRU,	// results from test (success case only)
+      NEW_STRATEGY,	// apply new strategy
+      ITERATE		// apply the same branch strategy to any result
+    };
+
+  BranchStrategy(StrategyExpression* initialStrategy,
+		 Action successAction,
+		 StrategyExpression* successStrategy,
+		 Action failureAction,
+		 StrategyExpression* failureStrategy);
   ~BranchStrategy();
 
-  SetGenerator* execute(DagNode* subject, RewritingContext& context);
+  StrategyExpression* getInitialStrategy() const;
+  StrategyExpression* getSuccessStrategy() const;
+  StrategyExpression* getFailureStrategy() const;
+  Action getSuccessAction() const;
+  Action getFailureAction() const;
+
+  StrategicExecution::Survival decompose(StrategicSearch& searchObject, DecompositionProcess* remainder);
 
 private:
-  StrategyExpression* const test;
-  StrategyExpression* const success;
-  StrategyExpression* const failure;
+  StrategyExpression* const initialStrategy;
+  StrategyExpression* const successStrategy;
+  StrategyExpression* const failureStrategy;
+  const Action successAction;
+  const Action failureAction;
 };
+
+inline StrategyExpression*
+BranchStrategy::getInitialStrategy() const
+{
+  return initialStrategy;
+}
+
+inline StrategyExpression*
+BranchStrategy::getSuccessStrategy() const
+{
+  return successStrategy;
+}
+
+inline StrategyExpression*
+BranchStrategy::getFailureStrategy() const
+{
+  return failureStrategy;
+}
+
+inline BranchStrategy::Action
+BranchStrategy::getSuccessAction() const
+{
+  return successAction;
+}
+
+inline BranchStrategy::Action
+BranchStrategy::getFailureAction() const
+{
+  return failureAction;
+}
 
 #endif

@@ -194,29 +194,66 @@ MixfixModule::makeStrategyLanguageProductions()
       }
   }
 
-  rhs[0] = Token::encode("fail");
+  rhs[0] = fail;
   parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, emptyGather, MixfixParser::MAKE_TRIVIAL, false);
 
-  rhs[0] = Token::encode("idle");
+  rhs[0] = idle;
   parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, emptyGather, MixfixParser::MAKE_TRIVIAL, true);
 
-  rhs[0] = Token::encode("all");
+  rhs[0] = all;
   parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, emptyGather, MixfixParser::MAKE_ALL);
-
-  rhs[0] = LABEL;
-  parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, gatherAny, MixfixParser::MAKE_APPLICATION);
 
   {
     //
-    //	<strategy expression> = <label> [ substitution> ]
+    //	<strategy expression> = <label> [ <substitution> ] { <strategy list> }
     //
-    Vector<int> rhs(4);
+    Vector<int> rhs(7);
     rhs[0] = LABEL;
     rhs[1] = leftBracket;
     rhs[2] = SUBSTITUTION;
     rhs[3] = rightBracket;
+    rhs[4] = leftBrace;
+    rhs[5] = STRATEGY_LIST;
+    rhs[6] = rightBrace;
+    parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, gatherAnyAnyAny,
+			     MixfixParser::MAKE_APPLICATION, true, true);
+
+    //
+    //	<strategy expression> = <label> [ <substitution> ]
+    //
+    rhs.resize(4);
     parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, gatherAnyAny,
-			     MixfixParser::MAKE_APPLICATION_WITH_SUBSTITUTION);
+			     MixfixParser::MAKE_APPLICATION, true, false);
+    //
+    //	<strategy expression> = <label> { <strategy list> }
+    //
+    rhs[1] = leftBrace;
+    rhs[2] = STRATEGY_LIST;
+    rhs[3] = rightBrace;
+    parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, gatherAnyAny,
+			     MixfixParser::MAKE_APPLICATION, false, true);
+    //
+    //	<strategy expression> = <label>
+    //
+    rhs.resize(1);
+    parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, gatherAny,
+			     MixfixParser::MAKE_APPLICATION, false, false);
+  }
+  {
+    //
+    //	<strategy list> = <strategy expression> , <strategy list>
+    //
+    Vector<int> rhs(3);
+    rhs[0] = STRATEGY_EXPRESSION;
+    rhs[1] = comma;
+    rhs[2] = STRATEGY_LIST;
+    parser->insertProduction(STRATEGY_LIST, rhs, PREFIX_GATHER, gatherPrefixPrefix,
+			     MixfixParser::MAKE_STRATEGY_LIST);
+    //
+    //	<strategy list> = <strategy expression>
+    //
+    rhs.resize(1);
+    parser->insertProduction(STRATEGY_LIST, rhs, 0, gatherAny, MixfixParser::PASS_THRU);
   }
   {
     //
@@ -226,39 +263,47 @@ MixfixModule::makeStrategyLanguageProductions()
     //	<strategy expression> = try ( <strategy expression> )
     //
     Vector<int> rhs(4);
-    rhs[0] = Token::encode("top");
+    rhs[0] = top;
     rhs[1] = leftParen;
     rhs[2] = STRATEGY_EXPRESSION;
     rhs[3] = rightParen;
+    parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, gatherAny, MixfixParser::MAKE_TOP);
+
+    rhs[0] = notToken;
     parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, gatherAny,
-			     MixfixParser::MAKE_TOP);
-    rhs[0] = Token::encode("not");
+			     MixfixParser::MAKE_BRANCH, BranchStrategy::FAIL, BranchStrategy::IDLE);
+    rhs[0] = test;
     parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, gatherAny,
-			     MixfixParser::MAKE_UNARY, UnaryStrategy::NOT);
-    rhs[0] = Token::encode("test");
+			     MixfixParser::MAKE_BRANCH, BranchStrategy::IDLE, BranchStrategy::FAIL);
+    rhs[0] = tryToken;
     parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, gatherAny,
-			     MixfixParser::MAKE_UNARY, UnaryStrategy::TEST);
-    rhs[0] = Token::encode("try");
-    parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, gatherAny,
-			     MixfixParser::MAKE_UNARY, UnaryStrategy::TRY);
+			     MixfixParser::MAKE_BRANCH, BranchStrategy::PASS_THRU, BranchStrategy::IDLE);
   }
   {
     //
     //	<strategy expression> = <strategy expression> ; <strategy expression>
     //	<strategy expression> = <strategy expression> | <strategy expression>
+    //	<strategy expression> = <strategy expression> orelse <strategy expression>
+    //
+    //	We force these to right associate by manipulating the gathers.
     //
     Vector<int> gather(2);
     gather[0] = STRAT_SEQ_PREC - 1;
     gather[1] = STRAT_SEQ_PREC;
     Vector<int> rhs(3);
     rhs[0] = STRATEGY_EXPRESSION;
-    rhs[1] = Token::encode(";");
+    rhs[1] = semicolon;
     rhs[2] = STRATEGY_EXPRESSION;
     parser->insertProduction(STRATEGY_EXPRESSION, rhs, STRAT_SEQ_PREC, gather, MixfixParser::MAKE_CONCATENATION);
     gather[0] = STRAT_UNION_PREC - 1;
     gather[1] = STRAT_UNION_PREC;
-    rhs[1] = Token::encode("|");
+    rhs[1] = pipe;
     parser->insertProduction(STRATEGY_EXPRESSION, rhs, STRAT_UNION_PREC, gather, MixfixParser::MAKE_UNION);
+    gather[0] = STRAT_ORELSE_PREC - 1;
+    gather[1] = STRAT_ORELSE_PREC;
+    rhs[1] = orelse;
+    parser->insertProduction(STRATEGY_EXPRESSION, rhs, STRAT_ORELSE_PREC, gather,
+			     MixfixParser::MAKE_BRANCH, BranchStrategy::PASS_THRU, BranchStrategy::NEW_STRATEGY);
   }
   {
     //
@@ -270,12 +315,13 @@ MixfixModule::makeStrategyLanguageProductions()
     gather[0] = 0;
     Vector<int> rhs(2);
     rhs[0] = STRATEGY_EXPRESSION;
-    rhs[1] = Token::encode("+");
-    parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, gather, MixfixParser::MAKE_ITERATION, false, false);
-    rhs[1] = Token::encode("*");
-    parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, gather, MixfixParser::MAKE_ITERATION, true, false);
-    rhs[1] = Token::encode("!");
-    parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, gather, MixfixParser::MAKE_ITERATION, true, true);
+    rhs[1] = plus;
+    parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, gather, MixfixParser::MAKE_ITERATION, false);
+    rhs[1] = star;
+    parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, gather, MixfixParser::MAKE_ITERATION, true);
+    rhs[1] = bang;
+    parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, gather,
+			     MixfixParser::MAKE_BRANCH, BranchStrategy::ITERATE, BranchStrategy::IDLE);
   }
   {
     //
@@ -284,14 +330,47 @@ MixfixModule::makeStrategyLanguageProductions()
     Vector<int> gather(3);
     Vector<int> rhs(5);
     gather[0] = STRAT_BRANCH_PREC;
-    gather[0] = ANY;
+    gather[1] = ANY;
     gather[2] = STRAT_BRANCH_PREC;
     rhs[0] = STRATEGY_EXPRESSION;
-    rhs[1] = Token::encode("?");
+    rhs[1] = query;
     rhs[2] = STRATEGY_EXPRESSION;
     rhs[3] = colon;
     rhs[4] = STRATEGY_EXPRESSION;
-    parser->insertProduction(STRATEGY_EXPRESSION, rhs, STRAT_BRANCH_PREC, gather, MixfixParser::MAKE_BRANCH);
+    parser->insertProduction(STRATEGY_EXPRESSION, rhs, STRAT_BRANCH_PREC, gather, MixfixParser::MAKE_BRANCH,
+			     BranchStrategy::NEW_STRATEGY, BranchStrategy::NEW_STRATEGY);
+  }
+  {
+    //
+    //	<strategy expression> = match <term> such that <condition>
+    //	<strategy expression> = xmatch <term> such that <condition>
+    //	<strategy expression> = amatch <term> such that <condition>
+    //	<strategy expression> = match <term>
+    //	<strategy expression> = xmatch <term>
+    //	<strategy expression> = amatch <term>
+    //
+    Vector<int> gather(3);
+    Vector<int> rhs(4);
+    gather[0] = STRAT_TEST_PREC;
+    gather[1] = ANY;
+    gather[2] = STRAT_TEST_PREC;
+    rhs[0] = match;
+    rhs[1] = TERM;
+    rhs[2] = SUCH_THAT;
+    rhs[3] = CONDITION;
+    parser->insertProduction(STRATEGY_EXPRESSION, rhs, STRAT_TEST_PREC, gather, MixfixParser::MAKE_TEST, -1);
+    rhs[0] = xmatch;
+    parser->insertProduction(STRATEGY_EXPRESSION, rhs, STRAT_TEST_PREC, gather, MixfixParser::MAKE_TEST, 0);
+    rhs[0] = amatch;
+    parser->insertProduction(STRATEGY_EXPRESSION, rhs, STRAT_TEST_PREC, gather, MixfixParser::MAKE_TEST, UNBOUNDED);
+    gather.resize(1);
+    rhs.resize(2);
+    rhs[0] = match;
+    parser->insertProduction(STRATEGY_EXPRESSION, rhs, STRAT_TEST_PREC, gather, MixfixParser::MAKE_TEST, -1);
+    rhs[0] = xmatch;
+    parser->insertProduction(STRATEGY_EXPRESSION, rhs, STRAT_TEST_PREC, gather, MixfixParser::MAKE_TEST, 0);
+    rhs[0] = amatch;
+    parser->insertProduction(STRATEGY_EXPRESSION, rhs, STRAT_TEST_PREC, gather, MixfixParser::MAKE_TEST, UNBOUNDED);
   }
   {
     //
@@ -306,7 +385,7 @@ MixfixModule::makeStrategyLanguageProductions()
 
   rhs.resize(3);
   rhs[0] = TERM;
-  rhs[1] = Token::encode("using");
+  rhs[1] = usingToken;
   rhs[2] = STRATEGY_EXPRESSION;
   parser->insertProduction(STRATEGY_COMMAND, rhs, 0, gatherAnyAny);  // need action
 }
@@ -459,15 +538,14 @@ MixfixModule::makeConditionProductions()
   rhs.resize(1);
   rhs[0] = EQUALITY_PAIR;
   parser->insertProduction(CONDITION_FRAGMENT, rhs, 0, gatherAny, MixfixParser::MAKE_EQUALITY);
-  parser->insertProduction(RULE_CONDITION_FRAGMENT, rhs, 0, gatherAny, MixfixParser::MAKE_EQUALITY);
   rhs[0] = COLON_PAIR;
   parser->insertProduction(CONDITION_FRAGMENT, rhs, 0, gatherAny, MixfixParser::MAKE_SORT_TEST);
-  parser->insertProduction(RULE_CONDITION_FRAGMENT, rhs, 0, gatherAny, MixfixParser::MAKE_SORT_TEST);
   rhs[0] = ASSIGN_PAIR;
   parser->insertProduction(CONDITION_FRAGMENT, rhs, 0, gatherAny, MixfixParser::MAKE_ASSIGNMENT);
-  parser->insertProduction(RULE_CONDITION_FRAGMENT, rhs, 0, gatherAny, MixfixParser::MAKE_ASSIGNMENT);
   rhs[0] = ARROW_PAIR;
   parser->insertProduction(RULE_CONDITION_FRAGMENT, rhs, 0, gatherAny, MixfixParser::MAKE_REWRITE);
+  rhs[0] = CONDITION_FRAGMENT;
+  parser->insertProduction(RULE_CONDITION_FRAGMENT, rhs, 0, gatherAny, MixfixParser::PASS_THRU);
   //
   //	Simple conditions.
   //
@@ -627,11 +705,11 @@ MixfixModule::makeComponentProductions()
 	  //	<SEARCH_PAIR> ::= <FooTerm> <SEARCH_CONNECTIVE> <FooTerm>
 	  //	<ASSIGNMENT> ::= <FooTerm> <- <FooTerm>
 	  //
-	  rhsPair[1] = Token::encode("<=?");
+	  rhsPair[1] = matches;
 	  parser->insertProduction(MATCH_PAIR, rhsPair, 0, gatherAnyAny);
 	  rhsPair[1] = SEARCH_CONNECTIVE;
 	  parser->insertProduction(SEARCH_PAIR, rhsPair, 0, gatherAnyAnyAny);
-	  rhsPair[1] = Token::encode("<-");
+	  rhsPair[1] = assignment;
 	  Vector<int> gather(2);
 	  gather[0] = ASSIGNMENT_PREC;
 	  gather[1] = ASSIGNMENT_PREC;
@@ -641,15 +719,12 @@ MixfixModule::makeComponentProductions()
       //	Syntax for colon pairs:
       //	<COLON_PAIR> ::= <FooTerm> : <FooSort>
       //	<COLON2_PAIR> ::= <FooTerm> :: <FooSort>
-      //	<COLON3_PAIR> ::= <FooTerm> :: <FooSort>
       //
       rhsPair[2] = sortNt;
       rhsPair[1] = colon;
       parser->insertProduction(COLON_PAIR, rhsPair, 0, gatherAny0);
       rhsPair[1] = colon2;
       parser->insertProduction(COLON2_PAIR, rhsPair, 0, gatherAny0);
-      rhsPair[1] = colon3;
-      parser->insertProduction(COLON3_PAIR, rhsPair, 0, gatherAny0);
       //
       //	Syntax for parentheses:
       //	<FooTerm> ::= ( <FooTerm> )
@@ -877,7 +952,6 @@ MixfixModule::makeBoolProductions()
       //
       rhs[0] = rangeNt;
       parser->insertProduction(CONDITION_FRAGMENT, rhs, 0, gatherAny, MixfixParser::MAKE_TRUE);
-      parser->insertProduction(RULE_CONDITION_FRAGMENT, rhs, 0, gatherAny, MixfixParser::MAKE_TRUE);
 
       if (falseSymbol != 0 &&
 	  falseSymbol->rangeComponent() == trueSymbol->rangeComponent())
@@ -887,8 +961,6 @@ MixfixModule::makeBoolProductions()
 	  //
 	  rhs[0] = COLON2_PAIR;
 	  parser->insertProduction(rangeNt, rhs, 0, gatherAny, MixfixParser::MAKE_SORT_TEST, 1);
-	  rhs[0] = COLON3_PAIR;
-	  parser->insertProduction(rangeNt, rhs, 0, gatherAny, MixfixParser::MAKE_SORT_TEST, 0);
 	}
     }
 }
@@ -1014,49 +1086,49 @@ MixfixModule::makeSpecialProductions()
   //	Productions for so far unseen tokens that have special properties
   //
   {
-    int t = Token::encode("[ SMALL_NAT ]");
+    int t = smallNat;
     parser->insertSpecialTerminal(Token::SMALL_NAT, t);
     rhs[0] = t;
     parser->insertProduction(SMALL_NAT, rhs, 0, emptyGather);
   }
   {
-    int t = Token::encode("[ ZERO ]");
+    int t = zero;
     parser->insertSpecialTerminal(Token::ZERO, t);
     rhs[0] = t;
     parser->insertProduction(ZERO, rhs, 0, emptyGather);
   }
   {
-    int t = Token::encode("[ SMALL_NEG ]");
+    int t = smallNeg;
     parser->insertSpecialTerminal(Token::SMALL_NEG, t);
     rhs[0] = t;
     parser->insertProduction(SMALL_NEG, rhs, 0, emptyGather);
   }
   {
-    int t = Token::encode("[ RATIONAL ]");
+    int t = rational;
     parser->insertSpecialTerminal(Token::RATIONAL, t);
     rhs[0] = t;
     parser->insertProduction(RATIONAL, rhs, 0, emptyGather);
   }
   {
-    int t = Token::encode("[ FLOAT ]");
+    int t = floatToken;
     parser->insertSpecialTerminal(Token::FLOAT, t);
     rhs[0] = t;
     parser->insertProduction(FLOAT_NT, rhs, 0, emptyGather);
   }
   {
-    int t = Token::encode("[ QUOTED_IDENTIFIER ]");
+    int t = quotedIdentifier;
     parser->insertSpecialTerminal(Token::QUOTED_IDENTIFIER, t);
     rhs[0] = t;
     parser->insertProduction(QUOTED_ID, rhs, 0, emptyGather);
   }
   {
-    int t = Token::encode("[ STRING ]");
+    int t = stringToken;
     parser->insertSpecialTerminal(Token::STRING, t);
     rhs[0] = t;
     parser->insertProduction(STRING_NT, rhs, 0, emptyGather);
   }
   {
-    int t = Token::encode("[ ENDS_IN_COLON ]");
+    int t = endsInColon;
     parser->insertSpecialTerminal(Token::ENDS_IN_COLON, t);
     rhs[0] = t;
     parser->insertProduction(ENDS_IN_COLON_NT, rhs, 0, emptyGather);

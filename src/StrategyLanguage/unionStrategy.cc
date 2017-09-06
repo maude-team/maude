@@ -35,7 +35,7 @@
 
 //	strategy language class definitions
 #include "unionStrategy.hh"
-#include "unionSetGenerator.hh"
+#include "decompositionProcess.hh"
 
 UnionStrategy::UnionStrategy(const Vector<StrategyExpression*>& strategies)
   : strategies(strategies)
@@ -50,8 +50,15 @@ UnionStrategy::~UnionStrategy()
     delete strategies[i];
 }
 
-SetGenerator*
-UnionStrategy::execute(DagNode* subject, RewritingContext& context)
+StrategicExecution::Survival
+UnionStrategy::decompose(StrategicSearch& /* searchObject */, DecompositionProcess* remainder)
 {
-  return new UnionSetGenerator(subject, context, strategies);
+  int last = strategies.size() - 1;
+  for (int i = 0; i < last; ++i)
+    {
+      DecompositionProcess* p = new DecompositionProcess(remainder);  // clone remainder
+      p->pushStrategy(strategies[i]);
+    }
+  remainder->pushStrategy(strategies[last]);
+  return StrategicExecution::SURVIVE;  // remainder should not request deletion
 }

@@ -44,7 +44,7 @@
 #include "directoryManager.hh"
 #include "preModule.hh"
 #include "lexerAux.hh"
-#include "main.hh"
+#include "global.hh"
 #include "userLevelRewritingContext.hh"
 #include "interpreter.hh"
 
@@ -104,7 +104,7 @@ in					RETURN(KW_IN)
 }
 
 <INITIAL>{
-th|fth|mod|fmod|obj			RETURN(KW_MOD)  // need to know which one we saw
+th|fth|mod|fmod|smod|obj		RETURN(KW_MOD)  // need to know which one we saw
 omod					RETURN(KW_OMOD)
 view					RETURN(KW_VIEW);
 load					return KW_LOAD;
@@ -269,7 +269,7 @@ eq					RETURN(KW_EQ)
 ceq|cq					RETURN(KW_CEQ)
 rl					RETURN(KW_RL)
 crl					RETURN(KW_CRL)
-end(th|fth|m|fm|om|o)|jbo		RETURN(KW_ENDM)
+end(th|fth|m|fm|sm|om|o)|jbo		RETURN(KW_ENDM)
 endv					RETURN(KW_ENDV)
 "->"					RETURN(KW_ARROW)
 "=>"					RETURN(KW_ARROW2)

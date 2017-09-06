@@ -21,4 +21,5 @@ SUBDIRS = \
 	FullCompiler \
 	MSCP10 \
 	StrategyLanguage \
-	Mixfix
+	Mixfix \
+	Main

@@ -54,7 +54,7 @@
 #include "userLevelRewritingContext.hh"
 #include "interpreter.hh"
 
-#include "main.hh"
+#include "global.hh"
 #define clear()			bubble.contractTo(0);
 #define store(token)		bubble.append(token)
 #define fragClear()		fragments.contractTo(0);
@@ -185,7 +185,7 @@ int yylex(YYSTYPE* lvalp);
 %type <yyToken> cToken cTokenBarDot cTokenBarDotColon cTokenBarIn
 %type <yyToken> cTokenBarLeftIn cTokenBarDotNumber cTokenBarDotRight
 %type <yyToken> cSimpleTokenBarDot
-%type <yyToken> cTokenBarDotCommaRight
+%type <yyToken> cTokenBarDotCommaRight cTokenBarDotCommaNumber
 %type <yyToken> sortName sortToken startModule sortDot
 
 /*

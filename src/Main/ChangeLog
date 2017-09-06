@@ -1,0 +1,31 @@
+2006-11-13  Steven Eker  <eker@goo.csl.sri.com>
+
+	* model-checker.maude: change protecting to including for
+	SATISFACTION and LTL in MODEL-CHECKER
+
+2006-11-07  Steven Eker  <eker@goo.csl.sri.com>
+
+	* model-checker.maude: many minor changes recommended by Jose
+
+2006-10-20  Steven Eker  <eker@goo.csl.sri.com>
+
+	* model-checker.maude: changed importation modes
+
+2006-10-19  Steven Eker  <eker@goo.csl.sri.com>
+
+	* socket.maude: minor clean up
+
+	* machine-int.maude: minor clean up
+
+	* linear.maude: minor clean up
+
+	* model-checker.maude: changed some importation modes
+
+	* prelude.maude: added protecting BOOL to a number of modules; use
+	set include BOOL on/off
+
+2006-10-06  Steven Eker  <eker@goo.csl.sri.com>
+
+	* main.cc: moved here and cleaned up
+
+===================================Maude88a===========================================

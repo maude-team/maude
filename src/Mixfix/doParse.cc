@@ -178,6 +178,7 @@ MixfixModule::parseStrategyCommand(const Vector<Token>& bubble,
 int
 MixfixModule::parseSentence(const Vector<Token>& bubble, int root, int begin, int end)
 {
+  Assert(bubble.length() >= 1, "empty sentence");
   if (end == DEFAULT)
     end = bubble.length() - 1;
   int nrTokens = end - begin + 1;
