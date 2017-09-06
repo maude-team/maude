@@ -1,3 +1,150 @@
+2006-03-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* execute.cc (sRewrite): handle limit = NONE case
+
+	* commands.yy (command): handle number for srewrite
+	(command): fix bug where erewrite wasn't allowed to take two
+	numbers
+
+	* interpreter.hh (endif): updated decl for sRewrite()
+
+	* execute.cc (sRewrite): support limit; garbage collect
+	context/gen/strategy; tidy up after aborts
+
+	* mixfixParser.cc (makeAssignment): check for and recover from
+	assignment to nonvariable
+
+2006-03-22  Steven Eker  <eker@goo.csl.sri.com>
+
+	* mixfixParser.hh (class MixfixParser): added decls for
+	makeAssignment() and makeSubstitution()
+	(class MixfixParser): added MAKE_SUBSTITUTION to enum
+	SemanticActions
+	(class MixfixParser): added MAKE_APPLICATION_WITH_SUBSTITUTION to
+	enum SemanticActions
+
+	* mixfixParser.cc (makeStrategy): added semantics for applications
+	with substitutions
+	(makeSubstitution): added
+
+	* makeGrammar.cc (makeComponentProductions): added syntax for assignments
+	(makeComplexProductions): added syntax for substitutions
+	(makeStrategyLanguageProductions): added syntax for applications
+	with substitutions
+
+	* mixfixModule.hh (CommonTokens): added ASSIGNMENT and
+	SUBSTITUTION to enum NonTerminal
+
+	* mixfixParser.hh (class MixfixParser): added MAKE_ALL to enum
+	SemanticActions
+
+	* mixfixParser.cc (makeStrategy): added MAKE_ALL case
+
+	* makeGrammar.cc (makeStrategyLanguageProductions): added syntax
+	for all
+
+2006-03-21  Steven Eker  <eker@goo.csl.sri.com>
+
+	* mixfixParser.hh (class MixfixParser): MAKE_ALTERNATION ->
+	MAKE_UNION
+
+	* mixfixParser.cc (makeStrategy): added semantics for MAKE_UNION
+
+	* mixfixModule.hh (CommonTokens): STRAT_ALT_PREC ->
+	STRAT_UNION_PREC
+
+	* makeGrammar.cc (makeStrategyLanguageProductions): added union
+	syntax
+
+2006-03-20  Steven Eker  <eker@goo.csl.sri.com>
+
+	* mixfixParser.cc (makeStrategy): added semantics for MAKE_BRANCH
+
+	* mixfixModule.hh (CommonTokens): added STRAT_BRANCH_PREC to enum
+	Precedence
+
+	* makeGrammar.cc (makeStrategyLanguageProductions): added syntax
+	for branch strategy; code cleaning
+
+2006-03-17  Steven Eker  <eker@goo.csl.sri.com>
+
+	* mixfixParser.cc (makeStrategy): added iterator and pass thru
+	cases
+
+	* makeGrammar.cc (makeStrategyLanguageProductions): added syntax
+	for iterators and parens
+
+	* execute.cc (sRewrite): need to reduce term first to ensure it
+	has sort info
+
+	* mixfixParser.cc (makeStrategy): handle trivial and sequence
+	cases
+
+	* makeGrammar.cc (makeStrategyLanguageProductions): added syntax
+	for fail, idle, sequencing
+
+	* mixfixModule.hh (CommonTokens): added STRAT_SEQ_PREC and
+	STRAT_ALT_PREC to enum Precedence
+
+	* makeGrammar.cc (makeComplexProductions): fix bad gathers for
+	arrow productions
+
+	* mixfixParser.hh (class MixfixParser): added more strategy
+	actions to enum SemanticActions
+
+2006-03-16  Steven Eker  <eker@goo.csl.sri.com>
+
+	* mixfixParser.cc (makeStrategy): added
+	(makeStrategyCommand): use makeStrategy()
+
+2006-03-15  Steven Eker  <eker@goo.csl.sri.com>
+
+	* makeGrammar.cc (makeStrategyLanguageProductions): fix resize bug
+	(makeStrategyLanguageProductions): handle labels
+	(makeGrammar): don't call makeLabelProductions() for complex parsers
+
+	* mixfixParser.hh (class MixfixParser): added decl for
+	makeStrategyCommand()
+
+	* mixfixParser.cc (makeStrategyCommand): added
+
+	* doParse.cc (parseStrategyCommand): implement
+
+	* mixfixModule.hh (CommonTokens): added decl for
+	makeStrategyLanguageProductions()
+
+	* makeGrammar.cc (makeStrategyLanguageProductions): created
+	(makeGrammar): call makeStrategyLanguageProductions()
+
+2006-03-08  Steven Eker  <eker@goo.csl.sri.com>
+
+	* makeGrammar.cc (makeComplexProductions): quick hack for strategy
+	command syntax
+
+	* mixfixModule.hh (CommonTokens): added decl for
+	parseStrategyCommand()
+	(CommonTokens): added STRATEGY_EXPRESSION and STRATEGY_COMMAND to
+	enum NonTerminal; renumbered
+
+	* doParse.cc (parseStrategyCommand): added stub
+
+	* execute.cc: added stub for sRewrite()
+
+	* lexer.ll: added sred; deleted ored
+
+	* top.yy: added KW_SREWRITE; deleted KW_OREWRITE
+
+	* interpreter.hh (endif): added decl for sRewrite()
+
+	* commands.yy (command): added syntax for srewrite
+
+2006-01-06  Steven Eker  <eker@goo.csl.sri.com>
+
+	* visibleModule.cc (showSortsAndSubsorts): for each line of
+	output, show main sort in color
+	
+===================================Maude87===========================================
+
 2005-11-28  Steven Eker  <eker@goo.csl.sri.com>
 
 	* symbolType.hh: added decl for operator<<()
@@ -8471,7 +8618,7 @@
 
 	* lexerAux.cc (eatComment): handle OBJ3 style pass-through comments
 
-	* lexer.flex: treat ---> equall to ***> and replace char with
+	* lexer.flex: treat ---> equal to ***> and replace char with
 	yyless(0); treat --- equal to ***
 
 	* mixfixModule.hh (class MixfixModule): added decl for printVariable()

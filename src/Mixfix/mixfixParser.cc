@@ -38,6 +38,7 @@
 #include "S_Theory.hh"
 #include "NA_Theory.hh"
 #include "builtIn.hh"
+#include "strategyLanguage.hh"
 #include "mixfix.hh"
 
 //      interface class definitions
@@ -55,7 +56,6 @@
 
 //	S theory class definitions
 #include "S_Symbol.hh"
-//#include "S_DagNode.hh"
 #include "S_Term.hh"
 
 //	builtin class definitions
@@ -72,6 +72,14 @@
 #include "sortTestConditionFragment.hh"
 #include "assignmentConditionFragment.hh"
 #include "rewriteConditionFragment.hh"
+
+//	strategy languages definitions
+#include "trivialStrategy.hh"
+#include "applicationStrategy.hh"
+#include "strategySequence.hh"
+#include "unionStrategy.hh"
+#include "iterationStrategy.hh"
+#include "branchStrategy.hh"
 
 //	front end class definitions
 #include "mixfixModule.hh"
@@ -338,6 +346,128 @@ MixfixParser::makeSearchCommand(Term*& initial,
 
   if (actions[parser.getProductionNumber(node)].action == CONDITIONAL_COMMAND)
     makeCondition(parser.getChild(node, 2), condition);
+}
+
+void
+MixfixParser::makeStrategyCommand(Term*& subject, StrategyExpression*& strategy)
+{
+  Assert(nrParses > 0, "no parses");
+  int node = ROOT_NODE;
+  int term = parser.getChild(node, 0);
+  int strat = parser.getChild(node, 1);
+  subject = makeTerm(parser.getChild(node, 0));
+  strategy = makeStrategy(parser.getChild(node, 1));
+}
+
+void
+MixfixParser::makeAssignment(int node, Vector<Term*>& variables, Vector<Term*>& values)
+{
+  Term* var = makeTerm(parser.getChild(node, 0));
+  if (dynamic_cast<VariableTerm*>(var))
+    {
+      Term* val = makeTerm(parser.getChild(node, 1));
+      variables.append(var);
+      values.append(val);
+    }
+  else
+    {
+      IssueWarning(*var << ": " << var << " is not a variable - ignoring assignment.");
+      var->deepSelfDestruct();
+    }
+}
+
+void
+MixfixParser::makeSubstitution(int node, Vector<Term*>& variables, Vector<Term*>& values)
+{
+  while (actions[parser.getProductionNumber(node)].action == MAKE_SUBSTITUTION)
+    {
+      makeAssignment(parser.getChild(node, 0), variables, values);
+      node = parser.getChild(node, 1);
+    }
+  Assert(actions[parser.getProductionNumber(node)].action == PASS_THRU, "unexpected action");
+  makeAssignment(parser.getChild(node, 0), variables, values);
+}
+
+StrategyExpression*
+MixfixParser::makeStrategy(int node)
+{
+  StrategyExpression* s;
+  Action& a = actions[parser.getProductionNumber(node)];
+  switch (a.action)
+    {
+    case PASS_THRU:
+      {
+	return makeStrategy(parser.getChild(node, 0));
+      }
+    case MAKE_TRIVIAL:
+      {
+	s = new TrivialStrategy(a.data);
+	break;
+      }
+    case MAKE_ALL:
+      {
+	Vector<Term*> variables;
+	Vector<Term*> values;
+	Vector<StrategyExpression*> strategies;
+	s = new ApplicationStrategy(UNDEFINED, variables, values, strategies);
+	break;
+      }
+    case MAKE_APPLICATION:
+      {
+	int label = actions[parser.getProductionNumber(parser.getChild(node, 0))].data;
+	Vector<Term*> variables;
+	Vector<Term*> values;
+	Vector<StrategyExpression*> strategies;
+	s = new ApplicationStrategy(label, variables, values, strategies);
+	break;
+      }
+    case MAKE_APPLICATION_WITH_SUBSTITUTION:
+      {
+	int label = actions[parser.getProductionNumber(parser.getChild(node, 0))].data;
+	Vector<Term*> variables;
+	Vector<Term*> values;
+	makeSubstitution(parser.getChild(node, 1), variables, values);
+	Vector<StrategyExpression*> strategies;
+	s = new ApplicationStrategy(label, variables, values, strategies);
+	break;
+      }
+    case MAKE_SEQUENCE:
+    case MAKE_UNION:
+      {
+	Vector<StrategyExpression*> strategies;
+	do
+	  {
+	    strategies.append(makeStrategy(parser.getChild(node, 0)));
+	    node = parser.getChild(node, 1);
+	  }
+	while (actions[parser.getProductionNumber(node)].action == a.action);
+	strategies.append(makeStrategy(node));
+	if (a.action == MAKE_SEQUENCE)
+	  s = new StrategySequence(strategies);
+	else
+	  s = new UnionStrategy(strategies);
+	break;
+      }
+    case MAKE_ITERATION:
+      {
+	s = new IterationStrategy(makeStrategy(parser.getChild(node, 0)),
+				  actions[parser.getProductionNumber(node)].data);
+	break;
+      }
+    case MAKE_BRANCH:
+      {
+	s = new BranchStrategy(makeStrategy(parser.getChild(node, 0)),
+			       makeStrategy(parser.getChild(node, 1)),
+			       makeStrategy(parser.getChild(node, 2)));
+	break;
+      }
+    default:
+      {
+	s = 0;  // to avoid uninitialized variable warning
+	CantHappen("bad action " << a.action);
+      }
+    }
+  return s;
 }
 
 Sort*

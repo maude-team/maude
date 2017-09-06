@@ -153,6 +153,28 @@ MixfixModule::parseSearchCommand(const Vector<Token>& bubble,
   return true;
 }
 
+bool
+MixfixModule::parseStrategyCommand(const Vector<Token>& bubble,
+				   Term*& subject,
+				   StrategyExpression*& strategy)
+{
+  makeGrammar(true);
+  int r = parseSentence(bubble, STRATEGY_COMMAND);
+  if (r <= 0)
+    {
+      IssueWarning(LineNumber(bubble[0].lineNumber()) <<
+		   ": no parse for command.");
+      return false;
+    }
+  if (r > 1)
+    {
+      IssueWarning(LineNumber(bubble[0].lineNumber()) <<
+		   ": multiple distinct parses for command.");
+    }
+  parser->makeStrategyCommand(subject, strategy);
+  return true;
+}
+
 int
 MixfixModule::parseSentence(const Vector<Token>& bubble, int root, int begin, int end)
 {

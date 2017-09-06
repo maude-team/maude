@@ -152,6 +152,7 @@ public:
   void rewrite(const Vector<Token>& subject, Int64 limit, bool debug);
   void fRewrite(const Vector<Token>& subject, Int64 limit, Int64 gas, bool debug);
   void eRewrite(const Vector<Token>& subject, Int64 limit, Int64 gas, bool debug);
+  void sRewrite(const Vector<Token>& subjectAndStrategy, Int64 limit, bool debug);
   void cont(Int64 limit, bool debug);
 
   void match(const Vector<Token>& bubble, bool withExtension, Int64 limit);
