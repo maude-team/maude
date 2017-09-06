@@ -123,3 +123,16 @@ VariableSymbol::makeCanonical(DagNode* original, HashConsSet* /* hcs */)
   //
   return original;
 }
+
+DagNode*
+VariableSymbol::makeCanonicalCopyEagerUptoReduced(DagNode* original, HashConsSet* /* hcs */)
+{
+  //
+  //	We have a unreduced node - copy forced -  in principle variable could rewrite to something else!
+  //
+  VariableDagNode* v = safeCast(VariableDagNode*, original);
+  VariableDagNode* n = new VariableDagNode(this, v->id(), v->getIndex());
+  n->copySetRewritingFlags(original);
+  n->setSortIndex(original->getSortIndex());
+  return n;
+}

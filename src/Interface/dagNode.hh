@@ -25,7 +25,7 @@
 //
 #ifndef _dagNode_hh_
 #define _dagNode_hh_
-#include "gmpxx.h"
+//#include "gmpxx.h"
 #include "symbol.hh"
 #include "redexPosition.hh"
 
@@ -122,7 +122,6 @@ public:
   bool computeSolvedForm(DagNode* rhs, UnificationContext& solution, PendingUnificationStack& pending);
   virtual bool computeSolvedForm2(DagNode* rhs, UnificationContext& solution, PendingUnificationStack& pending);
 
-  virtual mpz_class nonVariableSize();
   void insertVariables(NatSet& occurs);
   virtual void insertVariables2(NatSet& occurs) {}
   //

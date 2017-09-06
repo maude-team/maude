@@ -30,6 +30,7 @@
 //
 #ifndef _pendingUnificationStack_hh_
 #define _pendingUnificationStack_hh_
+#include "simpleRootContainer.hh"
 #include "substitution.hh"
 
 class PendingUnificationStack : private SimpleRootContainer

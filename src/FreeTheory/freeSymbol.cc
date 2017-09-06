@@ -389,6 +389,24 @@ FreeSymbol::makeCanonical(DagNode* original, HashConsSet* hcs)
   return original;  // can use the original dag node as the canonical version
 }
 
+DagNode*
+FreeSymbol::makeCanonicalCopyEagerUptoReduced(DagNode* original, HashConsSet* hcs)
+{
+  //
+  //	We have a unreduced node - copy forced.
+  //
+  FreeDagNode* n = new FreeDagNode(this);
+  n->copySetRewritingFlags(original);
+  n->setSortIndex(original->getSortIndex());
+  DagNode** q = n->argArray();
+
+  int nrArgs = arity();
+  DagNode** p = safeCast(FreeDagNode*, original)->argArray();
+  for (int i = 0; i < nrArgs; ++i, ++p, ++q)
+    *q = hcs->getCanonicalCopyEagerUptoReduced(eagerArgument(i), *p);
+  return n;
+}
+
 #ifdef COMPILER
 void
 FreeSymbol::generateCons(CompilationContext& context, int indentLevel) const

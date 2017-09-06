@@ -21,30 +21,36 @@
 */
 
 //
-//	Class for floating point number symbols.
+//      Class for hash cons'd cache of from-dags and to-dags together with their
+//	equational rewrite mapping
 //
-#ifndef _floatSymbol_hh_
-#define _floatSymbol_hh_
-#include "NA_Symbol.hh"
+#ifndef _memoMap_hh_
+#define _memoMap_hh_
+#include "hashConsSet.hh"
 
-class FloatSymbol : public NA_Symbol
+class MemoMap
 {
 public:
-  FloatSymbol(int id);
-
-  void fillInSortInfo(Term* subject);
-  void computeBaseSort(DagNode* subject);
-  void compileOpDeclarations();
-  bool isConstructor(DagNode* subject);
-  bool rewriteToFloat(DagNode* subject,
-		      RewritingContext& context,
-		      double result);
-
-  DagNode* makeCanonicalCopyEagerUptoReduced(DagNode* original, HashConsSet* /* hcs */);
+  int getFromIndex(DagNode* fromDag);
+  DagNode* getToDag(int fromIndex) const;
+  void assignToDag(int fromIndex, DagNode* toDag);
 
 private:
-  Sort* sort;
-  Sort* finiteSort;
+  HashConsSet dags;
+  Vector<int> toIndices;
 };
+
+inline DagNode*
+MemoMap::getToDag(int fromIndex) const
+{
+  int toIndex = toIndices[fromIndex];
+  return toIndex == NONE ? 0 : dags.getCanonical(toIndex);
+}
+
+inline void
+MemoMap::assignToDag(int fromIndex, DagNode* toDag)
+{
+  toIndices[fromIndex] = dags.insert(toDag);
+}
 
 #endif

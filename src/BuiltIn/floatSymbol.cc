@@ -108,3 +108,19 @@ FloatSymbol::rewriteToFloat(DagNode* subject,
     context.tracePostEqRewrite(subject);
   return true;  
 }
+
+//
+//	Hash cons code.
+//
+
+DagNode*
+FloatSymbol::makeCanonicalCopyEagerUptoReduced(DagNode* original, HashConsSet* /* hcs */)
+{
+  //
+  //	We have a unreduced node - copy forced -  in principle float could rewrite to something else!
+  //
+  FloatDagNode* n = new FloatDagNode(this, safeCast(FloatDagNode*, original)->getValue());
+  n->copySetRewritingFlags(original);
+  n->setSortIndex(original->getSortIndex());
+  return n;
+}

@@ -1,3 +1,53 @@
+2010-09-29  Steven Eker  <eker@rho>
+
+	* ACU_Symbol.cc (ACU_Symbol::makeCanonicalCopyEagerUptoReduced):
+	simplifed now that we only get unreduced nodes; use
+	getCanonicalCopyEagerUptoReduced(); fix bug where we were not
+	copying flags and sort
+
+	* ACU_Symbol.hh (class ACU_Symbol): added decl for
+	makeCanonicalCopyEagerUptoReduced()
+
+	* ACU_Symbol.cc (ACU_Symbol::makeCanonicalCopyEagerUptoReduced):
+	added
+	(ACU_Symbol::makeCanonical): removed commment out tree->array
+	conversion
+
+2010-09-23  Steven Eker  <eker@rho>
+
+	* ACU_LazySubproblem.cc (ACU_LazySubproblem::bindCollector): fix
+	bug where we weren't handling the case where our collector
+	variable had become bound by our stripper automaton
+
+	* ACU_LhsAutomaton.cc (ACU_LhsAutomaton::complete): fixed out of
+	date comment
+
+2010-09-10  Steven Eker  <eker@rho>
+
+	* ACU_UnificationSubproblem2.cc
+	(ACU_UnificationSubproblem2::solve): don't exclude the null
+	solution in the unequal identity collapse case
+
+2010-09-09  Steven Eker  <eker@rho>
+
+	* ACU_UnificationSubproblem2.cc
+	(ACU_UnificationSubproblem2::solve): check
+	hasUnequalLeftIdentityCollapse() and force generation of
+	non-maximal solutions when it is true
+
+2010-08-18  Steven Eker  <eker@rho>
+
+	* ACU_UnificationSubproblem2.cc
+	(ACU_UnificationSubproblem2::nextSelectionWithIdentity): deleted
+	commented out old verions
+
+	* ACU_DagNode.cc (ACU_DagNode::nonVariableSize): deleted
+
+	* ACU_DagNode.hh (class ACU_DagNode): deleted decl for
+	nonVariableSize()
+
+===================================Maude95===========================================
+
 2010-08-11  Steven Eker  <eker@rho>
 
 	* ACU_DagNode.cc (ACU_DagNode::computeSolvedForm2): handle

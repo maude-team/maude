@@ -28,7 +28,6 @@
 #include "temporalSymbol.hh"
 #include "cachedDag.hh"
 #include "modelChecker2.hh"
-#include "dagNodeSet.hh"
 #include "stateTransitionGraph.hh"
 
 class ModelCheckerSymbol : public TemporalSymbol

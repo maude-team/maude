@@ -1,3 +1,23 @@
+2010-09-29  Steven Eker  <eker@rho>
+
+	* S_Symbol.cc (S_Symbol::makeCanonicalCopyEagerUptoReduced):
+	simplified now that we only deal with unreduced nodes; use
+	getCanonicalCopyEagerUptoReduced()
+
+	* S_Symbol.hh (class S_Symbol): added decl for
+	makeCanonicalCopyEagerUptoReduced()
+
+	* S_Symbol.cc (S_Symbol::makeCanonicalCopyEagerUptoReduced): added
+
+2010-08-18  Steven Eker  <eker@rho>
+
+	* S_DagNode.cc (S_DagNode::nonVariableSize): deleted
+
+	* S_DagNode.hh (class S_DagNode): deleted decl for
+	nonVariableSize()
+
+===================================Maude95===========================================
+
 2010-08-12  Steven Eker  <eker@rho>
 
 	* S_DagNode.cc (S_DagNode::computeSolvedForm2): use

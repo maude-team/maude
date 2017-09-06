@@ -79,7 +79,7 @@ am_libcore_a_OBJECTS = libcore_a-memoryCell.$(OBJEXT) \
 	libcore_a-dagRoot.$(OBJEXT) libcore_a-cachedDag.$(OBJEXT) \
 	libcore_a-extensionMatchSubproblem.$(OBJEXT) \
 	libcore_a-dagNodeSet.$(OBJEXT) libcore_a-hashConsSet.$(OBJEXT) \
-	libcore_a-dagNodeCache.$(OBJEXT) libcore_a-memoTable.$(OBJEXT) \
+	libcore_a-memoTable.$(OBJEXT) libcore_a-memoMap.$(OBJEXT) \
 	libcore_a-rootContainer.$(OBJEXT) libcore_a-sortBdds.$(OBJEXT) \
 	libcore_a-unificationContext.$(OBJEXT) \
 	libcore_a-protectedDagNodeSet.$(OBJEXT) \
@@ -248,8 +248,8 @@ libcore_a_SOURCES = \
 	extensionMatchSubproblem.cc \
 	dagNodeSet.cc \
 	hashConsSet.cc \
-	dagNodeCache.cc \
 	memoTable.cc \
+	memoMap.cc \
 	rootContainer.cc \
 	sortBdds.cc \
 	unificationContext.cc \
@@ -279,7 +279,6 @@ noinst_HEADERS = \
 	dagArgumentIterator.hh \
 	dagNodeSet.hh \
 	hashConsSet.hh \
-	dagNodeCache.hh \
 	dagRoot.hh \
 	disjunctiveSubproblemAccumulator.hh \
 	equalitySubproblem.hh \
@@ -290,6 +289,7 @@ noinst_HEADERS = \
 	lineNumber.hh \
 	localBinding.hh \
 	memoTable.hh \
+	memoMap.hh \
 	memoryCell.hh \
 	module.hh \
 	moduleItem.hh \
@@ -382,7 +382,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcore_a-compoundCycleSubproblem.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcore_a-connectedComponent.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcore_a-copyRhsAutomaton.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcore_a-dagNodeCache.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcore_a-dagNodeSet.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcore_a-dagRoot.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcore_a-disjunctiveSubproblemAccumulator.Po@am__quote@
@@ -392,6 +391,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcore_a-extensionMatchSubproblem.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcore_a-hashConsSet.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcore_a-localBinding.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcore_a-memoMap.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcore_a-memoTable.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcore_a-memoryCell.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcore_a-module.Po@am__quote@
@@ -926,20 +926,6 @@ libcore_a-hashConsSet.obj: hashConsSet.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libcore_a-hashConsSet.obj `if test -f 'hashConsSet.cc'; then $(CYGPATH_W) 'hashConsSet.cc'; else $(CYGPATH_W) '$(srcdir)/hashConsSet.cc'; fi`
 
-libcore_a-dagNodeCache.o: dagNodeCache.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libcore_a-dagNodeCache.o -MD -MP -MF "$(DEPDIR)/libcore_a-dagNodeCache.Tpo" -c -o libcore_a-dagNodeCache.o `test -f 'dagNodeCache.cc' || echo '$(srcdir)/'`dagNodeCache.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libcore_a-dagNodeCache.Tpo" "$(DEPDIR)/libcore_a-dagNodeCache.Po"; else rm -f "$(DEPDIR)/libcore_a-dagNodeCache.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='dagNodeCache.cc' object='libcore_a-dagNodeCache.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libcore_a-dagNodeCache.o `test -f 'dagNodeCache.cc' || echo '$(srcdir)/'`dagNodeCache.cc
-
-libcore_a-dagNodeCache.obj: dagNodeCache.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libcore_a-dagNodeCache.obj -MD -MP -MF "$(DEPDIR)/libcore_a-dagNodeCache.Tpo" -c -o libcore_a-dagNodeCache.obj `if test -f 'dagNodeCache.cc'; then $(CYGPATH_W) 'dagNodeCache.cc'; else $(CYGPATH_W) '$(srcdir)/dagNodeCache.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libcore_a-dagNodeCache.Tpo" "$(DEPDIR)/libcore_a-dagNodeCache.Po"; else rm -f "$(DEPDIR)/libcore_a-dagNodeCache.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='dagNodeCache.cc' object='libcore_a-dagNodeCache.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libcore_a-dagNodeCache.obj `if test -f 'dagNodeCache.cc'; then $(CYGPATH_W) 'dagNodeCache.cc'; else $(CYGPATH_W) '$(srcdir)/dagNodeCache.cc'; fi`
-
 libcore_a-memoTable.o: memoTable.cc
 @am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libcore_a-memoTable.o -MD -MP -MF "$(DEPDIR)/libcore_a-memoTable.Tpo" -c -o libcore_a-memoTable.o `test -f 'memoTable.cc' || echo '$(srcdir)/'`memoTable.cc; \
 @am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libcore_a-memoTable.Tpo" "$(DEPDIR)/libcore_a-memoTable.Po"; else rm -f "$(DEPDIR)/libcore_a-memoTable.Tpo"; exit 1; fi
@@ -953,6 +939,20 @@ libcore_a-memoTable.obj: memoTable.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='memoTable.cc' object='libcore_a-memoTable.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libcore_a-memoTable.obj `if test -f 'memoTable.cc'; then $(CYGPATH_W) 'memoTable.cc'; else $(CYGPATH_W) '$(srcdir)/memoTable.cc'; fi`
+
+libcore_a-memoMap.o: memoMap.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libcore_a-memoMap.o -MD -MP -MF "$(DEPDIR)/libcore_a-memoMap.Tpo" -c -o libcore_a-memoMap.o `test -f 'memoMap.cc' || echo '$(srcdir)/'`memoMap.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libcore_a-memoMap.Tpo" "$(DEPDIR)/libcore_a-memoMap.Po"; else rm -f "$(DEPDIR)/libcore_a-memoMap.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='memoMap.cc' object='libcore_a-memoMap.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libcore_a-memoMap.o `test -f 'memoMap.cc' || echo '$(srcdir)/'`memoMap.cc
+
+libcore_a-memoMap.obj: memoMap.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libcore_a-memoMap.obj -MD -MP -MF "$(DEPDIR)/libcore_a-memoMap.Tpo" -c -o libcore_a-memoMap.obj `if test -f 'memoMap.cc'; then $(CYGPATH_W) 'memoMap.cc'; else $(CYGPATH_W) '$(srcdir)/memoMap.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libcore_a-memoMap.Tpo" "$(DEPDIR)/libcore_a-memoMap.Po"; else rm -f "$(DEPDIR)/libcore_a-memoMap.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='memoMap.cc' object='libcore_a-memoMap.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libcore_a-memoMap.obj `if test -f 'memoMap.cc'; then $(CYGPATH_W) 'memoMap.cc'; else $(CYGPATH_W) '$(srcdir)/memoMap.cc'; fi`
 
 libcore_a-rootContainer.o: rootContainer.cc
 @am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libcore_a-rootContainer.o -MD -MP -MF "$(DEPDIR)/libcore_a-rootContainer.Tpo" -c -o libcore_a-rootContainer.o `test -f 'rootContainer.cc' || echo '$(srcdir)/'`rootContainer.cc; \

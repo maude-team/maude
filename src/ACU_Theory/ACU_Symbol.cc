@@ -459,25 +459,8 @@ DagNode*
 ACU_Symbol::makeCanonical(DagNode* original, HashConsSet* hcs)
 {
   if (safeCast(ACU_BaseDagNode*, original)->isTree())
-    {
-      return safeCast(ACU_TreeDagNode*, original)->makeCanonical(hcs);
-      /*
-      //
-      //	Never use tree form as canonical.
-      //
-      const ACU_TreeDagNode* d = safeCast(const ACU_TreeDagNode*, original);
-      ACU_DagNode* n = new ACU_DagNode(this, d->tree.getSize(), ACU_BaseDagNode::ASSIGNMENT);
-      n->copySetRewritingFlags(original);
-      n->setSortIndex(original->getSortIndex());
-      ArgVec<ACU_DagNode::Pair>::iterator j = n->argArray.begin();
-      for (ACU_FastIter i(d->tree); i.valid(); i.next(), ++j)
-	{
-	  j->dagNode = hcs->getCanonical(hcs->insert(i.getDagNode()));
-	  j->multiplicity = i.getMultiplicity();
-	}
-      return n;
-      */
-    }
+    return safeCast(ACU_TreeDagNode*, original)->makeCanonical(hcs);
+
   const ACU_DagNode* d = safeCast(const ACU_DagNode*, original);
   int nrArgs = d->argArray.size();
   for (int i = 0; i < nrArgs; i++)
@@ -505,4 +488,42 @@ ACU_Symbol::makeCanonical(DagNode* original, HashConsSet* hcs)
         }
     }
   return original;  // can use the original dag node as the canonical version
+}
+
+DagNode*
+ACU_Symbol::makeCanonicalCopyEagerUptoReduced(DagNode* original, HashConsSet* hcs)
+{
+  //
+  //	We have a unreduced node - copy forced.
+  //
+  bool eager = getPermuteStrategy() == BinarySymbol::EAGER;
+  if (safeCast(ACU_BaseDagNode*, original)->isTree())
+    {
+      //
+      //	Never use tree form as canonical for unreduced dag.
+      //
+      const ACU_TreeDagNode* d = safeCast(const ACU_TreeDagNode*, original);
+      ACU_DagNode* n = new ACU_DagNode(this, d->tree.getSize(), ACU_BaseDagNode::ASSIGNMENT);
+      n->copySetRewritingFlags(original);
+      n->setSortIndex(original->getSortIndex());
+      ArgVec<ACU_DagNode::Pair>::iterator j = n->argArray.begin();
+      for (ACU_FastIter i(d->tree); i.valid(); i.next(), ++j)
+	{
+	  j->dagNode = hcs->getCanonicalCopyEagerUptoReduced(eager, i.getDagNode());
+	  j->multiplicity = i.getMultiplicity();
+	}
+      return n;
+    }
+
+  const ACU_DagNode* d = safeCast(const ACU_DagNode*, original);
+  int nrArgs = d->argArray.size();
+  ACU_DagNode* n = new ACU_DagNode(this, nrArgs, ACU_BaseDagNode::ASSIGNMENT);
+  n->copySetRewritingFlags(original);
+  n->setSortIndex(original->getSortIndex());
+  for (int i = 0; i < nrArgs; i++)
+    {
+      n->argArray[i].dagNode = hcs->getCanonicalCopyEagerUptoReduced(eager, d->argArray[i].dagNode);
+      n->argArray[i].multiplicity = d->argArray[i].multiplicity;
+    }
+  return n;
 }

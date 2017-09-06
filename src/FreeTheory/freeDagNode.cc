@@ -485,19 +485,6 @@ FreeDagNode::purifyAndOccurCheck(DagNode* repVar,
   return PURE_AS_IS;
 }
 
-mpz_class
-FreeDagNode::nonVariableSize()
-{
-  mpz_class s = 1;
-  int i = symbol()->arity();
-  if (i > 0)
-    {
-      for (DagNode** p = argArray(); i > 0; i--, p++)
-	s += (*p)->nonVariableSize();
-    }
-  return s;
-}
-
 void
 FreeDagNode::insertVariables2(NatSet& occurs)
 {

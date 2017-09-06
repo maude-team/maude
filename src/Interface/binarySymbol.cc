@@ -231,6 +231,7 @@ BinarySymbol::leftIdentitySortCheck()
   for (int i = 1; i < nrSorts; i++)
     {
       const Sort* resultSort = component->sort(traverse(step, i));
+      unequalLeftIdCollapse = (resultSort->index() != i);
       WarningCheck(leq(i, resultSort),
 		   "sort declarations for operator " << QUOTE(this) <<
 		   " with left identity " << QUOTE(id) <<
@@ -259,6 +260,7 @@ BinarySymbol::rightIdentitySortCheck()
   for (int i = 1; i < nrSorts; i++)
     {
       const Sort* resultSort = component->sort(traverse(traverse(0, i), idIndex));
+      unequalRightIdCollapse = (resultSort->index() != i);
       WarningCheck(leq(i, resultSort),
 		   "sort declarations for operator " << QUOTE(this) <<
 		   " with right identity " << QUOTE(id) <<

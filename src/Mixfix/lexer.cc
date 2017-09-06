@@ -421,10 +421,10 @@ static yyconst flex_int16_t yy_accept[1261] =
       107,    0,    0,    0,    0,    0,  175,    0,  174,  175,
         0,    0,    0,  175,  175,  166,    0,  175,  175,  175,
       175,  175,  175,  175,  175,  168,  175,  175,  175,  175,
-      175,  175,  175,  175,  175,  175,  175,  167,    0,    0,
-      179,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-        0,  176,    0,    0,  176,    0,    0,    0,  176,  176,
-        0,    0,  176,    0,  201,  177,    0,    0,    0,  186,
+      175,  175,  175,  175,  175,  175,  175,  167,  180,    0,
+      179,  180,    0,    0,    0,  180,  180,    0,  180,  180,
+      180,  176,  180,  180,  176,  180,  180,  180,  176,  176,
+      180,  180,  176,  180,  201,  177,    0,    0,    0,  186,
 
       182,  183,  184,  190,  192,  194,  194,  100,    0,    2,
         2,  100,  100,  100,   67,  100,  100,  100,  100,  100,
@@ -444,8 +444,8 @@ static yyconst flex_int16_t yy_accept[1261] =
         2,    0,    0,    0,    0,    2,    2,  175,    0,    2,
         2,  175,  175,  175,  175,  175,  175,  175,  175,  169,
       175,  175,  175,  175,  175,  175,  175,  169,  175,  175,
-      175,  175,  175,    0,    0,    2,    2,    0,    0,    0,
-      176,  176,    0,    0,    0,    0,  176,    0,    0,    0,
+      175,  175,  175,  180,    0,    2,    2,  180,  180,  180,
+      176,  176,  180,  180,  180,  180,  176,    0,    0,    0,
         0,    2,    2,    2,    1,    2,    2,  100,  100,  100,
 
        53,   43,  100,  100,  100,  100,  100,  100,  100,   50,
@@ -466,8 +466,8 @@ static yyconst flex_int16_t yy_accept[1261] =
         2,    1,    2,    2,  175,  169,  175,  175,  175,  175,
       175,  175,  169,  175,  169,  175,  175,  175,  175,  169,
       169,  175,  175,  175,    0,    0,    2,    2,    2,    1,
-        2,    2,    0,    0,  176,  176,    0,    0,    0,    0,
-        0,  176,    0,    0,    0,    2,    2,    1,    1,    1,
+        2,    2,  180,  180,  176,  176,  180,  180,  180,  180,
+      180,  176,  180,  180,  180,    2,    2,    1,    1,    1,
         1,    1,    2,    2,    2,   87,  100,   61,  100,   91,
 
       100,   42,   55,  100,  100,  100,  100,  100,  100,   80,
@@ -485,8 +485,8 @@ static yyconst flex_int16_t yy_accept[1261] =
         2,    2,    2,    1,    1,    1,    1,    1,    2,    2,
         2,  169,  175,  175,  175,  175,  175,  175,  175,  175,
       175,  175,  175,  175,  175,  175,  175,  169,    2,    2,
-        1,    1,    1,    1,    1,    2,    2,    2,  176,    0,
-        0,    0,    0,    0,    0,    1,    1,    1,    1,    1,
+        1,    1,    1,    1,    1,    2,    2,    2,  176,  180,
+      180,  180,  180,  180,  180,    1,    1,    1,    1,    1,
         2,    2,   39,  100,  100,  100,  100,  100,  100,  100,
       100,  100,  100,  100,  100,  100,  100,  100,   82,  100,
         4,  100,  100,   94,   57,   69,   28,  100,  100,   96,
@@ -499,8 +499,8 @@ static yyconst flex_int16_t yy_accept[1261] =
       160,    1,    1,    1,    1,    1,    2,    2,    1,    1,
         1,    1,    1,    2,    2,  175,  175,  169,  175,  175,
       175,  175,  175,  175,  175,  175,  175,  175,    1,    1,
-        1,    1,    1,    2,    2,    0,    0,    0,    0,    0,
-        0,    1,    1,  100,   61,  100,  100,   44,   79,  100,
+        1,    1,    1,    2,    2,  180,  180,  180,  180,  180,
+      180,    1,    1,  100,   61,  100,  100,   44,   79,  100,
        48,  100,  100,   20,  100,  100,   84,  100,  100,   83,
 
        68,   54,  100,  100,   95,   81,  100,   22,   21,  100,
@@ -508,16 +508,16 @@ static yyconst flex_int16_t yy_accept[1261] =
       160,  132,  160,  160,  160,  160,  130,  160,  133,  160,
       160,  160,  127,  160,  160,  139,  160,    1,    1,    1,
         1,  175,  175,  175,  175,  175,  175,  175,  175,  175,
-      175,  175,    1,    1,    0,    0,    0,    0,  176,  100,
+      175,  175,    1,    1,  180,  180,  180,  180,  176,  100,
       100,  100,   79,  100,  100,   27,   47,   23,  100,   24,
       100,  100,   97,   25,  100,  100,  160,  160,  160,  160,
       160,  160,  160,  160,  116,  121,  160,  160,  160,  122,
       141,  139,  160,  175,  175,  175,  175,  175,  175,  175,
 
-      175,    0,    0,    0,  176,  100,   53,   92,  100,   50,
+      175,  180,  180,  180,  176,  100,   53,   92,  100,   50,
        58,   18,  100,  100,   29,  160,  160,  160,  160,  160,
       160,  160,  160,  160,  134,  175,  175,  175,  175,  175,
-      175,  175,    0,    0,  100,  100,  160,  160,  160,  160,
+      175,  175,  180,  180,  100,  100,  160,  160,  160,  160,
       115,  160,  119,  141,  175,  175,  175,  175,  175,  100,
       112,  113,  160,  124,  175,   51,  160,  175,  128,    0
     } ;
@@ -4215,9 +4215,14 @@ YY_RULE_SETUP
 					}
 	YY_BREAK
 case 180:
+/* rule 180 can match eol */
 YY_RULE_SETUP
 #line 467 "../../../src/Mixfix/lexer.ll"
 {
+	     				  //
+					  //	We need {maudeId} here so that an identifier such
+					  //	as .foo doesn't get split by the first rule.
+					  //
 					  lexerBubble.append(savedToken);
 					  yyless(0);
 					  BEGIN(BUBBLE_MODE);
@@ -4227,7 +4232,7 @@ YY_RULE_SETUP
 
 case 181:
 YY_RULE_SETUP
-#line 475 "../../../src/Mixfix/lexer.ll"
+#line 479 "../../../src/Mixfix/lexer.ll"
 {
 					  if (accumulator.empty())
 					    BEGIN(FILE_NAME_QUOTE_MODE);
@@ -4237,32 +4242,32 @@ YY_RULE_SETUP
 	YY_BREAK
 case 182:
 YY_RULE_SETUP
-#line 481 "../../../src/Mixfix/lexer.ll"
+#line 485 "../../../src/Mixfix/lexer.ll"
 accumulator += ' ';
 	YY_BREAK
 case 183:
 YY_RULE_SETUP
-#line 482 "../../../src/Mixfix/lexer.ll"
+#line 486 "../../../src/Mixfix/lexer.ll"
 accumulator += '"';
 	YY_BREAK
 case 184:
 YY_RULE_SETUP
-#line 483 "../../../src/Mixfix/lexer.ll"
+#line 487 "../../../src/Mixfix/lexer.ll"
 accumulator += '\\';
 	YY_BREAK
 case 185:
 YY_RULE_SETUP
-#line 484 "../../../src/Mixfix/lexer.ll"
+#line 488 "../../../src/Mixfix/lexer.ll"
 accumulator += '\\';
 	YY_BREAK
 case 186:
 YY_RULE_SETUP
-#line 485 "../../../src/Mixfix/lexer.ll"
+#line 489 "../../../src/Mixfix/lexer.ll"
 accumulator += yytext;
 	YY_BREAK
 case 187:
 YY_RULE_SETUP
-#line 486 "../../../src/Mixfix/lexer.ll"
+#line 490 "../../../src/Mixfix/lexer.ll"
 {
 					  if (!accumulator.empty())
 					    {
@@ -4276,7 +4281,7 @@ YY_RULE_SETUP
 case 188:
 /* rule 188 can match eol */
 YY_RULE_SETUP
-#line 495 "../../../src/Mixfix/lexer.ll"
+#line 499 "../../../src/Mixfix/lexer.ll"
 {
 			                  ++lineNumber;					
 					  yy_pop_state();
@@ -4288,7 +4293,7 @@ YY_RULE_SETUP
 
 case 189:
 YY_RULE_SETUP
-#line 504 "../../../src/Mixfix/lexer.ll"
+#line 508 "../../../src/Mixfix/lexer.ll"
 {
 					   yy_pop_state();
 					   lvalp->yyString = accumulator.c_str();
@@ -4298,13 +4303,13 @@ YY_RULE_SETUP
 	YY_BREAK
 case 190:
 YY_RULE_SETUP
-#line 510 "../../../src/Mixfix/lexer.ll"
+#line 514 "../../../src/Mixfix/lexer.ll"
 accumulator += yytext;
 	YY_BREAK
 case 191:
 /* rule 191 can match eol */
 YY_RULE_SETUP
-#line 511 "../../../src/Mixfix/lexer.ll"
+#line 515 "../../../src/Mixfix/lexer.ll"
 {
 			                  ++lineNumber;					
 					  yy_pop_state();
@@ -4316,7 +4321,7 @@ YY_RULE_SETUP
 
 case 192:
 YY_RULE_SETUP
-#line 520 "../../../src/Mixfix/lexer.ll"
+#line 524 "../../../src/Mixfix/lexer.ll"
 {
 					  yy_pop_state();
 					  lvalp->yyString = yytext;			  
@@ -4326,7 +4331,7 @@ YY_RULE_SETUP
 case 193:
 /* rule 193 can match eol */
 YY_RULE_SETUP
-#line 525 "../../../src/Mixfix/lexer.ll"
+#line 529 "../../../src/Mixfix/lexer.ll"
 {
 					  yyless(0);  // so that line numbers will be correct
 					  yy_pop_state();
@@ -4338,12 +4343,12 @@ YY_RULE_SETUP
 
 case 194:
 YY_RULE_SETUP
-#line 534 "../../../src/Mixfix/lexer.ll"
+#line 538 "../../../src/Mixfix/lexer.ll"
 accumulator += yytext;
 	YY_BREAK
 case 195:
 YY_RULE_SETUP
-#line 535 "../../../src/Mixfix/lexer.ll"
+#line 539 "../../../src/Mixfix/lexer.ll"
 {
 					  if (braceCount == 0)
 					    ++parenCount;
@@ -4352,7 +4357,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 196:
 YY_RULE_SETUP
-#line 540 "../../../src/Mixfix/lexer.ll"
+#line 544 "../../../src/Mixfix/lexer.ll"
 {
 					  if (braceCount == 0)
 					    {
@@ -4370,7 +4375,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 197:
 YY_RULE_SETUP
-#line 554 "../../../src/Mixfix/lexer.ll"
+#line 558 "../../../src/Mixfix/lexer.ll"
 {
 					  ++braceCount;
 					  accumulator += yytext;
@@ -4378,7 +4383,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 198:
 YY_RULE_SETUP
-#line 558 "../../../src/Mixfix/lexer.ll"
+#line 562 "../../../src/Mixfix/lexer.ll"
 {
 					  --braceCount;
 					  accumulator += yytext;
@@ -4387,7 +4392,7 @@ YY_RULE_SETUP
 case 199:
 /* rule 199 can match eol */
 YY_RULE_SETUP
-#line 562 "../../../src/Mixfix/lexer.ll"
+#line 566 "../../../src/Mixfix/lexer.ll"
 {
 			                  ++lineNumber;					
 					  accumulator += yytext;
@@ -4395,7 +4400,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 200:
 YY_RULE_SETUP
-#line 566 "../../../src/Mixfix/lexer.ll"
+#line 570 "../../../src/Mixfix/lexer.ll"
 yy_pop_state();  // mindless recovery
 	YY_BREAK
 
@@ -4410,7 +4415,7 @@ case YY_STATE_EOF(FILE_NAME_MODE):
 case YY_STATE_EOF(FILE_NAME_QUOTE_MODE):
 case YY_STATE_EOF(STRING_MODE):
 case YY_STATE_EOF(LATEX_MODE):
-#line 569 "../../../src/Mixfix/lexer.ll"
+#line 573 "../../../src/Mixfix/lexer.ll"
 {
 					  if (UserLevelRewritingContext::interrupted() ||
 					      !handleEof())
@@ -4419,18 +4424,18 @@ case YY_STATE_EOF(LATEX_MODE):
 	YY_BREAK
 case 201:
 YY_RULE_SETUP
-#line 575 "../../../src/Mixfix/lexer.ll"
+#line 579 "../../../src/Mixfix/lexer.ll"
 ;
 	YY_BREAK
 case 202:
 /* rule 202 can match eol */
 YY_RULE_SETUP
-#line 576 "../../../src/Mixfix/lexer.ll"
+#line 580 "../../../src/Mixfix/lexer.ll"
 ++lineNumber;
 	YY_BREAK
 case 203:
 YY_RULE_SETUP
-#line 577 "../../../src/Mixfix/lexer.ll"
+#line 581 "../../../src/Mixfix/lexer.ll"
 {
 					  IssueWarning(LineNumber(lineNumber) <<
 					    ": skipped: " << QUOTE(yytext));
@@ -4438,10 +4443,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 204:
 YY_RULE_SETUP
-#line 582 "../../../src/Mixfix/lexer.ll"
+#line 586 "../../../src/Mixfix/lexer.ll"
 ECHO;
 	YY_BREAK
-#line 4445 "<stdout>"
+#line 4450 "<stdout>"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -5482,7 +5487,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 582 "../../../src/Mixfix/lexer.ll"
+#line 586 "../../../src/Mixfix/lexer.ll"
 
 
 

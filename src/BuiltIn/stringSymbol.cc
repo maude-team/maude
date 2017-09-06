@@ -84,3 +84,19 @@ StringSymbol::compileOpDeclarations()
 	charSort = s;  // set charSort to smallest (largest index) declared sort
     }
 }
+
+//
+//	Hash cons code.
+//
+
+DagNode*
+StringSymbol::makeCanonicalCopyEagerUptoReduced(DagNode* original, HashConsSet* /* hcs */)
+{
+  //
+  //	We have a unreduced node - copy forced -  in principle string could rewrite to something else!
+  //
+  StringDagNode* n = new StringDagNode(this, safeCast(StringDagNode*, original)->getValue());
+  n->copySetRewritingFlags(original);
+  n->setSortIndex(original->getSortIndex());
+  return n;
+}

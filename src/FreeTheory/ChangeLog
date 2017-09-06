@@ -1,3 +1,25 @@
+2010-09-29  Steven Eker  <eker@rho>
+
+	* freeSymbol.cc (FreeSymbol::makeCanonicalCopyEagerUptoReduced):
+	code cleaning
+	(FreeSymbol::makeCanonicalCopyEagerUptoReduced): simplified now
+	that we are only passed unreduced originals; use
+	getCanonicalCopyEagerUptoReduced()
+
+2010-09-28  Steven Eker  <eker@rho>
+
+	* freeSymbol.hh (class FreeSymbol): added decl for makeCanonicalCopyEagerUptoReduced()
+
+	* freeSymbol.cc (FreeSymbol::makeCanonicalCopyEagerUptoReduced): added
+
+2010-08-18  Steven Eker  <eker@rho>
+
+	* freeDagNode.hh (class FreeDagNode): deleted decl for 
+
+	* freeDagNode.cc (FreeDagNode::nonVariableSize): deleted
+
+===================================Maude95===========================================
+
 2010-08-12  Steven Eker  <eker@rho>
 
 	* freeDagNode.hh (class FreeDagNode): updated decl for
@@ -28,6 +50,8 @@
 	* freeDagNode.cc (FreeDagNode::purifyAndOccurCheck): added
 	(FreeDagNode::computeSolvedForm2): rewritten using
 	purifyAndOccurCheck()
+
+===================================Maude94a===========================================
 
 2010-06-30  Steven Eker  <eker@rho>
 

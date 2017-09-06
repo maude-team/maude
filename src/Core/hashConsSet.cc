@@ -21,7 +21,7 @@
 */
 
 //
-//      Implementation for class DagNodeSet
+//      Implementation for class HashConsSet
 //
 
 //	utility stuff
@@ -47,6 +47,19 @@ HashConsSet::insert(DagNode* d)
   return (index == NONE) ? PointerSet::insert(d->symbol()->makeCanonical(d, this), hashValue) : index;
 }
 
+int
+HashConsSet::insertCopyEagerUptoReduced(DagNode* d)
+{
+  unsigned int hashValue = d->getHashValue();
+  int index = pointer2Index(d, hashValue);
+  if (index != NONE)
+    return index;
+
+  Symbol* s = d->symbol();
+  DagNode* c = d->isReduced() ? s->makeCanonical(d, this) : s->makeCanonicalCopyEagerUptoReduced(d, this);
+  return PointerSet::insert(c, hashValue);
+}
+
 unsigned int
 HashConsSet::hash(void* /* pointer */) const
 {
@@ -60,6 +73,14 @@ HashConsSet::isEqual(void* pointer1, void* pointer2) const
   DagNode* d1 = static_cast<DagNode*>(pointer1);
   DagNode* d2 = static_cast<DagNode*>(pointer2);
   return d1->equal(d2);
+}
+
+void
+HashConsSet::markReachableNodes()
+{
+  int nrDagNodes = cardinality();
+  for (int i = 0; i < nrDagNodes; ++i)
+    getCanonical(i)->mark();
 }
 
 #ifndef NO_ASSERT

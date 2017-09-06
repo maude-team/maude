@@ -247,10 +247,36 @@ ACU_UnificationSubproblem2::solve(bool findFirst, UnificationContext& solution, 
 			" path count = " << bdd_pathcount(legal));
 	  int nrBasisElements = basis.size();
 	  bdd maximal = legal;
-	  for (int i = 0; i < nrBasisElements; ++i)
+	  if (topSymbol->hasUnequalLeftIdentityCollapse())
 	    {
-	      bdd notBigger = bdd_or(bdd_ithvar(i), bdd_not(bdd_restrict(legal, bdd_ithvar(i))));
-	      maximal = bdd_and(maximal, notBigger);
+	      //
+	      //	Can't ignore non-maximal solutions because
+	      //	(1) Maximal solution may not have a sorting while a non-maximal solution may have.
+	      //	(2) The sorting of a maximal solution may exclude a non-maximal solution it was covering.
+	      //
+	    }
+	  else
+	    {
+	      //
+	      //	Assume that each variable introduced for a Diophantine basis element will
+	      //	be able to disappear by taking the basis element. Thus we only want maximal
+	      //	vectors from legal.
+	      //
+	      for (int i = 0; i < nrBasisElements; ++i)
+		{
+		  //
+		  //	bigger = not(ith var) /\ (legal restricted to ith var true)
+		  //
+		  //	i.e. bigger represents those vectors where the ith variable is false and we get
+		  //	a legal solution by making it true. Clearly the original vector was not maximal,
+		  //	even if it was a legal solution.
+		  //
+		  //	We need to eliminate these vectors if we want maximal solutions, so we compute the
+		  //	complement of this set of vectors and conjunct them in.
+		  //	
+		  bdd notBigger = bdd_or(bdd_ithvar(i), bdd_not(bdd_restrict(legal, bdd_ithvar(i))));
+		  maximal = bdd_and(maximal, notBigger);
+		}
 	    }
 	  DebugAdvisory("maximal = " << maximal <<
 			" node count = " << bdd_nodecount(maximal) <<
@@ -549,80 +575,6 @@ ACU_UnificationSubproblem2::nextSelectionWithIdentity(bool /* findFirst */)
     }
   return false;
 }
-
-/*
-bool
-ACU_UnificationSubproblem2::nextSelectionWithIdentity(bool findFirst)
-{
-  int nrSubterms = subterms.size();
-  if (findFirst)
-    {
-      current = basis.begin();
-    forward:
-      //
-      //	We keep adding basis elements to the selection as long as they don't violate
-      //	an upper bound. When we do hit a violation, if we find that a covering is
-      //	not possible without this element we backtrack.
-      //
-      for (; current != basis.end(); ++current)
-	{
-	  if (includable(current))
-	    {
-	      for (int i = 0; i < nrSubterms; ++i)
-		{
-		  if (int v = current->element[i])
-		    {
-		      totals[i] += v;
-		      uncovered.subtract(i);
-		    }
-		}
-	      selection.append(current);
-	      selectionSet.insert(current->index);
-	    }
-	  else
-	    {
-	      if (!(current->remainder.contains(uncovered)))
-		goto backtrack;
-	    }
-	}
-      Assert(uncovered.empty(), "failed to cover");
-      FOR_EACH_CONST(i, NatSetList, old)
-	{
-	  if (i->contains(selectionSet))
-	    goto backtrack;
-	}
-      old.push_front(selectionSet);
-      return true;
-    }
-  else
-    {
-    backtrack:
-      //
-      //	We backtrack by removing basis elements from the current selection. Each time
-      //	we remove an element, if we can still get a covering with later elements we
-      //	start forward again. Because the empty selection is valid in the
-      //	identity case we can backtrack over it.
-      //
-      for (int i = selection.size() - 1; i >= 0; --i)
-	{
-	  current = selection[i];
-	  for (int j = 0; j < nrSubterms; ++j)
-	    {
-	      if ((totals[j] -= current->element[j]) == 0 && needToCover.contains(j))
-		uncovered.insert(j);
-	    }
-	  selectionSet.subtract(current->index);
-	  if (current->remainder.contains(uncovered))
-	    {
-	      ++current;
-	      selection.resize(i);
-	      goto forward;
-	    }
-	}
-    }
-  return false;
-}
-*/
 
 bool
 ACU_UnificationSubproblem2::includable(Basis::const_iterator potential)

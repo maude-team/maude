@@ -1,3 +1,23 @@
+2010-09-29  Steven Eker  <eker@rho>
+
+	* CUI_Symbol.cc (CUI_Symbol::makeCanonicalCopyEagerUptoReduced):
+	simplify now that we are only passed unreduced nodes; use
+	getCanonicalCopyEagerUptoReduced()
+
+	* CUI_Symbol.hh (class CUI_Symbol): added decl for
+	makeCanonicalCopyEagerUptoReduced()
+
+	* CUI_Symbol.cc: added
+
+2010-08-18  Steven Eker  <eker@rho>
+
+	* CUI_DagNode.cc (CUI_DagNode::nonVariableSize): deleted
+
+	* CUI_DagNode.hh (class CUI_DagNode): deleted decl for
+	nonVariableSize()
+
+===================================Maude95===========================================
+
 2010-08-12  Steven Eker  <eker@rho>
 
 	* CUI_DagNode.cc (CUI_DagNode::computeSolvedForm2): use

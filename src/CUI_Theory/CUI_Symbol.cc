@@ -354,3 +354,18 @@ CUI_Symbol::makeCanonical(DagNode* original, HashConsSet* hcs)
   n->argArray[1] = c1;
   return n;
 }
+
+DagNode*
+CUI_Symbol::makeCanonicalCopyEagerUptoReduced(DagNode* original, HashConsSet* hcs)
+{
+  //
+  //	We have a unreduced node - copy forced.
+  //
+  CUI_DagNode* n = new CUI_DagNode(this);
+  n->copySetRewritingFlags(original);
+  n->setSortIndex(original->getSortIndex());
+  DagNode** p = safeCast(CUI_DagNode*, original)->argArray;
+  n->argArray[0] = hcs->getCanonicalCopyEagerUptoReduced(eagerArgument(0), p[0]);
+  n->argArray[1] = hcs->getCanonicalCopyEagerUptoReduced(eagerArgument(1), p[1]);
+  return n;
+}

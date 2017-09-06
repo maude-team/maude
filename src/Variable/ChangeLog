@@ -1,3 +1,23 @@
+2010-09-29  Steven Eker  <eker@rho>
+
+	* variableSymbol.hh (class VariableSymbol): added decl for
+	makeCanonicalCopyEagerUptoReduced()
+
+	* variableSymbol.cc
+	(Variable_Symbol::makeCanonicalCopyEagerUptoReduced): added
+
+2010-08-18  Steven Eker  <eker@rho>
+
+	* variableDagNode.cc (VariableDagNode::computeSolvedForm2):
+	deleted
+	(VariableDagNode::computeSolvedForm2): deleted commented out old
+	version
+
+	* variableDagNode.hh (class VariableDagNode): deleted decl for
+	nonVariableSize()
+
+===================================Maude95===========================================
+
 2010-08-11  Steven Eker  <eker@rho>
 
 	* variableDagNode.cc (VariableDagNode::computeSolvedForm2): need
@@ -17,7 +37,7 @@
 2010-08-03  Steven Eker  <eker@rho>
 
 	* variableDagNode.cc (VariableDagNode::computeSolvedForm2):
-	rewritten; we now only hangle the variable vs variable case and
+	rewritten; we now only handle the variable vs variable case and
 	punt the other cases to the nonvariable terms theory
 
 ===================================Maude94a===========================================
