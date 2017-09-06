@@ -56,6 +56,7 @@ private:
   const bool zeroAllowed;		// allow start dag as a solution
   const bool normalForm;		// insist that solution are not further rewritable
   bool zeroReturnable;
+  bool started;				// did we already initialized the queue?
   GenQueue genQueue;
 };
 

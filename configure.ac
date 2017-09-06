@@ -3,7 +3,7 @@
 #
 #	Initialize autoconf stuff.
 #
-AC_INIT(Maude, alpha87a, [maude-bugs@maude.cs.uiuc.edu])
+AC_INIT(Maude, alpha87b, [maude-bugs@maude.cs.uiuc.edu])
 #
 #	Allow directory names that look like macros.
 #
@@ -16,7 +16,7 @@ AC_CANONICAL_HOST
 #
 #	Initialize automake stuff.
 #
-AM_INIT_AUTOMAKE(Maude, alpha87a)
+AM_INIT_AUTOMAKE(Maude, alpha87b)
 #
 #	Cause defines to be put in a header file rather than passed as
 #	compiler flags.
@@ -175,6 +175,12 @@ else
 #	implementation.
 #
     TWEAKFLAGS="-march=v8 -mtune=ultrasparc"
+    ;;
+
+  *-darwin*)
+#
+#	Changing the stack boundary causes problems on x86 Macs.
+#
     ;;
 #
 #	For the Intel x86 family we select the smallest stack alignment

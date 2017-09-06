@@ -1,3 +1,18 @@
+2006-06-28  Steven Eker  <eker@goo.csl.sri.com>
+
+	* iterationSetGenerator.cc (findNextSolution): fix new bug
+	introduced by last fix
+	(IterationSetGenerator): replace done with started
+	(findNextSolution): use started hack rather that done
+
+	* iterationSetGenerator.hh (class IterationSetGenerator): added
+	data member done
+
+	* iterationSetGenerator.cc (findNextSolution): fix bug where
+	returning a normal form with an empty queue starts us over by
+	using done flag
+	(IterationSetGenerator): initialized done flag
+
 2006-05-04  Steven Eker  <eker@goo.csl.sri.com>
 
 	* strategyLanguage.hh: added class StateCache

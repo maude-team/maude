@@ -1,3 +1,8 @@
+2006-06-28  Steven Eker  <eker@goo.csl.sri.com>
+
+	* configure.ac: don't tweak -mpreferred-stack-boundary= on Intel
+	Macs because Darwin needs 16 byte alignment
+
 2005-11-16  Steven Eker  <eker@goo.csl.sri.com>
 
 	* configure.ac: don't use Doug Lea's malloc() on x86-64/linux
