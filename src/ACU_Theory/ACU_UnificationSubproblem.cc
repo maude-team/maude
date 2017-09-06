@@ -63,7 +63,7 @@ ACU_UnificationSubproblem::ACU_UnificationSubproblem(ACU_Symbol* topSymbol,
 						     const Vector<DagNode*>& subterms)
   : topSymbol(topSymbol),
     subterms(subterms),
-    savedSubstitution(0)
+    savedSubstitution(1)
 {
   generatedSubproblem = 0;
 }
@@ -132,6 +132,10 @@ ACU_UnificationSubproblem::unificationSolve(bool findFirst, UnificationContext& 
 #endif
   if (findFirst)
     {
+      //
+      //	We use clone() rather than copy() because copy size will be wrong and
+      //	allocated substitution might be too small.
+      //
       savedSubstitution.clone(solution);
       /*
       cout << this << endl;
@@ -157,7 +161,8 @@ ACU_UnificationSubproblem::unificationSolve(bool findFirst, UnificationContext& 
       generatedSubproblem = 0;
       //
       //	Restore substitution to pre-solve state, implicitly deallocating
-      //	any fresh variables we introduced.
+      //	any fresh variables we introduced. Use clone() rather than copy()
+      //	since current substitution may have more variables that saved one.
       //
       solution.clone(savedSubstitution);
     }

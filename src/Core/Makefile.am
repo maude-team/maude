@@ -14,6 +14,7 @@ libcore_a_SOURCES = \
 	trivialRhsAutomaton.cc \
 	copyRhsAutomaton.cc \
 	variableInfo.cc \
+	narrowingVariableInfo.cc \
 	termSet.cc \
 	strategy.cc \
 	sortTable.cc \
@@ -45,7 +46,8 @@ libcore_a_SOURCES = \
 	memoTable.cc \
 	rootContainer.cc \
 	sortBdds.cc \
-	unificationContext.cc
+	unificationContext.cc \
+	protectedDagNodeSet.cc
 
 EXTRA_DIST = \
 	run.cc \
@@ -110,5 +112,7 @@ noinst_HEADERS = \
 	trivialRhsAutomaton.hh \
 	variableAbstractionSubproblem.hh \
 	variableInfo.hh \
+	narrowingVariableInfo.hh \
 	unificationContext.hh \
-	freshVariableGenerator.hh
+	freshVariableGenerator.hh \
+	protectedDagNodeSet.hh

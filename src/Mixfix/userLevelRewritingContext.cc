@@ -266,8 +266,11 @@ UserLevelRewritingContext::tracePreScApplication(DagNode* subject, const SortCon
     }
   if (interpreter.getFlag(Interpreter::TRACE_WHOLE))
     cout << "Whole: " << root() << '\n';
+  //
+  //	Coverity discovered bug - sc could be 0.
+  //
   if (interpreter.getFlag(Interpreter::TRACE_REWRITE))
-    cout << subject->getSort() << ": " << subject << " becomes " << sc->getSort() << '\n';
+    cout << subject->getSort() << ": " << subject << " becomes " << sc->getSort() << '\n';  // BUG
 }
 
 void

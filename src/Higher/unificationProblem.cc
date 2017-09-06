@@ -73,18 +73,18 @@ UnificationProblem::UnificationProblem(Vector<Term*>& lhs, Vector<Term*>& rhs, F
     {
       Term*& lhs = leftHandSides[i];
       lhs = lhs->normalize(true);
-      lhs->indexVariables(*this);
+      lhs->indexVariables(variableInfo);
       Term*& rhs = rightHandSides[i];
       rhs = rhs->normalize(true);
-      rhs->indexVariables(*this);
+      rhs->indexVariables(variableInfo);
     }
   //
   //	Check that variables have safe names
   //
-  int nrOriginalVariables = getNrProtectedVariables();
+  int nrOriginalVariables = variableInfo.getNrProtectedVariables();
   for (int i = 0; i < nrOriginalVariables; ++i)
     {
-      Term* v = index2Variable(i);
+      Term* v = variableInfo.index2Variable(i);
       if (freshVariableGenerator->variableNameConflict(safeCast(VariableTerm*, v)->id()))
 	{
 	  IssueWarning("Unsafe variable name " << QUOTE(v) << " in unification problem.");
@@ -225,7 +225,7 @@ UnificationProblem::findNextUnifier()
 
       //cerr << "first unsorted solution";
       //cout << "=== final solved form ===" << endl;
-      int nrRealVariables = getNrProtectedVariables();
+      int nrRealVariables = variableInfo.getNrProtectedVariables();
 #if 0
       cout << "total variables = " << unsortedSolution->nrFragileBindings() << endl;
       for (int i = 0; i < nrRealVariables; ++i)
@@ -301,6 +301,10 @@ UnificationProblem::findNextUnifier()
 void
 UnificationProblem::findOrderSortedUnifiers()
 {
+  //
+  //	We use clone() rather than copy() because addNewVariable() may have
+  //	increased the number of variables above the number of original variables.
+  //
   sortedSolution->clone(*unsortedSolution);
   //
   //	For each free variable allocate a block of BDD variables based on the
@@ -310,7 +314,7 @@ UnificationProblem::findOrderSortedUnifiers()
   int nrActualVariables = sortedSolution->nrFragileBindings();
   Vector<int> realToBdd(nrActualVariables);
   int nextBddVariable = sortBdds->getFirstAvailableVariable();
-  int nrOriginalVariables = getNrProtectedVariables();
+  int nrOriginalVariables = variableInfo.getNrProtectedVariables();
   for (int i = 0; i < nrActualVariables; ++i)
     {
       if (sortedSolution->value(i) == 0)
@@ -318,7 +322,7 @@ UnificationProblem::findOrderSortedUnifiers()
 	  freeVariables.append(i);
 	  realToBdd[i] = nextBddVariable;
 	  Sort* sort = (i < nrOriginalVariables) ?
-	    safeCast(VariableSymbol*, index2Variable(i)->symbol())->getSort() :
+	    safeCast(VariableSymbol*, variableInfo.index2Variable(i)->symbol())->getSort() :
 	    unsortedSolution->getFreshVariableSort(i);
 	  nextBddVariable += sortBdds->getNrVariables(sort->component()->getIndexWithinModule());
 	}
@@ -335,7 +339,7 @@ UnificationProblem::findOrderSortedUnifiers()
   for (int i = 0; i < nrOriginalVariables; ++i)
     {
       bddPair* bitMap = bdd_newpair();
-      Sort* sort = safeCast(VariableSymbol*, index2Variable(i)->symbol())->getSort();
+      Sort* sort = safeCast(VariableSymbol*, variableInfo.index2Variable(i)->symbol())->getSort();
       Bdd leqRelation = sortBdds->getLeqRelation(sort->getIndexWithinModule());
       DagNode* d = sortedSolution->value(i);
       if (d != 0)
@@ -381,7 +385,7 @@ UnificationProblem::findOrderSortedUnifiers()
     {
       int fv = freeVariables[i];
       Sort* sort = (fv < nrOriginalVariables) ?
-	safeCast(VariableSymbol*, index2Variable(fv)->symbol())->getSort() :
+	safeCast(VariableSymbol*, variableInfo.index2Variable(fv)->symbol())->getSort() :
 	unsortedSolution->getFreshVariableSort(fv);
       int nrBddVariables = sortBdds->getNrVariables(sort->component()->getIndexWithinModule());
       //
@@ -420,7 +424,7 @@ UnificationProblem::findOrderSortedUnifiers()
 	  if (sortedSolution->value(i) == 0)
 	    {
 	      Sort* sort = (i < nrOriginalVariables) ?
-		safeCast(VariableSymbol*, index2Variable(i)->symbol())->getSort() :
+		safeCast(VariableSymbol*, variableInfo.index2Variable(i)->symbol())->getSort() :
 		unsortedSolution->getFreshVariableSort(i);
 	      sortedSolution->bind(i, new VariableDagNode(freshVariableGenerator->getBaseVariableSymbol(sort),
 					  freshVariableGenerator->getFreshVariableName(freshVariableCount),
@@ -444,7 +448,7 @@ UnificationProblem::extractUnifier()
   //	bound variables by their dependencies and if that can be done, by
   //	instantiating their bindings in that order.
   //
-  int nrOriginalVariables = getNrProtectedVariables();
+  int nrOriginalVariables = variableInfo.getNrProtectedVariables();
   order.clear();
   done.clear();
   pending.clear();
@@ -481,20 +485,20 @@ UnificationProblem::explore(int index)
   d->insertVariables(occurs);
   if (!occurs.disjoint(pending))
     return false;  // dependency cycle
-   occurs.subtract(done);
-   if (!occurs.empty())
-     {
-       pending.insert(index);
-       FOR_EACH_CONST(i, NatSet, occurs)
-	 {
-	   if (!explore(*i))
-	     return false;
-	 }
-       pending.subtract(index);
-     }
-   order.append(index);
-   done.insert(index);
-   return true; 
+  occurs.subtract(done);
+  if (!occurs.empty())
+    {
+      pending.insert(index);
+      FOR_EACH_CONST(i, NatSet, occurs)
+	{
+	  if (!explore(*i))
+	    return false;
+	}
+      pending.subtract(index);
+    }
+  order.append(index);
+  done.insert(index);
+  return true; 
 }
 
 DagNode*

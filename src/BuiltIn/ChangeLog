@@ -1,3 +1,10 @@
+2007-09-06  Steven Eker  <eker@goo.csl.sri.com>
+
+	* branchSymbol.cc (computeBaseSort): added explanation of what it
+	does following coverity inspection
+
+===================================Maude89h===========================================
+
 2007-01-18  Steven Eker  <eker@goo.csl.sri.com>
 
 	* branchSymbol.cc (compileOpDeclarations): call

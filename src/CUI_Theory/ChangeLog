@@ -1,3 +1,29 @@
+2007-11-12  Steven Eker  <eker@goo.csl.sri.com>
+
+	* CUI_DagNode.cc (instantiate2): check ground flags of arguments;
+	set ground flag in new node if necessary
+	(instantiate2): call normalizeAtTop() rather than just assuming we
+	have a C symbol
+
+2007-11-05  Steven Eker  <eker@goo.csl.sri.com>
+
+	* CUI_DagNode.cc (stackArguments): optimize by not stacking equal
+	arguments in the comm case
+
+2007-11-01  Steven Eker  <eker@goo.csl.sri.com>
+
+	* CUI_DagNode.cc (indexVariables2): added
+	(instantiateWithReplacement): added
+
+	* CUI_DagNode.hh (class CUI_DagNode): added decls for
+	indexVariables2() and instantiateWithReplacement()
+
+	* CUI_DagNode.cc (instantiate2): updated
+
+	* CUI_DagNode.hh (class CUI_DagNode): updated decl for instantiate2()
+
+===================================Maude89h===========================================
+
 2007-08-24  Steven Eker  <eker@goo.csl.sri.com>
 
 	* CUI_DagNode.cc (computeBaseSortForGroundSubterms): reimplemented

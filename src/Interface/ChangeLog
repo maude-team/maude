@@ -1,3 +1,46 @@
+2007-11-12  Steven Eker  <eker@goo.csl.sri.com>
+
+	* dagNode.hh (copySetRewritingFlags): add GROUND_FLAG to flags
+	that are copied
+
+2007-11-01  Steven Eker  <eker@goo.csl.sri.com>
+
+	* dagNode.cc (indexVariables2): added
+	(indexVariables2): don't call setGround() here since it is called
+	by indexVariables()
+
+	* dagNode.hh (class DagNode): updated decls for instantiate(),
+	instantiate2(), instantiateWithReplacement()
+	(instantiate): updated
+
+2007-10-26  Steven Eker  <eker@goo.csl.sri.com>
+
+	* dagNode.hh (class DagNode): added decl for indexVariables2();
+	indexVariables() becomes nonvirtual
+	(indexVariables): added
+
+2007-10-25  Steven Eker  <eker@goo.csl.sri.com>
+
+	* dagNode.cc (computeBaseSortForGroundSubterms): use setGround();
+	(computeSolvedForm): use isGround() rather than checking sort
+	indices
+	(nonVariableSize): use isGround() in Assert()
+	(computeGeneralizedSort): rewritten using isGround()
+
+	* dagNode.hh (class DagNode): added GROUND_FLAG to Flags
+	(setGround, isGround): added
+	(instantiate, insertVariables): use isGround()
+
+2007-10-15  Steven Eker  <eker@goo.csl.sri.com>
+
+	* dagNode.hh (class DagNode): added decl for indexVariables()
+
+2007-09-24  Steven Eker  <eker@goo.csl.sri.com>
+
+	* symbol.cc (reset): call resetEachRule()
+
+===================================Maude89h==========================================
+
 2007-08-24  Steven Eker  <eker@goo.csl.sri.com>
 
 	* dagNode.cc (computeSolvedForm): use equal() rather than compare()

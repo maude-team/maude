@@ -88,10 +88,11 @@ MetaLevelOpSymbol::metaUnify2(FreeDagNode* subject, RewritingContext& context, b
 	  m->insert(subject, unification, solutionNr);
 	  {
 	    const Substitution& solution = unification->getSolution();
+	    const VariableInfo& variableInfo = unification->getVariableInfo();
 	    mpz_class lastVarIndex = varIndex + unification->getNrFreeVariables();
 	    result = disjoint ?
-	      metaLevel->upUnificationTriple(solution, *unification, lastVarIndex, m) :
-	      metaLevel->upUnificationPair(solution, *unification, lastVarIndex, m);
+	      metaLevel->upUnificationTriple(solution, variableInfo, lastVarIndex, m) :
+	      metaLevel->upUnificationPair(solution, variableInfo, lastVarIndex, m);
 	  }
 	fail:
 	  (void) m->unprotect();
@@ -174,10 +175,11 @@ MetaLevelOpSymbol::metaXunify2(FreeDagNode* subject, RewritingContext& context, 
 	    //	Up the solution.
 	    //
 	    const Substitution& solution = unification->getSolution();
+	    const VariableInfo& variableInfo = unification->getVariableInfo();
 	    mpz_class lastVarIndex = varIndex + unification->getNrFreeVariables();
 	    result = disjoint ?
-	      metaLevel->upUnificationContext4Tuple(solution, *unification, context, hole, lastVarIndex, m) :
-	      metaLevel->upUnificationContextTriple(solution, *unification, context, hole, lastVarIndex, m);
+	      metaLevel->upUnificationContext4Tuple(solution, variableInfo, context, hole, lastVarIndex, m) :
+	      metaLevel->upUnificationContextTriple(solution, variableInfo, context, hole, lastVarIndex, m);
 	  }
 	fail:
 	  (void) m->unprotect();

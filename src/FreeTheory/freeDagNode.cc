@@ -131,7 +131,7 @@ FreeDagNode::markArguments()
 DagNode*
 FreeDagNode::copyEagerUptoReduced2()
 {
-  FreeSymbol* s = static_cast<FreeSymbol*>(symbol());
+  FreeSymbol* s = symbol();
   FreeDagNode* n = new FreeDagNode(s);
   int nrArgs = s->arity();
   if (nrArgs != 0)
@@ -193,11 +193,10 @@ FreeDagNode::makeClone()
 DagNode*
 FreeDagNode::copyWithReplacement(int argIndex, DagNode* replacement)
 {
-  FreeSymbol* s = static_cast<FreeSymbol*>(symbol());
+  FreeSymbol* s = symbol();
   FreeDagNode* d = new FreeDagNode(s);
   int nrArgs = s->arity();
-  Assert(argIndex >= 0 && argIndex < nrArgs,
-	 "bad argIndex");
+  Assert(argIndex >= 0 && argIndex < nrArgs, "bad argIndex");
   DagNode** p = argArray();
   DagNode** q = d->argArray();
   for (int i = 0; i < nrArgs; i++, p++, q++)
@@ -213,7 +212,7 @@ FreeDagNode::copyWithReplacement(Vector<RedexPosition>& redexStack,
   Assert(first >= 0 && first <= last && last < redexStack.length(),
 	 "bad replacement range");
 
-  FreeSymbol* s = static_cast<FreeSymbol*>(symbol());
+  FreeSymbol* s = symbol();
   int nrArgs = s->arity();
   Assert(redexStack[first].argIndex() >= 0 &&
 	 redexStack[first].argIndex() < nrArgs &&
@@ -282,6 +281,7 @@ FreeDagNode::computeBaseSortForGroundSubterms()
   if (ground)
     {
       s->computeBaseSort(this);
+      setGround();
       return GROUND;
     }
   return NONGROUND;
@@ -339,11 +339,12 @@ FreeDagNode::insertVariables2(NatSet& occurs)
 }
 
 DagNode*
-FreeDagNode::instantiate2(Substitution& substitution)
+FreeDagNode::instantiate2(const Substitution& substitution)
 {
   //  cout << "FreeDagNode::instantiate2 enter " << this << endl;
   Symbol* s = symbol();
   int nrArgs = s->arity();
+
   Assert(nrArgs > 0, "we shouldn't be called on constants");
   DagNode** args = argArray();
   for (int i = 0; i < nrArgs; ++i)
@@ -363,7 +364,7 @@ FreeDagNode::instantiate2(Substitution& substitution)
 	  for (int j = 0; j < i; ++j)
 	    {
 	      DagNode* a = args[j];
-	      if (a->getSortIndex() == Sort::SORT_UNKNOWN)
+	      if (!(a->isGround()))
 		ground = false;
 	      args2[j] = a;
 	    }
@@ -371,7 +372,7 @@ FreeDagNode::instantiate2(Substitution& substitution)
 	  //	Handle current argument.
 	  //
 	  args2[i] = n;
-	  if (n->getSortIndex() == Sort::SORT_UNKNOWN)
+	  if (!(n->isGround()))
 	    ground = false;
 	  //
 	  //	Handle remaining arguments.
@@ -381,7 +382,7 @@ FreeDagNode::instantiate2(Substitution& substitution)
 	      DagNode* a = args[i];
 	      if (DagNode* n = a->instantiate(substitution))
 		a = n;
-	      if (a->getSortIndex() == Sort::SORT_UNKNOWN)
+	      if (!(a->isGround()))
 		ground = false;
 	      args2[i] = a;
 	    }
@@ -390,11 +391,53 @@ FreeDagNode::instantiate2(Substitution& substitution)
 	  //	we compute its base sort.
 	  //
 	  if (ground)
-	    s->computeBaseSort(d);
+	    {
+	      s->computeBaseSort(d);
+	      d->setGround();
+	    }
 	  // cout << "FreeDagNode::instantiate2 exit " << d << endl;
 	  return d;	
 	}
     }
   //  cout << "FreeDagNode::instantiate2 exit null" << endl;
   return 0;  // unchanged
+}
+
+bool
+FreeDagNode::indexVariables2(NarrowingVariableInfo& indices, int baseIndex)
+{
+  int nrArgs = symbol()->arity();
+  DagNode** args = argArray();
+  bool ground = true;
+  for (int i = 0; i < nrArgs; ++i)
+    {
+     if (!(args[i]->indexVariables(indices, baseIndex)))
+	ground = false;
+    }
+  return ground;
+}
+
+DagNode*
+FreeDagNode::instantiateWithReplacement(const Substitution& substitution, int argIndex, DagNode* newDag)
+{
+  FreeSymbol* s = symbol();
+  FreeDagNode* d = new FreeDagNode(s);
+  int nrArgs = s->arity();
+  Assert(argIndex >= 0 && argIndex < nrArgs, "bad argIndex");
+  DagNode** p = argArray();
+  DagNode** q = d->argArray();
+  for (int i = 0; i < nrArgs; i++, p++, q++)
+    {
+      DagNode* n;
+      if (i == argIndex)
+	n = newDag;
+      else
+	{
+	  n = *p;
+	  if (DagNode* c = n->instantiate(substitution))  // changed under substitutition
+	    n = c;
+	}
+      *q = n;
+    }
+  return d;
 }

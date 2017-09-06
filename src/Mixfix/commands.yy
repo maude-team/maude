@@ -131,7 +131,7 @@ command		:	KW_SELECT		{ lexerCmdMode(); clear(); }
 			  if (interpreter.setCurrentModule(moduleExpr, 1))
 			    interpreter.sRewrite(bubble, number, $1);
 			}
-		|	KW_SEARCH
+		|	search
 			{
 			  lexerCmdMode();
 			  clear();
@@ -143,7 +143,7 @@ command		:	KW_SELECT		{ lexerCmdMode(); clear(); }
 			{
 			  lexerInitialMode();
 			  if (interpreter.setCurrentModule(moduleExpr, 1))
-			    interpreter.search(bubble, number, number2);
+			    interpreter.search(bubble, number, number2, $1);
 			}
 		|	match
 			{
@@ -502,13 +502,19 @@ exclude		:	KW_EXCLUDE	       	{ $$ = true; }
 conceal		:	KW_CONCEAL		{ $$ = true; }
 		|	KW_REVEAL		{ $$ = false; }
 		;
+/*
+ *	Return true if we should do a narrowing search.
+ */
+search		:	KW_NARROW		{ $$ = true; }
+		|	KW_SEARCH		{ $$ = false; }
+		;
 
 match		:	KW_XMATCH		{ $$ = true; }
 		|	KW_MATCH		{ $$ = false; }
 		;
 
-unify		:	KW_XUNIFY		{ $$ = true; }
-		|	KW_UNIFY		{ $$ = false; }
+unify		:	/*KW_XUNIFY		{ $$ = true; }
+		|*/	KW_UNIFY		{ $$ = false; }
 		;
 
 optDebug       	:	KW_DEBUG 	       	{ $$ = true; }

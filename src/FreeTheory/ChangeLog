@@ -1,3 +1,55 @@
+2007-11-01  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeDagNode.cc (instantiateWithReplacement): handle the case
+	where instantiate() return 0 because dag is unchanged under
+	substitution
+
+	* freeTerm.cc (findAvailableTerms, compileRhsAliens, compileRhs3):
+	cast cleaning
+
+	* freeDagNode.cc (instantiate2, instantiateWithReplacement):
+	updated
+
+	* freeDagNode.hh (class FreeDagNode): updated decls for
+	instantiate2() and instantiateWithReplacement()
+
+2007-10-26  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeDagNode.cc (copyEagerUptoReduced2, copyWithReplacement) 
+	(instantiateWithReplacement): remove casts to FreeSymbol*
+
+	* freeDagNode.hh (symbol): added
+
+	* freeDagNode.cc (computeBaseSortForGroundSubterms): call
+	setGround() on ground terms
+	(instantiate2): removed temporary hack to handle ground terms
+
+	* freeDagNode.hh (class FreeDagNode): decl for indexVariables()
+	becomes indexVariables2()
+
+	* freeDagNode.cc (indexVariables): handle testing and setting of
+	ground flags
+	(indexVariables): becomes indexVariables2(); return bool
+
+2007-10-25  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeDagNode.cc (instantiateWithReplacement): added
+	(instantiate2): temporary hack to allow it to work on constants
+	(instantiate2): use isGround()/setGround()
+
+	* freeDagNode.hh (class FreeDagNode): added decl for
+	instantiateWithReplacement()
+
+2007-10-15  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeDagNode.hh (class FreeDagNode): adde decl for
+	indexVariables()
+	(class FreeDagNode): added decl for indexVariables()
+
+	* freeDagNode.cc (indexVariables): added
+
+===================================Maude89h===========================================
+
 2007-08-24  Steven Eker  <eker@goo.csl.sri.com>
 
 	* freeDagNode.cc (computeBaseSortForGroundSubterms): rewritten

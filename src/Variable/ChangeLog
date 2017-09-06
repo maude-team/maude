@@ -1,3 +1,27 @@
+2007-11-01  Steven Eker  <eker@goo.csl.sri.com>
+
+	* variableDagNode.cc (instantiate2): updated
+
+	* variableDagNode.hh (class VariableDagNode): updated decl for
+	instantiate2()
+
+2007-10-26  Steven Eker  <eker@goo.csl.sri.com>
+
+	* variableDagNode.hh (class VariableDagNode): decl for
+	indexVariables() becomes indexVariables2()
+
+	* variableDagNode.cc (indexVariables): becomes indexVariables2();
+	return bool
+
+2007-10-15  Steven Eker  <eker@goo.csl.sri.com>
+
+	* variableDagNode.hh (class VariableDagNode): adde decl for
+	indexVariables()
+
+	* variableDagNode.cc (indexVariables): added
+
+===================================Maude89h===========================================
+
 2007-08-24  Steven Eker  <eker@goo.csl.sri.com>
 
 	* variableDagNode.cc (computeBaseSortForGroundSubterms): updated

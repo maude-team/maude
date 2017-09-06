@@ -206,6 +206,7 @@ AU_Term::normalize(bool full, bool& changed)
 	  Term* t = argArray[i].term;
 	  if (identity->equal(t) && idPossible(i))
 	    {
+	      t->deepSelfDestruct();
 	      changed = true;
 	      continue;
 	    }

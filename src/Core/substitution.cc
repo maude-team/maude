@@ -45,7 +45,7 @@
 //	variable class definitions
 #include "variableDagNode.hh"
 
-int Substitution::allocateSize = 1;
+//int Substitution::allocateSize = 1;
 
 LocalBinding*
 Substitution::operator-(const Substitution& original) const

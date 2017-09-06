@@ -1,3 +1,176 @@
+2007-11-21  Steven Eker  <eker@goo.csl.sri.com>
+
+	* narrowingSearchState.cc (findNextNarrowing): pass 0 as
+	extensionInfo to NarrowingUnificationProblem()
+
+2007-11-20  Steven Eker  <eker@goo.csl.sri.com>
+
+	* sortTestConditionFragment.cc (check): allow for the case that
+	normalize() deletes the original term due to collapse
+
+	* rewriteConditionFragment.cc (check): allow for the case that
+	normalize() deletes the original term due to collapse
+
+	* assignmentConditionFragment.cc (check): allow for the case that
+	normalize() deletes the original term due to collapse
+
+	* equalityConditionFragment.cc (check): allow for the case that
+	normalize() deletes the original term due to collapse
+
+2007-11-19  Steven Eker  <eker@goo.csl.sri.com>
+
+	* narrowingSequenceSearch.cc (findNextMatch): use getStateDag()
+
+	* narrowingSequenceSearch.hh (getContext): added
+	(getStateDag): added
+
+	* higher.hh: added class SequenceSearch
+
+	* rewriteSequenceSearch.hh (class RewriteSequenceSearch): derive
+	from SequenceSearch
+
+	* narrowingSequenceSearch.hh (class NarrowingSequenceSearch):
+	derive from SequenceSearch
+
+	* sequenceSearch.hh (class SequenceSearch): created
+
+2007-11-16  Steven Eker  <eker@goo.csl.sri.com>
+
+	* narrowingSearchState.hh (class NarrowingSearchState): added decl
+	for ~NarrowingSearchState()
+
+	* narrowingSearchState.cc (~NarrowingSearchState): added
+
+	* narrowingSequenceSearch.cc (~NarrowingSequenceSearch): delete
+	any pending states and contexts on the stacks
+	(~NarrowingSequenceSearch): delete freshVariableGenerator
+
+2007-11-15  Steven Eker  <eker@goo.csl.sri.com>
+
+	* narrowingSequenceSearch.cc (findNextNormalForm): use seenSet
+	(NarrowingSequenceSearch): initialize seenSet
+	(findNextInterestingState): use seenSet
+	(findNextNormalForm): falsify topOfStackFresh after detecting a
+	dup
+
+2007-11-14  Steven Eker  <eker@goo.csl.sri.com>
+
+	* narrowingSequenceSearch.hh (class NarrowingSequenceSearch):
+	added data member seenSet
+
+	* narrowingSequenceSearch.cc (findNextMatch): call
+	findNextNormalForm() from here
+	(findNextInterestingState): don't call findNextNormalForm() from
+	here
+
+	* narrowingSequenceSearch.hh (class NarrowingSequenceSearch):
+	replace firstCall flag with topOfStackFresh flag
+
+	* narrowingSequenceSearch.cc (findNextNormalForm): handle maxDepth
+	(findNextNormalForm): reorganized
+	(findNextNormalForm): simplified; get rid of firstCall flag
+	(NarrowingSequenceSearch): initialize topOfStackFresh flag
+
+2007-11-13  Steven Eker  <eker@goo.csl.sri.com>
+
+	* narrowingSequenceSearch.cc (NarrowingSequenceSearch): initialize
+	firstCall
+
+	* narrowingSequenceSearch.hh (class NarrowingSequenceSearch):
+	added decl for findNextNormalForm(); added data member firstCall
+
+	* narrowingSequenceSearch.cc (findNextNormalForm): added
+
+	* narrowingSequenceSearch.hh (class NarrowingSequenceSearch):
+	deleted data member reachingInitialStateOK
+
+	* narrowingSequenceSearch.cc (NarrowingSequenceSearch): don't
+	initialize reachingInitialStateOK
+
+2007-11-06  Steven Eker  <eker@goo.csl.sri.com>
+
+	* narrowingSearchState.hh (class NarrowingSearchState): pass
+	ALLOW_NONEXEC as default flags argument
+
+2007-10-31  Steven Eker  <eker@goo.csl.sri.com>
+
+	* narrowingSequenceSearch.cc (findNextInterestingState): handle
+	maxDepth == NONE
+	(findNextInterestingState): handle trying of initial state
+
+2007-10-30  Steven Eker  <eker@goo.csl.sri.com>
+
+	* narrowingSequenceSearch.cc (findNextInterestingState): use
+	contextStack
+	(findNextMatch): use contextStack
+	(NarrowingSequenceSearch): initialize contextStack
+	(findNextInterestingState): start backtracking if current depth reached.
+
+	* narrowingSequenceSearch.hh (class NarrowingSequenceSearch):
+	added data member contextStack
+
+2007-10-29  Steven Eker  <eker@goo.csl.sri.com>
+
+	* narrowingSequenceSearch.hh: created
+
+	* narrowingSequenceSearch.cc: created
+
+	* rewriteSequenceSearch.hh: #define _rewriteSequenceSearchState_hh_
+	becomes _rewriteSequenceSearch_hh_
+
+2007-10-24  Steven Eker  <eker@goo.csl.sri.com>
+
+	* positionState.hh (class PositionState): added decl for
+	rebuildAndInstantiateDag()
+
+	* positionState.cc (rebuildAndInstantiateDag): added
+
+2007-10-19  Steven Eker  <eker@goo.csl.sri.com>
+
+	* narrowingSearchState.cc (findNextNarrowing): pass extension info
+	to NarrowingUnificationProblem()
+
+2007-10-17  Steven Eker  <eker@goo.csl.sri.com>
+
+	* higher.hh: added classes NarrowingUnificationProblem and
+	NarrowingSearchState
+
+	* narrowingSearchState.cc (getSubstitution): added
+	(findNextNarrowing): implemented
+
+	* narrowingSearchState.hh (class NarrowingSearchState): added data
+	member unificationProblem; added decl for getSubstitution()
+
+2007-10-16  Steven Eker  <eker@goo.csl.sri.com>
+
+	* narrowingSearchState.hh (class NarrowingSearchState): added data
+	member variableInfo
+
+	* narrowingSearchState.cc: created
+	(NarrowingSearchState): use variableInfo
+
+	* narrowingSearchState.hh: created
+
+	* narrowingUnificationProblem.cc: created
+
+	* narrowingUnificationProblem.hh: created
+
+2007-10-11  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unificationProblem.cc (UnificationProblem): use data member variableInfo
+	(findNextUnifier): use variableInfo
+	(findOrderSortedUnifiers): use variableInfo
+	(extractUnifier): use variableInfo
+	
+	* unificationProblem.hh (class UnificationProblem): added many
+	commments
+	(getVariableInfo): added
+	(class UnificationProblem): made VariableInfo base class private
+	(class UnificationProblem): made VariableInfo a data member rather
+	than a base class
+
+===================================Maude89h===========================================
+
 2007-08-24  Steven Eker  <eker@goo.csl.sri.com>
 
 	* unificationProblem.cc (~UnificationProblem): varsOK ->

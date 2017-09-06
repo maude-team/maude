@@ -1,3 +1,22 @@
+2007-11-12  Steven Eker  <eker@goo.csl.sri.com>
+
+	* S_DagNode.cc (instantiate2): if our argument is ground, set
+	ground flag and compute sort for new node
+
+2007-11-05  Steven Eker  <eker@goo.csl.sri.com>
+
+	* S_DagNode.cc (instantiateWithReplacement): added
+
+	* S_DagNode.hh (class S_DagNode): added decl for instantiateWithReplacement()
+
+2007-11-01  Steven Eker  <eker@goo.csl.sri.com>
+
+	* S_DagNode.cc (instantiate2): updated
+
+	* S_DagNode.hh (class S_DagNode): updated decl for instantiate2()
+
+===================================Maude89h===========================================
+
 2007-08-24  Steven Eker  <eker@goo.csl.sri.com>
 
 	* S_DagNode.cc (computeBaseSortForGroundSubterms): updated

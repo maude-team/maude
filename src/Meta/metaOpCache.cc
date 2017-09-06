@@ -47,6 +47,7 @@
 //	higher class definitions
 #include "searchState.hh"
 #include "rewriteSequenceSearch.hh"
+#include "narrowingSequenceSearch.hh"
 #include "unificationProblem.hh"
 
 //      free theory class definitions
@@ -76,6 +77,7 @@ MetaOpCache::Item::clear()
   delete metaOp;
   delete state;
   delete search;
+  delete narrowingSearch;
   delete unification;
 }
 
@@ -171,6 +173,49 @@ MetaOpCache::remove(FreeDagNode* metaOp,
 	{
 	  delete cache[i].metaOp;
 	  search = cache[i].search;
+	  safeCast(UserLevelRewritingContext*, search->getContext())->
+	    beAdoptedBy(safeCast(UserLevelRewritingContext*, &parentContext));
+	  lastSolutionNr = cache[i].lastSolutionNr;
+	  for (i++; i < nrEntries; i++)
+	    cache[i - 1] = cache[i];
+	  cache.contractTo(nrEntries - 1);
+	  return true;
+	}
+    }
+  return false;
+}
+
+void
+MetaOpCache::insert(FreeDagNode* metaOp, NarrowingSequenceSearch* search, Int64 lastSolutionNr)
+{
+  if (cache.length() < maxSize)
+    cache.expandBy(1);
+  else
+    cache[cache.length() - 1].clear();
+      
+  for (int i = cache.length() - 1; i >= 1; i--)
+    cache[i] = cache[i - 1];
+
+  cache[0].metaOp = new DagRoot(metaOp->makeClone());
+  cache[0].state = 0;
+  cache[0].narrowingSearch = search;
+  cache[0].unification = 0;
+  cache[0].lastSolutionNr = lastSolutionNr;
+}
+
+bool
+MetaOpCache::remove(FreeDagNode* metaOp,
+		    RewritingContext& parentContext,
+		    NarrowingSequenceSearch*& search,
+		    Int64& lastSolutionNr)
+{
+  int nrEntries = cache.length();
+  for (int i = 0; i < nrEntries; i++)
+    {
+      if (sameProblem(metaOp, cache[i].metaOp->getNode()))
+	{
+	  delete cache[i].metaOp;
+	  search = cache[i].narrowingSearch;
 	  safeCast(UserLevelRewritingContext*, search->getContext())->
 	    beAdoptedBy(safeCast(UserLevelRewritingContext*, &parentContext));
 	  lastSolutionNr = cache[i].lastSolutionNr;

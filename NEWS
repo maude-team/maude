@@ -1,3 +1,9 @@
+Overview of Changes in Maude alpha89h
+=====================================
+* crude support for narrowing
+* fixed bug with condition fragment collapses during processing
+* fixed memory leak in AU term collapses
+
 Overview of Changes in Maude alpha89g
 =====================================
 * fixed selection from basis bug in AC unification algorithm

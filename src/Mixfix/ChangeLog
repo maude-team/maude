@@ -1,3 +1,54 @@
+2007-11-21  Steven Eker  <eker@goo.csl.sri.com>
+
+	* token.cc (bubbleToPrefixNameCode): commented out problematic
+	Assert() until further investigation
+
+2007-10-31  Steven Eker  <eker@goo.csl.sri.com>
+
+	* interpreter.hh (endif): added decl for doNarrowing()
+
+	* search.cc (doNarrowing): added
+	(search): use doNarrowing
+
+2007-10-29  Steven Eker  <eker@goo.csl.sri.com>
+
+	* search.cc (search): use class NarrowingSequenceSearch
+
+2007-10-11  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unify.cc (doUnification): use getVariableInfo()
+
+2007-10-01  Steven Eker  <eker@goo.csl.sri.com>
+
+	* top.yy: declare type of search
+
+	* search.cc (search): partial handling of narrowing flag
+
+	* interpreter.hh (endif): update decl for search()
+
+	* commands.yy (search): added
+	(command): hijack search code to handle narrowing case
+
+2007-09-20  Steven Eker  <eker@goo.csl.sri.com>
+
+	* trial.cc (traceBeginEqTrial): removed the equation == 0 case
+	since this should never occur and could cause a null deref in
+	profileEqConditionStart() if it did (discovered by coverity);
+	added Assert()
+	(traceBeginRuleTrial, traceBeginScTrial): symmetric changes to
+	above
+
+2007-09-19  Steven Eker  <eker@goo.csl.sri.com>
+
+	* userLevelRewritingContext.cc (tracePreScApplication): added
+	comment to flag coverity discovered bug - need interface change to
+	fix this properly
+
+	* mixfixParser.cc (makeTerm): return 0 in (unreachable) default
+	case rather than setting t to 0 inorder to avoid coverity warning
+
+===================================Maude89h===========================================
+
 2007-08-24  Steven Eker  <eker@goo.csl.sri.com>
 
 	* unify.cc (unify): variablesOK() -> problemOK()

@@ -27,14 +27,13 @@
 //	variable bindings so that the same dag construction code can handle
 //	variable and non-variable operator arguments without branching.
 //
-//	Default substitutions come in a standards size (allocateSize) allowing
-//	them to be reused rather than reallocated. Within a default substitution
-//	entries 0,..., copySize-1 are real entries (actual variables, shared dags)
-//	while the remaining entries may be used as temporaries by any function
-//	that cares to use them.
-//
-//	Special purpose substitutions of any size may be created, with no temporary
-//	storage.
+//	For normal rewriting purposes a substitution is divided in to a fragile
+//	part which holds variables bindings and construction subdags that are shared
+//	between conditions fragments and/or the rhs, and local construction
+//	temporaries. The former need to be protected from the garbage collector
+//	and are copied when making a copy of the substitution. The latter are
+//	assumed to valid only during the construction of a single dag, and can
+//	be trashed afterwards.
 //
 #ifndef _substitution_hh_
 #define _substitution_hh_
@@ -44,9 +43,8 @@ class Substitution
   NO_COPYING(Substitution);
 
 public:
-  Substitution();
   Substitution(int size);  // for local substitutions in lhs automata
-
+  Substitution(int size, int cSize);  // rewriting contexts
   static void notify(int size);
 
   void clear(int size);
@@ -69,40 +67,31 @@ protected:
   int addNewVariable();
 
 private:
-  static int allocateSize;
-
   Vector<DagNode*> values;
   int copySize;
 };
 
 inline
-Substitution::Substitution() : values(allocateSize)
-{
-  copySize = 0;
-}
-
-inline
 Substitution::Substitution(int size) : values(size)
 {
+  //cout << "size = " << size << endl;
+  Assert(size >= 1, "size must be at least one");
   copySize = size;
 }
 
-inline void
-Substitution::notify(int size)
+inline
+Substitution::Substitution(int size, int cSize) : values(size)
 {
-  if (size > allocateSize)
-    {
-      DebugAdvisory("allocateSize increased from " <<
-		    allocateSize << " to " << size);
-      allocateSize = size;
-    }
+  //cout << "size = " << size << "  cSize = " << cSize << endl;
+  Assert(size >= 1, "size must be at least one");
+  copySize = cSize;
 }
 
 inline void
 Substitution::clear(int size)
 {
   Assert(size >= 0, "-ve size");
-  Assert(size <= allocateSize, "size > notified");
+  Assert(size <= values.length(), "size > length");
   //
   //	We alway clear at least 1 value in order to get a faster loop
   //	since the case size = 0 occurs very infrequently, and clearing
@@ -128,7 +117,7 @@ inline void
 Substitution::bind(int index, DagNode* value)
 {
   Assert(index >= 0, "-ve index " << index);
-  Assert(index < values.size(), "index too big " << index);
+  Assert(index < values.size(), "index too big " << index << " vs " << values.size());
   values[index] = value;
 }
 
@@ -172,9 +161,18 @@ Substitution::clone(const Substitution& original)
   //	to be the same.
   //
   copySize = original.copySize;
-  values.resize(copySize);
   if (copySize > 0)
     {
+      //
+      //	We make the underlying substitution larger if necessary. We never make it smaller
+      //	since some slots may be reserved for construction purposes (not part of the copy size)
+      //	and we must not lose them.
+      //
+      if (copySize > values.length())
+	values.expandTo(copySize);
+      //
+      //	Copy entries using interator for speed.
+      //
       Vector<DagNode*>::iterator dest = values.begin();
       Vector<DagNode*>::const_iterator source = original.values.begin();
       Vector<DagNode*>::const_iterator end = source + copySize;
@@ -193,6 +191,13 @@ Substitution::addNewVariable()
 {
   int index = copySize;
   ++copySize;
+  //
+  //	We make the underlying substitution larger if necessary. We never make it smaller
+  //	since some slots may be reserved for construction purposes (not part of the copy size)
+  //	and we must not lose them.
+  //
+  if (copySize > values.length())
+    values.expandTo(copySize);
   values.resize(copySize);
   values[index] = 0;
   return index;

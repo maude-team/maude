@@ -31,6 +31,7 @@
 //	forward declarations
 #include "interface.hh"
 #include "core.hh"
+#include "variable.hh"
 
 //	interface class definitions
 #include "symbol.hh"
@@ -38,6 +39,7 @@
 
 //      core class definitions
 #include "substitution.hh"
+#include "narrowingVariableInfo.hh"
 
 //	variable class definitions
 #include "variableSymbol.hh"
@@ -148,16 +150,16 @@ VariableDagNode::computeSolvedForm2(DagNode* rhs,
       //	Variable against variable case.
       //
       VariableDagNode* rv = v->lastVariableInChain(solution);
-      if (rv->index == lv->index)
+      if (rv->index == lv->index)  // unifying a variable with itself
 	return true;
       DagNode* lt = solution.value(lv->index);
-      if (lt == 0)
+      if (lt == 0)  // left variable unbound
 	{
 	  solution.bind(lv->index, rv);
 	  return true;
 	}
       DagNode* rt = solution.value(rv->index);
-      if (rt == 0)
+      if (rt == 0)  // right variable unbound
 	{
 	  solution.bind(rv->index, lv);
 	  return true;
@@ -222,7 +224,7 @@ VariableDagNode::insertVariables2(NatSet& occurs)
 }
 
 DagNode*
-VariableDagNode::instantiate2(Substitution& substitution)
+VariableDagNode::instantiate2(const Substitution& substitution)
 {
   return substitution.value(index);
 }
@@ -248,4 +250,11 @@ VariableDagNode::lastVariableInChain(Substitution& solution)
       v = n;
     }
   return v;
+}
+
+bool
+VariableDagNode::indexVariables2(NarrowingVariableInfo& indices, int baseIndex)
+{
+  index = baseIndex + indices.variable2Index(this);
+  return false;
 }

@@ -1,3 +1,88 @@
+2007-11-21  Steven Eker  <eker@goo.csl.sri.com>
+
+	* rule.cc (compile): pessimize the compilation of unconditional
+	rules to avoid left->right subterm sharing that would break
+	narrowing
+
+2007-11-14  Steven Eker  <eker@goo.csl.sri.com>
+
+	* core.hh: added class ProtectedDagNodeSet
+
+	* protectedDagNodeSet.cc: created
+
+	* protectedDagNodeSet.hh: created
+
+2007-10-26  Steven Eker  <eker@goo.csl.sri.com>
+
+	* rule.cc (getLhsDag): call computeBaseSortForGroundSubterms() and
+	issue warning for function symbols without unification algorithms
+
+2007-10-15  Steven Eker  <eker@goo.csl.sri.com>
+
+	* core.hh: added class NarrowingVariableInfo
+
+	* narrowingVariableInfo.hh: created
+
+	* narrowingVariableInfo.cc: created
+
+2007-09-28  Steven Eker  <eker@goo.csl.sri.com>
+
+	* substitution.hh (clone): rewritten so that we never make the
+	underlying vector smaller - this used to cause a problem with the
+	strategy language
+	(addNewVariable): symmetric change - this didn't cause a problem
+	at the moment but might have done in the future with narrowing
+
+2007-09-24  Steven Eker  <eker@goo.csl.sri.com>
+
+	* rule.hh (class Rule): added decl for getLhsDag()
+
+	* rule.cc (getLhsDag): added
+
+	* rule.hh (class Rule): added data member lhsDag
+
+	* rule.cc (reset): added
+
+	* rule.hh (class Rule): added decl for reset()
+
+	* ruleTable.cc (resetEachRule): added
+
+	* ruleTable.hh (class RuleTable): added decl for resetEachRule()
+
+2007-09-21  Steven Eker  <eker@goo.csl.sri.com>
+
+	* substitution.hh (notify): deleted
+	(Substitution): deleted no arg version
+	(clear): don't check against allocateSize
+	(class Substitution): deleted static data member allocateSize
+	(Substitution): adde 2 arg version
+
+	* module.cc (Module): initialize minimumSubstitutionSize
+
+	* preEquation.cc (compileMatch): look at the module of the lhs top
+	symbol instead
+
+	* rewritingContext.hh (RewritingContext): use getMinimumSubstitutionSize()
+
+	* module.hh (getMinimumSubstitutionSize): added
+	(notifySubstitutionSize): added
+	(class Module): added data member minimumSubstitutionSize
+
+	* preEquation.cc (compileMatch): call notifySubstitutionSize()
+
+	* variableInfo.hh (class VariableInfo): updated decl for
+	computeIndexRemapping()
+
+	* variableInfo.cc (computeIndexRemapping): don't call
+	Substitution::notify(); return minmum number of variables needed
+
+2007-09-06  Steven Eker  <eker@goo.csl.sri.com>
+
+	* disjunctiveSubproblemAccumulator.cc (extract): added Assert()
+	following coverity inspection
+
+===================================Maude89h===========================================
+
 2007-06-11  Steven Eker  <eker@goo.csl.sri.com>
 
 	* freshVariableGenerator.hh (class FreshVariableGenerator): added

@@ -31,6 +31,8 @@ class PositionState;
 class SearchState;
 class RewriteSearchState;
 class MatchSearchState;
+
+class SequenceSearch;
 class RewriteSequenceSearch;
 
 class StateTransitionGraph3;
@@ -47,5 +49,9 @@ class ModelCheckerSymbol;
 class SatSolverSymbol;
 
 class UnificationProblem;
+
+class NarrowingUnificationProblem;
+class NarrowingSearchState;
+class NarrowingSequenceSearch;
 
 #endif

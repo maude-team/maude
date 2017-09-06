@@ -354,7 +354,7 @@ FreeTerm::findAvailableTerms(TermBag& availableTerms, bool eagerContext, bool at
   if (ground())
     return;
   int nrArgs = argArray.length();
-  FreeSymbol* s = safeCast(FreeSymbol*, symbol());
+  FreeSymbol* s = symbol();
   if (atTop)
     {
       for (int i = 0; i < nrArgs; i++)
@@ -417,7 +417,7 @@ FreeTerm::compileRhsAliens(RhsBuilder& rhsBuilder,
 			   bool eagerContext)
 {
   int nrArgs = argArray.length();
-  FreeSymbol* s = safeCast(FreeSymbol*, symbol());
+  FreeSymbol* s = symbol();
   for (int i = 0; i < nrArgs; i++)
     {
       bool argEager = eagerContext && s->eagerArgument(i);
@@ -440,7 +440,7 @@ FreeTerm::compileRhs3(FreeRhsAutomaton* automaton,
 		      bool eagerContext)
 { // SHOULD BE CLEANED UP NOW WE HAVE compileRhsAliens()
   int nrArgs = argArray.length();
-  FreeSymbol* s = safeCast(FreeSymbol*, symbol());
+  FreeSymbol* s = symbol();
   Vector<int> sources;
   for (int i = 0; i < nrArgs; i++)
     {
