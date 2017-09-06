@@ -1,3 +1,11 @@
+2008-11-06  Steven Eker  <eker@goo.csl.sri.com>
+
+	* AU_Term.cc (normalize): fix a nasty bug where we were collapsing
+	to a subterm that had already been self destructed in the all
+	identity case
+
+===================================Maude91d===========================================
+
 2008-09-11  Steven Eker  <eker@goo.csl.sri.com>
 
 	* AU_Matcher.cc (determineRigidBlocks): initialized firstMatch

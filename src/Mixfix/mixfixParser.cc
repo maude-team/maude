@@ -23,6 +23,7 @@
 //
 //      Implementation for class MixfixParser.
 //
+#define PARSER_DEBUG 0
 
 //      utility stuff
 #include "macros.hh"
@@ -126,7 +127,7 @@ MixfixParser::insertProduction(int lhs,
       rhs2[i] = s < 0 ? s : tokens.insert(s);
     }
 
-#ifdef PARSER_DEBUG
+#if PARSER_DEBUG
   cout << "production: " << lhs << " ::= ";
   for (int i = 0; i < rhs2.length(); i++)
     cout << rhs2[i] << ' ';
@@ -171,7 +172,7 @@ MixfixParser::insertBubbleProduction(int lhs,
     cout << excludedTerminals[i] << ' ';
   cout << ")\n";
 #endif
-  
+
   parser.insertProd(lhs, lowerBound, upperBound, left, right, excludedTerminals);
   int nrActions = actions.length();
   actions.expandBy(1);
@@ -257,7 +258,7 @@ MixfixParser::parseSentence(const Vector<Token>& original,
       sentence[i] = terminal;
     }
 
-#ifdef PARSER_DEBUG
+#if PARSER_DEBUG
   cout << "parse: ";
   for (int i = 0; i < sentence.length(); i++)
     cout << sentence[i] << ' ';
@@ -285,7 +286,7 @@ MixfixParser::parseSentence(const Vector<Token>& original,
       firstBad = begin + nrTokens;  // HACK
 #endif
     }
-#ifdef PARSER_DEBUG
+#if PARSER_DEBUG
   parser.printCurrentParse();
 #endif
   return nrParses;
