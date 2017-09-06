@@ -66,7 +66,7 @@ EquationTable::applyReplace(DagNode* subject,
 		}
 	      context.incrementEqCount();
 	      context.finished();
-	      DagNode::okToCollectGarbage();
+	      MemoryCell::okToCollectGarbage();
 	      return true;
 	    }
 	}

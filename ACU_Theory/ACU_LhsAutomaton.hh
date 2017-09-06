@@ -112,8 +112,9 @@ private:
 
   struct NonGroundAlien
   {
-    Symbol* topSymbol;	// 0 if not stable
-    LhsAutomaton* automaton;
+    Term* term;
+    //Symbol* topSymbol;	// 0 if not stable
+    LhsAutomaton* automaton;	// 0 if not stable
     int multiplicity;
   };
 

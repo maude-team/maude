@@ -3,7 +3,7 @@
 //
 //	We implement the VWAA to GBA translation and GBA optimization
 //	algorithms from:
-//	  Paul Gastin and Denis Oddoux.
+//	  Paul Gastin and Denis Oddoux,
 //	  "Fast LTL to Buchi Automaton Translation",
 //	  CAV 2001, LNCS 2102, pp 53-65, 2001.
 //

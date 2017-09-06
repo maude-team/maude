@@ -15,13 +15,14 @@ ACU_LhsAutomaton::greedyMatch(ACU_DagNode* subject,
   for (int i = 0; i < nrNonGroundAliens; i++)
     {
       NonGroundAlien& nga = nonGroundAliens[i];
-      Symbol* s = nga.topSymbol;
+      Term* t = nga.term;
       LhsAutomaton* a = nga.automaton;
       int m = nga.multiplicity;
-      for (int j = (s == 0) ? 0 : subject->findFirstOccurrence(s); j < nrArgs; j++)
+      for (int j = (t == 0) ? 0 : subject->findFirstPotentialMatch(t, solution);
+	   j < nrArgs; j++)
 	{
 	  DagNode* d = args[j].dagNode;
-	  if (d->symbol() != s && s != 0)
+	  if (t != 0 && t->partialCompare(solution, d) == Term::GREATER)
 	    break;
 	  if (subjects[j].multiplicity >= m)
 	    {

@@ -1,6 +1,57 @@
+2003-01-31  Steven Eker  <eker@goo.csl.sri.com>
+
+	* term.hh (stable): use flags data member
+
+	* term.cc (dumpCommon): use honorsGroundOutMatch() and
+	hasEagerContext()
+	(insertAbstractionVariables): use honorsGroundOutMatch()
+	(analyseCollapses): added
+
+	* term.hh (class Term): added decl for analyseCollapses()
+	(class Term): added enum Flags
+	(class Term): added flags data member; removed
+	honorsGroundOutMatchFlag and eagerContext flags
+	(honorsGroundOutMatch): use flags data member
+	(setHonorsGroundOutMatch): use flags data member
+	(willGroundOutMatch): use honorsGroundOutMatch()
+	(Term): clear flags rather than eagerContext
+	(markEager): use flags data member
+
+	* term.cc (analyseCollapses): becomes analyseCollapses2()
+
+	* term.hh (class Term): analyseCollapses() -> analyseCollapses2()
+
+2003-01-24  Steven Eker  <eker@goo.csl.sri.com>
+
+	* extensionInfo.hh (class ExtensionInfo): added comments to
+	explain data members
+	
+===================================Maude79===========================================
+
+2003-01-07  Steven Eker  <eker@goo.csl.sri.com>
+
+	* term.hh (partialCompare): fixed bug in that we are supposed to
+	return LESS, GREATER, EQUAL or UNDECIDED rather than an arbitrary
+	int
+
+	* term.cc (partialCompareUnstable): added
+
+	* term.hh (class Term): added decl for partialCompareUnstable()
+
+	* term.cc (partialCompareArguments): added
+
+	* term.hh (class Term): added enum ReturnValues
+	(partialCompare): added
+	(class Term): added decls for partialCompareArguments() and
+	partialCompare()
+
+===================================Maude78==================================================
+
 2002-11-26  Steven Eker  <eker@goo.csl.sri.com>
 
 	* dagNode.hh: major rewrite, using new MemoryCell semantics
+	
+===================================Maude77==================================================
 
 2002-11-14  Steven Eker  <eker@goo.csl.sri.com>
 

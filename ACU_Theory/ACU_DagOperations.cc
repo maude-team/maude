@@ -27,6 +27,47 @@ ACU_DagNode::findFirstOccurrence(Symbol* key) const
   return first;
 }
 
+int
+ACU_DagNode::findFirstPotentialMatch(Term* key, const Substitution& partial) const
+{
+  const ArgVec<Pair>::const_iterator args = argArray.begin();  // for speed
+  int first = argArray.length();  // return index beyond arg array propects
+  Assert(first > 0, cerr << "no args");
+  int upper = first - 1;
+  int lower = 0;
+  do
+    {
+      int probe = (upper + lower) / 2;
+      int r = key->partialCompare(partial, args[probe].dagNode);
+
+      switch (r)
+	{
+	case Term::GREATER:
+	  {
+	    lower = probe + 1;
+	    break;
+	  }
+	case Term::EQUAL:
+	  {
+	    return probe;
+	  }
+	case Term::LESS:
+	  {
+	    upper = probe - 1;
+	    break;
+	  }
+	case UNDECIDED:
+	  {
+	    first = probe;
+	    upper = probe - 1;
+	    break;
+	  }
+	}
+    }
+  while (lower <= upper);
+  return first;
+}
+
 bool
 ACU_DagNode::binarySearch(DagNode* key, int& pos) const
 {
@@ -98,7 +139,7 @@ ACU_DagNode::eliminateSubject(DagNode* target,
     return true;
   if (target->symbol() == topSymbol)
     {
-      ArgVec<Pair>& args = static_cast<ACU_DagNode*>(target)->argArray;
+      ArgVec<Pair>& args = getACU_DagNode(target)->argArray;
       int nrArgs = args.length();
       for (int i = 0; i < nrArgs; i++)
         {

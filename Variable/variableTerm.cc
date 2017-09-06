@@ -24,6 +24,7 @@
 #include "variableInfo.hh"
 #include "symbolMap.hh"
 #include "termBag.hh"
+#include "substitution.hh"
 
 //	variable class definitions
 #include "variableSymbol.hh"
@@ -132,6 +133,21 @@ VariableTerm::subsumes(const Term* other, bool sameVariableSet) const
   //
   return !(occursInContext().contains(index)) &&
     getComponent()->leq(other->getSortIndex(), getSortIndex());
+}
+
+int
+VariableTerm::partialCompareUnstable(const Substitution& partialSubstitution,
+				     DagNode* other) const
+{
+  DagNode* d = partialSubstitution.value(index);
+  if (d == 0)
+    return UNDECIDED;
+  int r = d->compare(other);
+  if (r < 0)
+    return LESS;
+  if (r > 0)
+    return GREATER;
+  return EQUAL;
 }
 
 void

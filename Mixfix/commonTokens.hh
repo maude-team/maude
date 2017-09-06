@@ -25,6 +25,7 @@ protected:
   static int equals;
   static int assign;
   static int arrow;
+  static int arrowOne;
   static int arrowPlus;
   static int arrowStar;
   static int arrowBang;

@@ -151,6 +151,25 @@ FreeTerm::compareArguments(const DagNode* other) const
   return 0;
 }
 
+int
+FreeTerm::partialCompareArguments(const Substitution& partialSubstitution,
+				  DagNode* other) const
+{
+  Assert(symbol() == other->symbol(), cerr << "symbols differ");
+  int nrArgs = argArray.length();
+  if (nrArgs != 0)
+    {
+      DagNode** da = static_cast<FreeDagNode*>(other)->argArray();
+      for (int i = 0; i < nrArgs; i++, da++)
+	{
+	  int r = argArray[i]->partialCompare(partialSubstitution, *da);
+	  if (r != EQUAL)
+	    return r;
+	}
+    }
+  return 0;
+}
+
 void
 FreeTerm::findEagerVariables(bool atTop, NatSet& eagerVariables) const
 {

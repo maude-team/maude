@@ -1,6 +1,6 @@
 ***
 ***	Maude LTL satisfiability solver and model checker.
-***	Version alpha 77.
+***	Version alpha 78.
 ***	Copyright 2001-2003 SRI International.
 ***
 
@@ -157,6 +157,7 @@ fmod SAT-SOLVER is
   op nil : -> FormulaList [ctor] .
   op _;_ : FormulaList FormulaList -> FormulaList [ctor assoc id: nil] .
   op model : FormulaList FormulaList -> SatSolveResult [ctor] .
+
   op satSolve : Formula ~> SatSolveResult
 	[special (
 	   id-hook SatSolverSymbol
@@ -187,12 +188,18 @@ fmod SAT-SOLVER is
   eq $invert(model(L, C)) = counterexample(L, C) .
 endfm
 
+fmod SATISFACTION is
+  pr LTL .
+  sort State .
+  op _|=_ : State Formula ~> Bool .
+endfm
+
 fmod MODEL-CHECKER is
   pr QID .
-  inc LTL .
+  inc SATISFACTION .
 
-  *** states, transitions, results and satisfaction
-  sorts State RuleName Transition TransitionList ModelCheckResult .
+  *** transitions and results
+  sorts RuleName Transition TransitionList ModelCheckResult .
   subsort Qid < RuleName .
   subsort Transition < TransitionList .
   subsort Bool < ModelCheckResult .
@@ -201,7 +208,8 @@ fmod MODEL-CHECKER is
   op nil : -> TransitionList [ctor] .
   op __ : TransitionList TransitionList -> TransitionList [ctor assoc id: nil] .
   op counterexample : TransitionList TransitionList -> ModelCheckResult [ctor] .
-  op _|=_ : State Formula ~> ModelCheckResult
+
+  op modelCheck : State Formula ~> ModelCheckResult
 	[special (
 	   id-hook ModelCheckerSymbol
 	   op-hook trueSymbol           (True : ~> Formula)
@@ -212,6 +220,7 @@ fmod MODEL-CHECKER is
 	   op-hook orSymbol		(_\/_ : Formula Formula ~> Formula)
 	   op-hook untilSymbol		(_U_ : Formula Formula ~> Formula)
 	   op-hook releaseSymbol	(_R_ : Formula Formula ~> Formula)
+           op-hook satisfiesSymbol      (_|=_ : State Formula ~> Bool)
 	   op-hook qidSymbol		(<Qids> : ~> Qid)
 	   op-hook unlabeledSymbol	(unlabeled : ~> RuleName)
 	   op-hook deadlockSymbol	(deadlock : ~> RuleName)
@@ -222,6 +231,5 @@ fmod MODEL-CHECKER is
 	   op-hook counterexampleSymbol
 		   (counterexample : TransitionList TransitionList ~> ModelCheckResult)
 	   term-hook trueTerm		(true)
-	 )
-	 prec 75] .
+	 )] .
 endfm

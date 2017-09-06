@@ -90,14 +90,15 @@ ACU_LhsAutomaton::eliminateGroundedOutAliens(ACU_DagNode* subject,
   for (int i = 0; i < nrGroundedOutAliens; i++)
     {
       NonGroundAlien& goa = groundedOutAliens[i];
-      Symbol* s = goa.topSymbol;
+      Term* t = goa.term;
       LhsAutomaton* a = goa.automaton;
       int m = goa.multiplicity;
       Subproblem* sp;
-      for (int j = (s == 0) ? 0 : subject->findFirstOccurrence(s); j < nrArgs; j++)
+      for (int j = (t == 0) ? 0 : subject->findFirstPotentialMatch(t, solution);
+	   j < nrArgs; j++)
 	{
 	  DagNode* d = args[j].dagNode;
-	  if (d->symbol() != s && s != 0)
+	  if (t != 0 && t->partialCompare(solution, d) == Term::GREATER)
 	    break;
 	  if (currentMultiplicity[j] >= m && a->match(d, solution, sp))
 	    {
@@ -204,13 +205,14 @@ ACU_LhsAutomaton::aliensOnlyMatch(ACU_DagNode* subject,
       for (int i = 0; i < nrIndependentAliens; i++)
 	{
 	  NonGroundAlien& nga = nonGroundAliens[i];
-	  Symbol* s = nga.topSymbol;
+	  Term* t = nga.term;
 	  LhsAutomaton* a = nga.automaton;
 	  int m = nga.multiplicity;
-	  for (int j = (s == 0) ? 0 : subject->findFirstOccurrence(s); j < nrArgs; j++)
+	  for (int j = (t == 0) ? 0 : subject->findFirstPotentialMatch(t, solution);
+	       j < nrArgs; j++)
 	    {
 	      DagNode* d = args[j].dagNode;
-	      if (d->symbol() != s && s != 0)
+	      if (t != 0 && t->partialCompare(solution, d) == Term::GREATER)
 		break;
 	      if (currentMultiplicity[j] >= m)
 		{
@@ -278,7 +280,7 @@ ACU_LhsAutomaton::match(DagNode* subject,
       return false;
     }
   Assert(matchAtTop == (extensionInfo != 0), cerr << "matchAtTop disagreement");
-  ACU_DagNode* s = static_cast<ACU_DagNode*>(subject);
+  ACU_DagNode* s = getACU_DagNode(subject);
   if (!multiplicityChecks(s) || !eliminateGroundAliens(s) ||
       !eliminateBoundVariables(s, solution) || !eliminateGroundedOutAliens(s, solution))
     return false;
@@ -417,14 +419,15 @@ ACU_LhsAutomaton::buildBipartiteGraph(ACU_DagNode* subject,
     {
       bool matchable = false;
       NonGroundAlien& nga = nonGroundAliens[i];
-      Symbol* s = nga.topSymbol;
+      Term* t = nga.term;
       LhsAutomaton* a = nga.automaton;
       int m = nga.multiplicity;
       int pn = subproblem->addPatternNode(m);
-      for (int j = (s == 0) ? 0 : subject->findFirstOccurrence(s); j < nrArgs; j++)
+      for (int j = (t == 0) ? 0 : subject->findFirstPotentialMatch(t, solution);
+	   j < nrArgs; j++)
         {
 	  DagNode* d = args[j].dagNode;
-	  if (d->symbol() != s && s != 0)
+	  if (t != 0 && t->partialCompare(solution, d) == Term::GREATER)
 	    break;
           if (currentMultiplicity[j] >= m)
             {

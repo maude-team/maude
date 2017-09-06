@@ -26,7 +26,7 @@ public:
   int compareArguments(const DagNode* other) const;
   void findEagerVariables(bool atTop, NatSet& eagerVariables) const;
   void analyseConstraintPropagation(NatSet& boundUniquely) const;
-  void analyseCollapses();
+  void analyseCollapses2();
   void insertAbstractionVariables(VariableInfo& variableInfo);
   LhsAutomaton* compileLhs2(bool matchAtTop,
 			    const VariableInfo& variableInfo,
@@ -52,7 +52,7 @@ public:
 #endif
 
 private:
-  struct Pair
+  struct Pair  // misnomer!
     {
       Term* term;
       int multiplicity;
@@ -128,7 +128,7 @@ private:
 inline ACU_Symbol*
 ACU_Term::symbol() const
 {
-  return static_cast<ACU_Symbol*>(Term::symbol());
+  return safeCast(ACU_Symbol*, Term::symbol());
 }
 
 #endif

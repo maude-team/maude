@@ -1,3 +1,413 @@
+2003-02-20  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_Flatten.cc (flattenSortAndUniquize): use fastCopy(); handle
+	ACU_TreeDagNode* case; don't bother trying to combine flattened in
+	argument list with current run
+	(flattenSortAndUniquize): can't use fastCopy() after all - need to
+	multiply by multiplicity
+	(flattenSortAndUniquize): removed optimize involving d+1 as it
+	fails due to strict iterator checking
+
+	* ACU_DagNormalization.cc (copyAndBinaryInsert): don't treat
+	nrSourceArgs > 1 as a special case
+	(extensionNormalizeAtTop): fixed longstanding performance bug
+	where we were copying an argArray rather than taking its reference
+	(extensionNormalizeAtTop): handle ACU_TreeDagNode* case
+
+2003-02-13  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_Convert.cc (makeTree): don't use fast version of
+	ACU_RedBlackNode() since we don't have the maxMult value to hand
+
+2003-02-12  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_Flatten.cc (flattenSortAndUniquize): moved here
+
+	* ACU_MergeSort.cc (mergeSortAndUniquize): moved here
+	(sortAndUniquize): moved here
+
+	* ACU_Convert.cc (makeTree): added optional code for checking
+	red-black property
+
+	* ACU_ExtensionInfo.cc (convertToUnmatched): reimplemented to
+	handle unmatched dag root case
+
+2003-02-11  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_ExtensionInfo.cc (copy): reimplemented to handle unmatched
+	dag root case
+	(makeClone): reimplemented to handle unmatched dag root case
+	(buildMatchedPortion): reimplemented to handle ACU_TreeDagNode
+	case
+
+	* ACU_DagNode.hh (class ACU_DagNode): deleted decl for
+	makeExtensionInfo()
+
+	* ACU_DagNode.cc (makeExtensionInfo): deleted
+
+	* ACU_TreeDagNode.hh (class ACU_TreeDagNode): deleted decl for
+	makeExtensionInfo()
+
+	* ACU_TreeDagNode.cc (makeExtensionInfo): deleted
+
+	* ACU_BaseDagNode.hh (class ACU_BaseDagNode): added decl for
+	makeExtensionInfo()
+
+	* ACU_BaseDagNode.cc (makeExtensionInfo): added
+
+	* ACU_TreeDagNode.cc (partialConstruct): reimplemented without
+	using treeToArgVec()
+
+	* ACU_TreeDagNode.hh (class ACU_TreeDagNode): deleted decls for
+	argVecToTree(), overwriteWithInsert() and makeTree()
+
+	* ACU_TreeDagNode.cc (argVecToTree): deleted
+	(pow2min1): deleted
+	(makeTree): deleted
+	(overwriteWithInsert): deleted
+
+	* ACU_NewNormalize.cc: deleted
+
+	* ACU_Normalize.cc (insertAlien): use makeTree() in place of
+	argVecToTree() (2 places)
+	(insertAlien): use consInsert() in place of overwriteWithInsert()
+	(normalizeAtTop): use makeTree() in place of argVecToTree()
+	(normalizeAtTop): removed alternative merge case code
+
+	* ACU_DagNode.hh (class ACU_DagNode): added decl for makeTree()
+	(both versions) and pow2min1()
+
+	* ACU_Convert.cc: created
+
+	* ACU_Normalize.cc (insertAlien): use CONVERT_THRESHOLD
+	(insertAlien): fixed bug in alterate code when we fall below the
+	threshold
+
+	* ACU_DagNode.hh (class ACU_DagNode): added MERGE_THRESHOLD to
+	enum Sizes; THRESHOLD -> CONVERT_THRESHOLD
+
+	* ACU_Normalize.cc (normalizeAtTop): use MERGE_THRESHOLD
+
+2003-02-10  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_Normalize.cc (normalizeAtTop): don't convert back to
+	re-black ofer merging two red-black trees
+
+	* ACU_NonLinearLhsAutomaton.cc (treeMatch):
+	setNormalizationStatus(ACU_DagNode::ASSIGNMENT) now that we are
+	extract hi mult arguments in order
+
+2003-02-07  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_DagNode.hh (class ACU_DagNode): added ctor decl for Pair
+	(Pair): added
+	(Pair): added default ctor
+
+	* ACU_NonLinearLhsAutomaton.hh (class ACU_NonLinearLhsAutomaton):
+	added data member matched
+
+	* ACU_NonLinearLhsAutomaton.cc (treeMatch): rewritten
+	(match): use treeMatch()
+
+2003-02-06  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_NonLinearLhsAutomaton.hh (class ACU_NonLinearLhsAutomaton):
+	added decl for treeMatch()
+
+	* ACU_NonLinearLhsAutomaton.cc (treeMatch): added
+
+2003-02-05  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_TreeDagNode.cc (partialReplace): simplified using new
+	ACU_Extension interface
+
+	* ACU_NonLinearLhsAutomaton.cc (match): use new ACU_Extension
+	interface
+
+	* ACU_ExtensionInfo.hh (clearMatched): deleted
+	(addMatched): deleted
+	(getMatched): deleted
+	(clear): set unmatched to 0 rather than clearing matched
+	(reset): set unmatched to 0 rather than clearing matched
+	(class ACU_ExtensionInfo): deleted data member matched; added data
+	member unmatched
+	(setUnmatched): added DagNode* version
+	(getUnmatched): added DagNode* version
+	(useUnmatched): use unmatched
+
+2003-02-04  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_Symbol.cc: (complexStrategy): use new normalizeAtTop() (2
+	places)
+	(reduceArgumentsAndNormalize): use new normalizeAtTop()
+	(eqRewrite): use new normalizeAtTop()
+	(memoStrategy): use new normalizeAtTop() (3 places)
+	(normalizeAndComputeTrueSort): use new normalizeAtTop()
+
+	* ACU_DagNode.hh (class ACU_DagNode): added THRESHHOLD to enum Sizes
+
+	* ACU_TreeDagNode.hh (class ACU_TreeDagNode): made ctor public
+
+	* ACU_Normalize.cc (normalizeAtTop): reimplemented
+	(insertAlien): added
+
+2003-02-03  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_Normalize.cc: created
+
+	* ACU_DagNode.hh (fastCopy): moved here
+	(fastCopy): added ACU_FastIter version
+	(class ACU_DagNode): added decls for additional versions of fastMerge()
+
+	* ACU_FastMerge.cc: created
+
+	* ACU_TreeDagNode.cc (markArguments): rewritten to do a preorder
+	traversal, ignoring marked red-black nodes
+	(partialReplace): added replacement == matched arg heuristic
+
+2003-01-31  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_NewNormalize.cc (normalizeAtTop): fixed stupid brace bug in
+	two red-black tree case
+
+	* ACU_NonLinearLhsAutomaton.cc (match): fixed bug where we weren't
+	dealing with the case that we matched everything
+
+	* ACU_TreeDagNode.cc (partialReplace): fixed bug where we were not
+	testing r->getMultiplicity() against 1
+
+	* ACU_NewNormalize.cc (normalizeAtTop): added code for two
+	red-black trees case
+
+	* ACU_Term.cc (analyseCollapses): becomes analyseCollapses2()
+
+	* ACU_Term.hh (class ACU_Term): analyseCollapses() ->
+	analyseCollapses2()
+
+	* ACU_TreeDagArgumentIterator.cc: moved here
+
+	* ACU_TreeDagArgumentIterator.hh: moved here
+
+	* ACU_TreeDagNode.cc: moved here
+
+	* ACU_TreeDagNode.hh: moved here
+
+	* ACU_Theory.hh: added fwd decls for ACU_TreeDagNode and
+	ACU_TreeDagArgumentIterator
+
+2003-01-30  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_CollectorLhsAutomaton.cc (collect): ACU_SlowIter ->
+	ACU_Stack
+
+	* ACU_CollectorLhsAutomaton.hh (class ACU_CollectorLhsAutomaton):
+	ACU_SlowIter -> ACU_Stack
+
+	* ACU_NGA_LhsAutomaton.cc (match): use
+	ACU_RedBlackNode::findFirstPotentialMatch rather than
+	ACU_TreeDagNode::findFirstPotentialMatch
+
+2003-01-29  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_VarLhsAutomaton.cc (match): getArgument() -> getDagNode()
+
+	* ACU_Term.cc (compareArguments): getArgument() -> getDagNode()
+
+	* ACU_NonLinearLhsAutomaton.cc (match): getArgument() ->
+	getDagNode()
+
+	* ACU_NGA_LhsAutomaton.cc (match): getArgument() -> getDagNode()
+	(2 places)
+
+	* ACU_DagNode.cc (compareArguments): getArgument() -> getDagNode()
+
+2003-01-28  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_ExtensionInfo.hh (class ACU_ExtensionInfo): added decl for
+	convertToUnmatched()
+
+	* ACU_ExtensionInfo.cc (convertToUnmatched): added
+
+	* ACU_ExtensionInfo.hh (useUnmatched): added
+
+	* ACU_NewNormalize.cc (normalizeAtTop): use isTree() (2 places)
+
+	* ACU_DagNode.cc (getACU_DagNode): use isTree()
+
+	* ACU_NonLinearLhsAutomaton.cc (match): added red-black case
+
+2003-01-27  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_VarLhsAutomaton.cc (match): added red-black case
+
+	* ACU_GndLhsAutomaton.cc (match): added red-black case
+
+	* ACU_NGA_LhsAutomaton.cc (match): fixed if nesting bug; it hadn't
+	bitten because collect() seldom return false;
+
+	* ACU_Symbol.cc (eqRewrite): use isTree()
+
+	* ACU_NGA_LhsAutomaton.cc (match): use isTree()
+
+	* ACU_ExtensionInfo.hh (clear): use getSize()
+	(reset): use getSize()
+	(clearMatched): added
+
+	* ACU_BaseDagNode.cc: created
+
+	* ACU_ExtensionInfo.hh (ACU_ExtensionInfo): take ACU_BaseDagNode*
+	(class ACU_ExtensionInfo): added struct Matched and data member
+	matched
+
+2003-01-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_DagNode.cc (compareArguments): rewritten to use left to
+	right comparison and handle ACU_TreeDagNodes
+
+	* ACU_Term.cc (compareArguments): (DagNode* version) rewritten to
+	use left to right comparison and handle ACU_TreeDagNodes
+	(compareArguments): (Term*) rewritten to use iterators and left to
+	right comparison
+
+2003-01-22  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_BaseDagNode.hh (isTree): added
+
+2003-01-14  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_Symbol.cc (eqRewrite): fixed casting bug in tree case
+
+2003-01-13  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_Symbol.hh (computeBaseSort): added
+	(computeMultBaseSort): added
+
+	* ACU_ExtensionInfo.hh (ACU_ExtensionInfo): added ACU_TreeDagNode*
+	version
+
+	* ACU_Symbol.cc (eqRewrite): handle TREE case
+
+	* ACU_CollectorLhsAutomaton.cc (collect): added ACU_TreeDagNode*
+	version
+
+2003-01-12  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_NGA_LhsAutomaton.cc (match): added support for
+	ACU_TreeDagNodes
+
+	* ACU_CollectorLhsAutomaton.hh (class ACU_CollectorLhsAutomaton):
+	added decl for ACU_TreeDagNode* version of collect
+
+2003-01-10  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_Symbol.cc (eqRewrite): rewritten to use new normalizeAtTop()
+
+	* ACU_DagNode.hh (class ACU_DagNode): added decl for new version
+	of normalizeAtTop()
+
+	* ACU_NewNormalize.cc: created
+
+	* ACU_DagNode.cc (getACU_DagNode): made into a global function
+
+	* ACU_DagNode.hh (class ACU_DagNode): made getACU_DagNode() a
+	friend function rather than a static member function
+
+	* ACU_VarLhsAutomaton.cc (match): used getACU_DagNode()
+
+	* ACU_Term.cc (compareArguments): used getACU_DagNode() +
+	const_cast<DagNode*>()
+
+	* ACU_Subproblem.cc (solveVariables): used getACU_DagNode()
+
+	* ACU_NonLinearLhsAutomaton.cc (match): used getACU_DagNode()
+
+	* ACU_NGA_LhsAutomaton.cc (match): used getACU_DagNode()
+
+	* ACU_Matcher.cc (match): used getACU_DagNode()
+
+	* ACU_GndLhsAutomaton.cc (match): used getACU_DagNode()
+
+	* ACU_AlienAlienLhsAutomaton.cc (match): used getACU_DagNode()
+
+	* ACU_Term.hh (symbol): replaced static_cast<ACU_Symbol>() with
+	safeCast() 
+
+	* ACU_Symbol.cc (ruleRewrite): used getACU_DagNode()
+	(reduceArgumentsAndNormalize): used getACU_DagNode()
+	(eqRewrite): used getACU_DagNode()
+	(complexStrategy): used getACU_DagNode()
+	(memoStrategy): used getACU_DagNode()
+	(computeBaseSort): used getACU_DagNode()
+	(normalizeAndComputeTrueSort): used getACU_DagNode()
+	(stackArguments): used getACU_DagNode()
+
+	* ACU_DagNormalization.cc (flattenSortAndUniquize): used
+	getACU_DagNode()
+	(normalizeAtTop): used getACU_DagNode() in many places
+	(extensionNormalizeAtTop): used getACU_DagNode()
+
+	* ACU_DagOperations.cc (eliminateSubject): use getACU_DagNode()
+	rather than static_cast<ACU_DagNode*>
+
+	* ACU_DagNode.cc (compareArguments): handle TREE case
+
+	* ACU_DagNode.hh (class ACU_DagNode): added decl for
+	getACU_DagNode()
+
+	* ACU_DagNode.cc (getACU_DagNode): added
+
+2003-01-08  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_Symbol.cc (eqRewrite): added crude hack to see if we can
+	convert to re-black form and back
+
+	* ACU_DagNode.hh (class ACU_DagNode): made ACU_TreeDagNode a friend
+
+	* ACU_Theory.hh: added ACU_BaseDagNode;
+
+	* ACU_DagNode.cc (~ACU_DagNode): deleted
+
+	* ACU_DagNode.hh (class ACU_DagNode): rewritten, deriving from
+	ACU_BaseDagNode
+
+	* ACU_BaseDagNode.hh: created
+
+2003-01-07  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_LhsCompiler0.cc (tryToMakeCollectorLhsAutomaton): use new
+	ACU_NGA_LhsAutomaton() convention
+
+	* ACU_NGA_LhsAutomaton.cc (ACU_NGA_LhsAutomaton): replaced
+	stripperTopSymbol with stripperTerm
+	(match): rewritten using stripperTerm
+	(dump): sump stripperTerm
+
+	* ACU_NGA_LhsAutomaton.hh (class ACU_NGA_LhsAutomaton): replaced
+	stripperTopSymbol with stripperTerm
+	(class ACU_NGA_LhsAutomaton): updated decl for
+	ACU_NGA_LhsAutomaton()
+
+	* ACU_GreedyMatcher.cc (greedyMatch): use partialCompare() and
+	findFirstPotentialMatch()
+
+	* ACU_Matcher.cc (eliminateGroundedOutAliens): use
+	partialCompare() and findFirstPotentialMatch()
+	(aliensOnlyMatch): use partialCompare() and
+	findFirstPotentialMatch()
+	(buildBipartiteGraph): use partialCompare() and
+	findFirstPotentialMatch()
+
+	* ACU_LhsAutomaton.cc (addGroundedOutAlien): assign to term rather
+	than topSymbol
+	(addNonGroundAlien): assign to term rather than topSymbol
+
+	* ACU_LhsAutomaton.hh (class ACU_LhsAutomaton): term replaces
+	topSymbol in struct NonGroundAlien
+
+	* ACU_DagOperations.cc (findFirstPotentialMatch): added
+
+===================================Maude78==================================================
+
 2003-01-02  Steven Eker  <eker@goo.csl.sri.com>
 
 	* ACU_Term.hh (class ACU_Term): updated decl for

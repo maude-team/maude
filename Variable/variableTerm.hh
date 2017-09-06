@@ -23,6 +23,7 @@ public:
   Term* normalize(bool full, bool& changed);
   int compareArguments(const Term* other) const;
   int compareArguments(const DagNode* other) const;
+
   void findEagerVariables(bool atTop, NatSet& eagerVariables) const;
   void analyseConstraintPropagation(NatSet& boundUniquely) const;
   LhsAutomaton* compileLhs2(bool matchAtTop,
@@ -44,6 +45,9 @@ public:
   //	Optional stuff that is easy to define for variable terms.
   //
   bool subsumes(const Term* other, bool sameVariableSet) const;
+  int partialCompareUnstable(const Substitution& partialSubstitution,
+			     DagNode* other) const;
+
   //
   //	Functions particular to variable terms.
   //

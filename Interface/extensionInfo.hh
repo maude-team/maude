@@ -23,7 +23,16 @@ public:
   virtual void copy(ExtensionInfo* extensionInfo) = 0;	// for restoring extension info
 
 private:
+  //
+  //	The match phase records if extension info is valid after
+  //	the match phase or do we need to wait until after
+  //	the solve phase is successful.
+  //
   Bool validAfterMatchFlag;
+  //
+  //	Did we match the whole of the subject theory layer
+  //	(extension is empty) or just part.
+  //
   Bool matchedWholeFlag;
 };
 

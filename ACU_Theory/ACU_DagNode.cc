@@ -13,6 +13,7 @@
 #include "interface.hh"
 #include "core.hh"
 #include "ACU_Theory.hh"
+#include "ACU_RedBlack.hh"
 
 //      interface class definitions
 #include "term.hh"
@@ -24,13 +25,28 @@
 #include "ACU_ExtensionInfo.hh"
 #include "ACU_Subproblem.hh"
 
+//	ACU Red-Black class definitions
+#include "ACU_TreeDagNode.hh"
+#include "ACU_FastIter.hh"
+
+//	our stuff
+#include "ACU_Convert.cc"
+#include "ACU_Normalize.cc"
+#include "ACU_FastMerge.cc"
 #include "ACU_DagNormalization.cc"
+#include "ACU_MergeSort.cc"
+#include "ACU_Flatten.cc"
 #include "ACU_DagOperations.cc"
 
 Vector<int> ACU_DagNode::runsBuffer(INITIAL_RUNS_BUFFER_SIZE);
 
-ACU_DagNode::~ACU_DagNode()
+ACU_DagNode*
+getACU_DagNode(DagNode* dagNode)
 {
+  ACU_BaseDagNode* d = safeCast(ACU_BaseDagNode*, dagNode);
+  if (d->isTree())
+    return ACU_TreeDagNode::treeToArgVec(safeCast(ACU_TreeDagNode*, d));
+  return safeCast(ACU_DagNode*, d);
 }
 
 RawDagArgumentIterator*
@@ -44,7 +60,7 @@ ACU_DagNode::getHashValue()
 {
   size_t hashValue = symbol()->getHashValue();
   int nrArgs = argArray.length();
-  for (int i = 0; i < nrArgs; i++)
+  for (int i = 0; i < nrArgs; i++)  // user iterators?
     hashValue = hash(hashValue, argArray[i].dagNode->getHashValue(), argArray[i].multiplicity);
   return hashValue;
 }
@@ -52,32 +68,55 @@ ACU_DagNode::getHashValue()
 int
 ACU_DagNode::compareArguments(const DagNode* other) const
 {
-  const ArgVec<Pair>& argArray2 = static_cast<const ACU_DagNode*>(other)->argArray;
-  Assert(argArray.length() > 0 && argArray2.length() > 0, cerr << "no arguments");
-  int r = argArray.length() - argArray2.length();
-  if (r != 0)
-    return r;
-  //
-  //	HACK: We should change over to doing this forwards.
-  //
-  ArgVec<Pair>::const_iterator i = argArray.end();
-  const ArgVec<Pair>::const_iterator b = argArray.begin();
-  ArgVec<Pair>::const_iterator j = argArray2.end();
-
-  do
+  int len = argArray.length();
+  const ACU_BaseDagNode* d = safeCast(const ACU_BaseDagNode*, other);
+  if (d->isTree())
     {
-      Assert(j != argArray2.begin(), cerr << "iterator inconsistancy");
-      --i;
-      --j;
-      r = i->multiplicity - j->multiplicity;
+      const ACU_TreeDagNode* d2 = safeCast(const ACU_TreeDagNode*, d);
+      int r = len - d2->getRoot()->getSize();
       if (r != 0)
 	return r;
-      r = i->dagNode->compare(j->dagNode);
-      if (r != 0)
-	return r;
+      ACU_FastIter j(d2->getRoot());
+      ArgVec<Pair>::const_iterator i = argArray.begin();
+      const ArgVec<Pair>::const_iterator e = argArray.end();
+      do
+	{
+	  r = i->multiplicity - j.getMultiplicity();
+	  if (r != 0)
+	    return r;
+	  r = i->dagNode->compare(j.getDagNode());
+	  if (r != 0)
+	    return r;
+	  j.next();
+	  ++i;
+	}
+      while (i != e);
+      Assert(!j.valid(), cerr << "iterator problem");
     }
-  while (i != b);
-  Assert(j == argArray2.begin(), cerr << "iterator inconsistancy");
+  else
+    {
+      const ArgVec<ACU_DagNode::Pair>& argArray2 =
+	safeCast(const ACU_DagNode*, d)->argArray;
+      int r = len - argArray2.length();
+      if (r != 0)
+	return r;
+      ArgVec<ACU_DagNode::Pair>::const_iterator j = argArray2.begin();
+      ArgVec<Pair>::const_iterator i = argArray.begin();
+      const ArgVec<Pair>::const_iterator e = argArray.end();
+      do
+	{
+	  r = i->multiplicity - j->multiplicity;
+	  if (r != 0)
+	    return r;
+	  r = i->dagNode->compare(j->dagNode);
+	  if (r != 0)
+	    return r;
+	  ++j;
+	  ++i;
+	}
+      while (i != e);
+      Assert(j == argArray2.end(), cerr << "iterator problem");
+    }
   return 0;
 }
 
@@ -347,12 +386,6 @@ ACU_DagNode::partialConstruct(DagNode* replacement, ExtensionInfo* extensionInfo
   args2[p].dagNode = replacement;
   args2[p].multiplicity = 1;
   return n;
-}
-
-ExtensionInfo*
-ACU_DagNode::makeExtensionInfo()
-{
-  return new ACU_ExtensionInfo(this);
 }
 
 bool

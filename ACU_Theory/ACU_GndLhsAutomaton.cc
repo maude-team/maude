@@ -15,6 +15,7 @@
 #include "core.hh"
 #include "variable.hh"
 #include "ACU_Theory.hh"
+#include "ACU_RedBlack.hh"
 
 //      interface class definitions
 #include "associativeSymbol.hh"
@@ -34,6 +35,10 @@
 #include "ACU_Symbol.hh"
 #include "ACU_DagNode.hh"
 #include "ACU_GndLhsAutomaton.hh"
+
+//	ACU Red-Black class definitions
+#include "ACU_TreeDagNode.hh"
+#include "ACU_SlowIter.hh"
 
 ACU_GndLhsAutomaton::ACU_GndLhsAutomaton(ACU_Symbol* topSymbol,
 					 bool collapsePossible,
@@ -59,16 +64,44 @@ ACU_GndLhsAutomaton::match(DagNode* subject,
 	  //
 	  //	Non-collapse case.
 	  //
-	  ACU_DagNode* s = static_cast<ACU_DagNode*>(subject);
-	  int pos;
-	  if (!(s->binarySearch(stripperTerm, pos)))
-	    return false;
-	  if (collect(pos, s, solution))
+	  if (safeCast(ACU_BaseDagNode*, subject)->isTree())
 	    {
-	      returnedSubproblem = 0;
-	      if (extensionInfo)
-		extensionInfo->setMatchedWhole(true);
-	      return true;
+	      ACU_TreeDagNode* s = safeCast(ACU_TreeDagNode*, subject);
+	      ACU_SlowIter i;
+	      if (!ACU_RedBlackNode::find(s->getRoot(), stripperTerm, i))
+		return false;
+	      if (collect(i, s, solution))
+		{
+		  returnedSubproblem = 0;
+		  if (extensionInfo)
+		    extensionInfo->setMatchedWhole(true);
+		  return true;
+		}
+	      //
+	      //	This collect() does a precise sort calculation
+	      //	except for memberships.
+	      //
+	      if (topSymbol->sortConstraintFree())
+		return false;
+	    }
+	  else
+	    {
+	      ACU_DagNode* s = safeCast(ACU_DagNode*, subject);
+	      int pos;
+	      if (!(s->binarySearch(stripperTerm, pos)))
+		return false;
+	      if (collect(pos, s, solution))
+		{
+		  returnedSubproblem = 0;
+		  if (extensionInfo)
+		    extensionInfo->setMatchedWhole(true);
+		  return true;
+		}
+	      //
+	      //	This collect() can fail because it only does approximate
+	      //	sort tests so we can't do anything better than fall
+	      //	into the full matcher.
+	      //
 	    }
 	}
       else

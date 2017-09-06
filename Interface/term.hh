@@ -22,6 +22,13 @@ class Term : public LineNumber
   static bool discard;
 
 public:
+  enum ReturnValues
+  {
+    GREATER = 1,
+    LESS = -2,
+    EQUAL = 0
+  };
+
   Term(Symbol* symbol);
   virtual ~Term() {}
   //
@@ -56,6 +63,7 @@ public:
   bool honorsGroundOutMatch() const;
   void setHonorsGroundOutMatch(bool flag);
   bool willGroundOutMatch(const NatSet& boundUniquely) const;
+  void analyseCollapses();
   bool hasEagerContext() const;
   bool greedySafe(const VariableInfo& variableInfo, const NatSet& boundUniquely) const;
   LhsAutomaton* compileLhs(bool matchAtTop,
@@ -125,8 +133,8 @@ public:
   virtual bool subsumes(const Term* other, bool sameVariableSet) const;
   //
   //	This pair of functions does the preprocessing needed to handle collapse
-  //	theories correctly. analyseCollapses() computes the set of symbols that
-  //	could be the top symbol of the term following collapses caused by
+  //	theories correctly. analyseCollapses2() computes the set of symbols that
+  //	could be the top symbol of the term following collapses caused by bindings
   //	to its variables. The default version will work for symbols with
   //	collapse-free theories. insertAbstractionVariables() inserts abstraction
   //	variables where needed to help out the matching algorithm by replacing
@@ -134,8 +142,18 @@ public:
   //	the subpattern at solve time. The default version will work for symbols
   //	whose matching algorithm does not need abstraction variables.
   //
-  virtual void analyseCollapses();
+  virtual void analyseCollapses2();
   virtual void insertAbstractionVariables(VariableInfo& variableInfo);
+  //
+  //	Runtime heuristic partial camparison between a term with variables
+  //	and a dag, with a substitution that may bind some of the variables.
+  //
+  int partialCompare(const Substitution& partialSubstitution,
+		     DagNode* other) const;
+  virtual int partialCompareUnstable(const Substitution& partialSubstitution,
+				      DagNode* other) const;
+  virtual int partialCompareArguments(const Substitution& partialSubstitution,
+				      DagNode* other) const;
 
 #ifdef COMPILER
   void generateRhs(CompilationContext& context,
@@ -175,6 +193,25 @@ protected:
   void setSaveIndex(int index);
   
 private:
+  enum Flags
+  {
+    //
+    //	A subterm is stable if its top symbol cannot change under instantiation.
+    //
+    STABLE = 1,
+    //
+    //	A subterm is in an eager context if the path to its root contains only
+    //	eagerly evaluated positions.
+    //
+    EAGER_CONTEXT = 2,
+    //
+    //	A subterm "honors ground out match" if its matching algorithm guarantees
+    //	never to to return a matching subproblem when all the terms variables
+    //	are already bound.
+    //
+    HONORS_GROUND_OUT_MATCH = 4
+  };
+
   static bool commonWithOtherPatterns(Vector<Term*>& patterns, int excluded, Symbol* symbol);
   static bool hasGeqOrIncomparableVariable(Term* pattern, VariableSymbol* v);
 
@@ -186,8 +223,7 @@ private:
   NatSet occursSet;
   NatSet contextSet;
   PointerSet collapseSet;
-  Bool honorsGroundOutMatchFlag;
-  Bool eagerContext;
+  Ubyte flags;
   short sortIndex;
   ConnectedComponent* connectedComponent;
   int saveIndex;
@@ -198,7 +234,7 @@ inline
 Term::Term(Symbol* symbol)
 {
   topSymbol = symbol;
-  eagerContext = false;
+  flags = 0;
   sortIndex = Sort::SORT_UNKNOWN;
   saveIndex = NONE;
 }
@@ -218,7 +254,7 @@ Term::ground() const
 inline bool
 Term::stable() const
 {
-  return dynamic_cast<VariableSymbol*>(topSymbol) == 0 && collapseSet.empty();
+  return flags & STABLE;
 }
 
 inline const NatSet&
@@ -261,6 +297,23 @@ Term::compare(const DagNode* other) const
   return (topSymbol == s) ? compareArguments(other) : topSymbol->compare(s);
 }
 
+inline int  // inline this because it is heavily used at runtime
+Term::partialCompare(const Substitution& partialSubstitution,
+		     DagNode* other) const
+{
+  if (!stable())
+    return partialCompareUnstable(partialSubstitution, other);
+  Symbol* s = other->symbol();
+  if (topSymbol == s)
+    return partialCompareArguments(partialSubstitution, other);
+  int t = topSymbol->compare(s);
+  if (t < 0)
+    return LESS;
+  if (t > 0)
+    return GREATER;
+  return EQUAL;
+}
+
 inline bool
 Term::equal(const Term* other) const
 {
@@ -298,7 +351,7 @@ Term::markEager(int nrVariables,
 		const NatSet& eagerVariables,
 		Vector<int>& problemVariables)
 {
-  eagerContext = true;
+  flags |= EAGER_CONTEXT;
   markEagerArguments(nrVariables, eagerVariables, problemVariables);
 }
 
@@ -383,25 +436,28 @@ Term::setHashValue(unsigned int value)
 inline bool
 Term::honorsGroundOutMatch() const
 {
-  return honorsGroundOutMatchFlag;
+  return flags & HONORS_GROUND_OUT_MATCH;
 }
 
 inline void
 Term::setHonorsGroundOutMatch(bool flag)
 {
-  honorsGroundOutMatchFlag = flag;
+  if (flag)  // HACK should probably start clear and set as needed
+    flags |= HONORS_GROUND_OUT_MATCH;
+  else
+    flags &= ~HONORS_GROUND_OUT_MATCH;
 }
 
 inline bool
 Term::willGroundOutMatch(const NatSet& boundUniquely) const
 {
-  return honorsGroundOutMatchFlag && boundUniquely.contains(occursSet);
+  return honorsGroundOutMatch() && boundUniquely.contains(occursSet);
 }
 
 inline bool
 Term::hasEagerContext() const
 {
-  return eagerContext;
+  return flags & EAGER_CONTEXT;
 }
 
 inline bool

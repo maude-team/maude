@@ -12,6 +12,7 @@ whole:
 	cd $(ROOT_DIR)/Higher; $(MAKE) clean; $(MAKE) -e
 	cd $(ROOT_DIR)/FreeTheory; $(MAKE) clean; $(MAKE) -e
 	cd $(ROOT_DIR)/ACU_Theory; $(MAKE) clean; $(MAKE) -e
+	cd $(ROOT_DIR)/ACU_RedBlack; $(MAKE) clean; $(MAKE) -e
 	cd $(ROOT_DIR)/CUI_Theory; $(MAKE) clean; $(MAKE) -e
 	cd $(ROOT_DIR)/AU_Theory; $(MAKE) clean; $(MAKE) -e
 	cd $(ROOT_DIR)/S_Theory; $(MAKE) clean; $(MAKE) -e

@@ -14,10 +14,12 @@
 #include "core.hh"
 #include "variable.hh"
 #include "ACU_Theory.hh"
+#include "ACU_RedBlack.hh"
 
 //	ACU theory class definitions
 #include "ACU_Symbol.hh"
 #include "ACU_DagNode.hh"
+#include "ACU_TreeDagNode.hh"
 #include "ACU_Term.hh"
 #include "ACU_ExtensionInfo.hh"
 
@@ -47,7 +49,7 @@ ACU_Symbol::postOpDeclarationPass()
 DagNode*
 ACU_Symbol::ruleRewrite(DagNode* subject, RewritingContext& context)
 {
-  ACU_ExtensionInfo extensionInfo(static_cast<ACU_DagNode*>(subject));
+  ACU_ExtensionInfo extensionInfo(getACU_DagNode(subject));
   return applyRules(subject, context, &extensionInfo);
 }
 
@@ -92,7 +94,7 @@ ACU_Symbol::makeDagNode(const Vector<DagNode*>& args,
 bool
 ACU_Symbol::reduceArgumentsAndNormalize(DagNode* subject, RewritingContext& context)
 {
-  ACU_DagNode* s = static_cast<ACU_DagNode*>(subject);
+  ACU_DagNode* s = getACU_DagNode(subject);
   if (s->getNormalizationStatus() != ACU_DagNode::ASSIGNMENT)
     {
       int nrArgs = s->argArray.length();
@@ -112,9 +114,10 @@ ACU_Symbol::reduceArgumentsAndNormalize(DagNode* subject, RewritingContext& cont
 	  //	We always need to renormalize at the top because
 	  //	shared subterms may have rewritten.
 	  //
-	  (void) s->normalizeAtTop();
+	  if (s->normalizeAtTop())
+	    return false;
 	}
-      Term* identity = getIdentity();
+      Term* identity = getIdentity(); // FIX
       if (identity != 0 && s->eliminateArgument(identity))
 	return false;
     }
@@ -127,36 +130,57 @@ ACU_Symbol::eqRewrite(DagNode* subject, RewritingContext& context)
   Assert(this == subject->symbol(), cerr << "bad symbol");
   if (standardStrategy())
     {
-      ACU_DagNode* s = static_cast<ACU_DagNode*>(subject);
-      if (s->getNormalizationStatus() != ACU_DagNode::ASSIGNMENT)
+      if (safeCast(ACU_BaseDagNode*, subject)->isTree())
 	{
-	  int nrArgs = s->argArray.length();
-	  if (s->getNormalizationStatus() == ACU_DagNode::EXTENSION)
-	    {
-	      //
-	      //	Only last arg may be unreduced and out of place.
-	      //
-	      s->argArray[nrArgs - 1].dagNode->reduce(context);
-	      (void) s->extensionNormalizeAtTop();
-	    }
-	  else
-	    {
-	      for (int i = 0; i < nrArgs; i++)
-		s->argArray[i].dagNode->reduce(context);
-	      //
-	      //	We always need to renormalize at the top because
-	      //	shared subterms may have rewritten.
-	      //
-	      (void) s->normalizeAtTop();
-	    }
-	  Term* identity = getIdentity();
-	  if (identity != 0 && s->eliminateArgument(identity))
-	    return false;
+	treeCase:
 	  if (equationFree())
 	    return false;
+	  ACU_ExtensionInfo extensionInfo(safeCast(ACU_BaseDagNode*, subject));
+	  return applyReplace(subject, context, &extensionInfo);
 	}
-      ACU_ExtensionInfo extensionInfo(s);
-      return applyReplace(subject, context, &extensionInfo);
+      else
+	{
+	  ACU_DagNode* s = safeCast(ACU_DagNode*, subject);
+	  if (s->getNormalizationStatus() != ACU_DagNode::ASSIGNMENT)
+	    {
+	      int nrArgs = s->argArray.length();
+	      if (s->getNormalizationStatus() == ACU_DagNode::EXTENSION)
+		{
+		  //
+		  //	Only last arg may be unreduced and out of place.
+		  //
+		  s->argArray[nrArgs - 1].dagNode->reduce(context);
+		  (void) s->extensionNormalizeAtTop();
+		  Term* identity = getIdentity();
+		  if (identity != 0 && s->eliminateArgument(identity))
+		    return false;
+		}
+	      else
+		{
+		  for (int i = 0; i < nrArgs; i++)
+		    s->argArray[i].dagNode->reduce(context);
+		  //
+		  //	We always need to renormalize at the top because
+		  //	shared subterms may have rewritten.
+		  //
+		  if (s->normalizeAtTop())
+		    return false;
+		}
+	      if (safeCast(ACU_BaseDagNode*, subject)->isTree())
+		goto treeCase;   // may have been converted
+	      if (equationFree())
+		return false;
+	    }
+	  //
+	  //	We don't test for equation-freeness here
+	  //	because if we were produced by an assignment
+	  //	and our symbol is equation-free, our reduced flag
+	  //	would be set (since we don't have a complex
+	  //	strategy) and we wouldn't be here.
+	  //
+	  ACU_ExtensionInfo extensionInfo(s);
+	  return applyReplace(subject, context, &extensionInfo);
+	}
     }
   return complexStrategy(subject, context);
 }
@@ -170,25 +194,24 @@ ACU_Symbol::complexStrategy(DagNode* subject, RewritingContext& context)
       bool result = memoStrategy(from, subject, context);
       memoEnter(from, subject);
       //
-      //	We may need to return true in the case we collapse to a unreduced subterm.
+      //	We may need to return true in the case we collapse
+      //	to a unreduced subterm.
       //
       return result;
     }
-  ACU_DagNode* s = static_cast<ACU_DagNode*>(subject);
-  ArgVec<ACU_DagNode::Pair>& args = s->argArray;  // can't use hack!
-  Term* identity = getIdentity();
+  ACU_DagNode* s = getACU_DagNode(subject);
+  ArgVec<ACU_DagNode::Pair>& args = s->argArray;  // can't use iterator
   if (s->getNormalizationStatus() != ACU_DagNode::ASSIGNMENT)
     {
       int nrArgs = args.length();
       for (int i = 0; i < nrArgs; i++)
 	args[i].dagNode->computeTrueSort(context);
-      (void) s->normalizeAtTop();
       //
       //	If we collapse to one of our subterms which has not been reduced
       //	we pretend that we did a rewrite so that the reduction process
       //	continues.
       //
-      if (identity != 0 && s->eliminateArgument(identity))
+      if (s->normalizeAtTop())
 	return !(s->isReduced());
     }
   ACU_ExtensionInfo extensionInfo(s);
@@ -197,8 +220,7 @@ ACU_Symbol::complexStrategy(DagNode* subject, RewritingContext& context)
   if (getPermuteStrategy() == LAZY)
     return false;
   copyAndReduceSubterms(s, context);
-  (void) s->normalizeAtTop();
-  if (identity != 0 && s->eliminateArgument(identity))
+  if (s->normalizeAtTop())
     return false;
   s->repudiateSortInfo();  // applyReplace() might have left sort behind
   return applyReplace(subject, context, &extensionInfo);
@@ -209,7 +231,7 @@ ACU_Symbol::memoStrategy(MemoTable::SourceSet& from,
 			 DagNode* subject,
 			 RewritingContext& context)
 {
-  ACU_DagNode* s = static_cast<ACU_DagNode*>(subject);
+  ACU_DagNode* s = getACU_DagNode(subject);
   PermuteStrategy strat = getPermuteStrategy();
   if (strat == EAGER)
     {
@@ -232,9 +254,10 @@ ACU_Symbol::memoStrategy(MemoTable::SourceSet& from,
 	      //	We always need to renormalize at the top because
 	      //	shared subterms may have rewritten.
 	      //
-	      (void) s->normalizeAtTop();
+	      if (s->normalizeAtTop())
+		return false;
 	    }
-	  Term* identity = getIdentity();
+	  Term* identity = getIdentity();  // FIX
 	  if (identity != 0 && s->eliminateArgument(identity))
 	    return false;
 	}
@@ -242,19 +265,17 @@ ACU_Symbol::memoStrategy(MemoTable::SourceSet& from,
   else
     {
       ArgVec<ACU_DagNode::Pair>& args = s->argArray;  // can't use hack!
-      Term* identity = getIdentity();
-      if (s->getNormalizationStatus() != ACU_DagNode::ASSIGNMENT)
+     if (s->getNormalizationStatus() != ACU_DagNode::ASSIGNMENT)
 	{
 	  int nrArgs = args.length();
 	  for (int i = 0; i < nrArgs; i++)
 	    args[i].dagNode->computeTrueSort(context);
-	  (void) s->normalizeAtTop();
 	  //
 	  //	If we collapse to one of our subterms which has not been reduced
 	  //	we pretend that we did a rewrite so that the reduction process
 	  //	continues.
 	  //
-	  if (identity != 0 && s->eliminateArgument(identity))
+	  if (s->normalizeAtTop())
 	    return !(s->isReduced());
 	}
       if (memoRewrite(from, subject, context))
@@ -268,8 +289,7 @@ ACU_Symbol::memoStrategy(MemoTable::SourceSet& from,
       if (getPermuteStrategy() == LAZY)
 	return false;
       copyAndReduceSubterms(s, context);
-      (void) s->normalizeAtTop();
-      if (identity != 0 && s->eliminateArgument(identity))
+      if (s->normalizeAtTop())
 	return false;
       s->repudiateSortInfo();  // applyReplace() might have left sort behind
     }
@@ -294,67 +314,76 @@ void
 ACU_Symbol::computeBaseSort(DagNode* subject)
 {
   Assert(this == subject->symbol(), cerr << "bad symbol");
-  ACU_DagNode* s = static_cast<ACU_DagNode*>(subject);
-  ArgVec<ACU_DagNode::Pair>& args = s->argArray;
-  int nrArgs = args.length();
-  //
-  //	If symbol has a uniform sort structure do a fast sort computation.
-  //
-  const Sort* uniSort = uniformSort();
-  if (uniSort != 0)
+  if (safeCast(ACU_BaseDagNode*, subject)->getNormalizationStatus() ==
+      ACU_BaseDagNode::TREE)
     {
-      if (s->getNormalizationStatus() != ACU_DagNode::ASSIGNMENT)
+      ACU_TreeDagNode* s = safeCast(ACU_TreeDagNode*, subject);
+      s->computeBaseSort();
+    }
+  else
+    {
+      ACU_DagNode* s = safeCast(ACU_DagNode*, subject);
+      ArgVec<ACU_DagNode::Pair>& args = s->argArray;
+      int nrArgs = args.length();
+      //
+      //	If symbol has a uniform sort structure do a fast sort computation.
+      //
+      const Sort* uniSort = uniformSort();
+      if (uniSort != 0)
 	{
-	  //
-	  //	Check we're not in the error sort.
-	  //
-	  int lastIndex = Sort::SORT_UNKNOWN;
-	  for (int i = 0; i < nrArgs; i++)
+	  if (s->getNormalizationStatus() != ACU_DagNode::ASSIGNMENT)
 	    {
-	      int index = args[i].dagNode->getSortIndex();
-	      Assert(index != Sort::SORT_UNKNOWN, cerr << "bad sort");
-	      if (index != lastIndex)
+	      //
+	      //	Check we're not in the error sort.
+	      //
+	      int lastIndex = Sort::SORT_UNKNOWN;
+	      for (int i = 0; i < nrArgs; i++)
 		{
-		  if (!(leq(index, uniSort)))
+		  int index = args[i].dagNode->getSortIndex();
+		  Assert(index != Sort::SORT_UNKNOWN, cerr << "bad sort");
+		  if (index != lastIndex)
 		    {
-		      subject->setSortIndex(Sort::ERROR_SORT);
-		      return;
+		      if (!(leq(index, uniSort)))
+			{
+			  subject->setSortIndex(Sort::ERROR_SORT);
+			  return;
+			}
+		      lastIndex = index;
 		    }
-		  lastIndex = index;
 		}
 	    }
-        }
-      subject->setSortIndex(uniSort->index());
-      return;
-    }
-  //
-  //	Standard sort calculation.
-  //
-  int sortIndex = Sort::SORT_UNKNOWN;
-  for (int i = 0; i < nrArgs; i++)
-    {
-      DagNode* d = args[i].dagNode;
-      int t = d->getSortIndex();
-      Assert(t >= 0, cerr << "bad sort index");
-      int m = args[i].multiplicity;
-      if (sortIndex == Sort::SORT_UNKNOWN)
-	{
-	  sortIndex = t;
-	  if (--m == 0)
-	    continue;
+	  subject->setSortIndex(uniSort->index());
+	  return;
 	}
-      int state = traverse(0, t);  // commutative optimization for m > 1
-      for (int j = 0; j < m; j++)
-	sortIndex = traverse(state, sortIndex);
+      //
+      //	Standard sort calculation.
+      //
+      int sortIndex = Sort::SORT_UNKNOWN;
+      for (int i = 0; i < nrArgs; i++)
+	{
+	  DagNode* d = args[i].dagNode;
+	  int t = d->getSortIndex();
+	  Assert(t >= 0, cerr << "bad sort index");
+	  int m = args[i].multiplicity;
+	  if (sortIndex == Sort::SORT_UNKNOWN)
+	    {
+	      sortIndex = t;
+	      if (--m == 0)
+		continue;
+	    }
+	  int state = traverse(0, t);  // commutative optimization for m > 1
+	  for (int j = 0; j < m; j++)
+	    sortIndex = traverse(state, sortIndex);
+	}
+      subject->setSortIndex(sortIndex);
     }
-  subject->setSortIndex(sortIndex);
 }
 
 void
 ACU_Symbol::normalizeAndComputeTrueSort(DagNode* subject, RewritingContext& context)
 {
   Assert(this == subject->symbol(), cerr << "bad symbol");
-  ACU_DagNode* s = static_cast<ACU_DagNode*>(subject);
+  ACU_DagNode* s = getACU_DagNode(subject);
   ArgVec<ACU_DagNode::Pair>& args = s->argArray;
   int nrArgs = args.length();
   //
@@ -365,9 +394,7 @@ ACU_Symbol::normalizeAndComputeTrueSort(DagNode* subject, RewritingContext& cont
   //
   //	Put subject in normal form (could collapse to a subterm).
   //
-  (void) s->normalizeAtTop();
-  Term* identity = getIdentity();
-  if (identity != 0 && s->eliminateArgument(identity))
+  if (s->normalizeAtTop())
     return;
   //
   //	Finally compute subjects true sort.
@@ -384,7 +411,7 @@ ACU_Symbol::stackArguments(DagNode* subject,
   if (!(getFrozen().empty()))
     return;
   bool eager = (getPermuteStrategy() == EAGER);
-  ArgVec<ACU_DagNode::Pair>& args = safeCast(ACU_DagNode*, subject)->argArray;
+  ArgVec<ACU_DagNode::Pair>& args = getACU_DagNode(subject)->argArray;
   int nrArgs = args.length();
   int argNr = 0;
   for (int i = 0; i < nrArgs; i++)

@@ -25,6 +25,7 @@ int CommonTokens::dot;
 int CommonTokens::equals;
 int CommonTokens::assign;
 int CommonTokens::arrow;
+int CommonTokens::arrowOne;
 int CommonTokens::arrowPlus;
 int CommonTokens::arrowStar;
 int CommonTokens::arrowBang;
@@ -65,6 +66,7 @@ CommonTokens::CommonTokens()
       equals = Token::encode("=");
       assign = Token::encode(":=");
       arrow = Token::encode("=>");
+      arrowOne = Token::encode("=>1");
       arrowPlus = Token::encode("=>+");
       arrowStar = Token::encode("=>*");
       arrowBang = Token::encode("=>!");

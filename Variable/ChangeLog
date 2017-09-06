@@ -1,3 +1,12 @@
+2003-01-07  Steven Eker  <eker@goo.csl.sri.com>
+
+	* variableTerm.cc (partialCompareUnstable): added
+
+	* variableTerm.hh (class VariableTerm): added decl for
+	partialCompareUnstable()
+	
+===================================Engine78===========================================
+	
 2002-10-08  Steven Eker  <eker@goo.csl.sri.com>
 
 	* variableDagNode.cc (copyWithReplacement): (both versions) use

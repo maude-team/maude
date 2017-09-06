@@ -33,6 +33,12 @@ public:
   void compileOpDeclarations();
   void postOpDeclarationPass();
 
+  //
+  //	ACU_Symbol specific functions.
+  //
+  int computeBaseSort(int index1, int index2);
+  int computeMultBaseSort(int index, int multiplicity);
+
 protected:
   //
   //	For use in derived classes that override eqRewrite() so
@@ -51,5 +57,32 @@ private:
   bool memoStrategy(MemoTable::SourceSet& from, DagNode* subject, RewritingContext& context);
   void copyAndReduceSubterms(ACU_DagNode* subject, RewritingContext& context);
 };
+
+inline int
+ACU_Symbol::computeBaseSort(int index1, int index2)
+{
+  return traverse(traverse(0, index1), index2);
+}
+
+inline int
+ACU_Symbol::computeMultBaseSort(int index, int multiplicity)
+{
+  // NEEDS TO BE OPTIMIZED
+  int result = Sort::SORT_UNKNOWN;
+  int sqr = index;
+  while (multiplicity > 0)
+    {
+      if (multiplicity & 1)
+	{
+	  if (result == Sort::SORT_UNKNOWN)
+	    result = sqr;
+	  else
+	    result = computeBaseSort(sqr, result);
+	}
+      multiplicity >>= 1;
+      sqr = computeBaseSort(sqr, sqr);
+    }
+  return result;
+}
 
 #endif

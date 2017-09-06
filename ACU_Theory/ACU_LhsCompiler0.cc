@@ -207,5 +207,5 @@ ACU_Term::tryToMakeCollectorLhsAutomaton(bool matchAtTop,
       return 0;
     }
   return new ACU_NGA_LhsAutomaton(symbol(), !(collapseSymbols().empty()), a,
-				  t->symbol(), variableInfo.getNrProtectedVariables(), c);
+				  t, variableInfo.getNrProtectedVariables(), c);
 }

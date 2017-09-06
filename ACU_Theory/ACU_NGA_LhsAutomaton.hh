@@ -16,7 +16,7 @@ public:
   ACU_NGA_LhsAutomaton(ACU_Symbol* topSymbol,
 		       bool collapsePossible,
 		       LhsAutomaton* stripperAutomaton,
-		       Symbol* stripperTopSymbol,
+		       Term* stripperTerm,
 		       int nrVariables,
 		       VariableTerm* collector);
   ~ACU_NGA_LhsAutomaton();
@@ -39,7 +39,7 @@ private:
   //	The stripper automaton strips off one argument.
   //
   LhsAutomaton* const stripperAutomaton;
-  Symbol* const stripperTopSymbol;
+  Term* const stripperTerm;
   //
   //	Data storage for match-time use.
   //

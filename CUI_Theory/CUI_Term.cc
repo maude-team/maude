@@ -185,7 +185,7 @@ CUI_Term::dagify2()
 }
 
 void
-CUI_Term::analyseCollapses()
+CUI_Term::analyseCollapses2()
 {
   Term* t0 = argArray[0];
   Term* t1 = argArray[1];

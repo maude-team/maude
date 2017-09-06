@@ -35,7 +35,7 @@ Interpreter::search(const Vector<Token>& bubble, Int64 limit)
     }
   DagNode* subjectDag = makeDag(initial);
   
-  static char* searchTypeSymbol[] = { "=>", "=>+", "=>*", "=>!" };
+  static char* searchTypeSymbol[] = { "=>1", "=>+", "=>*", "=>!" };
   if (getFlag(SHOW_COMMAND))
     {
       UserLevelRewritingContext::beginCommand();

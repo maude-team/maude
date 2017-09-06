@@ -186,11 +186,9 @@ MetaLevel::downSorts(DagNode* metaSorts, MixfixModule* m)
   Symbol* ms = metaSorts->symbol();
   if (ms == sortSetSymbol)
     {
-      ACU_DagNode* a = static_cast<ACU_DagNode*>(metaSorts);
-      int nrArgs = a->nrArgs();
-      for (int i = 0; i < nrArgs; i++)
+      for (DagArgumentIterator i(metaSorts); i.valid(); i.next())
 	{
-	  if (!downSort(a->getArgument(i), m))
+	  if (!downSort(i.argument(), m))
 	    return false;
 	}
     }
@@ -423,11 +421,9 @@ MetaLevel::downSubsorts(DagNode* metaSubsorts, MixfixModule* m)
   Symbol* ms = metaSubsorts->symbol();
   if (ms == subsortDeclSetSymbol)
     {
-      ACU_DagNode* a = static_cast<ACU_DagNode*>(metaSubsorts);
-      int nrArgs = a->nrArgs();
-      for (int i = 0; i < nrArgs; i++)
+      for (DagArgumentIterator i(metaSubsorts); i.valid(); i.next())
 	{
-	  if (!downSubsort(a->getArgument(i), m))
+	  if (!downSubsort(i.argument(), m))
 	    return false;
 	}
     }
@@ -550,11 +546,9 @@ MetaLevel::downStatementAttrSet(DagNode* metaAttrSet,
   Symbol* ma = metaAttrSet->symbol();
   if (ma == attrSetSymbol)
     {
-      ACU_DagNode* a = static_cast<ACU_DagNode*>(metaAttrSet);
-      int nrArgs = a->nrArgs();
-      for (int i = 0; i < nrArgs; i++)
+      for (DagArgumentIterator i(metaAttrSet); i.valid(); i.next())
 	{
-	  if (!downStatementAttr(a->getArgument(i), label, metadata, flags))
+	  if (!downStatementAttr(i.argument(), label, metadata, flags))
 	    return false;
 	}
     }
@@ -597,11 +591,9 @@ MetaLevel::downMembAxs(DagNode* metaMembAxs, MixfixModule* m)
   Symbol* mm = metaMembAxs->symbol();
   if (mm == membAxSetSymbol)
     {
-      ACU_DagNode* a = static_cast<ACU_DagNode*>(metaMembAxs);
-      int nrArgs = a->nrArgs();
-      for (int i = 0; i < nrArgs; i++)
+      for (DagArgumentIterator i(metaMembAxs); i.valid(); i.next())
 	{
-	  if (!downMembAx(a->getArgument(i), m))
+	  if (!downMembAx(i.argument(), m))
 	    return false;
 	}
     }
@@ -650,29 +642,11 @@ MetaLevel::downEquations(DagNode* metaEquations, MixfixModule* m)
   Symbol* me = metaEquations->symbol();
   if (me == equationSetSymbol)
     {
-      //
-      //	HACK for MOS
-      //
-      if (ACU_DagNode* a = dynamic_cast<ACU_DagNode*>(metaEquations))
+      for (DagArgumentIterator i(metaEquations); i.valid(); i.next())
 	{
-	  int nrArgs = a->nrArgs();
-	  for (int i = 0; i < nrArgs; i++)
-	    {
-	      if (!downEquation(a->getArgument(i), m))
-		return false;
-	    }
+	  if (!downEquation(i.argument(), m))
+	    return false;
 	}
-      else if (AU_DagNode* a = dynamic_cast<AU_DagNode*>(metaEquations))
-	{
-	  int nrArgs = a->nrArgs();
-	  for (int i = 0; i < nrArgs; i++)
-	    {
-	      if (!downEquation(a->getArgument(i), m))
-		return false;
-	    }
-	}
-      else
-	return false;
     }
   else if (me != emptyEquationSetSymbol)
     return downEquation(metaEquations, m);
@@ -720,11 +694,9 @@ MetaLevel::downRules(DagNode* metaRules, MixfixModule* m)
   Symbol* mr = metaRules->symbol();
   if (mr == ruleSetSymbol)
     {
-      ACU_DagNode* a = static_cast<ACU_DagNode*>(metaRules);
-      int nrArgs = a->nrArgs();
-      for (int i = 0; i < nrArgs; i++)
+      for (DagArgumentIterator i(metaRules); i.valid(); i.next())
 	{
-	  if (!downRule(a->getArgument(i), m))
+	  if (!downRule(i.argument(), m))
 	    return false;
 	}
     }
@@ -980,11 +952,9 @@ MetaLevel::downSubstitution(DagNode* metaSubstitution,
   Symbol* ms = metaSubstitution->symbol();
   if (ms == substitutionSymbol)
     {
-      ACU_DagNode* a = static_cast<ACU_DagNode*>(metaSubstitution);
-      int nrArgs = a->nrArgs();
-      for (int i = 0; i < nrArgs; i++)
+      for (DagArgumentIterator i(metaSubstitution); i.valid(); i.next())
 	{
-	  if (!downAssignment(a->getArgument(i), m, variables, values))
+	  if (!downAssignment(i.argument(), m, variables, values))
 	    {
 	      for (int j = values.length() - 1; j >= 0; j--)
 		{

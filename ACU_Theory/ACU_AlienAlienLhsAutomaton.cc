@@ -13,6 +13,7 @@
 //      forward declarations
 #include "interface.hh"
 #include "core.hh"
+#include "ACU_RedBlack.hh"
 #include "ACU_Theory.hh"
 
 //      interface class definitions
@@ -65,7 +66,7 @@ ACU_AlienAlienLhsAutomaton::match(DagNode* subject,
 {
   if (subject->symbol() != topSymbol)
     return false;
-  ACU_DagNode* s = static_cast<ACU_DagNode*>(subject);
+  ACU_DagNode* s = getACU_DagNode(subject);
   int nrArgs = s->argArray.length();
   ACU_ExtensionInfo* e = static_cast<ACU_ExtensionInfo*>(extensionInfo);
   bool totalIsTwo = false;

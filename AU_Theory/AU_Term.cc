@@ -233,7 +233,7 @@ AU_Term::dagify2()
 }
 
 void
-AU_Term::analyseCollapses()
+AU_Term::analyseCollapses2()
 {
   //
   //	(1) Analyse our subterms.

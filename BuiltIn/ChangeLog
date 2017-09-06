@@ -1,3 +1,11 @@
+2003-01-08  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_NumberOpSymbol.cc (eqRewrite): rewritten to avoid making use
+	of ACU_DagNode; less efficient - need to revisit this once
+	red-black stuff is working
+	
+===================================Maude76==================================================
+
 2002-11-25  Steven Eker  <eker@goo.csl.sri.com>
 
 	* stringDagNode.cc (StringDagNode): commented out Assert() to

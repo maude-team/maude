@@ -22,6 +22,9 @@ public:
 protected:
   bool collectorFree(Substitution& solution) const;
   bool collect(int stripped, ACU_DagNode* subject, Substitution& solution) const;
+  bool collect(ACU_Stack& stripped,  // destroyed
+	       ACU_TreeDagNode* subject,
+	       Substitution& solution) const;
   void collapse(ACU_Symbol* topSymbol, Substitution& solution) const;
 
 private:

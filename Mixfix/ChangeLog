@@ -1,3 +1,28 @@
+2003-02-20  Steven Eker  <eker@goo.csl.sri.com>
+
+	* interact.cc (segmentationFaultHandler): updated bug report address
+
+	* entry.cc (addOpDeclaration): added WarningCheck for 1 arg ops with
+	empty syntax
+
+	* model-checker.maude: split off fmod SATISFACTION; use modelCheck
+	for model checker
+
+	* prelude.maude: NUMBER-CONVERSION -> CONVERSION
+
+2003-02-19  Steven Eker  <eker@goo.csl.sri.com>
+
+	* makeGrammar.cc (makeComplexProductions): use =>1 instead of =>
+	for one step rewriting
+
+	* commonTokens.hh (class CommonTokens): added arrowOne
+
+	* commonTokens.cc (CommonTokens): addedarrowOne
+
+	* search.cc (search): use =>1 instead of => for one step rewriting
+	
+===================================Maude78===========================================
+
 2003-01-06  Steven Eker  <eker@goo.csl.sri.com>
 
 	* main.cc (main): removed various commented out crap

@@ -163,6 +163,14 @@ Term::determineContextVariables()
 void
 Term::analyseCollapses()
 {
+  analyseCollapses2();
+  if (dynamic_cast<VariableSymbol*>(topSymbol) == 0 && collapseSet.empty())
+    flags |= STABLE;
+}
+
+void
+Term::analyseCollapses2()
+{
   for (ArgumentIterator a(*this); a.valid(); a.next())
     a.argument()->analyseCollapses();
 }
@@ -170,13 +178,13 @@ Term::analyseCollapses()
 void
 Term::insertAbstractionVariables(VariableInfo& variableInfo)
 {
-  honorsGroundOutMatchFlag = true;
+  setHonorsGroundOutMatch(true);
   for (ArgumentIterator a(*this); a.valid(); a.next())
     {
       Term* t = a.argument();
       t->insertAbstractionVariables(variableInfo);
-      if (!(t->honorsGroundOutMatchFlag))
-	honorsGroundOutMatchFlag = false;
+      if (!(t->honorsGroundOutMatch()))
+	setHonorsGroundOutMatch(false);
     }
 }
 
@@ -204,6 +212,20 @@ bool
 Term::subsumes(const Term* other, bool sameVariableSet) const
 {
   return false;
+}
+
+int
+Term::partialCompareUnstable(const Substitution& /* partialSubstitution */,
+			      DagNode* /* other */) const
+{
+  return UNDECIDED;
+}
+
+int
+Term::partialCompareArguments(const Substitution& /* partialSubstitution */,
+			      DagNode* /* other */) const
+{
+  return UNDECIDED;
 }
 
 void
@@ -622,8 +644,8 @@ void
 Term::dumpCommon(ostream& s, const VariableInfo& variableInfo, int indentLevel)
 {
   s << Indent(indentLevel) << "topSymbol = " << topSymbol <<
-    "\thonorsGroundOutMatchFlag = " << bool(honorsGroundOutMatchFlag) <<
-    "\teagerContext = " << bool(eagerContext) << '\n';
+    "\thonorsGroundOutMatch = " << honorsGroundOutMatch() <<
+    "\teagerContext = " << hasEagerContext() << '\n';
   if (sortIndex == Sort::SORT_UNKNOWN)
     s << Indent(indentLevel) << "sort information not valid\n";
   else

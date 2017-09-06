@@ -15,6 +15,7 @@
 #include "core.hh"
 #include "variable.hh"
 #include "ACU_Theory.hh"
+#include "ACU_RedBlack.hh"
 
 //      interface class definitions
 #include "associativeSymbol.hh"
@@ -34,6 +35,10 @@
 #include "ACU_Symbol.hh"
 #include "ACU_DagNode.hh"
 #include "ACU_VarLhsAutomaton.hh"
+
+//	ACU Red-Black class definitions
+#include "ACU_TreeDagNode.hh"
+#include "ACU_SlowIter.hh"
 
 ACU_VarLhsAutomaton::ACU_VarLhsAutomaton(ACU_Symbol* topSymbol,
 					 bool collapsePossible,
@@ -62,25 +67,51 @@ ACU_VarLhsAutomaton::match(DagNode* subject,
 	  //
 	  if (solution.value(stripperVarIndex) == 0)
 	    {
-	      ACU_DagNode* s = static_cast<ACU_DagNode*>(subject);
-	      int nrArgs = s->argArray.length();
-	      for (int i = 0; i < nrArgs; i++)
+	      if (safeCast(ACU_BaseDagNode*, subject)->isTree())
 		{
-		  DagNode* d = s->argArray[i].dagNode;
-		  if (d->leq(stripperSort))
+		  ACU_TreeDagNode* s = safeCast(ACU_TreeDagNode*, subject);
+		  ACU_SlowIter i(s->getRoot());
+		  do
 		    {
-		      if (collect(i, s, solution))
+		      DagNode* d = i.getDagNode();
+		      if (d->leq(stripperSort))
 			{
-			  solution.bind(stripperVarIndex, d);
-			  returnedSubproblem = 0;
-			  if (extensionInfo)
-			    extensionInfo->setMatchedWhole(true);
-			  return true;
+			  if (collect(i, s, solution))
+			    {
+			      solution.bind(stripperVarIndex, d);
+			      returnedSubproblem = 0;
+			      if (extensionInfo)
+				extensionInfo->setMatchedWhole(true);
+			      return true;
+			    }
 			}
-		      return fullMatch(subject, solution, returnedSubproblem, extensionInfo);
+		      i.next();
 		    }
+		  while (i.valid());
+		  return false;
 		}
-	      return false;
+	      else
+		{
+		  ACU_DagNode* s = safeCast(ACU_DagNode*, subject);
+		  int nrArgs = s->argArray.length();
+		  for (int i = 0; i < nrArgs; i++)
+		    {
+		      DagNode* d = s->argArray[i].dagNode;
+		      if (d->leq(stripperSort))
+			{
+			  if (collect(i, s, solution))
+			    {
+			      solution.bind(stripperVarIndex, d);
+			      returnedSubproblem = 0;
+			      if (extensionInfo)
+				extensionInfo->setMatchedWhole(true);
+			      return true;
+			    }
+			  return fullMatch(subject, solution, returnedSubproblem, extensionInfo);
+			}
+		    }
+		  return false;
+		}
 	    }
 	}
       else

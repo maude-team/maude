@@ -269,6 +269,9 @@ MixfixModule::addOpDeclaration(Token prefixName,
     }
   else
     {
+      WarningCheck(!(si.mixfixSyntax.length() == 1 && nrUnderscores == 1),
+		   *symbol <<
+		   ": empty syntax not allowed for single argument operators.");
       if (nrArgs != nrUnderscores)
 	{
 	  IssueWarning(*symbol <<

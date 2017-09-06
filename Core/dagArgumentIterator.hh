@@ -1,5 +1,5 @@
 //
-//      Wrapper around raw DAG argument iterators to provide cleaner interface
+//      Wrapper around raw DAG argument iterators to provide cleaner interface.
 //
 #ifndef _dagArgumentIterator_hh_
 #define _dagArgumentIterator_hh_
@@ -12,7 +12,9 @@ class DagArgumentIterator
 {
 public:
   DagArgumentIterator(DagNode& d);
+  DagArgumentIterator(DagNode* d);
   ~DagArgumentIterator();
+
   bool valid() const;
   DagNode* argument() const;
   void next();
@@ -25,6 +27,12 @@ inline
 DagArgumentIterator::DagArgumentIterator(DagNode& d)
 {
   dagArgumentIterator = d.arguments();
+
+}
+inline
+DagArgumentIterator::DagArgumentIterator(DagNode* d)
+{
+  dagArgumentIterator = d->arguments();
 }
 
 inline

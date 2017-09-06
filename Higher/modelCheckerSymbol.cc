@@ -49,6 +49,7 @@
 ModelCheckerSymbol::ModelCheckerSymbol(int id)
   : TemporalSymbol(id, 2)
 {
+  satisfiesSymbol = 0;
   qidSymbol = 0;
   unlabeledSymbol = 0;
   deadlockSymbol = 0;
@@ -71,6 +72,7 @@ ModelCheckerSymbol::attachData(const Vector<Sort*>& opDeclaration,
 bool
 ModelCheckerSymbol::attachSymbol(const char* purpose, Symbol* symbol)
 {
+  BIND_SYMBOL(purpose, symbol, satisfiesSymbol, Symbol*);
   BIND_SYMBOL(purpose, symbol, qidSymbol, QuotedIdentifierSymbol*);
   BIND_SYMBOL(purpose, symbol, unlabeledSymbol, Symbol*);
   BIND_SYMBOL(purpose, symbol, deadlockSymbol, Symbol*);
@@ -92,6 +94,7 @@ void
 ModelCheckerSymbol::copyAttachments(Symbol* original, SymbolMap* map)
 {
   ModelCheckerSymbol* orig = safeCast(ModelCheckerSymbol*, original);
+  COPY_SYMBOL(orig, satisfiesSymbol, map, Symbol*);
   COPY_SYMBOL(orig, qidSymbol, map, QuotedIdentifierSymbol*);
   COPY_SYMBOL(orig, unlabeledSymbol, map, Symbol*);
   COPY_SYMBOL(orig, deadlockSymbol, map, Symbol*);
@@ -215,7 +218,7 @@ ModelCheckerSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
   //
   //	Do the model check using a ModelChecker2 object.
   //
-  system.parentSymbol = this;
+  system.satisfiesSymbol = satisfiesSymbol;
   system.parentContext = &context;
   system.trueTerm = trueTerm.getDag();
   RewritingContext* sysContext = context.makeSubcontext(d->getArgument(0));
@@ -256,13 +259,8 @@ ModelCheckerSymbol::SystemAutomaton::checkProposition(int stateNr, int propositi
   args[0] = systemStates->getStateDag(stateNr);
   args[1] = propositions.index2DagNode(propositionIndex);
   RewritingContext* testContext = 
-    parentContext->makeSubcontext(parentSymbol->makeDagNode(args));
-
-  DagNode* d = testContext->root();
-  TemporalSymbol* s = static_cast<TemporalSymbol*>(d->symbol());  // HACK
-  if (s->TemporalSymbol::eqRewrite(d, *testContext))  // HACK
-    testContext->reduce();
-    
+    parentContext->makeSubcontext(satisfiesSymbol->makeDagNode(args));
+  testContext->reduce();  
   bool result = trueTerm->equal(testContext->root());
   parentContext->addInCount(*testContext);
   delete testContext;

@@ -13,6 +13,7 @@
 //      forward declarations
 #include "interface.hh"
 #include "core.hh"
+#include "ACU_RedBlack.hh"
 #include "ACU_Theory.hh"
 
 //      interface class definitions
@@ -152,7 +153,7 @@ ACU_LhsAutomaton::addGroundedOutAlien(Term* alien, LhsAutomaton* automaton, int 
   updateTotals(multiplicity, multiplicity);
   int nrGroundedOutAliens = groundedOutAliens.length();
   groundedOutAliens.expandBy(1);
-  groundedOutAliens[nrGroundedOutAliens].topSymbol = alien->stable() ? alien->symbol() : 0;
+  groundedOutAliens[nrGroundedOutAliens].term = alien->stable() ? alien : 0;
   groundedOutAliens[nrGroundedOutAliens].automaton = automaton;
   groundedOutAliens[nrGroundedOutAliens].multiplicity = multiplicity;
 }
@@ -164,7 +165,7 @@ ACU_LhsAutomaton::addNonGroundAlien(Term* alien, LhsAutomaton* automaton, int mu
   totalNonGroundAliensMultiplicity += multiplicity;
   int nrNonGroundAliens = nonGroundAliens.length();
   nonGroundAliens.expandBy(1);
-  nonGroundAliens[nrNonGroundAliens].topSymbol = alien->stable() ? alien->symbol() : 0;
+  nonGroundAliens[nrNonGroundAliens].term = alien->stable() ? alien : 0;
   nonGroundAliens[nrNonGroundAliens].automaton = automaton;
   nonGroundAliens[nrNonGroundAliens].multiplicity = multiplicity;
 }

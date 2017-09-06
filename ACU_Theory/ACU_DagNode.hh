@@ -1,46 +1,19 @@
 //
-//	Class for DAG nodes in the AC and ACU theories.
+//	Class for ArgVec based DAG nodes in the AC and ACU theories.
 //
 #ifndef _ACU_DagNode_hh_
 #define _ACU_DagNode_hh_
 #ifdef __GNUG__
 #pragma interface
 #endif
-#include "dagNode.hh"
+#include "ACU_BaseDagNode.hh"
 #include "argVec.hh"
+#include "ACU_FastIter.hh"
 
-class ACU_DagNode : public DagNode
+class ACU_DagNode : public ACU_BaseDagNode
 {
 public:
-  enum NormalizationStatus
-  {
-    //
-    //	Default: no guarantees.
-    //
-    FRESH,
-    //
-    //	Node was produced by a partial replacement after matching:
-    //	(a) all arguments except the last are reduced up to strategy
-    //	    of our symbol (this only holds if it was true of subject
-    //	    before matching);
-    //	(b) all arguments except the last have the correct sort; and
-    //	(c) argument list except for last argument is in theory normal form.
-    //	There is no guarantee about our sort since extension could be in
-    //	the error sort.
-    //
-    EXTENSION,
-    //
-    //	Node was produced by an assignment in ACU matcher:
-    //	(a) all arguments are reduced up to strategy of our symbol
-    //	   (this only holds if it was true of subject before matching);
-    //	(b) all arguments have the correct sort;
-    //	(c) argument list in theory normal form; and
-    //
-    ASSIGNMENT
-  };
-
   ACU_DagNode(ACU_Symbol* symbol, int size);
-  ~ACU_DagNode();
   //
   //	Member functions required by theory interface.
   //
@@ -66,25 +39,32 @@ public:
 				  ExtensionInfo* extensionInfo);
   void partialReplace(DagNode* replacement, ExtensionInfo* extensionInfo);
   DagNode* partialConstruct(DagNode* replacement, ExtensionInfo* extensionInfo);
-  ExtensionInfo* makeExtensionInfo();
   //
   //    Functions particular to ACU_DagNode.
   //
-  ACU_Symbol* symbol() const;
   int nrArgs() const;
   DagNode* getArgument(int i) const;
   int getMultiplicity(int i) const;
-  NormalizationStatus getNormalizationStatus() const;
-  void setNormalizationStatus(NormalizationStatus status);
 
 private:
   enum Sizes
   {
-    INITIAL_RUNS_BUFFER_SIZE = 4	// must be > 0
+    INITIAL_RUNS_BUFFER_SIZE = 4,	// must be > 0
+    CONVERT_THRESHOLD = 16,
+    MERGE_THRESHOLD = 32
+
+    //CONVERT_THRESHOLD = 0,
+    //MERGE_THRESHOLD = 0
+
+    //CONVERT_THRESHOLD = 25,
+    //MERGE_THRESHOLD = 50
   };
   
   struct Pair
   {
+    Pair(DagNode* d, int m);
+    Pair();
+
     void set(DagNode* d, int m);
 
     DagNode* dagNode;
@@ -103,18 +83,41 @@ private:
   static ArgVec<Pair>::iterator fastCopy(ArgVec<Pair>::const_iterator i,
 					 ArgVec<Pair>::const_iterator e,
 					 ArgVec<Pair>::iterator d);
+  static ArgVec<Pair>::iterator fastCopy(ACU_FastIter& i,
+					 ArgVec<Pair>::iterator d);
+
   bool normalizeAtTop();
   bool extensionNormalizeAtTop();
   void binaryInsert(DagNode* dagNode, int multiplicity);
   void copyAndBinaryInsert(const ACU_DagNode* source, DagNode* dagNode, int multiplicity);
   void fastMerge(const ACU_DagNode* source0, const ACU_DagNode* source1);
+  void fastMerge(const ACU_DagNode* source0, const ACU_TreeDagNode* source1);
+  void fastMerge(const ACU_TreeDagNode* source0, const ACU_TreeDagNode* source1);
+
   void sortAndUniquize();
   void flattenSortAndUniquize(int expansion);
   void mergeSortAndUniquize();
+
+  void collapse(DagNode* arg);
+  void insertAlien(ACU_BaseDagNode* normalForm,
+		   int nMult,
+		   DagNode* alien,
+		   int aMult);
+
+
+  ACU_RedBlackNode* makeTree();
+  static bool pow2min1(int i);
+  static ACU_RedBlackNode* makeTree(const ArgVec<Pair>& args,
+				    int first,
+				    int size,
+				    bool makeRed);
+
+
   //
   //	Functions for ACU specific operations.
   //
   int findFirstOccurrence(Symbol* key) const;
+  int findFirstPotentialMatch(Term* key, const Substitution& partial) const;
   bool binarySearch(DagNode* key, int& pos) const;
   bool binarySearch(Term* key, int& pos) const;
   bool eliminateSubject(DagNode* target,
@@ -145,7 +148,24 @@ private:
   friend class ACU_Subproblem;		// for constructing substitution
   friend class ACU_ExtensionInfo;	// for constructing matched portion
   friend class ACU_DagArgumentIterator;	// to accesss Pair
+
+  friend class ACU_TreeDagNode;		// for conversion
+  friend class ACU_BaseDagNode;		// HACK for getSize
+
+  friend ACU_DagNode* getACU_DagNode(DagNode* dagNode);
 };
+
+inline
+ACU_DagNode::Pair::Pair()
+{
+}
+
+inline
+ACU_DagNode::Pair::Pair(DagNode* d, int m)
+{
+  dagNode = d;
+  multiplicity = m;
+}
 
 inline void
 ACU_DagNode::Pair::set(DagNode* d, int m)
@@ -156,15 +176,9 @@ ACU_DagNode::Pair::set(DagNode* d, int m)
 
 inline
 ACU_DagNode::ACU_DagNode(ACU_Symbol* symbol, int size)
-  : DagNode(symbol), argArray(size)
+  : ACU_BaseDagNode(symbol), argArray(size)
 {
   setTheoryByte(FRESH);
-}
-
-inline ACU_Symbol*
-ACU_DagNode::symbol() const
-{
-  return static_cast<ACU_Symbol*>(DagNode::symbol());
 }
 
 inline int
@@ -185,16 +199,36 @@ ACU_DagNode::getMultiplicity(int i) const
   return argArray[i].multiplicity;
 }
 
-inline ACU_DagNode::NormalizationStatus
-ACU_DagNode::getNormalizationStatus() const
+inline ArgVec<ACU_DagNode::Pair>::iterator
+ACU_DagNode::fastCopy(ArgVec<Pair>::const_iterator i,
+		      ArgVec<Pair>::const_iterator e,
+		      ArgVec<Pair>::iterator d)
 {
-  return static_cast<NormalizationStatus>(getTheoryByte());
+  //
+  //	This beats the STL copy() algorithm because the latter maintains
+  //	a counter.
+  //
+  while (i != e)
+    {
+      *d = *i;
+      ++d;
+      ++i;
+    }
+  return d;
 }
 
-inline void
-ACU_DagNode::setNormalizationStatus(NormalizationStatus status)
+inline ArgVec<ACU_DagNode::Pair>::iterator
+ACU_DagNode::fastCopy(ACU_FastIter& i,
+		      ArgVec<Pair>::iterator d)
 {
-  setTheoryByte(status);
+  while (i.valid())
+    {
+      d->dagNode = i.getDagNode();
+      d->multiplicity = i.getMultiplicity();
+      ++d;
+      i.next();
+    }
+  return d;
 }
 
 #endif

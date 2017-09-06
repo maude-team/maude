@@ -7,8 +7,11 @@
 class ACU_Symbol;
 class ACU_Term;
 class ACU_ArgumentIterator;
+class ACU_BaseDagNode;
 class ACU_DagNode;
 class ACU_DagArgumentIterator;
+class ACU_TreeDagNode;
+class ACU_TreeDagArgumentIterator;
 class ACU_LhsAutomaton;
 class ACU_CollectorLhsAutomaton;
 class ACU_NGA_LhsAutomaton;

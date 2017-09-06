@@ -1,3 +1,14 @@
+2003-02-03  Steven Eker  <eker@goo.csl.sri.com>
+
+	* equationTable.cc (applyReplace): DagNode::okToCollectGarbage()
+	-> MemoryCell::okToCollectGarbage()
+	
+===================================Maude78===========================================
+
+2003-01-08  Steven Eker  <eker@goo.csl.sri.com>
+
+	* dagArgumentIterator.hh (DagArgumentIterator): added DagNode* version
+
 2002-12-17  Steven Eker  <eker@goo.csl.sri.com>
 
 	* argVec.hh (expandWithoutPreservationBy): added
@@ -21,7 +32,7 @@
 	* preEquation.cc (cleanStack): created
 	(checkCondition): call cleanStack() before returning to to an
 	abort
-
+	
 2002-11-20  Steven Eker  <eker@goo.csl.sri.com>
 
 	* checkedArgVecConstIterator.hh (operator->): made const
@@ -3054,7 +3065,7 @@ Mon Oct 27 11:20:14 1997  Steven Eker  <eker@lilac.csl.sri.com>
 	(solve): now assert extension info for selected option if present
 
 	* subproblemDisjunction.hh (class SubproblemDisjunction): added
-	extensionInfo arg to addOption; added extensionInfo memeber to
+	extensionInfo arg to addOption; added extensionInfo member to
 	struct Option; added data member realExtensionInfo
 
 Fri Oct 24 16:47:42 1997  Steven Eker  <eker@lilac.csl.sri.com>

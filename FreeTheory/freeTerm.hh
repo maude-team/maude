@@ -45,6 +45,8 @@ public:
   //
   bool earlyMatchFailOnInstanceOf(const Term* other) const;
   bool subsumes(const Term* other, bool sameVariableSet) const;
+  int partialCompareArguments(const Substitution& partialSubstitution,
+			      DagNode* other) const;
   //
   //	Functions particular to free terms.
   //

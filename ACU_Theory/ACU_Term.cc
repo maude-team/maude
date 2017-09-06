@@ -17,6 +17,7 @@
 #include "core.hh"
 #include "variable.hh"
 #include "ACU_Theory.hh"
+#include "ACU_RedBlack.hh"
 
 //      interface class definitions
 #include "argVec.hh"
@@ -44,6 +45,10 @@
 #include "ACU_ArgumentIterator.hh"
 #include "ACU_LhsAutomaton.hh"
 #include "ACU_RhsAutomaton.hh"
+
+//	ACU Red-Black class definitions
+#include "ACU_TreeDagNode.hh"
+#include "ACU_FastIter.hh"
 
 //	extra source files
 #include "ACU_LhsCompiler0.cc"
@@ -264,44 +269,81 @@ ACU_Term::normalize(bool full, bool& changed)
 int
 ACU_Term::compareArguments(const Term* other) const
 {
-  int i = argArray.length();
-  const Vector<Pair>& argArray2 = static_cast<const ACU_Term*>(other)->argArray;
-  int r = i - argArray2.length();
+  const Vector<Pair>& argArray2 = safeCast(const ACU_Term*, other)->argArray;
+  int r = argArray.length() - argArray2.length();
   if (r != 0)
     return r;
-  do 
+  Vector<Pair>::const_iterator j = argArray2.begin();
+  Vector<Pair>::const_iterator i = argArray.begin();
+  const Vector<Pair>::const_iterator e = argArray.end();
+  do
     {
-      --i;
-      r = argArray[i].multiplicity - argArray2[i].multiplicity;
+      r = i->multiplicity - j->multiplicity;
       if (r != 0)
 	return r;
-      r = argArray[i].term->compare(argArray2[i].term);
+      r = i->term->compare(j->term);
       if (r != 0)
 	return r;
+      ++j;
+      ++i;
     }
-  while (i > 0);
+  while (i != e);
+  Assert(j == argArray2.end(), cerr << "iterator problem");
   return 0;
 }
 
 int
 ACU_Term::compareArguments(const DagNode* other) const
 {
-  int i = argArray.length();
-  const ArgVec<ACU_DagNode::Pair>& argArray2 = static_cast<const ACU_DagNode*>(other)->argArray;
-  int r = i - argArray2.length();
-  if (r != 0)
-    return r;
-  do
+  int len = argArray.length();
+  const ACU_BaseDagNode* d = safeCast(const ACU_BaseDagNode*, other);
+  if (d->isTree())
     {
-      --i;
-      r = argArray[i].multiplicity - argArray2[i].multiplicity;
+      const ACU_TreeDagNode* d2 = safeCast(const ACU_TreeDagNode*, d);
+      int r = len - d2->getRoot()->getSize();
       if (r != 0)
 	return r;
-      r = argArray[i].term->compare(argArray2[i].dagNode);
-      if (r != 0)
-	return r;
+      ACU_FastIter j(d2->getRoot());
+      Vector<Pair>::const_iterator i = argArray.begin();
+      const Vector<Pair>::const_iterator e = argArray.end();
+      do
+	{
+	  r = i->multiplicity - j.getMultiplicity();
+	  if (r != 0)
+	    return r;
+	  r = i->term->compare(j.getDagNode());
+	  if (r != 0)
+	    return r;
+	  j.next();
+	  ++i;
+	}
+      while (i != e);
+      Assert(!j.valid(), cerr << "iterator problem");
     }
-  while (i > 0);
+  else
+    {
+      const ArgVec<ACU_DagNode::Pair>& argArray2 =
+	safeCast(const ACU_DagNode*, d)->argArray;
+      int r = len - argArray2.length();
+      if (r != 0)
+	return r;
+      ArgVec<ACU_DagNode::Pair>::const_iterator j = argArray2.begin();
+      Vector<Pair>::const_iterator i = argArray.begin();
+      const Vector<Pair>::const_iterator e = argArray.end();
+      do
+	{
+	  r = i->multiplicity - j->multiplicity;
+	  if (r != 0)
+	    return r;
+	  r = i->term->compare(j->dagNode);
+	  if (r != 0)
+	    return r;
+	  ++j;
+	  ++i;
+	}
+      while (i != e);
+      Assert(j == argArray2.end(), cerr << "iterator problem");
+    }
   return 0;
 }
 
@@ -346,7 +388,7 @@ ACU_Term::dagify2()
 }
 
 void
-ACU_Term::analyseCollapses()
+ACU_Term::analyseCollapses2()
 {
   int nrArgs = argArray.length();
   for (int i = 0; i < nrArgs; i++)

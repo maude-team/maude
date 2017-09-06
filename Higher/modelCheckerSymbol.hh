@@ -36,7 +36,7 @@ private:
     bool checkProposition(int stateNr, int propositionIndex) const;
 
     DagNodeSet propositions;
-    ModelCheckerSymbol* parentSymbol;
+    Symbol* satisfiesSymbol;
     RewritingContext* parentContext;
     DagNode* trueTerm;
     StateTransitionGraph3* systemStates;
@@ -49,6 +49,7 @@ private:
 			      int lastTarget);
   DagNode* makeCounterexample(const StateTransitionGraph3& states, const ModelChecker2& mc);
 
+  Symbol* satisfiesSymbol;
   //
   //	Symbols needed for returning counterexamples.
   //

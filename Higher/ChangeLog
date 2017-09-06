@@ -1,3 +1,20 @@
+2003-02-20  Steven Eker  <eker@goo.csl.sri.com>
+
+	* modelCheckerSymbol.hh (class ModelCheckerSymbol): parentSymbol
+	-> satisfiesSymbol in struct SystemAutomaton; added data member
+	satisfiesSymbol
+
+	* modelCheckerSymbol.cc (ModelCheckerSymbol): clear
+	satisfiesSymbol
+	(attachSymbol): handle satisfiesSymbol
+	(copyAttachments): handle satisfiesSymbol
+	(checkProposition): removed hacks that were needed because same
+	symbol was used for model checking and satisfaction
+	(checkProposition): use satisfiesSymbol
+	(eqRewrite): use satisfiesSymbol
+
+===================================Maude78=====================================
+	
 2002-11-25  Steven Eker  <eker@goo.csl.sri.com>
 
 	* positionState.cc (PositionState): switch initializer order to

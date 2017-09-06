@@ -28,7 +28,8 @@ OFLAGS =	-fno-exceptions \
 		-finline-limit=10000 \
 		-O2 \
 		-mcpu=v8 \
-		-mtune=ultrasparc
+		-mtune=ultrasparc \
+		-g
 
 DFLAGS =	-DSOLARIS \
 		-DLIBv3 \

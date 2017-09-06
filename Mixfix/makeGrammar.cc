@@ -41,7 +41,7 @@ MixfixModule::makeComplexProductions()
   static Vector<int> rhs(3);
 
   rhs.contractTo(1);
-  rhs[0] = arrow;
+  rhs[0] = arrowOne;
   parser->insertProduction(SEARCH_CONNECTIVE, rhs, 0, gatherAny,
 			   MixfixParser::NOP, RewriteSequenceSearch::ONE_STEP);
   rhs[0] = arrowPlus;

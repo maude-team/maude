@@ -14,6 +14,7 @@
 //      forward declarations
 #include "interface.hh"
 #include "core.hh"
+#include "ACU_RedBlack.hh"
 #include "ACU_Theory.hh"
 
 //      interface class definitions
@@ -213,7 +214,7 @@ ACU_Subproblem::solveVariables(bool findFirst, RewritingContext& solution)
 		    goto fail;
 		  if (d->symbol() == topSymbol)
 		    {
-		      (static_cast<ACU_DagNode*>(d))->
+		      (getACU_DagNode(d))->
 			setNormalizationStatus(ACU_DagNode::ASSIGNMENT);
 		      if (buildReducedNodes && d->getSortIndex() != Sort::SORT_UNKNOWN)
 			d->setReduced();

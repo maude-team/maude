@@ -8,11 +8,9 @@ MetaLevel::downOpDecls(DagNode* metaOpDecls, MetaModule* m)
   Symbol* mo = metaOpDecls->symbol();
   if (mo == opDeclSetSymbol)
     {
-      ACU_DagNode* a = safeCast(ACU_DagNode*, metaOpDecls);
-      int nrArgs = a->nrArgs();
-      for (int i = 0; i < nrArgs; i++)
+      for (DagArgumentIterator i(metaOpDecls); i.valid(); i.next())
 	{
-	  if (!downOpDecl(a->getArgument(i), m))
+	  if (!downOpDecl(i.argument(), m))
 	    return false;
 	}
     }
@@ -192,11 +190,9 @@ MetaLevel::downAttrSet(DagNode* metaAttrSet, AttributeInfo& ai)
   Symbol* ma = metaAttrSet->symbol();
   if (ma == attrSetSymbol)
     {
-      ACU_DagNode* a = static_cast<ACU_DagNode*>(metaAttrSet);
-      int nrArgs = a->nrArgs();
-      for (int i = 0; i < nrArgs; i++)
+      for (DagArgumentIterator i(metaAttrSet); i.valid(); i.next())
 	{
-	  if (!downAttr(a->getArgument(i), ai))
+	  if (!downAttr(i.argument(), ai))
 	    return false;
 	}
       }

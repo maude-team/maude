@@ -1,3 +1,19 @@
+2003-01-08  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaDownOps.cc (downOpDecls): use DagArgumentIterator rather
+	than messing with ACU_DagNode
+
+	* metaDown.cc (downSorts): use DagArgumentIterator rather than
+	messing with ACU_DagNode
+	(downSubsorts): ditto
+	(downStatementAttrSet): ditto
+	(downMembAxs): ditto
+	(downEquations): ditto; removed MOS hack
+	(downRules): ditto
+	(downSubstitution): ditto
+
+===================================Maude78==================================================
+
 2002-11-19  Steven Eker  <eker@goo.csl.sri.com>
 
 	* metaMatch.cc (makeMatchSearchState2): reverted to previous

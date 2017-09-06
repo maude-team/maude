@@ -58,6 +58,7 @@ LFLAGS =	-L$(ROOT_DIR)/Core \
                 -L$(ROOT_DIR)/FreeTheory \
 		-L$(ROOT_DIR)/AU_Theory \
 		-L$(ROOT_DIR)/ACU_Theory \
+		-L$(ROOT_DIR)/ACU_RedBlack \
 		-L$(ROOT_DIR)/CUI_Theory \
 		-L$(ROOT_DIR)/S_Theory \
 		-L$(ROOT_DIR)/NA_Theory \
@@ -78,6 +79,7 @@ OUR_LIBS =	-lmeta \
 		-lfreeTheory \
 		-lAU_Theory \
 		-lACU_Theory \
+		-lACU_RedBlack \
 		-lCUI_Theory \
 		-lS_Theory \
 		-lNA_Theory \

@@ -98,7 +98,7 @@ typedef unsigned int Uint32;
 //
 #ifndef NO_ASSERT
 #define safeCast(T, P) \
-  ((dynamic_cast<T>(P) == 0) ? \
+  ((P != 0 && dynamic_cast<T>(P) == 0) ? \
     ((cerr << "cast error: "<< __FILE__ << ':' << __LINE__ << '\n'), abort(), static_cast<T>(0)) : \
     static_cast<T>(P))
 #else

@@ -55,7 +55,7 @@
 
 //      ACU theory class definitions
 #include "ACU_Symbol.hh"
-#include "ACU_DagNode.hh"
+//#include "ACU_DagNode.hh"
 
 //      S theory class definitions
 #include "S_Symbol.hh"

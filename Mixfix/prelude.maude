@@ -1,6 +1,6 @@
 ***
 ***	Maude interpreter standard prelude.
-***	Version alpha 77.
+***	Version alpha 78.
 ***	Copyright 1998-2003 SRI International.
 ***
 ***	Some of the overall structure is taken from the OBJ3
@@ -638,7 +638,7 @@ fmod STRING is
 	          term-hook falseTerm (false))] .
 endfm
 
-fmod NUMBER-CONVERSION is
+fmod CONVERSION is
   protecting RAT .
   protecting FLOAT .
   protecting STRING .
@@ -1314,9 +1314,9 @@ mod CONFIGURATION is
   subsort Object Msg < Configuration .
   op <_:_|_> : Oid Cid AttributeSet -> Object [ctor object].
   op none : -> Configuration .
-  op __ : Configuration Configuration -> Configuration [ctor config assoc comm id: none] .
+  op __ : Configuration Configuration -> Configuration [ctor assoc comm id: none] .
 endm
 
 set omod include CONFIGURATION on .
 
-select NUMBER-CONVERSION .
+select CONVERSION .

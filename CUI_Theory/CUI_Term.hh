@@ -24,7 +24,7 @@ public:
   int compareArguments(const Term* other) const;
   int compareArguments(const DagNode* other) const;
   void findEagerVariables(bool atTop, NatSet& eagerVariables) const;
-  void analyseCollapses();
+  void analyseCollapses2();
   void analyseConstraintPropagation(NatSet& boundUniquely) const;
   LhsAutomaton* compileLhs2(bool matchAtTop,
 			    const VariableInfo& variableInfo,

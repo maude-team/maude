@@ -36,11 +36,20 @@ private:
 			    const ArgVec<ACU_DagNode::Pair>::const_iterator chosen,
 			    ACU_ExtensionInfo* extensionInfo);
 
+  bool treeMatch(ACU_TreeDagNode* subject,
+		 Substitution& solution,
+		 Subproblem*& returnedSubproblem,
+		 ACU_ExtensionInfo* extensionInfo);
+
   ACU_Symbol* const topSymbol;
   const int varIndex;
   const int multiplicity;
   Sort* const varSort;
   const bool unitSort;
+  //
+  //	Data storage for match-time use
+  //
+  Vector<ACU_DagNode::Pair> matched;
 };
 
 #endif

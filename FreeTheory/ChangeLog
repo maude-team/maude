@@ -1,3 +1,12 @@
+2003-01-07  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeTerm.hh (class FreeTerm): added decl for
+	partialCompareArguments()
+
+	* freeTerm.cc (partialCompareArguments): added
+	
+===================================Maude78==================================================
+
 2002-11-25  Steven Eker  <eker@goo.csl.sri.com>
 
 	* freeDagNode.hh (class FreeDagNode): added hack to get around the

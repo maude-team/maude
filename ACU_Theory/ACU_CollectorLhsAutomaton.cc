@@ -14,6 +14,7 @@
 #include "interface.hh"
 #include "core.hh"
 #include "ACU_Theory.hh"
+#include "ACU_RedBlack.hh"
 
 //      interface class definitions
 #include "associativeSymbol.hh"
@@ -32,6 +33,13 @@
 #include "ACU_Symbol.hh"
 #include "ACU_DagNode.hh"
 #include "ACU_CollectorLhsAutomaton.hh"
+
+//	ACU Red-Black class definitions
+//#include "ACU_FastIter.hh"
+//#include "ACU_SlowIter.hh"
+//#include "ACU_RedBlackNode.hh"
+//#include "ACU_TreeDagArgumentIterator.hh"
+#include "ACU_TreeDagNode.hh"
 
 ACU_CollectorLhsAutomaton::ACU_CollectorLhsAutomaton(VariableTerm* collector)
   : collectorVarIndex(collector->getIndex())
@@ -164,6 +172,35 @@ ACU_CollectorLhsAutomaton::collect(int stripped,
     {
       topSymbol->computeBaseSort(d);
       d->setReduced();
+    }
+  solution.bind(collectorVarIndex, d);
+  return true;
+}
+
+bool
+ACU_CollectorLhsAutomaton::collect(ACU_Stack& stripped,  // destroyed
+				   ACU_TreeDagNode* subject,
+				   Substitution& solution) const
+{
+  DagNode* d = subject->makeDelete(stripped, 1);
+  const Sort* cs = collectorSort;
+  if (cs == 0)
+    {
+      if (subject->isReduced() && d->symbol()->sortConstraintFree())
+	{
+	  d->symbol()->computeBaseSort(d);
+	  d->setReduced();
+	}
+    }
+  else
+    {
+      d->symbol()->computeBaseSort(d);
+      if (!leq(d->getSortIndex(), cs))
+	return false;
+      if (subject->isReduced() && d->symbol()->sortConstraintFree())
+	d->setReduced();
+      else
+	d->repudiateSortInfo();
     }
   solution.bind(collectorVarIndex, d);
   return true;

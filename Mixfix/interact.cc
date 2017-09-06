@@ -85,7 +85,7 @@ UserLevelRewritingContext::setHandlers(bool handleCtrlC)
 void
 UserLevelRewritingContext::segmentationFaultHandler(int)
 {
-  cerr << "Maude internal error: please submit a bug report to maude-bugs@csl.sri.com\n";
+  cerr << "Maude internal error: please submit a bug report to maude-bugs@maude.cs.uiuc.edu";
   /*
   cerr << "caught segv\n";
   struct rlimit rlim;
@@ -97,7 +97,7 @@ UserLevelRewritingContext::segmentationFaultHandler(int)
   getrusage(RUSAGE_SELF, &r_usage);
   cerr << "stack used = " << ru_isrss << '\n';
   */
-  _exit(1);  // don't call atexit() functions witha bad machine state
+  _exit(1);  // don't call atexit() functions with a bad machine state
 }
 
 void

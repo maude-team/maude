@@ -12,6 +12,7 @@
 //      forward declarations
 #include "interface.hh"
 #include "core.hh"
+#include "ACU_RedBlack.hh"
 #include "ACU_Theory.hh"
 
 //	ACU theory class definitions
