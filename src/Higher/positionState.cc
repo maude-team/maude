@@ -144,7 +144,7 @@ PositionState::rebuildDag(DagNode* replacement, ExtensionInfo* extInfo, Position
   return DagPair(newDag, replacement);
 }
 
-PositionState::DagPair
+DagNode*
 PositionState::rebuildAndInstantiateDag(DagNode* replacement,
 					Substitution& substitution,
 					int firstVariable,
@@ -184,8 +184,7 @@ PositionState::rebuildAndInstantiateDag(DagNode* replacement,
 	 }
     }
   //
-  //	We return the rebuilt dag, and the extended replacement term since the caller may
-  //	need the later for tracing purposes.
+  //	We return the rebuilt dag.
   //
-  return DagPair(newDag, replacement);
+  return newDag;
 }

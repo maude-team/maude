@@ -1,0 +1,3447 @@
+Maude> ==========================================
+get variants in TEST : g(f(u(g(g(X3:Msg, X15:Msg), X16:Msg), u(2, X14:Msg)), u(
+    g(X12:Msg, X3:Msg), g(X8:Msg, g(X10:Msg, X9:Msg)))), f(u(f(X8:Msg,
+    X15:Msg), u(X15:Msg, X9:Msg)), g(f(X2:Msg, X2:Msg), g(3, X6:Msg)))) .
+rewrites: 828
+
+Variant #1
+Msg: g(f(u(2, #4:Msg, g(g(#1:Msg, #2:Msg), #3:Msg)), u(g(#5:Msg, #1:Msg), g(
+    #6:Msg, g(#7:Msg, #8:Msg)))), f(u(#2:Msg, #8:Msg, f(#6:Msg, #2:Msg)), g(f(
+    #9:Msg, #9:Msg), g(3, #10:Msg))))
+X3:Msg --> #1:Msg
+X15:Msg --> #2:Msg
+X16:Msg --> #3:Msg
+X14:Msg --> #4:Msg
+X12:Msg --> #5:Msg
+X8:Msg --> #6:Msg
+X10:Msg --> #7:Msg
+X9:Msg --> #8:Msg
+X2:Msg --> #9:Msg
+X6:Msg --> #10:Msg
+
+Variant #2
+Msg: g(f(u(%10:Msg, g(g(%1:Msg, %2:Msg), %3:Msg)), u(g(%4:Msg, %1:Msg), g(
+    %5:Msg, g(%6:Msg, %7:Msg)))), f(u(%2:Msg, %7:Msg, f(%5:Msg, %2:Msg)), g(f(
+    %8:Msg, %8:Msg), g(3, %9:Msg))))
+X3:Msg --> %1:Msg
+X15:Msg --> %2:Msg
+X16:Msg --> %3:Msg
+X14:Msg --> u(2, %10:Msg)
+X12:Msg --> %4:Msg
+X8:Msg --> %5:Msg
+X10:Msg --> %6:Msg
+X9:Msg --> %7:Msg
+X2:Msg --> %8:Msg
+X6:Msg --> %9:Msg
+
+Variant #3
+Msg: g(f(g(g(%1:Msg, %2:Msg), %3:Msg), u(g(%4:Msg, %1:Msg), g(%5:Msg, g(%6:Msg,
+    %7:Msg)))), f(u(%2:Msg, %7:Msg, f(%5:Msg, %2:Msg)), g(f(%8:Msg, %8:Msg), g(
+    3, %9:Msg))))
+X3:Msg --> %1:Msg
+X15:Msg --> %2:Msg
+X16:Msg --> %3:Msg
+X14:Msg --> 2
+X12:Msg --> %4:Msg
+X8:Msg --> %5:Msg
+X10:Msg --> %6:Msg
+X9:Msg --> %7:Msg
+X2:Msg --> %8:Msg
+X6:Msg --> %9:Msg
+
+Variant #4
+Msg: g(f(u(2, %10:Msg), u(g(%4:Msg, %1:Msg), g(%5:Msg, g(%6:Msg, %7:Msg)))), f(
+    u(%2:Msg, %7:Msg, f(%5:Msg, %2:Msg)), g(f(%8:Msg, %8:Msg), g(3, %9:Msg))))
+X3:Msg --> %1:Msg
+X15:Msg --> %2:Msg
+X16:Msg --> %3:Msg
+X14:Msg --> u(%10:Msg, g(g(%1:Msg, %2:Msg), %3:Msg))
+X12:Msg --> %4:Msg
+X8:Msg --> %5:Msg
+X10:Msg --> %6:Msg
+X9:Msg --> %7:Msg
+X2:Msg --> %8:Msg
+X6:Msg --> %9:Msg
+
+Variant #5
+Msg: g(f(2, u(g(%4:Msg, %1:Msg), g(%5:Msg, g(%6:Msg, %7:Msg)))), f(u(%2:Msg,
+    %7:Msg, f(%5:Msg, %2:Msg)), g(f(%8:Msg, %8:Msg), g(3, %9:Msg))))
+X3:Msg --> %1:Msg
+X15:Msg --> %2:Msg
+X16:Msg --> %3:Msg
+X14:Msg --> g(g(%1:Msg, %2:Msg), %3:Msg)
+X12:Msg --> %4:Msg
+X8:Msg --> %5:Msg
+X10:Msg --> %6:Msg
+X9:Msg --> %7:Msg
+X2:Msg --> %8:Msg
+X6:Msg --> %9:Msg
+
+Variant #6
+Msg: g(f(u(2, g(g(%1:Msg, %2:Msg), %3:Msg)), u(g(%4:Msg, %1:Msg), g(%5:Msg, g(
+    %6:Msg, %7:Msg)))), f(u(%2:Msg, %7:Msg, f(%5:Msg, %2:Msg)), g(f(%8:Msg,
+    %8:Msg), g(3, %9:Msg))))
+X3:Msg --> %1:Msg
+X15:Msg --> %2:Msg
+X16:Msg --> %3:Msg
+X14:Msg --> null
+X12:Msg --> %4:Msg
+X8:Msg --> %5:Msg
+X10:Msg --> %6:Msg
+X9:Msg --> %7:Msg
+X2:Msg --> %8:Msg
+X6:Msg --> %9:Msg
+
+Variant #7
+Msg: g(f(u(2, %1:Msg, g(g(g(%5:Msg, %6:Msg), %2:Msg), %3:Msg)), null), f(u(
+    %2:Msg, %6:Msg, f(%4:Msg, %2:Msg)), g(f(%7:Msg, %7:Msg), g(3, %8:Msg))))
+X3:Msg --> g(%5:Msg, %6:Msg)
+X15:Msg --> %2:Msg
+X16:Msg --> %3:Msg
+X14:Msg --> %1:Msg
+X12:Msg --> %4:Msg
+X8:Msg --> %4:Msg
+X10:Msg --> %5:Msg
+X9:Msg --> %6:Msg
+X2:Msg --> %7:Msg
+X6:Msg --> %8:Msg
+
+Variant #8
+Msg: g(f(u(2, %1:Msg, g(g(%2:Msg, u(%9:Msg, %10:Msg)), %3:Msg)), u(g(%4:Msg,
+    %2:Msg), g(%5:Msg, g(%6:Msg, u(%9:Msg, %11:Msg))))), f(u(%10:Msg, %11:Msg,
+    f(%5:Msg, u(%9:Msg, %10:Msg))), g(f(%7:Msg, %7:Msg), g(3, %8:Msg))))
+X3:Msg --> %2:Msg
+X15:Msg --> u(%9:Msg, %10:Msg)
+X16:Msg --> %3:Msg
+X14:Msg --> %1:Msg
+X12:Msg --> %4:Msg
+X8:Msg --> %5:Msg
+X10:Msg --> %6:Msg
+X9:Msg --> u(%9:Msg, %11:Msg)
+X2:Msg --> %7:Msg
+X6:Msg --> %8:Msg
+
+Variant #9
+Msg: g(f(u(2, %1:Msg, g(g(%2:Msg, u(%9:Msg, %10:Msg)), %3:Msg)), u(g(%4:Msg,
+    %2:Msg), g(%5:Msg, g(%6:Msg, %9:Msg)))), f(u(%10:Msg, f(%5:Msg, u(%9:Msg,
+    %10:Msg))), g(f(%7:Msg, %7:Msg), g(3, %8:Msg))))
+X3:Msg --> %2:Msg
+X15:Msg --> u(%9:Msg, %10:Msg)
+X16:Msg --> %3:Msg
+X14:Msg --> %1:Msg
+X12:Msg --> %4:Msg
+X8:Msg --> %5:Msg
+X10:Msg --> %6:Msg
+X9:Msg --> %9:Msg
+X2:Msg --> %7:Msg
+X6:Msg --> %8:Msg
+
+Variant #10
+Msg: g(f(u(2, %1:Msg, g(g(%2:Msg, %9:Msg), %3:Msg)), u(g(%4:Msg, %2:Msg), g(
+    %5:Msg, g(%6:Msg, u(%9:Msg, %10:Msg))))), f(u(%10:Msg, f(%5:Msg, %9:Msg)),
+    g(f(%7:Msg, %7:Msg), g(3, %8:Msg))))
+X3:Msg --> %2:Msg
+X15:Msg --> %9:Msg
+X16:Msg --> %3:Msg
+X14:Msg --> %1:Msg
+X12:Msg --> %4:Msg
+X8:Msg --> %5:Msg
+X10:Msg --> %6:Msg
+X9:Msg --> u(%9:Msg, %10:Msg)
+X2:Msg --> %7:Msg
+X6:Msg --> %8:Msg
+
+Variant #11
+Msg: g(f(u(2, %1:Msg, g(g(%2:Msg, %9:Msg), %3:Msg)), u(g(%4:Msg, %2:Msg), g(
+    %5:Msg, g(%6:Msg, %9:Msg)))), f(f(%5:Msg, %9:Msg), g(f(%7:Msg, %7:Msg), g(
+    3, %8:Msg))))
+X3:Msg --> %2:Msg
+X15:Msg --> %9:Msg
+X16:Msg --> %3:Msg
+X14:Msg --> %1:Msg
+X12:Msg --> %4:Msg
+X8:Msg --> %5:Msg
+X10:Msg --> %6:Msg
+X9:Msg --> %9:Msg
+X2:Msg --> %7:Msg
+X6:Msg --> %8:Msg
+
+Variant #12
+Msg: g(f(u(2, %1:Msg, g(g(%2:Msg, %9:Msg), %3:Msg)), u(g(%4:Msg, %2:Msg), g(
+    %5:Msg, g(%6:Msg, u(%10:Msg, f(%5:Msg, %9:Msg)))))), f(u(%9:Msg, %10:Msg),
+    g(f(%7:Msg, %7:Msg), g(3, %8:Msg))))
+X3:Msg --> %2:Msg
+X15:Msg --> %9:Msg
+X16:Msg --> %3:Msg
+X14:Msg --> %1:Msg
+X12:Msg --> %4:Msg
+X8:Msg --> %5:Msg
+X10:Msg --> %6:Msg
+X9:Msg --> u(%10:Msg, f(%5:Msg, %9:Msg))
+X2:Msg --> %7:Msg
+X6:Msg --> %8:Msg
+
+Variant #13
+Msg: g(f(u(2, %1:Msg, g(g(%2:Msg, %9:Msg), %3:Msg)), u(g(%4:Msg, %2:Msg), g(
+    %5:Msg, g(%6:Msg, f(%5:Msg, %9:Msg))))), f(%9:Msg, g(f(%7:Msg, %7:Msg), g(
+    3, %8:Msg))))
+X3:Msg --> %2:Msg
+X15:Msg --> %9:Msg
+X16:Msg --> %3:Msg
+X14:Msg --> %1:Msg
+X12:Msg --> %4:Msg
+X8:Msg --> %5:Msg
+X10:Msg --> %6:Msg
+X9:Msg --> f(%5:Msg, %9:Msg)
+X2:Msg --> %7:Msg
+X6:Msg --> %8:Msg
+
+Variant #14
+Msg: g(f(u(2, %1:Msg, g(g(%2:Msg, null), %3:Msg)), u(g(%4:Msg, %2:Msg), g(
+    %5:Msg, g(%6:Msg, %9:Msg)))), f(u(%9:Msg, f(%5:Msg, null)), g(f(%7:Msg,
+    %7:Msg), g(3, %8:Msg))))
+X3:Msg --> %2:Msg
+X15:Msg --> null
+X16:Msg --> %3:Msg
+X14:Msg --> %1:Msg
+X12:Msg --> %4:Msg
+X8:Msg --> %5:Msg
+X10:Msg --> %6:Msg
+X9:Msg --> %9:Msg
+X2:Msg --> %7:Msg
+X6:Msg --> %8:Msg
+
+Variant #15
+Msg: g(f(u(2, %1:Msg, g(g(%2:Msg, %9:Msg), %3:Msg)), u(g(%4:Msg, %2:Msg), g(
+    %5:Msg, g(%6:Msg, null)))), f(u(%9:Msg, f(%5:Msg, %9:Msg)), g(f(%7:Msg,
+    %7:Msg), g(3, %8:Msg))))
+X3:Msg --> %2:Msg
+X15:Msg --> %9:Msg
+X16:Msg --> %3:Msg
+X14:Msg --> %1:Msg
+X12:Msg --> %4:Msg
+X8:Msg --> %5:Msg
+X10:Msg --> %6:Msg
+X9:Msg --> null
+X2:Msg --> %7:Msg
+X6:Msg --> %8:Msg
+
+Variant #16
+Msg: g(f(null, u(g(#4:Msg, #1:Msg), g(#5:Msg, g(#6:Msg, #7:Msg)))), f(u(#2:Msg,
+    #7:Msg, f(#5:Msg, #2:Msg)), g(f(#8:Msg, #8:Msg), g(3, #9:Msg))))
+X3:Msg --> #1:Msg
+X15:Msg --> #2:Msg
+X16:Msg --> #3:Msg
+X14:Msg --> u(2, g(g(#1:Msg, #2:Msg), #3:Msg))
+X12:Msg --> #4:Msg
+X8:Msg --> #5:Msg
+X10:Msg --> #6:Msg
+X9:Msg --> #7:Msg
+X2:Msg --> #8:Msg
+X6:Msg --> #9:Msg
+
+Variant #17
+Msg: g(f(#10:Msg, u(g(#4:Msg, #1:Msg), g(#5:Msg, g(#6:Msg, #7:Msg)))), f(u(
+    #2:Msg, #7:Msg, f(#5:Msg, #2:Msg)), g(f(#8:Msg, #8:Msg), g(3, #9:Msg))))
+X3:Msg --> #1:Msg
+X15:Msg --> #2:Msg
+X16:Msg --> #3:Msg
+X14:Msg --> u(2, #10:Msg, g(g(#1:Msg, #2:Msg), #3:Msg))
+X12:Msg --> #4:Msg
+X8:Msg --> #5:Msg
+X10:Msg --> #6:Msg
+X9:Msg --> #7:Msg
+X2:Msg --> #8:Msg
+X6:Msg --> #9:Msg
+
+Variant #18
+Msg: g(f(u(#1:Msg, g(g(g(#5:Msg, #6:Msg), #2:Msg), #3:Msg)), null), f(u(#2:Msg,
+    #6:Msg, f(#4:Msg, #2:Msg)), g(f(#7:Msg, #7:Msg), g(3, #8:Msg))))
+X3:Msg --> g(#5:Msg, #6:Msg)
+X15:Msg --> #2:Msg
+X16:Msg --> #3:Msg
+X14:Msg --> u(2, #1:Msg)
+X12:Msg --> #4:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #5:Msg
+X9:Msg --> #6:Msg
+X2:Msg --> #7:Msg
+X6:Msg --> #8:Msg
+
+Variant #19
+Msg: g(f(u(#1:Msg, g(g(#2:Msg, u(#9:Msg, #10:Msg)), #3:Msg)), u(g(#4:Msg,
+    #2:Msg), g(#5:Msg, g(#6:Msg, u(#9:Msg, #11:Msg))))), f(u(#10:Msg, #11:Msg,
+    f(#5:Msg, u(#9:Msg, #10:Msg))), g(f(#7:Msg, #7:Msg), g(3, #8:Msg))))
+X3:Msg --> #2:Msg
+X15:Msg --> u(#9:Msg, #10:Msg)
+X16:Msg --> #3:Msg
+X14:Msg --> u(2, #1:Msg)
+X12:Msg --> #4:Msg
+X8:Msg --> #5:Msg
+X10:Msg --> #6:Msg
+X9:Msg --> u(#9:Msg, #11:Msg)
+X2:Msg --> #7:Msg
+X6:Msg --> #8:Msg
+
+Variant #20
+Msg: g(f(u(#1:Msg, g(g(#2:Msg, u(#9:Msg, #10:Msg)), #3:Msg)), u(g(#4:Msg,
+    #2:Msg), g(#5:Msg, g(#6:Msg, #9:Msg)))), f(u(#10:Msg, f(#5:Msg, u(#9:Msg,
+    #10:Msg))), g(f(#7:Msg, #7:Msg), g(3, #8:Msg))))
+X3:Msg --> #2:Msg
+X15:Msg --> u(#9:Msg, #10:Msg)
+X16:Msg --> #3:Msg
+X14:Msg --> u(2, #1:Msg)
+X12:Msg --> #4:Msg
+X8:Msg --> #5:Msg
+X10:Msg --> #6:Msg
+X9:Msg --> #9:Msg
+X2:Msg --> #7:Msg
+X6:Msg --> #8:Msg
+
+Variant #21
+Msg: g(f(u(#1:Msg, g(g(#2:Msg, #9:Msg), #3:Msg)), u(g(#4:Msg, #2:Msg), g(
+    #5:Msg, g(#6:Msg, u(#9:Msg, #10:Msg))))), f(u(#10:Msg, f(#5:Msg, #9:Msg)),
+    g(f(#7:Msg, #7:Msg), g(3, #8:Msg))))
+X3:Msg --> #2:Msg
+X15:Msg --> #9:Msg
+X16:Msg --> #3:Msg
+X14:Msg --> u(2, #1:Msg)
+X12:Msg --> #4:Msg
+X8:Msg --> #5:Msg
+X10:Msg --> #6:Msg
+X9:Msg --> u(#9:Msg, #10:Msg)
+X2:Msg --> #7:Msg
+X6:Msg --> #8:Msg
+
+Variant #22
+Msg: g(f(u(#1:Msg, g(g(#2:Msg, #9:Msg), #3:Msg)), u(g(#4:Msg, #2:Msg), g(
+    #5:Msg, g(#6:Msg, #9:Msg)))), f(f(#5:Msg, #9:Msg), g(f(#7:Msg, #7:Msg), g(
+    3, #8:Msg))))
+X3:Msg --> #2:Msg
+X15:Msg --> #9:Msg
+X16:Msg --> #3:Msg
+X14:Msg --> u(2, #1:Msg)
+X12:Msg --> #4:Msg
+X8:Msg --> #5:Msg
+X10:Msg --> #6:Msg
+X9:Msg --> #9:Msg
+X2:Msg --> #7:Msg
+X6:Msg --> #8:Msg
+
+Variant #23
+Msg: g(f(u(#1:Msg, g(g(#2:Msg, #9:Msg), #3:Msg)), u(g(#4:Msg, #2:Msg), g(
+    #5:Msg, g(#6:Msg, u(#10:Msg, f(#5:Msg, #9:Msg)))))), f(u(#9:Msg, #10:Msg),
+    g(f(#7:Msg, #7:Msg), g(3, #8:Msg))))
+X3:Msg --> #2:Msg
+X15:Msg --> #9:Msg
+X16:Msg --> #3:Msg
+X14:Msg --> u(2, #1:Msg)
+X12:Msg --> #4:Msg
+X8:Msg --> #5:Msg
+X10:Msg --> #6:Msg
+X9:Msg --> u(#10:Msg, f(#5:Msg, #9:Msg))
+X2:Msg --> #7:Msg
+X6:Msg --> #8:Msg
+
+Variant #24
+Msg: g(f(u(#1:Msg, g(g(#2:Msg, #9:Msg), #3:Msg)), u(g(#4:Msg, #2:Msg), g(
+    #5:Msg, g(#6:Msg, f(#5:Msg, #9:Msg))))), f(#9:Msg, g(f(#7:Msg, #7:Msg), g(
+    3, #8:Msg))))
+X3:Msg --> #2:Msg
+X15:Msg --> #9:Msg
+X16:Msg --> #3:Msg
+X14:Msg --> u(2, #1:Msg)
+X12:Msg --> #4:Msg
+X8:Msg --> #5:Msg
+X10:Msg --> #6:Msg
+X9:Msg --> f(#5:Msg, #9:Msg)
+X2:Msg --> #7:Msg
+X6:Msg --> #8:Msg
+
+Variant #25
+Msg: g(f(u(#1:Msg, g(g(#2:Msg, null), #3:Msg)), u(g(#4:Msg, #2:Msg), g(#5:Msg,
+    g(#6:Msg, #9:Msg)))), f(u(#9:Msg, f(#5:Msg, null)), g(f(#7:Msg, #7:Msg), g(
+    3, #8:Msg))))
+X3:Msg --> #2:Msg
+X15:Msg --> null
+X16:Msg --> #3:Msg
+X14:Msg --> u(2, #1:Msg)
+X12:Msg --> #4:Msg
+X8:Msg --> #5:Msg
+X10:Msg --> #6:Msg
+X9:Msg --> #9:Msg
+X2:Msg --> #7:Msg
+X6:Msg --> #8:Msg
+
+Variant #26
+Msg: g(f(u(#1:Msg, g(g(#2:Msg, #9:Msg), #3:Msg)), u(g(#4:Msg, #2:Msg), g(
+    #5:Msg, g(#6:Msg, null)))), f(u(#9:Msg, f(#5:Msg, #9:Msg)), g(f(#7:Msg,
+    #7:Msg), g(3, #8:Msg))))
+X3:Msg --> #2:Msg
+X15:Msg --> #9:Msg
+X16:Msg --> #3:Msg
+X14:Msg --> u(2, #1:Msg)
+X12:Msg --> #4:Msg
+X8:Msg --> #5:Msg
+X10:Msg --> #6:Msg
+X9:Msg --> null
+X2:Msg --> #7:Msg
+X6:Msg --> #8:Msg
+
+Variant #27
+Msg: g(f(g(g(g(#4:Msg, #5:Msg), #1:Msg), #2:Msg), null), f(u(#1:Msg, #5:Msg, f(
+    #3:Msg, #1:Msg)), g(f(#6:Msg, #6:Msg), g(3, #7:Msg))))
+X3:Msg --> g(#4:Msg, #5:Msg)
+X15:Msg --> #1:Msg
+X16:Msg --> #2:Msg
+X14:Msg --> 2
+X12:Msg --> #3:Msg
+X8:Msg --> #3:Msg
+X10:Msg --> #4:Msg
+X9:Msg --> #5:Msg
+X2:Msg --> #6:Msg
+X6:Msg --> #7:Msg
+
+Variant #28
+Msg: g(f(g(g(#1:Msg, u(#8:Msg, #9:Msg)), #2:Msg), u(g(#3:Msg, #1:Msg), g(
+    #4:Msg, g(#5:Msg, u(#8:Msg, #10:Msg))))), f(u(#9:Msg, #10:Msg, f(#4:Msg, u(
+    #8:Msg, #9:Msg))), g(f(#6:Msg, #6:Msg), g(3, #7:Msg))))
+X3:Msg --> #1:Msg
+X15:Msg --> u(#8:Msg, #9:Msg)
+X16:Msg --> #2:Msg
+X14:Msg --> 2
+X12:Msg --> #3:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #5:Msg
+X9:Msg --> u(#8:Msg, #10:Msg)
+X2:Msg --> #6:Msg
+X6:Msg --> #7:Msg
+
+Variant #29
+Msg: g(f(g(g(#1:Msg, u(#8:Msg, #9:Msg)), #2:Msg), u(g(#3:Msg, #1:Msg), g(
+    #4:Msg, g(#5:Msg, #8:Msg)))), f(u(#9:Msg, f(#4:Msg, u(#8:Msg, #9:Msg))), g(
+    f(#6:Msg, #6:Msg), g(3, #7:Msg))))
+X3:Msg --> #1:Msg
+X15:Msg --> u(#8:Msg, #9:Msg)
+X16:Msg --> #2:Msg
+X14:Msg --> 2
+X12:Msg --> #3:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #5:Msg
+X9:Msg --> #8:Msg
+X2:Msg --> #6:Msg
+X6:Msg --> #7:Msg
+
+Variant #30
+Msg: g(f(g(g(#1:Msg, #8:Msg), #2:Msg), u(g(#3:Msg, #1:Msg), g(#4:Msg, g(#5:Msg,
+    u(#8:Msg, #9:Msg))))), f(u(#9:Msg, f(#4:Msg, #8:Msg)), g(f(#6:Msg, #6:Msg),
+    g(3, #7:Msg))))
+X3:Msg --> #1:Msg
+X15:Msg --> #8:Msg
+X16:Msg --> #2:Msg
+X14:Msg --> 2
+X12:Msg --> #3:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #5:Msg
+X9:Msg --> u(#8:Msg, #9:Msg)
+X2:Msg --> #6:Msg
+X6:Msg --> #7:Msg
+
+Variant #31
+Msg: g(f(g(g(#1:Msg, #8:Msg), #2:Msg), u(g(#3:Msg, #1:Msg), g(#4:Msg, g(#5:Msg,
+    #8:Msg)))), f(f(#4:Msg, #8:Msg), g(f(#6:Msg, #6:Msg), g(3, #7:Msg))))
+X3:Msg --> #1:Msg
+X15:Msg --> #8:Msg
+X16:Msg --> #2:Msg
+X14:Msg --> 2
+X12:Msg --> #3:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #5:Msg
+X9:Msg --> #8:Msg
+X2:Msg --> #6:Msg
+X6:Msg --> #7:Msg
+
+Variant #32
+Msg: g(f(g(g(#1:Msg, #8:Msg), #2:Msg), u(g(#3:Msg, #1:Msg), g(#4:Msg, g(#5:Msg,
+    u(#9:Msg, f(#4:Msg, #8:Msg)))))), f(u(#8:Msg, #9:Msg), g(f(#6:Msg, #6:Msg),
+    g(3, #7:Msg))))
+X3:Msg --> #1:Msg
+X15:Msg --> #8:Msg
+X16:Msg --> #2:Msg
+X14:Msg --> 2
+X12:Msg --> #3:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #5:Msg
+X9:Msg --> u(#9:Msg, f(#4:Msg, #8:Msg))
+X2:Msg --> #6:Msg
+X6:Msg --> #7:Msg
+
+Variant #33
+Msg: g(f(g(g(#1:Msg, #8:Msg), #2:Msg), u(g(#3:Msg, #1:Msg), g(#4:Msg, g(#5:Msg,
+    f(#4:Msg, #8:Msg))))), f(#8:Msg, g(f(#6:Msg, #6:Msg), g(3, #7:Msg))))
+X3:Msg --> #1:Msg
+X15:Msg --> #8:Msg
+X16:Msg --> #2:Msg
+X14:Msg --> 2
+X12:Msg --> #3:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #5:Msg
+X9:Msg --> f(#4:Msg, #8:Msg)
+X2:Msg --> #6:Msg
+X6:Msg --> #7:Msg
+
+Variant #34
+Msg: g(f(g(g(#1:Msg, null), #2:Msg), u(g(#3:Msg, #1:Msg), g(#4:Msg, g(#5:Msg,
+    #8:Msg)))), f(u(#8:Msg, f(#4:Msg, null)), g(f(#6:Msg, #6:Msg), g(3,
+    #7:Msg))))
+X3:Msg --> #1:Msg
+X15:Msg --> null
+X16:Msg --> #2:Msg
+X14:Msg --> 2
+X12:Msg --> #3:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #5:Msg
+X9:Msg --> #8:Msg
+X2:Msg --> #6:Msg
+X6:Msg --> #7:Msg
+
+Variant #35
+Msg: g(f(g(g(#1:Msg, #8:Msg), #2:Msg), u(g(#3:Msg, #1:Msg), g(#4:Msg, g(#5:Msg,
+    null)))), f(u(#8:Msg, f(#4:Msg, #8:Msg)), g(f(#6:Msg, #6:Msg), g(3,
+    #7:Msg))))
+X3:Msg --> #1:Msg
+X15:Msg --> #8:Msg
+X16:Msg --> #2:Msg
+X14:Msg --> 2
+X12:Msg --> #3:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #5:Msg
+X9:Msg --> null
+X2:Msg --> #6:Msg
+X6:Msg --> #7:Msg
+
+Variant #36
+Msg: g(f(u(2, #1:Msg), null), f(u(#4:Msg, #5:Msg, f(#2:Msg, #5:Msg)), g(f(
+    #6:Msg, #6:Msg), g(3, #7:Msg))))
+X3:Msg --> g(#3:Msg, #4:Msg)
+X15:Msg --> #5:Msg
+X16:Msg --> #8:Msg
+X14:Msg --> u(#1:Msg, g(g(g(#3:Msg, #4:Msg), #5:Msg), #8:Msg))
+X12:Msg --> #2:Msg
+X8:Msg --> #2:Msg
+X10:Msg --> #3:Msg
+X9:Msg --> #4:Msg
+X2:Msg --> #6:Msg
+X6:Msg --> #7:Msg
+
+Variant #37
+Msg: g(f(u(2, #1:Msg), u(g(#2:Msg, #3:Msg), g(#4:Msg, g(#5:Msg, u(#9:Msg,
+    #11:Msg))))), f(u(#10:Msg, #11:Msg, f(#4:Msg, u(#9:Msg, #10:Msg))), g(f(
+    #6:Msg, #6:Msg), g(3, #7:Msg))))
+X3:Msg --> #3:Msg
+X15:Msg --> u(#9:Msg, #10:Msg)
+X16:Msg --> #8:Msg
+X14:Msg --> u(#1:Msg, g(g(#3:Msg, u(#9:Msg, #10:Msg)), #8:Msg))
+X12:Msg --> #2:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #5:Msg
+X9:Msg --> u(#9:Msg, #11:Msg)
+X2:Msg --> #6:Msg
+X6:Msg --> #7:Msg
+
+Variant #38
+Msg: g(f(u(2, #1:Msg), u(g(#2:Msg, #3:Msg), g(#4:Msg, g(#5:Msg, #9:Msg)))), f(
+    u(#10:Msg, f(#4:Msg, u(#9:Msg, #10:Msg))), g(f(#6:Msg, #6:Msg), g(3,
+    #7:Msg))))
+X3:Msg --> #3:Msg
+X15:Msg --> u(#9:Msg, #10:Msg)
+X16:Msg --> #8:Msg
+X14:Msg --> u(#1:Msg, g(g(#3:Msg, u(#9:Msg, #10:Msg)), #8:Msg))
+X12:Msg --> #2:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #5:Msg
+X9:Msg --> #9:Msg
+X2:Msg --> #6:Msg
+X6:Msg --> #7:Msg
+
+Variant #39
+Msg: g(f(u(2, #1:Msg), u(g(#2:Msg, #3:Msg), g(#4:Msg, g(#5:Msg, u(#9:Msg,
+    #10:Msg))))), f(u(#10:Msg, f(#4:Msg, #9:Msg)), g(f(#6:Msg, #6:Msg), g(3,
+    #7:Msg))))
+X3:Msg --> #3:Msg
+X15:Msg --> #9:Msg
+X16:Msg --> #8:Msg
+X14:Msg --> u(#1:Msg, g(g(#3:Msg, #9:Msg), #8:Msg))
+X12:Msg --> #2:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #5:Msg
+X9:Msg --> u(#9:Msg, #10:Msg)
+X2:Msg --> #6:Msg
+X6:Msg --> #7:Msg
+
+Variant #40
+Msg: g(f(u(2, #1:Msg), u(g(#2:Msg, #3:Msg), g(#4:Msg, g(#5:Msg, #9:Msg)))), f(
+    f(#4:Msg, #9:Msg), g(f(#6:Msg, #6:Msg), g(3, #7:Msg))))
+X3:Msg --> #3:Msg
+X15:Msg --> #9:Msg
+X16:Msg --> #8:Msg
+X14:Msg --> u(#1:Msg, g(g(#3:Msg, #9:Msg), #8:Msg))
+X12:Msg --> #2:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #5:Msg
+X9:Msg --> #9:Msg
+X2:Msg --> #6:Msg
+X6:Msg --> #7:Msg
+
+Variant #41
+Msg: g(f(u(2, #1:Msg), u(g(#2:Msg, #3:Msg), g(#4:Msg, g(#5:Msg, u(#10:Msg, f(
+    #4:Msg, #9:Msg)))))), f(u(#9:Msg, #10:Msg), g(f(#6:Msg, #6:Msg), g(3,
+    #7:Msg))))
+X3:Msg --> #3:Msg
+X15:Msg --> #9:Msg
+X16:Msg --> #8:Msg
+X14:Msg --> u(#1:Msg, g(g(#3:Msg, #9:Msg), #8:Msg))
+X12:Msg --> #2:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #5:Msg
+X9:Msg --> u(#10:Msg, f(#4:Msg, #9:Msg))
+X2:Msg --> #6:Msg
+X6:Msg --> #7:Msg
+
+Variant #42
+Msg: g(f(u(2, #1:Msg), u(g(#2:Msg, #3:Msg), g(#4:Msg, g(#5:Msg, f(#4:Msg,
+    #9:Msg))))), f(#9:Msg, g(f(#6:Msg, #6:Msg), g(3, #7:Msg))))
+X3:Msg --> #3:Msg
+X15:Msg --> #9:Msg
+X16:Msg --> #8:Msg
+X14:Msg --> u(#1:Msg, g(g(#3:Msg, #9:Msg), #8:Msg))
+X12:Msg --> #2:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #5:Msg
+X9:Msg --> f(#4:Msg, #9:Msg)
+X2:Msg --> #6:Msg
+X6:Msg --> #7:Msg
+
+Variant #43
+Msg: g(f(u(2, #1:Msg), u(g(#2:Msg, #3:Msg), g(#4:Msg, g(#5:Msg, #9:Msg)))), f(
+    u(#9:Msg, f(#4:Msg, null)), g(f(#6:Msg, #6:Msg), g(3, #7:Msg))))
+X3:Msg --> #3:Msg
+X15:Msg --> null
+X16:Msg --> #8:Msg
+X14:Msg --> u(#1:Msg, g(g(#3:Msg, null), #8:Msg))
+X12:Msg --> #2:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #5:Msg
+X9:Msg --> #9:Msg
+X2:Msg --> #6:Msg
+X6:Msg --> #7:Msg
+
+Variant #44
+Msg: g(f(u(2, #1:Msg), u(g(#2:Msg, #3:Msg), g(#4:Msg, g(#5:Msg, null)))), f(u(
+    #9:Msg, f(#4:Msg, #9:Msg)), g(f(#6:Msg, #6:Msg), g(3, #7:Msg))))
+X3:Msg --> #3:Msg
+X15:Msg --> #9:Msg
+X16:Msg --> #8:Msg
+X14:Msg --> u(#1:Msg, g(g(#3:Msg, #9:Msg), #8:Msg))
+X12:Msg --> #2:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #5:Msg
+X9:Msg --> null
+X2:Msg --> #6:Msg
+X6:Msg --> #7:Msg
+
+Variant #45
+Msg: g(f(2, null), f(u(#3:Msg, #4:Msg, f(#1:Msg, #4:Msg)), g(f(#5:Msg, #5:Msg),
+    g(3, #6:Msg))))
+X3:Msg --> g(#2:Msg, #3:Msg)
+X15:Msg --> #4:Msg
+X16:Msg --> #7:Msg
+X14:Msg --> g(g(g(#2:Msg, #3:Msg), #4:Msg), #7:Msg)
+X12:Msg --> #1:Msg
+X8:Msg --> #1:Msg
+X10:Msg --> #2:Msg
+X9:Msg --> #3:Msg
+X2:Msg --> #5:Msg
+X6:Msg --> #6:Msg
+
+Variant #46
+Msg: g(f(2, u(g(#1:Msg, #2:Msg), g(#3:Msg, g(#4:Msg, u(#8:Msg, #10:Msg))))), f(
+    u(#9:Msg, #10:Msg, f(#3:Msg, u(#8:Msg, #9:Msg))), g(f(#5:Msg, #5:Msg), g(3,
+    #6:Msg))))
+X3:Msg --> #2:Msg
+X15:Msg --> u(#8:Msg, #9:Msg)
+X16:Msg --> #7:Msg
+X14:Msg --> g(g(#2:Msg, u(#8:Msg, #9:Msg)), #7:Msg)
+X12:Msg --> #1:Msg
+X8:Msg --> #3:Msg
+X10:Msg --> #4:Msg
+X9:Msg --> u(#8:Msg, #10:Msg)
+X2:Msg --> #5:Msg
+X6:Msg --> #6:Msg
+
+Variant #47
+Msg: g(f(2, u(g(#1:Msg, #2:Msg), g(#3:Msg, g(#4:Msg, #8:Msg)))), f(u(#9:Msg, f(
+    #3:Msg, u(#8:Msg, #9:Msg))), g(f(#5:Msg, #5:Msg), g(3, #6:Msg))))
+X3:Msg --> #2:Msg
+X15:Msg --> u(#8:Msg, #9:Msg)
+X16:Msg --> #7:Msg
+X14:Msg --> g(g(#2:Msg, u(#8:Msg, #9:Msg)), #7:Msg)
+X12:Msg --> #1:Msg
+X8:Msg --> #3:Msg
+X10:Msg --> #4:Msg
+X9:Msg --> #8:Msg
+X2:Msg --> #5:Msg
+X6:Msg --> #6:Msg
+
+Variant #48
+Msg: g(f(2, u(g(#1:Msg, #2:Msg), g(#3:Msg, g(#4:Msg, u(#8:Msg, #9:Msg))))), f(
+    u(#9:Msg, f(#3:Msg, #8:Msg)), g(f(#5:Msg, #5:Msg), g(3, #6:Msg))))
+X3:Msg --> #2:Msg
+X15:Msg --> #8:Msg
+X16:Msg --> #7:Msg
+X14:Msg --> g(g(#2:Msg, #8:Msg), #7:Msg)
+X12:Msg --> #1:Msg
+X8:Msg --> #3:Msg
+X10:Msg --> #4:Msg
+X9:Msg --> u(#8:Msg, #9:Msg)
+X2:Msg --> #5:Msg
+X6:Msg --> #6:Msg
+
+Variant #49
+Msg: g(f(2, u(g(#1:Msg, #2:Msg), g(#3:Msg, g(#4:Msg, #8:Msg)))), f(f(#3:Msg,
+    #8:Msg), g(f(#5:Msg, #5:Msg), g(3, #6:Msg))))
+X3:Msg --> #2:Msg
+X15:Msg --> #8:Msg
+X16:Msg --> #7:Msg
+X14:Msg --> g(g(#2:Msg, #8:Msg), #7:Msg)
+X12:Msg --> #1:Msg
+X8:Msg --> #3:Msg
+X10:Msg --> #4:Msg
+X9:Msg --> #8:Msg
+X2:Msg --> #5:Msg
+X6:Msg --> #6:Msg
+
+Variant #50
+Msg: g(f(2, u(g(#1:Msg, #2:Msg), g(#3:Msg, g(#4:Msg, u(#9:Msg, f(#3:Msg,
+    #8:Msg)))))), f(u(#8:Msg, #9:Msg), g(f(#5:Msg, #5:Msg), g(3, #6:Msg))))
+X3:Msg --> #2:Msg
+X15:Msg --> #8:Msg
+X16:Msg --> #7:Msg
+X14:Msg --> g(g(#2:Msg, #8:Msg), #7:Msg)
+X12:Msg --> #1:Msg
+X8:Msg --> #3:Msg
+X10:Msg --> #4:Msg
+X9:Msg --> u(#9:Msg, f(#3:Msg, #8:Msg))
+X2:Msg --> #5:Msg
+X6:Msg --> #6:Msg
+
+Variant #51
+Msg: g(f(2, u(g(#1:Msg, #2:Msg), g(#3:Msg, g(#4:Msg, f(#3:Msg, #8:Msg))))), f(
+    #8:Msg, g(f(#5:Msg, #5:Msg), g(3, #6:Msg))))
+X3:Msg --> #2:Msg
+X15:Msg --> #8:Msg
+X16:Msg --> #7:Msg
+X14:Msg --> g(g(#2:Msg, #8:Msg), #7:Msg)
+X12:Msg --> #1:Msg
+X8:Msg --> #3:Msg
+X10:Msg --> #4:Msg
+X9:Msg --> f(#3:Msg, #8:Msg)
+X2:Msg --> #5:Msg
+X6:Msg --> #6:Msg
+
+Variant #52
+Msg: g(f(2, u(g(#1:Msg, #2:Msg), g(#3:Msg, g(#4:Msg, #8:Msg)))), f(u(#8:Msg, f(
+    #3:Msg, null)), g(f(#5:Msg, #5:Msg), g(3, #6:Msg))))
+X3:Msg --> #2:Msg
+X15:Msg --> null
+X16:Msg --> #7:Msg
+X14:Msg --> g(g(#2:Msg, null), #7:Msg)
+X12:Msg --> #1:Msg
+X8:Msg --> #3:Msg
+X10:Msg --> #4:Msg
+X9:Msg --> #8:Msg
+X2:Msg --> #5:Msg
+X6:Msg --> #6:Msg
+
+Variant #53
+Msg: g(f(2, u(g(#1:Msg, #2:Msg), g(#3:Msg, g(#4:Msg, null)))), f(u(#8:Msg, f(
+    #3:Msg, #8:Msg)), g(f(#5:Msg, #5:Msg), g(3, #6:Msg))))
+X3:Msg --> #2:Msg
+X15:Msg --> #8:Msg
+X16:Msg --> #7:Msg
+X14:Msg --> g(g(#2:Msg, #8:Msg), #7:Msg)
+X12:Msg --> #1:Msg
+X8:Msg --> #3:Msg
+X10:Msg --> #4:Msg
+X9:Msg --> null
+X2:Msg --> #5:Msg
+X6:Msg --> #6:Msg
+
+Variant #54
+Msg: g(f(u(2, g(g(g(#4:Msg, #5:Msg), #1:Msg), #2:Msg)), null), f(u(#1:Msg,
+    #5:Msg, f(#3:Msg, #1:Msg)), g(f(#6:Msg, #6:Msg), g(3, #7:Msg))))
+X3:Msg --> g(#4:Msg, #5:Msg)
+X15:Msg --> #1:Msg
+X16:Msg --> #2:Msg
+X14:Msg --> null
+X12:Msg --> #3:Msg
+X8:Msg --> #3:Msg
+X10:Msg --> #4:Msg
+X9:Msg --> #5:Msg
+X2:Msg --> #6:Msg
+X6:Msg --> #7:Msg
+
+Variant #55
+Msg: g(f(u(2, g(g(#1:Msg, u(#8:Msg, #9:Msg)), #2:Msg)), u(g(#3:Msg, #1:Msg), g(
+    #4:Msg, g(#5:Msg, u(#8:Msg, #10:Msg))))), f(u(#9:Msg, #10:Msg, f(#4:Msg, u(
+    #8:Msg, #9:Msg))), g(f(#6:Msg, #6:Msg), g(3, #7:Msg))))
+X3:Msg --> #1:Msg
+X15:Msg --> u(#8:Msg, #9:Msg)
+X16:Msg --> #2:Msg
+X14:Msg --> null
+X12:Msg --> #3:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #5:Msg
+X9:Msg --> u(#8:Msg, #10:Msg)
+X2:Msg --> #6:Msg
+X6:Msg --> #7:Msg
+
+Variant #56
+Msg: g(f(u(2, g(g(#1:Msg, u(#8:Msg, #9:Msg)), #2:Msg)), u(g(#3:Msg, #1:Msg), g(
+    #4:Msg, g(#5:Msg, #8:Msg)))), f(u(#9:Msg, f(#4:Msg, u(#8:Msg, #9:Msg))), g(
+    f(#6:Msg, #6:Msg), g(3, #7:Msg))))
+X3:Msg --> #1:Msg
+X15:Msg --> u(#8:Msg, #9:Msg)
+X16:Msg --> #2:Msg
+X14:Msg --> null
+X12:Msg --> #3:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #5:Msg
+X9:Msg --> #8:Msg
+X2:Msg --> #6:Msg
+X6:Msg --> #7:Msg
+
+Variant #57
+Msg: g(f(u(2, g(g(#1:Msg, #8:Msg), #2:Msg)), u(g(#3:Msg, #1:Msg), g(#4:Msg, g(
+    #5:Msg, u(#8:Msg, #9:Msg))))), f(u(#9:Msg, f(#4:Msg, #8:Msg)), g(f(#6:Msg,
+    #6:Msg), g(3, #7:Msg))))
+X3:Msg --> #1:Msg
+X15:Msg --> #8:Msg
+X16:Msg --> #2:Msg
+X14:Msg --> null
+X12:Msg --> #3:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #5:Msg
+X9:Msg --> u(#8:Msg, #9:Msg)
+X2:Msg --> #6:Msg
+X6:Msg --> #7:Msg
+
+Variant #58
+Msg: g(f(u(2, g(g(#1:Msg, #8:Msg), #2:Msg)), u(g(#3:Msg, #1:Msg), g(#4:Msg, g(
+    #5:Msg, #8:Msg)))), f(f(#4:Msg, #8:Msg), g(f(#6:Msg, #6:Msg), g(3,
+    #7:Msg))))
+X3:Msg --> #1:Msg
+X15:Msg --> #8:Msg
+X16:Msg --> #2:Msg
+X14:Msg --> null
+X12:Msg --> #3:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #5:Msg
+X9:Msg --> #8:Msg
+X2:Msg --> #6:Msg
+X6:Msg --> #7:Msg
+
+Variant #59
+Msg: g(f(u(2, g(g(#1:Msg, #8:Msg), #2:Msg)), u(g(#3:Msg, #1:Msg), g(#4:Msg, g(
+    #5:Msg, u(#9:Msg, f(#4:Msg, #8:Msg)))))), f(u(#8:Msg, #9:Msg), g(f(#6:Msg,
+    #6:Msg), g(3, #7:Msg))))
+X3:Msg --> #1:Msg
+X15:Msg --> #8:Msg
+X16:Msg --> #2:Msg
+X14:Msg --> null
+X12:Msg --> #3:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #5:Msg
+X9:Msg --> u(#9:Msg, f(#4:Msg, #8:Msg))
+X2:Msg --> #6:Msg
+X6:Msg --> #7:Msg
+
+Variant #60
+Msg: g(f(u(2, g(g(#1:Msg, #8:Msg), #2:Msg)), u(g(#3:Msg, #1:Msg), g(#4:Msg, g(
+    #5:Msg, f(#4:Msg, #8:Msg))))), f(#8:Msg, g(f(#6:Msg, #6:Msg), g(3,
+    #7:Msg))))
+X3:Msg --> #1:Msg
+X15:Msg --> #8:Msg
+X16:Msg --> #2:Msg
+X14:Msg --> null
+X12:Msg --> #3:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #5:Msg
+X9:Msg --> f(#4:Msg, #8:Msg)
+X2:Msg --> #6:Msg
+X6:Msg --> #7:Msg
+
+Variant #61
+Msg: g(f(u(2, g(g(#1:Msg, null), #2:Msg)), u(g(#3:Msg, #1:Msg), g(#4:Msg, g(
+    #5:Msg, #8:Msg)))), f(u(#8:Msg, f(#4:Msg, null)), g(f(#6:Msg, #6:Msg), g(3,
+    #7:Msg))))
+X3:Msg --> #1:Msg
+X15:Msg --> null
+X16:Msg --> #2:Msg
+X14:Msg --> null
+X12:Msg --> #3:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #5:Msg
+X9:Msg --> #8:Msg
+X2:Msg --> #6:Msg
+X6:Msg --> #7:Msg
+
+Variant #62
+Msg: g(f(u(2, g(g(#1:Msg, #8:Msg), #2:Msg)), u(g(#3:Msg, #1:Msg), g(#4:Msg, g(
+    #5:Msg, null)))), f(u(#8:Msg, f(#4:Msg, #8:Msg)), g(f(#6:Msg, #6:Msg), g(3,
+    #7:Msg))))
+X3:Msg --> #1:Msg
+X15:Msg --> #8:Msg
+X16:Msg --> #2:Msg
+X14:Msg --> null
+X12:Msg --> #3:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #5:Msg
+X9:Msg --> null
+X2:Msg --> #6:Msg
+X6:Msg --> #7:Msg
+
+Variant #63
+Msg: g(f(u(2, #1:Msg, g(g(g(#2:Msg, u(#7:Msg, #9:Msg)), u(#7:Msg, #8:Msg)),
+    #3:Msg)), null), f(u(#8:Msg, #9:Msg, f(#4:Msg, u(#7:Msg, #8:Msg))), g(f(
+    #5:Msg, #5:Msg), g(3, #6:Msg))))
+X3:Msg --> g(#2:Msg, u(#7:Msg, #9:Msg))
+X15:Msg --> u(#7:Msg, #8:Msg)
+X16:Msg --> #3:Msg
+X14:Msg --> #1:Msg
+X12:Msg --> #4:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #2:Msg
+X9:Msg --> u(#7:Msg, #9:Msg)
+X2:Msg --> #5:Msg
+X6:Msg --> #6:Msg
+
+Variant #64
+Msg: g(f(u(2, #1:Msg, g(g(g(#2:Msg, #7:Msg), u(#7:Msg, #8:Msg)), #3:Msg)),
+    null), f(u(#8:Msg, f(#4:Msg, u(#7:Msg, #8:Msg))), g(f(#5:Msg, #5:Msg), g(3,
+    #6:Msg))))
+X3:Msg --> g(#2:Msg, #7:Msg)
+X15:Msg --> u(#7:Msg, #8:Msg)
+X16:Msg --> #3:Msg
+X14:Msg --> #1:Msg
+X12:Msg --> #4:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #2:Msg
+X9:Msg --> #7:Msg
+X2:Msg --> #5:Msg
+X6:Msg --> #6:Msg
+
+Variant #65
+Msg: g(f(u(2, #1:Msg, g(g(g(#2:Msg, u(#7:Msg, #8:Msg)), #7:Msg), #3:Msg)),
+    null), f(u(#8:Msg, f(#4:Msg, #7:Msg)), g(f(#5:Msg, #5:Msg), g(3, #6:Msg))))
+X3:Msg --> g(#2:Msg, u(#7:Msg, #8:Msg))
+X15:Msg --> #7:Msg
+X16:Msg --> #3:Msg
+X14:Msg --> #1:Msg
+X12:Msg --> #4:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #2:Msg
+X9:Msg --> u(#7:Msg, #8:Msg)
+X2:Msg --> #5:Msg
+X6:Msg --> #6:Msg
+
+Variant #66
+Msg: g(f(u(2, #1:Msg, g(g(g(#2:Msg, #7:Msg), #7:Msg), #3:Msg)), null), f(f(
+    #4:Msg, #7:Msg), g(f(#5:Msg, #5:Msg), g(3, #6:Msg))))
+X3:Msg --> g(#2:Msg, #7:Msg)
+X15:Msg --> #7:Msg
+X16:Msg --> #3:Msg
+X14:Msg --> #1:Msg
+X12:Msg --> #4:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #2:Msg
+X9:Msg --> #7:Msg
+X2:Msg --> #5:Msg
+X6:Msg --> #6:Msg
+
+Variant #67
+Msg: g(f(u(2, #1:Msg, g(g(g(#2:Msg, u(#8:Msg, f(#4:Msg, #7:Msg))), #7:Msg),
+    #3:Msg)), null), f(u(#7:Msg, #8:Msg), g(f(#5:Msg, #5:Msg), g(3, #6:Msg))))
+X3:Msg --> g(#2:Msg, u(#8:Msg, f(#4:Msg, #7:Msg)))
+X15:Msg --> #7:Msg
+X16:Msg --> #3:Msg
+X14:Msg --> #1:Msg
+X12:Msg --> #4:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #2:Msg
+X9:Msg --> u(#8:Msg, f(#4:Msg, #7:Msg))
+X2:Msg --> #5:Msg
+X6:Msg --> #6:Msg
+
+Variant #68
+Msg: g(f(u(2, #1:Msg, g(g(g(#2:Msg, f(#4:Msg, #7:Msg)), #7:Msg), #3:Msg)),
+    null), f(#7:Msg, g(f(#5:Msg, #5:Msg), g(3, #6:Msg))))
+X3:Msg --> g(#2:Msg, f(#4:Msg, #7:Msg))
+X15:Msg --> #7:Msg
+X16:Msg --> #3:Msg
+X14:Msg --> #1:Msg
+X12:Msg --> #4:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #2:Msg
+X9:Msg --> f(#4:Msg, #7:Msg)
+X2:Msg --> #5:Msg
+X6:Msg --> #6:Msg
+
+Variant #69
+Msg: g(f(u(2, #1:Msg, g(g(g(#2:Msg, #7:Msg), null), #3:Msg)), null), f(u(
+    #7:Msg, f(#4:Msg, null)), g(f(#5:Msg, #5:Msg), g(3, #6:Msg))))
+X3:Msg --> g(#2:Msg, #7:Msg)
+X15:Msg --> null
+X16:Msg --> #3:Msg
+X14:Msg --> #1:Msg
+X12:Msg --> #4:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #2:Msg
+X9:Msg --> #7:Msg
+X2:Msg --> #5:Msg
+X6:Msg --> #6:Msg
+
+Variant #70
+Msg: g(f(u(2, #1:Msg, g(g(g(#2:Msg, null), #7:Msg), #3:Msg)), null), f(u(
+    #7:Msg, f(#4:Msg, #7:Msg)), g(f(#5:Msg, #5:Msg), g(3, #6:Msg))))
+X3:Msg --> g(#2:Msg, null)
+X15:Msg --> #7:Msg
+X16:Msg --> #3:Msg
+X14:Msg --> #1:Msg
+X12:Msg --> #4:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #2:Msg
+X9:Msg --> null
+X2:Msg --> #5:Msg
+X6:Msg --> #6:Msg
+
+Variant #71
+Msg: g(f(u(2, #1:Msg, g(g(#2:Msg, u(#9:Msg, #10:Msg)), #3:Msg)), u(g(#4:Msg,
+    #2:Msg), g(#5:Msg, g(#6:Msg, u(#9:Msg, #11:Msg, f(#5:Msg, u(#9:Msg,
+    #10:Msg))))))), f(u(#10:Msg, #11:Msg), g(f(#7:Msg, #7:Msg), g(3, #8:Msg))))
+X3:Msg --> #2:Msg
+X15:Msg --> u(#9:Msg, #10:Msg)
+X16:Msg --> #3:Msg
+X14:Msg --> #1:Msg
+X12:Msg --> #4:Msg
+X8:Msg --> #5:Msg
+X10:Msg --> #6:Msg
+X9:Msg --> u(#9:Msg, #11:Msg, f(#5:Msg, u(#9:Msg, #10:Msg)))
+X2:Msg --> #7:Msg
+X6:Msg --> #8:Msg
+
+Variant #72
+Msg: g(f(u(2, #1:Msg, g(g(#2:Msg, u(#9:Msg, #10:Msg)), #3:Msg)), u(g(#4:Msg,
+    #2:Msg), g(#5:Msg, g(#6:Msg, u(#9:Msg, f(#5:Msg, u(#9:Msg, #10:Msg))))))),
+    f(#10:Msg, g(f(#7:Msg, #7:Msg), g(3, #8:Msg))))
+X3:Msg --> #2:Msg
+X15:Msg --> u(#9:Msg, #10:Msg)
+X16:Msg --> #3:Msg
+X14:Msg --> #1:Msg
+X12:Msg --> #4:Msg
+X8:Msg --> #5:Msg
+X10:Msg --> #6:Msg
+X9:Msg --> u(#9:Msg, f(#5:Msg, u(#9:Msg, #10:Msg)))
+X2:Msg --> #7:Msg
+X6:Msg --> #8:Msg
+
+Variant #73
+Msg: g(f(u(2, #1:Msg, g(g(#2:Msg, #3:Msg), #4:Msg)), u(g(#5:Msg, #2:Msg), g(
+    #6:Msg, g(#7:Msg, u(#3:Msg, f(#6:Msg, #3:Msg)))))), f(null, g(f(#8:Msg,
+    #8:Msg), g(3, #9:Msg))))
+X3:Msg --> #2:Msg
+X15:Msg --> #3:Msg
+X16:Msg --> #4:Msg
+X14:Msg --> #1:Msg
+X12:Msg --> #5:Msg
+X8:Msg --> #6:Msg
+X10:Msg --> #7:Msg
+X9:Msg --> u(#3:Msg, f(#6:Msg, #3:Msg))
+X2:Msg --> #8:Msg
+X6:Msg --> #9:Msg
+
+Variant #74
+Msg: g(f(u(2, #1:Msg, g(g(#2:Msg, #3:Msg), #4:Msg)), u(g(#5:Msg, #2:Msg), g(
+    #6:Msg, g(#7:Msg, u(#3:Msg, #10:Msg, f(#6:Msg, #3:Msg)))))), f(#10:Msg, g(
+    f(#8:Msg, #8:Msg), g(3, #9:Msg))))
+X3:Msg --> #2:Msg
+X15:Msg --> #3:Msg
+X16:Msg --> #4:Msg
+X14:Msg --> #1:Msg
+X12:Msg --> #5:Msg
+X8:Msg --> #6:Msg
+X10:Msg --> #7:Msg
+X9:Msg --> u(#3:Msg, #10:Msg, f(#6:Msg, #3:Msg))
+X2:Msg --> #8:Msg
+X6:Msg --> #9:Msg
+
+Variant #75
+Msg: g(f(u(2, #1:Msg, g(g(#2:Msg, null), #3:Msg)), u(g(#4:Msg, #2:Msg), g(
+    #5:Msg, g(#6:Msg, u(#9:Msg, f(#5:Msg, null)))))), f(#9:Msg, g(f(#7:Msg,
+    #7:Msg), g(3, #8:Msg))))
+X3:Msg --> #2:Msg
+X15:Msg --> null
+X16:Msg --> #3:Msg
+X14:Msg --> #1:Msg
+X12:Msg --> #4:Msg
+X8:Msg --> #5:Msg
+X10:Msg --> #6:Msg
+X9:Msg --> u(#9:Msg, f(#5:Msg, null))
+X2:Msg --> #7:Msg
+X6:Msg --> #8:Msg
+
+Variant #76
+Msg: g(f(null, null), f(u(%3:Msg, %4:Msg, f(%1:Msg, %4:Msg)), g(f(%5:Msg,
+    %5:Msg), g(3, %6:Msg))))
+X3:Msg --> g(%2:Msg, %3:Msg)
+X15:Msg --> %4:Msg
+X16:Msg --> %7:Msg
+X14:Msg --> u(2, g(g(g(%2:Msg, %3:Msg), %4:Msg), %7:Msg))
+X12:Msg --> %1:Msg
+X8:Msg --> %1:Msg
+X10:Msg --> %2:Msg
+X9:Msg --> %3:Msg
+X2:Msg --> %5:Msg
+X6:Msg --> %6:Msg
+
+Variant #77
+Msg: g(f(null, u(g(%1:Msg, %2:Msg), g(%3:Msg, g(%4:Msg, u(%8:Msg, %10:Msg))))),
+    f(u(%9:Msg, %10:Msg, f(%3:Msg, u(%8:Msg, %9:Msg))), g(f(%5:Msg, %5:Msg), g(
+    3, %6:Msg))))
+X3:Msg --> %2:Msg
+X15:Msg --> u(%8:Msg, %9:Msg)
+X16:Msg --> %7:Msg
+X14:Msg --> u(2, g(g(%2:Msg, u(%8:Msg, %9:Msg)), %7:Msg))
+X12:Msg --> %1:Msg
+X8:Msg --> %3:Msg
+X10:Msg --> %4:Msg
+X9:Msg --> u(%8:Msg, %10:Msg)
+X2:Msg --> %5:Msg
+X6:Msg --> %6:Msg
+
+Variant #78
+Msg: g(f(null, u(g(%1:Msg, %2:Msg), g(%3:Msg, g(%4:Msg, %8:Msg)))), f(u(%9:Msg,
+    f(%3:Msg, u(%8:Msg, %9:Msg))), g(f(%5:Msg, %5:Msg), g(3, %6:Msg))))
+X3:Msg --> %2:Msg
+X15:Msg --> u(%8:Msg, %9:Msg)
+X16:Msg --> %7:Msg
+X14:Msg --> u(2, g(g(%2:Msg, u(%8:Msg, %9:Msg)), %7:Msg))
+X12:Msg --> %1:Msg
+X8:Msg --> %3:Msg
+X10:Msg --> %4:Msg
+X9:Msg --> %8:Msg
+X2:Msg --> %5:Msg
+X6:Msg --> %6:Msg
+
+Variant #79
+Msg: g(f(null, u(g(%1:Msg, %2:Msg), g(%3:Msg, g(%4:Msg, u(%8:Msg, %9:Msg))))),
+    f(u(%9:Msg, f(%3:Msg, %8:Msg)), g(f(%5:Msg, %5:Msg), g(3, %6:Msg))))
+X3:Msg --> %2:Msg
+X15:Msg --> %8:Msg
+X16:Msg --> %7:Msg
+X14:Msg --> u(2, g(g(%2:Msg, %8:Msg), %7:Msg))
+X12:Msg --> %1:Msg
+X8:Msg --> %3:Msg
+X10:Msg --> %4:Msg
+X9:Msg --> u(%8:Msg, %9:Msg)
+X2:Msg --> %5:Msg
+X6:Msg --> %6:Msg
+
+Variant #80
+Msg: g(f(null, u(g(%1:Msg, %2:Msg), g(%3:Msg, g(%4:Msg, %8:Msg)))), f(f(%3:Msg,
+    %8:Msg), g(f(%5:Msg, %5:Msg), g(3, %6:Msg))))
+X3:Msg --> %2:Msg
+X15:Msg --> %8:Msg
+X16:Msg --> %7:Msg
+X14:Msg --> u(2, g(g(%2:Msg, %8:Msg), %7:Msg))
+X12:Msg --> %1:Msg
+X8:Msg --> %3:Msg
+X10:Msg --> %4:Msg
+X9:Msg --> %8:Msg
+X2:Msg --> %5:Msg
+X6:Msg --> %6:Msg
+
+Variant #81
+Msg: g(f(null, u(g(%1:Msg, %2:Msg), g(%3:Msg, g(%4:Msg, u(%9:Msg, f(%3:Msg,
+    %8:Msg)))))), f(u(%8:Msg, %9:Msg), g(f(%5:Msg, %5:Msg), g(3, %6:Msg))))
+X3:Msg --> %2:Msg
+X15:Msg --> %8:Msg
+X16:Msg --> %7:Msg
+X14:Msg --> u(2, g(g(%2:Msg, %8:Msg), %7:Msg))
+X12:Msg --> %1:Msg
+X8:Msg --> %3:Msg
+X10:Msg --> %4:Msg
+X9:Msg --> u(%9:Msg, f(%3:Msg, %8:Msg))
+X2:Msg --> %5:Msg
+X6:Msg --> %6:Msg
+
+Variant #82
+Msg: g(f(null, u(g(%1:Msg, %2:Msg), g(%3:Msg, g(%4:Msg, f(%3:Msg, %8:Msg))))),
+    f(%8:Msg, g(f(%5:Msg, %5:Msg), g(3, %6:Msg))))
+X3:Msg --> %2:Msg
+X15:Msg --> %8:Msg
+X16:Msg --> %7:Msg
+X14:Msg --> u(2, g(g(%2:Msg, %8:Msg), %7:Msg))
+X12:Msg --> %1:Msg
+X8:Msg --> %3:Msg
+X10:Msg --> %4:Msg
+X9:Msg --> f(%3:Msg, %8:Msg)
+X2:Msg --> %5:Msg
+X6:Msg --> %6:Msg
+
+Variant #83
+Msg: g(f(null, u(g(%1:Msg, %2:Msg), g(%3:Msg, g(%4:Msg, %8:Msg)))), f(u(%8:Msg,
+    f(%3:Msg, null)), g(f(%5:Msg, %5:Msg), g(3, %6:Msg))))
+X3:Msg --> %2:Msg
+X15:Msg --> null
+X16:Msg --> %7:Msg
+X14:Msg --> u(2, g(g(%2:Msg, null), %7:Msg))
+X12:Msg --> %1:Msg
+X8:Msg --> %3:Msg
+X10:Msg --> %4:Msg
+X9:Msg --> %8:Msg
+X2:Msg --> %5:Msg
+X6:Msg --> %6:Msg
+
+Variant #84
+Msg: g(f(null, u(g(%1:Msg, %2:Msg), g(%3:Msg, g(%4:Msg, null)))), f(u(%8:Msg,
+    f(%3:Msg, %8:Msg)), g(f(%5:Msg, %5:Msg), g(3, %6:Msg))))
+X3:Msg --> %2:Msg
+X15:Msg --> %8:Msg
+X16:Msg --> %7:Msg
+X14:Msg --> u(2, g(g(%2:Msg, %8:Msg), %7:Msg))
+X12:Msg --> %1:Msg
+X8:Msg --> %3:Msg
+X10:Msg --> %4:Msg
+X9:Msg --> null
+X2:Msg --> %5:Msg
+X6:Msg --> %6:Msg
+
+Variant #85
+Msg: g(f(%1:Msg, null), f(u(%4:Msg, %5:Msg, f(%2:Msg, %5:Msg)), g(f(%6:Msg,
+    %6:Msg), g(3, %7:Msg))))
+X3:Msg --> g(%3:Msg, %4:Msg)
+X15:Msg --> %5:Msg
+X16:Msg --> %8:Msg
+X14:Msg --> u(2, %1:Msg, g(g(g(%3:Msg, %4:Msg), %5:Msg), %8:Msg))
+X12:Msg --> %2:Msg
+X8:Msg --> %2:Msg
+X10:Msg --> %3:Msg
+X9:Msg --> %4:Msg
+X2:Msg --> %6:Msg
+X6:Msg --> %7:Msg
+
+Variant #86
+Msg: g(f(%1:Msg, u(g(%2:Msg, %3:Msg), g(%4:Msg, g(%5:Msg, u(%9:Msg,
+    %11:Msg))))), f(u(%10:Msg, %11:Msg, f(%4:Msg, u(%9:Msg, %10:Msg))), g(f(
+    %6:Msg, %6:Msg), g(3, %7:Msg))))
+X3:Msg --> %3:Msg
+X15:Msg --> u(%9:Msg, %10:Msg)
+X16:Msg --> %8:Msg
+X14:Msg --> u(2, %1:Msg, g(g(%3:Msg, u(%9:Msg, %10:Msg)), %8:Msg))
+X12:Msg --> %2:Msg
+X8:Msg --> %4:Msg
+X10:Msg --> %5:Msg
+X9:Msg --> u(%9:Msg, %11:Msg)
+X2:Msg --> %6:Msg
+X6:Msg --> %7:Msg
+
+Variant #87
+Msg: g(f(%1:Msg, u(g(%2:Msg, %3:Msg), g(%4:Msg, g(%5:Msg, %9:Msg)))), f(u(
+    %10:Msg, f(%4:Msg, u(%9:Msg, %10:Msg))), g(f(%6:Msg, %6:Msg), g(3,
+    %7:Msg))))
+X3:Msg --> %3:Msg
+X15:Msg --> u(%9:Msg, %10:Msg)
+X16:Msg --> %8:Msg
+X14:Msg --> u(2, %1:Msg, g(g(%3:Msg, u(%9:Msg, %10:Msg)), %8:Msg))
+X12:Msg --> %2:Msg
+X8:Msg --> %4:Msg
+X10:Msg --> %5:Msg
+X9:Msg --> %9:Msg
+X2:Msg --> %6:Msg
+X6:Msg --> %7:Msg
+
+Variant #88
+Msg: g(f(%1:Msg, u(g(%2:Msg, %3:Msg), g(%4:Msg, g(%5:Msg, u(%9:Msg,
+    %10:Msg))))), f(u(%10:Msg, f(%4:Msg, %9:Msg)), g(f(%6:Msg, %6:Msg), g(3,
+    %7:Msg))))
+X3:Msg --> %3:Msg
+X15:Msg --> %9:Msg
+X16:Msg --> %8:Msg
+X14:Msg --> u(2, %1:Msg, g(g(%3:Msg, %9:Msg), %8:Msg))
+X12:Msg --> %2:Msg
+X8:Msg --> %4:Msg
+X10:Msg --> %5:Msg
+X9:Msg --> u(%9:Msg, %10:Msg)
+X2:Msg --> %6:Msg
+X6:Msg --> %7:Msg
+
+Variant #89
+Msg: g(f(%1:Msg, u(g(%2:Msg, %3:Msg), g(%4:Msg, g(%5:Msg, %9:Msg)))), f(f(
+    %4:Msg, %9:Msg), g(f(%6:Msg, %6:Msg), g(3, %7:Msg))))
+X3:Msg --> %3:Msg
+X15:Msg --> %9:Msg
+X16:Msg --> %8:Msg
+X14:Msg --> u(2, %1:Msg, g(g(%3:Msg, %9:Msg), %8:Msg))
+X12:Msg --> %2:Msg
+X8:Msg --> %4:Msg
+X10:Msg --> %5:Msg
+X9:Msg --> %9:Msg
+X2:Msg --> %6:Msg
+X6:Msg --> %7:Msg
+
+Variant #90
+Msg: g(f(%1:Msg, u(g(%2:Msg, %3:Msg), g(%4:Msg, g(%5:Msg, u(%10:Msg, f(%4:Msg,
+    %9:Msg)))))), f(u(%9:Msg, %10:Msg), g(f(%6:Msg, %6:Msg), g(3, %7:Msg))))
+X3:Msg --> %3:Msg
+X15:Msg --> %9:Msg
+X16:Msg --> %8:Msg
+X14:Msg --> u(2, %1:Msg, g(g(%3:Msg, %9:Msg), %8:Msg))
+X12:Msg --> %2:Msg
+X8:Msg --> %4:Msg
+X10:Msg --> %5:Msg
+X9:Msg --> u(%10:Msg, f(%4:Msg, %9:Msg))
+X2:Msg --> %6:Msg
+X6:Msg --> %7:Msg
+
+Variant #91
+Msg: g(f(%1:Msg, u(g(%2:Msg, %3:Msg), g(%4:Msg, g(%5:Msg, f(%4:Msg,
+    %9:Msg))))), f(%9:Msg, g(f(%6:Msg, %6:Msg), g(3, %7:Msg))))
+X3:Msg --> %3:Msg
+X15:Msg --> %9:Msg
+X16:Msg --> %8:Msg
+X14:Msg --> u(2, %1:Msg, g(g(%3:Msg, %9:Msg), %8:Msg))
+X12:Msg --> %2:Msg
+X8:Msg --> %4:Msg
+X10:Msg --> %5:Msg
+X9:Msg --> f(%4:Msg, %9:Msg)
+X2:Msg --> %6:Msg
+X6:Msg --> %7:Msg
+
+Variant #92
+Msg: g(f(%1:Msg, u(g(%2:Msg, %3:Msg), g(%4:Msg, g(%5:Msg, %9:Msg)))), f(u(
+    %9:Msg, f(%4:Msg, null)), g(f(%6:Msg, %6:Msg), g(3, %7:Msg))))
+X3:Msg --> %3:Msg
+X15:Msg --> null
+X16:Msg --> %8:Msg
+X14:Msg --> u(2, %1:Msg, g(g(%3:Msg, null), %8:Msg))
+X12:Msg --> %2:Msg
+X8:Msg --> %4:Msg
+X10:Msg --> %5:Msg
+X9:Msg --> %9:Msg
+X2:Msg --> %6:Msg
+X6:Msg --> %7:Msg
+
+Variant #93
+Msg: g(f(%1:Msg, u(g(%2:Msg, %3:Msg), g(%4:Msg, g(%5:Msg, null)))), f(u(%9:Msg,
+    f(%4:Msg, %9:Msg)), g(f(%6:Msg, %6:Msg), g(3, %7:Msg))))
+X3:Msg --> %3:Msg
+X15:Msg --> %9:Msg
+X16:Msg --> %8:Msg
+X14:Msg --> u(2, %1:Msg, g(g(%3:Msg, %9:Msg), %8:Msg))
+X12:Msg --> %2:Msg
+X8:Msg --> %4:Msg
+X10:Msg --> %5:Msg
+X9:Msg --> null
+X2:Msg --> %6:Msg
+X6:Msg --> %7:Msg
+
+Variant #94
+Msg: g(f(u(%1:Msg, g(g(g(%2:Msg, u(%7:Msg, %9:Msg)), u(%7:Msg, %8:Msg)),
+    %3:Msg)), null), f(u(%8:Msg, %9:Msg, f(%4:Msg, u(%7:Msg, %8:Msg))), g(f(
+    %5:Msg, %5:Msg), g(3, %6:Msg))))
+X3:Msg --> g(%2:Msg, u(%7:Msg, %9:Msg))
+X15:Msg --> u(%7:Msg, %8:Msg)
+X16:Msg --> %3:Msg
+X14:Msg --> u(2, %1:Msg)
+X12:Msg --> %4:Msg
+X8:Msg --> %4:Msg
+X10:Msg --> %2:Msg
+X9:Msg --> u(%7:Msg, %9:Msg)
+X2:Msg --> %5:Msg
+X6:Msg --> %6:Msg
+
+Variant #95
+Msg: g(f(u(%1:Msg, g(g(g(%2:Msg, %7:Msg), u(%7:Msg, %8:Msg)), %3:Msg)), null),
+    f(u(%8:Msg, f(%4:Msg, u(%7:Msg, %8:Msg))), g(f(%5:Msg, %5:Msg), g(3,
+    %6:Msg))))
+X3:Msg --> g(%2:Msg, %7:Msg)
+X15:Msg --> u(%7:Msg, %8:Msg)
+X16:Msg --> %3:Msg
+X14:Msg --> u(2, %1:Msg)
+X12:Msg --> %4:Msg
+X8:Msg --> %4:Msg
+X10:Msg --> %2:Msg
+X9:Msg --> %7:Msg
+X2:Msg --> %5:Msg
+X6:Msg --> %6:Msg
+
+Variant #96
+Msg: g(f(u(%1:Msg, g(g(g(%2:Msg, u(%7:Msg, %8:Msg)), %7:Msg), %3:Msg)), null),
+    f(u(%8:Msg, f(%4:Msg, %7:Msg)), g(f(%5:Msg, %5:Msg), g(3, %6:Msg))))
+X3:Msg --> g(%2:Msg, u(%7:Msg, %8:Msg))
+X15:Msg --> %7:Msg
+X16:Msg --> %3:Msg
+X14:Msg --> u(2, %1:Msg)
+X12:Msg --> %4:Msg
+X8:Msg --> %4:Msg
+X10:Msg --> %2:Msg
+X9:Msg --> u(%7:Msg, %8:Msg)
+X2:Msg --> %5:Msg
+X6:Msg --> %6:Msg
+
+Variant #97
+Msg: g(f(u(%1:Msg, g(g(g(%2:Msg, %7:Msg), %7:Msg), %3:Msg)), null), f(f(%4:Msg,
+    %7:Msg), g(f(%5:Msg, %5:Msg), g(3, %6:Msg))))
+X3:Msg --> g(%2:Msg, %7:Msg)
+X15:Msg --> %7:Msg
+X16:Msg --> %3:Msg
+X14:Msg --> u(2, %1:Msg)
+X12:Msg --> %4:Msg
+X8:Msg --> %4:Msg
+X10:Msg --> %2:Msg
+X9:Msg --> %7:Msg
+X2:Msg --> %5:Msg
+X6:Msg --> %6:Msg
+
+Variant #98
+Msg: g(f(u(%1:Msg, g(g(g(%2:Msg, u(%8:Msg, f(%4:Msg, %7:Msg))), %7:Msg),
+    %3:Msg)), null), f(u(%7:Msg, %8:Msg), g(f(%5:Msg, %5:Msg), g(3, %6:Msg))))
+X3:Msg --> g(%2:Msg, u(%8:Msg, f(%4:Msg, %7:Msg)))
+X15:Msg --> %7:Msg
+X16:Msg --> %3:Msg
+X14:Msg --> u(2, %1:Msg)
+X12:Msg --> %4:Msg
+X8:Msg --> %4:Msg
+X10:Msg --> %2:Msg
+X9:Msg --> u(%8:Msg, f(%4:Msg, %7:Msg))
+X2:Msg --> %5:Msg
+X6:Msg --> %6:Msg
+
+Variant #99
+Msg: g(f(u(%1:Msg, g(g(g(%2:Msg, f(%4:Msg, %7:Msg)), %7:Msg), %3:Msg)), null),
+    f(%7:Msg, g(f(%5:Msg, %5:Msg), g(3, %6:Msg))))
+X3:Msg --> g(%2:Msg, f(%4:Msg, %7:Msg))
+X15:Msg --> %7:Msg
+X16:Msg --> %3:Msg
+X14:Msg --> u(2, %1:Msg)
+X12:Msg --> %4:Msg
+X8:Msg --> %4:Msg
+X10:Msg --> %2:Msg
+X9:Msg --> f(%4:Msg, %7:Msg)
+X2:Msg --> %5:Msg
+X6:Msg --> %6:Msg
+
+Variant #100
+Msg: g(f(u(%1:Msg, g(g(g(%2:Msg, %7:Msg), null), %3:Msg)), null), f(u(%7:Msg,
+    f(%4:Msg, null)), g(f(%5:Msg, %5:Msg), g(3, %6:Msg))))
+X3:Msg --> g(%2:Msg, %7:Msg)
+X15:Msg --> null
+X16:Msg --> %3:Msg
+X14:Msg --> u(2, %1:Msg)
+X12:Msg --> %4:Msg
+X8:Msg --> %4:Msg
+X10:Msg --> %2:Msg
+X9:Msg --> %7:Msg
+X2:Msg --> %5:Msg
+X6:Msg --> %6:Msg
+
+Variant #101
+Msg: g(f(u(%1:Msg, g(g(g(%2:Msg, null), %7:Msg), %3:Msg)), null), f(u(%7:Msg,
+    f(%4:Msg, %7:Msg)), g(f(%5:Msg, %5:Msg), g(3, %6:Msg))))
+X3:Msg --> g(%2:Msg, null)
+X15:Msg --> %7:Msg
+X16:Msg --> %3:Msg
+X14:Msg --> u(2, %1:Msg)
+X12:Msg --> %4:Msg
+X8:Msg --> %4:Msg
+X10:Msg --> %2:Msg
+X9:Msg --> null
+X2:Msg --> %5:Msg
+X6:Msg --> %6:Msg
+
+Variant #102
+Msg: g(f(u(%1:Msg, g(g(%2:Msg, u(%9:Msg, %10:Msg)), %3:Msg)), u(g(%4:Msg,
+    %2:Msg), g(%5:Msg, g(%6:Msg, u(%9:Msg, %11:Msg, f(%5:Msg, u(%9:Msg,
+    %10:Msg))))))), f(u(%10:Msg, %11:Msg), g(f(%7:Msg, %7:Msg), g(3, %8:Msg))))
+X3:Msg --> %2:Msg
+X15:Msg --> u(%9:Msg, %10:Msg)
+X16:Msg --> %3:Msg
+X14:Msg --> u(2, %1:Msg)
+X12:Msg --> %4:Msg
+X8:Msg --> %5:Msg
+X10:Msg --> %6:Msg
+X9:Msg --> u(%9:Msg, %11:Msg, f(%5:Msg, u(%9:Msg, %10:Msg)))
+X2:Msg --> %7:Msg
+X6:Msg --> %8:Msg
+
+Variant #103
+Msg: g(f(u(%1:Msg, g(g(%2:Msg, u(%9:Msg, %10:Msg)), %3:Msg)), u(g(%4:Msg,
+    %2:Msg), g(%5:Msg, g(%6:Msg, u(%9:Msg, f(%5:Msg, u(%9:Msg, %10:Msg))))))),
+    f(%10:Msg, g(f(%7:Msg, %7:Msg), g(3, %8:Msg))))
+X3:Msg --> %2:Msg
+X15:Msg --> u(%9:Msg, %10:Msg)
+X16:Msg --> %3:Msg
+X14:Msg --> u(2, %1:Msg)
+X12:Msg --> %4:Msg
+X8:Msg --> %5:Msg
+X10:Msg --> %6:Msg
+X9:Msg --> u(%9:Msg, f(%5:Msg, u(%9:Msg, %10:Msg)))
+X2:Msg --> %7:Msg
+X6:Msg --> %8:Msg
+
+Variant #104
+Msg: g(f(u(%1:Msg, g(g(%2:Msg, %3:Msg), %4:Msg)), u(g(%5:Msg, %2:Msg), g(
+    %6:Msg, g(%7:Msg, u(%3:Msg, f(%6:Msg, %3:Msg)))))), f(null, g(f(%8:Msg,
+    %8:Msg), g(3, %9:Msg))))
+X3:Msg --> %2:Msg
+X15:Msg --> %3:Msg
+X16:Msg --> %4:Msg
+X14:Msg --> u(2, %1:Msg)
+X12:Msg --> %5:Msg
+X8:Msg --> %6:Msg
+X10:Msg --> %7:Msg
+X9:Msg --> u(%3:Msg, f(%6:Msg, %3:Msg))
+X2:Msg --> %8:Msg
+X6:Msg --> %9:Msg
+
+Variant #105
+Msg: g(f(u(%1:Msg, g(g(%2:Msg, %3:Msg), %4:Msg)), u(g(%5:Msg, %2:Msg), g(
+    %6:Msg, g(%7:Msg, u(%3:Msg, %10:Msg, f(%6:Msg, %3:Msg)))))), f(%10:Msg, g(
+    f(%8:Msg, %8:Msg), g(3, %9:Msg))))
+X3:Msg --> %2:Msg
+X15:Msg --> %3:Msg
+X16:Msg --> %4:Msg
+X14:Msg --> u(2, %1:Msg)
+X12:Msg --> %5:Msg
+X8:Msg --> %6:Msg
+X10:Msg --> %7:Msg
+X9:Msg --> u(%3:Msg, %10:Msg, f(%6:Msg, %3:Msg))
+X2:Msg --> %8:Msg
+X6:Msg --> %9:Msg
+
+Variant #106
+Msg: g(f(u(%1:Msg, g(g(%2:Msg, null), %3:Msg)), u(g(%4:Msg, %2:Msg), g(%5:Msg,
+    g(%6:Msg, u(%9:Msg, f(%5:Msg, null)))))), f(%9:Msg, g(f(%7:Msg, %7:Msg), g(
+    3, %8:Msg))))
+X3:Msg --> %2:Msg
+X15:Msg --> null
+X16:Msg --> %3:Msg
+X14:Msg --> u(2, %1:Msg)
+X12:Msg --> %4:Msg
+X8:Msg --> %5:Msg
+X10:Msg --> %6:Msg
+X9:Msg --> u(%9:Msg, f(%5:Msg, null))
+X2:Msg --> %7:Msg
+X6:Msg --> %8:Msg
+
+Variant #107
+Msg: g(f(g(g(g(%1:Msg, u(%6:Msg, %8:Msg)), u(%6:Msg, %7:Msg)), %2:Msg), null),
+    f(u(%7:Msg, %8:Msg, f(%3:Msg, u(%6:Msg, %7:Msg))), g(f(%4:Msg, %4:Msg), g(
+    3, %5:Msg))))
+X3:Msg --> g(%1:Msg, u(%6:Msg, %8:Msg))
+X15:Msg --> u(%6:Msg, %7:Msg)
+X16:Msg --> %2:Msg
+X14:Msg --> 2
+X12:Msg --> %3:Msg
+X8:Msg --> %3:Msg
+X10:Msg --> %1:Msg
+X9:Msg --> u(%6:Msg, %8:Msg)
+X2:Msg --> %4:Msg
+X6:Msg --> %5:Msg
+
+Variant #108
+Msg: g(f(g(g(g(%1:Msg, %6:Msg), u(%6:Msg, %7:Msg)), %2:Msg), null), f(u(%7:Msg,
+    f(%3:Msg, u(%6:Msg, %7:Msg))), g(f(%4:Msg, %4:Msg), g(3, %5:Msg))))
+X3:Msg --> g(%1:Msg, %6:Msg)
+X15:Msg --> u(%6:Msg, %7:Msg)
+X16:Msg --> %2:Msg
+X14:Msg --> 2
+X12:Msg --> %3:Msg
+X8:Msg --> %3:Msg
+X10:Msg --> %1:Msg
+X9:Msg --> %6:Msg
+X2:Msg --> %4:Msg
+X6:Msg --> %5:Msg
+
+Variant #109
+Msg: g(f(g(g(g(%1:Msg, u(%6:Msg, %7:Msg)), %6:Msg), %2:Msg), null), f(u(%7:Msg,
+    f(%3:Msg, %6:Msg)), g(f(%4:Msg, %4:Msg), g(3, %5:Msg))))
+X3:Msg --> g(%1:Msg, u(%6:Msg, %7:Msg))
+X15:Msg --> %6:Msg
+X16:Msg --> %2:Msg
+X14:Msg --> 2
+X12:Msg --> %3:Msg
+X8:Msg --> %3:Msg
+X10:Msg --> %1:Msg
+X9:Msg --> u(%6:Msg, %7:Msg)
+X2:Msg --> %4:Msg
+X6:Msg --> %5:Msg
+
+Variant #110
+Msg: g(f(g(g(g(%1:Msg, %6:Msg), %6:Msg), %2:Msg), null), f(f(%3:Msg, %6:Msg),
+    g(f(%4:Msg, %4:Msg), g(3, %5:Msg))))
+X3:Msg --> g(%1:Msg, %6:Msg)
+X15:Msg --> %6:Msg
+X16:Msg --> %2:Msg
+X14:Msg --> 2
+X12:Msg --> %3:Msg
+X8:Msg --> %3:Msg
+X10:Msg --> %1:Msg
+X9:Msg --> %6:Msg
+X2:Msg --> %4:Msg
+X6:Msg --> %5:Msg
+
+Variant #111
+Msg: g(f(g(g(g(%1:Msg, u(%7:Msg, f(%3:Msg, %6:Msg))), %6:Msg), %2:Msg), null),
+    f(u(%6:Msg, %7:Msg), g(f(%4:Msg, %4:Msg), g(3, %5:Msg))))
+X3:Msg --> g(%1:Msg, u(%7:Msg, f(%3:Msg, %6:Msg)))
+X15:Msg --> %6:Msg
+X16:Msg --> %2:Msg
+X14:Msg --> 2
+X12:Msg --> %3:Msg
+X8:Msg --> %3:Msg
+X10:Msg --> %1:Msg
+X9:Msg --> u(%7:Msg, f(%3:Msg, %6:Msg))
+X2:Msg --> %4:Msg
+X6:Msg --> %5:Msg
+
+Variant #112
+Msg: g(f(g(g(g(%1:Msg, f(%3:Msg, %6:Msg)), %6:Msg), %2:Msg), null), f(%6:Msg,
+    g(f(%4:Msg, %4:Msg), g(3, %5:Msg))))
+X3:Msg --> g(%1:Msg, f(%3:Msg, %6:Msg))
+X15:Msg --> %6:Msg
+X16:Msg --> %2:Msg
+X14:Msg --> 2
+X12:Msg --> %3:Msg
+X8:Msg --> %3:Msg
+X10:Msg --> %1:Msg
+X9:Msg --> f(%3:Msg, %6:Msg)
+X2:Msg --> %4:Msg
+X6:Msg --> %5:Msg
+
+Variant #113
+Msg: g(f(g(g(g(%1:Msg, %6:Msg), null), %2:Msg), null), f(u(%6:Msg, f(%3:Msg,
+    null)), g(f(%4:Msg, %4:Msg), g(3, %5:Msg))))
+X3:Msg --> g(%1:Msg, %6:Msg)
+X15:Msg --> null
+X16:Msg --> %2:Msg
+X14:Msg --> 2
+X12:Msg --> %3:Msg
+X8:Msg --> %3:Msg
+X10:Msg --> %1:Msg
+X9:Msg --> %6:Msg
+X2:Msg --> %4:Msg
+X6:Msg --> %5:Msg
+
+Variant #114
+Msg: g(f(g(g(g(%1:Msg, null), %6:Msg), %2:Msg), null), f(u(%6:Msg, f(%3:Msg,
+    %6:Msg)), g(f(%4:Msg, %4:Msg), g(3, %5:Msg))))
+X3:Msg --> g(%1:Msg, null)
+X15:Msg --> %6:Msg
+X16:Msg --> %2:Msg
+X14:Msg --> 2
+X12:Msg --> %3:Msg
+X8:Msg --> %3:Msg
+X10:Msg --> %1:Msg
+X9:Msg --> null
+X2:Msg --> %4:Msg
+X6:Msg --> %5:Msg
+
+Variant #115
+Msg: g(f(g(g(%1:Msg, u(%8:Msg, %9:Msg)), %2:Msg), u(g(%3:Msg, %1:Msg), g(
+    %4:Msg, g(%5:Msg, u(%8:Msg, %10:Msg, f(%4:Msg, u(%8:Msg, %9:Msg))))))), f(
+    u(%9:Msg, %10:Msg), g(f(%6:Msg, %6:Msg), g(3, %7:Msg))))
+X3:Msg --> %1:Msg
+X15:Msg --> u(%8:Msg, %9:Msg)
+X16:Msg --> %2:Msg
+X14:Msg --> 2
+X12:Msg --> %3:Msg
+X8:Msg --> %4:Msg
+X10:Msg --> %5:Msg
+X9:Msg --> u(%8:Msg, %10:Msg, f(%4:Msg, u(%8:Msg, %9:Msg)))
+X2:Msg --> %6:Msg
+X6:Msg --> %7:Msg
+
+Variant #116
+Msg: g(f(g(g(%1:Msg, u(%8:Msg, %9:Msg)), %2:Msg), u(g(%3:Msg, %1:Msg), g(
+    %4:Msg, g(%5:Msg, u(%8:Msg, f(%4:Msg, u(%8:Msg, %9:Msg))))))), f(%9:Msg, g(
+    f(%6:Msg, %6:Msg), g(3, %7:Msg))))
+X3:Msg --> %1:Msg
+X15:Msg --> u(%8:Msg, %9:Msg)
+X16:Msg --> %2:Msg
+X14:Msg --> 2
+X12:Msg --> %3:Msg
+X8:Msg --> %4:Msg
+X10:Msg --> %5:Msg
+X9:Msg --> u(%8:Msg, f(%4:Msg, u(%8:Msg, %9:Msg)))
+X2:Msg --> %6:Msg
+X6:Msg --> %7:Msg
+
+Variant #117
+Msg: g(f(g(g(%1:Msg, %2:Msg), %3:Msg), u(g(%4:Msg, %1:Msg), g(%5:Msg, g(%6:Msg,
+    u(%2:Msg, f(%5:Msg, %2:Msg)))))), f(null, g(f(%7:Msg, %7:Msg), g(3,
+    %8:Msg))))
+X3:Msg --> %1:Msg
+X15:Msg --> %2:Msg
+X16:Msg --> %3:Msg
+X14:Msg --> 2
+X12:Msg --> %4:Msg
+X8:Msg --> %5:Msg
+X10:Msg --> %6:Msg
+X9:Msg --> u(%2:Msg, f(%5:Msg, %2:Msg))
+X2:Msg --> %7:Msg
+X6:Msg --> %8:Msg
+
+Variant #118
+Msg: g(f(g(g(%1:Msg, %2:Msg), %3:Msg), u(g(%4:Msg, %1:Msg), g(%5:Msg, g(%6:Msg,
+    u(%2:Msg, %9:Msg, f(%5:Msg, %2:Msg)))))), f(%9:Msg, g(f(%7:Msg, %7:Msg), g(
+    3, %8:Msg))))
+X3:Msg --> %1:Msg
+X15:Msg --> %2:Msg
+X16:Msg --> %3:Msg
+X14:Msg --> 2
+X12:Msg --> %4:Msg
+X8:Msg --> %5:Msg
+X10:Msg --> %6:Msg
+X9:Msg --> u(%2:Msg, %9:Msg, f(%5:Msg, %2:Msg))
+X2:Msg --> %7:Msg
+X6:Msg --> %8:Msg
+
+Variant #119
+Msg: g(f(g(g(%1:Msg, null), %2:Msg), u(g(%3:Msg, %1:Msg), g(%4:Msg, g(%5:Msg,
+    u(%8:Msg, f(%4:Msg, null)))))), f(%8:Msg, g(f(%6:Msg, %6:Msg), g(3,
+    %7:Msg))))
+X3:Msg --> %1:Msg
+X15:Msg --> null
+X16:Msg --> %2:Msg
+X14:Msg --> 2
+X12:Msg --> %3:Msg
+X8:Msg --> %4:Msg
+X10:Msg --> %5:Msg
+X9:Msg --> u(%8:Msg, f(%4:Msg, null))
+X2:Msg --> %6:Msg
+X6:Msg --> %7:Msg
+
+Variant #120
+Msg: g(f(u(2, %1:Msg), null), f(u(%8:Msg, %9:Msg, f(%2:Msg, u(%7:Msg,
+    %9:Msg))), g(f(%3:Msg, %3:Msg), g(3, %4:Msg))))
+X3:Msg --> g(%5:Msg, u(%7:Msg, %8:Msg))
+X15:Msg --> u(%7:Msg, %9:Msg)
+X16:Msg --> %6:Msg
+X14:Msg --> u(%1:Msg, g(g(g(%5:Msg, u(%7:Msg, %8:Msg)), u(%7:Msg, %9:Msg)),
+    %6:Msg))
+X12:Msg --> %2:Msg
+X8:Msg --> %2:Msg
+X10:Msg --> %5:Msg
+X9:Msg --> u(%7:Msg, %8:Msg)
+X2:Msg --> %3:Msg
+X6:Msg --> %4:Msg
+
+Variant #121
+Msg: g(f(u(2, %1:Msg), null), f(u(%8:Msg, f(%2:Msg, %7:Msg)), g(f(%3:Msg,
+    %3:Msg), g(3, %4:Msg))))
+X3:Msg --> g(%5:Msg, u(%7:Msg, %8:Msg))
+X15:Msg --> %7:Msg
+X16:Msg --> %6:Msg
+X14:Msg --> u(%1:Msg, g(g(g(%5:Msg, u(%7:Msg, %8:Msg)), %7:Msg), %6:Msg))
+X12:Msg --> %2:Msg
+X8:Msg --> %2:Msg
+X10:Msg --> %5:Msg
+X9:Msg --> u(%7:Msg, %8:Msg)
+X2:Msg --> %3:Msg
+X6:Msg --> %4:Msg
+
+Variant #122
+Msg: g(f(u(2, %1:Msg), null), f(u(%8:Msg, f(%2:Msg, u(%7:Msg, %8:Msg))), g(f(
+    %3:Msg, %3:Msg), g(3, %4:Msg))))
+X3:Msg --> g(%5:Msg, %7:Msg)
+X15:Msg --> u(%7:Msg, %8:Msg)
+X16:Msg --> %6:Msg
+X14:Msg --> u(%1:Msg, g(g(g(%5:Msg, %7:Msg), u(%7:Msg, %8:Msg)), %6:Msg))
+X12:Msg --> %2:Msg
+X8:Msg --> %2:Msg
+X10:Msg --> %5:Msg
+X9:Msg --> %7:Msg
+X2:Msg --> %3:Msg
+X6:Msg --> %4:Msg
+
+Variant #123
+Msg: g(f(u(2, %1:Msg), null), f(f(%2:Msg, %7:Msg), g(f(%3:Msg, %3:Msg), g(3,
+    %4:Msg))))
+X3:Msg --> g(%5:Msg, %7:Msg)
+X15:Msg --> %7:Msg
+X16:Msg --> %6:Msg
+X14:Msg --> u(%1:Msg, g(g(g(%5:Msg, %7:Msg), %7:Msg), %6:Msg))
+X12:Msg --> %2:Msg
+X8:Msg --> %2:Msg
+X10:Msg --> %5:Msg
+X9:Msg --> %7:Msg
+X2:Msg --> %3:Msg
+X6:Msg --> %4:Msg
+
+Variant #124
+Msg: g(f(u(2, %1:Msg), null), f(u(%7:Msg, %8:Msg), g(f(%3:Msg, %3:Msg), g(3,
+    %4:Msg))))
+X3:Msg --> g(%5:Msg, u(%7:Msg, f(%2:Msg, %8:Msg)))
+X15:Msg --> %8:Msg
+X16:Msg --> %6:Msg
+X14:Msg --> u(%1:Msg, g(g(g(%5:Msg, u(%7:Msg, f(%2:Msg, %8:Msg))), %8:Msg),
+    %6:Msg))
+X12:Msg --> %2:Msg
+X8:Msg --> %2:Msg
+X10:Msg --> %5:Msg
+X9:Msg --> u(%7:Msg, f(%2:Msg, %8:Msg))
+X2:Msg --> %3:Msg
+X6:Msg --> %4:Msg
+
+Variant #125
+Msg: g(f(u(2, %1:Msg), null), f(%7:Msg, g(f(%3:Msg, %3:Msg), g(3, %4:Msg))))
+X3:Msg --> g(%5:Msg, f(%2:Msg, %7:Msg))
+X15:Msg --> %7:Msg
+X16:Msg --> %6:Msg
+X14:Msg --> u(%1:Msg, g(g(g(%5:Msg, f(%2:Msg, %7:Msg)), %7:Msg), %6:Msg))
+X12:Msg --> %2:Msg
+X8:Msg --> %2:Msg
+X10:Msg --> %5:Msg
+X9:Msg --> f(%2:Msg, %7:Msg)
+X2:Msg --> %3:Msg
+X6:Msg --> %4:Msg
+
+Variant #126
+Msg: g(f(u(2, %1:Msg), null), f(u(%7:Msg, f(%2:Msg, %7:Msg)), g(f(%3:Msg,
+    %3:Msg), g(3, %4:Msg))))
+X3:Msg --> g(%5:Msg, null)
+X15:Msg --> %7:Msg
+X16:Msg --> %6:Msg
+X14:Msg --> u(%1:Msg, g(g(g(%5:Msg, null), %7:Msg), %6:Msg))
+X12:Msg --> %2:Msg
+X8:Msg --> %2:Msg
+X10:Msg --> %5:Msg
+X9:Msg --> null
+X2:Msg --> %3:Msg
+X6:Msg --> %4:Msg
+
+Variant #127
+Msg: g(f(u(2, %1:Msg), null), f(u(%7:Msg, f(%2:Msg, null)), g(f(%3:Msg,
+    %3:Msg), g(3, %4:Msg))))
+X3:Msg --> g(%5:Msg, %7:Msg)
+X15:Msg --> null
+X16:Msg --> %6:Msg
+X14:Msg --> u(%1:Msg, g(g(g(%5:Msg, %7:Msg), null), %6:Msg))
+X12:Msg --> %2:Msg
+X8:Msg --> %2:Msg
+X10:Msg --> %5:Msg
+X9:Msg --> %7:Msg
+X2:Msg --> %3:Msg
+X6:Msg --> %4:Msg
+
+Variant #128
+Msg: g(f(u(2, %1:Msg), u(g(%2:Msg, %3:Msg), g(%4:Msg, g(%5:Msg, u(%9:Msg,
+    %11:Msg, f(%4:Msg, u(%9:Msg, %10:Msg))))))), f(u(%10:Msg, %11:Msg), g(f(
+    %6:Msg, %6:Msg), g(3, %7:Msg))))
+X3:Msg --> %3:Msg
+X15:Msg --> u(%9:Msg, %10:Msg)
+X16:Msg --> %8:Msg
+X14:Msg --> u(%1:Msg, g(g(%3:Msg, u(%9:Msg, %10:Msg)), %8:Msg))
+X12:Msg --> %2:Msg
+X8:Msg --> %4:Msg
+X10:Msg --> %5:Msg
+X9:Msg --> u(%9:Msg, %11:Msg, f(%4:Msg, u(%9:Msg, %10:Msg)))
+X2:Msg --> %6:Msg
+X6:Msg --> %7:Msg
+
+Variant #129
+Msg: g(f(u(2, %1:Msg), u(g(%2:Msg, %3:Msg), g(%4:Msg, g(%5:Msg, u(%9:Msg, f(
+    %4:Msg, u(%9:Msg, %10:Msg))))))), f(%10:Msg, g(f(%6:Msg, %6:Msg), g(3,
+    %7:Msg))))
+X3:Msg --> %3:Msg
+X15:Msg --> u(%9:Msg, %10:Msg)
+X16:Msg --> %8:Msg
+X14:Msg --> u(%1:Msg, g(g(%3:Msg, u(%9:Msg, %10:Msg)), %8:Msg))
+X12:Msg --> %2:Msg
+X8:Msg --> %4:Msg
+X10:Msg --> %5:Msg
+X9:Msg --> u(%9:Msg, f(%4:Msg, u(%9:Msg, %10:Msg)))
+X2:Msg --> %6:Msg
+X6:Msg --> %7:Msg
+
+Variant #130
+Msg: g(f(u(2, %1:Msg), u(g(%2:Msg, %3:Msg), g(%4:Msg, g(%5:Msg, u(%6:Msg, f(
+    %4:Msg, %6:Msg)))))), f(null, g(f(%7:Msg, %7:Msg), g(3, %8:Msg))))
+X3:Msg --> %3:Msg
+X15:Msg --> %6:Msg
+X16:Msg --> %9:Msg
+X14:Msg --> u(%1:Msg, g(g(%3:Msg, %6:Msg), %9:Msg))
+X12:Msg --> %2:Msg
+X8:Msg --> %4:Msg
+X10:Msg --> %5:Msg
+X9:Msg --> u(%6:Msg, f(%4:Msg, %6:Msg))
+X2:Msg --> %7:Msg
+X6:Msg --> %8:Msg
+
+Variant #131
+Msg: g(f(u(2, %1:Msg), u(g(%2:Msg, %3:Msg), g(%4:Msg, g(%5:Msg, u(%6:Msg,
+    %10:Msg, f(%4:Msg, %6:Msg)))))), f(%10:Msg, g(f(%7:Msg, %7:Msg), g(3,
+    %8:Msg))))
+X3:Msg --> %3:Msg
+X15:Msg --> %6:Msg
+X16:Msg --> %9:Msg
+X14:Msg --> u(%1:Msg, g(g(%3:Msg, %6:Msg), %9:Msg))
+X12:Msg --> %2:Msg
+X8:Msg --> %4:Msg
+X10:Msg --> %5:Msg
+X9:Msg --> u(%6:Msg, %10:Msg, f(%4:Msg, %6:Msg))
+X2:Msg --> %7:Msg
+X6:Msg --> %8:Msg
+
+Variant #132
+Msg: g(f(u(2, %1:Msg), u(g(%2:Msg, %3:Msg), g(%4:Msg, g(%5:Msg, u(%9:Msg, f(
+    %4:Msg, null)))))), f(%9:Msg, g(f(%6:Msg, %6:Msg), g(3, %7:Msg))))
+X3:Msg --> %3:Msg
+X15:Msg --> null
+X16:Msg --> %8:Msg
+X14:Msg --> u(%1:Msg, g(g(%3:Msg, null), %8:Msg))
+X12:Msg --> %2:Msg
+X8:Msg --> %4:Msg
+X10:Msg --> %5:Msg
+X9:Msg --> u(%9:Msg, f(%4:Msg, null))
+X2:Msg --> %6:Msg
+X6:Msg --> %7:Msg
+
+Variant #133
+Msg: g(f(2, null), f(u(%7:Msg, %8:Msg, f(%1:Msg, u(%6:Msg, %8:Msg))), g(f(
+    %2:Msg, %2:Msg), g(3, %3:Msg))))
+X3:Msg --> g(%4:Msg, u(%6:Msg, %7:Msg))
+X15:Msg --> u(%6:Msg, %8:Msg)
+X16:Msg --> %5:Msg
+X14:Msg --> g(g(g(%4:Msg, u(%6:Msg, %7:Msg)), u(%6:Msg, %8:Msg)), %5:Msg)
+X12:Msg --> %1:Msg
+X8:Msg --> %1:Msg
+X10:Msg --> %4:Msg
+X9:Msg --> u(%6:Msg, %7:Msg)
+X2:Msg --> %2:Msg
+X6:Msg --> %3:Msg
+
+Variant #134
+Msg: g(f(2, null), f(u(%7:Msg, f(%1:Msg, %6:Msg)), g(f(%2:Msg, %2:Msg), g(3,
+    %3:Msg))))
+X3:Msg --> g(%4:Msg, u(%6:Msg, %7:Msg))
+X15:Msg --> %6:Msg
+X16:Msg --> %5:Msg
+X14:Msg --> g(g(g(%4:Msg, u(%6:Msg, %7:Msg)), %6:Msg), %5:Msg)
+X12:Msg --> %1:Msg
+X8:Msg --> %1:Msg
+X10:Msg --> %4:Msg
+X9:Msg --> u(%6:Msg, %7:Msg)
+X2:Msg --> %2:Msg
+X6:Msg --> %3:Msg
+
+Variant #135
+Msg: g(f(2, null), f(u(%7:Msg, f(%1:Msg, u(%6:Msg, %7:Msg))), g(f(%2:Msg,
+    %2:Msg), g(3, %3:Msg))))
+X3:Msg --> g(%4:Msg, %6:Msg)
+X15:Msg --> u(%6:Msg, %7:Msg)
+X16:Msg --> %5:Msg
+X14:Msg --> g(g(g(%4:Msg, %6:Msg), u(%6:Msg, %7:Msg)), %5:Msg)
+X12:Msg --> %1:Msg
+X8:Msg --> %1:Msg
+X10:Msg --> %4:Msg
+X9:Msg --> %6:Msg
+X2:Msg --> %2:Msg
+X6:Msg --> %3:Msg
+
+Variant #136
+Msg: g(f(2, null), f(f(%1:Msg, %6:Msg), g(f(%2:Msg, %2:Msg), g(3, %3:Msg))))
+X3:Msg --> g(%4:Msg, %6:Msg)
+X15:Msg --> %6:Msg
+X16:Msg --> %5:Msg
+X14:Msg --> g(g(g(%4:Msg, %6:Msg), %6:Msg), %5:Msg)
+X12:Msg --> %1:Msg
+X8:Msg --> %1:Msg
+X10:Msg --> %4:Msg
+X9:Msg --> %6:Msg
+X2:Msg --> %2:Msg
+X6:Msg --> %3:Msg
+
+Variant #137
+Msg: g(f(2, null), f(u(%6:Msg, %7:Msg), g(f(%2:Msg, %2:Msg), g(3, %3:Msg))))
+X3:Msg --> g(%4:Msg, u(%6:Msg, f(%1:Msg, %7:Msg)))
+X15:Msg --> %7:Msg
+X16:Msg --> %5:Msg
+X14:Msg --> g(g(g(%4:Msg, u(%6:Msg, f(%1:Msg, %7:Msg))), %7:Msg), %5:Msg)
+X12:Msg --> %1:Msg
+X8:Msg --> %1:Msg
+X10:Msg --> %4:Msg
+X9:Msg --> u(%6:Msg, f(%1:Msg, %7:Msg))
+X2:Msg --> %2:Msg
+X6:Msg --> %3:Msg
+
+Variant #138
+Msg: g(f(2, null), f(%6:Msg, g(f(%2:Msg, %2:Msg), g(3, %3:Msg))))
+X3:Msg --> g(%4:Msg, f(%1:Msg, %6:Msg))
+X15:Msg --> %6:Msg
+X16:Msg --> %5:Msg
+X14:Msg --> g(g(g(%4:Msg, f(%1:Msg, %6:Msg)), %6:Msg), %5:Msg)
+X12:Msg --> %1:Msg
+X8:Msg --> %1:Msg
+X10:Msg --> %4:Msg
+X9:Msg --> f(%1:Msg, %6:Msg)
+X2:Msg --> %2:Msg
+X6:Msg --> %3:Msg
+
+Variant #139
+Msg: g(f(2, null), f(u(%6:Msg, f(%1:Msg, %6:Msg)), g(f(%2:Msg, %2:Msg), g(3,
+    %3:Msg))))
+X3:Msg --> g(%4:Msg, null)
+X15:Msg --> %6:Msg
+X16:Msg --> %5:Msg
+X14:Msg --> g(g(g(%4:Msg, null), %6:Msg), %5:Msg)
+X12:Msg --> %1:Msg
+X8:Msg --> %1:Msg
+X10:Msg --> %4:Msg
+X9:Msg --> null
+X2:Msg --> %2:Msg
+X6:Msg --> %3:Msg
+
+Variant #140
+Msg: g(f(2, null), f(u(%6:Msg, f(%1:Msg, null)), g(f(%2:Msg, %2:Msg), g(3,
+    %3:Msg))))
+X3:Msg --> g(%4:Msg, %6:Msg)
+X15:Msg --> null
+X16:Msg --> %5:Msg
+X14:Msg --> g(g(g(%4:Msg, %6:Msg), null), %5:Msg)
+X12:Msg --> %1:Msg
+X8:Msg --> %1:Msg
+X10:Msg --> %4:Msg
+X9:Msg --> %6:Msg
+X2:Msg --> %2:Msg
+X6:Msg --> %3:Msg
+
+Variant #141
+Msg: g(f(2, u(g(%1:Msg, %2:Msg), g(%3:Msg, g(%4:Msg, u(%8:Msg, %10:Msg, f(
+    %3:Msg, u(%8:Msg, %9:Msg))))))), f(u(%9:Msg, %10:Msg), g(f(%5:Msg, %5:Msg),
+    g(3, %6:Msg))))
+X3:Msg --> %2:Msg
+X15:Msg --> u(%8:Msg, %9:Msg)
+X16:Msg --> %7:Msg
+X14:Msg --> g(g(%2:Msg, u(%8:Msg, %9:Msg)), %7:Msg)
+X12:Msg --> %1:Msg
+X8:Msg --> %3:Msg
+X10:Msg --> %4:Msg
+X9:Msg --> u(%8:Msg, %10:Msg, f(%3:Msg, u(%8:Msg, %9:Msg)))
+X2:Msg --> %5:Msg
+X6:Msg --> %6:Msg
+
+Variant #142
+Msg: g(f(2, u(g(%1:Msg, %2:Msg), g(%3:Msg, g(%4:Msg, u(%8:Msg, f(%3:Msg, u(
+    %8:Msg, %9:Msg))))))), f(%9:Msg, g(f(%5:Msg, %5:Msg), g(3, %6:Msg))))
+X3:Msg --> %2:Msg
+X15:Msg --> u(%8:Msg, %9:Msg)
+X16:Msg --> %7:Msg
+X14:Msg --> g(g(%2:Msg, u(%8:Msg, %9:Msg)), %7:Msg)
+X12:Msg --> %1:Msg
+X8:Msg --> %3:Msg
+X10:Msg --> %4:Msg
+X9:Msg --> u(%8:Msg, f(%3:Msg, u(%8:Msg, %9:Msg)))
+X2:Msg --> %5:Msg
+X6:Msg --> %6:Msg
+
+Variant #143
+Msg: g(f(2, u(g(%1:Msg, %2:Msg), g(%3:Msg, g(%4:Msg, u(%5:Msg, f(%3:Msg,
+    %5:Msg)))))), f(null, g(f(%6:Msg, %6:Msg), g(3, %7:Msg))))
+X3:Msg --> %2:Msg
+X15:Msg --> %5:Msg
+X16:Msg --> %8:Msg
+X14:Msg --> g(g(%2:Msg, %5:Msg), %8:Msg)
+X12:Msg --> %1:Msg
+X8:Msg --> %3:Msg
+X10:Msg --> %4:Msg
+X9:Msg --> u(%5:Msg, f(%3:Msg, %5:Msg))
+X2:Msg --> %6:Msg
+X6:Msg --> %7:Msg
+
+Variant #144
+Msg: g(f(2, u(g(%1:Msg, %2:Msg), g(%3:Msg, g(%4:Msg, u(%5:Msg, %9:Msg, f(
+    %3:Msg, %5:Msg)))))), f(%9:Msg, g(f(%6:Msg, %6:Msg), g(3, %7:Msg))))
+X3:Msg --> %2:Msg
+X15:Msg --> %5:Msg
+X16:Msg --> %8:Msg
+X14:Msg --> g(g(%2:Msg, %5:Msg), %8:Msg)
+X12:Msg --> %1:Msg
+X8:Msg --> %3:Msg
+X10:Msg --> %4:Msg
+X9:Msg --> u(%5:Msg, %9:Msg, f(%3:Msg, %5:Msg))
+X2:Msg --> %6:Msg
+X6:Msg --> %7:Msg
+
+Variant #145
+Msg: g(f(2, u(g(%1:Msg, %2:Msg), g(%3:Msg, g(%4:Msg, u(%8:Msg, f(%3:Msg,
+    null)))))), f(%8:Msg, g(f(%5:Msg, %5:Msg), g(3, %6:Msg))))
+X3:Msg --> %2:Msg
+X15:Msg --> null
+X16:Msg --> %7:Msg
+X14:Msg --> g(g(%2:Msg, null), %7:Msg)
+X12:Msg --> %1:Msg
+X8:Msg --> %3:Msg
+X10:Msg --> %4:Msg
+X9:Msg --> u(%8:Msg, f(%3:Msg, null))
+X2:Msg --> %5:Msg
+X6:Msg --> %6:Msg
+
+Variant #146
+Msg: g(f(u(2, g(g(g(%1:Msg, u(%6:Msg, %8:Msg)), u(%6:Msg, %7:Msg)), %2:Msg)),
+    null), f(u(%7:Msg, %8:Msg, f(%3:Msg, u(%6:Msg, %7:Msg))), g(f(%4:Msg,
+    %4:Msg), g(3, %5:Msg))))
+X3:Msg --> g(%1:Msg, u(%6:Msg, %8:Msg))
+X15:Msg --> u(%6:Msg, %7:Msg)
+X16:Msg --> %2:Msg
+X14:Msg --> null
+X12:Msg --> %3:Msg
+X8:Msg --> %3:Msg
+X10:Msg --> %1:Msg
+X9:Msg --> u(%6:Msg, %8:Msg)
+X2:Msg --> %4:Msg
+X6:Msg --> %5:Msg
+
+Variant #147
+Msg: g(f(u(2, g(g(g(%1:Msg, %6:Msg), u(%6:Msg, %7:Msg)), %2:Msg)), null), f(u(
+    %7:Msg, f(%3:Msg, u(%6:Msg, %7:Msg))), g(f(%4:Msg, %4:Msg), g(3, %5:Msg))))
+X3:Msg --> g(%1:Msg, %6:Msg)
+X15:Msg --> u(%6:Msg, %7:Msg)
+X16:Msg --> %2:Msg
+X14:Msg --> null
+X12:Msg --> %3:Msg
+X8:Msg --> %3:Msg
+X10:Msg --> %1:Msg
+X9:Msg --> %6:Msg
+X2:Msg --> %4:Msg
+X6:Msg --> %5:Msg
+
+Variant #148
+Msg: g(f(u(2, g(g(g(%1:Msg, u(%6:Msg, %7:Msg)), %6:Msg), %2:Msg)), null), f(u(
+    %7:Msg, f(%3:Msg, %6:Msg)), g(f(%4:Msg, %4:Msg), g(3, %5:Msg))))
+X3:Msg --> g(%1:Msg, u(%6:Msg, %7:Msg))
+X15:Msg --> %6:Msg
+X16:Msg --> %2:Msg
+X14:Msg --> null
+X12:Msg --> %3:Msg
+X8:Msg --> %3:Msg
+X10:Msg --> %1:Msg
+X9:Msg --> u(%6:Msg, %7:Msg)
+X2:Msg --> %4:Msg
+X6:Msg --> %5:Msg
+
+Variant #149
+Msg: g(f(u(2, g(g(g(%1:Msg, %6:Msg), %6:Msg), %2:Msg)), null), f(f(%3:Msg,
+    %6:Msg), g(f(%4:Msg, %4:Msg), g(3, %5:Msg))))
+X3:Msg --> g(%1:Msg, %6:Msg)
+X15:Msg --> %6:Msg
+X16:Msg --> %2:Msg
+X14:Msg --> null
+X12:Msg --> %3:Msg
+X8:Msg --> %3:Msg
+X10:Msg --> %1:Msg
+X9:Msg --> %6:Msg
+X2:Msg --> %4:Msg
+X6:Msg --> %5:Msg
+
+Variant #150
+Msg: g(f(u(2, g(g(g(%1:Msg, u(%7:Msg, f(%3:Msg, %6:Msg))), %6:Msg), %2:Msg)),
+    null), f(u(%6:Msg, %7:Msg), g(f(%4:Msg, %4:Msg), g(3, %5:Msg))))
+X3:Msg --> g(%1:Msg, u(%7:Msg, f(%3:Msg, %6:Msg)))
+X15:Msg --> %6:Msg
+X16:Msg --> %2:Msg
+X14:Msg --> null
+X12:Msg --> %3:Msg
+X8:Msg --> %3:Msg
+X10:Msg --> %1:Msg
+X9:Msg --> u(%7:Msg, f(%3:Msg, %6:Msg))
+X2:Msg --> %4:Msg
+X6:Msg --> %5:Msg
+
+Variant #151
+Msg: g(f(u(2, g(g(g(%1:Msg, f(%3:Msg, %6:Msg)), %6:Msg), %2:Msg)), null), f(
+    %6:Msg, g(f(%4:Msg, %4:Msg), g(3, %5:Msg))))
+X3:Msg --> g(%1:Msg, f(%3:Msg, %6:Msg))
+X15:Msg --> %6:Msg
+X16:Msg --> %2:Msg
+X14:Msg --> null
+X12:Msg --> %3:Msg
+X8:Msg --> %3:Msg
+X10:Msg --> %1:Msg
+X9:Msg --> f(%3:Msg, %6:Msg)
+X2:Msg --> %4:Msg
+X6:Msg --> %5:Msg
+
+Variant #152
+Msg: g(f(u(2, g(g(g(%1:Msg, %6:Msg), null), %2:Msg)), null), f(u(%6:Msg, f(
+    %3:Msg, null)), g(f(%4:Msg, %4:Msg), g(3, %5:Msg))))
+X3:Msg --> g(%1:Msg, %6:Msg)
+X15:Msg --> null
+X16:Msg --> %2:Msg
+X14:Msg --> null
+X12:Msg --> %3:Msg
+X8:Msg --> %3:Msg
+X10:Msg --> %1:Msg
+X9:Msg --> %6:Msg
+X2:Msg --> %4:Msg
+X6:Msg --> %5:Msg
+
+Variant #153
+Msg: g(f(u(2, g(g(g(%1:Msg, null), %6:Msg), %2:Msg)), null), f(u(%6:Msg, f(
+    %3:Msg, %6:Msg)), g(f(%4:Msg, %4:Msg), g(3, %5:Msg))))
+X3:Msg --> g(%1:Msg, null)
+X15:Msg --> %6:Msg
+X16:Msg --> %2:Msg
+X14:Msg --> null
+X12:Msg --> %3:Msg
+X8:Msg --> %3:Msg
+X10:Msg --> %1:Msg
+X9:Msg --> null
+X2:Msg --> %4:Msg
+X6:Msg --> %5:Msg
+
+Variant #154
+Msg: g(f(u(2, g(g(%1:Msg, u(%8:Msg, %9:Msg)), %2:Msg)), u(g(%3:Msg, %1:Msg), g(
+    %4:Msg, g(%5:Msg, u(%8:Msg, %10:Msg, f(%4:Msg, u(%8:Msg, %9:Msg))))))), f(
+    u(%9:Msg, %10:Msg), g(f(%6:Msg, %6:Msg), g(3, %7:Msg))))
+X3:Msg --> %1:Msg
+X15:Msg --> u(%8:Msg, %9:Msg)
+X16:Msg --> %2:Msg
+X14:Msg --> null
+X12:Msg --> %3:Msg
+X8:Msg --> %4:Msg
+X10:Msg --> %5:Msg
+X9:Msg --> u(%8:Msg, %10:Msg, f(%4:Msg, u(%8:Msg, %9:Msg)))
+X2:Msg --> %6:Msg
+X6:Msg --> %7:Msg
+
+Variant #155
+Msg: g(f(u(2, g(g(%1:Msg, u(%8:Msg, %9:Msg)), %2:Msg)), u(g(%3:Msg, %1:Msg), g(
+    %4:Msg, g(%5:Msg, u(%8:Msg, f(%4:Msg, u(%8:Msg, %9:Msg))))))), f(%9:Msg, g(
+    f(%6:Msg, %6:Msg), g(3, %7:Msg))))
+X3:Msg --> %1:Msg
+X15:Msg --> u(%8:Msg, %9:Msg)
+X16:Msg --> %2:Msg
+X14:Msg --> null
+X12:Msg --> %3:Msg
+X8:Msg --> %4:Msg
+X10:Msg --> %5:Msg
+X9:Msg --> u(%8:Msg, f(%4:Msg, u(%8:Msg, %9:Msg)))
+X2:Msg --> %6:Msg
+X6:Msg --> %7:Msg
+
+Variant #156
+Msg: g(f(u(2, g(g(%1:Msg, %2:Msg), %3:Msg)), u(g(%4:Msg, %1:Msg), g(%5:Msg, g(
+    %6:Msg, u(%2:Msg, f(%5:Msg, %2:Msg)))))), f(null, g(f(%7:Msg, %7:Msg), g(3,
+    %8:Msg))))
+X3:Msg --> %1:Msg
+X15:Msg --> %2:Msg
+X16:Msg --> %3:Msg
+X14:Msg --> null
+X12:Msg --> %4:Msg
+X8:Msg --> %5:Msg
+X10:Msg --> %6:Msg
+X9:Msg --> u(%2:Msg, f(%5:Msg, %2:Msg))
+X2:Msg --> %7:Msg
+X6:Msg --> %8:Msg
+
+Variant #157
+Msg: g(f(u(2, g(g(%1:Msg, %2:Msg), %3:Msg)), u(g(%4:Msg, %1:Msg), g(%5:Msg, g(
+    %6:Msg, u(%2:Msg, %9:Msg, f(%5:Msg, %2:Msg)))))), f(%9:Msg, g(f(%7:Msg,
+    %7:Msg), g(3, %8:Msg))))
+X3:Msg --> %1:Msg
+X15:Msg --> %2:Msg
+X16:Msg --> %3:Msg
+X14:Msg --> null
+X12:Msg --> %4:Msg
+X8:Msg --> %5:Msg
+X10:Msg --> %6:Msg
+X9:Msg --> u(%2:Msg, %9:Msg, f(%5:Msg, %2:Msg))
+X2:Msg --> %7:Msg
+X6:Msg --> %8:Msg
+
+Variant #158
+Msg: g(f(u(2, g(g(%1:Msg, null), %2:Msg)), u(g(%3:Msg, %1:Msg), g(%4:Msg, g(
+    %5:Msg, u(%8:Msg, f(%4:Msg, null)))))), f(%8:Msg, g(f(%6:Msg, %6:Msg), g(3,
+    %7:Msg))))
+X3:Msg --> %1:Msg
+X15:Msg --> null
+X16:Msg --> %2:Msg
+X14:Msg --> null
+X12:Msg --> %3:Msg
+X8:Msg --> %4:Msg
+X10:Msg --> %5:Msg
+X9:Msg --> u(%8:Msg, f(%4:Msg, null))
+X2:Msg --> %6:Msg
+X6:Msg --> %7:Msg
+
+Variant #159
+Msg: g(f(u(2, %1:Msg, g(g(g(%2:Msg, u(%7:Msg, %9:Msg, f(%4:Msg, u(%7:Msg,
+    %8:Msg)))), u(%7:Msg, %8:Msg)), %3:Msg)), null), f(u(%8:Msg, %9:Msg), g(f(
+    %5:Msg, %5:Msg), g(3, %6:Msg))))
+X3:Msg --> g(%2:Msg, u(%7:Msg, %9:Msg, f(%4:Msg, u(%7:Msg, %8:Msg))))
+X15:Msg --> u(%7:Msg, %8:Msg)
+X16:Msg --> %3:Msg
+X14:Msg --> %1:Msg
+X12:Msg --> %4:Msg
+X8:Msg --> %4:Msg
+X10:Msg --> %2:Msg
+X9:Msg --> u(%7:Msg, %9:Msg, f(%4:Msg, u(%7:Msg, %8:Msg)))
+X2:Msg --> %5:Msg
+X6:Msg --> %6:Msg
+
+Variant #160
+Msg: g(f(u(2, %1:Msg, g(g(g(%2:Msg, u(%7:Msg, f(%4:Msg, u(%7:Msg, %8:Msg)))),
+    u(%7:Msg, %8:Msg)), %3:Msg)), null), f(%8:Msg, g(f(%5:Msg, %5:Msg), g(3,
+    %6:Msg))))
+X3:Msg --> g(%2:Msg, u(%7:Msg, f(%4:Msg, u(%7:Msg, %8:Msg))))
+X15:Msg --> u(%7:Msg, %8:Msg)
+X16:Msg --> %3:Msg
+X14:Msg --> %1:Msg
+X12:Msg --> %4:Msg
+X8:Msg --> %4:Msg
+X10:Msg --> %2:Msg
+X9:Msg --> u(%7:Msg, f(%4:Msg, u(%7:Msg, %8:Msg)))
+X2:Msg --> %5:Msg
+X6:Msg --> %6:Msg
+
+Variant #161
+Msg: g(f(u(2, %1:Msg, g(g(g(%2:Msg, u(%3:Msg, f(%5:Msg, %3:Msg))), %3:Msg),
+    %4:Msg)), null), f(null, g(f(%6:Msg, %6:Msg), g(3, %7:Msg))))
+X3:Msg --> g(%2:Msg, u(%3:Msg, f(%5:Msg, %3:Msg)))
+X15:Msg --> %3:Msg
+X16:Msg --> %4:Msg
+X14:Msg --> %1:Msg
+X12:Msg --> %5:Msg
+X8:Msg --> %5:Msg
+X10:Msg --> %2:Msg
+X9:Msg --> u(%3:Msg, f(%5:Msg, %3:Msg))
+X2:Msg --> %6:Msg
+X6:Msg --> %7:Msg
+
+Variant #162
+Msg: g(f(u(2, %1:Msg, g(g(g(%2:Msg, u(%3:Msg, %8:Msg, f(%5:Msg, %3:Msg))),
+    %3:Msg), %4:Msg)), null), f(%8:Msg, g(f(%6:Msg, %6:Msg), g(3, %7:Msg))))
+X3:Msg --> g(%2:Msg, u(%3:Msg, %8:Msg, f(%5:Msg, %3:Msg)))
+X15:Msg --> %3:Msg
+X16:Msg --> %4:Msg
+X14:Msg --> %1:Msg
+X12:Msg --> %5:Msg
+X8:Msg --> %5:Msg
+X10:Msg --> %2:Msg
+X9:Msg --> u(%3:Msg, %8:Msg, f(%5:Msg, %3:Msg))
+X2:Msg --> %6:Msg
+X6:Msg --> %7:Msg
+
+Variant #163
+Msg: g(f(u(2, %1:Msg, g(g(g(%2:Msg, u(%7:Msg, f(%3:Msg, null))), null),
+    %4:Msg)), null), f(%7:Msg, g(f(%5:Msg, %5:Msg), g(3, %6:Msg))))
+X3:Msg --> g(%2:Msg, u(%7:Msg, f(%3:Msg, null)))
+X15:Msg --> null
+X16:Msg --> %4:Msg
+X14:Msg --> %1:Msg
+X12:Msg --> %3:Msg
+X8:Msg --> %3:Msg
+X10:Msg --> %2:Msg
+X9:Msg --> u(%7:Msg, f(%3:Msg, null))
+X2:Msg --> %5:Msg
+X6:Msg --> %6:Msg
+
+Variant #164
+Msg: g(f(null, null), f(u(#7:Msg, #8:Msg, f(#1:Msg, u(#6:Msg, #8:Msg))), g(f(
+    #2:Msg, #2:Msg), g(3, #3:Msg))))
+X3:Msg --> g(#4:Msg, u(#6:Msg, #7:Msg))
+X15:Msg --> u(#6:Msg, #8:Msg)
+X16:Msg --> #5:Msg
+X14:Msg --> u(2, g(g(g(#4:Msg, u(#6:Msg, #7:Msg)), u(#6:Msg, #8:Msg)), #5:Msg))
+X12:Msg --> #1:Msg
+X8:Msg --> #1:Msg
+X10:Msg --> #4:Msg
+X9:Msg --> u(#6:Msg, #7:Msg)
+X2:Msg --> #2:Msg
+X6:Msg --> #3:Msg
+
+Variant #165
+Msg: g(f(null, null), f(u(#7:Msg, f(#1:Msg, #6:Msg)), g(f(#2:Msg, #2:Msg), g(3,
+    #3:Msg))))
+X3:Msg --> g(#4:Msg, u(#6:Msg, #7:Msg))
+X15:Msg --> #6:Msg
+X16:Msg --> #5:Msg
+X14:Msg --> u(2, g(g(g(#4:Msg, u(#6:Msg, #7:Msg)), #6:Msg), #5:Msg))
+X12:Msg --> #1:Msg
+X8:Msg --> #1:Msg
+X10:Msg --> #4:Msg
+X9:Msg --> u(#6:Msg, #7:Msg)
+X2:Msg --> #2:Msg
+X6:Msg --> #3:Msg
+
+Variant #166
+Msg: g(f(null, null), f(u(#7:Msg, f(#1:Msg, u(#6:Msg, #7:Msg))), g(f(#2:Msg,
+    #2:Msg), g(3, #3:Msg))))
+X3:Msg --> g(#4:Msg, #6:Msg)
+X15:Msg --> u(#6:Msg, #7:Msg)
+X16:Msg --> #5:Msg
+X14:Msg --> u(2, g(g(g(#4:Msg, #6:Msg), u(#6:Msg, #7:Msg)), #5:Msg))
+X12:Msg --> #1:Msg
+X8:Msg --> #1:Msg
+X10:Msg --> #4:Msg
+X9:Msg --> #6:Msg
+X2:Msg --> #2:Msg
+X6:Msg --> #3:Msg
+
+Variant #167
+Msg: g(f(null, null), f(f(#1:Msg, #6:Msg), g(f(#2:Msg, #2:Msg), g(3, #3:Msg))))
+X3:Msg --> g(#4:Msg, #6:Msg)
+X15:Msg --> #6:Msg
+X16:Msg --> #5:Msg
+X14:Msg --> u(2, g(g(g(#4:Msg, #6:Msg), #6:Msg), #5:Msg))
+X12:Msg --> #1:Msg
+X8:Msg --> #1:Msg
+X10:Msg --> #4:Msg
+X9:Msg --> #6:Msg
+X2:Msg --> #2:Msg
+X6:Msg --> #3:Msg
+
+Variant #168
+Msg: g(f(null, null), f(u(#6:Msg, #7:Msg), g(f(#2:Msg, #2:Msg), g(3, #3:Msg))))
+X3:Msg --> g(#4:Msg, u(#6:Msg, f(#1:Msg, #7:Msg)))
+X15:Msg --> #7:Msg
+X16:Msg --> #5:Msg
+X14:Msg --> u(2, g(g(g(#4:Msg, u(#6:Msg, f(#1:Msg, #7:Msg))), #7:Msg), #5:Msg))
+X12:Msg --> #1:Msg
+X8:Msg --> #1:Msg
+X10:Msg --> #4:Msg
+X9:Msg --> u(#6:Msg, f(#1:Msg, #7:Msg))
+X2:Msg --> #2:Msg
+X6:Msg --> #3:Msg
+
+Variant #169
+Msg: g(f(null, null), f(#6:Msg, g(f(#2:Msg, #2:Msg), g(3, #3:Msg))))
+X3:Msg --> g(#4:Msg, f(#1:Msg, #6:Msg))
+X15:Msg --> #6:Msg
+X16:Msg --> #5:Msg
+X14:Msg --> u(2, g(g(g(#4:Msg, f(#1:Msg, #6:Msg)), #6:Msg), #5:Msg))
+X12:Msg --> #1:Msg
+X8:Msg --> #1:Msg
+X10:Msg --> #4:Msg
+X9:Msg --> f(#1:Msg, #6:Msg)
+X2:Msg --> #2:Msg
+X6:Msg --> #3:Msg
+
+Variant #170
+Msg: g(f(null, null), f(u(#6:Msg, f(#1:Msg, #6:Msg)), g(f(#2:Msg, #2:Msg), g(3,
+    #3:Msg))))
+X3:Msg --> g(#4:Msg, null)
+X15:Msg --> #6:Msg
+X16:Msg --> #5:Msg
+X14:Msg --> u(2, g(g(g(#4:Msg, null), #6:Msg), #5:Msg))
+X12:Msg --> #1:Msg
+X8:Msg --> #1:Msg
+X10:Msg --> #4:Msg
+X9:Msg --> null
+X2:Msg --> #2:Msg
+X6:Msg --> #3:Msg
+
+Variant #171
+Msg: g(f(null, null), f(u(#6:Msg, f(#1:Msg, null)), g(f(#2:Msg, #2:Msg), g(3,
+    #3:Msg))))
+X3:Msg --> g(#4:Msg, #6:Msg)
+X15:Msg --> null
+X16:Msg --> #5:Msg
+X14:Msg --> u(2, g(g(g(#4:Msg, #6:Msg), null), #5:Msg))
+X12:Msg --> #1:Msg
+X8:Msg --> #1:Msg
+X10:Msg --> #4:Msg
+X9:Msg --> #6:Msg
+X2:Msg --> #2:Msg
+X6:Msg --> #3:Msg
+
+Variant #172
+Msg: g(f(null, u(g(#1:Msg, #2:Msg), g(#3:Msg, g(#4:Msg, u(#8:Msg, #10:Msg, f(
+    #3:Msg, u(#8:Msg, #9:Msg))))))), f(u(#9:Msg, #10:Msg), g(f(#5:Msg, #5:Msg),
+    g(3, #6:Msg))))
+X3:Msg --> #2:Msg
+X15:Msg --> u(#8:Msg, #9:Msg)
+X16:Msg --> #7:Msg
+X14:Msg --> u(2, g(g(#2:Msg, u(#8:Msg, #9:Msg)), #7:Msg))
+X12:Msg --> #1:Msg
+X8:Msg --> #3:Msg
+X10:Msg --> #4:Msg
+X9:Msg --> u(#8:Msg, #10:Msg, f(#3:Msg, u(#8:Msg, #9:Msg)))
+X2:Msg --> #5:Msg
+X6:Msg --> #6:Msg
+
+Variant #173
+Msg: g(f(null, u(g(#1:Msg, #2:Msg), g(#3:Msg, g(#4:Msg, u(#8:Msg, f(#3:Msg, u(
+    #8:Msg, #9:Msg))))))), f(#9:Msg, g(f(#5:Msg, #5:Msg), g(3, #6:Msg))))
+X3:Msg --> #2:Msg
+X15:Msg --> u(#8:Msg, #9:Msg)
+X16:Msg --> #7:Msg
+X14:Msg --> u(2, g(g(#2:Msg, u(#8:Msg, #9:Msg)), #7:Msg))
+X12:Msg --> #1:Msg
+X8:Msg --> #3:Msg
+X10:Msg --> #4:Msg
+X9:Msg --> u(#8:Msg, f(#3:Msg, u(#8:Msg, #9:Msg)))
+X2:Msg --> #5:Msg
+X6:Msg --> #6:Msg
+
+Variant #174
+Msg: g(f(null, u(g(#1:Msg, #2:Msg), g(#3:Msg, g(#4:Msg, u(#5:Msg, f(#3:Msg,
+    #5:Msg)))))), f(null, g(f(#6:Msg, #6:Msg), g(3, #7:Msg))))
+X3:Msg --> #2:Msg
+X15:Msg --> #5:Msg
+X16:Msg --> #8:Msg
+X14:Msg --> u(2, g(g(#2:Msg, #5:Msg), #8:Msg))
+X12:Msg --> #1:Msg
+X8:Msg --> #3:Msg
+X10:Msg --> #4:Msg
+X9:Msg --> u(#5:Msg, f(#3:Msg, #5:Msg))
+X2:Msg --> #6:Msg
+X6:Msg --> #7:Msg
+
+Variant #175
+Msg: g(f(null, u(g(#1:Msg, #2:Msg), g(#3:Msg, g(#4:Msg, u(#5:Msg, #9:Msg, f(
+    #3:Msg, #5:Msg)))))), f(#9:Msg, g(f(#6:Msg, #6:Msg), g(3, #7:Msg))))
+X3:Msg --> #2:Msg
+X15:Msg --> #5:Msg
+X16:Msg --> #8:Msg
+X14:Msg --> u(2, g(g(#2:Msg, #5:Msg), #8:Msg))
+X12:Msg --> #1:Msg
+X8:Msg --> #3:Msg
+X10:Msg --> #4:Msg
+X9:Msg --> u(#5:Msg, #9:Msg, f(#3:Msg, #5:Msg))
+X2:Msg --> #6:Msg
+X6:Msg --> #7:Msg
+
+Variant #176
+Msg: g(f(null, u(g(#1:Msg, #2:Msg), g(#3:Msg, g(#4:Msg, u(#8:Msg, f(#3:Msg,
+    null)))))), f(#8:Msg, g(f(#5:Msg, #5:Msg), g(3, #6:Msg))))
+X3:Msg --> #2:Msg
+X15:Msg --> null
+X16:Msg --> #7:Msg
+X14:Msg --> u(2, g(g(#2:Msg, null), #7:Msg))
+X12:Msg --> #1:Msg
+X8:Msg --> #3:Msg
+X10:Msg --> #4:Msg
+X9:Msg --> u(#8:Msg, f(#3:Msg, null))
+X2:Msg --> #5:Msg
+X6:Msg --> #6:Msg
+
+Variant #177
+Msg: g(f(#1:Msg, null), f(u(#8:Msg, #9:Msg, f(#2:Msg, u(#7:Msg, #9:Msg))), g(f(
+    #3:Msg, #3:Msg), g(3, #4:Msg))))
+X3:Msg --> g(#5:Msg, u(#7:Msg, #8:Msg))
+X15:Msg --> u(#7:Msg, #9:Msg)
+X16:Msg --> #6:Msg
+X14:Msg --> u(2, #1:Msg, g(g(g(#5:Msg, u(#7:Msg, #8:Msg)), u(#7:Msg, #9:Msg)),
+    #6:Msg))
+X12:Msg --> #2:Msg
+X8:Msg --> #2:Msg
+X10:Msg --> #5:Msg
+X9:Msg --> u(#7:Msg, #8:Msg)
+X2:Msg --> #3:Msg
+X6:Msg --> #4:Msg
+
+Variant #178
+Msg: g(f(#1:Msg, null), f(u(#8:Msg, f(#2:Msg, #7:Msg)), g(f(#3:Msg, #3:Msg), g(
+    3, #4:Msg))))
+X3:Msg --> g(#5:Msg, u(#7:Msg, #8:Msg))
+X15:Msg --> #7:Msg
+X16:Msg --> #6:Msg
+X14:Msg --> u(2, #1:Msg, g(g(g(#5:Msg, u(#7:Msg, #8:Msg)), #7:Msg), #6:Msg))
+X12:Msg --> #2:Msg
+X8:Msg --> #2:Msg
+X10:Msg --> #5:Msg
+X9:Msg --> u(#7:Msg, #8:Msg)
+X2:Msg --> #3:Msg
+X6:Msg --> #4:Msg
+
+Variant #179
+Msg: g(f(#1:Msg, null), f(u(#8:Msg, f(#2:Msg, u(#7:Msg, #8:Msg))), g(f(#3:Msg,
+    #3:Msg), g(3, #4:Msg))))
+X3:Msg --> g(#5:Msg, #7:Msg)
+X15:Msg --> u(#7:Msg, #8:Msg)
+X16:Msg --> #6:Msg
+X14:Msg --> u(2, #1:Msg, g(g(g(#5:Msg, #7:Msg), u(#7:Msg, #8:Msg)), #6:Msg))
+X12:Msg --> #2:Msg
+X8:Msg --> #2:Msg
+X10:Msg --> #5:Msg
+X9:Msg --> #7:Msg
+X2:Msg --> #3:Msg
+X6:Msg --> #4:Msg
+
+Variant #180
+Msg: g(f(#1:Msg, null), f(f(#2:Msg, #7:Msg), g(f(#3:Msg, #3:Msg), g(3,
+    #4:Msg))))
+X3:Msg --> g(#5:Msg, #7:Msg)
+X15:Msg --> #7:Msg
+X16:Msg --> #6:Msg
+X14:Msg --> u(2, #1:Msg, g(g(g(#5:Msg, #7:Msg), #7:Msg), #6:Msg))
+X12:Msg --> #2:Msg
+X8:Msg --> #2:Msg
+X10:Msg --> #5:Msg
+X9:Msg --> #7:Msg
+X2:Msg --> #3:Msg
+X6:Msg --> #4:Msg
+
+Variant #181
+Msg: g(f(#1:Msg, null), f(u(#7:Msg, #8:Msg), g(f(#3:Msg, #3:Msg), g(3,
+    #4:Msg))))
+X3:Msg --> g(#5:Msg, u(#7:Msg, f(#2:Msg, #8:Msg)))
+X15:Msg --> #8:Msg
+X16:Msg --> #6:Msg
+X14:Msg --> u(2, #1:Msg, g(g(g(#5:Msg, u(#7:Msg, f(#2:Msg, #8:Msg))), #8:Msg),
+    #6:Msg))
+X12:Msg --> #2:Msg
+X8:Msg --> #2:Msg
+X10:Msg --> #5:Msg
+X9:Msg --> u(#7:Msg, f(#2:Msg, #8:Msg))
+X2:Msg --> #3:Msg
+X6:Msg --> #4:Msg
+
+Variant #182
+Msg: g(f(#1:Msg, null), f(#7:Msg, g(f(#3:Msg, #3:Msg), g(3, #4:Msg))))
+X3:Msg --> g(#5:Msg, f(#2:Msg, #7:Msg))
+X15:Msg --> #7:Msg
+X16:Msg --> #6:Msg
+X14:Msg --> u(2, #1:Msg, g(g(g(#5:Msg, f(#2:Msg, #7:Msg)), #7:Msg), #6:Msg))
+X12:Msg --> #2:Msg
+X8:Msg --> #2:Msg
+X10:Msg --> #5:Msg
+X9:Msg --> f(#2:Msg, #7:Msg)
+X2:Msg --> #3:Msg
+X6:Msg --> #4:Msg
+
+Variant #183
+Msg: g(f(#1:Msg, null), f(u(#7:Msg, f(#2:Msg, #7:Msg)), g(f(#3:Msg, #3:Msg), g(
+    3, #4:Msg))))
+X3:Msg --> g(#5:Msg, null)
+X15:Msg --> #7:Msg
+X16:Msg --> #6:Msg
+X14:Msg --> u(2, #1:Msg, g(g(g(#5:Msg, null), #7:Msg), #6:Msg))
+X12:Msg --> #2:Msg
+X8:Msg --> #2:Msg
+X10:Msg --> #5:Msg
+X9:Msg --> null
+X2:Msg --> #3:Msg
+X6:Msg --> #4:Msg
+
+Variant #184
+Msg: g(f(#1:Msg, null), f(u(#7:Msg, f(#2:Msg, null)), g(f(#3:Msg, #3:Msg), g(3,
+    #4:Msg))))
+X3:Msg --> g(#5:Msg, #7:Msg)
+X15:Msg --> null
+X16:Msg --> #6:Msg
+X14:Msg --> u(2, #1:Msg, g(g(g(#5:Msg, #7:Msg), null), #6:Msg))
+X12:Msg --> #2:Msg
+X8:Msg --> #2:Msg
+X10:Msg --> #5:Msg
+X9:Msg --> #7:Msg
+X2:Msg --> #3:Msg
+X6:Msg --> #4:Msg
+
+Variant #185
+Msg: g(f(#1:Msg, u(g(#2:Msg, #3:Msg), g(#4:Msg, g(#5:Msg, u(#9:Msg, #11:Msg, f(
+    #4:Msg, u(#9:Msg, #10:Msg))))))), f(u(#10:Msg, #11:Msg), g(f(#6:Msg,
+    #6:Msg), g(3, #7:Msg))))
+X3:Msg --> #3:Msg
+X15:Msg --> u(#9:Msg, #10:Msg)
+X16:Msg --> #8:Msg
+X14:Msg --> u(2, #1:Msg, g(g(#3:Msg, u(#9:Msg, #10:Msg)), #8:Msg))
+X12:Msg --> #2:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #5:Msg
+X9:Msg --> u(#9:Msg, #11:Msg, f(#4:Msg, u(#9:Msg, #10:Msg)))
+X2:Msg --> #6:Msg
+X6:Msg --> #7:Msg
+
+Variant #186
+Msg: g(f(#1:Msg, u(g(#2:Msg, #3:Msg), g(#4:Msg, g(#5:Msg, u(#9:Msg, f(#4:Msg,
+    u(#9:Msg, #10:Msg))))))), f(#10:Msg, g(f(#6:Msg, #6:Msg), g(3, #7:Msg))))
+X3:Msg --> #3:Msg
+X15:Msg --> u(#9:Msg, #10:Msg)
+X16:Msg --> #8:Msg
+X14:Msg --> u(2, #1:Msg, g(g(#3:Msg, u(#9:Msg, #10:Msg)), #8:Msg))
+X12:Msg --> #2:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #5:Msg
+X9:Msg --> u(#9:Msg, f(#4:Msg, u(#9:Msg, #10:Msg)))
+X2:Msg --> #6:Msg
+X6:Msg --> #7:Msg
+
+Variant #187
+Msg: g(f(#1:Msg, u(g(#2:Msg, #3:Msg), g(#4:Msg, g(#5:Msg, u(#6:Msg, f(#4:Msg,
+    #6:Msg)))))), f(null, g(f(#7:Msg, #7:Msg), g(3, #8:Msg))))
+X3:Msg --> #3:Msg
+X15:Msg --> #6:Msg
+X16:Msg --> #9:Msg
+X14:Msg --> u(2, #1:Msg, g(g(#3:Msg, #6:Msg), #9:Msg))
+X12:Msg --> #2:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #5:Msg
+X9:Msg --> u(#6:Msg, f(#4:Msg, #6:Msg))
+X2:Msg --> #7:Msg
+X6:Msg --> #8:Msg
+
+Variant #188
+Msg: g(f(#1:Msg, u(g(#2:Msg, #3:Msg), g(#4:Msg, g(#5:Msg, u(#6:Msg, #10:Msg, f(
+    #4:Msg, #6:Msg)))))), f(#10:Msg, g(f(#7:Msg, #7:Msg), g(3, #8:Msg))))
+X3:Msg --> #3:Msg
+X15:Msg --> #6:Msg
+X16:Msg --> #9:Msg
+X14:Msg --> u(2, #1:Msg, g(g(#3:Msg, #6:Msg), #9:Msg))
+X12:Msg --> #2:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #5:Msg
+X9:Msg --> u(#6:Msg, #10:Msg, f(#4:Msg, #6:Msg))
+X2:Msg --> #7:Msg
+X6:Msg --> #8:Msg
+
+Variant #189
+Msg: g(f(#1:Msg, u(g(#2:Msg, #3:Msg), g(#4:Msg, g(#5:Msg, u(#9:Msg, f(#4:Msg,
+    null)))))), f(#9:Msg, g(f(#6:Msg, #6:Msg), g(3, #7:Msg))))
+X3:Msg --> #3:Msg
+X15:Msg --> null
+X16:Msg --> #8:Msg
+X14:Msg --> u(2, #1:Msg, g(g(#3:Msg, null), #8:Msg))
+X12:Msg --> #2:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #5:Msg
+X9:Msg --> u(#9:Msg, f(#4:Msg, null))
+X2:Msg --> #6:Msg
+X6:Msg --> #7:Msg
+
+Variant #190
+Msg: g(f(u(#1:Msg, g(g(g(#2:Msg, u(#7:Msg, #9:Msg, f(#4:Msg, u(#7:Msg,
+    #8:Msg)))), u(#7:Msg, #8:Msg)), #3:Msg)), null), f(u(#8:Msg, #9:Msg), g(f(
+    #5:Msg, #5:Msg), g(3, #6:Msg))))
+X3:Msg --> g(#2:Msg, u(#7:Msg, #9:Msg, f(#4:Msg, u(#7:Msg, #8:Msg))))
+X15:Msg --> u(#7:Msg, #8:Msg)
+X16:Msg --> #3:Msg
+X14:Msg --> u(2, #1:Msg)
+X12:Msg --> #4:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #2:Msg
+X9:Msg --> u(#7:Msg, #9:Msg, f(#4:Msg, u(#7:Msg, #8:Msg)))
+X2:Msg --> #5:Msg
+X6:Msg --> #6:Msg
+
+Variant #191
+Msg: g(f(u(#1:Msg, g(g(g(#2:Msg, u(#7:Msg, f(#4:Msg, u(#7:Msg, #8:Msg)))), u(
+    #7:Msg, #8:Msg)), #3:Msg)), null), f(#8:Msg, g(f(#5:Msg, #5:Msg), g(3,
+    #6:Msg))))
+X3:Msg --> g(#2:Msg, u(#7:Msg, f(#4:Msg, u(#7:Msg, #8:Msg))))
+X15:Msg --> u(#7:Msg, #8:Msg)
+X16:Msg --> #3:Msg
+X14:Msg --> u(2, #1:Msg)
+X12:Msg --> #4:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #2:Msg
+X9:Msg --> u(#7:Msg, f(#4:Msg, u(#7:Msg, #8:Msg)))
+X2:Msg --> #5:Msg
+X6:Msg --> #6:Msg
+
+Variant #192
+Msg: g(f(u(#1:Msg, g(g(g(#2:Msg, u(#3:Msg, f(#5:Msg, #3:Msg))), #3:Msg),
+    #4:Msg)), null), f(null, g(f(#6:Msg, #6:Msg), g(3, #7:Msg))))
+X3:Msg --> g(#2:Msg, u(#3:Msg, f(#5:Msg, #3:Msg)))
+X15:Msg --> #3:Msg
+X16:Msg --> #4:Msg
+X14:Msg --> u(2, #1:Msg)
+X12:Msg --> #5:Msg
+X8:Msg --> #5:Msg
+X10:Msg --> #2:Msg
+X9:Msg --> u(#3:Msg, f(#5:Msg, #3:Msg))
+X2:Msg --> #6:Msg
+X6:Msg --> #7:Msg
+
+Variant #193
+Msg: g(f(u(#1:Msg, g(g(g(#2:Msg, u(#3:Msg, #8:Msg, f(#5:Msg, #3:Msg))),
+    #3:Msg), #4:Msg)), null), f(#8:Msg, g(f(#6:Msg, #6:Msg), g(3, #7:Msg))))
+X3:Msg --> g(#2:Msg, u(#3:Msg, #8:Msg, f(#5:Msg, #3:Msg)))
+X15:Msg --> #3:Msg
+X16:Msg --> #4:Msg
+X14:Msg --> u(2, #1:Msg)
+X12:Msg --> #5:Msg
+X8:Msg --> #5:Msg
+X10:Msg --> #2:Msg
+X9:Msg --> u(#3:Msg, #8:Msg, f(#5:Msg, #3:Msg))
+X2:Msg --> #6:Msg
+X6:Msg --> #7:Msg
+
+Variant #194
+Msg: g(f(u(#1:Msg, g(g(g(#2:Msg, u(#7:Msg, f(#3:Msg, null))), null), #4:Msg)),
+    null), f(#7:Msg, g(f(#5:Msg, #5:Msg), g(3, #6:Msg))))
+X3:Msg --> g(#2:Msg, u(#7:Msg, f(#3:Msg, null)))
+X15:Msg --> null
+X16:Msg --> #4:Msg
+X14:Msg --> u(2, #1:Msg)
+X12:Msg --> #3:Msg
+X8:Msg --> #3:Msg
+X10:Msg --> #2:Msg
+X9:Msg --> u(#7:Msg, f(#3:Msg, null))
+X2:Msg --> #5:Msg
+X6:Msg --> #6:Msg
+
+Variant #195
+Msg: g(f(g(g(g(#1:Msg, u(#6:Msg, #8:Msg, f(#3:Msg, u(#6:Msg, #7:Msg)))), u(
+    #6:Msg, #7:Msg)), #2:Msg), null), f(u(#7:Msg, #8:Msg), g(f(#4:Msg, #4:Msg),
+    g(3, #5:Msg))))
+X3:Msg --> g(#1:Msg, u(#6:Msg, #8:Msg, f(#3:Msg, u(#6:Msg, #7:Msg))))
+X15:Msg --> u(#6:Msg, #7:Msg)
+X16:Msg --> #2:Msg
+X14:Msg --> 2
+X12:Msg --> #3:Msg
+X8:Msg --> #3:Msg
+X10:Msg --> #1:Msg
+X9:Msg --> u(#6:Msg, #8:Msg, f(#3:Msg, u(#6:Msg, #7:Msg)))
+X2:Msg --> #4:Msg
+X6:Msg --> #5:Msg
+
+Variant #196
+Msg: g(f(g(g(g(#1:Msg, u(#6:Msg, f(#3:Msg, u(#6:Msg, #7:Msg)))), u(#6:Msg,
+    #7:Msg)), #2:Msg), null), f(#7:Msg, g(f(#4:Msg, #4:Msg), g(3, #5:Msg))))
+X3:Msg --> g(#1:Msg, u(#6:Msg, f(#3:Msg, u(#6:Msg, #7:Msg))))
+X15:Msg --> u(#6:Msg, #7:Msg)
+X16:Msg --> #2:Msg
+X14:Msg --> 2
+X12:Msg --> #3:Msg
+X8:Msg --> #3:Msg
+X10:Msg --> #1:Msg
+X9:Msg --> u(#6:Msg, f(#3:Msg, u(#6:Msg, #7:Msg)))
+X2:Msg --> #4:Msg
+X6:Msg --> #5:Msg
+
+Variant #197
+Msg: g(f(g(g(g(#1:Msg, u(#2:Msg, f(#4:Msg, #2:Msg))), #2:Msg), #3:Msg), null),
+    f(null, g(f(#5:Msg, #5:Msg), g(3, #6:Msg))))
+X3:Msg --> g(#1:Msg, u(#2:Msg, f(#4:Msg, #2:Msg)))
+X15:Msg --> #2:Msg
+X16:Msg --> #3:Msg
+X14:Msg --> 2
+X12:Msg --> #4:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #1:Msg
+X9:Msg --> u(#2:Msg, f(#4:Msg, #2:Msg))
+X2:Msg --> #5:Msg
+X6:Msg --> #6:Msg
+
+Variant #198
+Msg: g(f(g(g(g(#1:Msg, u(#2:Msg, #7:Msg, f(#4:Msg, #2:Msg))), #2:Msg), #3:Msg),
+    null), f(#7:Msg, g(f(#5:Msg, #5:Msg), g(3, #6:Msg))))
+X3:Msg --> g(#1:Msg, u(#2:Msg, #7:Msg, f(#4:Msg, #2:Msg)))
+X15:Msg --> #2:Msg
+X16:Msg --> #3:Msg
+X14:Msg --> 2
+X12:Msg --> #4:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #1:Msg
+X9:Msg --> u(#2:Msg, #7:Msg, f(#4:Msg, #2:Msg))
+X2:Msg --> #5:Msg
+X6:Msg --> #6:Msg
+
+Variant #199
+Msg: g(f(g(g(g(#1:Msg, u(#6:Msg, f(#2:Msg, null))), null), #3:Msg), null), f(
+    #6:Msg, g(f(#4:Msg, #4:Msg), g(3, #5:Msg))))
+X3:Msg --> g(#1:Msg, u(#6:Msg, f(#2:Msg, null)))
+X15:Msg --> null
+X16:Msg --> #3:Msg
+X14:Msg --> 2
+X12:Msg --> #2:Msg
+X8:Msg --> #2:Msg
+X10:Msg --> #1:Msg
+X9:Msg --> u(#6:Msg, f(#2:Msg, null))
+X2:Msg --> #4:Msg
+X6:Msg --> #5:Msg
+
+Variant #200
+Msg: g(f(u(2, #1:Msg), null), f(u(#8:Msg, #9:Msg), g(f(#3:Msg, #3:Msg), g(3,
+    #4:Msg))))
+X3:Msg --> g(#5:Msg, u(#7:Msg, #9:Msg, f(#2:Msg, u(#7:Msg, #8:Msg))))
+X15:Msg --> u(#7:Msg, #8:Msg)
+X16:Msg --> #6:Msg
+X14:Msg --> u(#1:Msg, g(g(g(#5:Msg, u(#7:Msg, #9:Msg, f(#2:Msg, u(#7:Msg,
+    #8:Msg)))), u(#7:Msg, #8:Msg)), #6:Msg))
+X12:Msg --> #2:Msg
+X8:Msg --> #2:Msg
+X10:Msg --> #5:Msg
+X9:Msg --> u(#7:Msg, #9:Msg, f(#2:Msg, u(#7:Msg, #8:Msg)))
+X2:Msg --> #3:Msg
+X6:Msg --> #4:Msg
+
+Variant #201
+Msg: g(f(u(2, #1:Msg), null), f(#8:Msg, g(f(#3:Msg, #3:Msg), g(3, #4:Msg))))
+X3:Msg --> g(#5:Msg, u(#7:Msg, f(#2:Msg, u(#7:Msg, #8:Msg))))
+X15:Msg --> u(#7:Msg, #8:Msg)
+X16:Msg --> #6:Msg
+X14:Msg --> u(#1:Msg, g(g(g(#5:Msg, u(#7:Msg, f(#2:Msg, u(#7:Msg, #8:Msg)))),
+    u(#7:Msg, #8:Msg)), #6:Msg))
+X12:Msg --> #2:Msg
+X8:Msg --> #2:Msg
+X10:Msg --> #5:Msg
+X9:Msg --> u(#7:Msg, f(#2:Msg, u(#7:Msg, #8:Msg)))
+X2:Msg --> #3:Msg
+X6:Msg --> #4:Msg
+
+Variant #202
+Msg: g(f(u(2, #1:Msg), null), f(null, g(f(#4:Msg, #4:Msg), g(3, #5:Msg))))
+X3:Msg --> g(#6:Msg, u(#3:Msg, f(#2:Msg, #3:Msg)))
+X15:Msg --> #3:Msg
+X16:Msg --> #7:Msg
+X14:Msg --> u(#1:Msg, g(g(g(#6:Msg, u(#3:Msg, f(#2:Msg, #3:Msg))), #3:Msg),
+    #7:Msg))
+X12:Msg --> #2:Msg
+X8:Msg --> #2:Msg
+X10:Msg --> #6:Msg
+X9:Msg --> u(#3:Msg, f(#2:Msg, #3:Msg))
+X2:Msg --> #4:Msg
+X6:Msg --> #5:Msg
+
+Variant #203
+Msg: g(f(u(2, #1:Msg), null), f(#8:Msg, g(f(#4:Msg, #4:Msg), g(3, #5:Msg))))
+X3:Msg --> g(#6:Msg, u(#3:Msg, #8:Msg, f(#2:Msg, #3:Msg)))
+X15:Msg --> #3:Msg
+X16:Msg --> #7:Msg
+X14:Msg --> u(#1:Msg, g(g(g(#6:Msg, u(#3:Msg, #8:Msg, f(#2:Msg, #3:Msg))),
+    #3:Msg), #7:Msg))
+X12:Msg --> #2:Msg
+X8:Msg --> #2:Msg
+X10:Msg --> #6:Msg
+X9:Msg --> u(#3:Msg, #8:Msg, f(#2:Msg, #3:Msg))
+X2:Msg --> #4:Msg
+X6:Msg --> #5:Msg
+
+Variant #204
+Msg: g(f(u(2, #1:Msg), null), f(#7:Msg, g(f(#2:Msg, #2:Msg), g(3, #3:Msg))))
+X3:Msg --> g(#4:Msg, u(#7:Msg, f(#5:Msg, null)))
+X15:Msg --> null
+X16:Msg --> #6:Msg
+X14:Msg --> u(#1:Msg, g(g(g(#4:Msg, u(#7:Msg, f(#5:Msg, null))), null),
+    #6:Msg))
+X12:Msg --> #5:Msg
+X8:Msg --> #5:Msg
+X10:Msg --> #4:Msg
+X9:Msg --> u(#7:Msg, f(#5:Msg, null))
+X2:Msg --> #2:Msg
+X6:Msg --> #3:Msg
+
+Variant #205
+Msg: g(f(2, null), f(u(#7:Msg, #8:Msg), g(f(#2:Msg, #2:Msg), g(3, #3:Msg))))
+X3:Msg --> g(#4:Msg, u(#6:Msg, #8:Msg, f(#1:Msg, u(#6:Msg, #7:Msg))))
+X15:Msg --> u(#6:Msg, #7:Msg)
+X16:Msg --> #5:Msg
+X14:Msg --> g(g(g(#4:Msg, u(#6:Msg, #8:Msg, f(#1:Msg, u(#6:Msg, #7:Msg)))), u(
+    #6:Msg, #7:Msg)), #5:Msg)
+X12:Msg --> #1:Msg
+X8:Msg --> #1:Msg
+X10:Msg --> #4:Msg
+X9:Msg --> u(#6:Msg, #8:Msg, f(#1:Msg, u(#6:Msg, #7:Msg)))
+X2:Msg --> #2:Msg
+X6:Msg --> #3:Msg
+
+Variant #206
+Msg: g(f(2, null), f(#7:Msg, g(f(#2:Msg, #2:Msg), g(3, #3:Msg))))
+X3:Msg --> g(#4:Msg, u(#6:Msg, f(#1:Msg, u(#6:Msg, #7:Msg))))
+X15:Msg --> u(#6:Msg, #7:Msg)
+X16:Msg --> #5:Msg
+X14:Msg --> g(g(g(#4:Msg, u(#6:Msg, f(#1:Msg, u(#6:Msg, #7:Msg)))), u(#6:Msg,
+    #7:Msg)), #5:Msg)
+X12:Msg --> #1:Msg
+X8:Msg --> #1:Msg
+X10:Msg --> #4:Msg
+X9:Msg --> u(#6:Msg, f(#1:Msg, u(#6:Msg, #7:Msg)))
+X2:Msg --> #2:Msg
+X6:Msg --> #3:Msg
+
+Variant #207
+Msg: g(f(2, null), f(null, g(f(#3:Msg, #3:Msg), g(3, #4:Msg))))
+X3:Msg --> g(#5:Msg, u(#2:Msg, f(#1:Msg, #2:Msg)))
+X15:Msg --> #2:Msg
+X16:Msg --> #6:Msg
+X14:Msg --> g(g(g(#5:Msg, u(#2:Msg, f(#1:Msg, #2:Msg))), #2:Msg), #6:Msg)
+X12:Msg --> #1:Msg
+X8:Msg --> #1:Msg
+X10:Msg --> #5:Msg
+X9:Msg --> u(#2:Msg, f(#1:Msg, #2:Msg))
+X2:Msg --> #3:Msg
+X6:Msg --> #4:Msg
+
+Variant #208
+Msg: g(f(2, null), f(#7:Msg, g(f(#3:Msg, #3:Msg), g(3, #4:Msg))))
+X3:Msg --> g(#5:Msg, u(#2:Msg, #7:Msg, f(#1:Msg, #2:Msg)))
+X15:Msg --> #2:Msg
+X16:Msg --> #6:Msg
+X14:Msg --> g(g(g(#5:Msg, u(#2:Msg, #7:Msg, f(#1:Msg, #2:Msg))), #2:Msg),
+    #6:Msg)
+X12:Msg --> #1:Msg
+X8:Msg --> #1:Msg
+X10:Msg --> #5:Msg
+X9:Msg --> u(#2:Msg, #7:Msg, f(#1:Msg, #2:Msg))
+X2:Msg --> #3:Msg
+X6:Msg --> #4:Msg
+
+Variant #209
+Msg: g(f(2, null), f(#6:Msg, g(f(#1:Msg, #1:Msg), g(3, #2:Msg))))
+X3:Msg --> g(#3:Msg, u(#6:Msg, f(#4:Msg, null)))
+X15:Msg --> null
+X16:Msg --> #5:Msg
+X14:Msg --> g(g(g(#3:Msg, u(#6:Msg, f(#4:Msg, null))), null), #5:Msg)
+X12:Msg --> #4:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #3:Msg
+X9:Msg --> u(#6:Msg, f(#4:Msg, null))
+X2:Msg --> #1:Msg
+X6:Msg --> #2:Msg
+
+Variant #210
+Msg: g(f(u(2, g(g(g(#1:Msg, u(#6:Msg, #8:Msg, f(#3:Msg, u(#6:Msg, #7:Msg)))),
+    u(#6:Msg, #7:Msg)), #2:Msg)), null), f(u(#7:Msg, #8:Msg), g(f(#4:Msg,
+    #4:Msg), g(3, #5:Msg))))
+X3:Msg --> g(#1:Msg, u(#6:Msg, #8:Msg, f(#3:Msg, u(#6:Msg, #7:Msg))))
+X15:Msg --> u(#6:Msg, #7:Msg)
+X16:Msg --> #2:Msg
+X14:Msg --> null
+X12:Msg --> #3:Msg
+X8:Msg --> #3:Msg
+X10:Msg --> #1:Msg
+X9:Msg --> u(#6:Msg, #8:Msg, f(#3:Msg, u(#6:Msg, #7:Msg)))
+X2:Msg --> #4:Msg
+X6:Msg --> #5:Msg
+
+Variant #211
+Msg: g(f(u(2, g(g(g(#1:Msg, u(#6:Msg, f(#3:Msg, u(#6:Msg, #7:Msg)))), u(#6:Msg,
+    #7:Msg)), #2:Msg)), null), f(#7:Msg, g(f(#4:Msg, #4:Msg), g(3, #5:Msg))))
+X3:Msg --> g(#1:Msg, u(#6:Msg, f(#3:Msg, u(#6:Msg, #7:Msg))))
+X15:Msg --> u(#6:Msg, #7:Msg)
+X16:Msg --> #2:Msg
+X14:Msg --> null
+X12:Msg --> #3:Msg
+X8:Msg --> #3:Msg
+X10:Msg --> #1:Msg
+X9:Msg --> u(#6:Msg, f(#3:Msg, u(#6:Msg, #7:Msg)))
+X2:Msg --> #4:Msg
+X6:Msg --> #5:Msg
+
+Variant #212
+Msg: g(f(u(2, g(g(g(#1:Msg, u(#2:Msg, f(#4:Msg, #2:Msg))), #2:Msg), #3:Msg)),
+    null), f(null, g(f(#5:Msg, #5:Msg), g(3, #6:Msg))))
+X3:Msg --> g(#1:Msg, u(#2:Msg, f(#4:Msg, #2:Msg)))
+X15:Msg --> #2:Msg
+X16:Msg --> #3:Msg
+X14:Msg --> null
+X12:Msg --> #4:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #1:Msg
+X9:Msg --> u(#2:Msg, f(#4:Msg, #2:Msg))
+X2:Msg --> #5:Msg
+X6:Msg --> #6:Msg
+
+Variant #213
+Msg: g(f(u(2, g(g(g(#1:Msg, u(#2:Msg, #7:Msg, f(#4:Msg, #2:Msg))), #2:Msg),
+    #3:Msg)), null), f(#7:Msg, g(f(#5:Msg, #5:Msg), g(3, #6:Msg))))
+X3:Msg --> g(#1:Msg, u(#2:Msg, #7:Msg, f(#4:Msg, #2:Msg)))
+X15:Msg --> #2:Msg
+X16:Msg --> #3:Msg
+X14:Msg --> null
+X12:Msg --> #4:Msg
+X8:Msg --> #4:Msg
+X10:Msg --> #1:Msg
+X9:Msg --> u(#2:Msg, #7:Msg, f(#4:Msg, #2:Msg))
+X2:Msg --> #5:Msg
+X6:Msg --> #6:Msg
+
+Variant #214
+Msg: g(f(u(2, g(g(g(#1:Msg, u(#6:Msg, f(#2:Msg, null))), null), #3:Msg)),
+    null), f(#6:Msg, g(f(#4:Msg, #4:Msg), g(3, #5:Msg))))
+X3:Msg --> g(#1:Msg, u(#6:Msg, f(#2:Msg, null)))
+X15:Msg --> null
+X16:Msg --> #3:Msg
+X14:Msg --> null
+X12:Msg --> #2:Msg
+X8:Msg --> #2:Msg
+X10:Msg --> #1:Msg
+X9:Msg --> u(#6:Msg, f(#2:Msg, null))
+X2:Msg --> #4:Msg
+X6:Msg --> #5:Msg
+
+Variant #215
+Msg: g(f(null, null), f(u(%7:Msg, %8:Msg), g(f(%2:Msg, %2:Msg), g(3, %3:Msg))))
+X3:Msg --> g(%4:Msg, u(%6:Msg, %8:Msg, f(%1:Msg, u(%6:Msg, %7:Msg))))
+X15:Msg --> u(%6:Msg, %7:Msg)
+X16:Msg --> %5:Msg
+X14:Msg --> u(2, g(g(g(%4:Msg, u(%6:Msg, %8:Msg, f(%1:Msg, u(%6:Msg,
+    %7:Msg)))), u(%6:Msg, %7:Msg)), %5:Msg))
+X12:Msg --> %1:Msg
+X8:Msg --> %1:Msg
+X10:Msg --> %4:Msg
+X9:Msg --> u(%6:Msg, %8:Msg, f(%1:Msg, u(%6:Msg, %7:Msg)))
+X2:Msg --> %2:Msg
+X6:Msg --> %3:Msg
+
+Variant #216
+Msg: g(f(null, null), f(%7:Msg, g(f(%2:Msg, %2:Msg), g(3, %3:Msg))))
+X3:Msg --> g(%4:Msg, u(%6:Msg, f(%1:Msg, u(%6:Msg, %7:Msg))))
+X15:Msg --> u(%6:Msg, %7:Msg)
+X16:Msg --> %5:Msg
+X14:Msg --> u(2, g(g(g(%4:Msg, u(%6:Msg, f(%1:Msg, u(%6:Msg, %7:Msg)))), u(
+    %6:Msg, %7:Msg)), %5:Msg))
+X12:Msg --> %1:Msg
+X8:Msg --> %1:Msg
+X10:Msg --> %4:Msg
+X9:Msg --> u(%6:Msg, f(%1:Msg, u(%6:Msg, %7:Msg)))
+X2:Msg --> %2:Msg
+X6:Msg --> %3:Msg
+
+Variant #217
+Msg: g(f(null, null), f(null, g(f(%3:Msg, %3:Msg), g(3, %4:Msg))))
+X3:Msg --> g(%5:Msg, u(%2:Msg, f(%1:Msg, %2:Msg)))
+X15:Msg --> %2:Msg
+X16:Msg --> %6:Msg
+X14:Msg --> u(2, g(g(g(%5:Msg, u(%2:Msg, f(%1:Msg, %2:Msg))), %2:Msg), %6:Msg))
+X12:Msg --> %1:Msg
+X8:Msg --> %1:Msg
+X10:Msg --> %5:Msg
+X9:Msg --> u(%2:Msg, f(%1:Msg, %2:Msg))
+X2:Msg --> %3:Msg
+X6:Msg --> %4:Msg
+
+Variant #218
+Msg: g(f(null, null), f(%7:Msg, g(f(%3:Msg, %3:Msg), g(3, %4:Msg))))
+X3:Msg --> g(%5:Msg, u(%2:Msg, %7:Msg, f(%1:Msg, %2:Msg)))
+X15:Msg --> %2:Msg
+X16:Msg --> %6:Msg
+X14:Msg --> u(2, g(g(g(%5:Msg, u(%2:Msg, %7:Msg, f(%1:Msg, %2:Msg))), %2:Msg),
+    %6:Msg))
+X12:Msg --> %1:Msg
+X8:Msg --> %1:Msg
+X10:Msg --> %5:Msg
+X9:Msg --> u(%2:Msg, %7:Msg, f(%1:Msg, %2:Msg))
+X2:Msg --> %3:Msg
+X6:Msg --> %4:Msg
+
+Variant #219
+Msg: g(f(null, null), f(%6:Msg, g(f(%1:Msg, %1:Msg), g(3, %2:Msg))))
+X3:Msg --> g(%3:Msg, u(%6:Msg, f(%4:Msg, null)))
+X15:Msg --> null
+X16:Msg --> %5:Msg
+X14:Msg --> u(2, g(g(g(%3:Msg, u(%6:Msg, f(%4:Msg, null))), null), %5:Msg))
+X12:Msg --> %4:Msg
+X8:Msg --> %4:Msg
+X10:Msg --> %3:Msg
+X9:Msg --> u(%6:Msg, f(%4:Msg, null))
+X2:Msg --> %1:Msg
+X6:Msg --> %2:Msg
+
+Variant #220
+Msg: g(f(%1:Msg, null), f(u(%8:Msg, %9:Msg), g(f(%3:Msg, %3:Msg), g(3,
+    %4:Msg))))
+X3:Msg --> g(%5:Msg, u(%7:Msg, %9:Msg, f(%2:Msg, u(%7:Msg, %8:Msg))))
+X15:Msg --> u(%7:Msg, %8:Msg)
+X16:Msg --> %6:Msg
+X14:Msg --> u(2, %1:Msg, g(g(g(%5:Msg, u(%7:Msg, %9:Msg, f(%2:Msg, u(%7:Msg,
+    %8:Msg)))), u(%7:Msg, %8:Msg)), %6:Msg))
+X12:Msg --> %2:Msg
+X8:Msg --> %2:Msg
+X10:Msg --> %5:Msg
+X9:Msg --> u(%7:Msg, %9:Msg, f(%2:Msg, u(%7:Msg, %8:Msg)))
+X2:Msg --> %3:Msg
+X6:Msg --> %4:Msg
+
+Variant #221
+Msg: g(f(%1:Msg, null), f(%8:Msg, g(f(%3:Msg, %3:Msg), g(3, %4:Msg))))
+X3:Msg --> g(%5:Msg, u(%7:Msg, f(%2:Msg, u(%7:Msg, %8:Msg))))
+X15:Msg --> u(%7:Msg, %8:Msg)
+X16:Msg --> %6:Msg
+X14:Msg --> u(2, %1:Msg, g(g(g(%5:Msg, u(%7:Msg, f(%2:Msg, u(%7:Msg,
+    %8:Msg)))), u(%7:Msg, %8:Msg)), %6:Msg))
+X12:Msg --> %2:Msg
+X8:Msg --> %2:Msg
+X10:Msg --> %5:Msg
+X9:Msg --> u(%7:Msg, f(%2:Msg, u(%7:Msg, %8:Msg)))
+X2:Msg --> %3:Msg
+X6:Msg --> %4:Msg
+
+Variant #222
+Msg: g(f(%1:Msg, null), f(null, g(f(%4:Msg, %4:Msg), g(3, %5:Msg))))
+X3:Msg --> g(%6:Msg, u(%3:Msg, f(%2:Msg, %3:Msg)))
+X15:Msg --> %3:Msg
+X16:Msg --> %7:Msg
+X14:Msg --> u(2, %1:Msg, g(g(g(%6:Msg, u(%3:Msg, f(%2:Msg, %3:Msg))), %3:Msg),
+    %7:Msg))
+X12:Msg --> %2:Msg
+X8:Msg --> %2:Msg
+X10:Msg --> %6:Msg
+X9:Msg --> u(%3:Msg, f(%2:Msg, %3:Msg))
+X2:Msg --> %4:Msg
+X6:Msg --> %5:Msg
+
+Variant #223
+Msg: g(f(%1:Msg, null), f(%8:Msg, g(f(%4:Msg, %4:Msg), g(3, %5:Msg))))
+X3:Msg --> g(%6:Msg, u(%3:Msg, %8:Msg, f(%2:Msg, %3:Msg)))
+X15:Msg --> %3:Msg
+X16:Msg --> %7:Msg
+X14:Msg --> u(2, %1:Msg, g(g(g(%6:Msg, u(%3:Msg, %8:Msg, f(%2:Msg, %3:Msg))),
+    %3:Msg), %7:Msg))
+X12:Msg --> %2:Msg
+X8:Msg --> %2:Msg
+X10:Msg --> %6:Msg
+X9:Msg --> u(%3:Msg, %8:Msg, f(%2:Msg, %3:Msg))
+X2:Msg --> %4:Msg
+X6:Msg --> %5:Msg
+
+Variant #224
+Msg: g(f(%1:Msg, null), f(%7:Msg, g(f(%2:Msg, %2:Msg), g(3, %3:Msg))))
+X3:Msg --> g(%4:Msg, u(%7:Msg, f(%5:Msg, null)))
+X15:Msg --> null
+X16:Msg --> %6:Msg
+X14:Msg --> u(2, %1:Msg, g(g(g(%4:Msg, u(%7:Msg, f(%5:Msg, null))), null),
+    %6:Msg))
+X12:Msg --> %5:Msg
+X8:Msg --> %5:Msg
+X10:Msg --> %4:Msg
+X9:Msg --> u(%7:Msg, f(%5:Msg, null))
+X2:Msg --> %2:Msg
+X6:Msg --> %3:Msg
+
+==========================================
+get variants in XOR : cst1 + X .
+rewrites: 3
+
+Variant #1
+XOR: cst1 + #1:XOR
+X --> #1:XOR
+
+Variant #2
+Elem: cst1
+X --> 0
+
+Variant #3
+XOR: 0
+X --> cst1
+
+Variant #4
+XOR: %1:XOR
+X --> cst1 + %1:XOR
+
+==========================================
+get variants in XOR : cst2 + X .
+rewrites: 3
+
+Variant #1
+XOR: cst2 + #1:XOR
+X --> #1:XOR
+
+Variant #2
+Elem: cst2
+X --> 0
+
+Variant #3
+XOR: 0
+X --> cst2
+
+Variant #4
+XOR: %1:XOR
+X --> cst2 + %1:XOR
+
+==========================================
+get variants in XOR : cst2 + X such that X + a irreducible .
+rewrites: 2
+
+Variant #1
+XOR: cst2 + #1:XOR
+X --> #1:XOR
+
+Variant #2
+XOR: 0
+X --> cst2
+
+Variant #3
+XOR: %1:XOR
+X --> cst2 + %1:XOR
+
+==========================================
+get variants in XOR : X + cst1 + Y .
+rewrites: 46
+
+Variant #1
+XOR: cst1 + #1:XOR + #2:XOR
+X --> #1:XOR
+Y --> #2:XOR
+
+Variant #2
+XOR: cst1 + %1:XOR
+X --> 0
+Y --> %1:XOR
+
+Variant #3
+XOR: cst1 + %1:XOR
+X --> %1:XOR
+Y --> 0
+
+Variant #4
+XOR: %1:XOR + %2:XOR
+X --> cst1 + %1:XOR
+Y --> %2:XOR
+
+Variant #5
+XOR: %1:XOR
+X --> cst1
+Y --> %1:XOR
+
+Variant #6
+XOR: %1:XOR + %2:XOR
+X --> %1:XOR
+Y --> cst1 + %2:XOR
+
+Variant #7
+XOR: %1:XOR
+X --> %1:XOR
+Y --> cst1
+
+Variant #8
+XOR: cst1 + %2:XOR + %3:XOR
+X --> %1:XOR + %2:XOR
+Y --> %1:XOR + %3:XOR
+
+Variant #9
+XOR: cst1 + %2:XOR
+X --> %1:XOR + %2:XOR
+Y --> %1:XOR
+
+Variant #10
+XOR: cst1 + %2:XOR
+X --> %1:XOR
+Y --> %1:XOR + %2:XOR
+
+Variant #11
+Elem: cst1
+X --> %1:XOR
+Y --> %1:XOR
+
+Variant #12
+XOR: #1:XOR
+X --> 0
+Y --> cst1 + #1:XOR
+
+Variant #13
+XOR: #1:XOR
+X --> cst1 + #1:XOR
+Y --> 0
+
+Variant #14
+XOR: 0
+X --> cst1 + #1:XOR
+Y --> #1:XOR
+
+Variant #15
+XOR: #2:XOR + #3:XOR
+X --> cst1 + #1:XOR + #2:XOR
+Y --> #1:XOR + #3:XOR
+
+Variant #16
+XOR: #2:XOR
+X --> cst1 + #1:XOR + #2:XOR
+Y --> #1:XOR
+
+Variant #17
+XOR: #2:XOR
+X --> cst1 + #1:XOR
+Y --> #1:XOR + #2:XOR
+
+Variant #18
+XOR: 0
+X --> #1:XOR
+Y --> cst1 + #1:XOR
+
+Variant #19
+XOR: #2:XOR + #3:XOR
+X --> #1:XOR + #2:XOR
+Y --> cst1 + #1:XOR + #3:XOR
+
+Variant #20
+XOR: #2:XOR
+X --> #1:XOR + #2:XOR
+Y --> cst1 + #1:XOR
+
+Variant #21
+XOR: #2:XOR
+X --> #1:XOR
+Y --> cst1 + #1:XOR + #2:XOR
+
+==========================================
+get variants in XOR : X + cst1 + Y such that X + cst1, X + cst2 irreducible .
+rewrites: 23
+
+Variant #1
+XOR: cst1 + #1:XOR + #2:XOR
+X --> #1:XOR
+Y --> #2:XOR
+
+Variant #2
+XOR: cst1 + %1:XOR
+X --> %1:XOR
+Y --> 0
+
+Variant #3
+XOR: %1:XOR + %2:XOR
+X --> %1:XOR
+Y --> cst1 + %2:XOR
+
+Variant #4
+XOR: %1:XOR
+X --> %1:XOR
+Y --> cst1
+
+Variant #5
+XOR: cst1 + %2:XOR + %3:XOR
+X --> %1:XOR + %2:XOR
+Y --> %1:XOR + %3:XOR
+
+Variant #6
+XOR: cst1 + %2:XOR
+X --> %1:XOR + %2:XOR
+Y --> %1:XOR
+
+Variant #7
+XOR: cst1 + %2:XOR
+X --> %1:XOR
+Y --> %1:XOR + %2:XOR
+
+Variant #8
+Elem: cst1
+X --> %1:XOR
+Y --> %1:XOR
+
+Variant #9
+XOR: 0
+X --> #1:XOR
+Y --> cst1 + #1:XOR
+
+Variant #10
+XOR: #2:XOR + #3:XOR
+X --> #1:XOR + #2:XOR
+Y --> cst1 + #1:XOR + #3:XOR
+
+Variant #11
+XOR: #2:XOR
+X --> #1:XOR + #2:XOR
+Y --> cst1 + #1:XOR
+
+Variant #12
+XOR: #2:XOR
+X --> #1:XOR
+Y --> cst1 + #1:XOR + #2:XOR
+
+Maude> Bye.

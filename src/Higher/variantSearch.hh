@@ -21,11 +21,12 @@
 */
 
 //
-//	Class to search for a complete set of variants from a given term.
+//	Class to search for a complete set of variants from a given dag.
+//
+//	It can also do variant unification, if unificationMode == true.
 //
 #ifndef _variantSearch_hh_
 #define _variantSearch_hh_
-#include <map>
 #include "cacheableState.hh"
 #include "simpleRootContainer.hh"
 #include "narrowingVariableInfo.hh"
@@ -36,30 +37,45 @@ class VariantSearch : public CacheableState, private SimpleRootContainer
   NO_COPYING(VariantSearch);
 
 public:
-  VariantSearch(RewritingContext* context, FreshVariableGenerator* freshVariableGenerator);
+  //
+  //	Initial dag is the root of context. This context should not go away nor should the initial dag be
+  //	rewriten in place while the VariantSearch object is in existence because we rely in the variable dag nodes
+  //	in the dag being protected from garbage collection.
+  //	
+  VariantSearch(RewritingContext* context,
+		const Vector<DagNode*>& blockerDags,
+		FreshVariableGenerator* freshVariableGenerator,
+		bool unificationMode = false);
   ~VariantSearch();
 
   const NarrowingVariableInfo& getVariableInfo() const;
   const Vector<DagNode*>* getNextVariant(int& nrFreeVariables);
-  RewritingContext* getContext();
+  const Vector<DagNode*>* getNextUnifier(int& nrFreeVariables);
+  RewritingContext* getContext() const;
 
 private:
-  typedef set<int> VariantIndexSet;
-
-  void expand(const Vector<DagNode*>& variant, int index, bool odd);
-  void dumpVariant(const Vector<DagNode*>& variant, int index,  int parentIndex);
+  typedef Vector<int> VariantIndexVec;
 
   void markReachableNodes();
+  void expand(const Vector<DagNode*>& variant, int index, bool odd);
+
+#ifdef DUMP
+  void dumpVariant(const Vector<DagNode*>& variant, int index,  int parentIndex);
+#endif
 
   RewritingContext* const context;
+  const Vector<DagNode*> blockerDags;
   FreshVariableGenerator* const freshVariableGenerator;
+  const bool unificationMode;
 
   NarrowingVariableInfo variableInfo;
   VariantFolder variantCollection;
+  VariantFolder unifierCollection;  // for storing variants corresponding to unifiers if unificationMode == true
 
-  VariantIndexSet frontier;
-  VariantIndexSet newFrontier;
+  VariantIndexVec frontier;
+  VariantIndexVec newFrontier;
   int currentIndex;
+  int unifierIndex;  // HACK
 
   Vector<DagNode*> protectedVariant;
 };
@@ -76,8 +92,14 @@ VariantSearch::getNextVariant(int& nrFreeVariables)
   return context->traceAbort() ? 0 : variantCollection.getNextSurvivingVariant(nrFreeVariables);
 }
 
+inline const Vector<DagNode*>*
+VariantSearch::getNextUnifier(int& nrFreeVariables)
+{
+  return context->traceAbort() ? 0 : unifierCollection.getNextSurvivingVariant(nrFreeVariables);
+}
+
 inline RewritingContext*
-VariantSearch::getContext()
+VariantSearch::getContext() const
 {
   return context;
 }

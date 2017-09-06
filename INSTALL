@@ -87,3 +87,16 @@ installed in $(datadir). In order for the Maude binary to find the
 .maude files you should set the environment variable MAUDE_LIB to
 point to $(datadir). Alternatively you could move the .maude files to
 $(bindir).
+
+
+Note for Mac users
+==================
+Currently (August 6th, 2012), the rope implementation distributed with
+the current version (4.2.1) of gcc on Macs won't actually compile with
+this compiler due to scoping issues. This shows up with complaints about
+"_Data_allocate". As a work around, I've put a hacked up version of the
+problem files in 3rdParty and the flag:
+  --with-rope-ugly-hack=yes
+can be passed to configure to use this copy instead. This is a very ugly
+hack that works with this exact combination of gcc and libstdc++ only,
+but I can't think of anything better.

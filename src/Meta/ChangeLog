@@ -1,3 +1,60 @@
+2012-07-31  Steven Eker  <eker@ape.csl.sri.com>
+
+	* metaVariant.cc (metaVariantUnify2): use upUnificationTriple(),
+	upUnificationPair()
+
+	* metaLevel.hh (M): added decls for 4 new narrow up functions
+
+	* metaUp.cc (upSubstitution): added narrowing version
+	(upUnificationPair): added narrowing version
+	(upVariant): use upSubstitution()
+	(upUnificationTriple): added narrowing version
+	(upDisjointSubstitutions): added narrowing version
+
+2012-07-30  Steven Eker  <eker@ape.csl.sri.com>
+
+	* metaLevelOpSymbol.hh (FreeSymbol): added decl for
+	metaVariantUnify2()
+
+	* metaVariant.cc (metaVariantUnify2): added
+
+	* descentSignature.cc: updated metaVariantUnify() and
+	metaVariantDisjointUnify()
+
+2012-07-23  Steven Eker  <eker@ape.csl.sri.com>
+
+	* metaVariant.cc (metaGetVariant): call normalize() on blocker
+	terms to set hash values
+
+2012-07-20  Steven Eker  <eker@ape.csl.sri.com>
+
+	* metaVariant.cc (metaGetVariant): convert blocker terms to
+	blocket dags
+
+	* metaUp.cc (upUnificationTriple): fix bug where we weren't
+	handling the singleton substitution case
+
+	* metaLevel.hh (M): make downTermList() public
+
+	* metaUp.cc (upUnificationTriple): switch term and substituion args
+
+	* metaDown.cc (downTerm): don't allow meta term syntax with empty
+	argument list
+	(downTermList): allow empty term lists
+
+	* metaLevelSignature.cc: added emptyTermListSymbol
+
+	* metaVariant.cc (metaGenerateVariant): becomes metaGetVariant()
+
+	* descentSignature.cc: replaced metaGenerateVariant() by
+	metaGetVariant()
+
+2012-07-18  Steven Eker  <eker@ape.csl.sri.com>
+
+	* metaVariant.cc (metaGenerateVariant): pass blocker dags to VariantSearch
+
+===================================Maude96a===========================================
+
 2012-05-22  Steven Eker  <eker@ape.csl.sri.com>
 
 	* metaVariant.cc (metaGenerateVariant): rewritten

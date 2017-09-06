@@ -1,5 +1,8 @@
 noinst_LIBRARIES = libutility.a
 
+libutility_a_CPPFLAGS = \
+	-I$(top_srcdir)/src/3rdParty
+
 libutility_a_SOURCES = \
 	macros.cc \
 	preVector.cc \

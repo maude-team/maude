@@ -419,60 +419,6 @@ MetaLevel::upUnificationTriple(const Substitution& substitution,
   return unificationTripleSymbol->makeDagNode(args);
 }
 
-/*
-DagNode*
-MetaLevel::upVariant(const Substitution& substitution,
-		     const VariableInfo& variableInfo,
-		     DagNode*& dagNode,
-		     const mpz_class& variableIndex,
-		     MixfixModule* m)
-{
-  PointerMap qidMap;
-  PointerMap dagNodeMap;
-  Vector<DagNode*> args(3);
-  args[0] = upSubstitution(substitution, variableInfo, m, qidMap, dagNodeMap);
-  args[1] = upDagNode(dagNode, m, qidMap, dagNodeMap);
-  args[2] = succSymbol->makeNatDag(variableIndex);
-  return variantSymbol->makeDagNode(args);
-}
-*/
-
-DagNode*
-MetaLevel::upVariant(const Vector<DagNode*>& variant, 
-		     const NarrowingVariableInfo& variableInfo,
-		     const mpz_class& variableIndex,
-		     MixfixModule* m)
-{
-  PointerMap qidMap;
-  PointerMap dagNodeMap;
-  Vector<DagNode*> args(3);
-
-  int nrVariables = variant.size() - 1;
-  if (nrVariables == 0)
-    args[0] = emptySubstitutionSymbol->makeDagNode();
-  else
-    {
-      Vector<DagNode*> args2(nrVariables);
-      for (int i = 0; i < nrVariables; ++i)
-	{
-	  args2[i] = upAssignment(variableInfo.index2Variable(i),
-				  variant[i],
-				  m,
-				  qidMap,
-				  dagNodeMap);
-	}
-      args[0] = substitutionSymbol->makeDagNode(args2);
-    }
-  args[1] = upDagNode(variant[nrVariables], m, qidMap, dagNodeMap);
-  args[2] = succSymbol->makeNatDag(variableIndex);
-  return variantSymbol->makeDagNode(args);
-}
-
-DagNode*
-MetaLevel::upNoVariant()
-{
-  return noVariantSymbol->makeDagNode();
-}
 
 void
 MetaLevel::upDisjointSubstitutions(const Substitution& substitution,
@@ -791,4 +737,129 @@ MetaLevel::upTypeList(const Vector<Sort*>& types,
   for (int i = 0; i < nrTypes; ++i)
     args[i] = upType(types[i], qidMap);
   return qidListSymbol->makeDagNode(args);
+}
+
+DagNode*
+MetaLevel::upSubstitution(const Vector<DagNode*>& substitution,
+			  const NarrowingVariableInfo& variableInfo,
+			  int nrVariables,
+			  MixfixModule* m,
+			  PointerMap& qidMap,
+			  PointerMap& dagNodeMap)
+{
+  if (nrVariables == 0)
+    return emptySubstitutionSymbol->makeDagNode();
+  else if (nrVariables == 1)
+    {
+      return upAssignment(variableInfo.index2Variable(0),
+			  substitution[0],
+			  m,
+			  qidMap,
+			  dagNodeMap);
+    }
+
+  Vector<DagNode*> args(nrVariables);
+  for (int i = 0; i < nrVariables; ++i)
+    {
+      args[i] = upAssignment(variableInfo.index2Variable(i),
+			     substitution[i],
+			     m,
+			     qidMap,
+			     dagNodeMap);
+    }
+  return substitutionSymbol->makeDagNode(args);
+}
+
+DagNode*
+MetaLevel::upUnificationPair(const Vector<DagNode*>& unifier,
+			     const NarrowingVariableInfo& variableInfo,
+			     const mpz_class& variableIndex,
+			     MixfixModule* m)
+{
+  PointerMap qidMap;
+  PointerMap dagNodeMap;
+  Vector<DagNode*> args(2);
+
+  args[0] = upSubstitution(unifier, variableInfo, unifier.size(), m, qidMap, dagNodeMap);
+  args[1] = succSymbol->makeNatDag(variableIndex);
+  return unificationPairSymbol->makeDagNode(args);
+}
+
+void
+MetaLevel::upDisjointSubstitutions(const Vector<DagNode*>& unifier,
+				   const NarrowingVariableInfo& variableInfo,
+				   MixfixModule* m,
+				   PointerMap& qidMap,
+				   PointerMap& dagNodeMap,
+				   DagNode*& left,
+				   DagNode*& right)
+{
+  int nrVariables = unifier.size();
+  Vector<DagNode*> leftArgs(0, nrVariables);
+  Vector<DagNode*> rightArgs(0, nrVariables);
+  for (int i = 0; i < nrVariables; i++)
+    {
+      VariableDagNode* variable = variableInfo.index2Variable(i);
+      DagNode* d = upAssignment(variable,
+				unifier[i],
+				m,
+				qidMap,
+				dagNodeMap);
+      if (Token::isFlagged(variable->id()))
+	rightArgs.append(d);
+      else
+	leftArgs.append(d);
+    }
+  int nrLeftArgs = leftArgs.size();
+  if (nrLeftArgs == 0)
+    left = emptySubstitutionSymbol->makeDagNode();
+  else if (nrLeftArgs == 1)
+    left = leftArgs[0];
+  else
+    left = substitutionSymbol->makeDagNode(leftArgs);
+  int nrRightArgs = rightArgs.size();
+  if (nrRightArgs == 0)
+    right = emptySubstitutionSymbol->makeDagNode();
+  else if (nrRightArgs == 1)
+    right = rightArgs[0];
+  else
+    right = substitutionSymbol->makeDagNode(rightArgs);
+}
+
+DagNode*
+MetaLevel::upUnificationTriple(const Vector<DagNode*>& unifier,
+			       const NarrowingVariableInfo& variableInfo,
+			       const mpz_class& variableIndex,
+			       MixfixModule* m)
+{
+  PointerMap qidMap;
+  PointerMap dagNodeMap;
+  Vector<DagNode*> args(3);
+
+  upDisjointSubstitutions(unifier, variableInfo, m, qidMap, dagNodeMap, args[0], args[1]);
+  args[2] = succSymbol->makeNatDag(variableIndex);
+  return unificationTripleSymbol->makeDagNode(args);
+}
+
+DagNode*
+MetaLevel::upVariant(const Vector<DagNode*>& variant, 
+		     const NarrowingVariableInfo& variableInfo,
+		     const mpz_class& variableIndex,
+		     MixfixModule* m)
+{
+  PointerMap qidMap;
+  PointerMap dagNodeMap;
+  Vector<DagNode*> args(3);
+
+  int nrVariables = variant.size() - 1;
+  args[0] = upDagNode(variant[nrVariables], m, qidMap, dagNodeMap);
+  args[1] = upSubstitution(variant, variableInfo, nrVariables, m, qidMap, dagNodeMap);
+  args[2] = succSymbol->makeNatDag(variableIndex);
+  return variantSymbol->makeDagNode(args);
+}
+
+DagNode*
+MetaLevel::upNoVariant()
+{
+  return noVariantSymbol->makeDagNode();
 }

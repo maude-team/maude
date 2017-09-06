@@ -65,6 +65,9 @@ public:
   bool isUnstackable() const;
   void setGround();
   bool isGround() const;
+  void setIrreducibleByVariantEquations();
+  bool isIrreducibleByVariantEquations() const;
+
   void copySetRewritingFlags(const DagNode* other);
   void copySortIndex(const DagNode* other);
   void upgradeSortIndex(const DagNode* other);
@@ -158,6 +161,10 @@ public:
   virtual void partialReplace(DagNode* replacement, ExtensionInfo* extensionInfo);
   virtual DagNode* partialConstruct(DagNode* replacement, ExtensionInfo* extensionInfo);
   virtual ExtensionInfo* makeExtensionInfo();
+  //
+  //	Utility function for variant narrowing.
+  //
+  bool reducibleByVariantEquation(RewritingContext& context);
 
 #ifdef DUMP
   //
@@ -204,7 +211,12 @@ private:
     UNSTACKABLE = 8,	// unrewritable and all subterms unstackable or frozen
     //CACHED = 16,	// node exists as part of a cache
     GROUND_FLAG = 16,	// no variables occur below this node
-    HASH_VALID = 32	// node has a valid hash value (storage is theory dependent)
+    HASH_VALID = 32,	// node has a valid hash value (storage is theory dependent)
+    //
+    //	We can share a the same bit for this flag since the rule rewriting strategy that needs UNREWRITABLE will
+    //	never be combined with variant narrowing.
+    //
+    IRREDUCIBLE_BY_VARIANT_EQUATIONS = 4
   };
 
   bool isCopied() const;
@@ -429,6 +441,18 @@ inline bool
 DagNode::isGround() const
 {
   return getMemoryCell()->getFlag(GROUND_FLAG);
+}
+
+inline void
+DagNode::setIrreducibleByVariantEquations()
+{
+  getMemoryCell()->setFlag(IRREDUCIBLE_BY_VARIANT_EQUATIONS);
+}
+
+inline bool
+DagNode::isIrreducibleByVariantEquations() const
+{
+  return getMemoryCell()->getFlag(IRREDUCIBLE_BY_VARIANT_EQUATIONS);
 }
 
 inline void

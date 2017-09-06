@@ -56,34 +56,48 @@ MetaLevelOpSymbol::getCachedVariantSearch(MetaModule* m,
 }
 
 bool
-MetaLevelOpSymbol::metaGenerateVariant(FreeDagNode* subject, RewritingContext& context)
+MetaLevelOpSymbol::metaGetVariant(FreeDagNode* subject, RewritingContext& context)
 {
   //
-  //	op metaGenerateVariant : Module Term Nat Nat ~> Variant? .
+  //	op metaGenerateVariant : Module Term TermList Nat Nat ~> Variant? .
   //
   if (MetaModule* m = metaLevel->downModule(subject->getArgument(0)))
     {
-      DagNode* metaVarIndex = subject->getArgument(2);
+      DagNode* metaVarIndex = subject->getArgument(3);
       Int64 solutionNr;
       if (metaLevel->isNat(metaVarIndex) &&
-	  metaLevel->downSaturate64(subject->getArgument(3), solutionNr) &&
+	  metaLevel->downSaturate64(subject->getArgument(4), solutionNr) &&
 	  solutionNr >= 0)
 	{
 	  const mpz_class& varIndex = metaLevel->getNat(metaVarIndex);
-
 	  VariantSearch* vs;
 	  Int64 lastSolutionNr;
 	  if (getCachedVariantSearch(m, subject, context, solutionNr, vs, lastSolutionNr))
 	    m->protect();  // Use cached state
-	  else if (Term* start = metaLevel->downTerm(subject->getArgument(1),  m))
-	    {
-	      m->protect();
-	      RewritingContext* startContext = term2RewritingContext(start, context);
-	      vs = new VariantSearch(startContext, new FreshVariableSource(m, varIndex));
-	      lastSolutionNr = -1;
-	    }
 	  else
-	    return false;
+	    {
+	      Term* start;
+	      Vector<Term*> blockerTerms;
+	      if ((start = metaLevel->downTerm(subject->getArgument(1),  m)) &&
+		  metaLevel->downTermList(subject->getArgument(2), m, blockerTerms))
+		{
+		  m->protect();
+		  RewritingContext* startContext = term2RewritingContext(start, context);
+
+		  Vector<DagNode*> blockerDags; 
+		  FOR_EACH_CONST(i, Vector<Term*>, blockerTerms)
+		    {
+		      Term* t = *i;
+		      t = t->normalize(true);  // we don't really need to normalize but we do need to set hash values
+		      blockerDags.append(t->term2Dag());
+		      t->deepSelfDestruct();
+		    }
+		  vs = new VariantSearch(startContext, blockerDags, new FreshVariableSource(m, varIndex));
+		  lastSolutionNr = -1;
+		}
+	      else
+		return false;
+	    }
 
 	  DagNode* result;
 	  const Vector<DagNode*>* variant;
@@ -115,19 +129,104 @@ MetaLevelOpSymbol::metaGenerateVariant(FreeDagNode* subject, RewritingContext& c
 }
 
 bool
+MetaLevelOpSymbol::metaVariantUnify2(FreeDagNode* subject, RewritingContext& context, bool disjoint)
+{
+  //
+  //	We handle both metaVariantUnify() and metaVariantDisjointUnify().
+  //
+  if (MetaModule* m = metaLevel->downModule(subject->getArgument(0)))
+    {
+      Int64 solutionNr;
+      DagNode* metaVarIndex = subject->getArgument(3);
+      if (metaLevel->isNat(metaVarIndex) &&
+	  metaLevel->downSaturate64(subject->getArgument(4), solutionNr))
+	{
+	  const mpz_class& varIndex = metaLevel->getNat(metaVarIndex);
+	  VariantSearch* vs;
+	  Int64 lastSolutionNr;
+	  if (getCachedVariantSearch(m, subject, context, solutionNr, vs, lastSolutionNr))
+	    m->protect();  // Use cached state
+	  else
+	    {
+	      Vector<Term*> lhs;
+	      Vector<Term*> rhs;
+	      if (!metaLevel->downUnificationProblem(subject->getArgument(1), lhs, rhs, m, disjoint))
+		return false;
+
+	      Vector<Term*> blockerTerms;
+	      if (!metaLevel->downTermList(subject->getArgument(2), m, blockerTerms))
+		{
+		  FOR_EACH_CONST(i, Vector<Term*>, lhs)
+		    (*i)->deepSelfDestruct();
+		  FOR_EACH_CONST(j, Vector<Term*>, rhs)
+		    (*j)->deepSelfDestruct();
+		  return false;
+		}
+	      
+	      m->protect();
+	      DagNode* d = m->makeUnificationProblemDag(lhs, rhs);
+	      RewritingContext* startContext = context.makeSubcontext(d, UserLevelRewritingContext::META_EVAL);
+
+	      Vector<DagNode*> blockerDags; 
+	      FOR_EACH_CONST(i, Vector<Term*>, blockerTerms)
+		{
+		  Term* t = *i;
+		  t = t->normalize(true);  // we don't really need to normalize but we do need to set hash values
+		  blockerDags.append(t->term2Dag());
+		  t->deepSelfDestruct();
+		}
+	      vs = new VariantSearch(startContext, blockerDags, new FreshVariableSource(m, varIndex), true);
+	      lastSolutionNr = -1;
+	    }
+
+	  DagNode* result;
+	  const Vector<DagNode*>* unifier;
+	  int nrFreeVariables;
+	  while (lastSolutionNr < solutionNr)
+	    {
+	      unifier = vs->getNextUnifier(nrFreeVariables);
+	      if (unifier == 0)
+		{
+		  delete vs;
+		  result = disjoint ? metaLevel->upNoUnifierTriple() : metaLevel->upNoUnifierPair();
+		  goto fail;
+		}
+
+	      context.transferCount(*(vs->getContext()));
+	      ++lastSolutionNr;
+	    }
+	  {
+	    m->insert(subject, vs, solutionNr);
+	    mpz_class lastVarIndex = varIndex + nrFreeVariables;
+	    result = disjoint ?
+	      //  0 : 0;
+	      metaLevel->upUnificationTriple(*unifier, vs->getVariableInfo(), lastVarIndex, m) :
+	      metaLevel->upUnificationPair(*unifier, vs->getVariableInfo(), lastVarIndex, m);
+	  }
+	fail:
+	  (void) m->unprotect();
+	  return context.builtInReplace(subject, result);
+	}
+    }
+  return false;
+}
+
+bool
 MetaLevelOpSymbol::metaVariantUnify(FreeDagNode* subject, RewritingContext& context)
 {
   //
-  //	op metaVariantUnify : Module UnificationProblem Nat Nat ~> UnificationPair? .
+  //	op metaVariantUnify : Module UnificationProblem TermList Nat Nat ~> UnificationPair? .
   //
-  return context.builtInReplace(subject, metaLevel->upNoUnifierPair());  // stub
+  return metaVariantUnify2(subject, context, false);
+  //return context.builtInReplace(subject, metaLevel->upNoUnifierPair());  // stub
 }
 
 bool
 MetaLevelOpSymbol::metaVariantDisjointUnify(FreeDagNode* subject, RewritingContext& context)
 {
   //
-  //	op metaVariantDisjointUnify : Module UnificationProblem Nat Nat ~> UnificationTriple? .
+  //	op metaVariantDisjointUnify : Module UnificationProblem TermList Nat Nat ~> UnificationTriple? .
   //
-  return context.builtInReplace(subject, metaLevel->upNoUnifierTriple());  // stub
+  return metaVariantUnify2(subject, context, true);
+  //return context.builtInReplace(subject, metaLevel->upNoUnifierTriple());  // stub
 }

@@ -1,3 +1,19 @@
+Overview of Changes in Maude alpha96a
+=====================================
+* hack to allow building 64-bit binaries under Darwin
+* fixed bug in metaGenerateVariant() with singleton substitutions
+* fixed variable name clash bug in narrowing
+* support for irreducibility constraints in variant narrowing
+* support for variant unification
+
+Overview of Changes in Maude alpha96
+====================================
+* fixed bug in narrowing where unifiers were being eagerly rewritten in place
+* fixed bug in narrowing caused by abstraction variables
+* fixed bug in pretty printing of equation attributes
+* fixed fresh variable clash bug in narrowing
+* first attempt at supporting variant narrowing
+
 Overview of Changes in Maude alpha95c
 =====================================
 * fixed a bug where stale information about fresh variables was not
@@ -7,8 +23,8 @@ Overview of Changes in Maude alpha95c
   deallocated
 * patched around apparent weirdness in rope::c_str()
 
-Overview of Changes in Maude Maude 2.6 (alpha95b)
-=================================================
+Overview of Changes in Maude 2.6 (alpha95b)
+===========================================
 * fixed a bug in the profiler provoked by condition fragments in a
 command or descent function invocation
 * more overparsing

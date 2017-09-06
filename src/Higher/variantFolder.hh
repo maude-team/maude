@@ -70,7 +70,7 @@ private:
   typedef map<int, RetainedVariant*> RetainedVariantMap;
 
   void markReachableNodes();
-  bool subsumes(const RetainedVariant* retainedVariant, const Vector<DagNode*> variant);
+  bool subsumes(const RetainedVariant* retainedVariant, const Vector<DagNode*>& variant);
 
   RetainedVariantMap mostGeneralSoFar;
 

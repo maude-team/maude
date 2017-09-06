@@ -25,7 +25,7 @@
 //
 #ifndef _unifierFilter_hh_
 #define _unifierFilter_hh_
-#include <map>
+#include <list>
 #include "simpleRootContainer.hh"
 
 class UnifierFilter : private SimpleRootContainer
@@ -36,8 +36,8 @@ public:
   UnifierFilter(int firstInterestingVariable, int nrInterestingVariables);
   ~UnifierFilter();
 
-  void insertUnifier(const Substitution& unifier, int positionIndex, int equationIndex /*, int nrFreeVariables */);
-  bool getNextSurvivingUnifier(Substitution*& unifier, int& positionIndex, int& equationIndex /*, int& nrFreeVariables */);
+  void insertUnifier(const Substitution& unifier, int positionIndex, int equationIndex);
+  bool getNextSurvivingUnifier(Substitution*& unifier, int& positionIndex, int& equationIndex);
 
 private:
   struct RetainedUnifier
@@ -51,16 +51,11 @@ private:
     Vector<Term*> interestingBindings;
     Vector<LhsAutomaton*> matchingAutomata;
     int nrVariablesInBindings;
+    int positionIndex;
     int equationIndex;
-    // int nrFreeVariables;
   };
 
-  //
-  //	We map from position index to retain unifiers so we can extract the survivors in position index order.
-  //	This feature is probably not needed and we could instead put the position index in the retained unifier
-  //	and just store them in a list.
-  //
-  typedef multimap<int, RetainedUnifier*> RetainedUnifierMultimap;
+  typedef list<RetainedUnifier*> RetainedUnifierList;
 
   void markReachableNodes();
   bool subsumes(const RetainedUnifier* retainedUnifier, const Substitution& unifier);
@@ -68,10 +63,10 @@ private:
 
   const int firstInterestingVariable;
   const int nrInterestingVariables;
-  RetainedUnifierMultimap mostGeneralSoFar;   // on interestingVariables;
+  RetainedUnifierList mostGeneralSoFar;   // on interestingVariables;
 
   bool startedExtractingUnifiers;
-  RetainedUnifierMultimap::const_iterator nextUnifier;
+  RetainedUnifierList::const_iterator nextUnifier;
 };
 
 

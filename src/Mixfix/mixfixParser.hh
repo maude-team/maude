@@ -97,6 +97,7 @@ public:
     //
     CONDITIONAL_COMMAND,
     UNIFY_LIST,
+    MAKE_TERM_LIST,
     //
     //	Strategy expression construction actions
     //
@@ -158,6 +159,10 @@ public:
 			 int& searchType,
 			 Term*& target,
 			 Vector<ConditionFragment*>& condition);
+  void makeGetVariantsCommand(Term*& initial, Vector<Term*>& constraint);
+  void makeVariantUnifyCommand(Vector<Term*>& lhs,
+			       Vector<Term*>& rhs,
+			       Vector<Term*>& constraint);
   void makeStrategyCommand(Term*& subject, StrategyExpression*& strategy);
 
   void makeAssignment(int node, Vector<Term*>& variables, Vector<Term*>& values);
@@ -206,6 +211,7 @@ private:
 			 FlagSet& flags,
 			 const Vector<int>& printNames,
 			 const Vector<Sort*>& printSorts);
+  void makeTermList(int node, Vector<Term*>& termList);
   void makeStrategyList(int node, Vector<StrategyExpression*>& strategies);
 
   int translateSpecialToken(int code);

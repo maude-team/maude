@@ -1,3 +1,14 @@
+2012-08-06  Steven Eker  <eker@ape.csl.sri.com>
+
+	* ropeStuff.hh: support USE_ROPE_UGLY_HACK
+
+2012-07-03  Steven Eker  <eker@ape.csl.sri.com>
+
+	* mpzSystem.cc (insertEqn, initializeUpperBounds): added
+	static_cast<>s to int to keep compiler happy
+
+===================================Maude96a===========================================
+
 2010-07-21  Steven Eker  <eker@rho>
 
 	* allSat.cc (AllSat::nextAssignment): use firstAssignment rather

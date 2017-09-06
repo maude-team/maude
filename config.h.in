@@ -105,9 +105,6 @@
 /* Define to the one symbol short name of this package. */
 #undef PACKAGE_TARNAME
 
-/* Define to the home page for this package. */
-#undef PACKAGE_URL
-
 /* Define to the version of this package. */
 #undef PACKAGE_VERSION
 
@@ -137,6 +134,9 @@
 
 /* use libsigsegv to handle segmentation faults */
 #undef USE_LIBSIGSEGV
+
+/* use hacked up version of Mac rope implementation */
+#undef USE_ROPE_UGLY_HACK
 
 /* use Tecla command line editing library */
 #undef USE_TECLA

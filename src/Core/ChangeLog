@@ -1,7 +1,19 @@
+2012-07-09  Steven Eker  <eker@ape.csl.sri.com>
+
+	* unificationContext.cc (UnificationContext): take odd argument
+	(makeFreshVariable): go back to passing freshVariableNumber rather
+	than index to getFreshVariableName(), but now clashing variable
+	names is avoided by also passing odd
+
+	* unificationContext.hh (SimpleRootContainer): added data member
+	odd; updated decl for ctore
+
+===================================Maude96a===========================================
+
 2012-05-23  Steven Eker  <eker@ape.csl.sri.com>
 
 	* unificationContext.cc (makeFreshVariable): pass index rather
-	than freshVariableNumber to getFreshVariableName to avoid clashing
+	than freshVariableNumber to getFreshVariableName() to avoid clashing
 	names with existing variables during narrowing steps
 
 2012-05-21  Steven Eker  <eker@ape.csl.sri.com>

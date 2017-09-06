@@ -169,7 +169,7 @@ command		:	KW_SELECT		{ lexBubble(END_COMMAND, 1) }
 			  if (interpreter.setCurrentModule(moduleExpr, 1))
 			    interpreter.unify(lexerBubble, number);
 			}
-		|	genvars
+		|	optDebug KW_VARIANT KW_UNIFY
 			{
 			  lexerCmdMode();
 			  moduleExpr.contractTo(0);
@@ -179,7 +179,20 @@ command		:	KW_SELECT		{ lexBubble(END_COMMAND, 1) }
 			{
 			  lexerInitialMode();
 			  if (interpreter.setCurrentModule(moduleExpr, 1))
-			    interpreter.generateVariants(lexerBubble, number);
+			    interpreter.variantUnify(lexerBubble, number, $1);
+			}
+
+		|	optDebug KW_GET KW_VARIANTS
+			{
+			  lexerCmdMode();
+			  moduleExpr.contractTo(0);
+			  number = NONE;
+			}
+			numberModuleTerm
+			{
+			  lexerInitialMode();
+			  if (interpreter.setCurrentModule(moduleExpr, 1))
+			    interpreter.getVariants(lexerBubble, number, $1);
 			}
 		|	optDebug KW_CONTINUE optNumber '.'
 			{
@@ -458,10 +471,6 @@ command		:	KW_SELECT		{ lexBubble(END_COMMAND, 1) }
  */
 		|	error			{ lexerInitialMode(); }
 			'.'
-		;
-
-genvars		:	KW_VARS
-		|	KW_GENERATE KW_VARIANTS
 		;
 
 /*
