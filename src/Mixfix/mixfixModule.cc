@@ -681,7 +681,7 @@ MixfixModule::instantiatePolymorph(int polymorphIndex, int kindIndex)
 		const char* purpose = Token::name(p.termHooks[i].purpose);
 		Term* copy = p.termHooks[i].term->deepCopy();
 		if (!(symbol->attachTerm(purpose, copy)))
-		  copy->deepSelfDestruct();  // HACK
+		  ;  // HACK
 	      }
 	  }
 	}

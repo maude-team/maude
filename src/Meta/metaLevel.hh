@@ -262,7 +262,7 @@ private:
 			PointerMap& qidMap,
 			PointerMap& dagNodeMap);
 
-  DagNode* upHeader(PreModule* pm, PointerMap& qidMap);
+  DagNode* upHeader(bool flat, PreModule* pm, PointerMap& qidMap);
   DagNode* upParameterDecls(PreModule* pm, PointerMap& qidMap);
   DagNode* upParameterDecl(PreModule* pm, int index, PointerMap& qidMap);
   DagNode* upPolymorphDecl(ImportModule* m, int index, PointerMap& qidMap);
