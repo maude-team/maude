@@ -152,7 +152,11 @@ VariantUnificationProblem::findNextUnifier()
   //	Go through bindings in unifier, inserting them into substitution.
   //
   const NarrowingVariableInfo& unifierVariableInfo = variantSearch->getVariableInfo();
-  int nrUnifierVariables = unifierVariableInfo.getNrVariables();
+  //
+  //	We can't take the number of unifier variables from unifierVariableInfo because
+  //	this also includes variables from blocker terms that may not have bindings.
+  //
+  int nrUnifierVariables = unifier->size();
   DebugAdvisory("variant unifier:\n");
 
   for (int i = 0; i < nrUnifierVariables; ++i)
@@ -161,7 +165,6 @@ VariantUnificationProblem::findNextUnifier()
       //	Get the variable that has been bound.
       //
       VariableDagNode* variable = unifierVariableInfo.index2Variable(i);
-      //int indexInOriginalProblem = variable->getIndex();  // this index belongs to VariantSearch's indexing scheme!
       //
       //	See if it belongs to the target's variableInfo.
       //
@@ -216,7 +219,7 @@ VariantUnificationProblem::findNextUnifier()
 	  if (solution->value(i) == 0)
 	    {
 	      //
-	      //	Not bound by VariantSearch so it must exist only in a large dag being narrowed and
+	      //	Not bound by VariantSearch so it must exist only in a larger dag being narrowed and
 	      //	not in the subdag being unified.
 	      //
 	      Sort* sort = safeCast(VariableSymbol*, variableInfo.index2Variable(indexInTarget)->symbol())->getSort();

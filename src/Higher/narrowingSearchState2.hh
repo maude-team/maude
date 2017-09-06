@@ -51,7 +51,7 @@ public:
   //	Takes over responsibility for deleting context and freshVariableGenerator on destruction.
   //
   NarrowingSearchState2(RewritingContext* context,
-			const Vector<DagNode*>& blockerDags,
+			const Vector<DagNode*>& blockerDagsArg,
 			FreshVariableGenerator* freshVariableGenerator,
 			int incomingVariableFamily,
 			int label = UNDEFINED,
@@ -74,7 +74,7 @@ public:
   //	Get information about last narrowing step.
   //
   Rule* getRule() const;
-  DagNode* getNarrowedDag(DagNode*& replacement) const;
+  DagNode* getNarrowedDag(DagNode*& replacement, DagNode*& replacementContext) const;
   const Substitution& getSubstitution() const;
   const NarrowingVariableInfo& getVariableInfo() const;
   const NarrowingVariableInfo& getActiveVariableInfo() const;
@@ -87,7 +87,7 @@ private:
   bool allVariablesBelongToIncomingFamily();
 
   RewritingContext* const context;
-  const Vector<DagNode*> blockerDags;
+  Vector<DagNode*> blockerDags;
   FreshVariableGenerator* const freshVariableGenerator;
   const int incomingVariableFamily;
   const int label;
@@ -99,6 +99,11 @@ private:
   //
   NarrowingVariableInfo variableInfo;
   NarrowingVariableInfo freshVariableInfo;
+  //
+  //	If we did a renaming, we keep a substitution that gets us back to
+  //	the original variables, for reconstructing the context around replaced
+  //	subdag.
+  Substitution* reverseMapping;
   //
   //	We might need to rename variables before we give the dag to
   //	PositionState to handle the traversal, we we can't have PositionState

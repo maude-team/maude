@@ -1,5 +1,14 @@
-Overview of Changes in alpha111
+Overview of Changes in alpha111a
 ================================
+* fixed bug where variables occuring only in a irreducibility
+  constraint could cause a crash
+* fixed bug where irreducibility constraint could be ignored
+* better handled of contexts for metaNarrowingApply()
+* require that variables that only occur in irreducibility
+  constraint meet safety criteria
+
+Overview of Changes in alpha111
+===============================
 * fixed bug where an ambiguity in a term-hook caused crash in
   sort computation because module isn't semi-compiled at this point
 * new narrowing descent function

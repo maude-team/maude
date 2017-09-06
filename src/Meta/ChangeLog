@@ -1,3 +1,10 @@
+2017-01-03  Steven Eker  <eker@install.csl.sri.com>
+
+	* metaNarrow.cc (metaNarrowingApply): use new getNarrowedDag()
+	semantics
+
+===================================Maude111a===========================================
+
 2016-12-19  Steven Eker  <eker@install.csl.sri.com>
 
 	* metaNarrow.cc (metaNarrowingApply): transfer counts from

@@ -1,3 +1,39 @@
+2017-01-06  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingSearchState2.cc (NarrowingSearchState2): index blockerDags
+
+	* narrowingSearchState2.hh (SimpleRootContainer): blockerDags no longer const
+
+	* narrowingSearchState2.cc (getNarrowedDag): fix bug where we had an assignment
+	inside ?:
+	(NarrowingSearchState2): rename variables blockerDags
+
+	* variantUnificationProblem.cc (findNextUnifier): use unifier size to
+	know how many bindings to extract from unifier - this makes a difference
+	if there are other variables in the context or blocker terms
+
+2017-01-05  Steven Eker  <eker@install.csl.sri.com>
+
+	* variantSearch.cc (VariantSearch): check for unsafe variables names in
+	blocker dags
+
+2017-01-03  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingSearchState2.hh (SimpleRootContainer): added data member
+	reverseMapping
+
+	* narrowingSearchState2.cc (NarrowingSearchState2): fill out reverseMapping
+	(getNarrowedDag): use reverseMapping
+	(~NarrowingSearchState2): delete reverseMapping
+
+	* narrowingSearchState2.hh (SimpleRootContainer): updated
+	decl for getNarrowedDag()
+
+	* narrowingSearchState2.cc (getNarrowedDag): pass back a
+	replacementContext
+
+===================================Maude111a===========================================
+
 2016-12-20  Steven Eker  <eker@install.csl.sri.com>
 
 	* variantUnificationProblem.cc (findNextUnifier): undo change -

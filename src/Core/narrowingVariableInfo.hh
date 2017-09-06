@@ -40,6 +40,11 @@ public:
   int variable2Index(VariableDagNode* variableTerm);
   int variable2IndexNoAdd(VariableDagNode* variableTerm) const;
   VariableDagNode* index2Variable(int index) const;
+  //
+  //	Forgets all but the first variables seen.
+  //	This hack is needed to deal with variables in blocker terms.
+  //
+  void forgetAllBut(int nrFirstVariables);
 
 private:
   //
@@ -58,6 +63,12 @@ inline VariableDagNode*
 NarrowingVariableInfo::index2Variable(int index) const
 {
   return variables[index];
+}
+
+inline void
+NarrowingVariableInfo::forgetAllBut(int nrFirstVariables)
+{
+  variables.resize(nrFirstVariables);
 }
 
 #endif

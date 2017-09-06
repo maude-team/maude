@@ -166,7 +166,7 @@ red metaVariantDisjointUnify(['XOR],
     upTerm(X:XOR + cst1),
     10, 0) .
 
-red metaVariantUDisjointnify(['XOR],
+red metaVariantDisjointUnify(['XOR],
     upTerm(X:XOR + cst1) =? upTerm(X:XOR + cst2),
     upTerm(X:XOR + cst1),
     0, 1) .

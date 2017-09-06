@@ -82,7 +82,7 @@ VariantSearch::VariantSearch(RewritingContext* context,
   targetCopy = context->root()->copyAll();
   context->root()->clearCopyPointers();
   //
-  //	Index variables in initial dag. We don't want to do reduction on initial dag for two reasons:
+  //	Index variables in target dag. We don't want to do reduction on target dag for two reasons:
   //	(1) We rely on variable dags not going away to protect variable dags in variableInfo from GC.
   //	(2) Rewriting could introduce new ground terms that don't have their ground flag set, breaking instantiation.
   //
@@ -124,6 +124,20 @@ VariantSearch::VariantSearch(RewritingContext* context,
 	  {
 	    IssueAdvisory("Irreducibility constraint " << d << " is itself reducible by a variant equation.");
 	    return;
+	  }
+      }
+    if (checkVariableNames)
+      {
+	int nrVariables = variableInfo.getNrVariables();
+	for (int i = nrVariantVariables; i < nrVariables; ++i)
+	  {
+	    VariableDagNode* v = variableInfo.index2Variable(i);
+	    if (freshVariableGenerator->variableNameConflict(v->id()))
+	      {
+		DagNode* d = v;
+		IssueWarning("unsafe variable name " << QUOTE(d) << " in irreducibility constraint.");
+		return;
+	      }
 	  }
       }
   }

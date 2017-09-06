@@ -221,3 +221,128 @@ red in META-LEVEL :
     empty,
     '#,
     4) .
+
+***
+***	Check irreducibility constraint and returned context.
+***
+
+mod XOR is
+  sorts Elt Expr .
+  subsort Elt < Expr .
+  ops a b c d e : -> Elt .
+  op _+_ : Expr Expr -> Expr [assoc comm] .
+  op 0 : -> Elt .
+
+vars W X Y Z : Expr .
+  eq Y + 0 = Y [variant] .
+  eq X + X = 0 [variant] .
+  eq X + X + Y = Y [variant] .
+endm
+
+mod XOR-TEST is inc XOR .
+  ops g h : Expr -> Expr .
+  op f : Expr Expr -> Expr .
+
+vars W X Y Z : Expr .
+  rl g(Y + a) => h(Y) [label nar] .
+endm
+
+red in META-LEVEL :
+  metaNarrowingApply(
+    ['XOR-TEST],
+    'f['g['_+_['W:Expr, 'b.Elt]], 'Z:Expr],
+    'nar,
+    '_+_['W:Expr, 'b.Elt],
+    '#,
+    0) .
+
+red in META-LEVEL :
+  metaNarrowingApply(
+    ['XOR-TEST],
+    'f['g['_+_['W:Expr, 'b.Elt]], 'Z:Expr],
+    'nar,
+    '_+_['W:Expr, 'b.Elt],
+    '#,
+    1) .
+
+red in META-LEVEL :
+  metaNarrowingApply(
+    ['XOR-TEST],
+    'f['g['_+_['W:Expr, 'b.Elt]], 'Z:Expr],
+    'nar,
+    '_+_['W:Expr, 'b.Elt],
+    '#,
+    2) .
+
+red in META-LEVEL :
+  metaNarrowingApply(
+    ['XOR-TEST],
+    'f['g['_+_['W:Expr, 'b.Elt]], 'Z:Expr],
+    'nar,
+    '_+_['W:Expr, 'b.Elt],
+    '#,
+    3) .
+
+***
+***	Now with unbound variable in irreducibility constraint; 'X:Expr should not be
+***	mentioned in any substitution.
+***
+
+red in META-LEVEL :
+  metaNarrowingApply(
+    ['XOR-TEST],
+    'f['g['_+_['W:Expr, 'b.Elt]], 'Z:Expr],
+    'nar,
+    '_+_['X:Expr, 'b.Elt],
+    '#,
+    0) .
+
+red in META-LEVEL :
+  metaNarrowingApply(
+    ['XOR-TEST],
+    'f['g['_+_['W:Expr, 'b.Elt]], 'Z:Expr],
+    'nar,
+    '_+_['X:Expr, 'b.Elt],
+    '#,
+    11) .
+
+red in META-LEVEL :
+  metaNarrowingApply(
+    ['XOR-TEST],
+    'f['g['_+_['W:Expr, 'b.Elt]], 'Z:Expr],
+    'nar,
+    '_+_['X:Expr, 'b.Elt],
+    '#,
+    12) .
+
+***
+***	Without renaming.
+***
+
+red in META-LEVEL :
+  metaNarrowingApply(
+    ['XOR-TEST],
+    'f['g['_+_['#1:Expr, 'b.Elt]], '#2:Expr],
+    'nar,
+    '_+_['#3:Expr, 'b.Elt],
+    '#,
+    0) .
+
+red in META-LEVEL :
+  metaNarrowingApply(
+    ['XOR-TEST],
+    'f['g['_+_['#1:Expr, 'b.Elt]], '#2:Expr],
+    'nar,
+    '_+_['#3:Expr, 'b.Elt],
+    '#,
+   11) .
+
+red in META-LEVEL :
+  metaNarrowingApply(
+    ['XOR-TEST],
+    'f['g['_+_['#1:Expr, 'b.Elt]], '#2:Expr],
+    'nar,
+    '_+_['#3:Expr, 'b.Elt],
+    '#,
+   12) .
+

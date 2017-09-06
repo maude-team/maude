@@ -43,7 +43,7 @@ public:
   //	rewritten in place while the VariantSearch object is in existence because we rely in the variable dag nodes
   //	in the dag being protected from garbage collection. This context is deleted on destruction.
   //
-  //	Blocker dags are protect from garbage collection.
+  //	Blocker dags are protected from garbage collection.
   //
   //	Fresh variable generator can optionally be deleted on destruction (for use in a cached metalevel object).
   //
