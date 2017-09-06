@@ -1,3 +1,8 @@
+2004-06-15  Steven Eker  <eker@goo.csl.sri.com>
+
+	* renaming.cc (typeMatch): fixed bug where we weren't catching the
+	case where the arities differed
+
 2004-05-25  Steven Eker  <eker@goo.csl.sri.com>
 
 	* import.cc (getModule): don't fall into mutually recursive import

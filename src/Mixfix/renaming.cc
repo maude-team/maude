@@ -349,6 +349,8 @@ bool
 Renaming::typeMatch(const Vector<set<int> >& types, Symbol* oldSymbol)
 {
   int nrArgs = types.size() - 1;
+  if (oldSymbol->arity() != nrArgs)
+    return false;
   for (int i = 0; i < nrArgs; i++)
     {
       if (!typeMatch(types[i], oldSymbol->domainComponent(i)))

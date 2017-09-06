@@ -3,12 +3,13 @@ Overview of Changes in Maude 2.1.1
 * set protect/extend <module> on/off added, BOOL now protected
 * fixed upModule() bug wrt CUI_NumberSymbol and ACU_NumberSymbol hooks
 * theory syntax and meta-syntax added
-* label renaming bug fixed
+* fixed label renaming bug
 * overparsing added
 * warnings added for illegal ad hoc overloading
 * rudimentary checking for bubble hooks
 * fixed missing id importation bug
 * fixed AU sort calculation bug
+* fixed op renaming bug
 
 Overview of Changes in Maude 2.1
 ================================
