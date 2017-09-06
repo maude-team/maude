@@ -428,6 +428,16 @@ ACU_Symbol::computeGeneralizedSort(const SortBdds& sortBdds,
   bdd_freepair(argMap);
 }
 
+bool
+ACU_Symbol::canResolveTheoryClash()
+{
+  //
+  //	We don't put this in parent class because return true has
+  //	the obligation to handle clashing in our unification subproblems.
+  //
+  return getIdentity() != 0;
+}
+
 UnificationSubproblem*
 ACU_Symbol::makeUnificationSubproblem()
 {

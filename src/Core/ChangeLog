@@ -1,3 +1,36 @@
+2010-06-30  Steven Eker  <eker@rho>
+
+	* pendingUnificationStack.cc
+	(PendingUnificationStack::markReachableNodes): added
+
+	* pendingUnificationStack.hh (class PendingUnificationStack):
+	privately inherit from SimpleRootContainer
+	(class PendingUnificationStack): added decl for
+	markReachableNodes()
+
+2010-06-29  Steven Eker  <eker@rho>
+
+	* pendingUnificationStack.cc
+	(PendingUnificationStack::resolveTheoryClash): added
+	(PendingUnificationStack::PendingUnificationStack): create special
+	theory table entry to track theory clashes
+	(PendingUnificationStack::makeNewSubproblem): handle theory clash
+	entries and use UnificationSubproblemDisjunction()
+
+	* pendingUnificationStack.hh (class PendingUnificationStack):
+	added decl for resolveTheoryClash()
+
+	* core.hh: added class UnificationSubproblemDisjunction
+
+	* unificationSubproblemDisjunction.cc: created
+
+	* unificationSubproblemDisjunction.hh: created
+
+	* pendingUnificationStack.cc
+	(PendingUnificationStack::makeNewSubproblem): deleted commented
+	out code that look for theory with greatest number of pending
+	unifications
+
 2010-03-19  Steven Eker  <eker@rho>
 
 	* substitution.hh (Substitution::addNewVariable): don't do a

@@ -45,6 +45,7 @@
 //	core class definitions
 #include "rewritingContext.hh"
 #include "subproblemAccumulator.hh"
+#include "pendingUnificationStack.hh"
 
 //	variable class definitions
 #include "variableDagNode.hh"
@@ -331,7 +332,7 @@ FreeDagNode::computeSolvedForm2(DagNode* rhs, UnificationContext& solution, Pend
     }
   if (dynamic_cast<VariableDagNode*>(rhs))
     return rhs->computeSolvedForm2(this, solution, pending);
-  return false;
+  return pending.resolveTheoryClash(this, rhs);
 }
 
 mpz_class

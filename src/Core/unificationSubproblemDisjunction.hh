@@ -2,7 +2,7 @@
 
     This file is part of the Maude 2 interpreter.
 
-    Copyright 1997-2007 SRI International, Menlo Park, CA 94025, USA.
+    Copyright 1997-2003 SRI International, Menlo Park, CA 94025, USA.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -23,35 +23,49 @@
 //
 //      Class for disjunctions of subproblems.
 //
+//	Disjunctions arise from theory clashes where both theories want to
+//	resolve the clash. We solve a sequence of such clashes by trying all
+//	combinations of controlling symbols.
+//
 #ifndef _unificationSubproblemDisjunction_hh_
 #define _unificationSubproblemDisjunction_hh_
-#include "subproblem.hh"
+#include "unificationSubproblem.hh"
+//#include "simpleRootContainer.hh"
+//#include "substitution.hh"
+#include "pendingUnificationStack.hh"
 
-class UnificationSubproblemDisjunction : public Subproblem
+class UnificationSubproblemDisjunction : public UnificationSubproblem
 {
 public:
-  UnificationSubproblemDisjunction(int nrBindings);
-  ~UnificationSubproblemDisjunction();
+  UnificationSubproblemDisjunction();
 
-  void addOption(LocalBinding* difference,
-		 Subproblem* subproblem,
-		 ExtensionInfo* extensionInfo = 0);
-  bool solve(bool findFirst, RewritingContext& solution);
+  void addUnification(DagNode* lhs, DagNode* rhs);
+  bool solve(bool findFirst, UnificationContext& solution, PendingUnificationStack& pending);
+
+#ifdef DUMP
+  /*
+  virtual void dump(ostream& s,
+		    const VariableInfo& variableInfo,
+		    int indentLevel = 0);
+  */
+#endif
 
 private:
-  struct Option
-    {
-      LocalBinding* difference;
-      Subproblem* subproblem;
-      ExtensionInfo* extensionInfo;
-    };
-  
-  ExtensionInfo* realExtensionInfo;
-  Vector<Option> options;
-  int selectedOption;
+  struct TheoryClash
+  {
+    DagNode* lhs;
+    DagNode* rhs;
+    PendingUnificationStack::Marker savedPendingState;
+    bool lhsControlling;
+  };
 
-  Substitution savedSubstitution;
-  Subproblem* assertionSubproblem;
+  Vector<TheoryClash> problems;
 };
+
+inline
+UnificationSubproblemDisjunction::UnificationSubproblemDisjunction()
+{
+  DebugAdvisory("Created  UnificationSubproblemDisjunction");
+}
 
 #endif

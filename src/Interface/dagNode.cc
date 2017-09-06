@@ -231,13 +231,13 @@ DagNode::computeSolvedForm(DagNode* rhs, UnificationContext& solution, PendingUn
   if (!isGround())
     return computeSolvedForm2(rhs, solution, pending);
   //
-  //	No extension and ground. If the other unificand is nonground, call its algorithm.
+  //	Ground. If the other unificand is nonground, call its algorithm.
   //
   if (!(rhs->isGround()))
     return rhs->computeSolvedForm2(this, solution, pending);
   //
   //
-  //	We have two ground terms and no extension so we can just compare them without the
+  //	We have two ground terms so we can just compare them without the
   //	need for an unification algorithm.
   //
   return equal(rhs);

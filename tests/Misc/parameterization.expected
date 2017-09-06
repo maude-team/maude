@@ -549,6 +549,7 @@ Maude> fmod BAZ is
 endfm
 fmod BOOL
 fmod TRUTH-VALUE
+fmod BOOL-OPS
 fmod TRUTH
 fmod EXT-BOOL
 fmod NAT
@@ -1246,6 +1247,7 @@ fmod BAZ is
 endfm
 fmod BOOL
 fmod TRUTH-VALUE
+fmod BOOL-OPS
 fmod TRUTH
 fmod EXT-BOOL
 fmod NAT
@@ -1947,6 +1949,7 @@ fmod BAZ is
 endfm
 fmod BOOL
 fmod TRUTH-VALUE
+fmod BOOL-OPS
 fmod TRUTH
 fmod EXT-BOOL
 fmod NAT
@@ -2241,6 +2244,7 @@ fmod BAZ is
 endfm
 fmod BOOL
 fmod TRUTH-VALUE
+fmod BOOL-OPS
 fmod TRUTH
 fmod EXT-BOOL
 fmod NAT

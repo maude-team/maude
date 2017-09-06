@@ -83,6 +83,12 @@ NA_Symbol::stackArguments(DagNode* /* subject */,
 {
 }
 
+bool
+NA_Symbol::isStable() const
+{
+  return true;
+}
+
 //
 //	Hash cons code.
 //

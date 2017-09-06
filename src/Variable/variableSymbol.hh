@@ -49,6 +49,7 @@ public:
 			      const Vector<int>& realToBdd,
 			      DagNode* subject,
 			      Vector<Bdd>& generalizedSort);
+  bool isStable() const;
   //
   //	Hash cons stuff.
   //

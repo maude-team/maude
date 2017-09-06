@@ -1,3 +1,45 @@
+2010-06-29  Steven Eker  <eker@rho>
+
+	* prettyPrint.cc (operator<<): handle null pointer NamedEntity*
+	case
+
+2010-06-11  Steven Eker  <eker@rho>
+
+	* view.cc (View::handleOpTermMappings): updated warning message
+	for two lhs variables with same base name
+
+2010-06-10  Steven Eker  <eker@rho>
+
+	* importTranslation.hh (class ImportTranslation): updated decl for
+	translateRegularSymbol()
+
+	* importTranslation.cc (ImportTranslation::translateTerm): fix bug
+	where were weren't considering renamings before the first op->term
+	mapping by making use of extra translateRegularSymbol() arg
+	(ImportTranslation::translateRegularSymbol): use extra argument to
+	pass back the opToTerm index
+	(ImportTranslation::translate): use new translateRegularSymbol() convention
+
+2010-06-02  Steven Eker  <eker@rho>
+
+	* syntacticPreModule.hh (SyntacticPreModule::addSortDecl): don't
+	add empty sort declarations; this fixes a bug where empty sort
+	declarations crashed show module command
+
+2010-05-19  Steven Eker  <eker@rho>
+
+	* execute.cc (Interpreter::sreduce): added
+
+	* interpreter.hh (endif): added decl for sreduce
+
+	* commands.yy (command): added sreduce command
+
+	* top.yy: added KW_SREDUCE
+
+	* lexer.ll: added sreduce
+
+===================================Maude94===========================================
+
 2010-05-07  Steven Eker  <eker@rho>
 
 	* mixfixModule.cc (MixfixModule::instantiatePolymorph): avoid

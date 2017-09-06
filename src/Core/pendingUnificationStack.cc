@@ -38,13 +38,21 @@
 #include "unificationSubproblem.hh"
 
 //	core class definitions
-//#include "freshVariableGenerator.hh"
-//#include "connectedComponent.hh"
-//#include "unificationContext.hh"
+#include "unificationSubproblemDisjunction.hh"
 #include "pendingUnificationStack.hh"
 
 PendingUnificationStack::PendingUnificationStack()
+  : theoryTable(1)
 {
+  //
+  //	The first theory is has a null controlling symbol and is used for
+  //	keeping track of theory clashes where both symbols claim to
+  //	be able to resolve theory clashes.
+  //
+  //	We want to solve these problems early.
+  //
+  theoryTable[0].controllingSymbol = 0;
+  theoryTable[0].firstProblemInTheory = NONE;
 }
 
 PendingUnificationStack::~PendingUnificationStack()
@@ -54,6 +62,16 @@ PendingUnificationStack::~PendingUnificationStack()
   //
   FOR_EACH_CONST(i, Vector<ActiveSubproblem>, subproblemStack)
     delete i->subproblem;
+}
+
+void
+PendingUnificationStack::markReachableNodes()
+{
+  FOR_EACH_CONST(i, Vector<PendingUnification>, unificationStack)
+    {
+      i->lhs->mark();
+      i->rhs->mark();
+    }
 }
 
 void
@@ -89,6 +107,32 @@ PendingUnificationStack::push(Symbol* controllingSymbol, DagNode* lhs, DagNode* 
   p.nextProblemInTheory = NONE;
   theoryTable[nrTheories].controllingSymbol = controllingSymbol;
   theoryTable[nrTheories].firstProblemInTheory = e;
+}
+
+bool
+PendingUnificationStack::resolveTheoryClash(DagNode* lhs, DagNode* rhs)
+{
+  Symbol* controllingSymbol = lhs->symbol();
+  if (controllingSymbol->canResolveTheoryClash())
+    {
+      if (rhs->symbol()->canResolveTheoryClash())
+	{
+	  //
+	  //	Both symbols can might be able to resolve the theory clash
+	  //	so we will need to try both.
+	  //
+	  controllingSymbol = 0;
+	}
+    }
+  else
+    {
+      controllingSymbol = rhs->symbol();
+      if (!(controllingSymbol->canResolveTheoryClash()))
+	return false;  // unresolvable - fail
+      swap(lhs, rhs);
+    }
+  push(controllingSymbol, lhs, rhs);
+  return true;
 }
 
 void
@@ -144,7 +188,6 @@ PendingUnificationStack::makeNewSubproblem()
 #ifndef NO_ASSERT
   //  dump(cerr);
 #endif
-#if 1
   //
   //    Find a theory with unsolved unifications and put all of its unsolved unifications
   //    into a new active subproblem.
@@ -155,7 +198,9 @@ PendingUnificationStack::makeNewSubproblem()
       int j = theoryTable[i].firstProblemInTheory;
       if (j != NONE)
         {
-          UnificationSubproblem* sp = theoryTable[i].controllingSymbol->makeUnificationSubproblem();
+	  Symbol* controllingSymbol = theoryTable[i].controllingSymbol;
+          UnificationSubproblem* sp = (controllingSymbol == 0) ? new UnificationSubproblemDisjunction() :
+	    controllingSymbol->makeUnificationSubproblem();
           do
             {
               PendingUnification& p = unificationStack[j];
@@ -174,52 +219,6 @@ PendingUnificationStack::makeNewSubproblem()
         }
     }
   return false;
-#else
-  //
-  //	Find the theory with the most unsolved unifications.
-  //	This doesn't seem beneficial so far so we use the old code in the release build.
-  //	
-  int chosenTheory = NONE;
-  int maxUnsolved = 0;
-  int nrTheories = theoryTable.size();
-  for (int i = 0; i < nrTheories; ++i)
-    {
-      int nrUnsolved = 0;
-      for (int j = theoryTable[i].firstProblemInTheory; j != NONE; j = unificationStack[j].nextProblemInTheory)
-	++nrUnsolved;
-      DebugAdvisory("theory " << theoryTable[i].controllingSymbol << " has " << nrUnsolved << " unsolved unifications");
-      nrUnsolved *= theoryTable[i].controllingSymbol->unificationPriority();
-      if (nrUnsolved > maxUnsolved)
-	{
-	  if (maxUnsolved > 0)
-	    { cerr << "choice situation\n";  dump(cerr); }
-	  chosenTheory = i;
-	  maxUnsolved = nrUnsolved;
-	}
-      
-    }
-  if (maxUnsolved == 0)
-    return false;
-  //
-  //	Put all of its unsolved unifications into a new active subproblem.
-  //
-  Theory& t = theoryTable[chosenTheory];
-  UnificationSubproblem* sp = t.controllingSymbol->makeUnificationSubproblem();
-  for (int j = t.firstProblemInTheory; j != NONE;)
-    {
-      PendingUnification& p = unificationStack[j];
-      sp->addUnification(p.lhs, p.rhs);
-      j = p.nextProblemInTheory;
-    }
-  int nrSubproblems = subproblemStack.size();
-  subproblemStack.resize(nrSubproblems + 1);
-  ActiveSubproblem& a = subproblemStack[nrSubproblems];
-  a.theoryIndex = chosenTheory;
-  a.savedFirstProblem = t.firstProblemInTheory;
-  a.subproblem = sp;
-  t.firstProblemInTheory = NONE;
-  return true;
-#endif
 }
 
 void

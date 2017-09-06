@@ -118,6 +118,12 @@ BinarySymbol::setPermuteFrozen(const NatSet& frozen)
     }
 }
 
+bool
+BinarySymbol::isStable() const
+{
+  return identityTerm.getTerm() == 0;
+}
+
 void
 BinarySymbol::commutativeSortCompletion()
 {

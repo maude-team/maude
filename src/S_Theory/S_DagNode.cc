@@ -36,6 +36,9 @@
 //      interface class definitions
 #include "term.hh"
 
+//      core class definitions
+#include "pendingUnificationStack.hh"
+
 //	variable class definitions
 #include "variableDagNode.hh"
 
@@ -222,31 +225,24 @@ S_DagNode::computeSolvedForm2(DagNode* rhs, UnificationContext& solution, Pendin
       mpz_class diff = *(rhs2->number) - *number;
       if (diff == 0)
 	return arg->computeSolvedForm(rhs2->arg, solution, pending);
+      //
+      //	Decompose by peeling the side with greatest iteration count.
+      //
       if (diff > 0)
 	{
-	  if (dynamic_cast<VariableDagNode*>(arg))
-	    {
-	      DagNode* d = new S_DagNode(s, diff, rhs2->arg);
-	      if (rhs2->arg->getSortIndex() != Sort::SORT_UNKNOWN)
-		s->computeBaseSort(d);
-	      return arg->computeSolvedForm(d, solution, pending);
-	    }
+	  DagNode* d = new S_DagNode(s, diff, rhs2->arg);
+	  if (rhs2->arg->getSortIndex() != Sort::SORT_UNKNOWN)
+	    s->computeBaseSort(d);
+	  return arg->computeSolvedForm(d, solution, pending);
 	}
-      else
-	{
-	  if (dynamic_cast<VariableDagNode*>(rhs2->arg))
-	    {
-	      DagNode* d = new S_DagNode(s, -diff, arg);
-	      if (arg->getSortIndex() != Sort::SORT_UNKNOWN)
-		s->computeBaseSort(d);
-	      return rhs2->arg->computeSolvedForm(d, solution, pending);
-	    }
-	}
-      return 0;
+      DagNode* d = new S_DagNode(s, -diff, arg);
+      if (arg->getSortIndex() != Sort::SORT_UNKNOWN)
+	s->computeBaseSort(d);
+      return rhs2->arg->computeSolvedForm(d, solution, pending);
     }
   if (dynamic_cast<VariableDagNode*>(rhs))
     return rhs->computeSolvedForm(this, solution, pending);
-  return false;
+  return pending.resolveTheoryClash(this, rhs);
 }
 
 mpz_class

@@ -1,3 +1,11 @@
+2010-06-11  Steven Eker  <eker@rho>
+
+	* metaUpView.cc (MetaLevel::upOpMappings): fix bug where we were
+	using the wrong modules to up the lhs and rhs of an op->term
+	mapping
+
+===================================Maude94===========================================
+
 2010-05-07  Steven Eker  <eker@rho>
 
 	* metaLevel.hh (class MetaLevel): updated decl for upHeader()

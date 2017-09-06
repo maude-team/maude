@@ -58,16 +58,24 @@ private:
   {
     Vector<int> element;	// practical basis elements will fit in 32-bit machine integers
     NatSet remainder;		// which subterms will be assigned by remaining elements
+    int index;
   };
 
   typedef list<Entry> Basis;
+  typedef list<NatSet> NatSetList;
 
   void markReachableNodes();
 
   void setMultiplicity(DagNode* dagNode, int multiplicity);
   bool unsolve(int index, UnificationContext& solution);
+  void classify(UnificationContext& solution,
+		DagNode* subject,
+		bool& canTakeIdentity,
+		int& upperBound,
+		Symbol*& stableSymbol);
   bool buildAndSolveDiophantineSystem(UnificationContext& solution);
   bool nextSelection(bool findFirst);
+  bool nextSelectionWithIdentity(bool findFirst);
   bool includable(Basis::const_iterator potential);
   bool buildSolution(UnificationContext& solution, PendingUnificationStack& pending);
 
@@ -80,12 +88,23 @@ private:
   NatSet accumulator;
   Vector<int> totals;
   Vector<int> upperBounds;
+  NatSet needToCover;
   NatSet uncovered;
   Vector<Basis::const_iterator> selection;
   Basis::const_iterator current;
   Substitution savedSubstitution;
   Substitution preSolveSubstitution;
   PendingUnificationStack::Marker savedPendingState;
+  //
+  //	Needed for identity case.
+  //
+  NatSetList old;
+  NatSet selectionSet;
+  //
+  //	We only keep track of restricted subterms that have unstable top symbols.
+  //	This vector could contain duplicates.
+  //
+  Vector<DagNode*> restrictedSubterms;
 };
 
 #endif

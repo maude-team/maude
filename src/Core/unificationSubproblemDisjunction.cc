@@ -2,7 +2,7 @@
 
     This file is part of the Maude 2 interpreter.
 
-    Copyright 1997-2007 SRI International, Menlo Park, CA 94025, USA.
+    Copyright 1997-2008 SRI International, Menlo Park, CA 94025, USA.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,113 +21,80 @@
 */
 
 //
-//      Implementation for class SubproblemDisjunction
+//      Implementation for class CUI_UnificationSubproblem.
 //
 
-//      utility stuff
+//	utility stuff
 #include "macros.hh"
 #include "vector.hh"
+#include "indent.hh"
 
 //      forward declarations
 #include "interface.hh"
 #include "core.hh"
 
 //      interface class definitions
-#include "symbol.hh"
 #include "dagNode.hh"
-#include "extensionInfo.hh"
 
 //      core class definitions
-#include "rewritingContext.hh"
-#include "localBinding.hh"
 #include "unificationSubproblemDisjunction.hh"
 
-UnificationSubproblemDisjunction::UnificationSubproblemDisjunction(int nrBindings)
-  : savedSubstitution(nrBindings)
-{
-  realExtensionInfo = 0;
-  assertionSubproblem = 0;
-}
-
-UnificationSubproblemDisjunction::~UnificationSubproblemDisjunction()
-{
-  int nrOptions = options.length();
-  for (int i = 0; i < nrOptions; i++)
-    {
-      Option& op = options[i];
-      delete op.difference;
-      delete op.subproblem;
-      delete op.extensionInfo;
-    }
-  delete assertionSubproblem;
-}
-
 void
-UnificationSubproblemDisjunction::addOption(LocalBinding* difference,
-					    Subproblem* subproblem,
-					    ExtensionInfo* extensionInfo)
+UnificationSubproblemDisjunction::addUnification(DagNode* lhs, DagNode* rhs)
 {
-  int nrOptions = options.length();
-  options.expandBy(1);
-  Option& op = options[nrOptions];
-  op.difference = difference;
-  op.subproblem = subproblem;
-  op.extensionInfo = extensionInfo;
-  if (extensionInfo != 0)
-    {
-      Assert(realExtensionInfo == 0 || realExtensionInfo == extensionInfo,
-	     "extension info clash");
-      realExtensionInfo = extensionInfo;
-    }
+  int nrProblems = problems.size();
+  problems.expandBy(1);
+  problems[nrProblems].lhs = lhs;
+  problems[nrProblems].rhs = rhs;
 }
 
 bool
-UnificationSubproblemDisjunction::solve(bool findFirst, RewritingContext& solution)
+UnificationSubproblemDisjunction::solve(bool findFirst, UnificationContext& /* solution */, PendingUnificationStack& pending)
 {
-  int nrOptions = options.length();
+  //
+  //	We only push problems on the pending stack and restore the pending stack.
+  //	We don't touch the substitution so we don't need to save or restore it.
+  //
+  int nrProblems = problems.size();
+  int i;
   if (findFirst)
-    selectedOption = 0;
-  for (; selectedOption < nrOptions; selectedOption++)
+    i = 0;
+  else
     {
-      Option& so = options[selectedOption];
-      if (findFirst && so.difference != 0)
+      for (i = nrProblems - 1;; --i)
 	{
-	  //
-	  //	Asserting our difference will irreversibly change our current
-	  //	solution and may introduce a new subproblem.
-	  //
-	  savedSubstitution.copy(solution);
-	  if (!(so.difference->unificationAssert(solution, assertionSubproblem)))
-	    goto fail;
-	  if (assertionSubproblem != 0 && !(assertionSubproblem->solve(true, solution)))
-	    goto fail;
-	}
-      for (Subproblem* subproblem = so.subproblem;; findFirst = true)
-	{
-	  if (subproblem == 0)
+	  TheoryClash& p = problems[i];
+	  if (p.lhsControlling)
 	    {
-	      if (findFirst)
-		return true;
+	      //
+	      //	Restore the state to what it was before we pushed the
+	      //	problem with the lhs controlling.
+	      //
+	      pending.restore(p.savedPendingState);
+	      p.lhsControlling = false;
+	      pending.push(p.rhs->symbol(), p.rhs, p.lhs);  // swap lhs and rhs
+	      ++i;
+	      break;
 	    }
-	  else
+	  if (i == 0)
 	    {
-	      if (subproblem->solve(findFirst, solution))
-		return true;
+	      //
+	      //	All combinations exhausted; restore intial state.
+	      //
+	      pending.restore(p.savedPendingState);
+	      return false;
 	    }
-	  //
-	  //	If there was a subproblem asssociated with our difference, try and solve
-	  //	it in a new way.
-	  //
-	  if (assertionSubproblem == 0 || !(assertionSubproblem->solve(false, solution)))
-	    break;
 	}
-      
-    fail:
-      delete assertionSubproblem;
-      assertionSubproblem = 0;
-      if (so.difference != 0)
-	solution.copy(savedSubstitution);
-      findFirst = true;
     }
-  return false;
+  //
+  //	Give lhs control of any remaining problems.
+  //
+  for (; i < nrProblems; ++i)
+    {
+      TheoryClash& p = problems[i];
+      p.savedPendingState = pending.checkPoint();
+      p.lhsControlling = true;
+      pending.push(p.lhs->symbol(), p.lhs, p.rhs);
+    }
+  return true;
 }

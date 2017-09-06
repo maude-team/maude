@@ -480,6 +480,7 @@ DagNode::ReturnResult
 ACU_DagNode::computeBaseSortForGroundSubterms()
 {
   ACU_Symbol* s = symbol();
+  /* HACK: allow identity case to run
   if (s->getIdentity() != 0)
     {
       //
@@ -488,6 +489,7 @@ ACU_DagNode::computeBaseSortForGroundSubterms()
       //
       return DagNode::computeBaseSortForGroundSubterms();
     }
+  */
   bool ground = true;
   int nrArgs = argArray.length();
   for (int i = 0; i < nrArgs; ++i)
@@ -525,9 +527,30 @@ ACU_DagNode::computeSolvedForm2(DagNode* rhs, UnificationContext& solution, Pend
       pending.push(symbol(), this, rhs);
       return true;
     }
+  //
+  //	If the rhs is a variable, switch sides and let the variable code handle it.
+  //
   if (dynamic_cast<VariableDagNode*>(rhs))
     return rhs->computeSolvedForm(this, solution, pending);
+  //
+  //	Theory clash - this case is only soluble if one side collapses.
+  //	We don't handle this yet - we need to insert a disjunction into the pending unification stack.
+  //	Also need to consider the case that the rhs could be our identity.
+  //
+  /*
+  {
+    //
+    //	Quick hack - assume we collapse. Nees a disjunction to consider the alternative.
+    //	Also we need to consider the alternative even if we don't have an identity.
+    //	What we really need is a general PendingUnificationStack::resolveTheoryClash()
+    //
+    if (symbol()->getIdentity() != 0)
+      pending.push(symbol(), this, rhs);
+    return true;
+  }
   return false;
+  */
+  return pending.resolveTheoryClash(this, rhs);
 }
 
 mpz_class
