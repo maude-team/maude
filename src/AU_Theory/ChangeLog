@@ -1,3 +1,11 @@
+2009-12-22  Steven Eker  <eker@goo.csl.sri.com>
+
+	* AU_Symbol.hh (class AU_Symbol): added decl for makeCanonical()
+
+	* AU_Symbol.cc (makeCanonical): added
+
+===================================Maude92b===========================================
+
 2009-11-04  Steven Eker  <eker@goo.csl.sri.com>
 
 	* AU_LhsCompiler.cc (findConstraintPropagationSequence): added

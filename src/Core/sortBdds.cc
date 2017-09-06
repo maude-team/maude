@@ -181,7 +181,7 @@ SortBdds::makeVariableVector(int firstVariable, int nrVariables, Vector<Bdd>& ve
   //
   vec.resize(nrVariables);
   for (int i = 0; i < nrVariables; ++i)
-    vec[i] = ithvar(firstVariable + i);
+    vec[i] = bdd_ithvar(firstVariable + i);
 }
 
 Bdd
@@ -195,8 +195,7 @@ SortBdds::makeIndexBdd(int firstVariable, int nrVariables, int index) const
   Bdd result = bdd_true();
   int end = firstVariable + nrVariables;
   for (int i = firstVariable; i < end; ++i, index >>= 1)
-    result = bdd_and(result, (index & 1) ? ithvar(i) : nithvar(i));  // HACK: because we may need to increase the number of BDD variables
-  //    result = bdd_and(result, (index & 1) ? bdd_ithvar(i) : bdd_nithvar(i));
+    result = bdd_and(result, (index & 1) ? bdd_ithvar(i) : bdd_nithvar(i));
   return result;
 }
 
@@ -213,7 +212,7 @@ SortBdds::makeVariableBdd(int firstVariable, int nrVariables) const
   Bdd result = bdd_true();
   int end = firstVariable + nrVariables;
   for (int i = firstVariable; i < end; ++i)
-    result = bdd_and(result, ithvar(i));  // HACK
+    result = bdd_and(result, bdd_ithvar(i));
   return result;
 }
 

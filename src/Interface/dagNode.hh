@@ -559,16 +559,18 @@ DagNode::leq(const Sort* sort) const
   return ::leq(getSortIndex(), sort);
 }
 
+#ifdef NO_ASSERT
 inline size_t
 DagNode::hash(size_t v1, size_t v2)
 {
-  return 3 * v1 + v2;
+  return (v1 * v1) ^ (v1 >> 16) ^ v2;  // best function to date on empirical measurement
 }
+#endif
 
 inline size_t
 DagNode::hash(size_t v1, size_t v2, size_t v3)
 {
-  return 3 * v1 + v2 * v3;
+  return (v1 * v1) ^ (v1 >> 16) ^ (v2 * v3);
 }
 
 #endif

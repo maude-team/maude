@@ -1,3 +1,38 @@
+2009-12-02  Steven Eker  <eker@goo.csl.sri.com>
+
+	* hashConsSet.hh (class HashConsSet): added ifdef'd
+	collisionCounter
+
+	* hashConsSet.cc (collision): increment collisionCounter
+
+2009-11-30  Steven Eker  <eker@goo.csl.sri.com>
+
+	* hashConsSet.hh (class HashConsSet): added decl for collision()
+
+	* hashConsSet.cc (collision): added
+
+2009-11-24  Steven Eker  <eker@goo.csl.sri.com>
+
+	* hashConsSet.cc: created
+
+	* hashConsSet.hh: created
+
+	* core.hh: added class HashConsSet
+
+2009-11-16  Steven Eker  <eker@goo.csl.sri.com>
+
+	* sortBdds.cc (makeIndexBdd): use bdd_ithvar() in place of
+	ithvar() and bdd_nithvar() in place of nithvar()
+
+	* sortTable.cc (computeSortFunctionBdds): calculate and allocate
+	the number of BDD variables we will need up front
+
+	* sortBdds.cc (makeVariableVector): use bdd_ithvar() in place of
+	ithvar()
+	(makeVariableBdd): bdd_ithvar() in place of ithvar()
+
+===================================Maude92b===========================================
+
 2009-10-28  Steven Eker  <eker@goo.csl.sri.com>
 
 	* sortBdds.cc (SortBdds): fix incorrect comment; add

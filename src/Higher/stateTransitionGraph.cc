@@ -21,7 +21,7 @@
 */
 
 //
-//	Implementation for class StateTransitionGraph3.
+//	Implementation for class StateTransitionGraph.
 //
 
 //	utility stuff
@@ -39,27 +39,21 @@
 
 //	core class definitions
 #include "rewriteSearchState.hh"
-#include "stateTransitionGraph3.hh"
+#include "stateTransitionGraph.hh"
 
-local_inline void
-StateTransitionGraph3::insertNewState(int parent)
-{
-  State* s = new State;
-  s->rewriteState = 0;
-  s->fullyExplored = false;
-  s->parent = parent;
-  seen.append(s);
-}
-
-StateTransitionGraph3::StateTransitionGraph3(RewritingContext* initial)
+StateTransitionGraph::StateTransitionGraph(RewritingContext* initial)
   : initial(initial)
 {
   initial->reduce();
-  insertNewState(NONE);
-  seenSet.insert(initial->root());
+  int hashConsIndex = hashConsSet.insert(initial->root());
+  hashCons2seen.resize(hashConsIndex + 1);
+  for (int i = 0; i < hashConsIndex; ++i)
+    hashCons2seen[i] = NONE;
+  hashCons2seen[hashConsIndex] = seen.size();
+  seen.append(new State(hashConsIndex, NONE));
 }
 
-StateTransitionGraph3::~StateTransitionGraph3()
+StateTransitionGraph::~StateTransitionGraph()
 {
   int nrStates = seen.length();
   for (int i = 0; i < nrStates; i++)
@@ -71,15 +65,14 @@ StateTransitionGraph3::~StateTransitionGraph3()
 }
 
 void
-StateTransitionGraph3::markReachableNodes()
+StateTransitionGraph::markReachableNodes()
 {
-  int nrStates = seen.length();
-  for (int i = 0; i < nrStates; i++)
-    seenSet.index2DagNode(i)->mark();
+  FOR_EACH_CONST(i, Vector<State*>, seen)
+    hashConsSet.getCanonical((*i)->hashConsIndex)->mark();
 }
 
 int
-StateTransitionGraph3::getNextState(int stateNr, int index)
+StateTransitionGraph::getNextState(int stateNr, int index)
 {
   State* n = seen[stateNr];
   int nrNextStates = n->nextStates.length();
@@ -89,10 +82,13 @@ StateTransitionGraph3::getNextState(int stateNr, int index)
     return NONE;
   if (n->rewriteState == 0)
     {
-      RewritingContext* newContext = initial->makeSubcontext(seenSet.index2DagNode(stateNr));
+      DagNode* canonicalStateDag = hashConsSet.getCanonical(seen[stateNr]->hashConsIndex);
+      RewritingContext* newContext = initial->makeSubcontext(canonicalStateDag);
       n->rewriteState = new RewriteSearchState(newContext,
 					       NONE,
-					       RewriteSearchState::GC_CONTEXT,
+					       RewriteSearchState::GC_CONTEXT |
+					       RewriteSearchState::SET_UNREWRITABLE |
+					       PositionState::SET_UNSTACKABLE,
 					       0,
 					       UNBOUNDED);
     }
@@ -135,12 +131,41 @@ StateTransitionGraph3::getNextState(int stateNr, int index)
             }
 	  initial->addInCount(*c);
 	  delete c;
-	  int nextState = seenSet.dagNode2Index(r.first);
-	  if (nextState == NONE)
+
+	  int nextState;
+	  int hashConsIndex = hashConsSet.insert(r.first);
+	  int mapSize = hashCons2seen.size();
+	  //DebugAdvisory("replacement dag = " << r.first << "hashConsIndex = " << hashConsIndex);
+	  if (hashConsIndex >= mapSize)
 	    {
-	      nextState = seen.length();
-	      insertNewState(stateNr);
-	      seenSet.insert(r.first);
+	      //
+	      //	Definitely a new state.
+	      //
+	      hashCons2seen.resize(hashConsIndex + 1);
+	      for (int i = mapSize; i < hashConsIndex; ++i)
+		hashCons2seen[i] = NONE;
+	      nextState = seen.size();
+	      hashCons2seen[hashConsIndex] = nextState;
+	      seen.append(new State(hashConsIndex, stateNr));
+	      DebugAdvisory("new state dag = " << r.first <<
+			    " hashConsIndex = " << hashConsIndex <<
+			    " collisionCounter = " << hashConsSet.collisionCounter);
+	    }
+	  else
+	    {
+	      //
+	      //	Seen before.
+	      //
+	      nextState = hashCons2seen[hashConsIndex];
+	      if (nextState == NONE)
+		{
+		  //
+		  //	 But only as a subdag, not as a state dag, so it counts as a new state.
+		  //
+		  nextState = seen.size();
+		  hashCons2seen[hashConsIndex] = nextState;
+		  seen.append(new State(hashConsIndex, stateNr));
+		}
 	    }
 	  n->nextStates.append(nextState);
 	  n->fwdArcs[nextState].insert(rule);

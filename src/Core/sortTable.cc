@@ -372,6 +372,14 @@ SortTable::computeSortFunctionBdds(const SortBdds& sortBdds, Vector<Bdd>& sortFu
   //  for (int i = 0; i < sortDiagram.size(); ++i)
   //    cerr << sortDiagram[i] << " ";
   //  cerr << endl;
+  //
+  //	Calculate and allocate the number of BDD variables we will need to represent the domain sorts.
+  //
+  int nrBddVariablesForDomain = 0;
+  for (int i = 0; i < nrArgs; ++i)
+    nrBddVariablesForDomain += sortBdds.getNrVariables(componentVector[i]->getIndexWithinModule());
+  BddUser::setNrVariables(nrBddVariablesForDomain);
+
   computeBddVector(sortBdds, 0, 0, table, 0);
   sortFunctionBdds.swap(table[0]);
 }

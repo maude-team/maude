@@ -1,3 +1,21 @@
+2009-12-09  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_Tree.cc (makeCanonical): added
+
+	* ACU_Tree.hh (class ACU_Tree): added decl for makeCanonical()
+
+2009-12-08  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_RedBlackNode.hh (class ACU_RedBlackNode): added decl for
+	canonicalRebuild()
+
+	* ACU_RedBlackNode.cc (canonicalRebuild): added
+
+	* ACU_RedBlackNode.hh (ACU_RedBlackNode): removed what appears to
+	be an unneeded getMemoryCell()->setByte()
+
+===================================Maude92b===========================================
+
 2003-05-29  Steven Eker  <eker@goo.csl.sri.com>
 
 	* ACU_Tree.hh (deleteMult2): added

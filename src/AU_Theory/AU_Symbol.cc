@@ -35,6 +35,9 @@
 #include "AU_Persistent.hh"
 #include "AU_Theory.hh"
 
+//      core class definitions
+#include "hashConsSet.hh"
+
 //	AU persistent class definitions
 #include "AU_DequeIter.hh"
 
@@ -467,4 +470,53 @@ AU_Symbol::stackArguments(DagNode* subject,
 	    stack.append(RedexPosition(d, parentIndex, i, eager));
 	}
     }
+}
+
+//
+//	Hash cons code.
+//
+
+DagNode*
+AU_Symbol::makeCanonical(DagNode* original, HashConsSet* hcs)
+{
+  if (safeCast(AU_BaseDagNode*, original)->isDeque())
+    {
+      //
+      //	Never use deque form as canonical.
+      //
+      const AU_DequeDagNode* d = safeCast(const AU_DequeDagNode*, original);
+      const AU_Deque& deque = d->getDeque();
+      AU_DagNode* n = new AU_DagNode(this, deque.length());
+      n->setProducedByAssignment();  // deque form must be theory normal
+      n->copySetRewritingFlags(original);
+      n->setSortIndex(original->getSortIndex());
+      ArgVec<DagNode*>::iterator j = n->argArray.begin();
+      for (AU_DequeIter i(deque); i.valid(); i.next(), ++j)
+	*j = hcs->getCanonical(hcs->insert(i.getDagNode()));
+      return n;
+    }
+  const AU_DagNode* d = safeCast(const AU_DagNode*, original);
+  int nrArgs = d->argArray.size();
+  for (int i = 0; i < nrArgs; i++)
+    {
+      DagNode* b = d->argArray[i];
+      DagNode* c = hcs->getCanonical(hcs->insert(b));
+      if (c != b)
+        {
+	  //
+	  //	Detected a non-canonical argument so need to make a new node.
+	  //
+	  AU_DagNode* n = new AU_DagNode(this, nrArgs);
+	  n->setProducedByAssignment();  // only theory normal dags will be hash cons'd
+	  n->copySetRewritingFlags(original);
+	  n->setSortIndex(original->getSortIndex());
+	  for (int j = 0; j < i; ++j)
+	    n->argArray[j] = d->argArray[j];
+	  n->argArray[i] = c;
+	  for (++i; i < nrArgs; i++)
+	    n->argArray[i] = hcs->getCanonical(hcs->insert(d->argArray[i]));
+	  return n;
+        }
+    }
+  return original;  // can use the original dag node as the canonical version
 }

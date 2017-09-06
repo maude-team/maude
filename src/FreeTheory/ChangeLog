@@ -1,3 +1,23 @@
+2009-12-01  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeTerm.cc (normalize): revert hash function
+
+	* freeDagNode.cc (getHashValue): revert hash function
+
+2009-11-30  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeTerm.cc (normalize): modify hash function
+
+	* freeDagNode.cc (getHashValue): modify hash function
+
+2009-11-24  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeSymbol.cc (makeCanonical): added
+
+	* freeSymbol.hh (class FreeSymbol): added decl for makeCanonical()
+
+===================================Maude92b===========================================
+
 2009-11-06  Steven Eker  <eker@goo.csl.sri.com>
 
 	* freeTerm.hh (class FreeTerm): made both
