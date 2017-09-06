@@ -112,11 +112,17 @@ public:
 		     Substitution& solution,
 		     Subproblem*& returnedSubproblem,
 		     ExtensionInfo* extensionInfo = 0) { CantHappen("Not implemented"); return false; }
+  virtual bool computeBaseSortForGroundSubterms() { CantHappen("Not implemented"); return false; }
   //
   //	instantiate() returns 0 if instantiation does not change term.
   //
-  virtual DagNode* instantiate(Substitution& substitution) { CantHappen("Not implemented"); return 0; }
-  virtual bool occurs(int index) { CantHappen("Not implemented"); return true; }
+  DagNode* instantiate(Substitution& substitution);
+  virtual DagNode* instantiate2(Substitution& substitution) { CantHappen("Not implemented"); return 0; }
+  bool occurs(int index);
+  virtual bool occurs2(int index) { CantHappen("Not implemented"); return true; }
+  void computeGeneralizedSort(const SortBdds& sortBdds,
+			      const Vector<int> realToBdd,  // first BDD variable for each free real variable
+			      Vector<Bdd>& generalizedSort);
   //
   //	These member functions must be defined for each derived class in theories
   //	that need extension
@@ -491,6 +497,24 @@ DagNode::copyAndReduce(RewritingContext& context)
   DagNode* d = copyReducible();
   d->reduce(context);
   return d;
+}
+
+inline DagNode*
+DagNode::instantiate(Substitution& substitution)
+{
+  //
+  //	If we know our sort we must be ground.
+  //
+  return (getSortIndex() == Sort::SORT_UNKNOWN) ? instantiate2(substitution) : 0;
+}
+
+inline bool
+DagNode::occurs(int index)
+{
+  //
+  //	If we know our sort we must be ground.
+  //
+  return (getSortIndex() == Sort::SORT_UNKNOWN) ? occurs2(index) : false;
 }
 
 inline bool

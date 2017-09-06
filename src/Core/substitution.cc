@@ -31,6 +31,7 @@
 //	forward declarations
 #include "interface.hh"
 #include "core.hh"
+#include "variable.hh"
 
 //      interface class definitions
 #include "symbol.hh"
@@ -39,6 +40,9 @@
 //      core class definitions
 #include "substitution.hh"
 #include "localBinding.hh"
+
+//	variable class definitions
+#include "variableDagNode.hh"
 
 int Substitution::allocateSize = 1;
 
@@ -72,10 +76,54 @@ Substitution::operator-(const Substitution& original) const
   return result;
 }
 
-void
-Substitution::update(int index, DagNode* value)
+bool
+Substitution::unificationBind(int index, Sort* varSort, DagNode* value)
 {
-  bind(index, value);
+  Assert(values[index] == 0, "trying to bind bound variable " << index << " to " << value);
+  //
+  //	First we instantiate the value with the current substitution.
+  //
+  DagNode* n = value->instantiate(*this);
+  if (n == 0)
+    n = value;
+  //
+  //	Check to see if we are binding to a ground or non-ground term.
+  //
+  int sortIndex = n->getSortIndex();
+  if (sortIndex == Sort::SORT_UNKNOWN)
+    {
+      //
+      //	Check to see if we are binding a variable to an expression
+      //	containing the variable.
+      //
+      if (n->occurs(index))
+	{
+	  //
+	  //	Check to see if we are binding a variable to itself.
+	  //
+	  if (VariableDagNode* v = dynamic_cast<VariableDagNode*>(n))
+	    {
+	      if (v->getIndex() == index)
+		return true;
+	    }
+	  return false;
+	}
+    }
+  else
+    {
+      //
+      //	Check the sort of the ground term we are binding to.
+      //
+      if (!leq(sortIndex, varSort))
+	return false;
+    }
+  //
+  //	Finally we can bind the variable.
+  //
+  bind(index, n);
+  //
+  //	Now we eliminate the variable from existing bindings.
+  //
   for (int i = 0; i < copySize; ++i)
     {
       if (i != index)
@@ -89,4 +137,5 @@ Substitution::update(int index, DagNode* value)
 	    }
 	}
     }
+  return true;
 }

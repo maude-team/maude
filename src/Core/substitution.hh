@@ -60,10 +60,12 @@ public:
   int nrFragileBindings() const;
 
   //
-  //	Update does a bind, followed by instantiating the bindings of all
-  //	the other bound variables.
+  //	unificationBind() instantiate value to which variable will be bound,
+  //	performs occurs check or sort check as neccessary and handles the case
+  //	where a variable is bound to itself. Other bindings are updated to
+  //	eliminate the bound variable.
   //
-  void update(int index, DagNode* value);
+  bool unificationBind(int index, Sort* varSort, DagNode* value);
 
 private:
   static int allocateSize;

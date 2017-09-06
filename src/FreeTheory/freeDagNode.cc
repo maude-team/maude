@@ -44,6 +44,7 @@
 
 //	core class definitions
 #include "rewritingContext.hh"
+#include "subproblemAccumulator.hh"
 
 //	variable class definitions
 #include "variableDagNode.hh"
@@ -269,55 +270,124 @@ FreeDagNode::unify(DagNode* rhs,
       int nrArgs = symbol()->arity();
       if (nrArgs != 0)
 	{
+	  SubproblemAccumulator subproblems;
 	  DagNode** args = argArray();
 	  DagNode** rhsArgs = safeCast(FreeDagNode*, rhs)->argArray();
 	  for (int i = 0; i < nrArgs; ++i)
 	    {
-	      if (!(args[i]->unify(rhsArgs[i], solution, returnedSubproblem, extensionInfo)))
+	      if (!(args[i]->unify(rhsArgs[i], solution, returnedSubproblem, 0)))
 		return false;
+	      subproblems.add(returnedSubproblem);
 	    }
+	  returnedSubproblem = subproblems.extractSubproblem();
 	}
+      else
+	returnedSubproblem = 0;
       return true;
     }
-  else
-    {
-      if (dynamic_cast<VariableDagNode*>(rhs))
-	return rhs->unify(this, solution, returnedSubproblem, extensionInfo);
-    }
+  if (dynamic_cast<VariableDagNode*>(rhs))
+    return rhs->unify(this, solution, returnedSubproblem, 0);
   return false;
 }
 
-DagNode*
-FreeDagNode::instantiate(Substitution& substitution)
+bool
+FreeDagNode::computeBaseSortForGroundSubterms()
 {
+  bool ground = true;
   Symbol* s = symbol();
   int nrArgs = s->arity();
   DagNode** args = argArray();
   for (int i = 0; i < nrArgs; ++i)
     {
-      if (DagNode* n = args[i]->instantiate(substitution))
+      if (!(args[i]->computeBaseSortForGroundSubterms()))
+	ground = false;
+    }
+  if (ground)
+    s->computeBaseSort(this);
+  return ground;
+}
+
+DagNode*
+FreeDagNode::instantiate2(Substitution& substitution)
+{
+  Symbol* s = symbol();
+  int nrArgs = s->arity();
+  Assert(nrArgs > 0, "we shouldn't be called on constants");
+  DagNode** args = argArray();
+  for (int i = 0; i < nrArgs; ++i)
+    {
+      DagNode* a = args[i];
+      if (a->getSortIndex() == Sort::SORT_UNKNOWN)
 	{
-	  FreeDagNode* d = new FreeDagNode(s);
-	  DagNode** args2 = d->argArray();
-	  for (int j = 0; j < i; ++j)
-	    args2[j] = args[j];
-	  args2[i] = n;
-	  for (++i; i < nrArgs; ++i)
+	  //
+	  //	Our argument is non-ground - try instantiating it.
+	  //
+	  if (DagNode* n = a->instantiate2(substitution))
 	    {
-	      DagNode* original = args[i];
-	      DagNode* n = original->instantiate(substitution);
-	      args2[i] = n ? n : original;
+	      //
+	      //	It changed under instantiation - need to make a new
+	      //	dagnode.
+	      //
+	      bool ground = true;
+	      FreeDagNode* d = new FreeDagNode(s);
+	      DagNode** args2 = d->argArray();
+	      //
+	      //	Copy the arguments we already looked at.
+	      //
+	      for (int j = 0; j < i; ++j)
+		{
+		  DagNode* a = args[i];
+		  if (a->getSortIndex() == Sort::SORT_UNKNOWN)
+		    ground = false;
+		  args2[j] = a;
+		}
+	      //
+	      //	Handle current argument.
+	      //
+	      args2[i] = n;
+	      if (n->getSortIndex() == Sort::SORT_UNKNOWN)
+		ground = false;
+	      //
+	      //	Handle remaining arguments.
+	      //
+	      for (++i; i < nrArgs; ++i)
+		{
+		  DagNode* a = args[i];
+		  if (a->getSortIndex() == Sort::SORT_UNKNOWN)
+		    {
+		      if (DagNode* n = a->instantiate2(substitution))
+			{
+			  args2[i] = n;
+			  if (n->getSortIndex() == Sort::SORT_UNKNOWN)
+			    ground = false;
+			}
+		      else
+			{
+			  ground = false;
+			  args2[i] = a;
+			}
+		    }
+		  else
+		    args2[i] = a;
+		}
+	      //
+	      //	Now if all the arguments of the new dagnode are ground
+	      //	we compute its base sort.
+	      //
+	      if (ground)
+		s->computeBaseSort(d);
+	      return d;	
 	    }
-	  return d;	
 	}
     }
   return 0;  // unchanged
 }
 
 bool
-FreeDagNode::occurs(int index)
+FreeDagNode::occurs2(int index)
 {
   int nrArgs = symbol()->arity();
+  Assert(nrArgs > 0, "we shouldn't be called on constants");
   DagNode** p = argArray();
   for (int i = nrArgs; i > 0; i--, p++)
     {

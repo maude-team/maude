@@ -1,3 +1,16 @@
+2007-01-30  Steven Eker  <eker@goo.csl.sri.com>
+
+	* dagNode.cc (computeGeneralizedSort): added
+
+	* dagNode.hh (class DagNode): added decl for
+	computeBaseSortForGroundSubterms()
+	(instantiate): added
+	(class DagNode): added decl for instantiate2()
+	(class DagNode): added decl for occurs2()
+	(class DagNode): added decl for computeGeneralizedSort()
+
+===================================Maude88e==========================================
+
 2007-01-18  Steven Eker  <eker@goo.csl.sri.com>
 
 	* dagNode.hh (class DagNode): add returns to unification interface
