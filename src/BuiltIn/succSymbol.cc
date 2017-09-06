@@ -208,6 +208,7 @@ SuccSymbol::getSignedInt64(const DagNode* dagNode, Int64& value) const
     }
   return false;
 }
+
 bool
 SuccSymbol::rewriteToNat(DagNode* subject, RewritingContext& context, const mpz_class& result)
 {

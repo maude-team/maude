@@ -1,4 +1,4 @@
-Maude> ==========================================
+==========================================
 reduce in META-LEVEL : wellFormed(fmod 'FOO is
   protecting 'FLOAT .
   sorts 'Bar ; 'Foo .
@@ -192,4 +192,4 @@ endm,
   'X:Bar <- 'true.Bool) .
 rewrites: 1
 result Bool: false
-Maude> Bye.
+Bye.

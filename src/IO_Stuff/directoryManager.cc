@@ -41,6 +41,10 @@ DirectoryManager::checkAccess(const string& directory,
 			      int mode,
 			      char const* const ext[])
 {
+  //
+  //	See if directory/fileName is accessible, and if not
+  //	try added extensions to see if the fixes the problem.
+  //
   string full(directory + '/' + fileName);
   if (access(full.c_str(), mode) == 0)
     return true;
@@ -51,8 +55,7 @@ DirectoryManager::checkAccess(const string& directory,
 	{
 	  for (char const* const* p = ext; *p; p++)
 	    {
-	      //	      if (fileName.compare(d, string::npos, *p) == 0)
-	      if (fileName.substr(d).compare(*p) == 0)  // HACK
+	      if (fileName.compare(d, string::npos, *p) == 0)
 		return false;  // already ends in one of our extensions
 	    }
 	}
@@ -108,7 +111,7 @@ DirectoryManager::realPath(const string& path, string& resolvedPath)
     }
   //  cout << "in " << path << '\n';
   resolvedPath.erase();
-  string::size_type p = 0;
+  string::size_type p = 0;  // p will index the first path component for standard processing
   switch (path[0])
     {
     case '/':  // absolute path name

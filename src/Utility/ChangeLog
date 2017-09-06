@@ -1,3 +1,9 @@
+2017-07-27  Steven Eker  <eker@install.csl.sri.com>
+
+	* macros.hh: forward decl for class Rope
+
+===================================Maude115===========================================
+
 2017-06-21  Steven Eker  <eker@install.csl.sri.com>
 
 	* macros.cc (doubleToString): use isinf() rather than deprecated finite()

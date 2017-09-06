@@ -1,3 +1,43 @@
+2017-08-08  Steven Eker  <eker@install.csl.sri.com>
+
+	* prelude.maude: fmod LEXICAL: print -> printTokens to
+	avoid confusion with print attribute in META-LEVEL
+
+2017-08-04  Steven Eker  <eker@install.csl.sri.com>
+
+	* prelude.maude: added fmod LEXICAL
+
+2017-08-01  Steven Eker  <eker@install.csl.sri.com>
+
+	* main.cc (main): call setUsePromptsAnyway() if our input
+	is from a terminal
+
+	* file.maude: deleted stdin, stdout, stderr from mod FILE
+
+2017-07-28  Steven Eker  <eker@install.csl.sri.com>
+
+	* file.maude: don't use BOUND, added mod COMMON-MESSAGES
+	added mod STD-STREAM
+
+2017-07-26  Steven Eker  <eker@install.csl.sri.com>
+
+	* file.maude: added op-hooks for stdin, stdout, stderr
+
+2017-07-25  Steven Eker  <eker@install.csl.sri.com>
+
+	* file.maude: added op-hooks for start, current, end,
+	minusSymbol
+
+2017-07-19  Steven Eker  <eker@install.csl.sri.com>
+
+	* file.maude: created
+
+2017-07-17  Steven Eker  <eker@install.csl.sri.com>
+
+	* prelude.maude: added fmod BOUND; use it in fmod META-LEVEL
+
+===================================Maude115===========================================
+
 2017-06-27  Steven Eker  <eker@install.csl.sri.com>
 
 	* smt.maude: removed comment about _divisible_ breaking CVC4
@@ -16,6 +56,8 @@
 2017-06-20  Steven Eker  <eker@install.csl.sri.com>
 
 	* Makefile.am (maude_LDADD): added YICE2_LIB
+
+===================================Maude114===========================================
 
 2017-05-25  Steven Eker  <eker@install.csl.sri.com>
 

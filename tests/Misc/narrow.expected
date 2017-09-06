@@ -1,4 +1,4 @@
-Maude> ==========================================
+==========================================
 vu-narrow in BAZ : g(j(A, B)) =>* C .
 
 Solution 1
@@ -928,4 +928,4 @@ No more solutions.
 rewrites: 1
 mb applications: 0  equational rewrites: 0  rule rewrites: 0  variant narrowing
     steps: 0  narrowing steps: 1
-Maude> Bye.
+Bye.

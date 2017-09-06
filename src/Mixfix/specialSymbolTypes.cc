@@ -56,3 +56,5 @@
   MACRO(InterpreterManagerSymbol, SymbolType::INTERPRETER_MANAGER_SYMBOL)
   MACRO(SMT_Symbol, SymbolType::SMT_SYMBOL)
   MACRO(SMT_NumberSymbol, SymbolType::SMT_NUMBER_SYMBOL)
+  MACRO(FileManagerSymbol, SymbolType::FILE_MANAGER_SYMBOL)
+  MACRO(StreamManagerSymbol, SymbolType::STREAM_MANAGER_SYMBOL)

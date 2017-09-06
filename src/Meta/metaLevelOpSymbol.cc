@@ -35,6 +35,7 @@
 #include "variable.hh"
 #include "higher.hh"
 #include "freeTheory.hh"
+#include "AU_Theory.hh"
 #include "NA_Theory.hh"
 #include "builtIn.hh"
 #include "strategyLanguage.hh"

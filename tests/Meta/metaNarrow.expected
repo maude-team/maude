@@ -1,4 +1,4 @@
-Maude> ==========================================
+==========================================
 unify in FOO : f(X, X) =? f(Y, Z, Z) .
 
 Solution 1
@@ -636,7 +636,7 @@ result NarrowingSearchResult: {
     'W:Foo <- 'h['f['%1:Foo,'%2:Foo,'%2:Foo]],
   '%
 }
-Maude> ==========================================
+==========================================
 reduce in META-LEVEL : metaNarrowingSearch(['BAR], 'g['f['A:Foo,'B:Foo,
     'B:Foo]], 'W:Foo, '*, unbounded, 'none, 4) .
 rewrites: 3
@@ -1453,4 +1453,4 @@ reduce in META-LEVEL : metaNarrowingSearchPath(['BAZ], 'g['j['A:Foo,'B:Foo]],
     'C:Foo, '!, unbounded, 'match, 1) .
 rewrites: 2
 result NarrowingSearchPathResult?: (failure).NarrowingSearchPathResult?
-Maude> Bye.
+Bye.

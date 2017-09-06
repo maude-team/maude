@@ -47,6 +47,7 @@ public:
   Term* makeIntTerm(const mpz_class& integer);
   bool isNeg(/* const */ Term* term) const;
   const mpz_class& getNeg(/* const */ Term* term, mpz_class& result) const;
+  bool getSignedInt64(const DagNode* dagNode, Int64& value) const;
 };
 
 #endif

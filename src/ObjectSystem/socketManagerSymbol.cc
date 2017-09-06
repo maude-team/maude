@@ -21,7 +21,7 @@
 */
 
 //
-//      Implementation for class SocketOidSymbol.
+//      Implementation for class SocketManagerSymbol.
 //
 
 //      utility stuff
@@ -43,18 +43,15 @@
 #include "term.hh"
 
 //      core class definitions
-//#include "rewritingContext.hh"
 #include "symbolMap.hh"
 
 //      free theory class definitions
-//#include "freeNet.hh"
 #include "freeDagNode.hh"
 
 //      built in class definitions
 #include "succSymbol.hh"
 #include "stringSymbol.hh"
 #include "stringDagNode.hh"
-//#include "stringOpSymbol.hh"
 #include "bindingMacros.hh"
 
 //	object system class definitions

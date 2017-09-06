@@ -1,4 +1,4 @@
-Maude> ==========================================
+==========================================
 reduce in META-LEVEL : metaParse(fmod 'FOO is
   including 'QID .
   sorts 'Foo ; 'Token .
@@ -213,4 +213,4 @@ result [ResultPair?]: metaReduce(fmod 'FOO is
   none
   none
 endfm, '=['a.Foo,'b.Foo])
-Maude> Bye.
+Bye.

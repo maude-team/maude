@@ -29,6 +29,8 @@
 
 class QuotedIdentifierOpSymbol : public FreeSymbol
 {
+  NO_COPYING(QuotedIdentifierOpSymbol);
+
 public:
   QuotedIdentifierOpSymbol(int id, int nrArgs);
 
@@ -46,15 +48,19 @@ public:
   bool eqRewrite(DagNode* subject, RewritingContext& context);
 
 private:
-  NO_COPYING(QuotedIdentifierOpSymbol);
+  DagNode* makeQid(int id, PointerMap& qidMap);
+  bool printQidList(DagNode* qidList, Rope& output);
+  bool printQid(DagNode* qid, bool& ansiActive, bool& needSpace, Rope& output);
 
 #ifdef MOS
   static int counter;
 #endif
 
   int op;
-  QuotedIdentifierSymbol* quotedIdentifierSymbol;
-  StringSymbol* stringSymbol;
+#define MACRO(SymbolName, SymbolClass, NrArgs) \
+  SymbolClass* SymbolName;
+#include "quotedIdentifierOpSignature.cc"
+#undef MACRO
 };
 
 #endif

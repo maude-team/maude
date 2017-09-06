@@ -1,4 +1,4 @@
-Maude> ==========================================
+==========================================
 check in TEST-B : W =/== X and Y .
 Result from sat solver is: sat
 ==========================================
@@ -877,7 +877,7 @@ contains a nonlinear variable X.
 Warning: <standard input>, line 324 (mod NONLINEAR-VAR-IN-LHS): module
     NONLINEAR-VAR-IN-LHS does not satisfy restrictions for rewriting modulo
     SMT.
-Maude> Warning: <standard input>, line 338 (mod EQ-AND-MB-NO_RULES): module
+Warning: <standard input>, line 338 (mod EQ-AND-MB-NO_RULES): module
     EQ-AND-MB-NO_RULES has equations.
 Warning: <standard input>, line 338 (mod EQ-AND-MB-NO_RULES): module
     EQ-AND-MB-NO_RULES has membership axioms.
@@ -887,4 +887,4 @@ Warning: <standard input>, line 338 (mod EQ-AND-MB-NO_RULES): module
     EQ-AND-MB-NO_RULES does not satisfy restrictions for rewriting modulo SMT.
 Warning: <standard input>, line 368: pattern contains a nonlinear variable C.
 Warning: <standard input>, line 371: pattern contains SMT symbol _+_.
-Maude> Bye.
+Bye.

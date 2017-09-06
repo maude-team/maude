@@ -1,4 +1,4 @@
-Maude> ==========================================
+==========================================
 reduce in META-LEVEL : upEqs('ATTR-TEST, true) .
 rewrites: 1
 result EquationSet: eq '_and_['A:Bool,'A:Bool] = 'A:Bool [none] .
@@ -387,4 +387,4 @@ eq 'tail['__['E:Nat,'L:NatList]] = 'L:NatList [none] .
 eq 'tail['__['E:Qid,'L:QidList]] = 'L:QidList [none] .
 eq 'union['S:QidSet,'S':QidSet] = '_;_['S:QidSet,'S':QidSet] [none] .
 eq '|_|['S:QidSet] = '$card['S:QidSet,'0.Zero] [none] .
-Maude> Bye.
+Bye.

@@ -25,6 +25,7 @@
 //
 #ifndef _IO_Manager_hh_
 #define _IO_Manager_hh_
+#include "autoWrapBuffer.hh"
 
 struct GetLine;  // to avoid sucking in the tecla header file
 
@@ -46,20 +47,30 @@ public:
   void setAutoWrap();
   void setCommandLineEditing(size_t maxLineLength = MAX_LINE_LENGTH,
 			     size_t maxHistoryLength = MAX_HISTORY_LENGTH);
+  void setUsePromptsAnyway();
   void setPrompt(const string& newPrompt);
   void setContPrompt(const string& newContPrompt);
   void startCommand();
-  int getInput(char* buf, int maxSize, FILE* stream);
+  ssize_t getInput(char* buf, size_t maxSize, FILE* stream);
+  Rope getLine(const Rope& prompt, FILE* stream);
+  ssize_t boundedGetLine(char* buf, size_t maxSize, FILE* stream);
 
 private:
   GetLine* gl;
   const char* line;
+  bool usePromptsAnyway;  // use prompts even if command line editing disabled
   bool contFlag;
   string prompt;
   string contPrompt;
   AutoWrapBuffer* wrapOut;
   AutoWrapBuffer* wrapErr;
 };
+
+inline void
+IO_Manager::setUsePromptsAnyway()
+{
+  usePromptsAnyway = true;
+}
 
 inline void
 IO_Manager::setPrompt(const string& newPrompt)

@@ -1,3 +1,44 @@
+2017-08-01  Steven Eker  <eker@install.csl.sri.com>
+
+	* IO_Manager.cc (IO_Manager): clear usePromptsAynway flag
+	(getInput): repect usePromptsAnyway flag
+	(getInput): make n a size_t
+
+	* IO_Manager.hh (setUsePromptsAnyway): added
+
+	* IO_Manager.cc (getInput): support contPrompt in non-Tecla
+	case
+
+	* IO_Manager.hh (I): added decl for boundedGetLine()
+
+	* IO_Manager.cc (boundedGetLine): added
+	(getInput): use boundedGetLine()
+
+	* IO_Manager.hh (I): upated decl for getInput()
+
+	* IO_Manager.cc (getLine): check and free memory even in
+	the EOF/error case
+	(getInput): pass maxSize as size_t
+
+2017-07-31  Steven Eker  <eker@install.csl.sri.com>
+
+	* IO_Manager.hh (I): updated decl for getLine()
+
+	* IO_Manager.cc (getLine): take a prompt argument
+
+2017-07-27  Steven Eker  <eker@install.csl.sri.com>
+
+	* IO_Manager.hh (I): adde decl for getLine()
+
+	* IO_Manager.cc (getLine): added
+
+2017-07-18  Steven Eker  <eker@install.csl.sri.com>
+
+	* directoryManager.cc (checkAccess): removed hack since compare() for
+	substring vs C-string seems to work; added comment
+
+===================================Maude115===========================================
+
 2008-09-04  Steven Eker  <eker@goo.csl.sri.com>
 
 	* directoryManager.cc (initialize): fix char constness
@@ -15,7 +56,7 @@
 
 	* IO_Manager.cc (getInput): rewritten to allow building without
 	Tecla
-	
+
 ===================================Maude82===========================================
 
 2003-07-28  Steven Eker  <eker@goo.csl.sri.com>

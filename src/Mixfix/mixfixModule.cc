@@ -129,6 +129,8 @@
 //	object system class definitions
 #include "configSymbol.hh"
 #include "socketManagerSymbol.hh"
+#include "fileManagerSymbol.hh"
+#include "streamManagerSymbol.hh"
 
 //	strategy language class definitions
 #include "trivialStrategy.hh"

@@ -1,4 +1,4 @@
-Maude> ==========================================
+==========================================
 reduce in META-LEVEL : metaMatch(['SEARCH-TEST], 'X:Nat, '_*_['a.Nat,'_+_[
     'b.Nat,'c.Nat]], '_*_['Y:Nat,'Z:Nat] := 'X:Nat, 0) .
 rewrites: 2
@@ -159,4 +159,4 @@ result Substitution:
   'X:Foo <- 'b.Foo ; 
   'Y:Foo <- 'a.Foo ; 
   'Z:Foo <- 'f['c.Foo,'c.Foo]
-Maude> Bye.
+Bye.

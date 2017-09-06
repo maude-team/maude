@@ -1,4 +1,4 @@
-Maude> ==========================================
+==========================================
 reduce in TEST : metaApply(m, 'a.Foo, 'k, none, 0) .
 rewrites: 3
 result ResultTriple: {'b.Foo,'Foo,(none).Substitution}
@@ -336,4 +336,4 @@ reduce in META-LEVEL : metaApply(mod 'FOO is
 endm, 'f['a.Foo,'b.Foo], 'k, none, 2) .
 rewrites: 1
 result ResultTriple?: (failure).ResultTriple?
-Maude> Bye.
+Bye.

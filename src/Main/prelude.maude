@@ -22,7 +22,7 @@
 
 ***
 ***	Maude interpreter standard prelude.
-***	Version alpha113
+***	Version alpha115
 ***
 ***	Some of the overall structure is taken from the OBJ3
 ***	interpreter standard prelude.
@@ -811,6 +811,13 @@ fmod RANDOM is
   op random : Nat -> Nat
         [special (id-hook RandomOpSymbol
                   op-hook succSymbol (s_ : Nat ~> NzNat))] .
+endfm
+
+fmod BOUND is
+  protecting NAT .
+  sort Bound .
+  subsort Nat < Bound .
+  op unbounded : -> Bound [ctor] .
 endfm
 
 fmod QID is
@@ -1932,11 +1939,7 @@ endfm
 
 fmod META-LEVEL is
   protecting META-VIEW .
-
-*** bounds
-  sort Bound .
-  subsort Nat < Bound .
-  op unbounded : -> Bound [ctor] .
+  protecting BOUND .
 
 *** parents
   sort Parent .
@@ -2606,6 +2609,28 @@ fmod META-LEVEL is
 *** backward compatibility
   op metaPrettyPrint : Module Term ~> QidList .
   eq metaPrettyPrint(M:Module, T:Term) = metaPrettyPrint(M:Module, T:Term, mixfix flat format number rat) .
+endfm
+
+
+***
+***	Lexical module.
+***
+
+fmod LEXICAL is
+  protecting QID-LIST .
+  op printTokens : QidList -> String
+        [special (id-hook QuotedIdentifierOpSymbol	(printTokens)
+                  op-hook stringSymbol			(<Strings> : ~> String)
+                  op-hook quotedIdentifierSymbol	(<Qids> : ~> Qid)
+		  op-hook nilQidListSymbol		(nil : ~> QidList)
+		  op-hook qidListSymbol			(__ : QidList QidList ~> QidList))] .
+
+  op tokenize : String -> QidList
+	[special (id-hook QuotedIdentifierOpSymbol	(tokenize)
+                  op-hook stringSymbol			(<Strings> : ~> String)
+                  op-hook quotedIdentifierSymbol	(<Qids> : ~> Qid)
+		  op-hook nilQidListSymbol		(nil : ~> QidList)
+		  op-hook qidListSymbol			(__ : QidList QidList ~> QidList))] .
 endfm
 
 ***

@@ -690,6 +690,10 @@ MixfixModule::newFancySymbol(Token prefixName,
       return new SMT_Symbol(name, nrArgs);
     case SymbolType::SMT_NUMBER_SYMBOL:
       return new SMT_NumberSymbol(name);
+    case SymbolType::FILE_MANAGER_SYMBOL:
+      return new FileManagerSymbol(name);
+    case SymbolType::STREAM_MANAGER_SYMBOL:
+      return new StreamManagerSymbol(name);
     }
 
   int lineNr = prefixName.lineNumber();

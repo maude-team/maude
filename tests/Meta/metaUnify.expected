@@ -1,4 +1,4 @@
-Maude> ==========================================
+==========================================
 reduce in META-LEVEL : metaDisjointUnify(['NAT], '_+_['X:Nat,'Y:Nat] =? '_+_[
     'X:Nat,'Y:Nat], 0, 0) .
 rewrites: 2
@@ -125,4 +125,4 @@ reduce in META-LEVEL : metaDisjointUnify(['BAZ], 'f['a.Foo] =? 'f['X:Foo] /\
     'f['b.Foo] =? 'f['X:Foo], 0, 0) .
 rewrites: 2
 result UnificationTriple?: (noUnifier).UnificationTriple?
-Maude> Bye.
+Bye.

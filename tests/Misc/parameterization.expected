@@ -1,4 +1,4 @@
-Maude> fmod BAZ is
+fmod BAZ is
   sorts Bool Zero NzNat Nat NzInt Int PosRat NzRat Rat Foo{Rat,Nat} .
   subsorts Zero NzNat NzNat < Nat .
   subsort NzNat < NzInt .
@@ -559,6 +559,7 @@ fmod FLOAT
 fmod STRING
 fmod CONVERSION
 fmod RANDOM
+fmod BOUND
 fmod QID
 fth TRIV
 fth STRICT-WEAK-ORDER
@@ -586,6 +587,7 @@ fmod META-TERM
 fmod META-MODULE
 fmod META-VIEW
 fmod META-LEVEL
+fmod LEXICAL
 mod COUNTER
 mod LOOP-MODE
 mod CONFIGURATION
@@ -1257,6 +1259,7 @@ fmod FLOAT
 fmod STRING
 fmod CONVERSION
 fmod RANDOM
+fmod BOUND
 fmod QID
 fth TRIV
 fth STRICT-WEAK-ORDER
@@ -1284,6 +1287,7 @@ fmod META-TERM
 fmod META-MODULE
 fmod META-VIEW
 fmod META-LEVEL
+fmod LEXICAL
 mod COUNTER
 mod LOOP-MODE
 mod CONFIGURATION
@@ -1959,6 +1963,7 @@ fmod FLOAT
 fmod STRING
 fmod CONVERSION
 fmod RANDOM
+fmod BOUND
 fmod QID
 fth TRIV
 fth STRICT-WEAK-ORDER
@@ -1986,6 +1991,7 @@ fmod META-TERM
 fmod META-MODULE
 fmod META-VIEW
 fmod META-LEVEL
+fmod LEXICAL
 mod COUNTER
 mod LOOP-MODE
 mod CONFIGURATION
@@ -2254,6 +2260,7 @@ fmod FLOAT
 fmod STRING
 fmod CONVERSION
 fmod RANDOM
+fmod BOUND
 fmod QID
 fth TRIV
 fth STRICT-WEAK-ORDER
@@ -2281,6 +2288,7 @@ fmod META-TERM
 fmod META-MODULE
 fmod META-VIEW
 fmod META-LEVEL
+fmod LEXICAL
 mod COUNTER
 mod LOOP-MODE
 mod CONFIGURATION
@@ -5494,4 +5502,4 @@ Warning: <standard input>, line 354 (fmod MOD): this module contains one or
     imported.
 Warning: <standard input>, line 359 (fmod TEST): unable to use module MOD due
     to unpatchable errors.
-Maude> Bye.
+Bye.

@@ -1,4 +1,4 @@
-Maude> ==========================================
+==========================================
 get variants in BOOL-FVP : X /\ Y .
 
 Variant #1
@@ -484,7 +484,7 @@ y --> #2:Int
 
 No more unifiers.
 rewrites: 11
-Maude> ==========================================
+==========================================
 variant unify [23] in INT-OFFSET-SET : {M} =? {M'}  .
 
 Unifier #1
@@ -916,4 +916,4 @@ variant unify in INT-PRESS-BOOL : i > j =? true /\ j > k =? true /\ i > k =?
 
 No unifiers.
 rewrites: 123
-Maude> Bye.
+Bye.
