@@ -109,6 +109,12 @@
 #include "matrixOpSymbol.hh"
 #include "counterSymbol.hh"
 
+//	SMT class definitions
+#include "SMT_Symbol.hh"
+#include "SMT_NumberSymbol.hh"
+#include "SMT_NumberTerm.hh"
+#include "SMT_NumberDagNode.hh"
+
 //	higher class definitions
 #include "rewriteSequenceSearch.hh"
 #include "modelCheckerSymbol.hh"
@@ -807,6 +813,25 @@ MixfixModule::findFloatSymbol(const ConnectedComponent* component) const
     static_cast<FloatSymbol*>((*i).second);
 }
 
+SMT_NumberSymbol*
+MixfixModule::findSMT_NumberSymbol(const ConnectedComponent* component, SMT_Base::SMT_Type type)
+{
+  map<int, Symbol*>::const_iterator i =
+    SMT_NumberSymbols.find(component->getIndexWithinModule());
+  if ((i == SMT_NumberSymbols.end()))
+    return 0;
+  //
+  //	Found an SMT_NumberSymbol; need to check if it is the right type.
+  //
+  Symbol* symbol = (*i).second;
+  Sort* sort = symbol->getRangeSort();
+  int sortIndexWithinModule = sort->getIndexWithinModule();
+  SMT_Base::SortIndexToSMT_TypeMap& sortMap = getSortMap();
+  SMT_Base::SortIndexToSMT_TypeMap::const_iterator j = sortMap.find(sortIndexWithinModule);
+  Assert(j != sortMap.end(), "couldn't find SMT type");
+  return (j->second == type) ? safeCast(SMT_NumberSymbol*, symbol) : 0;
+}
+
 void
 MixfixModule::addIdentityToPolymorph(int polymorphIndex,
 				     Term* identity)
@@ -1322,4 +1347,94 @@ MixfixModule::computePrecAndGather(int nrArgs, SymbolInfo& si, Symbol* symbol)
 	}
       Assert(si.gather.length() == nrArgs, "gather length != nrArgs");
     }
+}
+
+SMT_Base::SortIndexToSMT_TypeMap&
+MixfixModule::getSortMap()
+{
+  if (sortMap.empty())
+    {
+      const Vector<Symbol*>& symbols = getSymbols();
+      FOR_EACH_CONST(i, Vector<Symbol*>, symbols)
+	{
+	  if (SMT_Symbol* s = dynamic_cast<SMT_Symbol*>(*i))
+	    s->fillOutSortMap(sortMap);
+	  else if (SMT_NumberSymbol* s = dynamic_cast<SMT_NumberSymbol*>(*i))
+	    s->fillOutSortMap(sortMap);
+	}
+      {
+	//
+	//	Make pretty printer aware of number sorts whose ASCII representation might cause
+	//	ambiguous syntax.
+	//
+	const Vector<Sort*>& sorts = getSorts();
+	FOR_EACH_CONST(i, SMT_Base::SortIndexToSMT_TypeMap, sortMap)
+	  {
+	    //cerr << "sortMap " << i->first << " -> " << i->second << endl;
+
+	    switch (i->second)
+	      {
+		case SMT_Base::INTEGER:
+		  {
+		    Sort* sort = sorts[i->first];
+		    int kindIndex = sort->component()->getIndexWithinModule();
+		    pair<set<int>::iterator, bool> p = kindsWithSucc.insert(kindIndex);
+		    if (!(p.second))
+		      {
+			IssueWarning(LineNumber(sort->getLineNumber()) <<
+				     ": multiple sets of constants that look like integers in same kind will cause pretty printing problems.");
+		      }
+		    //
+		    //	Only built-ins we care about so far that have a minus will look like integers so no need to issue
+		    //	an additional warning. But we do need to record the kind so that minus symbol disambiguation will work.
+		    //
+		    kindsWithMinus.insert(kindIndex);
+		    //
+		    //	SMT Integers have an implicit zero constant rather than an explicit zero constant, so we need to record that
+		    //	so disambiguation of zero will work correctly.
+		    //
+		    kindsWithZero.insert(kindIndex);
+		    break;
+		  }
+		case SMT_Base::REAL:
+		  {
+		    Sort* sort = sorts[i->first];
+		    int kindIndex = sort->component()->getIndexWithinModule();
+		    pair<set<int>::iterator, bool> p = kindsWithDivision.insert(kindIndex);
+		    if (!(p.second))
+		      {
+			IssueWarning(LineNumber(sort->getLineNumber()) <<
+				     ": multiple sets of constants that look like rational numbers in same kind will cause pretty printing problems.");
+		      }
+		    //
+		    //	We don't record it in kindsWithMinus at the moment since REALs are always printed with a division symbol
+		    //	and can only be confused with other things having a division symbol.
+		    //
+		    break;
+		  }
+	      }
+	  }
+      }
+    }
+  return sortMap;
+}
+
+int
+MixfixModule::getSMT_NumberToken(const mpq_class& value, Sort* sort)
+{
+  int sortIndexWithinModule = sort->getIndexWithinModule();
+  //
+  //	Figure out what SMT sort we correspond to.
+  //
+  SMT_Base::SortIndexToSMT_TypeMap::const_iterator i = sortMap.find(sortIndexWithinModule);
+  Assert(i != sortMap.end(), "bad SMT sort");
+  string name = value.get_num().get_str();
+  if (i->second == SMT_Base::REAL)
+    {
+      name += '/';
+      name += value.get_den().get_str();
+    }
+  else
+    Assert(i->second == SMT_Base::INTEGER, "SMT number sort expected");
+  return Token::encode(name.c_str());
 }

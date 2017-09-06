@@ -2347,6 +2347,11 @@ fmod META-LEVEL is
            id-hook MetaLevelOpSymbol	(metaPrettyPrint)
            op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .
 
+  op metaCheck : Module Term ~> Bool 
+        [special (
+           id-hook MetaLevelOpSymbol	(metaCheck)
+           op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .
+
   op wellFormed : Module -> Bool
         [special (
            id-hook MetaLevelOpSymbol	(metaWellFormedModule)

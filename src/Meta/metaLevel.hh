@@ -251,6 +251,7 @@ private:
   DagNode* upConstant(int id, DagNode* d, PointerMap& qidMap);
   DagNode* upVariable(int id, Sort* sort, PointerMap& qidMap);
   DagNode* upTerm(const Term* term, MixfixModule* m, PointerMap& qidMap);
+  DagNode* upSMT_Number(const mpq_class& value, Symbol* symbol, MixfixModule* m, PointerMap& qidMap);
 
   DagNode* upAssignment(const Term* variable,
 			DagNode* value,

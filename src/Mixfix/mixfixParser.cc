@@ -68,6 +68,10 @@
 #include "minusSymbol.hh"
 #include "divisionSymbol.hh"
 
+//	SMT class definitions
+#include "SMT_NumberSymbol.hh"
+#include "SMT_NumberTerm.hh"
+
 //	higher class definitions
 #include "equalityConditionFragment.hh"
 #include "sortTestConditionFragment.hh"
@@ -732,6 +736,15 @@ MixfixParser::makeTerm(int node)
 	Assert(opName == symbol->id(), "iter symbol name clash");
 	Term* arg = makeTerm(parser.getChild(node, 1));
 	t = new S_Term(symbol, number, arg);
+	break;
+      }
+    case MAKE_SMT_NUMBER:
+      {
+	SMT_NumberSymbol* symbol = safeCast(SMT_NumberSymbol*, client.getSymbols()[a.data]);
+	const char* name = (*currentSentence)[pos].name();
+	mpq_class rat(name);
+	rat.canonicalize();  // precautionary - we don't plan to compute with these ourself
+	t = new SMT_NumberTerm(symbol, rat);
 	break;
       }
 #ifdef BUBBLES

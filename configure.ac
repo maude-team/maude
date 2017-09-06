@@ -3,7 +3,7 @@
 #
 #	Initialize autoconf stuff.
 #
-AC_INIT(Maude, alpha102, [maude-bugs@maude.cs.uiuc.edu])
+AC_INIT(Maude, alpha103, [maude-bugs@maude.cs.uiuc.edu])
 #
 #	Allow directory names that look like macros.
 #
@@ -16,7 +16,7 @@ AC_CANONICAL_HOST
 #
 #	Initialize automake stuff.
 #
-AM_INIT_AUTOMAKE(Maude, alpha102)
+AM_INIT_AUTOMAKE(Maude, alpha103)
 #
 #	Cause defines to be put in a header file rather than passed as
 #	compiler flags.
@@ -72,6 +72,18 @@ if (test -z "$BUDDY_LIB") then
   BUDDY_LIB="-lbdd"
 fi
 AC_SUBST(BUDDY_LIB)
+#
+#	Check if user set a particular CVC4 library to use and if
+#	not set default.
+#
+if (test -z "$CVC4_LIB") then
+  CVC4_LIB="-lcvc4"
+fi
+AC_SUBST(CVC4_LIB)
+#
+#	CVC4 needs the clock_gettime() function from the POSIX Realtime Extensions library.
+#
+AC_CHECK_LIB(rt, clock_gettime)
 #
 #	Check to see if we should use Tecla for command line editing.
 #
@@ -357,6 +369,7 @@ AC_CONFIG_FILES([Makefile
 		 src/MSCP10/Makefile
 		 src/StrategyLanguage/Makefile
 		 src/Mixfix/Makefile
+		 src/SMT/Makefile
 		 src/Main/Makefile
 		 tests/Makefile
 		 tests/BuiltIn/Makefile

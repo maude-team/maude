@@ -14,7 +14,8 @@ TESTS = \
 	variantNarrowing \
 	CU_Unification \
 	assocUnification \
-	sreduce
+	sreduce \
+	smtTest
 
 MAUDE_FILES = \
 	dekker.maude \
@@ -32,7 +33,8 @@ MAUDE_FILES = \
 	variantNarrowing.maude \
 	CU_Unification.maude \
 	assocUnification.maude \
-	sreduce.maude
+	sreduce.maude \
+	smtTest.maude
 
 RESULT_FILES = \
 	dekker.expected \
@@ -50,6 +52,7 @@ RESULT_FILES = \
 	variantNarrowing.expected \
 	CU_Unification.expected \
 	assocUnification.expected \
-	sreduce.expected
+	sreduce.expected \
+	smtTest.expected
 
 EXTRA_DIST = $(TESTS) $(MAUDE_FILES) $(RESULT_FILES)

@@ -1,3 +1,17 @@
+2014-05-20  Steven Eker  <eker@ape.csl.sri.com>
+
+	* prelude.maude: added metaCheck()
+
+2014-05-01  Steven Eker  <eker@ape.csl.sri.com>
+
+	* smt.maude: added modules INTEGER, REAL and REAL-INTEGER
+
+2014-04-22  Steven Eker  <eker@ape.csl.sri.com>
+
+	* Makefile.am (maude_LDADD): link in CVC4_LIB
+
+===================================Maude103===========================================
+
 2014-03-03  Steven Eker  <eker@ape.csl.sri.com>
 
 	* prelude.maude: added metaGetIrredundantVariant()

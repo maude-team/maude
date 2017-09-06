@@ -1,3 +1,16 @@
+2014-05-19  Steven Eker  <eker@ape.csl.sri.com>
+
+	* divisionSymbol.cc (makeRatDag): allow 0/n
+	(makeRatTerm): allow 0/n
+
+2014-05-05  Steven Eker  <eker@ape.csl.sri.com>
+
+	* bindingMacros.hh (BIND_OP3): added
+	(CODE3): added
+	(CODE_CASE3): added
+
+===================================Maude103===========================================
+
 2014-02-18  Steven Eker  <eker@ape.csl.sri.com>
 
 	* equalityExtor.cc (execute): rewritten; use tail call

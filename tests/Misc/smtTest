@@ -1,0 +1,10 @@
+#!/bin/sh
+
+MAUDE_LIB=$srcdir/../../src/Main
+export MAUDE_LIB
+
+../../src/Main/maude \
+  < $srcdir/smtTest.maude -no-banner -no-advise \
+  > smtTest.out 2>&1
+
+diff $srcdir/smtTest.expected smtTest.out > /dev/null 2>&1

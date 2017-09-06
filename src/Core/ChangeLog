@@ -1,3 +1,11 @@
+2014-06-03  Steven Eker  <eker@ape.csl.sri.com>
+
+	* sortTable.hh (getRangeSort): added
+
+2014-05-16  Steven Eker  <eker@ape.csl.sri.com>
+
+	* connectedComponent.hh: added decl for operator<<
+
 2014-02-27  Steven Eker  <eker@ape.csl.sri.com>
 
 	* run.cc (ruleRewrite): removed debugging code that was producing

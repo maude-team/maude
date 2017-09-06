@@ -1156,6 +1156,28 @@ MetaLevel::downTerm(DagNode* metaTerm, MixfixModule* m)
 			return new FloatTerm(s, Token::codeToDouble(cName));
 		      break;
 		    }
+		  case Token::ZERO:
+		  case Token::SMALL_NAT:
+		  case Token::SMALL_NEG:
+		    {
+		      SMT_NumberSymbol* s = m->findSMT_NumberSymbol(component, SMT_Base::INTEGER);
+		      if (s != 0)
+			{
+			  mpq_class q(Token::name(cName));
+			  return new SMT_NumberTerm(s, q);
+			}
+		      break;
+		    }
+		  case Token::RATIONAL:
+		    {
+		      SMT_NumberSymbol* s = m->findSMT_NumberSymbol(component, SMT_Base::REAL);
+		      if (s != 0)
+			{
+			  mpq_class q(Token::name(cName));
+			  return new SMT_NumberTerm(s, q);
+			}
+		      break;
+		    }
 		  }
 		static Vector<ConnectedComponent*> dummy;
 		Symbol* s = m->findSymbol(cName, dummy, component);

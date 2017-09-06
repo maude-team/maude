@@ -132,6 +132,19 @@ command		:	KW_SELECT		{ lexBubble(END_COMMAND, 1); }
 			  if (interpreter.setCurrentModule(moduleExpr, 1))
 			    interpreter.sRewrite(lexerBubble, number, $1);
 			}
+
+		|	KW_CHECK
+			{
+			  lexerCmdMode();
+			  moduleExpr.contractTo(0);
+			}
+			moduleAndTerm
+			{
+			  lexerInitialMode();
+			  if (interpreter.setCurrentModule(moduleExpr, 1))
+			    interpreter.check(lexerBubble);
+			}
+
 		|	search
 			{
 			  lexerCmdMode();

@@ -52,6 +52,15 @@ operator<<(ostream& s, const Sort* sort)
 }
 
 ostream&
+operator<<(ostream& s, const ConnectedComponent* component)
+{
+  //
+  //	We identify a connect component (aka kind) with its ERROR (aka KIND) sort.
+  //
+  return s << component->sort(Sort::KIND);
+}
+
+ostream&
 operator<<(ostream& s, const Term* term)
 {
   MixfixModule::globalIndent = 0;

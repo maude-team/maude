@@ -1,0 +1,221 @@
+Maude> ==========================================
+check in TEST-B : W != X and Y .
+Result from CVC4 is: sat
+==========================================
+check in TEST-B : W = X and Y .
+Result from CVC4 is: sat
+==========================================
+check in TEST-B : X != tt and X != Y and Y != tt .
+Result from CVC4 is: unsat
+==========================================
+check in TEST-B : X != tt and X != Y and Y != ff .
+Result from CVC4 is: sat
+==========================================
+check in TEST-B : (X xor tt) and (X xor Y) and (Y xor tt) .
+Result from CVC4 is: unsat
+==========================================
+check in TEST-B : (X xor tt) and (X xor Y) and (Y xor ff) .
+Result from CVC4 is: sat
+==========================================
+check in TEST-B : not (X or not X) .
+Result from CVC4 is: unsat
+==========================================
+check in TEST-B : not (X implies Y implies X) .
+Result from CVC4 is: unsat
+==========================================
+check in TEST-B : (X ? Y : Z) and (Y implies X) and (Z implies X) .
+Result from CVC4 is: sat
+==========================================
+check in TEST-B : (X ? Y : Z) and (Y implies not X) and (Z implies X) .
+Result from CVC4 is: unsat
+==========================================
+check in TEST-B : X = Y and Y = Z .
+Result from CVC4 is: sat
+==========================================
+check in TEST-B : X = Y and Y = Z and Z != X .
+Result from CVC4 is: unsat
+==========================================
+check in TEST-I : I > J and J > K .
+Result from CVC4 is: sat
+==========================================
+check in TEST-I : I > J and J > K and K > I .
+Result from CVC4 is: unsat
+==========================================
+check in TEST-I : I < J and J < K .
+Result from CVC4 is: sat
+==========================================
+check in TEST-I : I < J and J < K and K < I .
+Result from CVC4 is: unsat
+==========================================
+check in TEST-I : I >= J and J >= I .
+Result from CVC4 is: sat
+==========================================
+check in TEST-I : I >= J and J >= I and I != J .
+Result from CVC4 is: unsat
+==========================================
+check in TEST-I : I <= J and J <= I .
+Result from CVC4 is: sat
+==========================================
+check in TEST-I : I <= J and J <= I and I != J .
+Result from CVC4 is: unsat
+==========================================
+check in TEST-I : I = J + K and I > J and I > K .
+Result from CVC4 is: sat
+==========================================
+check in TEST-I : I = J + K and I > J + K .
+Result from CVC4 is: unsat
+==========================================
+check in TEST-I : I = J + K and I > J + K + L .
+Result from CVC4 is: sat
+==========================================
+check in TEST-I : I = J - K and I > J + K .
+Result from CVC4 is: sat
+==========================================
+check in TEST-I : - I = J - K and I > J + K .
+Result from CVC4 is: sat
+==========================================
+check in TEST-I : I != J + K and I > J + K .
+Result from CVC4 is: sat
+==========================================
+check in TEST-I : (I > J ? I : J) >= I and (I > J ? I : J) >= J .
+Result from CVC4 is: sat
+==========================================
+check in TEST-I : (I > J ? I : J) < I .
+Result from CVC4 is: unsat
+==========================================
+check in TEST-I : (I > J ? I : J) = I or (I > J ? I : J) = J .
+Result from CVC4 is: sat
+==========================================
+check in TEST-I : not ((I > J ? I : J) = I or (I > J ? I : J) = J) .
+Result from CVC4 is: unsat
+==========================================
+check in TEST-I : (I > J ? I : J) != I and (I > J ? I : J) != J .
+Result from CVC4 is: unsat
+==========================================
+check in TEST-R : P > Q and Q > R .
+Result from CVC4 is: sat
+==========================================
+check in TEST-R : P > Q and Q > R and R > P .
+Result from CVC4 is: unsat
+==========================================
+check in TEST-R : P < Q and Q < R .
+Result from CVC4 is: sat
+==========================================
+check in TEST-R : P < Q and Q < R and R < P .
+Result from CVC4 is: unsat
+==========================================
+check in TEST-R : P >= Q and Q >= P .
+Result from CVC4 is: sat
+==========================================
+check in TEST-R : P >= Q and Q >= P and P != Q .
+Result from CVC4 is: unsat
+==========================================
+check in TEST-R : P <= Q and Q <= P .
+Result from CVC4 is: sat
+==========================================
+check in TEST-R : P <= Q and Q <= P and P != Q .
+Result from CVC4 is: unsat
+==========================================
+check in TEST-R : P = Q + R and P > Q and P > R .
+Result from CVC4 is: sat
+==========================================
+check in TEST-R : P = Q + R and P > Q + R .
+Result from CVC4 is: unsat
+Warning: <standard input>, line 70: bad token s.
+Warning: <standard input>, line 70: no parse for term.
+==========================================
+check in TEST-R : P = Q - R and P > Q + R .
+Result from CVC4 is: sat
+==========================================
+check in TEST-R : - P = Q - R and P > Q + R .
+Result from CVC4 is: sat
+==========================================
+check in TEST-R : P != Q + R and P > Q + R .
+Result from CVC4 is: sat
+==========================================
+check in TEST-R : (P > Q ? P : Q) >= P and (P > Q ? P : Q) >= Q .
+Result from CVC4 is: sat
+==========================================
+check in TEST-R : (P > Q ? P : Q) < P .
+Result from CVC4 is: unsat
+==========================================
+check in TEST-R : (P > Q ? P : Q) = P or (P > Q ? P : Q) = Q .
+Result from CVC4 is: sat
+==========================================
+check in TEST-R : not ((P > Q ? P : Q) = P or (P > Q ? P : Q) = Q) .
+Result from CVC4 is: unsat
+==========================================
+check in TEST-R : (P > Q ? P : Q) != P and (P > Q ? P : Q) != Q .
+Result from CVC4 is: unsat
+==========================================
+check in TEST-RI : isInteger(toReal(I) + toReal(J)) != ff .
+Result from CVC4 is: sat
+==========================================
+check in TEST-RI : isInteger(toReal(I) + toReal(J)) != tt .
+Result from CVC4 is: unsat
+==========================================
+check in TEST-RI : toInteger(R) + toInteger(P) = toInteger(R + P) .
+Result from CVC4 is: sat
+==========================================
+check in TEST-RI : not toInteger(R) + toInteger(P) = toInteger(R + P) .
+Result from CVC4 is: sat
+==========================================
+check in TEST-RI : 1/2 < P .
+Result from CVC4 is: sat
+==========================================
+check in TEST-RI : 1/2 < P and P < 3/4 .
+Result from CVC4 is: sat
+==========================================
+check in TEST-RI : 1/2 < P and P < 3/4 and isInteger(P) .
+Result from CVC4 is: unsat
+==========================================
+check in TEST-RI : -2 < I .
+Result from CVC4 is: sat
+==========================================
+check in TEST-RI : -2 < I and -2 * I > -1 .
+Result from CVC4 is: sat
+==========================================
+check in TEST-RI : -2 < I and -2 * I > -1 and I != -1 .
+Result from CVC4 is: sat
+==========================================
+check in TEST-RI : -2 < I and -2 * I > -1 and I != -1 and I - I != I .
+Result from CVC4 is: unsat
+==========================================
+reduce in META-LEVEL : metaCheck(['REAL-INTEGER], '_=_['_+_['1.Integer,
+    '1.Integer],'2.Integer]) .
+rewrites: 2
+result Bool: true
+==========================================
+reduce in META-LEVEL : metaCheck(['REAL-INTEGER], '_=_['_+_['1.Integer,
+    '1.Integer],'3.Integer]) .
+rewrites: 2
+result Bool: false
+==========================================
+reduce in META-CHECK : metaCheck(['META-CHECK], upTerm((I > J ? I : J) < I)) .
+rewrites: 3
+result Bool: false
+==========================================
+reduce in META-CHECK : metaCheck(['META-CHECK], upTerm((I > J ? I : J) > I)) .
+rewrites: 3
+result Bool: true
+==========================================
+reduce in META-CHECK : metaCheck(['META-CHECK], upTerm((I > J ? I : J) = I or (
+    I > J ? I : J) = J)) .
+rewrites: 3
+result Bool: true
+==========================================
+reduce in META-CHECK : metaCheck(['META-CHECK], upTerm(not ((I > J ? I : J) = I
+    or (I > J ? I : J) = J))) .
+rewrites: 3
+result Bool: false
+==========================================
+reduce in META-CHECK : metaCheck(['META-CHECK], upTerm((I > J ? I : J) != I and
+    (I > J ? I : J) != J)) .
+rewrites: 3
+result Bool: false
+==========================================
+reduce in META-CHECK : metaCheck(['META-CHECK], upTerm((I > J ? I : J) != I or
+    (I > J ? I : J) != J)) .
+rewrites: 3
+result Bool: true
+Maude> Bye.

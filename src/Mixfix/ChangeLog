@@ -1,3 +1,219 @@
+2014-06-04  Steven Eker  <eker@ape.csl.sri.com>
+
+	* execute.cc (check): clean up; extra sanity checks
+	(check): use QUOTE() in warnings
+
+	* dagNodePrint.cc (prettyPrint): deleted commented out code
+
+	* termPrint.cc (prettyPrint): deleted commented out code
+
+	* bufferPrint.cc (prettyPrint): deleted commented out code
+
+2014-06-03  Steven Eker  <eker@ape.csl.sri.com>
+
+	* termPrint.cc (handleSMT_Number): use getRangeSort()
+
+	* mixfixModule.cc (findSMT_NumberSymbol): use getRangeSort()
+
+	* makeGrammar.cc (makeSymbolProductions): use getRangeSort()
+
+	* graphPrint.cc (graphPrint): use getRangeSort()
+
+	* dagNodePrint.cc (handleSMT_Number): use getRangeSort()
+
+	* bufferPrint.cc (prettyPrint): pass argRangeKnown to recursive
+	call to fix bug we introduced when we rewrote the function
+	(handleSMT_NumberSymbol): use getRangeSort()
+
+2014-06-02  Steven Eker  <eker@ape.csl.sri.com>
+
+	* bufferPrint.cc (prettyPrint): use rangeOfArgumentsKnown()
+
+	* dagNodePrint.cc (prettyPrint): use rangeOfArgumentsKnown()
+
+	* termPrint.cc (prettyPrint): use rangeOfArgumentsKnown()
+
+	* sharedPrint.cc (ambiguous): added comments
+
+	* mixfixModule.hh (SharedTokens): added decl for
+	rangeOfArgumentsKnown()
+
+	* sharedPrint.cc (rangeOfArgumentsKnown): added
+
+	* bufferPrint.cc (handleFloat, handleString)
+	(handleQuotedIdentifier): added
+	(prettyPrint): call handleFloat(), handleString(),
+	handleQuotedIdentifer()
+
+	* mixfixModule.hh (SharedTokens): added decls for handleFloat(),
+	handleString(), handleQuotedIdentifier()
+
+2014-05-30  Steven Eker  <eker@ape.csl.sri.com>
+
+	* mixfixModule.hh (SharedTokens): updated decls for handleIter(),
+	handleMinus(), handleDivision(), handleSMT_NumberSymbol()
+
+	* bufferPrint.cc (handleIter): rewritten
+	(handleMinus): rewritten
+	(handleDivision): rewritten
+	(handleSMT_NumberSymbol): rewritten
+
+	* mixfixModule.hh (SharedTokens): added decls for buffer print
+	versions of prefix() and suffix()
+
+	* bufferPrint.cc (prefix, suffix): added
+
+	* mixfixModule.cc (getSortMap): fill out kindsWithMinus
+
+	* entry.cc (addOpDeclaration): use PSEUDO_ZERO
+
+	* sharedPrint.cc (ambiguous): check PSEUDO_ZERO and kindsWithZero
+
+	* mixfixModule.hh (SharedTokens): added PSEUDO_ZERO to enum
+	InternalFlags
+	(SharedTokens): added data member kindsWithZero
+
+2014-05-29  Steven Eker  <eker@ape.csl.sri.com>
+
+	* entry.cc (addOpDeclaration): treat ZERO case as PSEUDO_NAT so
+	the SMT Integer disambiguation works for 0
+
+	* mixfixModule.hh (SharedTokens): added comments for InternalFlags
+
+	* sharedPrint.cc (prefix): moved here from dagNodePrint.cc
+
+2014-05-21  Steven Eker  <eker@ape.csl.sri.com>
+
+	* execute.cc: deepSelfDestruct() term
+
+2014-05-20  Steven Eker  <eker@ape.csl.sri.com>
+
+	* token.cc (int64ToCode): fix bug where we weren't checking for
+	ZERO property - in practice this bug can't be exercised since
+	code it only called from the metalevel, and the prelude will
+	generate a 0 token before we can
+
+2014-05-19  Steven Eker  <eker@ape.csl.sri.com>
+
+	* mixfixModule.hh (SharedTokens): added decl for
+	getSMT_NumberToken()
+
+	* mixfixModule.cc (getSMT_NumberToken): added
+
+	* token.cc (looksLikeRational): allow 0/n
+
+2014-05-16  Steven Eker  <eker@ape.csl.sri.com>
+
+	* makeGrammar.cc (makeSymbolProductions): added production for
+	ZERO as an SMT_NUMBER
+
+	* prettyPrint.cc (<<): added ConnectedComponent version
+
+	* entry.cc (addOpDeclaration): fill out SMT_NumberSymbols map
+
+	* mixfixModule.cc (findSMT_NumberSymbol): implemented
+
+2014-05-15  Steven Eker  <eker@ape.csl.sri.com>
+
+	* mixfixModule.hh (SharedTokens): added SMT_NumberSymbols data
+	member
+
+	* mixfixModule.cc (findSMT_NumberSymbol): added stub
+
+	* mixfixModule.hh (SharedTokens): updated comments now that we use
+	kindsWith* sets slightly differently
+	(SharedTokens): added decl for findSMT_NumberSymbol
+
+	* mixfixModule.cc (getSortMap): record SMT integers as belonging
+	to kindsWithMinus
+
+2014-05-14  Steven Eker  <eker@ape.csl.sri.com>
+
+	* mixfixModule.hh (SharedTokens): added decl for buffer version of
+	handleSMT_NumberSymbol()
+
+	* bufferPrint.cc (handleSMT_NumberSymbol): added
+	(prettyPrint): call handleSMT_NumberSymbol()
+
+	* graphPrint.cc (graphPrint): handle SMT numbers
+
+	* mixfixParser.cc (makeTerm): call canonicalize() on newly created
+	SMT number
+
+	* mixfixModule.hh (SharedTokens): added decl for
+	handleSMT_Number()
+
+	* dagNodePrint.cc (prettyPrint): call handleSMT_Number()
+	(handleSMT_Number): added
+
+2014-05-13  Steven Eker  <eker@ape.csl.sri.com>
+
+	* makeGrammar.cc (makeSymbolProductions): added SMT production for
+	SMALL_NAT
+
+	* mixfixParser.cc (makeTerm): added MAKE_SMT_NUMBER case
+
+	* mixfixParser.hh (M): added  MAKE_SMT_NUMBER to enum SemanticActions
+
+	* makeGrammar.cc (makeSymbolProductions): addd productions for SMT numbers
+
+	* mixfixModule.cc (getSortMap): track kinds containing things that
+	look like integers or rational numbers for pretty printing
+	disambiguation
+
+	* mixfixModule.hh (SharedTokens): added decl for
+	handleSMT_Number()
+ 
+	* termPrint.cc (prettyPrint): added SMT_NUMBER_SYMBOL case
+	(handleSMT_Number): added
+
+2014-05-08  Steven Eker  <eker@ape.csl.sri.com>
+
+	* symbolType.hh (S): added SMT_NUMBER_SYMBOL
+
+	* entry.cc (newFancySymbol): added SMT_NumberSymbol
+
+	* specialSymbolTypes.cc: added SMT_NumberSymbol
+
+2014-05-07  Steven Eker  <eker@ape.csl.sri.com>
+
+	* execute.cc (check): pass sort map to dagToCVC4()
+
+2014-05-06  Steven Eker  <eker@ape.csl.sri.com>
+
+	* execute.cc (check): handle integer and real variables
+	(check): fix bug where we were making Boolean rather than Integer
+	variable
+
+	* mixfixModule.cc (getSortMap): added
+
+	* mixfixModule.hh (SharedTokens): addded decl for getSortMap()
+	(SharedTokens): added data member sortMap
+
+2014-04-30  Steven Eker  <eker@ape.csl.sri.com>
+
+	* execute.cc (check): rewritten to use new dagToCVC4 convention
+
+2014-04-29  Steven Eker  <eker@ape.csl.sri.com>
+
+	* interpreter.hh (ViewDatabase): added decl for check()
+
+	* commands.yy (command): added syntax for check command
+
+	* top.yy: added KW_CHECK
+
+	* lexer.ll: added KW_CHECK
+
+2014-04-25  Steven Eker  <eker@ape.csl.sri.com>
+
+	* symbolType.hh (S): added SMT_SYMBOL
+
+	* entry.cc (newFancySymbol): added SMT_Symbol
+
+	* specialSymbolTypes.cc: added SMT_Symbol
+
+===================================Maude103===========================================
+
 2014-02-28  Steven Eker  <eker@ape.csl.sri.com>
 
 	* search.cc (getVariants): handle irredundant flag

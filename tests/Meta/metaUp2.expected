@@ -589,6 +589,9 @@ op 'metaApply : '`[Module`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,Paramete
     '`[FindResult`,NatList`,Bound`] -> '`[ResultTriple?`] [special(
     id-hook('MetaLevelOpSymbol, 'metaApply) 
     op-hook('shareWith, 'metaReduce, 'Module 'QidSet, 'ResultPair?))] .
+op 'metaCheck : '`[Module`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`] -> '`[Bool`] [special(
+    id-hook('MetaLevelOpSymbol, 'metaCheck) 
+    op-hook('shareWith, 'metaReduce, 'Module 'QidSet, 'ResultPair?))] .
 op 'metaDisjointUnify : '`[Module`] '`[UnificationProblem`]
     '`[FindResult`,NatList`,Bound`] '`[FindResult`,NatList`,Bound`] ->
     '`[UnificationTriple?`] [special(
@@ -1078,6 +1081,9 @@ op 'maximalSorts : '`[Module`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,Param
 op 'metaApply : '`[Module`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`] '`[Substitution?`]
     '`[FindResult`,NatList`,Bound`] -> '`[ResultTriple?`] [special(
     id-hook('MetaLevelOpSymbol, 'metaApply) 
+    op-hook('shareWith, 'metaReduce, 'Module 'QidSet, 'ResultPair?))] .
+op 'metaCheck : '`[Module`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`] -> '`[Bool`] [special(
+    id-hook('MetaLevelOpSymbol, 'metaCheck) 
     op-hook('shareWith, 'metaReduce, 'Module 'QidSet, 'ResultPair?))] .
 op 'metaDisjointUnify : '`[Module`] '`[UnificationProblem`]
     '`[FindResult`,NatList`,Bound`] '`[FindResult`,NatList`,Bound`] ->
@@ -1930,6 +1936,9 @@ result FModule: fmod 'META-LEVEL is
     '`[FindResult`,NatList`,Bound`] -> '`[ResultTriple?`] [special(
     id-hook('MetaLevelOpSymbol, 'metaApply) 
     op-hook('shareWith, 'metaReduce, 'Module 'QidSet, 'ResultPair?))] .
+  op 'metaCheck : '`[Module`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`] -> '`[Bool`] [special(
+    id-hook('MetaLevelOpSymbol, 'metaCheck) 
+    op-hook('shareWith, 'metaReduce, 'Module 'QidSet, 'ResultPair?))] .
   op 'metaDisjointUnify : '`[Module`] '`[UnificationProblem`]
     '`[FindResult`,NatList`,Bound`] '`[FindResult`,NatList`,Bound`] ->
     '`[UnificationTriple?`] [special(
@@ -2685,6 +2694,9 @@ result FModule: fmod 'META-LEVEL is
   op 'metaApply : '`[Module`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`] '`[Substitution?`]
     '`[FindResult`,NatList`,Bound`] -> '`[ResultTriple?`] [special(
     id-hook('MetaLevelOpSymbol, 'metaApply) 
+    op-hook('shareWith, 'metaReduce, 'Module 'QidSet, 'ResultPair?))] .
+  op 'metaCheck : '`[Module`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`] -> '`[Bool`] [special(
+    id-hook('MetaLevelOpSymbol, 'metaCheck) 
     op-hook('shareWith, 'metaReduce, 'Module 'QidSet, 'ResultPair?))] .
   op 'metaDisjointUnify : '`[Module`] '`[UnificationProblem`]
     '`[FindResult`,NatList`,Bound`] '`[FindResult`,NatList`,Bound`] ->
@@ -3917,6 +3929,9 @@ result FModule: fmod 'META-LEVEL is
   op 'metaApply : '`[Module`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`] '`[Substitution?`]
     '`[FindResult`,NatList`,Bound`] -> '`[ResultTriple?`] [special(
     id-hook('MetaLevelOpSymbol, 'metaApply) 
+    op-hook('shareWith, 'metaReduce, 'Module 'QidSet, 'ResultPair?))] .
+  op 'metaCheck : '`[Module`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`] -> '`[Bool`] [special(
+    id-hook('MetaLevelOpSymbol, 'metaCheck) 
     op-hook('shareWith, 'metaReduce, 'Module 'QidSet, 'ResultPair?))] .
   op 'metaDisjointUnify : '`[Module`] '`[UnificationProblem`]
     '`[FindResult`,NatList`,Bound`] '`[FindResult`,NatList`,Bound`] ->
@@ -5406,8 +5421,12 @@ result ResultPair: {'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,
     ''`[ResultTriple?`].Kind,'special['__['id-hook[''MetaLevelOpSymbol.Sort,
     ''metaApply.Sort],'op-hook[''shareWith.Sort,''metaReduce.Sort,'__[
     ''Module.Sort,''QidSet.Sort],''ResultPair?.Sort]]]],'op_:_->_`[_`].[
-    ''metaDisjointUnify.Sort,'__[''`[Module`].Kind,
-    ''`[UnificationProblem`].Kind,''`[FindResult`,NatList`,Bound`].Kind,
+    ''metaCheck.Sort,'__[''`[Module`].Kind,''`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`].Kind],''`[Bool`].Kind,
+    'special['__['id-hook[''MetaLevelOpSymbol.Sort,''metaCheck.Sort],'op-hook[
+    ''shareWith.Sort,''metaReduce.Sort,'__[''Module.Sort,''QidSet.Sort],
+    ''ResultPair?.Sort]]]],'op_:_->_`[_`].[''metaDisjointUnify.Sort,'__[
+    ''`[Module`].Kind,''`[UnificationProblem`].Kind,
+    ''`[FindResult`,NatList`,Bound`].Kind,
     ''`[FindResult`,NatList`,Bound`].Kind],''`[UnificationTriple?`].Kind,
     'special['__['id-hook[''MetaLevelOpSymbol.Sort,''metaDisjointUnify.Sort],
     'op-hook[''shareWith.Sort,''metaReduce.Sort,'__[''Module.Sort,
@@ -6967,8 +6986,12 @@ result GroundTerm: 'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,'nil.ImportList,
     ''`[ResultTriple?`].Kind,'special['__['id-hook[''MetaLevelOpSymbol.Sort,
     ''metaApply.Sort],'op-hook[''shareWith.Sort,''metaReduce.Sort,'__[
     ''Module.Sort,''QidSet.Sort],''ResultPair?.Sort]]]],'op_:_->_`[_`].[
-    ''metaDisjointUnify.Sort,'__[''`[Module`].Kind,
-    ''`[UnificationProblem`].Kind,''`[FindResult`,NatList`,Bound`].Kind,
+    ''metaCheck.Sort,'__[''`[Module`].Kind,''`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`].Kind],''`[Bool`].Kind,
+    'special['__['id-hook[''MetaLevelOpSymbol.Sort,''metaCheck.Sort],'op-hook[
+    ''shareWith.Sort,''metaReduce.Sort,'__[''Module.Sort,''QidSet.Sort],
+    ''ResultPair?.Sort]]]],'op_:_->_`[_`].[''metaDisjointUnify.Sort,'__[
+    ''`[Module`].Kind,''`[UnificationProblem`].Kind,
+    ''`[FindResult`,NatList`,Bound`].Kind,
     ''`[FindResult`,NatList`,Bound`].Kind],''`[UnificationTriple?`].Kind,
     'special['__['id-hook[''MetaLevelOpSymbol.Sort,''metaDisjointUnify.Sort],
     'op-hook[''shareWith.Sort,''metaReduce.Sort,'__[''Module.Sort,
@@ -8528,8 +8551,12 @@ result ResultPair: {'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,
     ''`[ResultTriple?`].Kind,'special['__['id-hook[''MetaLevelOpSymbol.Sort,
     ''metaApply.Sort],'op-hook[''shareWith.Sort,''metaReduce.Sort,'__[
     ''Module.Sort,''QidSet.Sort],''ResultPair?.Sort]]]],'op_:_->_`[_`].[
-    ''metaDisjointUnify.Sort,'__[''`[Module`].Kind,
-    ''`[UnificationProblem`].Kind,''`[FindResult`,NatList`,Bound`].Kind,
+    ''metaCheck.Sort,'__[''`[Module`].Kind,''`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`].Kind],''`[Bool`].Kind,
+    'special['__['id-hook[''MetaLevelOpSymbol.Sort,''metaCheck.Sort],'op-hook[
+    ''shareWith.Sort,''metaReduce.Sort,'__[''Module.Sort,''QidSet.Sort],
+    ''ResultPair?.Sort]]]],'op_:_->_`[_`].[''metaDisjointUnify.Sort,'__[
+    ''`[Module`].Kind,''`[UnificationProblem`].Kind,
+    ''`[FindResult`,NatList`,Bound`].Kind,
     ''`[FindResult`,NatList`,Bound`].Kind],''`[UnificationTriple?`].Kind,
     'special['__['id-hook[''MetaLevelOpSymbol.Sort,''metaDisjointUnify.Sort],
     'op-hook[''shareWith.Sort,''metaReduce.Sort,'__[''Module.Sort,

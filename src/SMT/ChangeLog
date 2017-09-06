@@ -1,0 +1,104 @@
+2014-06-04  Steven Eker  <eker@ape.csl.sri.com>
+
+	* SMT_Symbol.cc (dagToCVC4): tidy up warnings
+
+2014-06-03  Steven Eker  <eker@ape.csl.sri.com>
+
+	* SMT_NumberSymbol.cc (fillOutSortMap): use getRangeSort() (2 places)
+
+	* SMT_Symbol.cc (fillOutSortMap): use getRangeSort()
+
+2014-05-20  Steven Eker  <eker@ape.csl.sri.com>
+
+	* SMT.hh: created
+
+	* SMT_NumberSymbol.cc (termify): implemented
+
+2014-05-14  Steven Eker  <eker@ape.csl.sri.com>
+
+	* SMT_NumberDagNode.hh: fix bad #ifdef
+
+2014-05-12  Steven Eker  <eker@ape.csl.sri.com>
+
+	* SMT_NumberTerm.cc: created
+
+	* SMT_Symbol.hh (SMT_Base): deleted decl for makeIntegerConstant()
+
+	* SMT_Symbol.cc (makeIntegerConstant): deleted - mkConst() doesn't
+	actually support Integer objects despite documentation to the
+	contrary
+	(dagToCVC4): simplified - all numbers are treated as rationals at
+	CVC4 API
+
+	* SMT_Symbol.hh (SMT_Base): added decls for makeIntegerConstant(),
+	makeRationalConstant()
+
+	* SMT_Symbol.cc (makeIntegerConstant, makeRationalConstant): added stubs
+	(makeRationalConstant): use makeIntegerConstant(), makeRationalConstant()
+
+2014-05-09  Steven Eker  <eker@ape.csl.sri.com>
+
+	* SMT_Symbol.cc (dagToCVC4): handle integer and real constants
+
+	* SMT_NumberDagNode.hh: created
+
+	* SMT_NumberDagNode.cc: created
+
+2014-05-08  Steven Eker  <eker@ape.csl.sri.com>
+
+	* SMT_NumberTerm.hh: created
+
+	* SMT_NumberSymbol.cc: created
+
+	* SMT_NumberSymbol.hh: created
+
+2014-05-07  Steven Eker  <eker@ape.csl.sri.com>
+
+	* SMT_Symbol.cc (dagToCVC4): updated recursive call
+	(dagToCVC4): added remaining integer and real ops
+	(dagToCVC4): use IFF for Boolean equality
+
+	* SMT_Symbol.hh (SMT_Base): updated decl for dagToCVC4()
+
+	* SMT_Symbol.cc (dagToCVC4): take sort map
+
+2014-05-06  Steven Eker  <eker@ape.csl.sri.com>
+
+	* SMT_Symbol.cc (dagToCVC4): added some arithmetic operators
+
+	* SMT_Symbol.hh (SMT_Base): derive from SMT_Base
+
+	* SMT_Base.hh (S): created
+
+	* SMT_Symbol.cc (fillOutSortMap): added
+
+2014-05-05  Steven Eker  <eker@ape.csl.sri.com>
+
+	* SMT_Symbol.cc (getDataAttachments): use 3 letter codes; added
+	remaining operators
+	(dagToCVC4): use 3 letter codes
+	(attachData): use BIND_OP3
+
+2014-05-02  Steven Eker  <eker@ape.csl.sri.com>
+
+	* SMT_Symbol.cc (dagToCVC4): added true and false cases
+	(dagToCVC4): added xor, implies
+	(getDataAttachments): added xor, implies
+
+2014-04-30  Steven Eker  <eker@ape.csl.sri.com>
+
+	* SMT_Symbol.hh (FreeSymbol): updated decl for dagToCVC4()
+
+	* SMT_Symbol.cc (dagToCVC4): take Vector of SMT variables
+
+2014-04-28  Steven Eker  <eker@ape.csl.sri.com>
+
+	* SMT_Symbol.hh (FreeSymbol): added decl for dagToCVC4()
+
+	* SMT_Symbol.cc (dagToCVC4): added
+
+2014-04-25  Steven Eker  <eker@ape.csl.sri.com>
+
+	* SMT_Symbol.cc: created
+
+	* SMT_Symbol.hh: created
