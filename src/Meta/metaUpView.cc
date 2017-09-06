@@ -91,5 +91,5 @@ MetaLevel::upOpMappings(View* view, PointerMap& qidMap)
       args.append(opTermMappingSymbol->makeDagNode(args2));
     }
 
-  return upGroup(args, emptySortMappingSetSymbol, sortMappingSetSymbol);
+  return upGroup(args, emptyOpMappingSetSymbol, opMappingSetSymbol);
 }

@@ -1900,6 +1900,27 @@ fmod META-VIEW is
   op view_from_to_is__endv : Header ModuleExpression ModuleExpression
     SortMappingSet OpMappingSet -> View [ctor gather (& & & & &)
      format (d d d d d d d n++i ni n--i d)] .
+
+*** projection functions
+  var Q : Qid .
+  vars ME ME' : ModuleExpression .
+  var SMS : SortMappingSet .
+  var OMS : OpMappingSet .
+
+  op getName : View -> Qid .
+  eq getName(view Q from ME to ME' is SMS OMS endv) = Q .
+
+  op getFrom : View -> ModuleExpression .
+  eq getFrom(view Q from ME to ME' is SMS OMS endv) = ME .
+
+  op getTo : View -> ModuleExpression .
+  eq getTo(view Q from ME to ME' is SMS OMS endv) = ME' .
+
+  op getSortMappings : View -> SortMappingSet .
+  eq getSortMappings(view Q from ME to ME' is SMS OMS endv) = SMS .
+
+  op getOpMappings : View -> OpMappingSet .
+  eq getOpMappings(view Q from ME to ME' is SMS OMS endv) = OMS .
 endfm
 
 fmod META-LEVEL is

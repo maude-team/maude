@@ -1,3 +1,7 @@
+2010-05-05  Steven Eker  <eker@rho>
+
+	* prelude.maude: added projection functions for meta-views
+
 2009-08-11  Steven Eker  <eker@goo.csl.sri.com>
 
 	* prelude.maude: op mappings don't take AttrSets
