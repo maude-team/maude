@@ -1,3 +1,27 @@
+2007-01-31  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeDagNode.cc (unify): clean up
+	(unify): handle subproblems; zero extensionInfo on recursive calls
+
+2007-01-30  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeSymbol.cc (computeGeneralizedSort): use DagNode version of
+	computeGeneralizedSort()
+
+	* freeDagNode.hh (class FreeDagNode): instantiate() ->
+	instantiate2(); occurs() -> occurs2()
+
+	* freeDagNode.cc (computeBaseSortForGroundSubterms): added
+	(instantiate): becomes instantiate2()
+	(instantiate2): handle the computation of the base sort of a newly
+	dagnode if it turns out to be ground
+	(occurs): becomes occurs2()
+
+	* freeDagNode.hh (class FreeDagNode): added decl for
+	computeBaseSortForGroundSubterms()
+
+===================================Maude88e===========================================
+
 2007-01-05  Steven Eker  <eker@goo.csl.sri.com>
 
 	* freeSymbol.cc (computeGeneralizedSort): added

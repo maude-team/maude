@@ -40,6 +40,7 @@
 #include "substitution.hh"
 
 //	variable class definitions
+#include "variableSymbol.hh"
 #include "variableDagNode.hh"
 
 RawDagArgumentIterator*
@@ -124,30 +125,26 @@ VariableDagNode::unify(DagNode* rhs,
 		       Subproblem*& returnedSubproblem,
 		       ExtensionInfo* extensionInfo)
 {
-  DagNode* b = solution.value(index);
-  if (b == 0)
-    {
-      if (equal(rhs))
-	return true;
-      DagNode* n = rhs->instantiate(solution);
-      if (n == 0)
-	n = rhs;
-      if (n->occurs(index))
-	return false;
-      solution.update(index, n);
-      return true;
-    }
-  return b->unify(rhs, solution, returnedSubproblem, extensionInfo);
+  if (DagNode* b = solution.value(index))
+    return b->unify(rhs, solution, returnedSubproblem, 0);
+  returnedSubproblem = 0;
+  return solution.unificationBind(index, safeCast(VariableSymbol*, symbol())->getSort(), rhs);
+}
+
+bool
+VariableDagNode::computeBaseSortForGroundSubterms()
+{
+  return false;
 }
 
 DagNode*
-VariableDagNode::instantiate(Substitution& substitution)
+VariableDagNode::instantiate2(Substitution& substitution)
 {
   return substitution.value(index);
 }
 
 bool
-VariableDagNode::occurs(int index)
+VariableDagNode::occurs2(int index)
 {
   return index == this->index;
 }

@@ -1,3 +1,35 @@
+2007-02-02  Steven Eker  <eker@goo.csl.sri.com>
+
+	* variableDagNode.cc: use unificationBind(); this fixes the bug
+	where we bind a variable X to a variable Y that is already bound
+	to X and fail the occurs check
+
+2007-01-31  Steven Eker  <eker@goo.csl.sri.com>
+
+	* variableDagNode.cc (unify): clear returnedSubproblem; pass 0
+	extensionInfo on recursive call
+
+2007-01-30  Steven Eker  <eker@goo.csl.sri.com>
+
+	* variableDagNode.cc (unify): do sort check when getting bound to
+	ground variable
+
+	* variableDagNode.hh (class VariableDagNode): occurs() ->
+	occurs2()
+
+	* variableDagNode.cc (instantiate): becomes instantiate2()
+	(occurs): becomes occurs2()
+
+	* variableDagNode.hh (class VariableDagNode): instantiate() ->
+	instantiate2()
+
+	* variableDagNode.cc (computeBaseSortForGroundSubterms): added
+
+	* variableDagNode.hh (class VariableDagNode): added decl for
+	computeBaseSortForGroundSubterms()
+
+===================================Maude88e===========================================
+
 2007-01-16  Steven Eker  <eker@goo.csl.sri.com>
 
 	* variableDagNode.cc (unify): handle the case where we unify an

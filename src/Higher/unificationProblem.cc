@@ -59,10 +59,12 @@ UnificationProblem::UnificationProblem(Term* lhs, Term* rhs, FreshVariableGenera
   lhs = lhs->normalize(true);
   lhs->indexVariables(*this);
   lhsDag = lhs->term2Dag();
+  lhsDag->computeBaseSortForGroundSubterms();
 
   rhs = rhs->normalize(true);
   rhs->indexVariables(*this);
   rhsDag = rhs->term2Dag();
+  rhsDag->computeBaseSortForGroundSubterms();
   //
   //	Solve the underlying many-sorted unification problem, and if it has a
   //	solution, calculate sorts of free variables, and check sorts of assignments.
@@ -168,7 +170,7 @@ UnificationProblem::findOrderSortedUnifiers()
 	  //	Bound variable: term must have sort <= variables sort.
 	  //
 	  Vector<Bdd> genSort;
-	  d->symbol()->computeGeneralizedSort(*sortBdds, realToBdd, d, genSort);	  
+	  d->computeGeneralizedSort(*sortBdds, realToBdd, genSort);	  
 	  int nrBdds =  genSort.size();
 	  for (int j = 0; j < nrBdds; ++j)
 	    bdd_setbddpair(bitMap, j, genSort[j]);

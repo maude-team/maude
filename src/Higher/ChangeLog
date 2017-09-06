@@ -1,3 +1,12 @@
+2007-01-30  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unificationProblem.cc (UnificationProblem): use
+	computeBaseSortForGroundSubterms()
+	(findOrderSortedUnifiers): use DagNode version of
+	computeGeneralizedSort()
+
+===================================Maude88e===========================================
+
 2007-01-17  Steven Eker  <eker@goo.csl.sri.com>
 
 	* unificationProblem.cc (~UnificationProblem): delete

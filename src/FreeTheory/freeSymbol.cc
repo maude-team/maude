@@ -316,31 +316,24 @@ FreeSymbol::computeGeneralizedSort(const SortBdds& sortBdds,
 				   Vector<Bdd>& generalizedSort)
 {
   int nrArgs = arity();
-  if (nrArgs == 0)
+  Assert(nrArgs > 0, "we shouldn't be called on constants");
+  DagNode** args = safeCast(FreeDagNode*, subject)->argArray();
+  int varCounter = 0;
+  bddPair* argMap = bdd_newpair();
+  for (int i = 0; i < nrArgs; i++)
     {
-      int nrBdds = sortBdds.getNrVariables(rangeComponent()->getIndexWithinModule());
-      sortBdds.makeIndexVector(nrBdds, traverse(0, 0), generalizedSort);
+      Vector<Bdd> argGenSort;
+      args[i]->computeGeneralizedSort(sortBdds, realToBdd, argGenSort);
+      int nrBdds = argGenSort.size();
+      for (int j = 0; j < nrBdds; ++j, ++varCounter)
+	bdd_setbddpair(argMap, varCounter, argGenSort[j]);
     }
-  else
-    {
-      DagNode** args = safeCast(FreeDagNode*, subject)->argArray();
-      int varCounter = 0;
-      bddPair* argMap = bdd_newpair();
-      for (int i = 0; i < nrArgs; i++)
-	{
-	  Vector<Bdd> argGenSort;
-	  args[i]->symbol()->computeGeneralizedSort(sortBdds, realToBdd, args[i], argGenSort);
-	  int nrBdds = argGenSort.size();
-	  for (int j = 0; j < nrBdds; ++j, ++varCounter)
-	    bdd_setbddpair(argMap, varCounter, argGenSort[j]);
-	}
-      const Vector<Bdd>& sortFunction = sortBdds.getSortFunction(getIndexWithinModule());
-      int nrBdds = sortFunction.size();
-      generalizedSort.resize(nrBdds);
-      for (int i = 0; i < nrBdds; ++i)
-	generalizedSort[i] = bdd_veccompose(sortFunction[i], argMap);
-      bdd_freepair(argMap);
-    }
+  const Vector<Bdd>& sortFunction = sortBdds.getSortFunction(getIndexWithinModule());
+  int nrBdds = sortFunction.size();
+  generalizedSort.resize(nrBdds);
+  for (int i = 0; i < nrBdds; ++i)
+    generalizedSort[i] = bdd_veccompose(sortFunction[i], argMap);
+  bdd_freepair(argMap);
 }
 
 #ifdef COMPILER

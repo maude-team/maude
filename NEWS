@@ -1,3 +1,8 @@
+Overview of Changes in Maude alpha88e
+=====================================
+* string, qid and float constants allowed in unification
+* fixed unify f(X, Y) =? f(Y, X)  bug
+
 Overview of Changes in Maude alpha88d
 =====================================
 * set trace builtin on/off command
