@@ -1,3 +1,9 @@
+2012-11-01  Steven Eker  <eker@ape.csl.sri.com>
+
+	* userLevelRewritingContext.cc (tracePreEqRewrite): added call to flush()
+
+===================================Maude96b===========================================
+
 2012-08-06  Steven Eker  <eker@ape.csl.sri.com>
 
 	* commands.yy (command): call getVariants()

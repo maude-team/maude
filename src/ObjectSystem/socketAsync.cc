@@ -66,7 +66,7 @@ SocketManagerSymbol::doRead(int fd)
     }
   else if (as.state & WAITING_TO_ACCEPT)
     {
-      ActiveSocket& as = activeSockets[fd];
+      //ActiveSocket& as = activeSockets[fd];
       sockaddr_in sockName;
       socklen_t addrLen = sizeof(sockName);
       int r;
@@ -81,7 +81,10 @@ SocketManagerSymbol::doRead(int fd)
       if (r >= 0)
 	{
 	  if (setNonblockingFlag(r, message, context))
-	    acceptedClientReply(inet_ntoa(sockName.sin_addr), r, message, context);
+	    {
+	      acceptedClientReply(inet_ntoa(sockName.sin_addr), r, message, context);
+	      activeSockets[r].state = NOMINAL;  // this creates the new ActiveSocket object
+	    }
 	}
       else
 	{
@@ -122,8 +125,8 @@ SocketManagerSymbol::doWrite(int fd)
       ObjectSystemRewritingContext& context = *(as.originalContext);
       if (errorCode == 0)
 	{
-	  as.state = NOMINAL;
 	  createdSocketReply(fd, message, context);
+	  as.state = NOMINAL;
 	  as.lastMessage.setNode(0);  // allow GC of last message
 	}
       else

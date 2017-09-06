@@ -68,6 +68,10 @@
 #include "socketAsync.cc"
 #include "socketOutcomes.cc"
 
+SocketManagerSymbol::ActiveSocket::ActiveSocket()
+{
+  textArray = 0;  // make it safe for deletion
+}
 
 SocketManagerSymbol::ActiveSocket::~ActiveSocket()
 {

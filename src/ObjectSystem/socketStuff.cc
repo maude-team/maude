@@ -39,14 +39,20 @@ SocketManagerSymbol::getPort(DagNode* portArg, int& port)
 }
 
 bool
-SocketManagerSymbol::getActiveSocket(DagNode* socketArg, int& socketId)
+SocketManagerSymbol::getActiveSocket(DagNode* socketArg, int& socketId, ActiveSocket*& asp)
 {
   if (socketArg->symbol() == socketOidSymbol)
     {
       DagNode* idArg = safeCast(FreeDagNode*, socketArg)->getArgument(0);
-      if (succSymbol->getSignedInt(idArg, socketId) &&
-	  activeSockets.find(socketId) != activeSockets.end())
-	return true;
+      if (succSymbol->getSignedInt(idArg, socketId))
+	{
+	  SocketMap::iterator i = activeSockets.find(socketId);
+	  if (activeSockets.find(socketId) != activeSockets.end())
+	    {
+	      asp = &(i->second);
+	      return true;
+	    }
+	}
     }
   return false;
 }
@@ -137,14 +143,17 @@ SocketManagerSymbol::createClientTcpSocket(FreeDagNode* message, ObjectSystemRew
       sockName.sin_port = htons(port);
       sockName.sin_addr = *(reinterpret_cast<in_addr*>(record->h_addr_list[0]));  // HACK
       if (connect(fd, reinterpret_cast<sockaddr*>(&sockName), sizeof(sockName)) == 0)
-	createdSocketReply(fd, message, context);  // instant success
+	{
+	  createdSocketReply(fd, message, context);  // instant success
+	  activeSockets[fd].state = NOMINAL;  // this creates the ActiveSocket object
+	}
       else if (errno == EINPROGRESS)
 	{
 	  //
 	  //	Incomplete transaction on an asynchronous socket, so save details
 	  //	so we know what to do when transaction completes.
 	  //
-	  ActiveSocket& as = activeSockets[fd];
+	  ActiveSocket& as = activeSockets[fd];  // this creates the ActiveSocket object
 	  as.state = WAITING_TO_CONNECT;
 	  as.lastMessage.setNode(message);
 	  as.originalContext = &context;
@@ -243,7 +252,7 @@ SocketManagerSymbol::createServerTcpSocket(FreeDagNode* message, ObjectSystemRew
       //	Return a message now that we have a bound and listening server socket.
       //
       createdSocketReply(fd, message, context);
-      activeSockets[fd].state = LISTENING;  // HACK - already set to nominal
+      activeSockets[fd].state = LISTENING;  // this creates the ActiveSocket object
      return true;
     }
   IssueAdvisory("socket manager declined malformed message " << QUOTE(message) << '.');
@@ -254,10 +263,11 @@ bool
 SocketManagerSymbol::acceptClient(FreeDagNode* message, ObjectSystemRewritingContext& context)
 {
   int socketId;
+  ActiveSocket* asp;
   DagNode* socketName = message->getArgument(0);
-  if (getActiveSocket(socketName, socketId))
+  if (getActiveSocket(socketName, socketId, asp))
     {
-      ActiveSocket& as = activeSockets[socketId];
+      ActiveSocket& as = *asp;
       if (as.state == LISTENING)
 	{
 	  sockaddr_in sockName;
@@ -269,7 +279,10 @@ SocketManagerSymbol::acceptClient(FreeDagNode* message, ObjectSystemRewritingCon
 	  if (r >= 0)
 	    {
 	      if (setNonblockingFlag(r, message, context))
-		acceptedClientReply(inet_ntoa(sockName.sin_addr), r, message, context);
+		{
+		  acceptedClientReply(inet_ntoa(sockName.sin_addr), r, message, context);
+		  activeSockets[r].state = NOMINAL;  // this creates the new ActiveSocket object
+		}
 	    }
 	  else if (errno == EAGAIN)
 	    {
@@ -300,13 +313,15 @@ bool
 SocketManagerSymbol::send(FreeDagNode* message, ObjectSystemRewritingContext& context)
 {
   int socketId;
+  ActiveSocket* asp;
   crope text;
   DagNode* socketName = message->getArgument(0);
-  if (getActiveSocket(socketName, socketId) &&
+  if (getActiveSocket(socketName, socketId, asp) &&
       getText(message->getArgument(2), text) &&
       text.size() != 0)
     {
-      ActiveSocket& as = activeSockets[socketId];
+      //ActiveSocket& as = activeSockets[socketId];
+      ActiveSocket& as = *asp;
       if ((as.state & ~WAITING_TO_READ) == 0)  // check that all the state bits other than WAITING_TO_READ are clear
 	{
 	  //as.text = text;
@@ -361,11 +376,13 @@ SocketManagerSymbol::send(FreeDagNode* message, ObjectSystemRewritingContext& co
 bool
 SocketManagerSymbol::receive(FreeDagNode* message, ObjectSystemRewritingContext& context)
 {
-  DagNode* socketName = message->getArgument(0);
   int socketId;
-  if (getActiveSocket(socketName, socketId))
+  ActiveSocket* asp;
+  DagNode* socketName = message->getArgument(0);
+  if (getActiveSocket(socketName, socketId, asp))
     {
-      ActiveSocket& as = activeSockets[socketId];
+      //ActiveSocket& as = activeSockets[socketId];
+      ActiveSocket& as = *asp;
       if ((as.state & ~WAITING_TO_WRITE) == 0)  // check that all the state bits other than WAITING_TO_WRITE are clear
 	{
 	  char buffer[READ_BUFFER_SIZE];
@@ -414,9 +431,10 @@ SocketManagerSymbol::receive(FreeDagNode* message, ObjectSystemRewritingContext&
 bool
 SocketManagerSymbol::closeSocket(FreeDagNode* message, ObjectSystemRewritingContext& context)
 {
-  DagNode* socketName = message->getArgument(0);
   int socketId;
-  if (getActiveSocket(socketName, socketId))
+  ActiveSocket* asp;
+  DagNode* socketName = message->getArgument(0);
+  if (getActiveSocket(socketName, socketId, asp))
     {
       closedSocketReply(socketId, "", message, context);
       return true;
@@ -429,7 +447,8 @@ void
 SocketManagerSymbol::cleanUp(DagNode* objectId)
 {
   int socketId;
-  if (getActiveSocket(objectId, socketId))
+  ActiveSocket* asp;
+  if (getActiveSocket(objectId, socketId, asp))
     {
       DebugAdvisory("cleaning up " << objectId);
       close(socketId);

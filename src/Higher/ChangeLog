@@ -1,3 +1,26 @@
+2012-08-22  Steven Eker  <eker@ape.csl.sri.com>
+
+	* variantFolder.cc (subsumes): call okToCollectGarbage()
+
+	* unifierFilter.cc (subsumes): call okToCollectGarbage()
+
+	* variantNarrowingSearchState.cc (collectUnifiers): can't use
+	getDagNode() if we using the built in variant unification
+	equations because find next position won't have been called
+
+2012-08-21  Steven Eker  <eker@ape.csl.sri.com>
+
+	* variantNarrowingSearchState.cc (collectUnifiers): added code to
+	print out message if excessive number of unifiers seen
+
+	* variantSearch.cc (expand): added code to print variants as they
+	are added to collection for debugging purposes
+
+2012-08-13  Steven Eker  <eker@ape.csl.sri.com>
+
+	* variantNarrowingSearchState.cc (VariantNarrowingSearchState):
+	don't clear() zero number of variables
+
 2012-08-07  Steven Eker  <eker@ape.csl.sri.com>
 
 	* narrowingSequenceSearch.cc (findNextNormalForm)

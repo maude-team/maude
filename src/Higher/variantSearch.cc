@@ -258,7 +258,19 @@ VariantSearch::expand(const Vector<DagNode*>& variant, int index, bool odd)
       //
       //cout << "inserting internal " << newIndex << endl;
       if (variantCollection.insertVariant(protectedVariant, newIndex, index))
-	newFrontier.append(newIndex);
+	{
+	  //cout << "added variant\n";
+	  DagNode* d = protectedVariant[substSize];
+	  //cout << d->getSort() << ": " << d << '\n';
+	  for (int i = 0; i < substSize; ++i)
+	    {
+	      DagNode* v = variableInfo.index2Variable(i);
+	      //cout << v << " --> " << protectedVariant[i] << endl;
+	    }
+	  //cout << endl;
+
+	  newFrontier.append(newIndex);
+	}
       protectedVariant.clear();  // remove GC protection
       //
       //	Move rewrite count from reduction to original context.

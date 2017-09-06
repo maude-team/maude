@@ -71,7 +71,9 @@ VariantNarrowingSearchState::VariantNarrowingSearchState(RewritingContext* conte
      module(context->root()->symbol()->getModule()),
      blockerSubstitution(originalVariables.getNrVariables())  // could be larger than variant substitution because of variables peculiar to blockerDags
 {
-  blockerSubstitution.clear(originalVariables.getNrVariables());  // this ensures that any variables peculiar to blockerDags are cleared
+  //cout << "VariantNarrowingSearchState() on " << context->root() << endl;
+  if (originalVariables.getNrVariables() > 0)
+    blockerSubstitution.clear(originalVariables.getNrVariables());  // this ensures that any variables peculiar to blockerDags are cleared
   //
   //	Index all variables occuring in the variant term and the variant substitution.
   //	These VariableDagNodes are coming from dags that are assumed to be protected by the caller and thus we assume
@@ -153,9 +155,21 @@ VariantNarrowingSearchState::collectUnifiers(NarrowingUnificationProblem* unific
 {
   int firstTargetSlot = module->getMinimumSubstitutionSize();
   int nrInterestingVariables = variableInfo.getNrVariables();
-
+  long nrUnifiersFound = 0;
   while (unificationProblem->findNextUnifier())
     {
+      ++nrUnifiersFound;
+      if (nrUnifiersFound >= 1000 && (nrUnifiersFound % 1000) == 0)
+	{
+	  /*
+	  cout << "Variant Narrowing, term = " << context->root();
+	  if (equationIndex == NONE)
+	    cout << "(unifying of subterms) for variant unfication\n";
+	  else
+	    cout << ", subterm = " <<  getDagNode() << " equation = " << module->getEquations()[equationIndex] << '\n';
+	  cout << "number of unifiers seen = " << nrUnifiersFound << endl;
+	  */
+	}
       const Substitution& solution = unificationProblem->getSolution();
       //
       //	Check for reducibility on interesting variables.
