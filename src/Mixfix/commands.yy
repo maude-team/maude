@@ -96,6 +96,7 @@ command		:	KW_SELECT		{ lexerCmdMode(); clear(); }
 			  clear();
 			  moduleExpr.contractTo(0);
 			  number = NONE;
+			  number2 = NONE;
 			}
 			numberModuleTerm
 			{

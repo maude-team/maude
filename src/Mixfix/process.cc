@@ -277,7 +277,8 @@ PreModule::processOps()
 							   opDef.frozen,
 							   opDef.prec,
 							   opDef.gather,
-							   opDef.format);
+							   opDef.format,
+							   opDef.metadata);
 	  opDecl.originator = true;  // HACK
 	}
       else if (opDef.symbolType.getBasicType() == SymbolType::VARIABLE)
@@ -296,6 +297,7 @@ PreModule::processOps()
 						       opDef.prec,
 						       opDef.gather,
 						       opDef.format,
+						       opDef.metadata,
 						       opDecl.originator);
 	  if (opDef.symbolType.getBasicType() == SymbolType::BUBBLE)
 	    {

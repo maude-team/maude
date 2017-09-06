@@ -375,6 +375,13 @@ MetaLevel::upPolymorphDecl(ImportModule* m, int index, PointerMap& qidMap)
       }
     if (st.hasFlag(SymbolType::LEFT_ID | SymbolType::RIGHT_ID))
       attrArgs.append(upIdentity(m, st, m->getPolymorphIdentity(index), qidMap));
+    int metadata = m->getPolymorphMetadata(index);
+    if (metadata != NONE)
+      {
+	Vector<DagNode*> args2(1);
+	args2[0] = new StringDagNode(stringSymbol, Token::codeToRope(metadata));
+	attrArgs.append(metadataSymbol->makeDagNode(args2));
+      }
     if (st.hasSpecial())
       attrArgs.append(upPolymorphSpecial(index, m, qidMap));
     args[3] = upAttributeSet(st, attrArgs);
@@ -504,6 +511,14 @@ MetaLevel::upOpDecl(ImportModule* m, int symbolNr, int declNr, PointerMap& qidMa
       }
     if (st.hasFlag(SymbolType::LEFT_ID | SymbolType::RIGHT_ID))
       attrArgs.append(upIdentity(m, st, safeCast(BinarySymbol*, symbol)->getIdentity(), qidMap));
+
+    int metadata = m->getMetadata(symbol, declNr);
+    if (metadata != NONE)
+      {
+	Vector<DagNode*> args2(1);
+	args2[0] = new StringDagNode(stringSymbol, Token::codeToRope(metadata));
+	attrArgs.append(metadataSymbol->makeDagNode(args2));
+      }
     if (st.hasSpecial())
       attrArgs.append(upSpecial(symbol, d, m, qidMap));
     args[3] = upAttributeSet(st, attrArgs);

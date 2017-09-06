@@ -28,6 +28,7 @@
 #include <map>
 #include "externalObjectManagerSymbol.hh"
 #include "pseudoThread.hh"
+#include "dagRoot.hh"
 
 class SocketManagerSymbol
   : public ExternalObjectManagerSymbol,
@@ -63,29 +64,70 @@ public:
   void doHungUp(int fd);
 
 private:
+  enum Sizes
+    {
+      READ_BUFFER_SIZE = 4096
+    };
+ 
   enum SocketState
-  {
-    READY_TO_SEND
-  };
+    {
+      NOMINAL = 0,
+      WAITING_TO_CONNECT= 1,
+      WAITING_TO_READ = 2,
+      WAITING_TO_WRITE = 4,
+      LISTENING = 8,
+      WAITING_TO_ACCEPT = 16
+    };
 
   struct ActiveSocket
   {
     int state;
+    //
+    //	If we are in a waiting state, we need to keep pointers to the last message
+    //	and the original rewriting context so that we can handle an asynchronous response from
+    //	the operating system.
+    //
+    DagRoot lastMessage;  // must be protected from GC
+    //
+    //	Since destruction of the context causes a cleanUp() call for each registered external
+    //	object, this should not become a dangling pointer.
+    //
+    ObjectSystemRewritingContext* originalContext;
+    //
+    //	Outgoing text
+    //
+    crope text;
+    const char* unsent;
+    crope::size_type nrUnsent;
   };
 
   typedef map<int, ActiveSocket> SocketMap;
 
-  bool getDomain(DagNode* domainArg, int& port);
   bool getPort(DagNode* protocolArg, int& protocol);
   bool getActiveSocket(DagNode* socketArg, int& socketId);
   bool getText(DagNode* textArg, crope& text);
+  bool setNonblockingFlag(int fd, FreeDagNode* message, ObjectSystemRewritingContext& context);
+
   void errorReply(const char* errorMessage,
 		  FreeDagNode* orignalMessage,
 		  ObjectSystemRewritingContext& context);
-  void closeSocket(DagNode* socketName,
-		   int socketId,
-		   DagNode* clientName,
-		   ObjectSystemRewritingContext& context);
+  void createdSocketReply(int fd,
+			  FreeDagNode* originalMessage,
+			  ObjectSystemRewritingContext& context);
+  void acceptedClientReply(const char* addr,
+			   int fd,
+			   FreeDagNode* originalMessage,
+			   ObjectSystemRewritingContext& context);
+  void sentMsgReply(FreeDagNode* originalMessage,
+		    ObjectSystemRewritingContext& context);
+  void receivedMsgReply(char buffer[],
+			ssize_t length,
+			FreeDagNode* originalMessage,
+			ObjectSystemRewritingContext& context);
+  void closedSocketReply(int socketId,
+			 const char* errorMessage,
+			 FreeDagNode* originalMessage,
+			 ObjectSystemRewritingContext& context);
 
   bool createClientTcpSocket(FreeDagNode* message, ObjectSystemRewritingContext& context);
   bool createServerTcpSocket(FreeDagNode* message, ObjectSystemRewritingContext& context);

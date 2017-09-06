@@ -82,6 +82,7 @@ MixfixModule::addOpDeclaration(Token prefixName,
 			       int prec,
 			       const Vector<int>& gather,
 			       const Vector<int>& format,
+			       int metadata,
 			       bool& firstDecl)
 {
   Assert(symbolType.getBasicType() != SymbolType::VARIABLE,
@@ -142,6 +143,8 @@ MixfixModule::addOpDeclaration(Token prefixName,
 					   *s << '.');
 			      markAsBad();
 			    }
+			  if (metadata != NONE)
+			    insertMetadata(s, s->getOpDeclarations().length(), metadata);
 			  s->addOpDeclaration(domainAndRange,
 					      symbolType.hasFlag(SymbolType::CTOR));
 			  return s;
@@ -188,7 +191,9 @@ MixfixModule::addOpDeclaration(Token prefixName,
 	    }
 	}
     }
- 
+  //
+  //	Need to create a new symbol.
+  //
   if (symbolType.hasFlag(SymbolType::DITTO))
     {
       IssueWarning(LineNumber(prefixName.lineNumber()) <<
@@ -366,8 +371,10 @@ MixfixModule::addOpDeclaration(Token prefixName,
       firstSymbols[index] = nrSymbols;
     }
 
-  symbol->addOpDeclaration(domainAndRange, symbolType.hasFlag(SymbolType::CTOR));
   Module::insertSymbol(symbol);
+  if (metadata != NONE)
+    insertMetadata(symbol, symbol->getOpDeclarations().length(), metadata);
+  symbol->addOpDeclaration(domainAndRange, symbolType.hasFlag(SymbolType::CTOR));
   firstDecl = true;
   switch (symbolType.getBasicType())
     {
@@ -698,7 +705,8 @@ MixfixModule::addPolymorph(Token prefixName,
 			   const NatSet& frozen,
 			   int prec,
 			   const Vector<int>& gather,
-			   const Vector<int>& format)
+			   const Vector<int>& format,
+			   int metadata)
 {
   int index = findPolymorphIndex(prefixName.code(), domainAndRange);
   if (index != NONE)
@@ -718,6 +726,7 @@ MixfixModule::addPolymorph(Token prefixName,
   p.strategy = strategy;  // deep copy
   p.frozen = frozen;  // deep copy
   p.identity = 0;
+  p.metadata = metadata;
   int nrUnderscores = Token::extractMixfix(prefixName.code(), p.symbolInfo.mixfixSyntax);
   if (p.symbolInfo.mixfixSyntax.length() == 0)
     {

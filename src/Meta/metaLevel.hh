@@ -173,6 +173,7 @@ private:
     int prec;
     Vector<int> gather;
     Vector<int> format;
+    int metadata;
     DagNode* identity;
     DagNode* fixUpInfo;
   };
@@ -339,6 +340,7 @@ inline
 MetaLevel::AttributeInfo::AttributeInfo()
 {
   prec = DEFAULT;
+  metadata = NONE;
   identity = 0;
   fixUpInfo = 0;
 }

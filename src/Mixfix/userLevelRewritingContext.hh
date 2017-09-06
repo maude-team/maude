@@ -67,6 +67,7 @@ public:
   static void beginCommand();
   static void setDebug();
   static void clearDebug();
+  static void clearInterrupt();
   static void setTraceConditionFlag(bool status);
   static void setTraceWholeFlag(bool status);
   static void setTraceSubstitutionFlag(bool status);

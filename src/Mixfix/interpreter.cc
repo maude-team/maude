@@ -45,6 +45,9 @@
 #include "matchSearchState.hh"
 #include "rewriteSequenceSearch.hh"
 
+//	object system class definitions
+#include "pseudoThread.hh"
+
 //	front end class definitions
 #include "timer.hh"
 #include "userLevelRewritingContext.hh"

@@ -191,6 +191,7 @@ ImportModule::donateOps2(ImportModule* copy, Renaming* renaming)
 							 prec,
 							 gather,
 							 *format,
+							 getMetadata(symbol, j),
 							 originator);
 	      if (j == 0)
 		{
@@ -254,16 +255,16 @@ ImportModule::donateOps2(ImportModule* copy, Renaming* renaming)
 
       const Vector<int>& strategy = symbolType.hasFlag(SymbolType::STRAT) ?
 	getPolymorphStrategy(i) : emptyStrategy;
-      const NatSet& frozen = getPolymorphFrozen(i);
 
       copy->addPolymorph(name,
 			 domainAndRange,
 			 symbolType,
 			 strategy,
-			 frozen,
+			 getPolymorphFrozen(i),
 			 prec,
 			 gather,
-			 *format);
+			 *format,
+			 getPolymorphMetadata(i));
     }
 }
 

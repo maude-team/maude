@@ -192,6 +192,7 @@ PreModule::finishModule(Token endToken)
 PreModule::OpDef::OpDef()
 {
   prec = DEFAULT;
+  metadata = NONE;
 }
 
 void

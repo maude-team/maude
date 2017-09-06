@@ -146,7 +146,7 @@ PreModule::printAttributes(ostream& s, const OpDef& opDef)
   SymbolType st = opDef.symbolType;
   if (!(st.hasFlag(SymbolType::ATTRIBUTES | SymbolType::CTOR |
 		   SymbolType::POLY | SymbolType::DITTO)) &&
-      opDef.special.empty())
+      opDef.special.empty() && opDef.metadata == NONE)
     return;
 
   const char* space = "";
@@ -275,6 +275,11 @@ PreModule::printAttributes(ostream& s, const OpDef& opDef)
       s << space;
       space = " ";
       printFormat(s, opDef.format);
+    }
+  if (opDef.metadata != NONE)
+    {
+      s << space << "metadata " << Token::name(opDef.metadata);
+      space = " ";
     }
   if (!(opDef.special.empty()))
     {

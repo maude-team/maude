@@ -436,6 +436,10 @@ fmod FOO is
     id-hook ACU_NumberOpSymbol (&)
     op-hook succSymbol (s_ : Nat ~> NzNat)
     op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
+  op _&_ : Nat Int -> Nat [assoc comm prec 53 gather (e E) special (
+    id-hook ACU_NumberOpSymbol (&)
+    op-hook succSymbol (s_ : Nat ~> NzNat)
+    op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
   op _&_ : Int Int -> Int [assoc comm prec 53 gather (e E) special (
     id-hook ACU_NumberOpSymbol (&)
     op-hook succSymbol (s_ : Nat ~> NzNat)

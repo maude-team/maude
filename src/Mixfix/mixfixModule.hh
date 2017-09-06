@@ -84,6 +84,7 @@ public:
 			   int prec,
 			   const Vector<int>& gather,
 			   const Vector<int>& format,
+			   int metadata,
 			   bool& firstDecl);
   void addVariableAlias(Token name, Sort* sort);
   int addPolymorph(Token prefixName,
@@ -93,7 +94,8 @@ public:
 		   const NatSet& frozen,
 		   int prec,
 		   const Vector<int>& gather,
-		   const Vector<int>& format);
+		   const Vector<int>& format,
+		   int metadata);
   void addIdentityToPolymorph(int polymorphIndex,
 			      Term* identity);
   void addIdHookToPolymorph(int polymorphIndex,
@@ -199,6 +201,7 @@ public:
   int getPolymorphPrec(int index) const;
   void getPolymorphGather(int index, Vector<int>& gather) const;
   const Vector<int>& getPolymorphFormat(int index) const;
+  int getPolymorphMetadata(int index) const;
   bool getPolymorphDataAttachment(int index, int nr, int& purpose, Vector<int>& items) const;
   bool getPolymorphSymbolAttachment(int index, int nr, int& purpose, Symbol*& op) const;
   bool getPolymorphTermAttachment(int index, int nr, int& purpose, Term*& term) const;
@@ -369,6 +372,7 @@ private:
     Vector<int> strategy;
     NatSet frozen;
     Term* identity;
+    int metadata;
     Vector<IdHook> idHooks;
     Vector<OpHook> opHooks;
     Vector<TermHook> termHooks;
@@ -777,6 +781,12 @@ inline const Vector<int>&
 MixfixModule::getPolymorphFormat(int index) const
 {
   return polymorphs[index].symbolInfo.format;
+}
+
+inline int
+MixfixModule::getPolymorphMetadata(int index) const
+{
+  return polymorphs[index].metadata;
 }
 
 inline int
