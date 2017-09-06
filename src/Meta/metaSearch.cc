@@ -21,7 +21,7 @@
 */
 
 //
-//	Code for metaSearch()/metaSearchPath() descent functions.
+//	Code for metaSearch()/metaSearchPath()/metaSmtSearch() descent functions.
 //
 
 local_inline bool
@@ -39,35 +39,6 @@ MetaLevelOpSymbol::downSearchType(DagNode* arg, SequenceSearch::SearchType& sear
       else
 	return false;
       return true;
-    }
-  return false;
-}
-
-local_inline bool
-MetaLevelOpSymbol::getCachedRewriteSequenceSearch(MetaModule* m,
-						  FreeDagNode* subject,
-						  RewritingContext& context,
-						  Int64 solutionNr,
-						  RewriteSequenceSearch*& search,
-						  Int64& lastSolutionNr)
-{
-  CacheableState* cachedState;
-  if (m->remove(subject, cachedState, lastSolutionNr))
-    {
-      DebugAdvisory("looking for solution #" << solutionNr << " and found cached solution #" << lastSolutionNr);
-      if (lastSolutionNr <= solutionNr)
-	{
-	  search = safeCast(RewriteSequenceSearch*, cachedState);
-	  //
-	  //	The parent context pointer of the root context in the
-	  //	RewriteSequenceSearch object may be stale, since the
-	  //	object may have been cached in a different context.
-	  //
-	  safeCast(UserLevelRewritingContext*, search->getContext())->
-	    beAdoptedBy(safeCast(UserLevelRewritingContext*, &context));
-	  return true;
-	}
-      delete cachedState;
     }
   return false;
 }
@@ -119,7 +90,7 @@ MetaLevelOpSymbol::metaSearch(FreeDagNode* subject, RewritingContext& context)
 	{
 	  RewriteSequenceSearch* state;
 	  Int64 lastSolutionNr;
-	  if (getCachedRewriteSequenceSearch(m, subject, context, solutionNr, state, lastSolutionNr))
+	  if (getCachedStateObject(m, subject, context, solutionNr, state, lastSolutionNr))
 	    m->protect();  // Use cached state
 	  else if ((state = makeRewriteSequenceSearch(m, subject, context)))
 	    lastSolutionNr = -1;
@@ -169,7 +140,7 @@ MetaLevelOpSymbol::metaSearchPath(FreeDagNode* subject, RewritingContext& contex
 	{
 	  RewriteSequenceSearch* state;
 	  Int64 lastSolutionNr;
-	  if (getCachedRewriteSequenceSearch(m, subject, context, solutionNr, state, lastSolutionNr))
+	  if (getCachedStateObject(m, subject, context, solutionNr, state, lastSolutionNr))
 	    m->protect();  // Use cached state
 	  else if ((state = makeRewriteSequenceSearch(m, subject, context)))
 	    lastSolutionNr = -1;
@@ -203,34 +174,6 @@ MetaLevelOpSymbol::metaSearchPath(FreeDagNode* subject, RewritingContext& contex
 #include "SMT_Info.hh"
 #include "variableGenerator.hh"
 #include "SMT_RewriteSequenceSearch.hh"
-
-local_inline bool
-MetaLevelOpSymbol::getCachedSMT_RewriteSequenceSearch(MetaModule* m,
-						   FreeDagNode* subject,
-						   RewritingContext& context,
-						   Int64 solutionNr,
-						   SMT_RewriteSequenceSearch*& search,
-						   Int64& lastSolutionNr)
-{
-  CacheableState* cachedState;
-  if (m->remove(subject, cachedState, lastSolutionNr))
-    {
-      if (lastSolutionNr <= solutionNr)
-	{
-	  search = safeCast(SMT_RewriteSequenceSearch*, cachedState);
-	  //
-	  //	The parent context pointer of the root context in the
-	  //	NarrowingSequenceSearch is possibly stale.
-	  //
-	  safeCast(UserLevelRewritingContext*, search->getRootContext())->
-	    beAdoptedBy(safeCast(UserLevelRewritingContext*, &context));
-	  DebugAdvisory("   !!! Found cached SMT_RewriteSequenceSearch !!!");
-	  return true;
-	}
-      delete cachedState;
-    }
-  return false;
-}
 
 SMT_RewriteSequenceSearch*
 MetaLevelOpSymbol::makeSMT_RewriteSequenceSearch(MetaModule* m,
@@ -290,7 +233,7 @@ MetaLevelOpSymbol::metaSmtSearch(FreeDagNode* subject, RewritingContext& context
 	    {
 	      SMT_RewriteSequenceSearch* smtState;
 	      Int64 lastSolutionNr;
-	      if (getCachedSMT_RewriteSequenceSearch(m, subject, context, solutionNr, smtState, lastSolutionNr))
+	      if (getCachedStateObject(m, subject, context, solutionNr, smtState, lastSolutionNr))
 		m->protect();  // Use cached state
 	      else if ((smtState = makeSMT_RewriteSequenceSearch(m, subject, context)))
 		lastSolutionNr = -1;
@@ -311,32 +254,13 @@ MetaLevelOpSymbol::metaSmtSearch(FreeDagNode* subject, RewritingContext& context
 		  ++lastSolutionNr;
 		}
 	      m->insert(subject, smtState, solutionNr);
-	      {
-		/*
-		DagNode* state = smtState->getState(smtState->getCurrentStateNumber());
-		const Substitution& substitution = *(smtState->getSubstitution());
-		const VariableInfo& variableInfo = *smtState;
-		const NatSet& smtVariables = smtState->getSMT_VarIndices();
-		DagNode* constraint = smtState->getFinalConstraint();
-		const mpz_class& variableNumber = smtState->getMaxVariableNumber();
-
-		result = metaLevel->upSmtResult(state,
-						substitution,
-						variableInfo,
-						smtVariables,
-						constraint,
-						variableNumber,
-						m);
-		*/
-
-		result = metaLevel->upSmtResult(smtState->getState(smtState->getCurrentStateNumber()),
-						*(smtState->getSubstitution()),
-						*smtState,
-						smtState->getSMT_VarIndices(),
-						smtState->getFinalConstraint(),
-						smtState->getMaxVariableNumber(),
-						m);
-	      }
+	      result = metaLevel->upSmtResult(smtState->getState(smtState->getCurrentStateNumber()),
+					      *(smtState->getSubstitution()),
+					      *smtState,
+					      smtState->getSMT_VarIndices(),
+					      smtState->getFinalConstraint(),
+					      smtState->getMaxVariableNumber(),
+					      m);
 	    fail:
 	      (void) m->unprotect();
 	      return context.builtInReplace(subject, result);

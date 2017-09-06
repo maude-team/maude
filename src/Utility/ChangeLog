@@ -1,3 +1,10 @@
+2017-03-15  Steven Eker  <eker@install.csl.sri.com>
+
+	* natSet.cc (<): fix critical bug where we were putting Words from
+	the arrays into ints and losing the top 32 bits on a 64-bit machine
+
+===================================Maude112===========================================
+
 2017-01-11  Steven Eker  <eker@install.csl.sri.com>
 
 	* stack.hh: created
@@ -44,7 +51,7 @@
 
 	* wordDigraph.hh: deleted
 
-	* pigPug-cycleDetection.cc (arrive, depart, confirmedLive): 
+	* pigPug-cycleDetection.cc (arrive, depart, confirmedLive):
 	moved here from wordDiagraph.cc
 
 	* macros.hh: Verbose now prints its output in cyan

@@ -24,33 +24,6 @@
 //	Code for metaNarrow() descent functions.
 //
 
-local_inline bool
-MetaLevelOpSymbol::getCachedNarrowingSequenceSearch(MetaModule* m,
-						    FreeDagNode* subject,
-						    RewritingContext& context,
-						    Int64 solutionNr,
-						    NarrowingSequenceSearch*& search,
-						    Int64& lastSolutionNr)
-{
-  CacheableState* cachedState;
-  if (m->remove(subject, cachedState, lastSolutionNr))
-    {
-      if (lastSolutionNr <= solutionNr)
-	{
-	  search = safeCast(NarrowingSequenceSearch*, cachedState);
-	  //
-	  //	The parent context pointer of the root context in the
-	  //	NarrowingSequenceSearch is possibly stale.
-	  //
-	  safeCast(UserLevelRewritingContext*, search->getContext())->
-	    beAdoptedBy(safeCast(UserLevelRewritingContext*, &context));
-	  return true;
-	}
-      delete cachedState;
-    }
-  return false;
-}
-
 NarrowingSequenceSearch*
 MetaLevelOpSymbol::makeNarrowingSequenceSearch(MetaModule* m,
 					       FreeDagNode* subject,
@@ -94,7 +67,7 @@ MetaLevelOpSymbol::metaNarrow(FreeDagNode* subject, RewritingContext& context)
 	{
 	  NarrowingSequenceSearch* state;
 	  Int64 lastSolutionNr;
-	  if (getCachedNarrowingSequenceSearch(m, subject, context, solutionNr, state, lastSolutionNr))
+	  if (getCachedStateObject(m, subject, context, solutionNr, state, lastSolutionNr))
 	    m->protect();  // Use cached state
 	  else if ((state = makeNarrowingSequenceSearch(m, subject, context)))
 	    lastSolutionNr = -1;
@@ -173,7 +146,7 @@ MetaLevelOpSymbol::metaNarrow2(FreeDagNode* subject, RewritingContext& context)
 	{
 	  NarrowingSequenceSearch* state;
 	  Int64 lastSolutionNr;
-	  if (getCachedNarrowingSequenceSearch(m, subject, context, solutionNr, state, lastSolutionNr))
+	  if (getCachedStateObject(m, subject, context, solutionNr, state, lastSolutionNr))
 	    m->protect();  // Use cached state
 	  else if ((state = makeNarrowingSequenceSearchAlt(m, subject, context)))
 	    lastSolutionNr = -1;

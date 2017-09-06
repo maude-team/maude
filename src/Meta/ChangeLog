@@ -1,3 +1,50 @@
+2017-03-16  Steven Eker  <eker@install.csl.sri.com>
+
+	* metaLevelOpSymbol.hh (FreeSymbol): delete decl for
+	getCachedVariantSearch()
+
+	* metaVariant.cc (getCachedVariantSearch): deleted
+	(metaGetVariant2, metaVariantUnify2): use getCachedStateObject()
+
+	* metaLevelOpSymbol.hh (FreeSymbol): deleted decl for
+	getCachedNarrowingSequenceSearch()
+
+	* metaNarrow.cc (getCachedNarrowingSequenceSearch): deleted
+	(metaNarrow, metaNarrow2): use getCachedStateObject()
+
+	* metaSearch.cc (metaSmtSearch): deleted commented out code
+
+	* metaLevelOpSymbol.hh (FreeSymbol): deleted decl for
+	getCachedSMT_RewriteSequenceSearch()
+
+	* metaSearch.cc (getCachedSMT_RewriteSequenceSearch): deleted
+	(metaSmtSearch): use getCachedMatchSearchState()
+
+	* metaLevelOpSymbol.hh (FreeSymbol): deleted decl for
+	getCachedMatchSearchState()
+
+	* metaMatch.cc (getCachedMatchSearchState): deleted
+	(metaMatch): use getCachedStateObject()
+	(metaXmatch): use getCachedStateObject()
+
+	* metaLevelOpSymbol.hh (FreeSymbol): deleted decl for
+	getCachedRewriteSearchState()
+
+	* metaApply.cc (getCachedRewriteSearchState): deleted
+	(metaApply): use getCachedStateObject()
+	(metaXapply): use getCachedStateObject()
+
+	* metaLevelOpSymbol.hh (FreeSymbol): deleted decl for
+	getCachedRewriteSequenceSearch()
+
+	* metaSearch.cc (getCachedRewriteSequenceSearch): deleted
+	(metaSearch): use getCachedStateObject()
+	(metaSearchPath): use getCachedStateObject()
+
+	* metaLevelOpSymbol.hh (getCachedStateObject): added DebugAdvisory()
+
+===================================Maude112===========================================
+
 2017-03-14  Steven Eker  <eker@install.csl.sri.com>
 
 	* metaNewNarrow.cc (metaNarrowingSearch): reverted use of

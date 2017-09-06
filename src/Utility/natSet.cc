@@ -281,8 +281,8 @@ NatSet::operator<(const NatSet& other) const
     return firstWord < other.firstWord;
   for (int i = 0; i < len; i++)
     {
-      int a = array[i];
-      int b = other.array[i];
+      Word a = array[i];
+      Word b = other.array[i];
       if (a != b)
 	return a < b;
     }

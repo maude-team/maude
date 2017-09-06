@@ -25,33 +25,6 @@
 //
 #include "variantSearch.hh"
 
-local_inline bool
-MetaLevelOpSymbol::getCachedVariantSearch(MetaModule* m,
-					  FreeDagNode* subject,
-					  RewritingContext& context,
-					  Int64 solutionNr,
-					  VariantSearch*& search,
-					  Int64& lastSolutionNr)
-{
-  CacheableState* cachedState;
-  if (m->remove(subject, cachedState, lastSolutionNr))
-    {
-      if (lastSolutionNr <= solutionNr)
-	{
-	  search = safeCast(VariantSearch*, cachedState);
-	  //
-	  //	The parent context pointer of the root context in the VariantSearch is possibly
-	  //	stale since it points the context from a different descent function call.
-	  //
-	  safeCast(UserLevelRewritingContext*, search->getContext())->
-	    beAdoptedBy(safeCast(UserLevelRewritingContext*, &context));
-	  return true;
-	}
-      delete cachedState;
-    }
-  return false;
-}
-
 bool
 MetaLevelOpSymbol::metaGetVariant2(FreeDagNode* subject, RewritingContext& context, bool irredundant)
 {
@@ -69,7 +42,7 @@ MetaLevelOpSymbol::metaGetVariant2(FreeDagNode* subject, RewritingContext& conte
 	  const mpz_class& varIndex = metaLevel->getNat(metaVarIndex);
 	  VariantSearch* vs;
 	  Int64 lastSolutionNr;
-	  if (getCachedVariantSearch(m, subject, context, solutionNr, vs, lastSolutionNr))
+	  if (getCachedStateObject(m, subject, context, solutionNr, vs, lastSolutionNr))
 	    m->protect();  // Use cached state
 	  else
 	    {
@@ -176,7 +149,7 @@ MetaLevelOpSymbol::metaVariantUnify2(FreeDagNode* subject, RewritingContext& con
 	  const mpz_class& varIndex = metaLevel->getNat(metaVarIndex);
 	  VariantSearch* vs;
 	  Int64 lastSolutionNr;
-	  if (getCachedVariantSearch(m, subject, context, solutionNr, vs, lastSolutionNr))
+	  if (getCachedStateObject(m, subject, context, solutionNr, vs, lastSolutionNr))
 	    m->protect();  // Use cached state
 	  else
 	    {
