@@ -1,3 +1,265 @@
+2012-05-23  Steven Eker  <eker@ape.csl.sri.com>
+
+	* variantNarrowingSearchState.cc (VariantNarrowingSearchState):
+	need to delete unificationProblem after we're done with it
+
+2012-05-22  Steven Eker  <eker@ape.csl.sri.com>
+
+	* unifierFilter.hh (SimpleRootContainer): commented out previous changes
+
+	* unifierFilter.cc (insertUnifier): commented out previous changes
+	(getNextSurvivingUnifier): commented out previous changes
+
+	* variantNarrowingSearchState.cc (findNextVariant)
+	(VariantNarrowingSearchState): commented out previous changes
+
+	* variantNarrowingSearchState.hh (PositionState): commented out
+	previous decl change
+
+	* variantSearch.hh (getNextVariant): pass back nrFreeVariables
+
+	* variantSearch.cc (expand): commented out nrFreeVariables change
+	(VariantSearch): check for unsafe variable names
+
+	* variantFolder.hh (SimpleRootContainer): updated decl for
+	getNextSurvivingVariant()
+
+	* variantFolder.cc (RetainedVariant): fill out nrFreeVariables
+	(getNextSurvivingVariant): return nrFreeVariables
+
+	* variantNarrowingSearchState.hh (PositionState): updated decl for
+	findNextVariant()
+
+	* variantNarrowingSearchState.cc (VariantNarrowingSearchState):
+	pass nrFreeVariables to  insertUnifier()
+	(findNextVariant): get nrFreeVariables from
+	getNextSurvivingUnifier()
+
+	* unifierFilter.hh (SimpleRootContainer): add nrFreeVariables to
+	struct RetainedUnifier; updated decls for insertUnifier() and
+	getNextSurvivingUnifier()
+
+	* unifierFilter.cc (getNextSurvivingUnifier): return nrFreeVariables
+	(insertUnifier): store nrFreeVariables
+
+2012-05-21  Steven Eker  <eker@ape.csl.sri.com>
+
+	* narrowingSequenceSearch.cc (findNextNormalForm): check for abort
+	after reducing; use incrementNarrowingCount() and addInCount()
+
+	* variantSearch.hh (SimpleRootContainer): derive from CacheableState
+
+	* higher.hh: added classes UnifierFilter,
+	VariantNarrowingSearchState, VariantSearch, VariantFolder
+
+	* variantSearch.hh (SimpleRootContainer): adde decl for dtor
+
+	* variantSearch.cc (~NarrowingSequenceSearch): added
+
+	* variantSearch.hh (getNextVariant): check for traceAbort()
+	(getContext): added
+
+	* variantSearch.cc (VariantSearch): repostition traceAbort() test
+
+	* variantNarrowingSearchState.cc (findNextVariant): call
+	incrementVariantNarrowingCount()
+
+	* variantSearch.cc (markReachableNodes): don't protect
+	VariableDagNodes in variableInfo now that we notice they
+	will be reachable from original dag which itself is protected
+
+	* variantNarrowingSearchState.cc (findNextVariant): pass
+	originalVariables to traceVariantNarrowingStep()
+
+	* variantNarrowingSearchState.hh (PositionState): updated decl for
+	ctor; added data member originalVariables
+
+	* variantNarrowingSearchState.cc (VariantNarrowingSearchState):
+	take extra argument and initialize originalVariables
+
+	* variantSearch.cc (expand): add in subcontext counts
+	(VariantSearch): delete redContext; add in count from redContext
+	(expand): pass variableInfo to VariantNarrowingSearchState ctor
+
+2012-05-18  Steven Eker  <eker@ape.csl.sri.com>
+
+	* variantNarrowingSearchState.cc (findNextVariant): add tracing
+
+2012-05-17  Steven Eker  <eker@ape.csl.sri.com>
+
+	* variantSearch.cc (VariantSearch): reduce initial term after
+	rather than before replacement of variables with fresh variables;
+	this fixes a bug where reduction was introducing new ground terms
+	without their ground flags set which broke instantiation.
+	(VariantSearch): check for abort
+
+	* variantNarrowingSearchState.cc (reducibleByVariantEquation): fix
+	multiple problems with the deletion of subproblems
+
+2012-05-11  Steven Eker  <eker@ape.csl.sri.com>
+
+	* variantSearch.hh (SimpleRootContainer): added data member
+	protectedVariant
+
+	* variantSearch.cc (expand): use protectedVariant to avoid
+	substitution part of new variant being garbage collected when term
+	part is reduced
+
+	* variantSearch.hh (V): updated decl for expand()
+	(SimpleRootContainer): inherit from SimpleRootContainer
+	(SimpleRootContainer): added decl for markReachableNodes()
+
+	* variantSearch.cc (expand): handle odd flag and pass it to
+	VariantNarrowingSearchState
+	(VariantSearch): maintain odd flag and pass it to expand()
+
+	* variantNarrowingSearchState.hh (PositionState): updated decl for ctor
+
+	* variantNarrowingSearchState.cc (VariantNarrowingSearchState):
+	pass odd flag to NarrowingUnificationProblem()
+
+	* narrowingUnificationProblem.cc (NarrowingUnificationProblem):
+	handle odd flag
+	(findNextUnifier): pass odd flag to getFreshVariableName
+
+	* narrowingUnificationProblem.hh (SimpleRootContainer): added odd
+	ctor argument and data member
+
+	* narrowingUnificationProblem.cc (findNextUnifier): removed
+	commented out call to freshVariableGenerator->reset();
+
+	* variantNarrowingSearchState.cc (reducibleByVariantEquation):
+	delete subproblems
+
+	* variantSearch.cc (VariantSearch): handle the case where
+	instantiate() returns null
+
+2012-05-10  Steven Eker  <eker@ape.csl.sri.com>
+
+	* variantNarrowingSearchState.cc (findNextVariant): fix bug where
+	we were not handling null returned by instantiate()
+
+	* variantSearch.cc: added
+
+	* variantSearch.hh: added
+
+2012-05-09  Steven Eker  <eker@ape.csl.sri.com>
+
+	* variantFolder.cc: created
+
+	* variantFolder.hh: created
+
+2012-05-04  Steven Eker  <eker@ape.csl.sri.com>
+
+	* variantNarrowingSearchState.cc (findNextVariant): use
+	reducibleByVariantEquation()
+	(findNextVariant): normalize and compute sorts for instantiated
+	substition before checking for reducibility
+
+	* variantNarrowingSearchState.hh (PositionState): added decl for
+	reducibleByVariantEquation()
+
+	* variantNarrowingSearchState.cc (reducibleByVariantEquation):
+	added
+
+2012-05-03  Steven Eker  <eker@ape.csl.sri.com>
+
+	* variantNarrowingSearchState.cc (VariantNarrowingSearchState):
+	only use equations with the variant attribute
+	(VariantNarrowingSearchState): use equations indexed under symbol
+	for stable symbols
+
+2012-04-30  Steven Eker  <eker@ape.csl.sri.com>
+
+	* unifierFilter.cc (subsumes): don't create zero size
+	substitutions as this breaks stuff
+
+2012-04-27  Steven Eker  <eker@ape.csl.sri.com>
+
+	* unificationProblem.cc (UnificationProblem): use
+	getNrRealVariables() rather than getNrProtectedVariables() - more
+	a cleanliness issue here
+	(findNextUnifier): ditto
+	(findOrderSortedUnifiers): ditto
+	(extractUnifier): dirrot
+
+	* narrowingUnificationProblem.cc (findNextUnifier): use
+	getNrRealVariables() rather than getNrProtectedVariables(); this
+	fixes a nasty problem that we were treating slots introduced for
+	purposes such as variable abstraction during matching as real
+	variables in the preEquation being used for narrowing, resulting
+	in memory corruption
+	(extractUnifier): ditto
+	(findOrderSortedUnifiers): ditto
+
+	* narrowingSearchState.cc (getNarrowedDag): don't clear slots used
+	by rhsBuilder - unification code should never look at these
+
+2012-04-26  Steven Eker  <eker@ape.csl.sri.com>
+
+	* unifierFilter.hh (SimpleRootContainer): updated decl for getNextSurvivingUnifier()
+
+	* unifierFilter.cc (getNextSurvivingUnifier): remove const from unifier
+
+	* variantNarrowingSearchState.hh: created
+
+	* variantNarrowingSearchState.cc: created
+
+	* positionState.hh (P): updated decl for rebuildAndInstantiateDag()
+
+	* positionState.cc (rebuildAndInstantiateDag): turned CantHappen()
+	into an Assert()
+	(rebuildAndInstantiateDag): take PositionIndex
+
+	* unifierFilter.cc (getNextSurvivingUnifier): moved here
+
+2012-04-19  Steven Eker  <eker@ape.csl.sri.com>
+
+	* unifierFilter.cc: rewritten
+
+	* unifierFilter.hh (SimpleRootContainer): rewritten to index
+	retained unifiers by positionIndex and to store equationIndex
+
+2012-04-18  Steven Eker  <eker@ape.csl.sri.com>
+
+	* narrowingUnificationProblem.hh: updated comment to reflect
+	change below
+
+	* narrowingUnificationProblem.cc (findNextUnifier): rewritten so
+	that we don't modify previously generated unifiers to make new
+	unifiers
+
+2012-04-13  Steven Eker  <eker@ape.csl.sri.com>
+
+	* narrowingSearchState.cc (getNarrowedDag): new
+	rebuildAndInstantiateDag() calling convention
+
+	* positionState.hh (P): updated decl for rebuildAndInstantiateDag()
+
+	* positionState.cc (rebuildAndInstantiateDag): rewritten to take
+	an eager copy of the part the substitution we will use if
+	there is any instatiation going to happen
+
+2012-04-05  Steven Eker  <eker@ape.csl.sri.com>
+
+	* unifierFilter.hh: created
+
+	* unifierFilter.cc: created
+
+2012-03-28  Steven Eker  <eker@ape.csl.sri.com>
+
+	* narrowingUnificationProblem.hh (SimpleRootContainer): switched
+	rule for preEquation
+
+	* narrowingUnificationProblem.cc: switched rule for preEquation
+	thoughout file
+
+	* pattern.hh (PreEquation): adde decl for print()
+
+	* pattern.cc (print): added
+
+===================================Maude96===========================================
+
 2011-01-06  Steven Eker  <eker@rho>
 
 	* unificationProblem.cc

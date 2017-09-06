@@ -890,8 +890,13 @@ MetaLevel::upStatementAttributes(MixfixModule* m,
       args.append(printSymbol->makeDagNode(args2));
     }
   const Equation* eq = dynamic_cast<const Equation*>(pe);
-  if (eq != 0 && eq->isOwise())
-    args.append(owiseSymbol->makeDagNode());
+  if (eq != 0)
+    {
+      if (eq->isOwise())
+	args.append(owiseSymbol->makeDagNode());
+      if (eq->isVariant())
+	args.append(variantAttrSymbol->makeDagNode());
+    }
   return upGroup(args, emptyAttrSetSymbol, attrSetSymbol);
 }
 

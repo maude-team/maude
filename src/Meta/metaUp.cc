@@ -419,44 +419,59 @@ MetaLevel::upUnificationTriple(const Substitution& substitution,
   return unificationTripleSymbol->makeDagNode(args);
 }
 
+/*
 DagNode*
-MetaLevel::upUnificationContextTriple(const Substitution& substitution,
-				      const VariableInfo& variableInfo,
-				      DagNode* dagNode,
-				      DagNode* hole,
-				      const mpz_class& variableIndex,
-				      MixfixModule* m)
+MetaLevel::upVariant(const Substitution& substitution,
+		     const VariableInfo& variableInfo,
+		     DagNode*& dagNode,
+		     const mpz_class& variableIndex,
+		     MixfixModule* m)
 {
   PointerMap qidMap;
   PointerMap dagNodeMap;
   Vector<DagNode*> args(3);
   args[0] = upSubstitution(substitution, variableInfo, m, qidMap, dagNodeMap);
-  args[1] = upContext(dagNode, m, hole, qidMap, dagNodeMap);
+  args[1] = upDagNode(dagNode, m, qidMap, dagNodeMap);
   args[2] = succSymbol->makeNatDag(variableIndex);
-  return unificationContextTripleSymbol->makeDagNode(args);
+  return variantSymbol->makeDagNode(args);
 }
+*/
 
 DagNode*
-MetaLevel::upUnificationContext4Tuple(const Substitution& substitution,
-				      const VariableInfo& variableInfo,
-				      DagNode* dagNode,
-				      DagNode* hole,
-				      const mpz_class& variableIndex,
-				      MixfixModule* m)
+MetaLevel::upVariant(const Vector<DagNode*>& variant, 
+		     const NarrowingVariableInfo& variableInfo,
+		     const mpz_class& variableIndex,
+		     MixfixModule* m)
 {
   PointerMap qidMap;
   PointerMap dagNodeMap;
-  Vector<DagNode*> args(4);
-  upDisjointSubstitutions(substitution,
-			  variableInfo,
-			  m,
-			  qidMap,
-			  dagNodeMap,
-			  args[0],
-			  args[1]);
-  args[2] = upContext(dagNode, m, hole, qidMap, dagNodeMap);
-  args[3] = succSymbol->makeNatDag(variableIndex);
-  return unificationContext4TupleSymbol->makeDagNode(args);
+  Vector<DagNode*> args(3);
+
+  int nrVariables = variant.size() - 1;
+  if (nrVariables == 0)
+    args[0] = emptySubstitutionSymbol->makeDagNode();
+  else
+    {
+      Vector<DagNode*> args2(nrVariables);
+      for (int i = 0; i < nrVariables; ++i)
+	{
+	  args2[i] = upAssignment(variableInfo.index2Variable(i),
+				  variant[i],
+				  m,
+				  qidMap,
+				  dagNodeMap);
+	}
+      args[0] = substitutionSymbol->makeDagNode(args2);
+    }
+  args[1] = upDagNode(variant[nrVariables], m, qidMap, dagNodeMap);
+  args[2] = succSymbol->makeNatDag(variableIndex);
+  return variantSymbol->makeDagNode(args);
+}
+
+DagNode*
+MetaLevel::upNoVariant()
+{
+  return noVariantSymbol->makeDagNode();
 }
 
 void
@@ -544,6 +559,19 @@ MetaLevel::upAssignment(const Term* variable,
 }
 
 DagNode*
+MetaLevel::upAssignment(DagNode* variable,
+			DagNode* value,
+			MixfixModule* m,
+			PointerMap& qidMap,
+			PointerMap& dagNodeMap)
+{
+  static Vector<DagNode*> args(2);
+  args[0] = upDagNode(variable, m, qidMap, dagNodeMap);
+  args[1] = upDagNode(value, m, qidMap, dagNodeMap);
+  return assignmentSymbol->makeDagNode(args);
+}
+
+DagNode*
 MetaLevel::upFailurePair()
 {
   return failure2Symbol->makeDagNode();
@@ -565,18 +593,6 @@ DagNode*
 MetaLevel::upNoUnifierTriple()
 {
   return noUnifierTripleSymbol->makeDagNode();
-}
-
-DagNode*
-MetaLevel::upNoUnifierContextTriple()
-{
-  return noUnifierContextTripleSymbol->makeDagNode();
-}
-
-DagNode*
-MetaLevel::upNoUnifierContext4Tuple()
-{
-  return noUnifierContext4TupleSymbol->makeDagNode();
 }
 
 DagNode*
@@ -605,7 +621,6 @@ MetaLevel::upMatchPair(const Substitution& substitution,
   args[1] = upContext(dagNode, m, hole, qidMap, dagNodeMap);
   return matchPairSymbol->makeDagNode(args);
 }
-
 
 DagNode*
 MetaLevel::upFailure4Tuple()

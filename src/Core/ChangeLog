@@ -1,3 +1,80 @@
+2012-05-23  Steven Eker  <eker@ape.csl.sri.com>
+
+	* unificationContext.cc (makeFreshVariable): pass index rather
+	than freshVariableNumber to getFreshVariableName to avoid clashing
+	names with existing variables during narrowing steps
+
+2012-05-21  Steven Eker  <eker@ape.csl.sri.com>
+
+	* rewritingContext.hh (SimpleRootContainer): new decl for traceVariantNarrowingStep()
+	(addInCount, transferCount): update narrowingCount and variantNarrowingCount
+	(getTotalCount): include narrowingCount and variantNarrowingCount
+	(SimpleRootContainer): added data members narrowingCount and variantNarrowingCount
+	(RewritingContext): clear narrowingCount and variantNarrowingCount
+	(getNarrowingCount): added
+	(getVariantNarrowingCount): added
+	(incrementNarrowingCount, incrementVariantNarrowingCount): added
+
+2012-05-18  Steven Eker  <eker@ape.csl.sri.com>
+
+	* rewritingContext.cc (traceVariantNarrowingStep): added stub
+
+	* rewritingContext.hh (SimpleRootContainer): added decl for traceVariantNarrowingStep()
+
+2012-05-11  Steven Eker  <eker@ape.csl.sri.com>
+
+	* freshVariableGenerator.hh (F): added odd field
+
+2012-05-04  Steven Eker  <eker@ape.csl.sri.com>
+
+	* equation.cc (compile): always compile lhs for equations with the
+	variant attribute
+
+2012-05-03  Steven Eker  <eker@ape.csl.sri.com>
+
+	* equation.cc (compile): pessimize the variant case
+
+	* equation.hh (PreEquation): added VARIANT to flags
+	(isVariant): added
+	(setVariant): added
+
+2012-04-05  Steven Eker  <eker@ape.csl.sri.com>
+
+	* rewritingContext.cc (markReachableNodes): check for limited use
+	RewritingContext
+
+	* rewritingContext.hh (RewritingContext): added ctor for limited
+	use RewritingContexts
+
+2012-03-28  Steven Eker  <eker@ape.csl.sri.com>
+
+	* equation.hh (PreEquation): added decl for print()
+
+	* sortConstraint.hh (PreEquation): added decl for print()
+
+	* equation.cc (print): added
+
+	* rule.cc (getLhsDag, reset): deleted
+	(print): added
+
+	* rule.hh (PreEquation): added decl for print(); deleted
+	declarations for getLhsDag(), reset()
+
+	* preEquation.hh (BadFlag): added decls for getLhsDag(), reset(),
+	print(), operator<<()
+
+	* preEquation.cc (getLhsDag): added
+	(getLhsDag): added
+	(reset): added
+
+	* preEquation.hh (BadFlag): added data member lhsDag
+
+	* equationTable.hh (E): added decl for resetEachEquation()
+
+	* equationTable.cc (resetEachEquation): added
+
+===================================Maude96===========================================
+
 2011-11-22  Steven Eker  <eker@rho>
 
 	* unificationContext.cc (UnificationContext::restoreFromClone): added
@@ -38,7 +115,7 @@
 
 	* sortTable.cc (SortTable::computeMaximalOpDeclSetTable)
 	(SortTable::minimize, SortTable::buildSortDiagram): add comments
-	(SortTable::findMinSortIndex): rewriten using FOR_EACH_CONST
+	(SortTable::findMinSortIndex): rewritten using FOR_EACH_CONST
 
 ===================================Maude95c===========================================
 

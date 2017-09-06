@@ -81,7 +81,7 @@ public:
   virtual void stackArguments(DagNode* subject,
 			      Vector<RedexPosition>& stack,
 			      int parentIndex) = 0;
-  
+  virtual Term* termify(DagNode* dagNode) = 0;
   //
   //	These functions may be redefined for each derived class.
   //
@@ -132,7 +132,7 @@ public:
   virtual UnificationSubproblem* makeUnificationSubproblem();
   virtual int unificationPriority() const;
   //
-  //	Symbols that can disappear under substitution must rdefine this to return false.
+  //	Symbols that can disappear under substitution must redefine this to return false.
   //
   virtual bool isStable() const = 0;
   //

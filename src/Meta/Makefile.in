@@ -222,7 +222,8 @@ EXTRA_DIST = \
 	metaNarrow.cc \
 	descentSignature.cc \
 	interpreterSignature.cc \
-	metaUpView.cc
+	metaUpView.cc \
+	metaVariant.cc
 
 noinst_HEADERS = \
 	meta.hh \

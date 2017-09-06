@@ -704,6 +704,8 @@ MetaLevel::downStatementAttr(DagNode* metaAttr, MixfixModule* m, StatementAttrib
     }
   else if (ma == owiseSymbol)
     ai.flags.setFlags(OWISE);
+  else if (ma == variantAttrSymbol)
+    ai.flags.setFlags(VARIANT);
   else if (ma == nonexecSymbol)
     ai.flags.setFlags(NONEXEC);
   else if (ma == printSymbol && !ai.flags.getFlag(PRINT))
@@ -858,6 +860,13 @@ MetaLevel::downEquation(DagNode* metaEquation, MixfixModule* m)
 					      ai.flags.getFlag(OWISE), condition);
 		  if (ai.flags.getFlag(NONEXEC))
 		    eq->setNonexec();
+		  if (ai.flags.getFlag(VARIANT))
+		    {
+		      if (condition.empty())
+			eq->setVariant();
+		      else
+			IssueAdvisory("variant attribute not allowed for conditional equation in meta-module " << QUOTE(m) << '.');
+		    }
 		  m->insertEquation(eq);
 		  if (ai.metadata != NONE)
 		    m->insertMetadata(MixfixModule::EQUATION, eq, ai.metadata);

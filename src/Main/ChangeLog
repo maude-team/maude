@@ -1,3 +1,17 @@
+2012-05-03  Steven Eker  <eker@ape.csl.sri.com>
+
+	* prelude.maude: added meta representation of variant attribute
+
+2012-03-28  Steven Eker  <eker@ape.csl.sri.com>
+
+	* prelude.maude: fix arity for metaGenerateVariant()
+
+2012-03-08  Steven Eker  <eker@ape.csl.sri.com>
+
+	* prelude.maude: added variant narrowing syntax and descent functions
+
+===================================Maude96===========================================
+
 2010-07-13  Steven Eker  <eker@rho>
 
 	* metaInterpreter.maude: added insertView/insertedView and
@@ -93,7 +107,7 @@
 
 	* prelude.maude: moved set include BOOL on to after last module;
 	added syntax for metaUnify()
-	
+
 ===================================Maude88d===========================================
 
 2006-11-20  Steven Eker  <eker@goo.csl.sri.com>

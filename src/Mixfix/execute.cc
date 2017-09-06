@@ -131,7 +131,9 @@ Interpreter::printStats(const Timer& timer, RewritingContext& context, bool timi
     {
       cout << "mb applications: " << context.getMbCount() <<
 	"  equational rewrites: " << context.getEqCount() <<
-	"  rule rewrites: " << context.getRlCount() << '\n';
+	"  rule rewrites: " << context.getRlCount() <<
+	"  variant narrowing steps: " << context.getVariantNarrowingCount() <<
+	"  narrowing steps: " << context.getNarrowingCount() << '\n';
     }
 }
 

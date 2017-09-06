@@ -302,6 +302,18 @@ CUI_Symbol::setFrozen(const NatSet& frozen)
     BinarySymbol::setFrozen(frozen);
 }
 
+Term*
+CUI_Symbol::termify(DagNode* dagNode)
+{
+  Vector<Term*> arguments(2);
+  DagNode** argArray = safeCast(CUI_DagNode*, dagNode)->argArray;
+  DagNode* d0 = argArray[0];
+  DagNode* d1 = argArray[1];
+  arguments[0] = d0->symbol()->termify(d0);
+  arguments[1] = d1->symbol()->termify(d1);
+  return new CUI_Term(this, arguments);
+}
+
 //
 //	Unification code.
 //

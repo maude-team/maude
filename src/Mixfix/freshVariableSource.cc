@@ -61,26 +61,26 @@ FreshVariableSource::FreshVariableSource(MixfixModule* module, const mpz_class& 
 }
 
 int
-FreshVariableSource::getFreshVariableName(int index)
+FreshVariableSource::getFreshVariableName(int index, bool odd)
 {
-  //
-  //	Check to see if we've aready computed a variable name for this index.
-  //
-  int nrCached = cache.size();
+  Vector<int>& cacheToUse = /* odd ? oddCache : */ cache;
+  char charToUse = /* odd ? '%' : */ '#';
+
+  int nrCached = cacheToUse.size();
   if (index < nrCached)
     {
-      int t = cache[index];
+      int t = cacheToUse[index];
       if (t >= 0)
 	return t;
     }
   //
   //	In order to avoid allocating the name twice we convert the negative index to a
-  //	string and replace the minus sign with a '#'.
+  //	string and replace the minus sign with a '#' or '%'
   //
   int negIndex = -(index + 1);
   mpz_class negativeIndex = negIndex - baseNumber;
   char* name = mpz_get_str (0, 10, negativeIndex.get_mpz_t());
-  name[0] = '#';
+  name[0] = charToUse;
   int code = Token::encode(name);
   free(name);
   //
@@ -88,11 +88,11 @@ FreshVariableSource::getFreshVariableName(int index)
   //
   if (index >= nrCached)
     {
-      cache.resize(index + 1);
+      cacheToUse.resize(index + 1);
       for (int i = nrCached; i < index; ++i)
-	cache[i] = -1;
+	cacheToUse[i] = -1;
     }
-  cache[index] = code;
+  cacheToUse[index] = code;
   return code;
 }
 
@@ -106,7 +106,7 @@ bool
 FreshVariableSource::variableNameConflict(int id)
 {
   const char* name = Token::name(Token::unflaggedCode(id));
-  if (name[0] != '#' || name[1] == '0' || name[1] == '\0')
+  if ((name[0] != '#' /* && name[0] != '%' */) || name[1] == '0' || name[1] == '\0')
     return false;
   for (const char* p = name + 1; *p; ++p)
     {

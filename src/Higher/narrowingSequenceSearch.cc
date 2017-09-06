@@ -171,9 +171,17 @@ NarrowingSequenceSearch::findNextNormalForm()
 	  if (context->traceAbort())
 	    return false;
 	}
+      initial->incrementNarrowingCount();
 
       RewritingContext* newContext = initial->makeSubcontext(narrowedDag);
       newContext->reduce();
+      if (newContext->traceAbort())
+	{
+	  delete newContext;
+	  return false;
+	}
+      initial->addInCount(*newContext);
+      
       if (seenSet.dagNode2Index(newContext->root()) != NONE)
 	{
 	  delete newContext;

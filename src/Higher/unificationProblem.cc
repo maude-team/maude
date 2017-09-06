@@ -79,7 +79,7 @@ UnificationProblem::UnificationProblem(Vector<Term*>& lhs,
   //
   //	Check that variables have safe names
   //
-  int nrOriginalVariables = variableInfo.getNrProtectedVariables();
+  int nrOriginalVariables = variableInfo.getNrRealVariables();
   for (int i = 0; i < nrOriginalVariables; ++i)
     {
       Term* v = variableInfo.index2Variable(i);
@@ -204,7 +204,7 @@ UnificationProblem::findNextUnifier()
       //cout << "=== final solved form ===" << endl;
 #if 0
       cout << "total variables = " << unsortedSolution->nrFragileBindings() << endl;
-      int nrRealVariables = variableInfo.getNrProtectedVariables();
+      int nrRealVariables = variableInfo.getNrRealVariables();
       for (int i = 0; i < nrRealVariables; ++i)
 	{
 	  cout << variableInfo.index2Variable(i) << " =? ";
@@ -243,7 +243,7 @@ UnificationProblem::findNextUnifier()
 #if 0
 	  {
 	    cout << "total variables = " << unsortedSolution->nrFragileBindings() << endl;
-	    int nrRealVariables = variableInfo.getNrProtectedVariables();
+	    int nrRealVariables = variableInfo.getNrRealVariables();
 	    for (int i = 0; i < nrRealVariables; ++i)
 	      {
 		cout << variableInfo.index2Variable(i) << " =? ";
@@ -319,7 +319,7 @@ UnificationProblem::findOrderSortedUnifiers()
   int nrActualVariables = sortedSolution->nrFragileBindings();
   Vector<int> realToBdd(nrActualVariables);
   int nextBddVariable = sortBdds->getFirstAvailableVariable();
-  int nrOriginalVariables = variableInfo.getNrProtectedVariables();
+  int nrOriginalVariables = variableInfo.getNrRealVariables();
   for (int i = 0; i < nrActualVariables; ++i)
     {
       if (sortedSolution->value(i) == 0)
@@ -473,7 +473,7 @@ UnificationProblem::extractUnifier()
   //	bound variables by their dependencies and if that can be done, by
   //	instantiating their bindings in that order.
   //
-  int nrOriginalVariables = variableInfo.getNrProtectedVariables();
+  int nrOriginalVariables = variableInfo.getNrRealVariables();
   order.clear();
   done.clear();
   pending.clear();

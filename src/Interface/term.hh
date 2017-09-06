@@ -72,6 +72,7 @@ public:
   DagNode* term2Dag(bool setSortInfo = false);
   DagNode* dagify();
   void indexVariables(VariableInfo& indicies);
+  void addContextVariables(const NatSet& externalVariables);
   void determineContextVariables();
   void markEager(int nrVariables,
 		 const NatSet& eagerVariables,
@@ -497,6 +498,12 @@ inline bool
 Term::leq(const Sort* sort) const
 {
   return ::leq(sortIndex, sort);
+}
+
+inline void
+Term::addContextVariables(const NatSet& externalVariables)
+{
+  contextSet.insert(externalVariables);
 }
 
 //

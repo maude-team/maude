@@ -71,7 +71,11 @@ am_libhigher_a_OBJECTS = libhigher_a-rewriteSearchState.$(OBJEXT) \
 	libhigher_a-unificationProblem.$(OBJEXT) \
 	libhigher_a-narrowingSearchState.$(OBJEXT) \
 	libhigher_a-narrowingUnificationProblem.$(OBJEXT) \
-	libhigher_a-narrowingSequenceSearch.$(OBJEXT)
+	libhigher_a-narrowingSequenceSearch.$(OBJEXT) \
+	libhigher_a-unifierFilter.$(OBJEXT) \
+	libhigher_a-variantNarrowingSearchState.$(OBJEXT) \
+	libhigher_a-variantFolder.$(OBJEXT) \
+	libhigher_a-variantSearch.$(OBJEXT)
 libhigher_a_OBJECTS = $(am_libhigher_a_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
@@ -224,7 +228,11 @@ libhigher_a_SOURCES = \
 	unificationProblem.cc \
 	narrowingSearchState.cc \
 	narrowingUnificationProblem.cc \
-	narrowingSequenceSearch.cc
+	narrowingSequenceSearch.cc \
+	unifierFilter.cc \
+	variantNarrowingSearchState.cc \
+	variantFolder.cc \
+	variantSearch.cc
 
 noinst_HEADERS = \
 	assignmentConditionFragment.hh \
@@ -249,7 +257,11 @@ noinst_HEADERS = \
 	narrowingUnificationProblem.hh \
 	narrowingSequenceSearch.hh \
 	sequenceSearch.hh \
-	cacheableState.hh
+	cacheableState.hh \
+	unifierFilter.hh \
+	variantNarrowingSearchState.hh \
+	variantFolder.hh \
+	variantSearch.hh
 
 all: all-am
 
@@ -318,6 +330,10 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libhigher_a-stateTransitionGraph.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libhigher_a-temporalSymbol.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libhigher_a-unificationProblem.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libhigher_a-unifierFilter.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libhigher_a-variantFolder.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libhigher_a-variantNarrowingSearchState.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libhigher_a-variantSearch.Po@am__quote@
 
 .cc.o:
 @am__fastdepCXX_TRUE@	if $(CXXCOMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -c -o $@ $<; \
@@ -612,6 +628,62 @@ libhigher_a-narrowingSequenceSearch.obj: narrowingSequenceSearch.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='narrowingSequenceSearch.cc' object='libhigher_a-narrowingSequenceSearch.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libhigher_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libhigher_a-narrowingSequenceSearch.obj `if test -f 'narrowingSequenceSearch.cc'; then $(CYGPATH_W) 'narrowingSequenceSearch.cc'; else $(CYGPATH_W) '$(srcdir)/narrowingSequenceSearch.cc'; fi`
+
+libhigher_a-unifierFilter.o: unifierFilter.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libhigher_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libhigher_a-unifierFilter.o -MD -MP -MF "$(DEPDIR)/libhigher_a-unifierFilter.Tpo" -c -o libhigher_a-unifierFilter.o `test -f 'unifierFilter.cc' || echo '$(srcdir)/'`unifierFilter.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libhigher_a-unifierFilter.Tpo" "$(DEPDIR)/libhigher_a-unifierFilter.Po"; else rm -f "$(DEPDIR)/libhigher_a-unifierFilter.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='unifierFilter.cc' object='libhigher_a-unifierFilter.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libhigher_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libhigher_a-unifierFilter.o `test -f 'unifierFilter.cc' || echo '$(srcdir)/'`unifierFilter.cc
+
+libhigher_a-unifierFilter.obj: unifierFilter.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libhigher_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libhigher_a-unifierFilter.obj -MD -MP -MF "$(DEPDIR)/libhigher_a-unifierFilter.Tpo" -c -o libhigher_a-unifierFilter.obj `if test -f 'unifierFilter.cc'; then $(CYGPATH_W) 'unifierFilter.cc'; else $(CYGPATH_W) '$(srcdir)/unifierFilter.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libhigher_a-unifierFilter.Tpo" "$(DEPDIR)/libhigher_a-unifierFilter.Po"; else rm -f "$(DEPDIR)/libhigher_a-unifierFilter.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='unifierFilter.cc' object='libhigher_a-unifierFilter.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libhigher_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libhigher_a-unifierFilter.obj `if test -f 'unifierFilter.cc'; then $(CYGPATH_W) 'unifierFilter.cc'; else $(CYGPATH_W) '$(srcdir)/unifierFilter.cc'; fi`
+
+libhigher_a-variantNarrowingSearchState.o: variantNarrowingSearchState.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libhigher_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libhigher_a-variantNarrowingSearchState.o -MD -MP -MF "$(DEPDIR)/libhigher_a-variantNarrowingSearchState.Tpo" -c -o libhigher_a-variantNarrowingSearchState.o `test -f 'variantNarrowingSearchState.cc' || echo '$(srcdir)/'`variantNarrowingSearchState.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libhigher_a-variantNarrowingSearchState.Tpo" "$(DEPDIR)/libhigher_a-variantNarrowingSearchState.Po"; else rm -f "$(DEPDIR)/libhigher_a-variantNarrowingSearchState.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='variantNarrowingSearchState.cc' object='libhigher_a-variantNarrowingSearchState.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libhigher_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libhigher_a-variantNarrowingSearchState.o `test -f 'variantNarrowingSearchState.cc' || echo '$(srcdir)/'`variantNarrowingSearchState.cc
+
+libhigher_a-variantNarrowingSearchState.obj: variantNarrowingSearchState.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libhigher_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libhigher_a-variantNarrowingSearchState.obj -MD -MP -MF "$(DEPDIR)/libhigher_a-variantNarrowingSearchState.Tpo" -c -o libhigher_a-variantNarrowingSearchState.obj `if test -f 'variantNarrowingSearchState.cc'; then $(CYGPATH_W) 'variantNarrowingSearchState.cc'; else $(CYGPATH_W) '$(srcdir)/variantNarrowingSearchState.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libhigher_a-variantNarrowingSearchState.Tpo" "$(DEPDIR)/libhigher_a-variantNarrowingSearchState.Po"; else rm -f "$(DEPDIR)/libhigher_a-variantNarrowingSearchState.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='variantNarrowingSearchState.cc' object='libhigher_a-variantNarrowingSearchState.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libhigher_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libhigher_a-variantNarrowingSearchState.obj `if test -f 'variantNarrowingSearchState.cc'; then $(CYGPATH_W) 'variantNarrowingSearchState.cc'; else $(CYGPATH_W) '$(srcdir)/variantNarrowingSearchState.cc'; fi`
+
+libhigher_a-variantFolder.o: variantFolder.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libhigher_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libhigher_a-variantFolder.o -MD -MP -MF "$(DEPDIR)/libhigher_a-variantFolder.Tpo" -c -o libhigher_a-variantFolder.o `test -f 'variantFolder.cc' || echo '$(srcdir)/'`variantFolder.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libhigher_a-variantFolder.Tpo" "$(DEPDIR)/libhigher_a-variantFolder.Po"; else rm -f "$(DEPDIR)/libhigher_a-variantFolder.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='variantFolder.cc' object='libhigher_a-variantFolder.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libhigher_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libhigher_a-variantFolder.o `test -f 'variantFolder.cc' || echo '$(srcdir)/'`variantFolder.cc
+
+libhigher_a-variantFolder.obj: variantFolder.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libhigher_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libhigher_a-variantFolder.obj -MD -MP -MF "$(DEPDIR)/libhigher_a-variantFolder.Tpo" -c -o libhigher_a-variantFolder.obj `if test -f 'variantFolder.cc'; then $(CYGPATH_W) 'variantFolder.cc'; else $(CYGPATH_W) '$(srcdir)/variantFolder.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libhigher_a-variantFolder.Tpo" "$(DEPDIR)/libhigher_a-variantFolder.Po"; else rm -f "$(DEPDIR)/libhigher_a-variantFolder.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='variantFolder.cc' object='libhigher_a-variantFolder.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libhigher_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libhigher_a-variantFolder.obj `if test -f 'variantFolder.cc'; then $(CYGPATH_W) 'variantFolder.cc'; else $(CYGPATH_W) '$(srcdir)/variantFolder.cc'; fi`
+
+libhigher_a-variantSearch.o: variantSearch.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libhigher_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libhigher_a-variantSearch.o -MD -MP -MF "$(DEPDIR)/libhigher_a-variantSearch.Tpo" -c -o libhigher_a-variantSearch.o `test -f 'variantSearch.cc' || echo '$(srcdir)/'`variantSearch.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libhigher_a-variantSearch.Tpo" "$(DEPDIR)/libhigher_a-variantSearch.Po"; else rm -f "$(DEPDIR)/libhigher_a-variantSearch.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='variantSearch.cc' object='libhigher_a-variantSearch.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libhigher_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libhigher_a-variantSearch.o `test -f 'variantSearch.cc' || echo '$(srcdir)/'`variantSearch.cc
+
+libhigher_a-variantSearch.obj: variantSearch.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libhigher_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libhigher_a-variantSearch.obj -MD -MP -MF "$(DEPDIR)/libhigher_a-variantSearch.Tpo" -c -o libhigher_a-variantSearch.obj `if test -f 'variantSearch.cc'; then $(CYGPATH_W) 'variantSearch.cc'; else $(CYGPATH_W) '$(srcdir)/variantSearch.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libhigher_a-variantSearch.Tpo" "$(DEPDIR)/libhigher_a-variantSearch.Po"; else rm -f "$(DEPDIR)/libhigher_a-variantSearch.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='variantSearch.cc' object='libhigher_a-variantSearch.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libhigher_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libhigher_a-variantSearch.obj `if test -f 'variantSearch.cc'; then $(CYGPATH_W) 'variantSearch.cc'; else $(CYGPATH_W) '$(srcdir)/variantSearch.cc'; fi`
 uninstall-info-am:
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
