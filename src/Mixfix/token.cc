@@ -376,12 +376,24 @@ Token::checkForSpecialProperty(const char* tokenString)
 bool
 Token::looksLikeRational(const char* s)
 {
+  bool neg = false;
   if (*s == '-')
-    s++;
+    {
+      s++;
+      neg = true;
+    }
   {
     char c = *s++;
-    if (!isdigit(c) || c == '0')
+    if (!isdigit(c))
       return false;
+    if (c == '0')
+      {
+	//
+	//	We allow 0/n but not -0/n or 00/n.
+	//
+	if (neg || *s != '/')
+	  return false;
+      }
   }
   for (;;)
     {
@@ -517,7 +529,10 @@ Token::int64ToCode(Int64 i)
   int code = stringTable.encode(int64ToString(i, 10));
   if (code == specialProperties.length())
     {
-      specialProperties.append((i < 0) ? SMALL_NEG : SMALL_NAT);
+      specialProperties.append((i == 0) ? ZERO : ((i < 0) ? SMALL_NEG : SMALL_NAT));
+      //
+      //	Integers are always valid sorts.
+      //
       auxProperties.append(AUX_SORT);
     }
   return code;
@@ -539,6 +554,9 @@ Token::doubleToCode(double d)
   if (code == specialProperties.length())
     {
       specialProperties.append(FLOAT);
+      //
+      //	Floats might look like a sort or a "constant.sort".
+      //
       auxProperties.append(computeAuxProperty(stringTable.name(code)));
     }
   return code;

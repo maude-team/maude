@@ -1,3 +1,49 @@
+2014-06-04  Steven Eker  <eker@ape.csl.sri.com>
+
+	* descentFunctions.cc (metaCheck): deleted commented out code
+	(metaCheck): use QUOTE() in advisories
+
+2014-06-03  Steven Eker  <eker@ape.csl.sri.com>
+
+	* metaUp.cc (upSMT_Number): use getRangeSort()
+
+	* descentFunctions.cc (metaCheck): use getRangeSort()
+
+2014-05-21  Steven Eker  <eker@ape.csl.sri.com>
+
+	* descentFunctions.cc (metaCheck): fix memory leak if we return
+	early
+
+2014-05-20  Steven Eker  <eker@ape.csl.sri.com>
+
+	* descentFunctions.cc (metaCheck): implemented
+	(metaCheck): added check for null Expr and advisories
+	(metaCheck): deepSelfDestruct() term
+
+	* descentSignature.cc: added metaCheck
+
+	* descentFunctions.cc (metaCheck): added stub
+
+2014-05-19  Steven Eker  <eker@ape.csl.sri.com>
+
+	* metaLevel.hh (M): added decl for upSMT_Number()
+
+	* metaUp.cc (upDagNode): added SMT_NUMBER_SYMBOL case
+	(upTerm): added SMT_NUMBER_SYMBOL case
+	(upSMT_Number): added
+
+2014-05-16  Steven Eker  <eker@ape.csl.sri.com>
+
+	* descentFunctions.cc (metaDownTerm): output advisory when term is
+	in the wrong kind
+
+2014-05-15  Steven Eker  <eker@ape.csl.sri.com>
+
+	* metaDown.cc (downTerm): added cases for SMT integers and reals
+	(downTerm): need to capture ZERO case as well
+
+===================================Maude103===========================================
+
 2014-03-03  Steven Eker  <eker@ape.csl.sri.com>
 
 	* metaLevelOpSymbol.hh (FreeSymbol): added decl for metaGetVariant2()

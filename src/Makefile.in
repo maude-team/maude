@@ -98,6 +98,7 @@ CC = @CC@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
 CPPFLAGS = @CPPFLAGS@
+CVC4_LIB = @CVC4_LIB@
 CXX = @CXX@
 CXXCPP = @CXXCPP@
 CXXDEPMODE = @CXXDEPMODE@
@@ -216,6 +217,7 @@ SUBDIRS = \
 	MSCP10 \
 	StrategyLanguage \
 	Mixfix \
+	SMT \
 	Main
 
 all: all-recursive

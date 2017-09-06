@@ -50,6 +50,7 @@ public:
   const Vector<OpDeclaration>& getOpDeclarations() const;
   /* const */ ConnectedComponent* rangeComponent() const;
   const ConnectedComponent* domainComponent(int argNr) const;
+  Sort* getRangeSort() const;
   Sort* getSingleNonErrorSort() const;
   int getCtorStatus() const;
   virtual void compileOpDeclarations();
@@ -169,6 +170,17 @@ inline /* const */ ConnectedComponent*
 SortTable::rangeComponent() const
 {
   return opDeclarations[0].getDomainAndRange()[nrArgs]->component();
+}
+
+inline Sort*
+SortTable::getRangeSort() const
+{
+  //
+  //	If an operator has been declared with multiple range sort, this
+  //	function just returns the first, which is good enough for some
+  //	purposes.
+  //
+  return opDeclarations[0].getDomainAndRange()[nrArgs];
 }
 
 inline const ConnectedComponent*

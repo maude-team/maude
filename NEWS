@@ -1,3 +1,11 @@
+Overview of Changes in alpha103
+===============================
+* 0/1 is now a valid Rat constant
+* advisory printed when downTerm() fails because of kind clash
+* experimental support for calling CVC4
+* fixed bug where metaPrettyPrint() was failing to generate neeed
+  disambiguation for built-in data types
+
 Overview of Changes in alpha102
 ===============================
 * experimental support for linear associative unification

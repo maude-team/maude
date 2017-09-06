@@ -63,12 +63,120 @@
 #include "interpreter.hh"
 #include "global.hh"
 
+
+#include "cvc4/expr/expr_manager.h"
+#include "cvc4/smt/smt_engine.h"
+
+using namespace CVC4;
+
+void
+testCVC4()
+{
+  ExprManager em;
+  SmtEngine smt(&em);
+  Expr onePlusTwo = em.mkExpr(kind::PLUS,
+                              em.mkConst(Rational(1)),
+                              em.mkConst(Rational(2)));
+  std::cout << Expr::setlanguage(language::output::LANG_CVC4)
+            << smt.getInfo("name")
+            << " says that 1 + 2 = "
+            << smt.simplify(onePlusTwo)
+            << std::endl;
+}
+
+void
+test2()
+{
+  ExprManager em;
+  Expr helloworld = em.mkVar("Hello World!", em.booleanType());
+  SmtEngine smt(&em);
+  std::cout << helloworld << " is " << smt.query(helloworld) << std::endl;
+}
+
+void
+test3()
+{
+  ExprManager em;
+  SmtEngine smt(&em);
+  smt.setOption("incremental", SExpr("true"));  // Enable incremental solving
+
+  Type real = em.realType();
+  Type integer = em.integerType();
+
+  Expr x = em.mkVar("x", integer);
+  Expr y = em.mkVar("y", real);
+
+  Expr three = em.mkConst(Rational(3));
+  Expr neg2 = em.mkConst(Rational(-2));
+  Expr two_thirds = em.mkConst(Rational(2,3));
+
+  Expr three_y = em.mkExpr(kind::MULT, three, y);  // 3y
+  Expr diff = em.mkExpr(kind::MINUS, y, x);  // y - x
+
+  Expr x_geq_3y = em.mkExpr(kind::GEQ, x, three_y);  // x >= 3y
+  Expr x_leq_y = em.mkExpr(kind::LEQ, x, y);  // x <= y
+  Expr neg2_lt_x = em.mkExpr(kind::LT, neg2, x);  // -2 < x
+
+  Expr assumptions = em.mkExpr(kind::AND, x_geq_3y, x_leq_y, neg2_lt_x);  // x >= 3y /\ x <= y /\ -2 < x
+  smt.assertFormula(assumptions);
+
+  //smt.push();
+  Expr diff_leq_two_thirds = em.mkExpr(kind::LEQ, diff, two_thirds);   // y - x <= 2/3
+  cout << "Prove that " << diff_leq_two_thirds << " with CVC4." << endl;
+  cout << "CVC4 should report VALID." << endl;
+  cout << "Result from CVC4 is: " << smt.query(diff_leq_two_thirds) << endl;
+  //smt.pop();
+
+  smt.push();
+  Expr diff_is_two_thirds = em.mkExpr(kind::EQUAL, diff, two_thirds);  // y - x = 2/3
+  smt.assertFormula(diff_is_two_thirds);
+  cout << "Show that the asserts are consistent with " << endl;
+  cout << diff_is_two_thirds << " with CVC4." << endl;
+  cout << "CVC4 should report SAT." << endl;
+  cout << "Result from CVC4 is: " << smt.checkSat(em.mkConst(true)) << endl;
+  smt.pop();
+
+}
+
+
+void
+test4()
+{
+  ExprManager em;
+  SmtEngine smt(&em);
+  smt.setOption("incremental", SExpr("true"));  // Enable incremental solving
+
+  Type integer = em.integerType();
+
+  Expr x = em.mkVar("x", integer);
+  Expr y = em.mkVar("y", integer);
+  
+  Expr x_geq_y = em.mkExpr(kind::GEQ, x, y);
+  Expr max_x_y = em.mkExpr(kind::ITE, x_geq_y, x, y);
+
+  Expr max_x_y_geq_x = em.mkExpr(kind::GEQ, max_x_y, x);
+
+  cout << "valid = " << smt.query(max_x_y_geq_x) << endl;
+
+  smt.push();
+  smt.assertFormula(max_x_y_geq_x);
+  cout << "sat = " << smt.checkSat(em.mkConst(true)) << endl;
+  smt.pop();
+
+}
+
+
+
 int
 main(int argc, char* argv[])
 {
   void testSeq();
 
   //testSeq();
+  //testCVC4();
+  //test2();
+  //test3();
+  //test4();
   //
   //	Global function declatations
   //

@@ -150,6 +150,12 @@ MetaLevel::upDagNode(DagNode* dagNode,
 	d = upConstant(Token::doubleToCode(mf), dagNode, qidMap);
 	break;
       }
+    case SymbolType::SMT_NUMBER_SYMBOL:
+      {
+	const mpq_class& value = safeCast(SMT_NumberDagNode*, dagNode)->getValue();
+	d = upSMT_Number(value, s, m, qidMap);
+	break;
+      }
     case SymbolType::VARIABLE:
       {
 	VariableDagNode* v = safeCast(VariableDagNode*, dagNode);
@@ -219,6 +225,11 @@ MetaLevel::upTerm(const Term* term, MixfixModule* m, PointerMap& qidMap)
       {
 	double mf = static_cast<const FloatTerm*>(term)->getValue();
 	return upConstant(Token::doubleToCode(mf), MixfixModule::disambiguatorSort(term), qidMap);
+      }
+    case SymbolType::SMT_NUMBER_SYMBOL:
+      {
+	const mpq_class& value = safeCast(const SMT_NumberTerm*, term)->getValue();
+	return upSMT_Number(value, s, m, qidMap);
       }
     case SymbolType::VARIABLE:
       {
@@ -862,4 +873,12 @@ DagNode*
 MetaLevel::upNoVariant()
 {
   return noVariantSymbol->makeDagNode();
+}
+
+DagNode*
+MetaLevel::upSMT_Number(const mpq_class& value, Symbol* symbol, MixfixModule* m, PointerMap& qidMap)
+{
+  Sort* sort = symbol->getRangeSort();
+  int id = m->getSMT_NumberToken(value, sort);
+  return upJoin(id, sort, '.', qidMap);
 }

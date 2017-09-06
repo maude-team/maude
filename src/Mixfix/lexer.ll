@@ -159,6 +159,7 @@ rew|rewrite				return KW_REWRITE;
 erew|erewrite				return KW_EREWRITE;
 frew|frewrite				return KW_FREWRITE;
 srew|srewrite				return KW_SREWRITE;
+check					return KW_CHECK;
 loop					return KW_LOOP;
 cont|continue				return KW_CONTINUE;
 nar|narrow				return KW_NARROW;
