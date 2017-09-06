@@ -1,3 +1,7 @@
+Overview of Changes in Maude alpha89b
+=====================================
+* fixed bug where early unifcation failure caused memory corruption
+
 Overview of Changes in Maude alpha89a
 =====================================
 * fixed bug where syntax could leave renaming in bad state

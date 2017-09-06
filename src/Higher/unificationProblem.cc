@@ -85,6 +85,11 @@ UnificationProblem::UnificationProblem(Term* lhs, Term* rhs, FreshVariableGenera
     }
   //unsortedSolution->clear(nrOriginalVariables);  // unsafe!
   //  cout << "=== computing solved form ===" << endl;
+  //
+  //	computeSolvedForm() only sets subproblem on success; so if we don't clear it
+  //	here we will attempt to free a random location in our dtor following a failure.
+  //
+  subproblem = 0;
   viable = lhsDag->computeSolvedForm(rhsDag, *unsortedSolution, subproblem);
   /*
   int nrRealVariables = getNrProtectedVariables();
