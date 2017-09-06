@@ -101,7 +101,6 @@ private:
   //
   //	Data passed at initialization.
   //
-  const SearchType searchType;
   const SMT_Info& smtInfo;  // information about SMT sort; might get folded into wrapper
   SMT_EngineWrapper* const engine;  // wrapper to call the SMT engine
   const int maxDepth;

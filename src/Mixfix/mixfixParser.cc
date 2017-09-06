@@ -744,7 +744,7 @@ MixfixParser::makeTerm(int node)
 	SMT_NumberSymbol* symbol = safeCast(SMT_NumberSymbol*, client.getSymbols()[a.data]);
 	const char* name = (*currentSentence)[pos].name();
 	mpq_class rat(name);
-	rat.canonicalize();  // precautionary - we don't plan to compute with these ourself
+	rat.canonicalize();  // we don't compute with these ourself but SMT solver might require canonical form
 	t = new SMT_NumberTerm(symbol, rat);
 	break;
       }

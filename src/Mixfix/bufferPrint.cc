@@ -97,13 +97,18 @@ MixfixModule::handleIter(Vector<int>& buffer, Term* term, SymbolInfo& si, bool r
   if (number == 1)
     return false;  // do default thing
 
-  // NEED TO FIX: disambig; i.e. we might have a regular operator called f^2
+  bool needToDisambiguate;
+  bool argumentRangeKnown;
+  decideIteratedAmbiguity(rangeKnown, term->symbol(), number, needToDisambiguate, argumentRangeKnown);
+  prefix(buffer, needToDisambiguate);
+
   string prefixName;
   makeIterName(prefixName, term->symbol()->id(), number);
   printPrefixName(buffer, Token::encode(prefixName.c_str()), si, printFlags);
   buffer.append(leftParen);
-  prettyPrint(buffer, st->getArgument(), PREFIX_GATHER, UNBOUNDED, 0, UNBOUNDED, 0, rangeKnown, printFlags);
+  prettyPrint(buffer, st->getArgument(), PREFIX_GATHER, UNBOUNDED, 0, UNBOUNDED, 0, argumentRangeKnown, printFlags);
   buffer.append(rightParen);
+  suffix(buffer, term, needToDisambiguate, printFlags);
   return true;
 }
 

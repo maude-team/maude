@@ -1,3 +1,242 @@
+2017-07-11  Steven Eker  <eker@install.csl.sri.com>
+
+	* search.cc (checkSearchRestrictions): check for SMT
+	operators in pattern
+
+	* mixfixModule.hh (SharedTokens): added decl for new
+	findNonlinearVariable()
+	(SharedTokens): made findSMT_Symbol() public
+
+	* search.cc (search): don't make Pattern for smt-search
+	(checkSearchRestrictions): moved nonlinear variable check here
+
+	* mixfixModule.cc (findNonlinearVariable): added variableInfo
+	version
+
+	* search.cc (search): check for nonlinear variables in pattern
+	in smt-search case
+
+	* mixfixModule.cc (validForSMT_Rewriting): added line number info
+	to warnings
+
+2017-07-10  Steven Eker  <eker@install.csl.sri.com>
+
+	* mixfixModule.cc (MixfixModule): initialize smtStatus
+	(validForSMT_Rewriting): check and set smtStatus
+
+	* mixfixModule.hh (SharedTokens): added enum SMT_Status and
+	data member smtStatus
+
+2017-07-07  Steven Eker  <eker@install.csl.sri.com>
+
+	* search.cc (checkSearchRestrictions): issue warning if
+	validForSMT_Rewriting() returns false
+
+	* mixfixModule.cc (validForSMT_Rewriting): add line number to
+	error messages
+
+	* mixfixModule.hh (SharedTokens): added decl for
+	findNonlinearVariable()
+
+	* mixfixModule.cc (findNonlinearVariable): added
+	(validForSMT_Rewriting): check for nonlinear variables in lhs
+
+	* mixfixModule.hh (SharedTokens): containsSMT_Symbol()
+	-> findSMT_Symbol()
+
+	* mixfixModule.cc (containsSMT_Symbol): becomes
+	findSMT_Symbol()
+	(validForSMT_Rewriting): use findSMT_Symbol()
+
+	* mixfixModule.hh (SharedTokens): added decl for
+	containsSMT_Symbol()
+
+	* mixfixModule.cc (containsSMT_Symbol): added
+	(validForSMT_Rewriting): check for SMT symbols occurring
+	in the lhs of a rule
+
+2017-07-06  Steven Eker  <eker@install.csl.sri.com>
+
+	* mixfixModule.cc (validForSMT_Rewriting): added check for
+	non-SMT operators have SMT sorts as their range
+
+2017-06-30  Steven Eker  <eker@install.csl.sri.com>
+
+	* mixfixModule.cc (validForSMT_Rewriting): check for regular
+	symbols and polymorphic operators that have a collapse
+	axiom
+
+	* symbolType.hh (S): added COLLAPSE
+
+2017-06-28  Steven Eker  <eker@install.csl.sri.com>
+
+	* yices2_Bindings.cc (checkDag): check for error from
+	yices_assert_formula()
+	(checkDag): treat all return values other than STATUS_SAT
+	and STATUS_UNSAT as SAT_UNKNOWN
+	(assertDag): symmetric changes
+	(dagToYices2): enforce 2nd argument of divisible to be
+	positive constant
+
+2017-06-27  Steven Eker  <eker@install.csl.sri.com>
+
+	* cvc4_Bindings.cc (dagToCVC4): check for non-positive
+	2nd arguments to divisible
+	(checkDag): catch CVC4::LogicException
+	(assertDag): catch CVC4::LogicException
+	(assertDag): don't both passing an argument to checkSat()
+
+2017-06-26  Steven Eker  <eker@install.csl.sri.com>
+
+	* cvc4_Bindings.cc (dagToCVC4): fix bug where DIVISIBLE
+	case could fall through
+
+	* yices2_Bindings.cc (dagToYices2): flipped argument order
+	to yices_divides_atom()
+
+2017-06-23  Steven Eker  <eker@install.csl.sri.com>
+
+	* yices2_Bindings.hh (SMT_EngineWrapper): delet decl for
+	makeRationalConstant()
+
+	* yices2_Bindings.cc (makeRationalConstant): fold into
+	dagToYices2()
+
+2017-06-20  Steven Eker  <eker@install.csl.sri.com>
+
+	* yices2_Bindings.cc (dagToYices2): implemented
+
+2017-06-16  Steven Eker  <eker@install.csl.sri.com>
+
+	* yices2_Bindings.cc (makeVariable): implemented
+	(makeBooleanExpr): implemented
+
+2017-06-15  Steven Eker  <eker@install.csl.sri.com>
+
+	* yices2_Bindings.cc: created
+
+	* yices2_Bindings.hh: created
+
+2017-06-14  Steven Eker  <eker@install.csl.sri.com>
+
+	* cvc4_Bindings.hh: created to hold CVC4 specific code
+
+	* variableGenerator.hh (SMT_EngineWrapper): stripped out
+	all CVC4 specific code
+
+	* cvc4_Bindings.cc: created to hold CVC4 specific code
+
+	* variableGenerator.cc: stripped out all CVC4 specific code
+
+2017-06-13  Steven Eker  <eker@install.csl.sri.com>
+
+	* prettyPrint.cc (printAttributes): fix bug where we weren't
+	printing the narrowing attribute if it was the only attribute
+
+2017-06-12  Steven Eker  <eker@install.csl.sri.com>
+
+	* mixfixModule.cc (checkFreshVariableNames): implemented
+
+	* mixfixModule.hh (SharedTokens): added decl for
+	checkFreshVariableNames()
+
+	* syntacticPreModule.cc (getFlatModule): call
+	checkFreshVariableNames()
+
+	* mixfixModule.cc (checkFreshVariableNames): added stub
+
+	* freshVariableSource.cc (variableNameConflict): need to consider
+	@ variables
+
+2017-06-09  Steven Eker  <eker@install.csl.sri.com>
+
+	* bufferPrint.cc (handleIter): use decideIteratedAmbiguity()
+	to decide needToDisambiguate and argumentRangeKnown
+
+	* dagNodePrint.cc (handleIter): use decideIteratedAmbiguity()
+	to decide needToDisambiguate and argumentRangeKnown
+
+	* entry.cc (checkPseudoIterated): rewritten using
+	iteratedMap
+
+	* termPrint.cc (handleIter): don't pass iflags argument to
+	decideIteratedAmbiguity()
+
+	* mixfixModule.hh (SharedTokens): updated decl for
+	decideIteratedAmbiguity()
+
+	* sharedPrint.cc (decideIteratedAmbiguity): use iteratedMap
+	(decideIteratedAmbiguity): delete iflags argument
+
+	* entry.cc (checkIterated): fill out iteratedMap
+
+	* mixfixModule.hh (SharedTokens): added typedef IteratedMap
+	and data member iteratedMap
+
+2017-06-08  Steven Eker  <eker@install.csl.sri.com>
+
+	* termPrint.cc (handleIter): use decideIteratedAmbiguity()
+	to do disambiguation properly
+
+	* mixfixModule.hh (SharedTokens): added decl for
+	decideIteratedAmbiguity()
+
+	* sharedPrint.cc (decideIteratedAmbiguity): added
+
+	* entry.cc (checkPseudoIterated, checkIterated): more detailed
+	warnings
+
+2017-06-07  Steven Eker  <eker@install.csl.sri.com>
+
+	* entry.cc (checkIterated): implemented
+	(addOpDeclaration): call checkIterated()
+
+	* mixfixModule.hh (SharedTokens): added decl for
+	checkIterated()
+
+	* entry.cc (checkPseudoIterated): fill out pseudoIteratedMap
+	(checkIterated): added stub
+
+	* mixfixModule.hh (SharedTokens): checkPseudoIterator() ->
+	checkPseudoIterated()
+	(SharedTokens): added typedefs NumberToSymbolMap,
+	PseudoIteratedMap and data member pseudoIteratedMap
+
+	* entry.cc (addOpDeclaration): updated calling convention
+	for checkPseudoIterator() again
+	(checkPseudoIterator): becomes checkPseudoIterated()
+	(addOpDeclaration): use checkPseudoIterated()
+
+	* mixfixModule.hh (SharedTokens): updated decl for
+	checkPseudoIterator()
+
+	* entry.cc (addOpDeclaration): updated calling convention
+	for checkPseudoIterator()
+	(checkPseudoIterator): replace with Symbol* base version
+
+	* token.hh (T): updated decl for checkPseudoIterator()
+
+	* entry.cc (checkPseudoIterator): implemented
+
+2017-06-06  Steven Eker  <eker@install.csl.sri.com>
+
+	* mixfixModule.hh (SharedTokens): added decl for checkPseudoIterator()
+
+	* entry.cc (addOpDeclaration): added call to checkPseudoIterator()
+	(checkPseudoIterator): added stub
+
+2017-06-05  Steven Eker  <eker@install.csl.sri.com>
+
+	* symbolType.hh (hasAtLeastOneFlag): added
+
+2017-05-31  Steven Eker  <eker@install.csl.sri.com>
+
+	* ops.cc (setPoly): check for duplicate arg numbers in
+	poly attribute
+
+===================================Maude114===========================================
+
+
 2017-05-26  Steven Eker  <eker@install.csl.sri.com>
 
 	* execute.cc (clearContinueInfo): deleted commented out code

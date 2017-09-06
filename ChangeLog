@@ -1,3 +1,28 @@
+2017-07-12  Steven Eker  <eker@install.csl.sri.com>
+
+	* tests/Misc/smtTest.maude: added tests for violations
+	of SMT restrictions
+
+2017-06-26  Steven Eker  <eker@install.csl.sri.com>
+
+	* INSTALL: add Yices2 info
+
+2017-06-21  Steven Eker  <eker@install.csl.sri.com>
+
+	* tests/Misc/smtTest (MAUDE_LIB): check for USE_YICES2
+
+2017-06-20  Steven Eker  <eker@install.csl.sri.com>
+
+	* configure.ac (GMP_LIBS): add configuration for Yices2
+
+2017-05-30  Steven Eker  <eker@install.csl.sri.com>
+
+	* tests/Misc/smtTest.maude: move smt continue tests here
+	from continue.maude since they shouldn't be run if we don't
+	have CVC4 linked
+
+===================================Maude114===========================================
+
 2017-05-26  Steven Eker  <eker@install.csl.sri.com>
 
 	* tests/Meta/metaNarrow.maude: added tests for metaNarrowingSearchPath()

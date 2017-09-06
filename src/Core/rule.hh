@@ -47,6 +47,7 @@ public:
   void print(ostream& s) const;
   bool isNarrowing() const;
   void setNarrowing();
+  void clearNarrowing();
 
 private:
   enum Flags
@@ -85,6 +86,12 @@ inline void
 Rule::setNarrowing()
 {
   setFlags(NARROWING);
+}
+
+inline void
+Rule::clearNarrowing()
+{
+  clearFlags(NARROWING);
 }
 
 //

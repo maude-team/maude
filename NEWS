@@ -1,3 +1,16 @@
+Overview of Changes in alpha114
+===============================
+* more sanity checks at object level and meta level
+* pretty printer smarter about iterated operator disambiguation
+* fixed bug where narrowing attribute was not being printed
+  if it was a rule's only attribute
+* support for Yices2 as the SMT solver backend
+* fixed bug in CVC4 bindings where passing something other than
+  a positive integer constant for the second argument to divisible
+  produced a crash
+* asserting nonlinear stuff in CVC4 now produces unknown rather
+  that a crash
+
 Overview of Changes in alpha113
 ===============================
 * redesigned/extended vu narrowing functionality

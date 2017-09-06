@@ -39,6 +39,7 @@
 
 //      variable class definitions
 #include "variableDagNode.hh"
+#include "freshVariableGenerator.hh"
 
 VariableInfo::VariableInfo()
 {
@@ -162,4 +163,16 @@ VariableInfo::computeIndexRemapping()
   DebugAdvisory("nrProtectedVariables = " << nrProtectedVariables <<
 		"\tnrColors = " << nrColors);
   */
+}
+
+Term*
+VariableInfo::variableNameConflict(FreshVariableGenerator& variableSource)
+{
+  FOR_EACH_CONST(i, Vector<Term*>, variables)
+    {
+      VariableTerm* v = safeCast(VariableTerm*, *i);
+      if (variableSource.variableNameConflict(v->id()))
+	return v;
+    }
+  return 0;
 }

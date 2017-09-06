@@ -112,7 +112,7 @@ FreshVariableSource::variableNameConflict(int id)
   //	the index > baseNumber as this will produce a potential conflict with fresh variables.
   //
   const char* name = Token::name(Token::unflaggedCode(id));
-  if ((name[0] != '#' && name[0] != '%') || name[1] == '0' || name[1] == '\0')
+  if ((name[0] != '#' && name[0] != '%' && name[0] != '@') || name[1] == '0' || name[1] == '\0')
     return false;
   for (const char* p = name + 1; *p; ++p)
     {

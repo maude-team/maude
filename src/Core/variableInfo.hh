@@ -72,11 +72,15 @@ public:
   void addUnboundVariables(const NatSet& vars);
   const NatSet& getConditionVariables() const;
   const NatSet& getUnboundVariables() const;
-
   //
   //	Decide if an index is read or virtual.
   //
   static bool isReal(int index);
+  //
+  //	Check to see if we have a variable that conflicts with those
+  //	of a fresh variable source.
+  //
+  Term* variableNameConflict(FreshVariableGenerator& variableSource);
 
 private:
   enum Values

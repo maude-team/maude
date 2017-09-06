@@ -122,7 +122,7 @@ MixfixModule::printAttributes(ostream& s, const PreEquation* pe, ItemType itemTy
   int metadata = getMetadata(itemType, pe);
   const PrintAttribute* printAttribute = getPrintAttribute(itemType, pe);
 
-  if (!nonexec && !owise && !variant && id == NONE && metadata == NONE && printAttribute == 0)
+  if (!nonexec && !owise && !variant && !narrowing && id == NONE && metadata == NONE && printAttribute == 0)
     return;
   s << " [";
   const char *space = "";

@@ -340,7 +340,13 @@ SyntacticPreModule::setPoly(const Vector<Token>& polyArgs)
       long argPos = strtol(str, &pointer, 10);
       if (pointer != str && *pointer == '\0' &&
 	  argPos >= 0 && argPos <= maxArgPos)
-	opDef.polyArgs.insert(argPos);
+	{
+	  WarningCheck(!(opDef.polyArgs.contains(argPos)),
+		       LineNumber(polyArgs[i].lineNumber()) <<
+		       ": argument " << QUOTE(argPos) <<
+		       " mentioned twice in polymorphic attribute.");
+	  opDef.polyArgs.insert(argPos);
+	}
       else
 	{
 	  IssueWarning(LineNumber(polyArgs[i].lineNumber()) <<

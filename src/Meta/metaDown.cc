@@ -1196,6 +1196,7 @@ MetaLevel::downTerm(DagNode* metaTerm, MixfixModule* m)
 		      if (s != 0)
 			{
 			  mpq_class q(Token::name(cName));
+			  q.canonicalize();
 			  return new SMT_NumberTerm(s, q);
 			}
 		      break;

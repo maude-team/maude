@@ -1,3 +1,22 @@
+2017-06-27  Steven Eker  <eker@install.csl.sri.com>
+
+	* smt.maude: removed comment about _divisible_ breaking CVC4
+	now we've made it bulletproof
+
+2017-06-23  Steven Eker  <eker@install.csl.sri.com>
+
+	* Makefile.am (maude_LDADD): move $(YICES2_LIB) before tecla in
+	the hope that tecla won't be able to access its symbols
+
+2017-06-22  Steven Eker  <eker@install.csl.sri.com>
+
+	* Makefile.am (maude_LDADD): delete $(DLMALLOC_LIB) form link line;
+	move $(YICES2_LIB) to the end
+
+2017-06-20  Steven Eker  <eker@install.csl.sri.com>
+
+	* Makefile.am (maude_LDADD): added YICE2_LIB
+
 2017-05-25  Steven Eker  <eker@install.csl.sri.com>
 
 	* prelude.maude: update syntax for metaNarrowingApply() return values;

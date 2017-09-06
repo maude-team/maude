@@ -115,7 +115,12 @@ MixfixModule::handleIter(ostream& s,
   if (number == 1)
     return false;  // do default thing
   
-  // NEED TO FIX: disambig; i.e. we might have a regular operator called f^2
+  bool needToDisambiguate;
+  bool argumentRangeKnown;
+  decideIteratedAmbiguity(rangeKnown, dagNode->symbol(), number, needToDisambiguate, argumentRangeKnown);
+  if (needToDisambiguate)
+    s << '(';
+
   string prefixName;
   makeIterName(prefixName, dagNode->symbol()->id(), number);
   if (color != 0)
@@ -130,8 +135,9 @@ MixfixModule::handleIter(ostream& s,
 	coloringInfo.reducedDirectlyAbove;
     }
   prettyPrint(s, coloringInfo, sd->getArgument(),
-	      PREFIX_GATHER, UNBOUNDED, 0, UNBOUNDED, 0, rangeKnown);
+	      PREFIX_GATHER, UNBOUNDED, 0, UNBOUNDED, 0, argumentRangeKnown);
   s << ')';
+  suffix(s, dagNode, needToDisambiguate, color);
   return true;
 }
 

@@ -1,3 +1,37 @@
+2017-07-11  Steven Eker  <eker@install.csl.sri.com>
+
+	* metaSearch.cc (makeSMT_RewriteSequenceSearch): check for
+	nonlinear variables in the target
+	(makeSMT_RewriteSequenceSearch): check for SMT operators
+	in the target
+
+2017-06-29  Steven Eker  <eker@install.csl.sri.com>
+
+	* metaDown.cc (downTerm): canonicalize rational number
+
+2017-06-05  Steven Eker  <eker@install.csl.sri.com>
+
+	* metaDownOps.cc (downAttr): set STRAT flag when strat
+	attribute seen
+	(downAttr): check for duplicated attributes
+
+2017-05-31  Steven Eker  <eker@install.csl.sri.com>
+
+	* metaDownOps.cc (downAttr): check for duplicate argument
+	numbers in poly attribute
+	(downAttr): check for duplicate argument numbers in frozen
+	attribute
+	(downOpDecl): check that frozen and poly argument numbers
+	are in range
+	(downOpDecl): check gather lengths in both cases
+
+2017-05-30  Steven Eker  <eker@install.csl.sri.com>
+
+	* metaUp.cc (upQidList): call upQid() in the singleton
+	case
+
+===================================Maude114===========================================
+
 2017-05-25  Steven Eker  <eker@install.csl.sri.com>
 
 	* metaNewNarrow.cc (metaNarrowingApply): use

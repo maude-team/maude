@@ -267,6 +267,7 @@ SHELL = @SHELL@
 STRIP = @STRIP@
 TECLA_LIBS = @TECLA_LIBS@
 VERSION = @VERSION@
+YICES2_LIB = @YICES2_LIB@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
@@ -431,7 +432,9 @@ EXTRA_DIST = \
 	narrowing.cc \
 	variantUnify.cc \
 	getVariants.cc \
-	smtSearch.cc
+	smtSearch.cc \
+	cvc4_Bindings.cc \
+	yices2_Bindings.cc
 
 noinst_HEADERS = \
 	renaming.hh \
@@ -471,7 +474,9 @@ noinst_HEADERS = \
 	syntaxContainer.hh \
 	freshVariableSource.hh \
 	variableGenerator.hh \
-	cacheableRewritingContext.hh
+	cacheableRewritingContext.hh \
+	cvc4_Bindings.hh \
+	yices2_Bindings.hh
 
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am

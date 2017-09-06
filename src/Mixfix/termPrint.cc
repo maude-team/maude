@@ -99,7 +99,12 @@ MixfixModule::handleIter(ostream& s,
   if (number == 1)
     return false;  // do default thing
 
-  // NEED TO FIX: disambig
+  bool needToDisambiguate;
+  bool argumentRangeKnown;
+  decideIteratedAmbiguity(rangeKnown, term->symbol(), number, needToDisambiguate, argumentRangeKnown);
+  if (needToDisambiguate)
+    s << '(';
+
   string prefixName;
   makeIterName(prefixName, term->symbol()->id(), number);
   if (color != 0)
@@ -108,8 +113,9 @@ MixfixModule::handleIter(ostream& s,
     printPrefixName(s, prefixName.c_str(), si);
   s << '(';
   prettyPrint(s, st->getArgument(),
-	      PREFIX_GATHER, UNBOUNDED, 0, UNBOUNDED, 0, rangeKnown);
+	      PREFIX_GATHER, UNBOUNDED, 0, UNBOUNDED, 0, argumentRangeKnown);
   s << ')';
+  suffix(s, term, needToDisambiguate, color);
   return true;
 }
 

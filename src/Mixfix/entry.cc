@@ -73,6 +73,106 @@ MixfixModule::hasSameDomain(const Vector<Sort*>& domainAndRange1,
   return true;
 }
 
+int
+MixfixModule::checkPseudoIterated(Symbol* symbol, const Vector<Sort*>& domainAndRange)
+{
+  //
+  //	A symbol with a prefix name that looks like f^n can be confused with
+  //	an iterated symbol f when parsing and pretty printing.
+  //	We keep track of this extra overloading here.
+  //
+  int baseName;
+  mpz_class number;
+  Token::split(symbol->id(), baseName, number);
+  pseudoIteratedMap[baseName].insert(NumberToSymbolMap::value_type(number, symbol));
+  int overloadType = 0;
+  //
+  //	Now can we find an iterated symbol with baseName?
+  //
+  for (IteratedMap::const_iterator i = iteratedMap.lower_bound(baseName);
+       i != iteratedMap.end() && i->first == baseName; ++i)
+    {
+      Symbol* iSymbol = i->second;
+      const Vector<Sort*>& iDomainAndRange = iSymbol->getOpDeclarations()[0].getDomainAndRange();
+      overloadType |= ADHOC_OVERLOADED;
+
+      bool sameRange = (domainAndRange[1]->component() == iDomainAndRange[1]->component());
+      if (sameRange)
+	overloadType |= RANGE_OVERLOADED;
+
+      bool sameDomain (domainAndRange[0]->component() == iDomainAndRange[0]->component());
+      if (sameDomain)
+	{
+	  overloadType |= DOMAIN_OVERLOADED;
+	  if (sameRange)
+	    {
+	      IssueWarning(*symbol << ": declaration for operator " << QUOTE(symbol) <<
+			   " clashes with declaration for iterated operator " << QUOTE(iSymbol) <<
+			   " on " << *iSymbol <<
+			   " because of iterated notation.");
+	    }
+	  else
+	    {
+	      IssueWarning(*symbol << ": declaration for operator " << QUOTE(symbol) <<
+			   " clashes with declaration for iterated operator " << QUOTE(iSymbol) <<
+			   " on " << *iSymbol <<
+			   ", which has a different range kind, because of iterated notation.");
+	    }
+	}
+    }
+  return overloadType;
+}
+
+void
+MixfixModule::checkIterated(Symbol* symbol, const Vector<Sort*>& domainAndRange)
+{
+  int name = symbol->id();
+  iteratedMap.insert(IteratedMap::value_type(name, symbol));
+  //
+  //	An iterated symbol f can be confused with a pseudo iterated symbol
+  //	with name f^n when parsing and pretty printing.
+  //	We keep track of this extra overloading here.
+  //
+  PseudoIteratedMap::const_iterator i = pseudoIteratedMap.find(name);
+  if (i != pseudoIteratedMap.end())
+    {
+      //
+      //	At least one symbol aliasing the iterated forms of symbol.
+      //
+      FOR_EACH_CONST(j, NumberToSymbolMap, i->second)
+	{
+	  int overloadType = ADHOC_OVERLOADED;
+	  Symbol* pSymbol = j->second;
+	  const Vector<Sort*>& pDomainAndRange = pSymbol->getOpDeclarations()[0].getDomainAndRange();
+
+	  bool sameRange = (domainAndRange[1]->component() == pDomainAndRange[1]->component());
+	  if (sameRange)
+	    overloadType |= RANGE_OVERLOADED;
+
+	  bool sameDomain (domainAndRange[0]->component() == pDomainAndRange[0]->component());
+	  if (sameDomain)
+	    {
+	      overloadType |= DOMAIN_OVERLOADED;
+	      if (sameRange)
+		{
+		  IssueWarning(*symbol << ": declaration for operator " << QUOTE(symbol) <<
+			       " clashes with declaration for iterated operator " << QUOTE(pSymbol) <<
+			       " on " << *pSymbol <<
+			       " because of iterated notation.");
+		}
+	      else
+		{
+		  IssueWarning(*symbol << ": declaration for operator " << QUOTE(symbol) <<
+			       " clashes with declaration for iterated " << QUOTE(pSymbol) <<
+			       " on " << *pSymbol <<
+			       ", which has a different range kind, because of iterated notation.");
+		}
+	    }
+	  symbolInfo[pSymbol->getIndexWithinModule()].iflags |= overloadType;
+	}
+    }
+}
+
 Symbol*
 MixfixModule::addOpDeclaration(Token prefixName,
 			       const Vector<Sort*>& domainAndRange,
@@ -299,6 +399,17 @@ MixfixModule::addOpDeclaration(Token prefixName,
 	  iflags |= PSEUDO_RAT;
 	}
     }
+  //
+  //	Need to worry about unary operators whose prefix name looks like f^2; i.e.
+  //	iterated notation.
+  //
+  if (nrArgs == 1 && prefixName.specialProperty() == Token::ITER_SYMBOL)
+    iflags |= checkPseudoIterated(symbol, domainAndRange);
+  //
+  //	We also need the check iterated symbols against any symbols with prefix
+  //	names like f^n.
+  if (symbolType.hasFlag(SymbolType::ITER))
+    checkIterated(symbol, domainAndRange);
 
   int nrSymbols = symbolInfo.length();
   symbolInfo.expandBy(1);

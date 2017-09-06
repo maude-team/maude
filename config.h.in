@@ -147,5 +147,8 @@
 /* use Tecla command line editing library */
 #undef USE_TECLA
 
+/* use Yices2 SMT solver library */
+#undef USE_YICES2
+
 /* Version number of package */
 #undef VERSION

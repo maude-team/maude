@@ -69,7 +69,6 @@ SMT_RewriteSequenceSearch::SMT_RewriteSequenceSearch(RewritingContext* initial,
 						     int maxDepth,
 						     const mpz_class& avoidVariableNumber)
   : Pattern(target, false),
-    searchType(searchType),
     smtInfo(smtInfo),
     engine(engine),
     maxDepth((searchType == ONE_STEP) ? 1 : maxDepth),

@@ -147,6 +147,7 @@ could not be patched up and thus it cannot be used or imported.");
 	{
 	  //IssueWarning("calling closeTheory on  " << *m);  // HACK
 	  m->closeTheory();
+	  m->checkFreshVariableNames();
 	}
       m->resetImports();
     }

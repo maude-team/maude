@@ -48,6 +48,7 @@ public:
 
   bool isOwise() const;
   void setVariant();
+  void clearVariant();
   bool isVariant() const;
 
   void stackMachineCompile();
@@ -94,6 +95,12 @@ inline void
 Equation::setVariant()
 {
   setFlags(VARIANT);
+}
+
+inline void
+Equation::clearVariant()
+{
+  clearFlags(VARIANT);
 }
 
 inline long

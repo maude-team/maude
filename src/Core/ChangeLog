@@ -1,3 +1,15 @@
+2017-06-12  Steven Eker  <eker@install.csl.sri.com>
+
+	* equation.hh (clearVariant): added
+
+	* rule.hh (clearNarrowing): added
+
+	* variableInfo.hh (V): added decl for variableNameConflict()
+
+	* variableInfo.cc (variableNameConflict): added
+
+===================================Maude114===========================================
+
 2017-05-24  Steven Eker  <eker@install.csl.sri.com>
 
 	* narrowingVariableInfo.hh (copy): added

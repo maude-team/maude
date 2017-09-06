@@ -82,7 +82,28 @@ Interpreter::checkSearchRestrictions(SearchKind searchKind,
 	//	Module must satisfy many restrictions.
 	//
 	if (!(module->validForSMT_Rewriting()))
+	  {
+	    IssueWarning(*module << ": module " << QUOTE(module) <<
+			 " does not satisfy restrictions for rewriting modulo SMT.");
+	    return false;
+	  }
+	//
+	//	Target can't contain SMT operators.
+	//
+	if (Symbol* s = module->findSMT_Symbol(target))
+	  {
+	    IssueWarning(*target << ": pattern contains SMT symbol " << QUOTE(s) << ".");
+	    return false;
+	  }
+	//
+	//	Target can't contain nonlinear variables.
+	//
+	VariableInfo variableInfo;
+	if (Term* v = MixfixModule::findNonlinearVariable(target, variableInfo))
+	{
+	  IssueWarning(*target << ": pattern contains a nonlinear variable " << QUOTE(v) << ".");
 	  return false;
+	}
 	break;
       }
     default:
@@ -110,7 +131,8 @@ Interpreter::search(const Vector<Token>& bubble, Int64 limit, Int64 depth, Searc
 	delete *i;
       return;
     }
-  Pattern* pattern = (searchKind == VU_NARROW || searchKind == FVU_NARROW) ? 0 : new Pattern(target, false, condition);
+  Pattern* pattern = (searchKind == VU_NARROW || searchKind == FVU_NARROW || searchKind == SMT_SEARCH) ? 0 :
+    new Pattern(target, false, condition);
   //
   //	Regular seach cannot have unbound variables.
   //
@@ -123,6 +145,7 @@ Interpreter::search(const Vector<Token>& bubble, Int64 limit, Int64 depth, Searc
       delete pattern;
       return;
     }
+
   DagNode* subjectDag = makeDag(initial);
 
   static const char* searchTypeSymbol[] = { "=>1", "=>+", "=>*", "=>!" };

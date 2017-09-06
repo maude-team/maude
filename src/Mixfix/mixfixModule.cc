@@ -152,6 +152,7 @@
 #include "quotedIdentifierDagNode.hh"
 #include "loopSymbol.hh"
 #include "userLevelRewritingContext.hh"
+#include "freshVariableSource.hh"
 
 #include "interpreter.hh"
 #include "global.hh"  // HACK shouldn't be accessing global variables
@@ -201,6 +202,44 @@ MixfixModule::nonTerminal(const Sort* sort, NonTerminalType type)
 #include "strategyPrint.cc"
 
 void
+MixfixModule::checkFreshVariableNames()
+{
+  FreshVariableSource varSource(this);
+  {
+    const Vector<Rule*>& rules = getRules();
+    FOR_EACH_CONST(i, Vector<Rule*>, rules)
+      {
+	Rule* r = *i;
+	if (r->isNarrowing())
+	  {
+	    if (Term* t = r->variableNameConflict(varSource))
+	      {
+		IssueWarning(*r << " : fresh variable name " << QUOTE(t) <<
+			     " used in narrowing rule. Recovering by ignoring narrowing attribute.");
+		r->clearNarrowing();
+	      }
+	  }
+      }
+  }
+  {
+    const Vector<Equation*>& equations = getEquations();
+    FOR_EACH_CONST(i, Vector<Equation*>, equations)
+      {
+	Equation* e = *i;
+	if (e->isVariant())
+	  {
+	    if (Term* t = e->variableNameConflict(varSource))
+	      {
+		IssueWarning(*e << " : fresh variable name " << QUOTE(t) <<
+			     " used in variant equation. Recovering by ignoring variant attribute.");
+		e->clearVariant();
+	      }
+	  }
+      }
+  }
+}
+
+void
 MixfixModule::SymbolInfo::revertGather(Vector<int>& gatherSymbols) const
 {
   int nrElts = gather.length();
@@ -232,6 +271,7 @@ MixfixModule::MixfixModule(int name, ModuleType moduleType)
   trueSymbol = 0;
   falseSymbol = 0;
   parser = 0;
+  smtStatus = UNCHECKED;
 }
 
 MixfixModule::~MixfixModule()
@@ -1440,33 +1480,144 @@ MixfixModule::getSMT_NumberToken(const mpq_class& value, Sort* sort)
 bool
 MixfixModule::validForSMT_Rewriting()
 {
+  if (smtStatus != UNCHECKED)
+    return smtStatus == GOOD;
+
   bool ok = true;
   if (!getEquations().empty())
     {
-      IssueWarning("Can't rewrite modulo SMT in module " << QUOTE(this) << " because it has equations.");
+      IssueWarning(*this << ": module " << QUOTE(this) << " has equations.");
       ok = false;
     }
   
   if (!getSortConstraints().empty())
     {
-      IssueWarning("Can't rewrite modulo SMT in module " << QUOTE(this) << " because it has membership axioms.");
+      IssueWarning(*this << ": module " << QUOTE(this) << " has membership axioms.");
       ok = false;
     }
 
   const Vector<Rule*>& rules = getRules();
   if (rules.empty())
     {
-      IssueWarning("Can't rewrite modulo SMT in module " << QUOTE(this) << " because it has no rules.");
+      IssueWarning(*this << ": module " << QUOTE(this) << " has no rules.");
       ok = false;
     }
 
   const SMT_Info& info = getSMT_Info();
   if (info.getConjunctionOperator() == 0)
     {
-      IssueWarning("Can't rewrite modulo SMT in module " << QUOTE(this) << " because SMT conjunction operator could not be found.");
+      IssueWarning(*this << ": module " << QUOTE(this) << " has no SMT conjunction operator.");
       ok = false;
     }
 
+  const Vector<Symbol*>& symbols = getSymbols();
+  {
+    //
+    //	Check for regular symbols with a collapse axiom.
+    //
+    int nrSymbols = symbolInfo.size();
+    for (int i = 0; i < nrSymbols; ++i)
+      {
+	if (symbolInfo[i].symbolType.hasAtLeastOneFlag(SymbolType::COLLAPSE))
+	  {
+	    Symbol* s = symbols[i];
+	    IssueWarning(*s << ": operator " << QUOTE(s) << " has a collapse axiom.");
+	    ok = false;
+	  }
+      }
+  }
+  {
+    //
+    //	Check for polymorphic symbols with a collapse axiom.
+    //
+    int nrPolymorphs = polymorphs.size();
+    for (int i = 0; i < nrPolymorphs; ++i)
+      {
+	if (polymorphs[i].symbolInfo.symbolType.hasAtLeastOneFlag(SymbolType::COLLAPSE))
+	  {
+	    Token& name = polymorphs[i].name;
+	    IssueWarning(LineNumber(name.lineNumber()) << ": polymorphic operator " <<
+			 QUOTE(name) << " has a collapse axiom.");
+	    ok = false;
+	  }
+      }
+  }
+
+  NatSet smtSortIndices;
+  int nrSymbols = symbols.size();
+  {
+    //
+    //	Determine SMT sorts.
+    //
+    //	A sort is considered an SMT sort if any SMT operator has it in it's domain
+    //	or range, since the SMT signature is considered to be a subsignature.
+    //
+    for (int i = 0; i < nrSymbols; ++i)
+      {
+	int basicType = symbolInfo[i].symbolType.getBasicType();
+	if (basicType == SymbolType::SMT_SYMBOL || basicType == SymbolType::SMT_NUMBER_SYMBOL)
+	  {
+	    const Vector<OpDeclaration>& opDecs = symbols[i]->getOpDeclarations();
+	    FOR_EACH_CONST(j, Vector<OpDeclaration>, opDecs)
+	      {
+		const Vector<Sort*>& domainAndRange = j->getDomainAndRange();
+		FOR_EACH_CONST(k, Vector<Sort*>, domainAndRange)
+		  smtSortIndices.insert((*k)->getIndexWithinModule());
+	      }
+	  }
+      }
+  }
+  {
+    //
+    //	Check that no non-SMT operator has an SMT sort as its range.
+    //
+    for (int i = 0; i < nrSymbols; ++i)
+      {
+	int basicType = symbolInfo[i].symbolType.getBasicType();
+	if (basicType != SymbolType::SMT_SYMBOL &&
+	    basicType != SymbolType::SMT_NUMBER_SYMBOL &&
+	    basicType != SymbolType::VARIABLE)
+	  {
+	    Symbol* s = symbols[i];
+	    const Vector<OpDeclaration>& opDecs = s->getOpDeclarations();
+	    FOR_EACH_CONST(j, Vector<OpDeclaration>, opDecs)
+	      {
+		const Vector<Sort*>& domainAndRange = j->getDomainAndRange();
+		Sort* rangeSort = domainAndRange[domainAndRange.size() - 1];
+		if (smtSortIndices.contains(rangeSort->getIndexWithinModule()))
+		  {
+		    IssueWarning(*s << ": non-SMT operator " << QUOTE(s) <<
+				 " has an SMT sort " << QUOTE(rangeSort) << " as its range.");
+		    ok = false;
+		  }
+	      }
+	  }
+      }
+  }
+  {
+    //
+    //	Check each rule. The left-hand side may not contain SMT operators or nonlinear variables.
+    //
+    const Vector<Rule*>& rules = getRules();
+    FOR_EACH_CONST(i, Vector<Rule*>, rules)
+      {
+	Rule* rule = *i;
+	Term* lhs = rule->getLhs();
+	if (Symbol* s = findSMT_Symbol(lhs))
+	  {
+	    IssueWarning(*rule << ": left-hand side of rule\n  " << rule <<
+			 "\ncontains SMT symbol " << QUOTE(s) << ".");
+	    ok = false;
+	  }
+	NatSet variableIndices;
+	if (Term* v = findNonlinearVariable(lhs, variableIndices))
+	  {
+	    IssueWarning(*rule << ": left-hand side of rule\n  " << rule <<
+			 "\ncontains a nonlinear variable " << QUOTE(v) << ".");
+	    ok = false;
+	  }
+      }
+  }
   //
   //	Should probably check for true so we know that sort Boolean is determined. Or maybe conjunction operator should determine true sort.
   //
@@ -1476,10 +1627,65 @@ MixfixModule::validForSMT_Rewriting()
   //	Should also check that each condition fragment is of the form <Boolean term> = true or a suitable SMT equality operator exists.
   //
 
-
-  //
-  //	Should check that user operators don't go in to SMT sorts.
-  //
+  smtStatus = ok ? GOOD : BAD;
 
   return ok;  // might want to cache this when computing it becomes more expensive
+}
+
+Symbol*
+MixfixModule::findSMT_Symbol(Term* term)
+{
+  Symbol* s = term->symbol();
+  int basicType = symbolInfo[s->getIndexWithinModule()].symbolType.getBasicType();
+  if (basicType == SymbolType::SMT_SYMBOL || basicType == SymbolType::SMT_NUMBER_SYMBOL)
+    return s;
+
+  for (ArgumentIterator a(*term); a.valid(); a.next())
+    {
+      if (Symbol* s = findSMT_Symbol(a.argument()))
+	return s;
+    }
+  return 0;
+}
+
+Term* 
+MixfixModule::findNonlinearVariable(Term* term, NatSet& seenIndices)
+{
+  if (VariableTerm* v = dynamic_cast<VariableTerm*>(term))
+    {
+      int index = v->getIndex();
+      if (seenIndices.contains(index))
+	return v;
+      seenIndices.insert(index);
+    }
+  else
+    {
+      for (ArgumentIterator a(*term); a.valid(); a.next())
+	{
+	  if (Term* v = findNonlinearVariable(a.argument(), seenIndices))
+	    return v;
+	}
+    }
+  return 0;
+}
+
+Term* 
+MixfixModule::findNonlinearVariable(Term* term, VariableInfo& variableInfo)
+{
+  if (VariableTerm* v = dynamic_cast<VariableTerm*>(term))
+    {
+      int nrVariables = variableInfo.getNrRealVariables();
+      (void) variableInfo.variable2Index(v);
+      if (nrVariables == variableInfo.getNrRealVariables())
+	return v;  // no increase in number of variables means v is a duplicate
+    }
+  else
+    {
+      for (ArgumentIterator a(*term); a.valid(); a.next())
+	{
+	  if (Term* v = findNonlinearVariable(a.argument(), variableInfo))
+	    return v;
+	}
+    }
+  return 0;
 }

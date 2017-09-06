@@ -775,7 +775,7 @@ MetaLevel::upQidList(const Vector<int>& ids, PointerMap& qidMap)
   if (nrIds == 0)
     return new FreeDagNode(nilQidListSymbol);
   if (nrIds == 1)
-    return new QuotedIdentifierDagNode(qidSymbol, Token::backQuoteSpecials(ids[0]));
+    return upQid(ids[0], qidMap);
   Vector<DagNode*> args(nrIds);
   for (int i = 0; i < nrIds; i++)
     args[i] = upQid(ids[i], qidMap);

@@ -111,7 +111,8 @@ maude_DEPENDENCIES = ../Mixfix/libmixfix.a \
 	../IO_Stuff/libIO_Stuff.a $(FULL_COMPILER_LIB) \
 	../Utility/libutility.a $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -257,6 +258,7 @@ SHELL = @SHELL@
 STRIP = @STRIP@
 TECLA_LIBS = @TECLA_LIBS@
 VERSION = @VERSION@
+YICES2_LIB = @YICES2_LIB@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
@@ -361,12 +363,12 @@ maude_LDADD = \
 	../IO_Stuff/libIO_Stuff.a \
 	$(FULL_COMPILER_LIB) \
 	../Utility/libutility.a \
-	$(BUDDY_LIB) \
 	$(CVC4_LIB) \
-	$(TECLA_LIBS) \
-	$(LIBSIGSEGV_LIB) \
+	$(YICES2_LIB) \
 	$(GMP_LIBS) \
-	$(DLMALLOC_LIB)
+	$(BUDDY_LIB) \
+	$(TECLA_LIBS) \
+	$(LIBSIGSEGV_LIB)
 
 maude_SOURCES = \
 	main.cc
