@@ -63,7 +63,7 @@ am__libmixfix_a_SOURCES_DIST = syntaxContainer.cc renaming.cc view.cc \
 	viewDatabase.cc profileModule.cc mixfixParser.cc \
 	visibleModule.cc sharedTokens.cc metadataStore.cc \
 	printAttribute.cc banner.cc lexer.cc surface.cc \
-	freshVariableSource.cc compiler.cc
+	freshVariableSource.cc variableGenerator.cc compiler.cc
 @BUILD_COMPILER_TRUE@am__objects_1 = libmixfix_a-compiler.$(OBJEXT)
 am_libmixfix_a_OBJECTS = libmixfix_a-syntaxContainer.$(OBJEXT) \
 	libmixfix_a-renaming.$(OBJEXT) libmixfix_a-view.$(OBJEXT) \
@@ -96,7 +96,8 @@ am_libmixfix_a_OBJECTS = libmixfix_a-syntaxContainer.$(OBJEXT) \
 	libmixfix_a-printAttribute.$(OBJEXT) \
 	libmixfix_a-banner.$(OBJEXT) libmixfix_a-lexer.$(OBJEXT) \
 	libmixfix_a-surface.$(OBJEXT) \
-	libmixfix_a-freshVariableSource.$(OBJEXT) $(am__objects_1)
+	libmixfix_a-freshVariableSource.$(OBJEXT) \
+	libmixfix_a-variableGenerator.$(OBJEXT) $(am__objects_1)
 libmixfix_a_OBJECTS = $(am_libmixfix_a_OBJECTS)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
@@ -287,6 +288,7 @@ libmixfix_a_SOURCES = \
 	lexer.cc \
 	surface.cc \
 	freshVariableSource.cc \
+	variableGenerator.cc \
 	$(COMPILER_SRC)
 
 EXTRA_libmixfix_a_SOURCES = \
@@ -367,7 +369,8 @@ noinst_HEADERS = \
 	visibleModule.hh \
 	xmlBuffer.hh \
 	syntaxContainer.hh \
-	freshVariableSource.hh
+	freshVariableSource.hh \
+	variableGenerator.hh
 
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -451,6 +454,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-syntaxContainer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-token.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-userLevelRewritingContext.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-variableGenerator.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-view.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-viewDatabase.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-visibleModule.Po@am__quote@
@@ -973,6 +977,20 @@ libmixfix_a-freshVariableSource.obj: freshVariableSource.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='freshVariableSource.cc' object='libmixfix_a-freshVariableSource.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-freshVariableSource.obj `if test -f 'freshVariableSource.cc'; then $(CYGPATH_W) 'freshVariableSource.cc'; else $(CYGPATH_W) '$(srcdir)/freshVariableSource.cc'; fi`
+
+libmixfix_a-variableGenerator.o: variableGenerator.cc
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-variableGenerator.o -MD -MP -MF $(DEPDIR)/libmixfix_a-variableGenerator.Tpo -c -o libmixfix_a-variableGenerator.o `test -f 'variableGenerator.cc' || echo '$(srcdir)/'`variableGenerator.cc
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libmixfix_a-variableGenerator.Tpo $(DEPDIR)/libmixfix_a-variableGenerator.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='variableGenerator.cc' object='libmixfix_a-variableGenerator.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-variableGenerator.o `test -f 'variableGenerator.cc' || echo '$(srcdir)/'`variableGenerator.cc
+
+libmixfix_a-variableGenerator.obj: variableGenerator.cc
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-variableGenerator.obj -MD -MP -MF $(DEPDIR)/libmixfix_a-variableGenerator.Tpo -c -o libmixfix_a-variableGenerator.obj `if test -f 'variableGenerator.cc'; then $(CYGPATH_W) 'variableGenerator.cc'; else $(CYGPATH_W) '$(srcdir)/variableGenerator.cc'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libmixfix_a-variableGenerator.Tpo $(DEPDIR)/libmixfix_a-variableGenerator.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='variableGenerator.cc' object='libmixfix_a-variableGenerator.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-variableGenerator.obj `if test -f 'variableGenerator.cc'; then $(CYGPATH_W) 'variableGenerator.cc'; else $(CYGPATH_W) '$(srcdir)/variableGenerator.cc'; fi`
 
 libmixfix_a-compiler.o: compiler.cc
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-compiler.o -MD -MP -MF $(DEPDIR)/libmixfix_a-compiler.Tpo -c -o libmixfix_a-compiler.o `test -f 'compiler.cc' || echo '$(srcdir)/'`compiler.cc

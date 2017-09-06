@@ -41,6 +41,7 @@
 #include "builtIn.hh"
 #include "strategyLanguage.hh"
 #include "mixfix.hh"
+#include "SMT.hh"
 
 //      interface class definitions
 #include "term.hh"

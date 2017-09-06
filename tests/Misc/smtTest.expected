@@ -1,221 +1,475 @@
 Maude> ==========================================
-check in TEST-B : W != X and Y .
-Result from CVC4 is: sat
+check in TEST-B : W =/== X and Y .
+Result from sat solver is: sat
 ==========================================
-check in TEST-B : W = X and Y .
-Result from CVC4 is: sat
+check in TEST-B : W === X and Y .
+Result from sat solver is: sat
 ==========================================
-check in TEST-B : X != tt and X != Y and Y != tt .
-Result from CVC4 is: unsat
+check in TEST-B : X =/== true and X =/== Y and Y =/== true .
+Result from sat solver is: unsat
 ==========================================
-check in TEST-B : X != tt and X != Y and Y != ff .
-Result from CVC4 is: sat
+check in TEST-B : X =/== true and X =/== Y and Y =/== false .
+Result from sat solver is: sat
 ==========================================
-check in TEST-B : (X xor tt) and (X xor Y) and (Y xor tt) .
-Result from CVC4 is: unsat
+check in TEST-B : (X xor true) and (X xor Y) and (Y xor true) .
+Result from sat solver is: unsat
 ==========================================
-check in TEST-B : (X xor tt) and (X xor Y) and (Y xor ff) .
-Result from CVC4 is: sat
+check in TEST-B : (X xor true) and (X xor Y) and (Y xor false) .
+Result from sat solver is: sat
 ==========================================
 check in TEST-B : not (X or not X) .
-Result from CVC4 is: unsat
+Result from sat solver is: unsat
 ==========================================
 check in TEST-B : not (X implies Y implies X) .
-Result from CVC4 is: unsat
+Result from sat solver is: unsat
 ==========================================
 check in TEST-B : (X ? Y : Z) and (Y implies X) and (Z implies X) .
-Result from CVC4 is: sat
+Result from sat solver is: sat
 ==========================================
 check in TEST-B : (X ? Y : Z) and (Y implies not X) and (Z implies X) .
-Result from CVC4 is: unsat
+Result from sat solver is: unsat
 ==========================================
-check in TEST-B : X = Y and Y = Z .
-Result from CVC4 is: sat
+check in TEST-B : X === Y and Y === Z .
+Result from sat solver is: sat
 ==========================================
-check in TEST-B : X = Y and Y = Z and Z != X .
-Result from CVC4 is: unsat
+check in TEST-B : X === Y and Y === Z and Z =/== X .
+Result from sat solver is: unsat
 ==========================================
 check in TEST-I : I > J and J > K .
-Result from CVC4 is: sat
+Result from sat solver is: sat
 ==========================================
 check in TEST-I : I > J and J > K and K > I .
-Result from CVC4 is: unsat
+Result from sat solver is: unsat
 ==========================================
 check in TEST-I : I < J and J < K .
-Result from CVC4 is: sat
+Result from sat solver is: sat
 ==========================================
 check in TEST-I : I < J and J < K and K < I .
-Result from CVC4 is: unsat
+Result from sat solver is: unsat
 ==========================================
 check in TEST-I : I >= J and J >= I .
-Result from CVC4 is: sat
+Result from sat solver is: sat
 ==========================================
-check in TEST-I : I >= J and J >= I and I != J .
-Result from CVC4 is: unsat
+check in TEST-I : I >= J and J >= I and I =/== J .
+Result from sat solver is: unsat
 ==========================================
 check in TEST-I : I <= J and J <= I .
-Result from CVC4 is: sat
+Result from sat solver is: sat
 ==========================================
-check in TEST-I : I <= J and J <= I and I != J .
-Result from CVC4 is: unsat
+check in TEST-I : I <= J and J <= I and I =/== J .
+Result from sat solver is: unsat
 ==========================================
-check in TEST-I : I = J + K and I > J and I > K .
-Result from CVC4 is: sat
+check in TEST-I : I === J + K and I > J and I > K .
+Result from sat solver is: sat
 ==========================================
-check in TEST-I : I = J + K and I > J + K .
-Result from CVC4 is: unsat
+check in TEST-I : I === J + K and I > J + K .
+Result from sat solver is: unsat
 ==========================================
-check in TEST-I : I = J + K and I > J + K + L .
-Result from CVC4 is: sat
+check in TEST-I : I === J + K and I > J + K + L .
+Result from sat solver is: sat
 ==========================================
-check in TEST-I : I = J - K and I > J + K .
-Result from CVC4 is: sat
+check in TEST-I : I === J - K and I > J + K .
+Result from sat solver is: sat
 ==========================================
-check in TEST-I : - I = J - K and I > J + K .
-Result from CVC4 is: sat
+check in TEST-I : - I === J - K and I > J + K .
+Result from sat solver is: sat
 ==========================================
-check in TEST-I : I != J + K and I > J + K .
-Result from CVC4 is: sat
+check in TEST-I : I =/== J + K and I > J + K .
+Result from sat solver is: sat
 ==========================================
 check in TEST-I : (I > J ? I : J) >= I and (I > J ? I : J) >= J .
-Result from CVC4 is: sat
+Result from sat solver is: sat
 ==========================================
 check in TEST-I : (I > J ? I : J) < I .
-Result from CVC4 is: unsat
+Result from sat solver is: unsat
 ==========================================
-check in TEST-I : (I > J ? I : J) = I or (I > J ? I : J) = J .
-Result from CVC4 is: sat
+check in TEST-I : (I > J ? I : J) === I or (I > J ? I : J) === J .
+Result from sat solver is: sat
 ==========================================
-check in TEST-I : not ((I > J ? I : J) = I or (I > J ? I : J) = J) .
-Result from CVC4 is: unsat
+check in TEST-I : not ((I > J ? I : J) === I or (I > J ? I : J) === J) .
+Result from sat solver is: unsat
 ==========================================
-check in TEST-I : (I > J ? I : J) != I and (I > J ? I : J) != J .
-Result from CVC4 is: unsat
+check in TEST-I : (I > J ? I : J) =/== I and (I > J ? I : J) =/== J .
+Result from sat solver is: unsat
 ==========================================
 check in TEST-R : P > Q and Q > R .
-Result from CVC4 is: sat
+Result from sat solver is: sat
 ==========================================
 check in TEST-R : P > Q and Q > R and R > P .
-Result from CVC4 is: unsat
+Result from sat solver is: unsat
 ==========================================
 check in TEST-R : P < Q and Q < R .
-Result from CVC4 is: sat
+Result from sat solver is: sat
 ==========================================
 check in TEST-R : P < Q and Q < R and R < P .
-Result from CVC4 is: unsat
+Result from sat solver is: unsat
 ==========================================
 check in TEST-R : P >= Q and Q >= P .
-Result from CVC4 is: sat
+Result from sat solver is: sat
 ==========================================
-check in TEST-R : P >= Q and Q >= P and P != Q .
-Result from CVC4 is: unsat
+check in TEST-R : P >= Q and Q >= P and P =/== Q .
+Result from sat solver is: unsat
 ==========================================
 check in TEST-R : P <= Q and Q <= P .
-Result from CVC4 is: sat
+Result from sat solver is: sat
 ==========================================
-check in TEST-R : P <= Q and Q <= P and P != Q .
-Result from CVC4 is: unsat
+check in TEST-R : P <= Q and Q <= P and P =/== Q .
+Result from sat solver is: unsat
 ==========================================
-check in TEST-R : P = Q + R and P > Q and P > R .
-Result from CVC4 is: sat
+check in TEST-R : P === Q + R and P > Q and P > R .
+Result from sat solver is: sat
 ==========================================
-check in TEST-R : P = Q + R and P > Q + R .
-Result from CVC4 is: unsat
-Warning: <standard input>, line 70: bad token s.
-Warning: <standard input>, line 70: no parse for term.
+check in TEST-R : P === Q + R and P > Q + R .
+Result from sat solver is: unsat
 ==========================================
-check in TEST-R : P = Q - R and P > Q + R .
-Result from CVC4 is: sat
+check in TEST-R : P === Q + R and P > Q + R + S .
+Result from sat solver is: sat
 ==========================================
-check in TEST-R : - P = Q - R and P > Q + R .
-Result from CVC4 is: sat
+check in TEST-R : P === Q - R and P > Q + R .
+Result from sat solver is: sat
 ==========================================
-check in TEST-R : P != Q + R and P > Q + R .
-Result from CVC4 is: sat
+check in TEST-R : - P === Q - R and P > Q + R .
+Result from sat solver is: sat
+==========================================
+check in TEST-R : P =/== Q + R and P > Q + R .
+Result from sat solver is: sat
 ==========================================
 check in TEST-R : (P > Q ? P : Q) >= P and (P > Q ? P : Q) >= Q .
-Result from CVC4 is: sat
+Result from sat solver is: sat
 ==========================================
 check in TEST-R : (P > Q ? P : Q) < P .
-Result from CVC4 is: unsat
+Result from sat solver is: unsat
 ==========================================
-check in TEST-R : (P > Q ? P : Q) = P or (P > Q ? P : Q) = Q .
-Result from CVC4 is: sat
+check in TEST-R : (P > Q ? P : Q) === P or (P > Q ? P : Q) === Q .
+Result from sat solver is: sat
 ==========================================
-check in TEST-R : not ((P > Q ? P : Q) = P or (P > Q ? P : Q) = Q) .
-Result from CVC4 is: unsat
+check in TEST-R : not ((P > Q ? P : Q) === P or (P > Q ? P : Q) === Q) .
+Result from sat solver is: unsat
 ==========================================
-check in TEST-R : (P > Q ? P : Q) != P and (P > Q ? P : Q) != Q .
-Result from CVC4 is: unsat
+check in TEST-R : (P > Q ? P : Q) =/== P and (P > Q ? P : Q) =/== Q .
+Result from sat solver is: unsat
 ==========================================
-check in TEST-RI : isInteger(toReal(I) + toReal(J)) != ff .
-Result from CVC4 is: sat
+check in TEST-RI : isInteger(toReal(I) + toReal(J)) =/== false .
+Result from sat solver is: sat
 ==========================================
-check in TEST-RI : isInteger(toReal(I) + toReal(J)) != tt .
-Result from CVC4 is: unsat
+check in TEST-RI : isInteger(toReal(I) + toReal(J)) =/== true .
+Result from sat solver is: unsat
 ==========================================
-check in TEST-RI : toInteger(R) + toInteger(P) = toInteger(R + P) .
-Result from CVC4 is: sat
+check in TEST-RI : toInteger(R) + toInteger(P) === toInteger(R + P) .
+Result from sat solver is: sat
 ==========================================
-check in TEST-RI : not toInteger(R) + toInteger(P) = toInteger(R + P) .
-Result from CVC4 is: sat
+check in TEST-RI : not toInteger(R) + toInteger(P) === toInteger(R + P) .
+Result from sat solver is: sat
 ==========================================
 check in TEST-RI : 1/2 < P .
-Result from CVC4 is: sat
+Result from sat solver is: sat
 ==========================================
 check in TEST-RI : 1/2 < P and P < 3/4 .
-Result from CVC4 is: sat
+Result from sat solver is: sat
 ==========================================
 check in TEST-RI : 1/2 < P and P < 3/4 and isInteger(P) .
-Result from CVC4 is: unsat
+Result from sat solver is: unsat
 ==========================================
 check in TEST-RI : -2 < I .
-Result from CVC4 is: sat
+Result from sat solver is: sat
 ==========================================
 check in TEST-RI : -2 < I and -2 * I > -1 .
-Result from CVC4 is: sat
+Result from sat solver is: sat
 ==========================================
-check in TEST-RI : -2 < I and -2 * I > -1 and I != -1 .
-Result from CVC4 is: sat
+check in TEST-RI : -2 < I and -2 * I > -1 and I =/== -1 .
+Result from sat solver is: sat
 ==========================================
-check in TEST-RI : -2 < I and -2 * I > -1 and I != -1 and I - I != I .
-Result from CVC4 is: unsat
+check in TEST-RI : -2 < I and -2 * I > -1 and I =/== -1 and I - I =/== I .
+Result from sat solver is: unsat
 ==========================================
 reduce in META-LEVEL : metaCheck(['REAL-INTEGER], '_=_['_+_['1.Integer,
     '1.Integer],'2.Integer]) .
-rewrites: 2
-result Bool: true
+rewrites: 1
+result [Bool]: metaCheck(th 'REAL-INTEGER is
+  including 'REAL-INTEGER .
+  sorts none .
+  none
+  none
+  none
+  none
+  none
+endth, '_=_['_+_['1.Integer,'1.Integer],'2.Integer])
 ==========================================
 reduce in META-LEVEL : metaCheck(['REAL-INTEGER], '_=_['_+_['1.Integer,
     '1.Integer],'3.Integer]) .
-rewrites: 2
-result Bool: false
+rewrites: 1
+result [Bool]: metaCheck(th 'REAL-INTEGER is
+  including 'REAL-INTEGER .
+  sorts none .
+  none
+  none
+  none
+  none
+  none
+endth, '_=_['_+_['1.Integer,'1.Integer],'3.Integer])
 ==========================================
 reduce in META-CHECK : metaCheck(['META-CHECK], upTerm((I > J ? I : J) < I)) .
 rewrites: 3
-result Bool: false
+result Bool: (false).Bool
 ==========================================
 reduce in META-CHECK : metaCheck(['META-CHECK], upTerm((I > J ? I : J) > I)) .
 rewrites: 3
-result Bool: true
+result Bool: (true).Bool
 ==========================================
-reduce in META-CHECK : metaCheck(['META-CHECK], upTerm((I > J ? I : J) = I or (
-    I > J ? I : J) = J)) .
+reduce in META-CHECK : metaCheck(['META-CHECK], upTerm((I > J ? I : J) === I or
+    (I > J ? I : J) === J)) .
 rewrites: 3
-result Bool: true
+result Bool: (true).Bool
 ==========================================
-reduce in META-CHECK : metaCheck(['META-CHECK], upTerm(not ((I > J ? I : J) = I
-    or (I > J ? I : J) = J))) .
+reduce in META-CHECK : metaCheck(['META-CHECK], upTerm(not ((I > J ? I : J) ===
+    I or (I > J ? I : J) === J))) .
 rewrites: 3
-result Bool: false
+result Bool: (false).Bool
 ==========================================
-reduce in META-CHECK : metaCheck(['META-CHECK], upTerm((I > J ? I : J) != I and
-    (I > J ? I : J) != J)) .
+reduce in META-CHECK : metaCheck(['META-CHECK], upTerm((I > J ? I : J) =/== I
+    and (I > J ? I : J) =/== J)) .
 rewrites: 3
-result Bool: false
+result Bool: (false).Bool
 ==========================================
-reduce in META-CHECK : metaCheck(['META-CHECK], upTerm((I > J ? I : J) != I or
-    (I > J ? I : J) != J)) .
+reduce in META-CHECK : metaCheck(['META-CHECK], upTerm((I > J ? I : J) =/== I
+    or (I > J ? I : J) =/== J)) .
 rewrites: 3
-result Bool: true
+result Bool: (true).Bool
+==========================================
+smt-rewrite [3] in INTEGER-SOUP : < f(1 2 3 4 5 6 7 8 9 10 11 12) | true > .
+
+Solution 1
+< g(3, 1) | 3 === 3 * 1 >
+
+Solution 2
+< g(6, 2) | 6 === 3 * 2 >
+
+Solution 3
+< g(9, 3) | 9 === 3 * 3 >
+==========================================
+smt-rewrite in INTEGER-SOUP : < f(K 1 2 3 4 5 6 7 8 9 10 11 12) | true > .
+
+Solution 1
+< g(3, 1) | 3 === 3 * 1 >
+
+Solution 2
+< g(3, K) | 3 === 3 * K >
+
+Solution 3
+< g(6, 2) | 6 === 3 * 2 >
+
+Solution 4
+< g(6, K) | 6 === 3 * K >
+
+Solution 5
+< g(9, 3) | 9 === 3 * 3 >
+
+Solution 6
+< g(9, K) | 9 === 3 * K >
+
+Solution 7
+< g(12, 4) | 12 === 3 * 4 >
+
+Solution 8
+< g(12, K) | 12 === 3 * K >
+
+Solution 9
+< g(K, 1) | K === 3 * 1 >
+
+Solution 10
+< g(K, 2) | K === 3 * 2 >
+
+Solution 11
+< g(K, 3) | K === 3 * 3 >
+
+Solution 12
+< g(K, 4) | K === 3 * 4 >
+
+Solution 13
+< g(K, 5) | K === 3 * 5 >
+
+Solution 14
+< g(K, 6) | K === 3 * 6 >
+
+Solution 15
+< g(K, 7) | K === 3 * 7 >
+
+Solution 16
+< g(K, 8) | K === 3 * 8 >
+
+Solution 17
+< g(K, 9) | K === 3 * 9 >
+
+Solution 18
+< g(K, 10) | K === 3 * 10 >
+
+Solution 19
+< g(K, 11) | K === 3 * 11 >
+
+Solution 20
+< g(K, 12) | K === 3 * 12 >
+==========================================
+smt-rewrite in INTEGER-SOUP : < f(K 1 2 3 4 5 6 7 8 9 10 11 12) | K <= 24 > .
+
+Solution 1
+< g(3, 1) | 3 === 3 * 1 and K <= 24 >
+
+Solution 2
+< g(3, K) | 3 === 3 * K and K <= 24 >
+
+Solution 3
+< g(6, 2) | 6 === 3 * 2 and K <= 24 >
+
+Solution 4
+< g(6, K) | 6 === 3 * K and K <= 24 >
+
+Solution 5
+< g(9, 3) | 9 === 3 * 3 and K <= 24 >
+
+Solution 6
+< g(9, K) | 9 === 3 * K and K <= 24 >
+
+Solution 7
+< g(12, 4) | 12 === 3 * 4 and K <= 24 >
+
+Solution 8
+< g(12, K) | 12 === 3 * K and K <= 24 >
+
+Solution 9
+< g(K, 1) | K === 3 * 1 and K <= 24 >
+
+Solution 10
+< g(K, 2) | K === 3 * 2 and K <= 24 >
+
+Solution 11
+< g(K, 3) | K === 3 * 3 and K <= 24 >
+
+Solution 12
+< g(K, 4) | K === 3 * 4 and K <= 24 >
+
+Solution 13
+< g(K, 5) | K === 3 * 5 and K <= 24 >
+
+Solution 14
+< g(K, 6) | K === 3 * 6 and K <= 24 >
+
+Solution 15
+< g(K, 7) | K === 3 * 7 and K <= 24 >
+
+Solution 16
+< g(K, 8) | K === 3 * 8 and K <= 24 >
+==========================================
+smt-rewrite in INTEGER-SOUP : < f(K 1 2 3 4 5 6 7 8 9 10 11 12) | K divisible 5
+    > .
+
+Solution 1
+< g(3, 1) | 3 === 3 * 1 and K divisible 5 >
+
+Solution 2
+< g(6, 2) | 6 === 3 * 2 and K divisible 5 >
+
+Solution 3
+< g(9, 3) | 9 === 3 * 3 and K divisible 5 >
+
+Solution 4
+< g(12, 4) | 12 === 3 * 4 and K divisible 5 >
+
+Solution 5
+< g(K, 5) | K === 3 * 5 and K divisible 5 >
+
+Solution 6
+< g(K, 10) | K === 3 * 10 and K divisible 5 >
+==========================================
+smt-rewrite in INTEGER-SOUP2 : < f(1 2 3 4 5 6 7 8 9 10 11 12) | true > .
+
+Solution 1
+< g(3, #1-K:Integer) | 3 === 3 * #1-K:Integer >
+
+Solution 2
+< g(6, #1-K:Integer) | 6 === 3 * #1-K:Integer >
+
+Solution 3
+< g(9, #1-K:Integer) | 9 === 3 * #1-K:Integer >
+
+Solution 4
+< g(12, #1-K:Integer) | 12 === 3 * #1-K:Integer >
+==========================================
+reduce in TEST : metaSmtSearch(['INTEGER-SOUP2], upTerm(< f(1 2 3 4 5 6 7 8 9
+    10 11 12) | true >), '+, 0, 1, 0) .
+rewrites: 4
+result SmtResult: {'<_|_>['g['3.Integer,'#1-K:Integer],'_===_['3.Integer,'_*_[
+    '3.Integer,'#1-K:Integer]]],(1).NzNat}
+==========================================
+reduce in TEST : metaSmtSearch(['INTEGER-SOUP2], upTerm(< f(1 2 3 4 5 6 7 8 9
+    10 11 12) | true >), '+, 0, 1, 1) .
+rewrites: 4
+result SmtResult: {'<_|_>['g['6.Integer,'#1-K:Integer],'_===_['6.Integer,'_*_[
+    '3.Integer,'#1-K:Integer]]],(1).NzNat}
+==========================================
+reduce in TEST : metaSmtSearch(['INTEGER-SOUP2], upTerm(< f(1 2 3 4 5 6 7 8 9
+    10 11 12) | true >), '+, 0, 1, 2) .
+rewrites: 4
+result SmtResult: {'<_|_>['g['9.Integer,'#1-K:Integer],'_===_['9.Integer,'_*_[
+    '3.Integer,'#1-K:Integer]]],(1).NzNat}
+==========================================
+reduce in TEST : metaSmtSearch(['INTEGER-SOUP2], upTerm(< f(1 2 3 4 5 6 7 8 9
+    10 11 12) | true >), '+, 0, 1, 3) .
+rewrites: 4
+result SmtResult: {'<_|_>['g['12.Integer,'#1-K:Integer],'_===_['12.Integer,
+    '_*_['3.Integer,'#1-K:Integer]]],(1).NzNat}
+==========================================
+reduce in TEST : metaSmtSearch(['INTEGER-SOUP2], upTerm(< f(1 2 3 4 5 6 7 8 9
+    10 11 12) | true >), '+, 0, 1, 5) .
+rewrites: 3
+result SmtResult?: (failure).SmtResult?
+==========================================
+reduce in TEST : metaSmtSearch(['INTEGER-SOUP2], upTerm(< f(1 2 3 4 5 6 7 8 9
+    10 11 12) | true >), '+, 42, 1, 0) .
+rewrites: 4
+result SmtResult: {'<_|_>['g['3.Integer,'#43-K:Integer],'_===_['3.Integer,'_*_[
+    '3.Integer,'#43-K:Integer]]],(43).NzNat}
+Warning: <standard input>, line 199 (mod TEST): missing period.
+==========================================
+reduce in TEST : gen(upTerm(< f(K 1 2 3 4 5 6 7 8 9 10 11 12) | true >), 0) .
+rewrites: 146
+result SmtResultList: {'<_|_>['g['3.Integer,'1.Integer],'_===_['3.Integer,'_*_[
+    '3.Integer,'1.Integer]]],(0).Zero}
+{'<_|_>['g['3.Integer,'K:Integer],'_===_['3.Integer,'_*_['3.Integer,
+    'K:Integer]]],(0).Zero}
+{'<_|_>['g['6.Integer,'2.Integer],'_===_['6.Integer,'_*_['3.Integer,
+    '2.Integer]]],(0).Zero}
+{'<_|_>['g['6.Integer,'K:Integer],'_===_['6.Integer,'_*_['3.Integer,
+    'K:Integer]]],(0).Zero}
+{'<_|_>['g['9.Integer,'3.Integer],'_===_['9.Integer,'_*_['3.Integer,
+    '3.Integer]]],(0).Zero}
+{'<_|_>['g['9.Integer,'K:Integer],'_===_['9.Integer,'_*_['3.Integer,
+    'K:Integer]]],(0).Zero}
+{'<_|_>['g['12.Integer,'4.Integer],'_===_['12.Integer,'_*_['3.Integer,
+    '4.Integer]]],(0).Zero}
+{'<_|_>['g['12.Integer,'K:Integer],'_===_['12.Integer,'_*_['3.Integer,
+    'K:Integer]]],(0).Zero}
+{'<_|_>['g['K:Integer,'1.Integer],'_===_['K:Integer,'_*_['3.Integer,
+    '1.Integer]]],(0).Zero}
+{'<_|_>['g['K:Integer,'2.Integer],'_===_['K:Integer,'_*_['3.Integer,
+    '2.Integer]]],(0).Zero}
+{'<_|_>['g['K:Integer,'3.Integer],'_===_['K:Integer,'_*_['3.Integer,
+    '3.Integer]]],(0).Zero}
+{'<_|_>['g['K:Integer,'4.Integer],'_===_['K:Integer,'_*_['3.Integer,
+    '4.Integer]]],(0).Zero}
+{'<_|_>['g['K:Integer,'5.Integer],'_===_['K:Integer,'_*_['3.Integer,
+    '5.Integer]]],(0).Zero}
+{'<_|_>['g['K:Integer,'6.Integer],'_===_['K:Integer,'_*_['3.Integer,
+    '6.Integer]]],(0).Zero}
+{'<_|_>['g['K:Integer,'7.Integer],'_===_['K:Integer,'_*_['3.Integer,
+    '7.Integer]]],(0).Zero}
+{'<_|_>['g['K:Integer,'8.Integer],'_===_['K:Integer,'_*_['3.Integer,
+    '8.Integer]]],(0).Zero}
+{'<_|_>['g['K:Integer,'9.Integer],'_===_['K:Integer,'_*_['3.Integer,
+    '9.Integer]]],(0).Zero}
+{'<_|_>['g['K:Integer,'10.Integer],'_===_['K:Integer,'_*_['3.Integer,
+    '10.Integer]]],(0).Zero}
+{'<_|_>['g['K:Integer,'11.Integer],'_===_['K:Integer,'_*_['3.Integer,
+    '11.Integer]]],(0).Zero}
+{'<_|_>['g['K:Integer,'12.Integer],'_===_['K:Integer,'_*_['3.Integer,
+    '12.Integer]]],(0).Zero}
 Maude> Bye.

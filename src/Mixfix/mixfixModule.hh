@@ -37,7 +37,7 @@
 #include "token.hh"
 #include "pointerSet.hh"
 #include "symbolType.hh"
-#include "SMT_Base.hh"
+#include "SMT_Info.hh"
 #include "SMT_NumberSymbol.hh"
 
 class MixfixModule : public ProfileModule, public MetadataStore, protected SharedTokens
@@ -189,7 +189,7 @@ public:
   QuotedIdentifierSymbol* findQuotedIdentifierSymbol(const ConnectedComponent* component) const;
   StringSymbol* findStringSymbol(const ConnectedComponent* component) const;
   FloatSymbol* findFloatSymbol(const ConnectedComponent* component) const;
-  SMT_NumberSymbol* findSMT_NumberSymbol(const ConnectedComponent* component, SMT_Base::SMT_Type type);
+  SMT_NumberSymbol* findSMT_NumberSymbol(const ConnectedComponent* component, SMT_Info::SMT_Type type);
   int findPolymorphIndex(int polymorphName, const Vector<Sort*>& domainAndRange) const;
   //
   //	Polymorph functions.
@@ -242,7 +242,8 @@ public:
   bool isTheory() const;
   static bool canImport(ModuleType t1, ModuleType t2);
   static bool canHaveAsParameter(ModuleType t1, ModuleType t2);
-  SMT_Base::SortIndexToSMT_TypeMap& getSortMap();
+  const SMT_Info& getSMT_Info();
+  bool validForSMT_Rewriting();
 
 protected:
   static int findMatchingParen(const Vector<Token>& tokens, int pos);
@@ -746,7 +747,7 @@ private:
   typedef map<IntList, Symbol*> InternalTupleMap;
   InternalTupleMap tupleSymbols;
 
-  SMT_Base::SortIndexToSMT_TypeMap sortMap;
+  SMT_Info smtInfo;
 
   friend ostream& operator<<(ostream& s, const Term* term);
   friend ostream& operator<<(ostream& s, DagNode* dagNode);

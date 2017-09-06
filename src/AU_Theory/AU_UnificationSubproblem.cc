@@ -91,6 +91,282 @@ AU_UnificationSubproblem::addUnification(DagNode* lhs, DagNode* rhs, bool marked
 }
 
 bool
+AU_UnificationSubproblem::hasArgumentBoundInTheory(AU_DagNode* target, UnificationContext& solution)
+{
+  int nrArgs = target->argArray.length();
+  for (int i = 0; i < nrArgs; ++i)
+    {
+      DagNode* arg = target->argArray[i];
+      if (VariableDagNode* v = dynamic_cast<VariableDagNode*>(arg))
+	{
+	  //
+	  //	Argument is a variable - see if it is bound in theory.
+	  //
+	  VariableDagNode* lv = v->lastVariableInChain(solution);
+	  int index = lv->getIndex();
+	  DagNode* binding = solution.value(index);
+	  if (binding != 0 && binding->symbol() == topSymbol)
+	    return true;
+	}
+    }
+  return false;
+}
+
+AU_DagNode*
+AU_UnificationSubproblem::flatten(int index, AU_DagNode* target, UnificationContext& solution)
+{
+  Vector<DagNode*> flattenedArguments;
+  //
+  //	Flatten in arguments that are bound in theory. If we flatten in variable with given
+  //	index, return null to indicate an occurrs check failure.
+  //
+  int nrArgs = target->argArray.length();
+  for (int i = 0; i < nrArgs; ++i)
+    {
+      DagNode* arg = target->argArray[i];
+      if (VariableDagNode* v = dynamic_cast<VariableDagNode*>(arg))
+	{
+	  //
+	  //	Argument is a variable - see if it is bound in theory.
+	  //
+	  VariableDagNode* lv = v->lastVariableInChain(solution);
+	  int argVarIndex = lv->getIndex();
+	  Assert(argVarIndex != index, "variable " << arg <<
+		 " is equivalent to variable with index " << index);  // binding should not contain an occurs check failure
+	  DagNode* binding = solution.value(argVarIndex);
+	  if (binding != 0 && binding->symbol() == topSymbol)
+	    {
+	      AU_DagNode* b = safeCast(AU_DagNode*, binding);
+	      int nrArgs2 = b->argArray.length();
+	      for (int j = 0; j < nrArgs2; ++j)
+		{
+		  DagNode* subArg = b->argArray[j];
+		  if (VariableDagNode* v2 = dynamic_cast<VariableDagNode*>(subArg))
+		    {
+		      VariableDagNode* lv2 = v2->lastVariableInChain(solution);
+		      if (lv2->getIndex() == index)
+			{
+			  DebugAdvisory("occur check failure while trying to purify " << static_cast<DagNode*>(target) <<
+					" because of " << static_cast<DagNode*>(v) <<
+					" bound to " << static_cast<DagNode*>(subArg) <<
+					" containing " << static_cast<DagNode*>(v2));
+			  return 0;
+			}
+		      flattenedArguments.append(lv2);  // variable in binding
+		    }
+		  else
+		    {
+		      CantHappen("non-variable " << subArg <<
+				 " seen in binding " << binding <<
+				 " for variable " << arg <<
+				 " while flattening " << target);
+		    }
+		}
+	    }
+	  else
+	    {
+	      //
+	      //	Either the variable is unbound or bound to an alien. Either way it is good as it is.
+	      //
+	      flattenedArguments.append(lv);
+	    }
+	}
+      else
+	{
+	  //
+	  //	This case should not arise if we are flattening a binding, since bindings are supposed to be pure.
+	  //
+	  Assert(index == NONE, "binding " << target << " for variable with index " << index << " has subterm " << arg);
+	  flattenedArguments.append(arg);
+	}
+    }
+  int newNrArgs = flattenedArguments.size();
+  AU_DagNode* result = new AU_DagNode(topSymbol, newNrArgs);
+  for (int i = 0; i < newNrArgs; ++i)
+    result->argArray[i] = flattenedArguments[i];
+  return result;
+}
+
+bool
+AU_UnificationSubproblem::interflattenBindings(UnificationContext& solution)
+{
+  int nrFragile = solution.nrFragileBindings();
+  bool didFlatten;
+  do
+    {
+      didFlatten = false;
+      for (int i = 0; i < nrFragile; ++i)
+	{
+	  DagNode* binding = solution.value(i);
+	  if (binding != 0 && binding->symbol() == topSymbol)
+	    {
+	      //
+	      //	Binding belongs to our theory - need to check it.
+	      //
+	      AU_DagNode* a = safeCast(AU_DagNode*, binding);
+	      if (hasArgumentBoundInTheory(a, solution))
+		{
+		  AU_DagNode* f = flatten(i, a, solution);
+		  if (f == 0)
+		    return false;  // occurs check failure
+		  VariableDagNode* v = solution.getVariableDagNode(i);
+		  solution.unificationBind(v, f);
+		  DebugAdvisory("for variable " << static_cast<DagNode*>(v) <<
+				": flattened " << binding <<
+				" to " << static_cast<DagNode*>(f));
+		  didFlatten = true;
+		}
+	    }
+	}
+    }
+  while (didFlatten);  // to fixed point
+  return true;
+}
+
+bool
+AU_UnificationSubproblem::purifyAndBind(VariableDagNode* variable, AU_DagNode* target, UnificationContext& solution, PendingUnificationStack& pending)
+{
+  DebugAdvisory("purifying assoc dag " << static_cast<DagNode*>(target) << " and binding to variable " << static_cast<DagNode*>(variable));
+  //
+  //	Arguments can only be variables - aliens must be replaced by variables.
+  //
+  int index = variable->getIndex();
+  int nrArgs = target->argArray.length();
+  AU_DagNode* purified = new AU_DagNode(topSymbol, nrArgs);
+  for (int i = 0; i < nrArgs; ++i)
+    {
+      DagNode* arg = target->argArray[i];
+      Assert(arg->symbol() != topSymbol, "target " << target << " not flattened");
+
+      if (VariableDagNode* v = dynamic_cast<VariableDagNode*>(arg))
+	{
+	  //
+	  //	Argument is a variable - find current representative.
+	  //
+	  VariableDagNode* lv = v->lastVariableInChain(solution);
+	  int argVarIndex = lv->getIndex();
+	  if (argVarIndex == index)
+	    {
+	      DebugAdvisory("occur check failure while trying to purify " << static_cast<DagNode*>(target) <<
+			    " because of " << static_cast<DagNode*>(v));
+	      return false;
+	    }
+	  purified->argArray[i] = lv;
+	}
+      else
+	{
+	  //
+	  //	Argument is an alien - introduce a new variable to purify it.
+	  //
+	  ConnectedComponent* component = topSymbol->rangeComponent();
+	  DagNode* freshVariable = solution.makeFreshVariable(component);
+	  if (!(arg->computeSolvedForm(freshVariable, solution, pending)))
+	    {
+	      DebugAdvisory("unexpected failure of " << arg << " =? " << freshVariable << " during purification");
+	      return false;
+	    }
+	  purified->argArray[i] = freshVariable;
+	}
+    }
+  //
+  //	When we bind a variable X to a purified form f(..., Y, ...) we still have potential problems that
+  //	(1) X may occur in some other binding Z |-> f(..., X, ...) which is now unflattened; and
+  //	(2) Y may be bound Y |-> f(...) in which case we are creating an unflat binding.
+  //	We fix up these situations by a mutual flattening proceedure later on.
+  //
+  solution.unificationBind(variable, purified);
+  DebugAdvisory("bound " << static_cast<DagNode*>(variable) << " to " << static_cast<DagNode*>(purified));
+  return true;
+}
+
+bool
+AU_UnificationSubproblem::simplify(UnificationContext& solution, PendingUnificationStack& pending)
+{
+  //
+  //	We assume that any bindings X = f(...) in our theory are in normal form.
+  //	Unifications f(...) =? X can only be solved binding X to something that unifies with f(...)
+  //	so we solve those unifications first.
+  //
+  bool madeBinding = false;
+  int nrUnifications = unifications.size();
+  for (int i = 0; i < nrUnifications; ++i)
+    {
+      Unification& u = unifications[i];
+      if (u.rhs->symbol() != topSymbol)
+	{
+	  VariableDagNode* rhs = safeCast(VariableDagNode*, u.rhs);
+	  VariableDagNode* lv = rhs->lastVariableInChain(solution);
+	  int index = lv->getIndex();
+	  DagNode* binding = solution.value(index);
+	  if (binding == 0)
+	    {
+	      if (!purifyAndBind(lv, safeCast(AU_DagNode*, u.lhs), solution, pending))
+		return false;  // must have been occurs check failure
+	      madeBinding = true;
+	    }
+	  else
+	    {
+	      //
+	      //	X is already bound - either we have a new f(...) =? f(...) problem or
+	      //	a theory clash.
+	      //
+	      if (binding->symbol() == topSymbol)
+		{
+		  int nrUnifications = unifications.size();
+		  unifications.expandTo(nrUnifications + 1);
+		  unifications[nrUnifications].lhs = u.lhs;
+		  unifications[nrUnifications].rhs = binding;
+		  unifications[nrUnifications].problem = 0;
+		}
+	      else
+		{
+		  //
+		  //	Theory clash - punt on it.
+		  //
+		  if (!(u.lhs->computeSolvedForm(binding, solution, pending)))
+		    return false;  // must have been theory clash failure
+		}
+	    }
+	}
+    }
+  return !madeBinding || interflattenBindings(solution);
+}
+
+#if 0
+
+bool
+AU_UnificationSubproblem::solve(bool findFirst, UnificationContext& solution, PendingUnificationStack& pending)
+{
+  if (findFirst)
+    {
+      //
+      //	Save substituion and check point the pending stack because
+      //	initial purification might introduce bindings or unification
+      //	problems that must be retracted when we exit with failure.
+      //
+      preSolveSubstitution.clone(solution);
+      preSolveState = pending.checkPoint();
+      //
+      //	We first attempt to solve any unification problems of the form
+      //	f(...) =? X
+      //	This may increase the number of unification problems.
+      //
+      if (!simplify(solution, pending))
+	{
+	  //
+	  //	Occur check failure or theory clash failure - anyway we need to restore
+	  //	state and quit.
+	  //
+	  pending.restore(preSolveState);
+	  solution.restoreFromClone(preSolveSubstitution);
+	}
+    }
+}
+
+
+#endif
+
+bool
 AU_UnificationSubproblem::checkAndInsertVariable(VariableDagNode* variable, UnificationContext& solution, NatSet& seenVariableIndices)
 {
   VariableDagNode* lv = variable->lastVariableInChain(solution);
@@ -373,6 +649,10 @@ AU_UnificationSubproblem::buildSolution(const Unification& unification, Unificat
 bool
 AU_UnificationSubproblem::resolve(DagNode* subterm, const Vector<DagNode*>& freshVariables, UnificationContext& solution, PendingUnificationStack& pending)
 {
+  //
+  //	Solve an original subterm against a lone fresh variable like #1 or a term composed from fresh variables like f(#1, #2, #3).
+  //	If subterm is a representative of an unbound variable, we bind the variable otherwise we pass the buck to computeSolvedForm().
+  //
   DagNode* d;
   int nrVars = freshVariables.size();
   if (nrVars == 1)
@@ -394,8 +674,15 @@ AU_UnificationSubproblem::resolve(DagNode* subterm, const Vector<DagNode*>& fres
       VariableDagNode* repVar = varSubterm->lastVariableInChain(solution);
       if (solution.value(repVar->getIndex()) == 0)
 	{
+	  //
+	  //	Check for the case that repVar is in fact the lone fresh variable we wanted to bind to it.
+	  //	We don't handle this case in ACU because all subterms have been uniquified. Should only
+	  //	happen if we have non-linear variables, say if we allow non-linear element variables.
+	  //
 	  if (!(repVar->equal(d)))
 	    solution.unificationBind(repVar, d);
+	  else
+	    DebugAdvisory("AU_UnificationSubproblem::resolve(): repVar and fresh var are both " << d);
 	  return true;
 	}
     }

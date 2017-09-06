@@ -236,6 +236,8 @@ label|labels				return KW_LABEL;
 profile					return KW_PROFILE;
 number					return KW_NUMBER;
 rat|rational				return KW_RAT;
+test					return KW_TEST;
+smt-search				return KW_SMT_SEARCH;
 [.\[\]()]				return *yytext;
 0|([1-9][0-9]*)				{
 					  bool dummy;

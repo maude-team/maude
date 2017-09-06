@@ -46,6 +46,11 @@ public:
 
   Term* getLhs() const;
   Term* getRhs() const;
+  //
+  //	This function exists to enable equality condition fragments to have
+  //	a special operational semantics under rewriting modulo SMT.
+  //
+  void buildInstances(Substitution& substitution, DagNode*& lhs, DagNode*& rhs);
 
 #ifdef DUMP
   void dump(ostream& s, const VariableInfo& variableInfo, int indentLevel);

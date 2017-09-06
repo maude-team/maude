@@ -1,3 +1,31 @@
+2014-06-30  Steven Eker  <eker@ape.csl.sri.com>
+
+	* AU_UnificationSubproblem.cc (purifyAndBind): rewritten to no
+	longer do flattening
+	(simplify): use new purifyAndBind() convention
+	(interflattenBindings): added
+
+	* AU_UnificationSubproblem.hh (SimpleRootContainer): added decls
+	for hasArgumentBoundInTheory() and flatten()
+
+	* AU_UnificationSubproblem.cc (hasArgumentBoundInTheory): added
+	(flatten): addded
+
+2014-06-27  Steven Eker  <eker@ape.csl.sri.com>
+
+	* AU_UnificationSubproblem.hh (SimpleRootContainer): added decls
+	for purifyAndBind() and simplify()
+
+	* AU_UnificationSubproblem.cc (purifyAndBind): added
+	(simplify): added
+
+2014-06-23  Steven Eker  <eker@ape.csl.sri.com>
+
+	* AU_UnificationSubproblem.cc (resolve): added comments and
+	DebugAdvisory()
+
+===================================Maude104===========================================
+
 2014-04-04  Steven Eker  <eker@ape.csl.sri.com>
 
 	* AU_UnificationSubproblem.cc (checkAndInsertVariable): check for

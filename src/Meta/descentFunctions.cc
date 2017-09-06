@@ -580,9 +580,8 @@ MetaLevelOpSymbol::metaDownTerm(FreeDagNode* subject, RewritingContext& context)
   return context.builtInReplace(subject, d);
 }
 
-#include "SMT_Symbol.hh"
-#include "variableTerm.hh"
-#include "cvc4/smt/smt_engine.h"
+#include "SMT_Info.hh"
+#include "variableGenerator.hh"
 
 bool
 MetaLevelOpSymbol::metaCheck(FreeDagNode* subject, RewritingContext& context)
@@ -592,100 +591,33 @@ MetaLevelOpSymbol::metaCheck(FreeDagNode* subject, RewritingContext& context)
       if (Term* term = metaLevel->downTerm(subject->getArgument(1), m))
 	{
 	  m->protect();
+	  DagNode* d = term->term2Dag();
 
-	  if (SMT_Symbol* s = dynamic_cast<SMT_Symbol*>(term->symbol()))
+	  const SMT_Info& smtInfo = m->getSMT_Info();
+	  VariableGenerator vg(smtInfo);
+	  VariableGenerator::Result result = vg.checkDag(d);
+	  switch (result)
 	    {
-	      SMT_Base::SortIndexToSMT_TypeMap& sortMap = m->getSortMap();
-	      Sort* rangeSort = s->getRangeSort();
-	      SMT_Base::SortIndexToSMT_TypeMap::const_iterator k = sortMap.find(rangeSort->getIndexWithinModule());
-	      Assert(k != sortMap.end(), "bad SMT sort");
-	      if (k->second == SMT_Base::BOOLEAN)
-		{
-		  //
-		  //	We have a good module, a good term and the term appears to be of SMT Boolean sort
-		  //
-		  //
-		  //	Convert index variables and term to a dag.
-		  //
-		  VariableInfo variableInfo;
-		  term->indexVariables(variableInfo);
-		  DagNode* d = term->term2Dag();
-		  //
-		  //	Make an SMT variable for each variable occurring in dag.
-		  //
-		  ExprManager em;
-		  int nrVariables = variableInfo.getNrRealVariables();
-		  Vector<Expr> variables(nrVariables);
-		  for (int i = 0; i < nrVariables; ++i)
-		    {
-		      VariableTerm* v = safeCast(VariableTerm*, variableInfo.index2Variable(i));
-		      const char* name = Token::name(v->id());
-		      Type t;
-		      int sortIndex = v->getSort()->getIndexWithinModule();
-		      SMT_Base::SortIndexToSMT_TypeMap::const_iterator j = sortMap.find(sortIndex);
-		      if (j == sortMap.end())
-			{
-			  IssueAdvisory("variable " << QUOTE(static_cast<Term*>(v)) << " does not belong to an SMT sort.");
-			  goto fail;
-			}
-		      switch(j->second)
-			{
-			case SMT_Base::BOOLEAN:
-			  {
-			    DebugAdvisory("made Boolean variable " << static_cast<Term*>(v));
-			    t = em.booleanType();
-			    break;
-			  }
-			case SMT_Base::INTEGER:
-			  {
-			    DebugAdvisory("made Integer variable " << static_cast<Term*>(v));
-			    t = em.integerType();
-			    break;
-			  }
-			case SMT_Base::REAL:
-			  {
-			    t = em.realType();
-			    DebugAdvisory("made Real variable " << static_cast<Term*>(v));
-			    break;
-			  }
-			}
-		      variables[i] = em.mkVar(name, t);
-		    }
-		  //
-		  //	Convert Maude dag in to SMT expression.
-		  //
-		  Expr e = s->dagToCVC4(d, variables, sortMap, em);
-		  if (!(e.isNull()))
-		    {
-		      //
-		      //	Check satisfiability.
-		      //
-		      SmtEngine smt(&em);
-		      DebugAdvisory("Expression asserted in CVC4 is " << e);
-		      smt.assertFormula(e);
-		      const CVC4::Result result = smt.checkSat(em.mkConst(true));
-		      DebugAdvisory("CVC4 checkSat() returned " << result);
-		      
-		      CVC4::Result::Sat sat = result.isSat();
-		      if (sat != CVC4::Result::SAT_UNKNOWN)
-			{
-			  DagNode* r = metaLevel->upBool(sat == CVC4::Result::SAT);
-			  term->deepSelfDestruct();
-			  (void) m->unprotect();
-			  return context.builtInReplace(subject, r);
-			}
-		      else
-			IssueAdvisory("CVC4 couldn't decide satisfiability: " << result);
-		    }
-		  //else
-		  //  IssueAdvisory("term " << QUOTE(term) << " is not a pure SMT expression.");
-		}
-	      else
-		IssueAdvisory("term " << QUOTE(term) << " does not belong to an SMT Boolean sort.");
+	    case VariableGenerator::BAD_DAG:
+	      {
+		IssueAdvisory("term " << QUOTE(term) << " is not a valid SMT Boolean expression.");
+		break;
+	      }
+	    case VariableGenerator::SAT_UNKNOWN:
+	      {
+		IssueAdvisory("sat solver could not determined satisfiability of " << QUOTE(term) << ".");
+		break;
+	      }
+	    case VariableGenerator::UNSAT:
+	    case VariableGenerator::SAT:
+	      {
+		DagNode* r = metaLevel->upBool(result == VariableGenerator::SAT);
+		term->deepSelfDestruct();
+		(void) m->unprotect();
+		return context.builtInReplace(subject, r);
+	      }
 	    }
-	  else
-	    IssueAdvisory("term " << QUOTE(term) << " is not headed by an SMT operator.");
-	fail:
+
 	  term->deepSelfDestruct();
 	  (void) m->unprotect();
 	}

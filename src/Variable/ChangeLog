@@ -1,3 +1,10 @@
+2014-06-23  Steven Eker  <eker@ape.csl.sri.com>
+
+	* variableDagNode.cc (safeVirtualReplacement): update comment,
+	since we are assume that oldVar is the last variable it its chain
+
+===================================Maude104===========================================
+
 2013-01-04  Steven Eker  <eker@ape.csl.sri.com>
 
 	* variableDagNode.hh (NamedEntity): added decl for

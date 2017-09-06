@@ -1,3 +1,10 @@
+Overview of Changes in alpha104
+===============================
+* fixed duplicate advisories about missing sorts
+* fixed missing echoing bug for commands with 2 optional arguments
+* fixed caching bug for descent functions
+* experimental support for 1-step rewriting modulo SMT
+
 Overview of Changes in alpha103
 ===============================
 * 0/1 is now a valid Rat constant

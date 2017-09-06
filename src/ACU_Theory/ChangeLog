@@ -1,3 +1,10 @@
+2014-06-20  Steven Eker  <eker@ape.csl.sri.com>
+
+	* ACU_UnificationSubproblem2.cc (solve): added comment with new
+	insight into why solved forms must be unsolved
+
+===================================Maude104===========================================
+
 2013-02-28  Steven Eker  <eker@ape.csl.sri.com>
 
 	* ACU_UnificationSubproblem2.cc (addUnification): call killCancelledSubterms()

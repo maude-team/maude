@@ -64,6 +64,13 @@ private:
   bool buildSolution(const Unification& unification, UnificationContext& solution, PendingUnificationStack& pending);
   bool resolve(DagNode* subterm, const Vector<DagNode*>& freshVariables, UnificationContext& solution, PendingUnificationStack& pending);
 
+  bool hasArgumentBoundInTheory(AU_DagNode* target, UnificationContext& solution);
+  AU_DagNode* flatten(int index, AU_DagNode* target, UnificationContext& solution);
+  bool interflattenBindings(UnificationContext& solution);
+  bool simplify(UnificationContext& solution, PendingUnificationStack& pending);
+  bool purifyAndBind(VariableDagNode* variable, AU_DagNode* target, UnificationContext& solution, PendingUnificationStack& pending);
+
+
   AU_Symbol* const topSymbol;
   Vector<Unification> unifications;
   //

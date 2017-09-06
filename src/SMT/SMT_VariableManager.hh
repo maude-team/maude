@@ -2,7 +2,7 @@
 
     This file is part of the Maude 2 interpreter.
 
-    Copyright 1997-2006 SRI International, Menlo Park, CA 94025, USA.
+    Copyright 1997-2014 SRI International, Menlo Park, CA 94025, USA.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,18 +21,34 @@
 */
 
 //
-//	Base class for large chunks of state that can be cached.
+//      Abstract base class for managing SMT variables.
 //
-#ifndef _cacheableState_hh_
-#define _cacheableState_hh_
+#ifndef _SMT_VariableManager_hh_
+#define _SMT_VariableManager_hh_
+#include "gmpxx.h"
 
-class CacheableState
+class SMT_VariableManager
 {
 public:
+  enum Result
+    {
+      BAD_DAG = -2,
+      SAT_UNKNOWN = -1,
+      UNSAT = 0,
+      SAT = 1
+    };
+
+  virtual ~SMT_VariableManager() {}
+
   //
-  //	A cache needs to be able to delete a state.
+  //	Extra functionality for when we do full abstraction of SMT solving.
   //
-  virtual ~CacheableState() {};
+  virtual Result assertDag(DagNode* dag) = 0;
+  virtual Result checkDag(DagNode* dag) = 0;
+  //
+  //	Make a Maude variable corresponding to a fresh SMT variable.
+  //
+  virtual VariableDagNode* makeFreshVariable(Term* baseVariable, const mpz_class& number) = 0;
 };
 
 #endif

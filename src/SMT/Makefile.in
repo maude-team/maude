@@ -54,7 +54,9 @@ libSMT_a_LIBADD =
 am_libSMT_a_OBJECTS = libSMT_a-SMT_Symbol.$(OBJEXT) \
 	libSMT_a-SMT_NumberSymbol.$(OBJEXT) \
 	libSMT_a-SMT_NumberDagNode.$(OBJEXT) \
-	libSMT_a-SMT_NumberTerm.$(OBJEXT)
+	libSMT_a-SMT_NumberTerm.$(OBJEXT) \
+	libSMT_a-SMT_RewriteSearchState.$(OBJEXT) \
+	libSMT_a-SMT_Info.$(OBJEXT)
 libSMT_a_OBJECTS = $(am_libSMT_a_OBJECTS)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
@@ -184,6 +186,7 @@ libSMT_a_CPPFLAGS = \
 	-I$(top_srcdir)/src/Interface \
 	-I$(top_srcdir)/src/Core \
 	-I$(top_srcdir)/src/Variable \
+	-I$(top_srcdir)/src/Higher \
 	-I$(top_srcdir)/src/FullCompiler \
 	-I$(top_srcdir)/src/NA_Theory \
 	-I$(top_srcdir)/src/FreeTheory \
@@ -193,7 +196,9 @@ libSMT_a_SOURCES = \
 	SMT_Symbol.cc \
 	SMT_NumberSymbol.cc \
 	SMT_NumberDagNode.cc \
-	SMT_NumberTerm.cc
+	SMT_NumberTerm.cc \
+	SMT_RewriteSearchState.cc \
+	SMT_Info.cc
 
 EXTRA_DIST = 
 noinst_HEADERS = \
@@ -202,7 +207,10 @@ noinst_HEADERS = \
 	SMT_Symbol.hh \
 	SMT_NumberSymbol.hh \
 	SMT_NumberDagNode.hh \
-	SMT_NumberTerm.hh
+	SMT_NumberTerm.hh \
+	SMT_VariableManager.hh \
+	SMT_RewriteSearchState.hh \
+	SMT_Info.hh
 
 all: all-am
 
@@ -252,9 +260,11 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libSMT_a-SMT_Info.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libSMT_a-SMT_NumberDagNode.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libSMT_a-SMT_NumberSymbol.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libSMT_a-SMT_NumberTerm.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libSMT_a-SMT_RewriteSearchState.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libSMT_a-SMT_Symbol.Po@am__quote@
 
 .cc.o:
@@ -326,6 +336,34 @@ libSMT_a-SMT_NumberTerm.obj: SMT_NumberTerm.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='SMT_NumberTerm.cc' object='libSMT_a-SMT_NumberTerm.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libSMT_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libSMT_a-SMT_NumberTerm.obj `if test -f 'SMT_NumberTerm.cc'; then $(CYGPATH_W) 'SMT_NumberTerm.cc'; else $(CYGPATH_W) '$(srcdir)/SMT_NumberTerm.cc'; fi`
+
+libSMT_a-SMT_RewriteSearchState.o: SMT_RewriteSearchState.cc
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libSMT_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libSMT_a-SMT_RewriteSearchState.o -MD -MP -MF $(DEPDIR)/libSMT_a-SMT_RewriteSearchState.Tpo -c -o libSMT_a-SMT_RewriteSearchState.o `test -f 'SMT_RewriteSearchState.cc' || echo '$(srcdir)/'`SMT_RewriteSearchState.cc
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libSMT_a-SMT_RewriteSearchState.Tpo $(DEPDIR)/libSMT_a-SMT_RewriteSearchState.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='SMT_RewriteSearchState.cc' object='libSMT_a-SMT_RewriteSearchState.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libSMT_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libSMT_a-SMT_RewriteSearchState.o `test -f 'SMT_RewriteSearchState.cc' || echo '$(srcdir)/'`SMT_RewriteSearchState.cc
+
+libSMT_a-SMT_RewriteSearchState.obj: SMT_RewriteSearchState.cc
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libSMT_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libSMT_a-SMT_RewriteSearchState.obj -MD -MP -MF $(DEPDIR)/libSMT_a-SMT_RewriteSearchState.Tpo -c -o libSMT_a-SMT_RewriteSearchState.obj `if test -f 'SMT_RewriteSearchState.cc'; then $(CYGPATH_W) 'SMT_RewriteSearchState.cc'; else $(CYGPATH_W) '$(srcdir)/SMT_RewriteSearchState.cc'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libSMT_a-SMT_RewriteSearchState.Tpo $(DEPDIR)/libSMT_a-SMT_RewriteSearchState.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='SMT_RewriteSearchState.cc' object='libSMT_a-SMT_RewriteSearchState.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libSMT_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libSMT_a-SMT_RewriteSearchState.obj `if test -f 'SMT_RewriteSearchState.cc'; then $(CYGPATH_W) 'SMT_RewriteSearchState.cc'; else $(CYGPATH_W) '$(srcdir)/SMT_RewriteSearchState.cc'; fi`
+
+libSMT_a-SMT_Info.o: SMT_Info.cc
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libSMT_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libSMT_a-SMT_Info.o -MD -MP -MF $(DEPDIR)/libSMT_a-SMT_Info.Tpo -c -o libSMT_a-SMT_Info.o `test -f 'SMT_Info.cc' || echo '$(srcdir)/'`SMT_Info.cc
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libSMT_a-SMT_Info.Tpo $(DEPDIR)/libSMT_a-SMT_Info.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='SMT_Info.cc' object='libSMT_a-SMT_Info.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libSMT_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libSMT_a-SMT_Info.o `test -f 'SMT_Info.cc' || echo '$(srcdir)/'`SMT_Info.cc
+
+libSMT_a-SMT_Info.obj: SMT_Info.cc
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libSMT_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libSMT_a-SMT_Info.obj -MD -MP -MF $(DEPDIR)/libSMT_a-SMT_Info.Tpo -c -o libSMT_a-SMT_Info.obj `if test -f 'SMT_Info.cc'; then $(CYGPATH_W) 'SMT_Info.cc'; else $(CYGPATH_W) '$(srcdir)/SMT_Info.cc'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libSMT_a-SMT_Info.Tpo $(DEPDIR)/libSMT_a-SMT_Info.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='SMT_Info.cc' object='libSMT_a-SMT_Info.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libSMT_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libSMT_a-SMT_Info.obj `if test -f 'SMT_Info.cc'; then $(CYGPATH_W) 'SMT_Info.cc'; else $(CYGPATH_W) '$(srcdir)/SMT_Info.cc'; fi`
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \

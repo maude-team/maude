@@ -77,17 +77,16 @@ MixfixModule::graphPrint(ostream& s, DagNode* dagNode)
 	    //
 	    Symbol* symbol = dagNode->symbol();
 	    Sort* sort = symbol->getRangeSort();
-	    int sortIndexWithinModule = sort->getIndexWithinModule();
 	    //
 	    //	Figure out what SMT sort we correspond to.
 	    //
-	    SMT_Base::SortIndexToSMT_TypeMap::const_iterator j = sortMap.find(sortIndexWithinModule);
-	    Assert(j != sortMap.end(), "bad SMT sort");
+	    SMT_Info::SMT_Type t = getSMT_Info().getType(sort);
+	    Assert(t != SMT_Info::NOT_SMT, "bad SMT sort " << sort);
 	    s << value.get_num();
-	    if (j->second == SMT_Base::REAL)
+	    if (t == SMT_Info::REAL)
 	      s << '/' << value.get_den();
 	    else
-	      Assert(j->second == SMT_Base::INTEGER, "SMT number sort expected");
+	      Assert(t == SMT_Info::INTEGER, "SMT number sort expected");
 	    break;
 	  }
 	default:

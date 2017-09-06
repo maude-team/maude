@@ -45,6 +45,7 @@
 #include "bindingMacros.hh"
 
 //	SMT stuff
+#include "SMT_Info.hh"
 #include "SMT_NumberSymbol.hh"
 #include "SMT_NumberTerm.hh"
 #include "SMT_NumberDagNode.hh"
@@ -98,7 +99,7 @@ SMT_NumberSymbol::getDataAttachments(const Vector<Sort*>& opDeclaration,
 }
 
 void
-SMT_NumberSymbol::fillOutSortMap(SortIndexToSMT_TypeMap& sortMap)
+SMT_NumberSymbol::fillOutSMT_Info(SMT_Info& info)
 {
   //
   //	If we are the construction operator for some SMT type, fill out that information.
@@ -107,14 +108,12 @@ SMT_NumberSymbol::fillOutSortMap(SortIndexToSMT_TypeMap& sortMap)
     {
     case CODE('i', 'n'):
       {
-	Sort* rangeSort = getRangeSort();
-	sortMap[rangeSort->getIndexWithinModule()] = INTEGER;
+	info.setType(getRangeSort(), SMT_Info::INTEGER);
 	break;
       }
     case CODE('r', 'e'):
       {
-	Sort* rangeSort = getRangeSort();
-	sortMap[rangeSort->getIndexWithinModule()] = REAL;
+	info.setType(getRangeSort(), SMT_Info::REAL);
 	break;
       }
     default:

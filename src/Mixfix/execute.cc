@@ -93,7 +93,7 @@ Interpreter::beginRewriting(bool debug)
 void
 Interpreter::printModifiers(Int64 number, Int64 number2)
 {
-  if (number2 != NONE || number2 != NONE)
+  if (number != NONE || number2 != NONE)
     {
       cout << '[';
       if (number != NONE)
@@ -455,17 +455,14 @@ Interpreter::sreduce(const Vector<Token>& subject)
     }
 }
 
-#include "SMT_Symbol.hh"
-#include "variableTerm.hh"
-#include "cvc4/smt/smt_engine.h"
+#include "SMT_Info.hh"
+#include "variableGenerator.hh"
 
 void
 Interpreter::check(const Vector<Token>& subject)
 {
   if (Term* term = currentModule->getFlatModule()->parseTerm(subject))
     {
-      VariableInfo variableInfo;
-      term->indexVariables(variableInfo);
       DagNode* d = term->term2Dag();
 
       if (getFlag(SHOW_COMMAND))
@@ -477,83 +474,24 @@ Interpreter::check(const Vector<Token>& subject)
       VisibleModule* fm = currentModule->getFlatModule();
       startUsingModule(fm);
 
-      if (SMT_Symbol* s = dynamic_cast<SMT_Symbol*>(d->symbol()))
-	{
-	  //
-	  //	Check to see term is of a SMT Boolean sort.
-	  //
-	  SMT_Base::SortIndexToSMT_TypeMap& sortMap = fm->getSortMap();
-	  Sort* rangeSort = term->symbol()->getRangeSort();
-	  SMT_Base::SortIndexToSMT_TypeMap::const_iterator k = sortMap.find(rangeSort->getIndexWithinModule());
-	  Assert(k != sortMap.end(), "bad SMT sort");
-	  //
-	  //	Make an SMT variable for each variable occurring in dag.
-	  //
-	  if (k->second == SMT_Base::BOOLEAN)
-	    {
-	      ExprManager em;
-	      int nrVariables = variableInfo.getNrRealVariables();
-	      Vector<Expr> variables(nrVariables);
-	      for (int i = 0; i < nrVariables; ++i)
-		{
-		  VariableTerm* v = safeCast(VariableTerm*, variableInfo.index2Variable(i));
-		  const char* name = Token::name(v->id());
-		  Type t;
-		  int sortIndex = v->getSort()->getIndexWithinModule();
-		  SMT_Base::SortIndexToSMT_TypeMap::const_iterator j = sortMap.find(sortIndex);
-		  if (j == sortMap.end())
-		    {
-		      IssueWarning(*v << ": variable " << QUOTE(static_cast<Term*>(v)) << " does not belong to an SMT sort.");
-		      goto fail;
-		    }
-		  switch(j->second)
-		    {
-		    case SMT_Base::BOOLEAN:
-		      {
-			DebugAdvisory("made Boolean variable " << static_cast<Term*>(v));
-			t = em.booleanType();
-			break;
-		      }
-		    case SMT_Base::INTEGER:
-		      {
-			DebugAdvisory("made Integer variable " << static_cast<Term*>(v));
-			t = em.integerType();
-			break;
-		      }
-		    case SMT_Base::REAL:
-		      {
-			t = em.realType();
-			DebugAdvisory("made Real variable " << static_cast<Term*>(v));
-			break;
-		      }
-		    }
-		  variables[i] = em.mkVar(name, t);
-		}
-	      //
-	      //	Convert Maude dag in to SMT expression.
-	      //
-	      Expr e = s->dagToCVC4(d, variables, sortMap, em);
-	      if (!(e.isNull()))
-		{
-		  //
-		  //	Check satisfiability.
-		  //
-		  SmtEngine smt(&em);
-		  DebugAdvisory("CVC4 Expression is " << e);
-		  smt.assertFormula(e);
-		  const Result result2 = smt.checkSat(em.mkConst(true));
-		  cout << "Result from CVC4 is: " << result2 << endl;
-		}
-	      //else
-	      //  IssueWarning(*term << ": term " << QUOTE(term) << " is not a pure SMT expression.");
-	    }
-	  else
-	    IssueWarning(*term << ": term " << QUOTE(term) << " does not belong to an SMT Boolean sort.");
-	}
+      const SMT_Info& smtInfo = fm->getSMT_Info();
+      VariableGenerator vg(smtInfo);
+      VariableGenerator::Result result = vg.checkDag(d);
+      if (result == VariableGenerator::BAD_DAG)
+	IssueWarning (*term << ": term " << QUOTE(term) << " is not a valid SMT Boolean expression.");
       else
-	IssueWarning(*term << ": term " << QUOTE(term) << " is not headed by an SMT operator.");
-    fail:
+	{
+	  cout << "Result from sat solver is: " <<
+	    ((result == VariableGenerator::SAT) ? "sat" :
+	     ((result == VariableGenerator::UNSAT) ? "unsat" : "undecided")) << endl;
+	}
+
       term->deepSelfDestruct();
       fm->unprotect();
     }
+}
+
+void
+Interpreter::test(const Vector<Token>& subject)
+{
 }

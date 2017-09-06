@@ -33,24 +33,21 @@ MetaLevelOpSymbol::getCachedVariantSearch(MetaModule* m,
 					  VariantSearch*& search,
 					  Int64& lastSolutionNr)
 {
-  if (solutionNr > 0)
+  CacheableState* cachedState;
+  if (m->remove(subject, cachedState, lastSolutionNr))
     {
-      CacheableState* cachedState;
-      if (m->remove(subject, cachedState, lastSolutionNr))
+      if (lastSolutionNr <= solutionNr)
 	{
-	  if (lastSolutionNr <= solutionNr)
-	    {
-	      search = safeCast(VariantSearch*, cachedState);
-	      //
-	      //	The parent context pointer of the root context in the VariantSearch is possibly
-	      //	stale since it points the context from a different descent function call.
-	      //
-	      safeCast(UserLevelRewritingContext*, search->getContext())->
-		beAdoptedBy(safeCast(UserLevelRewritingContext*, &context));
-	      return true;
-	    }
-	  delete cachedState;
+	  search = safeCast(VariantSearch*, cachedState);
+	  //
+	  //	The parent context pointer of the root context in the VariantSearch is possibly
+	  //	stale since it points the context from a different descent function call.
+	  //
+	  safeCast(UserLevelRewritingContext*, search->getContext())->
+	    beAdoptedBy(safeCast(UserLevelRewritingContext*, &context));
+	  return true;
 	}
+      delete cachedState;
     }
   return false;
 }
@@ -66,8 +63,7 @@ MetaLevelOpSymbol::metaGetVariant2(FreeDagNode* subject, RewritingContext& conte
       DagNode* metaVarIndex = subject->getArgument(3);
       Int64 solutionNr;
       if (metaLevel->isNat(metaVarIndex) &&
-	  metaLevel->downSaturate64(subject->getArgument(4), solutionNr) &&
-	  solutionNr >= 0)
+	  metaLevel->downSaturate64(subject->getArgument(4), solutionNr) && solutionNr >= 0)
 	{
 	  const mpz_class& varIndex = metaLevel->getNat(metaVarIndex);
 	  VariantSearch* vs;
@@ -158,7 +154,7 @@ MetaLevelOpSymbol::metaVariantUnify2(FreeDagNode* subject, RewritingContext& con
       Int64 solutionNr;
       DagNode* metaVarIndex = subject->getArgument(3);
       if (metaLevel->isNat(metaVarIndex) &&
-	  metaLevel->downSaturate64(subject->getArgument(4), solutionNr))
+	  metaLevel->downSaturate64(subject->getArgument(4), solutionNr) && solutionNr >= 0)
 	{
 	  const mpz_class& varIndex = metaLevel->getNat(metaVarIndex);
 	  VariantSearch* vs;
