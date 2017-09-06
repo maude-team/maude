@@ -105,6 +105,8 @@
 #include "ACU_NumberOpSymbol.hh"
 #include "CUI_NumberOpSymbol.hh"
 #include "divisionSymbol.hh"
+#include "randomOpSymbol.hh"
+#include "counterSymbol.hh"
 
 //	higher class definitions
 #include "rewriteSequenceSearch.hh"

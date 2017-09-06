@@ -141,7 +141,8 @@ libbuiltIn_a_CPPFLAGS = \
 	-I$(top_srcdir)/src/ACU_Theory \
 	-I$(top_srcdir)/src/CUI_Theory \
 	-I$(top_srcdir)/src/S_Theory \
-	-I$(top_srcdir)/src/FreeTheory
+	-I$(top_srcdir)/src/FreeTheory \
+	-I$(top_srcdir)/src/3rdParty
 
 
 libbuiltIn_a_SOURCES = \
@@ -161,7 +162,9 @@ libbuiltIn_a_SOURCES = \
 	minusSymbol.cc \
 	ACU_NumberOpSymbol.cc \
 	CUI_NumberOpSymbol.cc \
-	divisionSymbol.cc
+	divisionSymbol.cc \
+	randomOpSymbol.cc \
+	counterSymbol.cc
 
 
 noinst_HEADERS = \
@@ -183,7 +186,9 @@ noinst_HEADERS = \
 	stringOpSymbol.hh \
 	stringSymbol.hh \
 	stringTerm.hh \
-	succSymbol.hh
+	succSymbol.hh \
+	randomOpSymbol.hh \
+	counterSymbol.hh
 
 subdir = src/BuiltIn
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
@@ -209,7 +214,9 @@ am_libbuiltIn_a_OBJECTS = libbuiltIn_a-equalitySymbol.$(OBJEXT) \
 	libbuiltIn_a-minusSymbol.$(OBJEXT) \
 	libbuiltIn_a-ACU_NumberOpSymbol.$(OBJEXT) \
 	libbuiltIn_a-CUI_NumberOpSymbol.$(OBJEXT) \
-	libbuiltIn_a-divisionSymbol.$(OBJEXT)
+	libbuiltIn_a-divisionSymbol.$(OBJEXT) \
+	libbuiltIn_a-randomOpSymbol.$(OBJEXT) \
+	libbuiltIn_a-counterSymbol.$(OBJEXT)
 libbuiltIn_a_OBJECTS = $(am_libbuiltIn_a_OBJECTS)
 
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
@@ -218,6 +225,7 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/libbuiltIn_a-ACU_NumberOpSymbol.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/libbuiltIn_a-CUI_NumberOpSymbol.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/libbuiltIn_a-branchSymbol.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/libbuiltIn_a-counterSymbol.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/libbuiltIn_a-divisionSymbol.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/libbuiltIn_a-equalitySymbol.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/libbuiltIn_a-floatDagNode.Po \
@@ -226,6 +234,7 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/libbuiltIn_a-floatTerm.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/libbuiltIn_a-minusSymbol.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/libbuiltIn_a-numberOpSymbol.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/libbuiltIn_a-randomOpSymbol.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/libbuiltIn_a-sortTestSymbol.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/libbuiltIn_a-stringDagNode.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/libbuiltIn_a-stringOpSymbol.Po \
@@ -274,6 +283,8 @@ libbuiltIn_a-minusSymbol.$(OBJEXT): minusSymbol.cc
 libbuiltIn_a-ACU_NumberOpSymbol.$(OBJEXT): ACU_NumberOpSymbol.cc
 libbuiltIn_a-CUI_NumberOpSymbol.$(OBJEXT): CUI_NumberOpSymbol.cc
 libbuiltIn_a-divisionSymbol.$(OBJEXT): divisionSymbol.cc
+libbuiltIn_a-randomOpSymbol.$(OBJEXT): randomOpSymbol.cc
+libbuiltIn_a-counterSymbol.$(OBJEXT): counterSymbol.cc
 libbuiltIn.a: $(libbuiltIn_a_OBJECTS) $(libbuiltIn_a_DEPENDENCIES) 
 	-rm -f libbuiltIn.a
 	$(libbuiltIn_a_AR) libbuiltIn.a $(libbuiltIn_a_OBJECTS) $(libbuiltIn_a_LIBADD)
@@ -288,6 +299,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libbuiltIn_a-ACU_NumberOpSymbol.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libbuiltIn_a-CUI_NumberOpSymbol.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libbuiltIn_a-branchSymbol.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libbuiltIn_a-counterSymbol.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libbuiltIn_a-divisionSymbol.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libbuiltIn_a-equalitySymbol.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libbuiltIn_a-floatDagNode.Po@am__quote@
@@ -296,6 +308,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libbuiltIn_a-floatTerm.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libbuiltIn_a-minusSymbol.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libbuiltIn_a-numberOpSymbol.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libbuiltIn_a-randomOpSymbol.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libbuiltIn_a-sortTestSymbol.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libbuiltIn_a-stringDagNode.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libbuiltIn_a-stringOpSymbol.Po@am__quote@
@@ -701,6 +714,50 @@ libbuiltIn_a-divisionSymbol.obj: divisionSymbol.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/libbuiltIn_a-divisionSymbol.Po' tmpdepfile='$(DEPDIR)/libbuiltIn_a-divisionSymbol.TPo' @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libbuiltIn_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libbuiltIn_a-divisionSymbol.obj `if test -f 'divisionSymbol.cc'; then $(CYGPATH_W) 'divisionSymbol.cc'; else $(CYGPATH_W) '$(srcdir)/divisionSymbol.cc'`
+
+libbuiltIn_a-randomOpSymbol.o: randomOpSymbol.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libbuiltIn_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libbuiltIn_a-randomOpSymbol.o -MD -MP -MF "$(DEPDIR)/libbuiltIn_a-randomOpSymbol.Tpo" \
+@am__fastdepCXX_TRUE@	  -c -o libbuiltIn_a-randomOpSymbol.o `test -f 'randomOpSymbol.cc' || echo '$(srcdir)/'`randomOpSymbol.cc; \
+@am__fastdepCXX_TRUE@	then mv "$(DEPDIR)/libbuiltIn_a-randomOpSymbol.Tpo" "$(DEPDIR)/libbuiltIn_a-randomOpSymbol.Po"; \
+@am__fastdepCXX_TRUE@	else rm -f "$(DEPDIR)/libbuiltIn_a-randomOpSymbol.Tpo"; exit 1; \
+@am__fastdepCXX_TRUE@	fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='randomOpSymbol.cc' object='libbuiltIn_a-randomOpSymbol.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/libbuiltIn_a-randomOpSymbol.Po' tmpdepfile='$(DEPDIR)/libbuiltIn_a-randomOpSymbol.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libbuiltIn_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libbuiltIn_a-randomOpSymbol.o `test -f 'randomOpSymbol.cc' || echo '$(srcdir)/'`randomOpSymbol.cc
+
+libbuiltIn_a-randomOpSymbol.obj: randomOpSymbol.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libbuiltIn_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libbuiltIn_a-randomOpSymbol.obj -MD -MP -MF "$(DEPDIR)/libbuiltIn_a-randomOpSymbol.Tpo" \
+@am__fastdepCXX_TRUE@	  -c -o libbuiltIn_a-randomOpSymbol.obj `if test -f 'randomOpSymbol.cc'; then $(CYGPATH_W) 'randomOpSymbol.cc'; else $(CYGPATH_W) '$(srcdir)/randomOpSymbol.cc'`; \
+@am__fastdepCXX_TRUE@	then mv "$(DEPDIR)/libbuiltIn_a-randomOpSymbol.Tpo" "$(DEPDIR)/libbuiltIn_a-randomOpSymbol.Po"; \
+@am__fastdepCXX_TRUE@	else rm -f "$(DEPDIR)/libbuiltIn_a-randomOpSymbol.Tpo"; exit 1; \
+@am__fastdepCXX_TRUE@	fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='randomOpSymbol.cc' object='libbuiltIn_a-randomOpSymbol.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/libbuiltIn_a-randomOpSymbol.Po' tmpdepfile='$(DEPDIR)/libbuiltIn_a-randomOpSymbol.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libbuiltIn_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libbuiltIn_a-randomOpSymbol.obj `if test -f 'randomOpSymbol.cc'; then $(CYGPATH_W) 'randomOpSymbol.cc'; else $(CYGPATH_W) '$(srcdir)/randomOpSymbol.cc'`
+
+libbuiltIn_a-counterSymbol.o: counterSymbol.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libbuiltIn_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libbuiltIn_a-counterSymbol.o -MD -MP -MF "$(DEPDIR)/libbuiltIn_a-counterSymbol.Tpo" \
+@am__fastdepCXX_TRUE@	  -c -o libbuiltIn_a-counterSymbol.o `test -f 'counterSymbol.cc' || echo '$(srcdir)/'`counterSymbol.cc; \
+@am__fastdepCXX_TRUE@	then mv "$(DEPDIR)/libbuiltIn_a-counterSymbol.Tpo" "$(DEPDIR)/libbuiltIn_a-counterSymbol.Po"; \
+@am__fastdepCXX_TRUE@	else rm -f "$(DEPDIR)/libbuiltIn_a-counterSymbol.Tpo"; exit 1; \
+@am__fastdepCXX_TRUE@	fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='counterSymbol.cc' object='libbuiltIn_a-counterSymbol.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/libbuiltIn_a-counterSymbol.Po' tmpdepfile='$(DEPDIR)/libbuiltIn_a-counterSymbol.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libbuiltIn_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libbuiltIn_a-counterSymbol.o `test -f 'counterSymbol.cc' || echo '$(srcdir)/'`counterSymbol.cc
+
+libbuiltIn_a-counterSymbol.obj: counterSymbol.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libbuiltIn_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libbuiltIn_a-counterSymbol.obj -MD -MP -MF "$(DEPDIR)/libbuiltIn_a-counterSymbol.Tpo" \
+@am__fastdepCXX_TRUE@	  -c -o libbuiltIn_a-counterSymbol.obj `if test -f 'counterSymbol.cc'; then $(CYGPATH_W) 'counterSymbol.cc'; else $(CYGPATH_W) '$(srcdir)/counterSymbol.cc'`; \
+@am__fastdepCXX_TRUE@	then mv "$(DEPDIR)/libbuiltIn_a-counterSymbol.Tpo" "$(DEPDIR)/libbuiltIn_a-counterSymbol.Po"; \
+@am__fastdepCXX_TRUE@	else rm -f "$(DEPDIR)/libbuiltIn_a-counterSymbol.Tpo"; exit 1; \
+@am__fastdepCXX_TRUE@	fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='counterSymbol.cc' object='libbuiltIn_a-counterSymbol.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/libbuiltIn_a-counterSymbol.Po' tmpdepfile='$(DEPDIR)/libbuiltIn_a-counterSymbol.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libbuiltIn_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libbuiltIn_a-counterSymbol.obj `if test -f 'counterSymbol.cc'; then $(CYGPATH_W) 'counterSymbol.cc'; else $(CYGPATH_W) '$(srcdir)/counterSymbol.cc'`
 uninstall-info-am:
 
 ETAGS = etags

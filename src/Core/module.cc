@@ -467,9 +467,22 @@ Module::reset()
 void
 Module::resetRules()
 {
-  int nrSymbols = symbols.length();
-  for (int i = 0; i < nrSymbols; i++)
-    symbols[i]->resetRules();
+  FOR_EACH_CONST(i, Vector<Symbol*>, symbols)
+    (*i)->resetRules();
+}
+
+void
+Module::saveHiddenState()
+{
+  FOR_EACH_CONST(i, Vector<Symbol*>, symbols)
+    (*i)->saveHiddenState();
+}
+
+void
+Module::restoreHiddenState()
+{
+  FOR_EACH_CONST(i, Vector<Symbol*>, symbols)
+    (*i)->restoreHiddenState();
 }
 
 #ifdef DUMP

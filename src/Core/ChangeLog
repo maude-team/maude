@@ -1,3 +1,25 @@
+2004-06-07  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ruleTable.cc (resetRules): moved here
+
+	* module.cc (resetRules): use FOR_EACH_CONST()
+	(saveHiddenState): added
+	(restoreHiddenState): added
+
+	* module.hh (class Module): added decls for saveHiddenState() and
+	restoreHiddenState()
+
+	* ruleTable.cc (RuleTable): don't zero nextRule
+	(compileRules): don't zero nextRule
+	(saveHiddenState): added
+	(restoreHiddenState): added
+
+	* ruleTable.hh (class RuleTable): added decls for
+	saveHiddenState() and restoreHiddenState()
+	(class RuleTable): added data member nextRuleStack
+	
+===================================Maude84c==================================
+
 2003-08-28  Steven Eker  <eker@goo.csl.sri.com>
 
 	* equationTable.hh (class EquationTable): added decl for

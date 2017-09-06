@@ -1,3 +1,9 @@
+Overview of Changes in Maude alpha84c
+=====================================
+* added random number generation
+* added counters
+* trace applications in metaApply()/metaXapply()
+
 Overview of Changes in Maude 2.1.1
 ==================================
 * set protect/extend <module> on/off added, BOOL now protected

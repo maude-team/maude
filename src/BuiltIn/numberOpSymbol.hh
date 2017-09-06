@@ -27,6 +27,7 @@
 #define _numberOpSymbol_hh_
 #include "freeSymbol.hh"
 #include "cachedDag.hh"
+#include "gmpxx.h"
 
 class NumberOpSymbol : public FreeSymbol
 {

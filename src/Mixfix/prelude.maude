@@ -22,7 +22,7 @@
 
 ***
 ***	Maude interpreter standard prelude.
-***	Version 84b
+***	Version Alpha 84c
 ***
 ***	Some of the overall structure is taken from the OBJ3
 ***	interpreter standard prelude.
@@ -746,6 +746,20 @@ fmod CONVERSION is
 		  op-hook decFloatSymbol 
                           (<_,_,_> : Int String Int ~> DecFloat))] .
 endfm
+
+fmod RANDOM is
+  protecting NAT .
+  op random : Nat -> Nat
+	[special (id-hook RandomOpSymbol
+		  op-hook succSymbol (s_ : Nat ~> NzNat))] .
+endfm
+
+mod COUNTER is
+  protecting NAT .
+  op counter : -> Nat
+	[special (id-hook CounterSymbol
+		  op-hook succSymbol (s_ : Nat ~> NzNat))] .
+endm
 
 fmod QID is
   protecting STRING .

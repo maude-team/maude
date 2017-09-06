@@ -1,3 +1,18 @@
+2004-06-14  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaApply.cc (metaApply): support tracing of meta applications
+	(metaXapply): support tracing of meta applications
+	(metaXapply): unprotect metamodule on abort
+	(metaApply): unprotect metamodule on abort
+
+2004-06-07  Steven Eker  <eker@goo.csl.sri.com>
+
+	* descentFunctions.cc (metaRewrite): use saveHiddenState() and
+	restoreHiddenState()
+	(metaFrewrite): use saveHiddenState() and restoreHiddenState()
+	
+===================================Maude84c===========================================
+
 2004-05-24  Steven Eker  <eker@goo.csl.sri.com>
 
 	* metaDownFixUps.cc (fixUpBubble): use new fixUpBubbleSpec()

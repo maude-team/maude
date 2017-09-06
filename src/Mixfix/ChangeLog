@@ -3,6 +3,31 @@
 	* renaming.cc (typeMatch): fixed bug where we weren't catching the
 	case where the arities differed
 
+2004-06-03  Steven Eker  <eker@goo.csl.sri.com>
+
+	* entry.cc (newFancySymbol): added case for CounterSymbol
+
+	* specialSymbolTypes.cc (MACRO): added CounterSymbol
+
+	* symbolType.hh (class SymbolType): added COUNTER_SYMBOL
+
+2004-06-02  Steven Eker  <eker@goo.csl.sri.com>
+
+	* main.cc (main): handle -random-seed= flag
+	(printHelp): added lines for -random-seed= and -xml-log= flags
+
+	* entry.cc (newFancySymbol): added case for RandomOpSymbol
+
+	* specialSymbolTypes.cc (MACRO): added RandomOpSymbol
+
+	* symbolType.hh (class SymbolType): added RANDOM_OP_SYMBOL
+
+2004-06-01  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: added fmod RANDOM
+	
+===================================Maude84c===========================================
+
 2004-05-25  Steven Eker  <eker@goo.csl.sri.com>
 
 	* import.cc (getModule): don't fall into mutually recursive import
