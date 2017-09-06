@@ -112,6 +112,7 @@ private:
 					 ArgVec<Pair>::iterator d);
 
   bool normalizeAtTop();
+  bool dumbNormalizeAtTop();
   void copyAndBinaryInsert(const ACU_DagNode* source, DagNode* dagNode, int multiplicity);
   void fastMerge(const ACU_DagNode* source0, const ACU_DagNode* source1);
   void fastMerge(const ACU_DagNode* source0, const ACU_TreeDagNode* source1);

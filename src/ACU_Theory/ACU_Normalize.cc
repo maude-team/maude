@@ -330,6 +330,18 @@ ACU_DagNode::normalizeAtTop()
   //
   //	General case.
   //
+  return dumbNormalizeAtTop();
+}
+
+bool
+ACU_DagNode::dumbNormalizeAtTop()
+{
+  //
+  //	Don't try any fancy optimizations and in particular never convert to
+  //	tree form - thus we can safely be called during unification.
+  //
+  ACU_Symbol* s = symbol();
+  Term* identity = s->getIdentity();
   int expansion = 0;
   bool needToFlatten = false;
   const ArgVec<Pair>::const_iterator e = argArray.end();

@@ -1,3 +1,22 @@
+2007-08-09  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_DagNode.hh (class ACU_DagNode): added decl for
+	dumbNormalizeAtTop()
+
+	* ACU_DagNode.cc (instantiate2): use dumbNormalizeAtTop() to avoid
+	getting a tree form
+
+	* ACU_UnificationSubproblem.cc (buildSolution): use
+	dumbNormalizeAtTop() to avoid getting a tree form
+
+	* ACU_Normalize.cc (dumbNormalizeAtTop): added
+	(normalizeAtTop): use dumbNormalizeAtTop() for general case
+
+	* ACU_UnificationSubproblem.cc (buildSolution): added Assert() to
+	protect against getting a tree form from normalizeAtTop()
+
+===================================Maude89f===========================================
+
 2007-07-06  Steven Eker  <eker@goo.csl.sri.com>
 
 	* ACU_DagNode.cc (computeSolvedForm): use

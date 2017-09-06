@@ -280,7 +280,7 @@ ACU_UnificationWithExtensionSubproblem::nextSelection()
 	  int current = selection[i];
 	  if (selectionDiff > 0 && current < rhs->argArray[i].multiplicity)
 	    {
-	      selection[i] = current + 1;;
+	      selection[i] = current + 1;
 	      --selectionDiff;
 	      break;
 	    }

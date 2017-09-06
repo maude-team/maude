@@ -381,7 +381,9 @@ ACU_Symbol::computeGeneralizedSort(const SortBdds& sortBdds,
 				    Vector<Bdd>& generalizedSort)
 {
   Assert(safeCast(ACU_BaseDagNode*, subject)->isTree() == false,
-	 "Tree case not implemented");
+	 "Tree case not implemented: " << subject <<
+	 " " <<  static_cast<void*>(dynamic_cast<ACU_DagNode*>(subject)) <<
+	 " " <<  static_cast<void*>(dynamic_cast<ACU_TreeDagNode*>(subject)));
 
   const Vector<Bdd>& sortFunction = sortBdds.getSortFunction(getIndexWithinModule());
   int nrBdds = sortFunction.size();

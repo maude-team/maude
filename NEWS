@@ -1,3 +1,9 @@
+Overview of Changes in Maude alpha89f
+=====================================
+* fixed bug where large AC dags could get normalized into tree form
+  during unification with resulting chaos
+* fixed C unification breakage from alpha89c
+
 Overview of Changes in Maude alpha89e
 =====================================
 * fixed bug where we were deleting unification subproblems twice
@@ -19,7 +25,7 @@ Overview of Changes in Maude alpha89c
 
 Overview of Changes in Maude alpha89b
 =====================================
-* fixed bug where early unifcation failure caused memory corruption
+* fixed bug where early unification failure caused memory corruption
 
 Overview of Changes in Maude alpha89a
 =====================================

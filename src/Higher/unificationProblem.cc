@@ -126,7 +126,11 @@ UnificationProblem::UnificationProblem(Vector<Term*>& lhs, Vector<Term*>& rhs, F
   //
   //	Solve the underlying many-sorted unification problem.
   //
-  // cout << leftHandDags[0] << " =? " << rightHandDags[0] << endl;
+#if 0
+  cout << "%%%%%UnificationProblem:\n";
+  for (int i = 0; i < nrEquations; ++i)
+    cout << leftHandDags[i] << " =? " << rightHandDags[i] << endl;
+#endif
   SubproblemAccumulator subproblems;
   for (int i = 0; i < nrEquations; ++i)
     {
@@ -212,7 +216,7 @@ UnificationProblem::findNextUnifier()
       //cerr << "first unsorted solution";
       //cout << "=== final solved form ===" << endl;
       int nrRealVariables = getNrProtectedVariables();
-      /*
+#if 0
       cout << "total variables = " << unsortedSolution->nrFragileBindings() << endl;
       for (int i = 0; i < nrRealVariables; ++i)
 	{
@@ -223,7 +227,7 @@ UnificationProblem::findNextUnifier()
 	    cout << unsortedSolution->value(i) << endl;
 	}
       cout << "=== end of solved form ===" << endl;
-      */
+#endif
       if (!extractUnifier())
 	goto nextUnsorted;
       findOrderSortedUnifiers();
