@@ -26,7 +26,7 @@
 #ifndef _moduleDatabase_hh_
 #define _moduleDatabase_hh_
 #include <map>
-#include "intSet.hh"
+#include <set>
 #include "importModule.hh"
 
 class ModuleDatabase
@@ -35,6 +35,7 @@ class ModuleDatabase
 
 public:
   typedef map<int, ImportModule::ImportMode> ImportMap;
+  typedef set<int> ImportSet;
 
   ModuleDatabase(){}
   ~ModuleDatabase();
@@ -46,7 +47,7 @@ public:
   void setAutoImport(ImportModule::ImportMode importMode, Token name, bool polarity);
   void setOmodInclude(Token name, bool polarity);
   const ImportMap& getAutoImports() const;
-  const IntSet& getOmodIncludes() const;
+  const ImportSet& getOmodIncludes() const;
   void showNamedModules() const;
 
 private:
@@ -54,7 +55,7 @@ private:
 
   ModuleMap moduleMap;
   ImportMap autoImports;
-  IntSet defaultOmodIncludes;
+  ImportSet defaultOmodIncludes;
 };
 
 inline const ModuleDatabase::ImportMap&
@@ -63,7 +64,7 @@ ModuleDatabase::getAutoImports() const
   return autoImports;
 }
 
-inline const IntSet&
+inline const ModuleDatabase::ImportSet&
 ModuleDatabase::getOmodIncludes() const
 {
   return defaultOmodIncludes;

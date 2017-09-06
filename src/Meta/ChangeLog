@@ -1,3 +1,18 @@
+2005-04-27  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaModule.cc (MetaModule): pass origin argument to
+	ImportModule()
+
+2005-04-19  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaDownRenamings.cc (downRenamingType): AUX_PARAMETERIZED_SORT
+	-> AUX_STRUCTURED_SORT
+
+	* metaDown.cc (downType2): AUX_PARAMETERIZED_SORT ->
+	AUX_STRUCTURED_SORT
+
+===================================Maude86a===========================================
+
 2005-03-17  Steven Eker  <eker@goo.csl.sri.com>
 
 	* metaModuleCache.cc (regretToInform): removed removeUser() hack

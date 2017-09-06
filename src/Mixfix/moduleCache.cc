@@ -67,7 +67,12 @@ ModuleCache::makeRenamedCopy(ImportModule* module, Renaming* renaming)
   //
   //	Build the canonical name of the module we want.
   //
-  crope name(Token::name(module->id()));
+  crope name;
+  if (module->getOrigin() == ImportModule::SUMMATION)
+    name = '(';
+  name += Token::name(module->id());
+  if (module->getOrigin() == ImportModule::SUMMATION)
+    name += ')';
   name += " * (";
   name += canonical->makeCanonicalName() + ")";
   int t = Token::encode(name.c_str());
@@ -126,7 +131,13 @@ ModuleCache::makeInstatiation(ImportModule* module, const Vector<View*>& views, 
   //
   //	Make the name of the module we want.
   //
-  crope name(Token::name(module->id()));
+  crope name;
+  if (module->getOrigin() == ImportModule::RENAMING)
+    name = '(';
+  name += Token::name(module->id());
+  if (module->getOrigin() == ImportModule::RENAMING)
+    name += ')';
+
   const char* sep = "{";
   int nrParameters = views.size();
   for (int i = 0; i < nrParameters; ++i)
@@ -191,10 +202,10 @@ ModuleCache::makeSummation(const Vector<ImportModule*>& modules)
   crope name;
   for (Vector<ImportModule*>::const_iterator i = local.begin(); i != e; ++i)
     {
-      name += name.empty() ? "(" : " + ";
+      if (!name.empty())
+	name += " + ";
       name += Token::name((*i)->id());
     }
-  name += ')';
   int t = Token::encode(name.c_str());
   //
   //	Check if it is already in cache.
@@ -214,7 +225,7 @@ ModuleCache::makeSummation(const Vector<ImportModule*>& modules)
   MixfixModule::ModuleType moduleType = (*i)->getModuleType();
   for (++i; i != e; ++i)
     moduleType = MixfixModule::join(moduleType, (*i)->getModuleType());
-  ImportModule* sum = new ImportModule(t, moduleType, this);
+  ImportModule* sum = new ImportModule(t, moduleType, ImportModule::SUMMATION, this);
   LineNumber lineNumber(FileTable::AUTOMATIC);
   for (Vector<ImportModule*>::const_iterator i = local.begin(); i != e; i++)
     sum->addImport(*i, ImportModule::INCLUDING, lineNumber);

@@ -97,14 +97,14 @@ MixfixModule::addOpDeclaration(Token prefixName,
 
   int nrArgs = domainAndRange.length() - 1;
   int name = prefixName.code();
-  int index = symbolNames.int2Index(name);
   int iflags = 0;
-  if (index != NONE)
+  IntMap::const_iterator first = firstSymbols.find(name);
+  if (first != firstSymbols.end())
     {
       //
       //	Examine all existing symbols with same name.
       //
-      for (int i = firstSymbols[index]; i != NONE; i = symbolInfo[i].next)
+      for (int i = first->second; i != NONE; i = symbolInfo[i].next)
 	{
 	  Symbol* s = getSymbols()[i];
 	  int iNrArgs = s->arity();
@@ -351,20 +351,8 @@ MixfixModule::addOpDeclaration(Token prefixName,
   si.symbolType = symbolType;
   si.symbolType.clearFlags(SymbolType::CTOR);  // don't store ctor flag in per-symbol struct
   si.iflags = iflags;
-  
-  if (index == NONE)
-    {
-      symbolNames.insert(name);
-      si.next = NONE;
-      firstSymbols.append(nrSymbols);
-      Assert(symbolNames.cardinality() == firstSymbols.length(),
-	     "symbolNames & firstSymbols out of sync");
-    }
-  else
-    {
-      si.next = firstSymbols[index];
-      firstSymbols[index] = nrSymbols;
-    }
+  si.next = (first == firstSymbols.end()) ? NONE : first->second;
+  firstSymbols[name] = nrSymbols;
 
   Module::insertSymbol(symbol);
   if (metadata != NONE)

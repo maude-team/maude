@@ -350,7 +350,7 @@ MetaLevel::downType2(int id, MixfixModule* m, Sort*& type)
   switch (Token::auxProperty(id))
     {
     case Token::AUX_SORT:
-    case Token::AUX_PARAMETERIZED_SORT:
+    case Token::AUX_STRUCTURED_SORT:
       {
 	Sort* s = m->findSort(id);
 	if (s != 0)

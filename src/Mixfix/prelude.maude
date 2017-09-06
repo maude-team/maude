@@ -2,7 +2,7 @@
 
     This file is part of the Maude 2 interpreter.
 
-    Copyright 1997-2004 SRI International, Menlo Park, CA 94025, USA.
+    Copyright 1997-2005 SRI International, Menlo Park, CA 94025, USA.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 
 ***
 ***	Maude interpreter standard prelude.
-***	Version Alpha 86
+***	Version Alpha 86a
 ***
 ***	Some of the overall structure is taken from the OBJ3
 ***	interpreter standard prelude.
@@ -899,6 +899,7 @@ fmod LIST{X :: TRIV} is
   protecting NAT .
   sorts NeList{X} List{X} .
   subsort X$Elt < NeList{X} < List{X} .
+
   op nil : -> List{X} [ctor] .
   op __ : List{X} List{X} -> List{X} [ctor assoc id: nil prec 25] .
   op __ : NeList{X} List{X} -> NeList{X} [ctor ditto] .
@@ -937,17 +938,19 @@ fmod LIST{X :: TRIV} is
   eq $reverse(nil, A) = A .
   eq $reverse(E L, A) = $reverse(L, E A).
 
-  op length : List{X} -> Nat .
-  op length : NeList{X} -> NzNat .
-  eq length(L) = $length(L, 0) .
+  op size : List{X} -> Nat .
+  op size : NeList{X} -> NzNat .
+  eq size(L) = $size(L, 0) .
 
-  op $length : List{X} Nat -> Nat .
-  eq $length(nil, C) = C .
-  eq $length(E L, C) = $length(L, C + 1) .
+  op $size : List{X} Nat -> Nat .
+  eq $size(nil, C) = C .
+  eq $size(E L, C) = $size(L, C + 1) .
 endfm
 
 fmod SORTABLE-LIST{X :: TAO-SET} is
-  protecting LIST{TAO-SET}{X} .
+  protecting (LIST{TAO-SET} *
+              (sort NeList{TAO-SET}{X} to NeList{X},
+               sort List{TAO-SET}{X} to List{X})){X} .
   sort $Split{X} .
 
   vars E E' : X$Elt .
@@ -985,6 +988,7 @@ fmod SET{X :: TRIV} is
   protecting NAT .
   sorts NeSet{X} Set{X} .
   subsort X$Elt < NeSet{X} < Set{X} .
+
   op empty : -> Set{X} [ctor] .
   op _,_ : Set{X} Set{X} -> Set{X} [ctor assoc comm id: empty prec 121 format (d r os d)] .
   op _,_ : NeSet{X} Set{X} -> NeSet{X} [ctor ditto] .
@@ -1091,14 +1095,14 @@ fmod LIST*{X :: TRIV} is
   eq $reverse(E, A) = E A .
   eq $reverse(E P, A) = $reverse(P, E A).
 
-  op length : List{X} -> Nat .
-  op length : NeList{X} -> NzNat .
-  eq length([]) = 0 .
-  eq length([P]) = $length(P, 0) .
+  op size : List{X} -> Nat .
+  op size : NeList{X} -> NzNat .
+  eq size([]) = 0 .
+  eq size([P]) = $size(P, 0) .
 
-  op $length : PreList{X} Nat -> NzNat .
-  eq $length(E, C) = C + 1 .
-  eq $length(E P, C) = $length(P, C + 1) .
+  op $size : PreList{X} Nat -> NzNat .
+  eq $size(E, C) = C + 1 .
+  eq $size(E P, C) = $size(P, C + 1) .
 endfm
 
 fmod SET*{X :: TRIV} is
@@ -1107,7 +1111,7 @@ fmod SET*{X :: TRIV} is
   subsort X$Elt Set{X} < Element{X} < PreSet{X} .
   subsort NeSet{X} < Set{X} .
 
-  op _,_ : PreSet{X} PreSet{X} -> PreSet{X} [ctor assoc comm prec 120] .
+  op _,_ : PreSet{X} PreSet{X} -> PreSet{X} [ctor assoc comm prec 121 format (d r os d)] .
   op {_} : PreSet{X} -> NeSet{X} [ctor] .
   op {} : -> Set{X} [ctor] .
 
@@ -1185,7 +1189,7 @@ fmod MAP{X :: TRIV, Y :: TRIV} is
 
   op _|->_ : X$Elt Y$Elt -> Entry{X,Y} [ctor] .
   op empty : -> Map{X,Y} [ctor] .
-  op _,_ : Map{X,Y} Map{X,Y} -> Map{X,Y} [ctor assoc comm id: empty prec 120] .
+  op _,_ : Map{X,Y} Map{X,Y} -> Map{X,Y} [ctor assoc comm id: empty prec 121 format (d r os d)] .
   op undefined : -> [Y$Elt] [ctor] .
 
   var D : X$Elt .
@@ -1228,7 +1232,7 @@ fmod META-TERM is
   subsorts Constant < GroundTerm < Term GroundTermList < TermList .
   op <Qids> : -> Constant [special (id-hook QuotedIdentifierSymbol (constantQid))] .
   op <Qids> : -> Variable [special (id-hook QuotedIdentifierSymbol (variableQid))] .
-  op _,_ : GroundTermList GroundTermList -> GroundTermList [ctor assoc gather (e E) prec 120] .
+  op _,_ : GroundTermList GroundTermList -> GroundTermList [ctor assoc gather (e E) prec 121] .
   op _,_ : TermList TermList -> TermList [ctor ditto] .
   op _[_] : Qid GroundTermList -> GroundTerm [ctor] .
   op _[_] : Qid TermList -> Term [ctor] .

@@ -142,7 +142,7 @@ View::evaluate()
 	    Sort* jTransSort = toModule->findSort(jTrans);
 	    if (jTransSort == 0)
 	      {
-		IssueWarning(*this << ": failed to find sort " << QUOTE(Token::name(jTrans)) <<  // HACK: what ifjTrans is structured?
+		IssueWarning(*this << ": failed to find sort " << QUOTE(Token::sortName(jTrans)) <<
 			     " in " << QUOTE(toModule) << " to represent sort " << QUOTE(jSort) <<
 			     " from " << QUOTE(fromTheory) << '.');
 		status = BAD;

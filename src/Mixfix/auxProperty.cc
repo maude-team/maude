@@ -131,7 +131,7 @@ Token::computeAuxProperty(const char* tokenString)
 	bool parameterized;
 	const char* p = skipSortName(tokenString, parameterized);
 	if (p != 0 && *p == '\0')
-	  return parameterized ? AUX_PARAMETERIZED_SORT : AUX_SORT;
+	  return parameterized ? AUX_STRUCTURED_SORT : AUX_SORT;
       }
   }
   {
@@ -145,14 +145,14 @@ Token::computeAuxProperty(const char* tokenString)
 	if (c == '.')
 	  {
 	    int t = computeAuxProperty(tokenString + i + 1);
-	    if (t == AUX_SORT || t == AUX_PARAMETERIZED_SORT || t == AUX_KIND)
+	    if (t == AUX_SORT || t == AUX_STRUCTURED_SORT || t == AUX_KIND)
 	      return AUX_CONSTANT;
 	    break;
 	  }
 	else if (c == ':')
 	  {
 	    int t = computeAuxProperty(tokenString + i + 1);
-	    if (t == AUX_SORT || t == AUX_PARAMETERIZED_SORT || t == AUX_KIND)
+	    if (t == AUX_SORT || t == AUX_STRUCTURED_SORT || t == AUX_KIND)
 	      return AUX_VARIABLE;
 	    break;
 	  }
@@ -165,7 +165,7 @@ crope
 Token::sortName(int code)
 {
   const char* name = stringTable.name(code);
-  if (auxProperty(code) != AUX_PARAMETERIZED_SORT)
+  if (auxProperty(code) != AUX_STRUCTURED_SORT)
     return crope(name);
 
   crope acc;
@@ -191,7 +191,7 @@ Token::sortName(int code)
 void
 Token::splitParameterizedSort(int code, Vector<int>& codes)
 {
-  Assert(auxProperty(code) == AUX_PARAMETERIZED_SORT, "called on " << stringTable.name(code));
+  Assert(auxProperty(code) == AUX_STRUCTURED_SORT, "called on " << stringTable.name(code));
 
   codes.clear();
   const char* name = stringTable.name(code);
@@ -247,7 +247,7 @@ Token::splitParameterizedSort(int code, Vector<int>& codes)
 void
 Token::splitParameterList(int code, int& header, Vector<int>& parameters)
 {
-  Assert(auxProperty(code) == AUX_PARAMETERIZED_SORT, "called on " << stringTable.name(code));
+  Assert(auxProperty(code) == AUX_STRUCTURED_SORT, "called on " << stringTable.name(code));
 
   parameters.clear();
   const char* n = name(code);

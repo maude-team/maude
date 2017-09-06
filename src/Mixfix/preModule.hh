@@ -163,6 +163,7 @@ private:
 
   static void printAttributes(ostream& s, const OpDef& opDef);
   static ImportModule*  getModule(int name, const LineNumber& lineNumber);
+  static void printSortTokenVector(ostream& s, const Vector<Token>& sorts);
 
   void regretToInform(Entity* doomedEntity);
   int findHook(const Vector<Hook>& hookList, HookType type, int name);

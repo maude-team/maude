@@ -345,7 +345,7 @@ void
 MixfixModule::printSort(Vector<int>& buffer, const Sort* sort, int printFlags)
 {
   int name = sort->id();
-  if (Token::auxProperty(name) == Token::AUX_PARAMETERIZED_SORT &&
+  if (Token::auxProperty(name) == Token::AUX_STRUCTURED_SORT &&
       interpreter.getPrintFlag(Interpreter::PRINT_MIXFIX))
     {
       Vector<int> parts;
@@ -361,7 +361,7 @@ void
 MixfixModule::printDotSort(Vector<int>& buffer, const Sort* sort, int printFlags)
 {
   int name = sort->id();
-  if (Token::auxProperty(name) == Token::AUX_PARAMETERIZED_SORT &&
+  if (Token::auxProperty(name) == Token::AUX_STRUCTURED_SORT &&
       interpreter.getPrintFlag(Interpreter::PRINT_MIXFIX))
     {
       Vector<int> parts;
@@ -378,7 +378,7 @@ void
 MixfixModule::printVarSort(Vector<int>& buffer, string& fullName, const Sort* sort, int printFlags)
 {
   int name = sort->id();
-  if (Token::auxProperty(name) == Token::AUX_PARAMETERIZED_SORT &&
+  if (Token::auxProperty(name) == Token::AUX_STRUCTURED_SORT &&
       interpreter.getPrintFlag(Interpreter::PRINT_MIXFIX))
     {
       Vector<int> parts;

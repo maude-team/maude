@@ -39,7 +39,7 @@
 
 
 MetaModule::MetaModule(int name, ModuleType moduleType, Entity::User* parent)
-  : ImportModule(name, moduleType, parent)
+  : ImportModule(name, moduleType, TEXT, parent)
 {
 }
 

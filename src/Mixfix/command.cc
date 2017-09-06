@@ -32,11 +32,11 @@ operator<<(ostream& s, const PreModule::Type& type)
       s << '[' << type.tokens[0];
       int nrTokens = type.tokens.length();
       for (int i = 1; i < nrTokens; i++)
-	s << ',' << type.tokens[i];
+	s << ',' << Token::sortName(type.tokens[i].code());
       s << ']';
     }
   else
-    s << type.tokens[0];
+    s << Token::sortName(type.tokens[0].code());
   return s;
 }
 
@@ -60,9 +60,27 @@ PreModule::dump()
 }
 
 void
+PreModule::printSortTokenVector(ostream& s, const Vector<Token>& sorts)
+{
+  int nrTokens = sorts.size();
+  s << Token::sortName(sorts[0].code());
+  for (int i = 1; i < nrTokens; ++i)
+    s << ' ' << Token::sortName(sorts[i].code());
+}
+
+void
 PreModule::showModule(ostream& s)
 {
-  s << MixfixModule::moduleTypeString(moduleType) << ' ' << this << " is\n";
+  s << MixfixModule::moduleTypeString(moduleType) << ' ' << this;
+  int nrParameters = parameters.size();
+  if (nrParameters > 0)
+    {
+      s << '{' << parameters[0].name << " :: " << parameters[0].theory;
+      for (int i = 1; i < nrParameters; ++i)
+	s << ", " << parameters[i].name << " :: " << parameters[i].theory;
+      s << '}';
+    }
+  s << " is\n";
 
   int nrImports = imports.length();
   for (int i = 0; i < nrImports; i++)
@@ -77,7 +95,9 @@ PreModule::showModule(ostream& s)
     {
       if (UserLevelRewritingContext::interrupted())
 	return;
-      s << "  sorts " << sortDecls[i] << " .\n";
+      s << "  sorts ";
+      printSortTokenVector(s, sortDecls[i]);
+      s << " .\n";
     }
 
   int nrSubsortDecls = subsortDecls.length();
@@ -85,7 +105,9 @@ PreModule::showModule(ostream& s)
     {
       if (UserLevelRewritingContext::interrupted())
 	return;
-      s << "  subsorts " << subsortDecls[i] << " .\n";
+      s << "  subsorts ";
+      printSortTokenVector(s, subsortDecls[i]);
+      s << " .\n";
     }
 
   bool follow = false;

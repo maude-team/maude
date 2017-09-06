@@ -1,3 +1,15 @@
+2005-04-29  Steven Eker  <eker@goo.csl.sri.com>
+
+	* socketStuff.cc (createClientTcpSocket, createServerTcpSocket) 
+	(acceptClient, send, receive, closeSocket): most DebugAdvisory()s
+	turned into IssueAdvisory()s
+
+2005-04-15  Steven Eker  <eker@goo.csl.sri.com>
+
+	* socketStuff.cc (receive): added extra DebugAdvisory()
+	
+===================================Maude86a===========================================
+
 2005-03-15  Steven Eker  <eker@goo.csl.sri.com>
 
 	* socketStuff.cc (createServerTcpSocket): set SO_REUSEADDR flag

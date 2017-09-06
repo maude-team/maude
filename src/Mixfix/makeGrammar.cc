@@ -73,7 +73,7 @@ MixfixModule::makeParameterizedSortProductions()
   FOR_EACH_CONST(i, SortMap, sortNames)
     {
       int name= i->first;
-      if (Token::auxProperty(name) == Token::AUX_PARAMETERIZED_SORT)
+      if (Token::auxProperty(name) == Token::AUX_STRUCTURED_SORT)
 	{
 	  //
 	  //	Need to make a non-terminal for each lead token of a parameterized sort
@@ -388,7 +388,7 @@ MixfixModule::makeComponentProductions()
 	  parser->insertProduction(sortNt, rhsOne, 0, emptyGather, MixfixParser::NOP, sortIndex);
 	  rhsOne[0] = Token::dotNameCode(sortNameCode);
 	  parser->insertProduction(dotSortNt, rhsOne, 0, emptyGather);
-	  if (Token::auxProperty(sortNameCode) == Token::AUX_PARAMETERIZED_SORT)
+	  if (Token::auxProperty(sortNameCode) == Token::AUX_STRUCTURED_SORT)
 	    {
 	      //
 	      //	Syntax for multitoken versions of parameterized sorts.

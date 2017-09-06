@@ -48,21 +48,7 @@ operator<<(ostream& s, const Sort* sort)
 	s << ',' << c->sort(i);
       return s << ']';
     }
-  int name = sort->id();
-  if (interpreter.getPrintFlag(Interpreter::PRINT_MIXFIX))
-    return s << Token::sortName(name);
-  /*
-  if (Token::auxProperty(name) == Token::AUX_PARAMETERIZED_SORT &&
-      interpreter.getPrintFlag(Interpreter::PRINT_MIXFIX))
-    {
-      Vector<int> parts;
-      Token::splitParameterizedSort(name, parts);
-      FOR_EACH_CONST(i, Vector<int>, parts)
-	s << Token::name(*i);
-      return s;
-    }
-  */
-  return s << Token::name(name);
+  return s << Token::sortName(sort->id());
 }
 
 ostream&
