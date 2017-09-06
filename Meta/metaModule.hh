@@ -3,12 +3,8 @@
 //
 #ifndef _metaModule_hh_
 #define _metaModule_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "importModule.hh"
 #include "metaOpCache.hh"
-
 
 class MetaModule : public ImportModule, public MetaOpCache
 {

@@ -3,9 +3,6 @@
 //
 #ifndef _conditionFragment_hh_
 #define _conditionFragment_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include <stack>
 #include "rhsBuilder.hh"
 #include "conditionState.hh"

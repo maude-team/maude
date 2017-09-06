@@ -53,13 +53,13 @@ ACU_Term::analyseConstraintPropagation(NatSet& boundUniquely) const
 }
 
 #include "rule.hh" // HACK
-ACU_LhsAutomaton*
+void
 ACU_Term::compileLhs3(bool matchAtTop,
 		      const VariableInfo& variableInfo,
 		      NatSet& boundUniquely,
-		      bool& subproblemLikely)
+		      bool& subproblemLikely,
+		      ACU_LhsAutomaton* automaton)
 {
-  LhsAutomaton* uniqueCollapseAutomaton = 0;
   if (uniqueCollapseSubtermIndex != NONE)
     {
       //
@@ -68,14 +68,10 @@ ACU_Term::compileLhs3(bool matchAtTop,
       //
       NatSet local(boundUniquely);
       bool spl;
-      uniqueCollapseAutomaton = argArray[uniqueCollapseSubtermIndex].term->
-	compileLhs(matchAtTop, variableInfo, local, spl);
+      automaton->
+	addUniqueCollapseAutomaton(argArray[uniqueCollapseSubtermIndex].term->
+				   compileLhs(matchAtTop, variableInfo, local, spl));
     }
-  ACU_LhsAutomaton* automaton = new ACU_LhsAutomaton(symbol(),
-						     matchAtTop,
-						     !(collapseSymbols().empty()),
-						     uniqueCollapseAutomaton,
-						     variableInfo.getNrProtectedVariables());
   //
   //	Insert variables, ground aliens and grounded out aliens
   //	in to automaton and collect non-ground aliens.
@@ -96,8 +92,9 @@ ACU_Term::compileLhs3(bool matchAtTop,
       if (v != 0)
 	{
 	  int index = v->getIndex();
-	  automaton->addTopVariable(v, m);
-	  if (!(boundUniquely.contains(index)))
+	  bool bound = boundUniquely.contains(index);
+	  automaton->addTopVariable(v, m, bound);
+	  if (!bound)
 	    {
 	      lastUnboundVariable = index;
 	      ++nrUnboundVariables;
@@ -127,7 +124,7 @@ ACU_Term::compileLhs3(bool matchAtTop,
 	  bool spl;
 	  LhsAutomaton* subAutomaton =
 	    t->compileLhs(false, variableInfo, boundUniquely, spl);
-	  Assert(!spl, cerr << "grounded out alien should not return subproblem");
+	  Assert(!spl, "grounded out alien should not return subproblem");
 	  automaton->addGroundedOutAlien(t, subAutomaton, m);
 	}
       else
@@ -148,7 +145,7 @@ ACU_Term::compileLhs3(bool matchAtTop,
   //
   //	Now decide on a matching strategy
   //
-  if (nonGroundAliens.length() == 0)
+  if (nonGroundAliens.empty())
     {
       //
       //	No aliens case
@@ -167,7 +164,7 @@ ACU_Term::compileLhs3(bool matchAtTop,
 	      if (nrUnboundVariables == 1)
 		{
 		  boundUniquely.insert(lastUnboundVariable);
-		  subproblemLikely = false;
+		  subproblemLikely = false;  // variable forced so red-black ok
 		}
 	      strategy = ACU_LhsAutomaton::LONE_VARIABLE;
 	      break;
@@ -192,7 +189,6 @@ ACU_Term::compileLhs3(bool matchAtTop,
       compileGreedyAndFullCases(automaton, nonGroundAliens, variableInfo, boundUniquely,
 				subproblemLikely);
     }
-  return automaton;
 }
 
 void

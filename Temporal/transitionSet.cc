@@ -1,9 +1,6 @@
 //
 //	Implementation for class TransitionSet.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 #include <set>
 
 //	utility stuff
@@ -44,7 +41,7 @@ TransitionSet::insert(const Transition& transition)
   if (equal == e)
     {
       pair<TransitionMap::iterator, bool> p = transitionMap.insert(transition);
-      Assert(p.second, cerr << "failed to insert");
+      Assert(p.second, "failed to insert");
       p.first->second = formula;
     }
   else
@@ -97,7 +94,7 @@ TransitionSet::rename(const TransitionSet& original, const Vector<int>& renaming
       const NatSet::const_iterator ej = i->first.end();
       for (NatSet::const_iterator j  = i->first.begin(); j != ej; ++j)
 	{
-	  Assert(renaming[*j] != NONE, cerr << "no renaming for " << *j);
+	  Assert(renaming[*j] != NONE, "no renaming for " << *j);
 	  t.first.insert(renaming[*j]);
 	}
       t.second = i->second;

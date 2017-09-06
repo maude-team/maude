@@ -1,9 +1,6 @@
 //
 //      Implementation for class DirectoryManager.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 #include <sys/param.h>
 #include <sys/types.h>

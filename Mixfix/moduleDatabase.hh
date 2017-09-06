@@ -3,9 +3,6 @@
 //
 #ifndef _moduleDatabase_hh_
 #define _moduleDatabase_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include <map>
 #include "intSet.hh"
 

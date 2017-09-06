@@ -3,9 +3,6 @@
 //
 #ifndef _ACU_Symbol_hh_
 #define _ACU_Symbol_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "associativeSymbol.hh"
 
 class ACU_Symbol : public AssociativeSymbol
@@ -36,8 +33,8 @@ public:
   //
   //	ACU_Symbol specific functions.
   //
-  int computeBaseSort(int index1, int index2);
-  int computeMultBaseSort(int index, int multiplicity);
+  int computeSortIndex(int index1, int index2);
+  int computeMultSortIndex(int index1, int index2, int multiplicity);
 
 protected:
   //
@@ -59,30 +56,22 @@ private:
 };
 
 inline int
-ACU_Symbol::computeBaseSort(int index1, int index2)
+ACU_Symbol::computeSortIndex(int index1, int index2)
 {
   return traverse(traverse(0, index1), index2);
 }
 
 inline int
-ACU_Symbol::computeMultBaseSort(int index, int multiplicity)
+ACU_Symbol::computeMultSortIndex(int index1, int index2, int multiplicity)
 {
-  // NEEDS TO BE OPTIMIZED
-  int result = Sort::SORT_UNKNOWN;
-  int sqr = index;
   while (multiplicity > 0)
     {
       if (multiplicity & 1)
-	{
-	  if (result == Sort::SORT_UNKNOWN)
-	    result = sqr;
-	  else
-	    result = computeBaseSort(sqr, result);
-	}
+	index1 = computeSortIndex(index1, index2);
       multiplicity >>= 1;
-      sqr = computeBaseSort(sqr, sqr);
+      index2 = computeSortIndex(index2, index2);
     }
-  return result;
+  return index1;
 }
 
 #endif

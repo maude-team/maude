@@ -3,9 +3,6 @@
 //
 #ifndef _argumentIterator_hh_
 #define _argumentIterator_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "rawArgumentIterator.hh"
 
 class ArgumentIterator

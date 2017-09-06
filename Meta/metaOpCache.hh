@@ -3,9 +3,6 @@
 //
 #ifndef _metaOpCache_hh_
 #define _metaOpCache_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 class MetaOpCache
 {

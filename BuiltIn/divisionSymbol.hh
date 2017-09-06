@@ -3,9 +3,6 @@
 //
 #ifndef _divisionSymbol_hh_
 #define _divisionSymbol_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "freeSymbol.hh"
 #include "cachedDag.hh"
 

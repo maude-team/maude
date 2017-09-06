@@ -3,9 +3,6 @@
 //
 #ifndef _S_ExtensionInfo_hh_
 #define _S_ExtensionInfo_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include <gmpxx.h>
 #include "extensionInfo.hh"
 

@@ -1,9 +1,6 @@
 //
 //      Implementation for class SortConstraint.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
  
 //	utility stuff
 #include "macros.hh"
@@ -23,11 +20,14 @@
 #include "termBag.hh"
 #include "sortConstraint.hh"
 
-SortConstraint::SortConstraint(int label, Term* lhs, Sort* sort, const Vector<ConditionFragment*>& condition)
+SortConstraint::SortConstraint(int label,
+			       Term* lhs,
+			       Sort* sort,
+			       const Vector<ConditionFragment*>& condition)
   : PreEquation(label, lhs, condition),
     sort(sort)
 {
-  Assert(sort != 0, cerr << "null sort");
+  Assert(sort != 0, "null sort");
 }
 
 void
@@ -49,7 +49,7 @@ void
 SortConstraint::preprocess()
 {
   PreEquation::preprocess();
-  Assert(getLhs()->getComponent() == sort->component(), cerr << "component clash");
+  Assert(getLhs()->getComponent() == sort->component(), "component clash");
 }
 
 void

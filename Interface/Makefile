@@ -2,13 +2,11 @@ ROOT_DIR := ..
 
 include $(ROOT_DIR)/MakeOptions
 
-MODULES =	interface.o \
-		symbol.o \
+MODULES =	symbol.o \
 		binarySymbol.o \
 		associativeSymbol.o \
 		term.o \
-		dagNode.o \
-		heuristicLhsAutomaton.o
+		dagNode.o
 
 IFLAGS =        -I$(ROOT_DIR)/Utility \
 		-I$(ROOT_DIR)/Core \

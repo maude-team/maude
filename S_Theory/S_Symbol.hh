@@ -3,9 +3,6 @@
 //
 #ifndef _S_Symbol_hh_
 #define _S_Symbol_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "symbol.hh"
 
 class S_Symbol : public Symbol

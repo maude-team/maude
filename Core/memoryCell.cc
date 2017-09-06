@@ -1,9 +1,6 @@
 //
 //      Implementation for base class MemoryCell
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //	utility stuff
 #include "macros.hh"
@@ -105,7 +102,7 @@ MemoryCell::slowNew()
 	  FullSizeMemoryCell* d = currentArena->firstNode();
 	  endPointer = d + ARENA_SIZE - RESERVE_SIZE;
 	  nextNode = d + 1;
-	  Assert(d->h.flags == 0, cerr << "flags not cleared");
+	  Assert(d->h.flags == 0, "flags not cleared");
 	  d->initialize();
 	  return d;
 	}
@@ -133,7 +130,7 @@ MemoryCell::slowNew()
 	      FullSizeMemoryCell* d = currentArena->firstNode();
 	      endPointer = d + ARENA_SIZE;
 	      nextNode = d + 1;
-	      Assert(d->h.flags == 0, cerr << "flags not cleared");
+	      Assert(d->h.flags == 0, "flags not cleared");
 	      d->initialize();
 	      return d;
 	    }

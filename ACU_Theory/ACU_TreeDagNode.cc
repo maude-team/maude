@@ -190,40 +190,31 @@ ACU_TreeDagNode::clearCopyPointers2()
   CantHappen("Should not be copying on ACU_TreeDagNode");
 }
 
-void
-ACU_TreeDagNode::computeBaseSort()
+int
+ACU_TreeDagNode::treeComputeBaseSort()
 {
-  int sortIndex = computeBaseSort(symbol(), root);
-  setSortIndex(sortIndex);
+  return recComputeBaseSort(symbol(), root);
 }
 
 int
-ACU_TreeDagNode::computeBaseSort(ACU_Symbol* symbol, ACU_RedBlackNode* root)
+ACU_TreeDagNode::recComputeBaseSort(ACU_Symbol* symbol, ACU_RedBlackNode* root)
 {
+  // CANDIDATE FOR RECURSION ELIMINATION
   int index = root->getSortIndex();
   if (index != Sort::SORT_UNKNOWN)
     return index;
 
   index = root->getDagNode()->getSortIndex();
-  Assert(index != Sort::SORT_UNKNOWN, cerr << "bad sort");
-  index = symbol->computeMultBaseSort(index, root->getMultiplicity());
+  Assert(index != Sort::SORT_UNKNOWN, "bad sort");
+  index = symbol->computeMultSortIndex(index, index, root->getMultiplicity() - 1);
 
   if (ACU_RedBlackNode* l = root->getLeft())
-    index = symbol->computeBaseSort(index, computeBaseSort(symbol, l));
-  if (ACU_RedBlackNode* r = root->getLeft())
-    index = symbol->computeBaseSort(index, computeBaseSort(symbol, r));
-  
+    index = symbol->computeSortIndex(index, recComputeBaseSort(symbol, l));
+  if (ACU_RedBlackNode* r = root->getRight())
+    index = symbol->computeSortIndex(index, recComputeBaseSort(symbol, r));
+
   root->setSortIndex(index);
   return index;
-}
-
-DagNode*
-ACU_TreeDagNode::makeDelete(ACU_Stack& path, int multiplicity)
-{
-  ACU_RedBlackNode* n = ACU_RedBlackNode::consDelete(path, multiplicity);
-  if (n->getSize() == 1 && n->getMultiplicity() == 1)
-    return n->getDagNode();
-  return new ACU_TreeDagNode(symbol(), n);
 }
 
 ACU_DagNode*
@@ -247,7 +238,7 @@ ACU_TreeDagNode::treeToArgVec(ACU_TreeDagNode* original)
       j->multiplicity = i.getMultiplicity();
     }
 
-  Assert(j == d->argArray.end(), cerr << "iterators inconsistant");
+  Assert(j == d->argArray.end(), "iterators inconsistant");
   //cerr << "out: " << d << endl;
 
   d->setSortIndex(sortIndex);

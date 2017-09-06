@@ -3,9 +3,6 @@
 //
 #ifndef _freeNet_hh_
 #define _freeNet_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "unionFind.hh"
 
 class FreeNet
@@ -39,6 +36,12 @@ public:
 #endif
 
 private:
+  enum SpecialValues
+  {
+    LESS = 1,
+    GREATER = 0
+  };
+
   struct TestNode
   {
     Symbol* symbol;
@@ -58,16 +61,14 @@ private:
     //
     short argIndex;
     short equal;
-    short less;
-    short greater;
+    short notEqual[2];
 #else
     //
     //	Optimize layout for 32bit ptrs and ints.
     //
     int argIndex;
     int equal;
-    int less;
-    int greater;
+    int notEqual[2];
     int dummy;  // to round size up to 8 machine words
 #endif
   };

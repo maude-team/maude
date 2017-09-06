@@ -3,9 +3,6 @@
 //
 #ifndef _floatTerm_hh_
 #define _floatTerm_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "NA_Term.hh"
 
 class FloatTerm : public NA_Term

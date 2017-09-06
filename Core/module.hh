@@ -3,9 +3,6 @@
 //
 #ifndef _module_hh_
 #define _module_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "namedEntity.hh"
 #include "lineNumber.hh"
 #include "badFlag.hh"

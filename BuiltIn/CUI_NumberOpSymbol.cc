@@ -1,9 +1,6 @@
 //
 //      Implementation for class CUI_NumberOpSymbol.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //      utility stuff
 #include "macros.hh"
@@ -66,7 +63,7 @@ CUI_NumberOpSymbol::copyAttachments(Symbol* original, SymbolMap* map)
 bool
 CUI_NumberOpSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
 {
-  Assert(this == subject->symbol(), cerr << "bad symbol");
+  Assert(this == subject->symbol(), "bad symbol");
   CUI_DagNode* d = safeCast(CUI_DagNode*, subject);
   bool specialEval = true;
   //

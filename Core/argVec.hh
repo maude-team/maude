@@ -19,9 +19,6 @@
 //
 #ifndef _argVec_hh_
 #define _argVec_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 template<class T>
 class ArgVec
@@ -157,7 +154,7 @@ template<class T>
 inline typename ArgVec<T>::const_reference
 ArgVec<T>::operator[](size_type i) const
 {
-  Assert(i < len, cerr << "index too big");
+  Assert(i < len, "index too big");
   return basePtr[i];
 }
 
@@ -165,7 +162,7 @@ template<class T>
 inline typename ArgVec<T>::reference
 ArgVec<T>::operator[](size_type i)
 {
-  Assert(i < len, cerr <<  "index too big");
+  Assert(i < len, "index too big");
   return basePtr[i];
 }
 
@@ -218,7 +215,7 @@ template<class T>
 inline void
 ArgVec<T>::contractTo(size_type length)
 {
-  Assert(length <= len, cerr << "new length > old length");
+  Assert(length <= len, "new length > old length");
   len = length;
 }
 

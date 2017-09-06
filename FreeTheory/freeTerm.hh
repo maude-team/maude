@@ -4,9 +4,6 @@
 
 #ifndef _freeTerm_hh_
 #define _freeTerm_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "term.hh"
 #include "freeSubterm.hh"
 

@@ -107,7 +107,7 @@ FreeTerm::compileRemainder(Equation* equation, const Vector<int>& slotTranslatio
 	  subAutomata[i] = nonGroundAliens[bestSequence.sequence[i]].term()->
 	    compileLhs(false, *equation, boundUniquely, spl);
 	}
-      Assert(boundUniquely == bestSequence.bound, cerr << "bound clash");
+      Assert(boundUniquely == bestSequence.bound, "bound clash");
     }
   return new FreeRemainder(equation, freeSymbols, freeVariables,
 			   boundVariables, groundAliens, nonGroundAliens,
@@ -176,7 +176,7 @@ FreeTerm::compileLhs2(bool /* matchAtTop */,
 	    compileLhs(false, variableInfo, boundUniquely, spl);
 	  subproblemLikely = subproblemLikely || spl;
 	}
-      Assert(boundUniquely == bestSequence.bound, cerr << "bound clash");
+      Assert(boundUniquely == bestSequence.bound, "bound clash");
     }
   return new FreeLhsAutomaton(freeSymbols, uncertainVariables,
 			      boundVariables, groundAliens, nonGroundAliens,
@@ -200,7 +200,7 @@ FreeTerm::findConstraintPropagationSequence(const Vector<FreeOccurrence>& aliens
 				    boundUniquely,
                                     step,
 				    bestSequence);
-  Assert(bestSequence.cardinality >= 0, cerr << "didn't find a sequence");
+  Assert(bestSequence.cardinality >= 0, "didn't find a sequence");
 }
 
 void

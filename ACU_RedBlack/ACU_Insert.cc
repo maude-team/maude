@@ -32,7 +32,7 @@ ACU_RedBlackNode::consInsert2(ACU_RedBlackNode* p, DagNode* argument, int multip
 #endif
 
 {
-  Assert(p != 0, cerr << "inserting into empty tree not allowed");
+  Assert(p != 0, "inserting into empty tree not allowed");
 
   ACU_Stack path;
   bool goLeft;

@@ -3,9 +3,6 @@
 //
 #ifndef _variableSymbol_hh_
 #define _variableSymbol_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "symbol.hh"
 
 class VariableSymbol : public Symbol
@@ -36,9 +33,9 @@ VariableSymbol::getSort()
   //	Temporary hack until sorts mechanism revised.
   //
   const Vector<OpDeclaration>& s = getOpDeclarations();
-  Assert(s.length() == 1, cerr << "s.length() != 1");
+  Assert(s.length() == 1, "s.length() != 1");
   const Vector<Sort*>& v = s[0].getDomainAndRange();
-  Assert(v.length() == 1, cerr << "v.length() != 1");
+  Assert(v.length() == 1, "v.length() != 1");
   return v[0];
 }
 

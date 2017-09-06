@@ -1,9 +1,6 @@
 //
 //      Implementation for class AU_Subproblem.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //	utility stuff
 #include "macros.hh"
@@ -38,7 +35,7 @@ AU_Subproblem::AU_Subproblem(AU_DagNode* subject,
 {
   Assert(extensionInfo == 0 ||
 	 (firstSubterm == 0 && lastSubterm == subject->argArray.length() - 1),
-	 cerr << "extension disagreement");
+	 "extension disagreement");
   for (int i = 0; i < nrLayers; i++)
     layers[i].initialize(subject);
   layers[0].initializeFirst(firstSubterm, extensionInfo);

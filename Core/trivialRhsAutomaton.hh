@@ -4,9 +4,6 @@
 //
 #ifndef _trivialRhsAutomaton_hh_
 #define _trvialRhsAutomaton_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "rhsAutomaton.hh"
 
 class TrivialRhsAutomaton : public RhsAutomaton

@@ -6,9 +6,6 @@
 //
 #ifndef _moduleItem_hh_
 #define _moduleItem_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 class ModuleItem
 {

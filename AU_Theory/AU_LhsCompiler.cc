@@ -97,7 +97,7 @@ AU_Term::compileLhs2(bool matchAtTop,
 	      subproblemLikely = subproblemLikely || spl;
 	    }
 	}
-      Assert(boundUniquely == bestSequence.bound, cerr << "bound clash");
+      Assert(boundUniquely == bestSequence.bound, "bound clash");
       //
       //	Build flex part (special cases).
       //
@@ -109,7 +109,7 @@ AU_Term::compileLhs2(bool matchAtTop,
 	}
       if (nrFlex == 1 && !oneSidedIdentity)
 	{
-	  Assert(!matchAtTop, cerr << "shouldn't match at top");
+	  Assert(!matchAtTop, "shouldn't match at top");
 	  Tuple& t = argArray[leftPos];
 	  if (t.abstractionVariableIndex == NONE)
 	    {
@@ -125,7 +125,7 @@ AU_Term::compileLhs2(bool matchAtTop,
 	    {
 	      bool matchOurIdentity = t.matchOurIdentity && idPossible(leftPos);
 	      Assert(t.collapseToOurSymbol || matchOurIdentity,
-		     cerr << "should not use abstraction variable");
+		     "should not use abstraction variable");
 	      bool spl;
 	      a->addFlexAbstractionVariable
 		(t.abstractionVariableIndex,
@@ -200,7 +200,7 @@ AU_Term::compileLhs2(bool matchAtTop,
 	      bool matchOurIdentity = ip && t.matchOurIdentity;
 	      bool awkward = matchAtTop && !ip && t.matchOurIdentity;
 	      Assert(t.collapseToOurSymbol || matchOurIdentity || awkward,
-		     cerr << "should not use abstraction variable");
+		     "should not use abstraction variable");
 	      NatSet local(boundUniquely);
 	      bool spl;
 	      a->addFlexAbstractionVariable
@@ -223,7 +223,7 @@ AU_Term::compileLhs2(bool matchAtTop,
   //
   if (fixedLengthBlockStart != NONE)
     {
-      Assert(matchAtTop, cerr << "ended flex part with fixed length block");
+      Assert(matchAtTop, "ended flex part with fixed length block");
       bool spl;
       addFixedLengthBlock(a, fixedLengthBlockStart,
 			  argArray.length() - fixedLengthBlockStart,

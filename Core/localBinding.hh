@@ -3,9 +3,6 @@
 //
 #ifndef _localBinding_hh_
 #define _localBinding_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "simpleRootContainer.hh"
 #undef assert  //HACK
 
@@ -37,5 +34,16 @@ private:
 
   Vector<Binding> bindings;
 };
+
+inline void
+LocalBinding::addBinding(int index, DagNode* value)
+{
+  int t = bindings.length();
+  bindings.expandBy(1);
+  Binding& b = bindings[t];
+  b.variableIndex = index;
+  b.value = value;
+  b.active = false;
+}
 
 #endif

@@ -3,9 +3,6 @@
 //
 #ifndef _NA_Term_hh_
 #define _NA_Term_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "term.hh"
 
 class NA_Term : public Term

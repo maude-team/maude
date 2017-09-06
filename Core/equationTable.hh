@@ -3,9 +3,6 @@
 //
 #ifndef _equationTable_hh_
 #define _equationTable_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 class EquationTable
 {

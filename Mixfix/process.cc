@@ -239,12 +239,12 @@ PreModule::computeType(const Type& type)
     {
       int nrTokens = type.tokens.length();
       Sort* s = flatModule->findSort(type.tokens[0].code());
-      Assert(s != 0, cerr << "missing sort");
+      Assert(s != 0, "missing sort");
       ConnectedComponent* c = s->component();
       for (int i = 1; i < nrTokens; i++)
 	{
 	  Sort* t = flatModule->findSort(type.tokens[i].code());
-	  Assert(t != 0, cerr << "missing sort");
+	  Assert(t != 0, "missing sort");
 	  WarningCheck(t->component() == c,
 		       LineNumber(type.tokens[i].lineNumber()) <<
 		       ": sorts " << QUOTE(s) << " and " << QUOTE(t) <<
@@ -255,9 +255,9 @@ PreModule::computeType(const Type& type)
   else
     {
       Assert(type.tokens.length() == 1,
-	     cerr << "bad number of tokens " << type.tokens.length());
+	     "bad number of tokens " << type.tokens.length());
       Sort* s = flatModule->findSort(type.tokens[0].code());
-      Assert(s != 0, cerr << "missing sort");
+      Assert(s != 0, "missing sort");
       return s;
     }
 }

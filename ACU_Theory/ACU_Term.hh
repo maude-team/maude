@@ -3,9 +3,6 @@
 //
 #ifndef _ACU_Term_hh_
 #define _ACU_Term_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "ACU_Symbol.hh"
 #include "term.hh"
 
@@ -16,7 +13,7 @@ class ACU_Term : public Term
 public:
   ACU_Term(ACU_Symbol* symbol, const Vector<Term*>& arguments);
   //
-  //    Member functions required by theory interface
+  //    Member functions required by theory interface.
   //
   RawArgumentIterator* arguments();
   void deepSelfDestruct();
@@ -43,7 +40,7 @@ public:
 		  TermBag& availableTerms,
 		  bool eagerContext);
   //
-  //    Functions particular to ACU_Term
+  //    Functions particular to ACU_Term.
   //
   ACU_Symbol* symbol() const;
 
@@ -65,24 +62,28 @@ private:
 
   ACU_Term(const ACU_Term& original, SymbolMap* map);
   bool normalizeAliensAndFlatten();
-  ACU_NonLinearLhsAutomaton* tryToMakeNonLinearLhsAutomaton(bool matchAtTop,
-							    const VariableInfo& variableInfo,
-							    NatSet& boundUniquely);
-  ACU_AlienAlienLhsAutomaton* tryToMakeAlienAlienLhsAutomaton(const VariableInfo& variableInfo,
-							      NatSet& boundUniquely);
-  ACU_CollectorLhsAutomaton* tryToMakeCollectorLhsAutomaton(bool matchAtTop,
-							    const VariableInfo& variableInfo,
-							    NatSet& boundUniquely,
-							    int collectorCandidate);
   static bool pairLt(const Pair& p1, const Pair& p2);
   static void weakConstraintPropagation(const Vector<Pair>& aliens,
 					const NatSet& boundUniquely,
 					int step,
 					Vector<int>& sequence);
-  ACU_LhsAutomaton* compileLhs3(bool matchAtTop,
-				const VariableInfo& variableInfo,
-				NatSet& boundUniquely,
-				bool& subproblemLikely);
+  void compileLhs3(bool matchAtTop,
+		   const VariableInfo& variableInfo,
+		   NatSet& boundUniquely,
+		   bool& subproblemLikely,
+		   ACU_LhsAutomaton* automaton);
+  //
+  //	Fuctions for compiling special case automata.
+  //
+  ACU_LhsAutomaton* tryToMakeSpecialCaseAutomaton(bool matchAtTop,
+						  const VariableInfo& variableInfo,
+						  NatSet& boundUniquely);
+  ACU_LhsAutomaton* tryToMakeNonLinearLhsAutomaton(const VariableInfo& variableInfo,
+						   NatSet& boundUniquely);
+  ACU_LhsAutomaton* tryToMakeCollectorLhsAutomaton(bool matchAtTop,
+						   const VariableInfo& variableInfo,
+						   NatSet& boundUniquely,
+						   int collectorCandidate);
   //
   //	Functions needed to compile aliens only case matching.
   //

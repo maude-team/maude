@@ -3,9 +3,6 @@
 //
 #ifndef _token_hh_
 #define _token_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include <gmpxx.h>
 #ifdef LIBv3
 #include <ext/rope>

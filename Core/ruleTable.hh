@@ -3,9 +3,6 @@
 //
 #ifndef _ruleTable_hh_
 #define _ruleTable_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 class RuleTable
 {

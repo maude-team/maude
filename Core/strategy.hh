@@ -3,9 +3,6 @@
 //
 #ifndef _strategy_hh_
 #define _strategy_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "natSet.hh"
 
 class Strategy

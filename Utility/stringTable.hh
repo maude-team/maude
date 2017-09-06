@@ -3,9 +3,6 @@
 //
 #ifndef _stringTable_hh_
 #define _stringTable_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 class StringTable
 {

@@ -1,9 +1,6 @@
 //
 //	Implementation for class Substitution
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //	utility stuff
 #include "macros.hh"
@@ -23,39 +20,32 @@
 
 int Substitution::allocateSize = 1;
 
-Substitution::Substitution(const Substitution& original)
-  : values(original.copySize)
-{
-  copySize = original.copySize;
-  for (int i = 0; i < copySize; i++)
-    values[i] = original.values[i];
-}
-
 LocalBinding*
 Substitution::operator-(const Substitution& original) const
 {
   int nrDiff = 0;
-  for (int i = 0; i < copySize; i++)
+  Vector<DagNode*>::const_iterator b = values.begin();
+  Vector<DagNode*>::const_iterator e = b + copySize;
+
+  Vector<DagNode*>::const_iterator j = original.values.begin();
+  for (Vector<DagNode*>::const_iterator i = b; i != e; ++i, ++j)
     {
-      if (original.values[i] == 0)
-	{
-	  if (values[i] != 0)
-	    ++nrDiff;
-	}
-      else
-	Assert(values[i] != 0, cerr << "substitution inconsistancy at index " << i);
+      Assert(*j == 0 || *i == *j,
+	     "substitution inconsistancy at index " << i - b);
+      if (*i != *j)
+	++nrDiff;
     }
+
   if (nrDiff == 0)
     return 0;
   LocalBinding* result = new LocalBinding(nrDiff);
-  for (int i = 0; i < copySize; i++)
+
+  j = original.values.begin();
+  for (Vector<DagNode*>::const_iterator i = b; i != e; ++i, ++j)
     {
-      if (original.values[i] == 0)
-	{
-	  DagNode* d = values[i];
-	  if (d != 0)
-	    result->addBinding(i, d);
-	}
+      DagNode* d = *i;
+      if (d != *j)
+	result->addBinding(i - b, d);
     }
   return result;
 }

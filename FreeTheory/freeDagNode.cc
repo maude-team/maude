@@ -1,9 +1,6 @@
 //
 //      Implementation for class FreeDagNode.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 #include <typeinfo>
 
 //	utility stuff
@@ -70,7 +67,7 @@ FreeDagNode::getHashValue()
 int
 FreeDagNode::compareArguments(const DagNode* other) const
 {
-  Assert(symbol() == other->symbol(), cerr << "symbols differ");
+  Assert(symbol() == other->symbol(), "symbols differ");
   int nrArgs = symbol()->arity();
   if (nrArgs != 0)
     {
@@ -176,7 +173,7 @@ FreeDagNode::copyWithReplacement(int argIndex, DagNode* replacement)
   FreeDagNode* d = new FreeDagNode(s);
   int nrArgs = s->arity();
   Assert(argIndex >= 0 && argIndex < nrArgs,
-	 cerr << "bad argIndex");
+	 "bad argIndex");
   DagNode** p = argArray();
   DagNode** q = d->argArray();
   for (int i = 0; i < nrArgs; i++, p++, q++)
@@ -190,7 +187,7 @@ FreeDagNode::copyWithReplacement(Vector<RedexPosition>& redexStack,
 				 int last)
 {
   Assert(first >= 0 && first <= last && last < redexStack.length(),
-	 cerr << "bad replacement range");
+	 "bad replacement range");
 
   FreeSymbol* s = static_cast<FreeSymbol*>(symbol());
   int nrArgs = s->arity();
@@ -198,7 +195,7 @@ FreeDagNode::copyWithReplacement(Vector<RedexPosition>& redexStack,
 	 redexStack[first].argIndex() < nrArgs &&
 	 redexStack[last].argIndex() >= 0 &&
 	 redexStack[last].argIndex() < nrArgs,
-	 cerr << "bad replacement arg index");
+	 "bad replacement arg index");
 
   FreeDagNode* d = new FreeDagNode(s);
   DagNode** p = argArray();

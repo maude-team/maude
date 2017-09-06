@@ -3,9 +3,6 @@
 //
 #ifndef _profileModule_hh_
 #define _profileModule_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "module.hh"
 
 class ProfileModule : public Module

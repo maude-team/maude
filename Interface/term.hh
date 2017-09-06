@@ -3,9 +3,6 @@
 //
 #ifndef _term_hh_
 #define _term_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "lineNumber.hh"
 #include "sort.hh"
 #include "symbol.hh"
@@ -330,14 +327,14 @@ inline DagNode*
 Term::dagify()
 {
   Assert(subDags.length() == converted.cardinality(),
-	 cerr << "length/cardinality mismatch");
+	 "length/cardinality mismatch");
   int e = converted.term2Index(this);
   if (e >= 0)
     return subDags[e];
   DagNode* d = dagify2();
   if (setSortInfoFlag)
     {
-      Assert(sortIndex != Sort::SORT_UNKNOWN, cerr << "missing sort info");
+      Assert(sortIndex != Sort::SORT_UNKNOWN, "missing sort info");
       d->setSortIndex(sortIndex);
       d->setReduced();
     }

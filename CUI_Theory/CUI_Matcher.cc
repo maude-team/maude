@@ -13,7 +13,7 @@ CUI_LhsAutomaton::match(DagNode* subject,
   bool greedyMatchOK = f & GREEDY_MATCH_OK;
   if (subject->symbol() == topSymbol)
     {
-      Assert(extensionInfo == 0, cerr << "shouldn't have extension info");
+      Assert(extensionInfo == 0, "shouldn't have extension info");
       CUI_DagNode* s = static_cast<CUI_DagNode*>(subject);
       DagNode* s0 = s->argArray[0];
       DagNode* s1 = s->argArray[1];

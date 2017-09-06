@@ -1,9 +1,6 @@
 //
 //      Implementation for class VariableInfo.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 #include "macros.hh"
 #include "vector.hh"
@@ -27,10 +24,10 @@ VariableInfo::VariableInfo()
 int
 VariableInfo::variable2Index(VariableTerm* variable)
 {
-  Assert(variable != 0, cerr << "null term");
+  Assert(variable != 0, "null term");
   int nrRealVariables = variables.length();
   Assert(nrRealVariables == nrProtectedVariables,
-	 cerr << "can't add new real variables at this stage");
+	 "can't add new real variables at this stage");
   for (int i = 0; i < nrRealVariables; i++)
     {
       if (variable->equal(variables[i]))

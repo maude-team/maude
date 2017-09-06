@@ -1,9 +1,6 @@
 //
 //      Implementation for class BranchSymbol.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
  
 //	utility stuff
 #include "macros.hh"
@@ -46,24 +43,24 @@ void
 BranchSymbol::fillInSortInfo(Term* subject)
 {
   ArgumentIterator a(*subject);
-  Assert(a.valid(), cerr << "invalid first subterm");
+  Assert(a.valid(), "invalid first subterm");
   Term* t = a.argument();
   t->symbol()->fillInSortInfo(t);
-  Assert(t->getComponent() == domainComponent(0), cerr << "bad 1st component");
+  Assert(t->getComponent() == domainComponent(0), "bad 1st component");
 
   a.next();
-  Assert(a.valid(), cerr << "invalid second subterm");
+  Assert(a.valid(), "invalid second subterm");
   Term* t2 = a.argument();
   t2->symbol()->fillInSortInfo(t2);
   ConnectedComponent* component = t2->getComponent();
-  Assert(component == domainComponent(1), cerr << "bad 2nd component");
+  Assert(component == domainComponent(1), "bad 2nd component");
   
   NatSet leqSorts(component->getLeqSorts(t2->getSortIndex()));
   for (a.next(); a.valid(); a.next())
     {
       t2 = a.argument();
       t2->symbol()->fillInSortInfo(t2);
-      Assert(t2->getComponent() == component, cerr << "bad component");
+      Assert(t2->getComponent() == component, "bad component");
       leqSorts.insert(component->getLeqSorts(t2->getSortIndex()));
     }
   subject->setSortInfo(component,
@@ -74,7 +71,7 @@ BranchSymbol::fillInSortInfo(Term* subject)
 bool
 BranchSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
 {
-  Assert(this == subject->symbol(), cerr << "Bad symbol");
+  Assert(this == subject->symbol(), "bad symbol");
   FreeDagNode* f = static_cast<FreeDagNode*>(subject);
   DagNode *e = f->getArgument(0);
   e->reduce(context);
@@ -97,7 +94,7 @@ BranchSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
 void 
 BranchSymbol::computeBaseSort(DagNode* subject)
 {
-  Assert(this == subject->symbol(), cerr << "Bad symbol");
+  Assert(this == subject->symbol(), "bad symbol");
   FreeDagNode* f = static_cast<FreeDagNode*>(subject);
   
   if (f->getArgument(0)->leq(getOpDeclarations()[0].getDomainAndRange()[0]))

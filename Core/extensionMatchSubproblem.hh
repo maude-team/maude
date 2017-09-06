@@ -4,9 +4,6 @@
 //
 #ifndef _extensionMatchSubproblem_hh_
 #define _extensionMatchSubproblem_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "subproblem.hh"
 #include "dagRoot.hh"
 #include "substitution.hh"

@@ -13,9 +13,6 @@
 //
 #ifndef _autoWrapBuf_hh_
 #define _autoWrapBuf_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include <string>
 
 class AutoWrapBuffer : public std::streambuf

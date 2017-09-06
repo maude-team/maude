@@ -1,9 +1,6 @@
 //
 //	Implementation for base class Term.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //	utility stuff
 #include "macros.hh"
@@ -242,7 +239,7 @@ Term::commonSymbols(Vector<Term*>& patterns, PointerSet& common)
   //	p_i there is some variable v_i which is p_i of is in p_i's collapse set
   //	with sort greater, equal or incomparable to v's sort.
   //
-  Assert(common.empty(), cerr << "common not empty to start with");
+  Assert(common.empty(), "common not empty to start with");
   int nrPatterns = patterns.length();
   for (int i = 0; i < nrPatterns; i++)
     {

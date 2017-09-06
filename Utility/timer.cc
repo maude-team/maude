@@ -1,9 +1,6 @@
 //
 //      Implementation for class Timer.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 #include <signal.h>
 #include <sys/time.h>
 

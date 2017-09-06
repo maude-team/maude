@@ -1,11 +1,9 @@
 //
-//	Class for dag nodes containing quoted identifiers (references to real identifiers).
+//	Class for dag nodes containing quoted identifiers
+//	(references to real identifiers).
 //
 #ifndef _quotedIdentifierDagNode_hh_
 #define _quotedIdentifierDagNode_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "NA_DagNode.hh"
 
 class QuotedIdentifierDagNode : public NA_DagNode

@@ -3,9 +3,6 @@
 //
 #ifndef _directoryManager_hh_
 #define _directoryManager_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "stringTable.hh"
 
 class DirectoryManager

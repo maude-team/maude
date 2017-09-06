@@ -16,7 +16,7 @@ ACU_LhsAutomaton::uniqueCollapseMatch(DagNode* subject,
   //
   SubproblemAccumulator subproblems;
   int nrTopVariables = topVariables.length();
-  Assert(nrTopVariables >= 1, cerr << "not enough top variables to collapse");
+  Assert(nrTopVariables >= 1, "not enough top variables to collapse");
   for (int i = 0; i < nrTopVariables; i++)
     {
       TopVariable& tv = topVariables[i];
@@ -41,7 +41,7 @@ ACU_LhsAutomaton::uniqueCollapseMatch(DagNode* subject,
       else
 	{
 	  Assert(tv.multiplicity == 1,
-		 cerr << "variable with multiplicity > 1 cannot take identity");
+		 "variable with multiplicity > 1 cannot take identity");
 	}
     }
   Subproblem* subproblem;
@@ -81,7 +81,7 @@ ACU_LhsAutomaton::multiwayCollapseMatch(DagNode* subject,
   for (int i = 0; i < nrTopVariables; i++)
     {
       TopVariable& tv = topVariables[i];
-      Assert(tv.takeIdentity, cerr << "variable can't take identity");
+      Assert(tv.takeIdentity, "variable can't take identity");
       DagNode* d = solution.value(tv.index);
       if (d != 0)
 	{
@@ -147,7 +147,7 @@ ACU_LhsAutomaton::multiwayCollapseMatch(DagNode* subject,
       if (extensionInfo == 0)
 	return false;
       TopVariable& tv = topVariables[0];  // pick any since they are all bound to identity
-      Assert(identity->equal(solution.value(tv.index)), cerr << "should be identity");
+      Assert(identity->equal(solution.value(tv.index)), "should be identity");
       return subject->matchVariable(tv.index,
 				    tv.sort,
 				    matchAtTop,
@@ -182,7 +182,7 @@ ACU_LhsAutomaton::multiwayCollapseMatch(DagNode* subject,
       TopVariable& tv = topVariables[i];
       if (solution.value(tv.index) == 0)
 	{
-	  Assert(tv.multiplicity == 1, cerr << "unbound variable of multiplicity > 1");
+	  Assert(tv.multiplicity == 1, "unbound variable of multiplicity > 1");
 	  local.copy(solution);
 	  bindUnboundVariablesToIdentity(local, i);
 	  Subproblem* subproblem;

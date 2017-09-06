@@ -3,9 +3,6 @@
 //
 #ifndef _CUI_LhsAutomaton_hh_
 #define _CUI_LhsAutomaton_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "lhsAutomaton.hh"
 
 class CUI_LhsAutomaton : public LhsAutomaton

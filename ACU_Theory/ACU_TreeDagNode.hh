@@ -35,13 +35,11 @@ public:
   void partialReplace(DagNode* replacement, ExtensionInfo* extensionInfo);
   DagNode* partialConstruct(DagNode* replacement, ExtensionInfo* extensionInfo);
   //
-  //	ACU_TreeDagNode <-> ACU_DagNode in-place conversion functions.
+  //	ACU_TreeDagNode -> ACU_DagNode in-place conversion function.
   //
   static ACU_DagNode* treeToArgVec(ACU_TreeDagNode* original);
 
-  DagNode* makeDelete(ACU_Stack& path, int multiplicity);
-  void computeBaseSort();
-
+  int treeComputeBaseSort();
   ACU_RedBlackNode* getRoot() const; // would like to return const ACU_RedBlackNode*
 
 private:
@@ -54,7 +52,7 @@ private:
   //
   //	Private functions.
   //
-  static int computeBaseSort(ACU_Symbol* symbol, ACU_RedBlackNode* root);
+  static int recComputeBaseSort(ACU_Symbol* symbol, ACU_RedBlackNode* root);
 
   //
   //	Arguments under ACU symbol.
@@ -66,6 +64,8 @@ inline
 ACU_TreeDagNode::ACU_TreeDagNode(ACU_Symbol* symbol, ACU_RedBlackNode* root)
   : ACU_BaseDagNode(symbol), root(root)
 {
+  Assert(root->getSize() > 1 || root->getMultiplicity() > 1,
+	 "tried to make ACU_TreeDagNode with single argument");
   setNormalizationStatus(TREE);
 }
 

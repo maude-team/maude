@@ -1,9 +1,6 @@
 //
 //      Implementation for class VisibleModule.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //      utility stuff
 #include "macros.hh"
@@ -277,7 +274,7 @@ VisibleModule::showDecls(ostream& s, bool indent, Symbol* symbol, bool all) cons
   int begin = 0;
   const Vector<OpDeclaration>& opDecls = symbol->getOpDeclarations();
   int end = opDecls.length();
-  Assert(end > 0, cerr << "op " << symbol << " has no declarations");
+  Assert(end > 0, "op " << symbol << " has no declarations");
 
   if (!all)
     {

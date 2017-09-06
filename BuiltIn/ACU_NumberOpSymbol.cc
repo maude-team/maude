@@ -1,9 +1,6 @@
 //
 //      Implementation for class ACU_NumberOpSymbol.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //      utility stuff
 #include "macros.hh"
@@ -72,7 +69,7 @@ ACU_NumberOpSymbol::copyAttachments(Symbol* original, SymbolMap* map)
 bool
 ACU_NumberOpSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
 {
-  Assert(this == subject->symbol(), cerr << "bad symbol");
+  Assert(this == subject->symbol(), "bad symbol");
   if (!reduceArgumentsAndNormalize(subject, context))
     return false;  // collapsed under us
   //
@@ -168,7 +165,7 @@ ACU_NumberOpSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
 	}
       if (usedMultiplicity >= 2)
 	{
-	  Assert(minusSymbol != 0 || accumulator >= 0, cerr << "can't make -ve int");
+	  Assert(minusSymbol != 0 || accumulator >= 0, "can't make -ve int");
 	  if (unused.empty())
 	    {
 	      return (accumulator >= 0) ?

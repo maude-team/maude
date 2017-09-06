@@ -3,9 +3,6 @@
 //
 #ifndef _sortCheckSubproblem_hh_
 #define _sortCheckSubproblem_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "subproblem.hh"
 
 class SortCheckSubproblem : public Subproblem

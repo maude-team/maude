@@ -3,9 +3,6 @@
 //
 #ifndef _symbol_hh_
 #define _symbol_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "fullCompiler.hh"
 
 #include "namedEntity.hh"
@@ -43,6 +40,7 @@ public:
   int compare(const Symbol* other) const;
   bool mightMatchPattern(Term* pattern);
   void fastComputeTrueSort(DagNode* subject, RewritingContext& context);  // maybe should be const?
+  int getUniqueSortIndex();
   //
   //	Functions needed for sophisticated sort analysis.
   //
@@ -132,6 +130,12 @@ inline int
 Symbol::compare(const Symbol* other) const
 {
   return orderInt - other->orderInt;
+}
+
+inline int
+Symbol::getUniqueSortIndex()
+{
+  return uniqueSortIndex;
 }
 
 #endif

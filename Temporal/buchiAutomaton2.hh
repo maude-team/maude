@@ -3,9 +3,6 @@
 //
 #ifndef _buchiAutomaton2_hh_
 #define _buchiAutomaton2_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include <map>
 #include "bddUser.hh"
 #include "bdd.hh"

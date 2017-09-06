@@ -3,9 +3,6 @@
 //
 #ifndef _symbolType_hh_
 #define _symbolType_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 class SymbolType
 {

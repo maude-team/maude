@@ -3,9 +3,6 @@
 //
 #ifndef _rewriteConditionFragment_hh_
 #define _rewriteConditionFragment_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "conditionFragment.hh"
 #include "rhsBuilder.hh"
 

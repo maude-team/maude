@@ -1,3 +1,12 @@
+2003-02-25  Steven Eker  <eker@goo.csl.sri.com>
+
+	* configSymbol.cc: removed #pragma
+	(checkArgs): updated Assert()
+
+	* configSymbol.hh: removed #pragma
+	
+===================================Maude79===========================================
+
 2001-04-20  Steven Eker  <eker@goo.csl.sri.com>
 
 	* configSymbol.hh (class ConfigSymbol): added struct MessageQueue,

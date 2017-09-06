@@ -1,9 +1,6 @@
 //
 //	Implementation for class FreeArgumentIterator
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 #include "macros.hh"
 #include "vector.hh"
@@ -28,13 +25,13 @@ FreeArgumentIterator::valid() const
 Term*
 FreeArgumentIterator::argument() const
 {
-  Assert(position < argArray->length(), cerr << "no args left");
+  Assert(position < argArray->length(), "no args left");
   return (*argArray)[position];
 }
 
 void
 FreeArgumentIterator::next()
 {
-  Assert(position < argArray->length(), cerr << "no args left");
+  Assert(position < argArray->length(), "no args left");
   ++position;
 }

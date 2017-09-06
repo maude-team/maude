@@ -1,9 +1,6 @@
 //
 //      Implementation for class ImportModule.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //      utility stuff
 #include "macros.hh"
@@ -236,7 +233,7 @@ ImportModule::donateOps(ImportModule* importer)
 	  Symbol* symbol = symbols[i];
 	  SymbolType symbolType = getSymbolType(symbol);
 	  Assert(!(symbolType.isCreatedOnTheFly()),
-		 cerr << "unexpected variable/sort test/polymorph instance " << symbol);
+		 "unexpected variable/sort test/polymorph instance " << symbol);
 	  Token name;
 	  name.tokenize(symbol->id(), symbol->getLineNumber());
 	  const Vector<OpDeclaration>& opDecls = symbol->getOpDeclarations();
@@ -289,7 +286,7 @@ ImportModule::donateOps(ImportModule* importer)
 		    }
 		}
 	      else
-		Assert(!originator, cerr << "Bad origination of " << symbol);
+		Assert(!originator, "bad origination of " << symbol);
 	    }
 	}
     }
@@ -347,9 +344,9 @@ ImportModule::fixUpDonatedOps(ImportModule* importer)
 	      //
 	      BinarySymbol* s = static_cast<BinarySymbol*>(symbol);
 	      Term* id = s->getIdentity();
-	      Assert(id != 0, cerr << "missing identity");
+	      Assert(id != 0, "missing identity");
 	      BinarySymbol* s2 = static_cast<BinarySymbol*>(importTranslation.translate(symbol));
-	      Assert(s2->getIdentity() == 0, cerr << "identity already exists");
+	      Assert(s2->getIdentity() == 0, "identity already exists");
 	      s2->setIdentity(id->deepCopy(&importTranslation));
 	    }
 	  if (symbolType.getBasicType() == SymbolType::BUBBLE)

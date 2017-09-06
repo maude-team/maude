@@ -1,9 +1,6 @@
 //
 //      Implementation for class FloatOpSymbol.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 #include <math.h>
 #ifdef SOLARIS
 #include <ieeefp.h>
@@ -111,7 +108,7 @@ FloatOpSymbol::reset()
 bool
 FloatOpSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
 {
-  Assert(this == subject->symbol(), cerr << "Bad symbol");
+  Assert(this == subject->symbol(), "bad symbol");
   int nrArgs = arity();
   FreeDagNode* d = static_cast<FreeDagNode*>(subject);
   bool floatEval = true;
@@ -204,7 +201,7 @@ FloatOpSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
 		return context.builtInReplace(subject, r);
 	      }
 	    default:
-	      Assert(false, cerr << "bad float op");
+	      CantHappen("bad float op");
 	    }
 	}
       else
@@ -273,10 +270,10 @@ FloatOpSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
 		    r = a1 >= a2;
 		    break;
 		  default:
-		    Assert(false, cerr << "bad float op");
+		    CantHappen("bad float op");
 		  }
 		Assert(trueTerm.getTerm() != 0 && falseTerm.getTerm() != 0,
-		       cerr << "null true/false for relational op");
+		       "null true/false for relational op");
 		return context.builtInReplace(subject, r ? trueTerm.getDag() : falseTerm.getDag());
 	      }
 	    }
@@ -289,7 +286,7 @@ FloatOpSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
       DagNode* a0 = d->getArgument(0);
       if (op == CODE('f', 'l'))
 	{
-	  Assert(succSymbol != 0, cerr << "succSymbol undefined");
+	  Assert(succSymbol != 0, "succSymbol undefined");
 	  if (succSymbol->isNat(a0))
 	    {
 	      mpq_class tq(succSymbol->getNat(a0), 1);

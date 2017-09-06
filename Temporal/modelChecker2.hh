@@ -8,9 +8,6 @@
 //
 #ifndef _modelChecker2_hh_
 #define _modelChecker2_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include <list>
 #include "natSet.hh"
 #include "buchiAutomaton2.hh"

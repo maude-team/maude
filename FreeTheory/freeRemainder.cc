@@ -1,9 +1,6 @@
 //
 //	Implementation for class FreeRemainder.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //	utility stuff
 #include "macros.hh"
@@ -76,7 +73,7 @@ FreeRemainder::FreeRemainder(Equation* eqn,
         const FreeOccurrence& oc = freeVars[i];
         FreeTerm* parent = safeCast(FreeTerm*, freeSymbols[oc.position()].term());
 	Assert(parent->getSlotIndex() != NONE,
-	       cerr << "bad slot for " << parent << " in " << eqn);
+	       "bad slot for " << parent << " in " << eqn);
         VariableTerm* v = safeCast(VariableTerm*, oc.term());
         freeVariables[i].position = slotTranslation[parent->getSlotIndex()];
         freeVariables[i].argIndex = oc.argIndex();
@@ -101,7 +98,7 @@ FreeRemainder::FreeRemainder(Equation* eqn,
 	  {
 	    FreeTerm* parent = safeCast(FreeTerm*, freeSymbols[oc.position()].term());
 	    Assert(parent->getSlotIndex() != NONE,
-		   cerr << "bad slot for " << parent << " in " << eqn);
+		   "bad slot for " << parent << " in " << eqn);
 	    int j = freeVariables.length();
 	    freeVariables.expandTo(j + 1);
 	    freeVariables[j].position = slotTranslation[parent->getSlotIndex()];
@@ -121,7 +118,7 @@ FreeRemainder::FreeRemainder(Equation* eqn,
         const FreeOccurrence& oc = boundVars[i];
         FreeTerm* parent = safeCast(FreeTerm*, freeSymbols[oc.position()].term());
 	Assert(parent->getSlotIndex() != NONE,
-	       cerr << "bad slot for " << parent << " in " << eqn);
+	       "bad slot for " << parent << " in " << eqn);
         VariableTerm* v = safeCast(VariableTerm*, oc.term());
         boundVariables[i].position = slotTranslation[parent->getSlotIndex()];
         boundVariables[i].argIndex = oc.argIndex();
@@ -139,7 +136,7 @@ FreeRemainder::FreeRemainder(Equation* eqn,
         const FreeOccurrence& oc = gndAliens[i];
         FreeTerm* parent = safeCast(FreeTerm*, freeSymbols[oc.position()].term());
 	Assert(parent->getSlotIndex() != NONE,
-	       cerr << "bad slot for " << parent << " in " << eqn);
+	       "bad slot for " << parent << " in " << eqn);
         groundAliens[i].position = slotTranslation[parent->getSlotIndex()];
         groundAliens[i].argIndex = oc.argIndex();
         groundAliens[i].alien = oc.term();
@@ -156,7 +153,7 @@ FreeRemainder::FreeRemainder(Equation* eqn,
         const FreeOccurrence& oc = nonGndAliens[bestSequence[i]];
         FreeTerm* parent = safeCast(FreeTerm*, freeSymbols[oc.position()].term());
 	Assert(parent->getSlotIndex() != NONE,
-	       cerr << "bad slot for " << parent << " in " << eqn);
+	       "bad slot for " << parent << " in " << eqn);
         nonGroundAliens[i].position = slotTranslation[parent->getSlotIndex()];
         nonGroundAliens[i].argIndex = oc.argIndex();
         nonGroundAliens[i].automaton = subAutomata[i];
@@ -248,7 +245,7 @@ FreeRemainder::slowMatchReplace2(DagNode* subject,
       //
       if (!nonGroundAliens.isNull())
 	{
-	  Assert(nonGroundAliens.size() > 0, cerr << "no nonGroundAliens");
+	  Assert(nonGroundAliens.size() > 0, "no nonGroundAliens");
 	  SubproblemAccumulator subproblems;
 	  Vector<NonGroundAlien>::const_iterator i = nonGroundAliens.begin();
 	  Vector<NonGroundAlien>::const_iterator e = nonGroundAliens.end();

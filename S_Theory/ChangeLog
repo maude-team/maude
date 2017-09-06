@@ -1,3 +1,71 @@
+2003-02-26  Steven Eker  <eker@goo.csl.sri.com>
+
+	* S_Subproblem.cc (S_Subproblem): pass varSort as const Sort*
+
+	* S_Subproblem.hh (class S_Subproblem): made varSort const Sort*
+	const; updated decl for ctor
+
+	* S_DagNode.cc (matchVariableWithExtension): implemented
+
+2003-02-25  Steven Eker  <eker@goo.csl.sri.com>
+
+	* S_LhsAutomaton.cc (match): updated Assert()
+
+	* S_Term.cc: removed #pragma
+	(S_Term): updated Assert()
+	(normalize): updated Assert()s
+	(insertAbstractionVariables): DebugAdvisoryCheck() ->
+	DebugAdvisory()
+
+	* S_Term.hh: removed #pragma
+
+	* S_Symbol.cc: removed #pragma
+	(makeTerm): updated Assert()s
+	(makeDagNode): updated Assert()s
+	(eqRewrite): updated Assert()
+	(computeBaseSort): updated Assert()
+	(normalizeAndComputeTrueSort): updated Assert()
+
+	* S_Symbol.hh: removed #pragma
+
+	* S_Subproblem.cc: removed #pragma
+	(S_Subproblem): updated Assert()s
+	(solve): updated Assert()
+
+	* S_Subproblem.hh: removed #pragma
+
+	* S_RhsAutomaton.cc: removed #pragma
+
+	* S_RhsAutomaton.hh: removed #pragma
+
+	* S_LhsAutomaton.cc: removed #pragma
+
+	* S_LhsAutomaton.hh: removed #pragma
+
+	* S_ExtensionInfo.cc: removed #pragma
+
+	* S_ExtensionInfo.hh: removed #pragma
+
+	* S_DagNode.cc: removed #pragma
+	(copyWithReplacement): updated Assert() (both versions)
+	(matchVariableWithExtension): Assert() -> CantHappen()
+
+	* S_DagNode.hh: removed #pragma
+
+	* S_DagArgumentIterator.cc: removed #pragma
+	(argument): updated Assert()
+	(next): updated Assert()
+
+	* S_DagArgumentIterator.hh: removed #pragma
+
+	* S_ArgumentIterator.cc: removed #pragma
+	(argument): updated Assert()
+	(next): updated Assert()
+
+	* S_ArgumentIterator.hh: removed #pragma
+	
+===================================Maude79===========================================
+
 2002-11-25  Steven Eker  <eker@goo.csl.sri.com>
 
 	* S_Subproblem.cc (S_Subproblem): switched initializer order to

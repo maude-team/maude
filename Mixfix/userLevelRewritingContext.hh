@@ -3,9 +3,6 @@
 //
 #ifndef _userLevelRewritingContext_hh_
 #define _userLevelRewritingContext_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "rewritingContext.hh"
 #include "intSet.hh"
 #include "module.hh"

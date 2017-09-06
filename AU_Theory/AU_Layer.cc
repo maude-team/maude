@@ -1,9 +1,6 @@
 //
 //      Implementation for class AU_Layer.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //	utility stuff
 #include "macros.hh"
@@ -131,7 +128,7 @@ AU_Layer::link(AU_Layer& nextLayer)
 	{
 	  ++j;
 	  Assert(j < nextLayer.nodes.length(), 
-		 cerr << "could not find a valid target for node " << i);
+		 "could not find a valid target for node " << i);
 	  nextStart = nextLayer.nodes[j].firstSubterm - nextLayer.totalLowerBound;
 	}
       nodes[i].downTarget = j;
@@ -165,7 +162,7 @@ AU_Layer::solvePatterns2(bool findFirst, RewritingContext& solution)
 	{
 	  int d = n.firstSubterm - firstSubterm;
 	  Assert(d >= totalLowerBound,
-		 cerr << "insufficient subterms for previous variables");
+		 "insufficient subterms for previous variables");
 	  if (d > totalUpperBound)
 	    break;
 	  if (n.difference != 0 && !(n.difference->assert(solution)))
@@ -258,7 +255,7 @@ AU_Layer::buildPartition(const Substitution& solution)
   AU_Symbol* s = subject->symbol();
   int nrVariables = prevVariables.length();
   int nrParts = nrVariables + leftExtend + rightExtend;
-  Assert(nrParts > 0, cerr << "no parts");
+  Assert(nrParts > 0, "no parts");
   SequencePartition* p = new SequencePartition(lastSubterm - firstSubterm + 1, nrParts);
 
   if (leftExtend)
@@ -276,7 +273,7 @@ AU_Layer::buildPartition(const Substitution& solution)
 	  bool rightExtreme = (i == nrVariables - 1 && lastSubterm == lastSubjectSubterm);
 	  bool nasty;
 	  min = max = s->calculateNrSubjectsMatched(d, leftExtreme, rightExtreme, nasty);
-	  DebugAdvisoryCheck(!nasty, cerr << "nasty binding of " << d <<
+	  DebugAdvisoryCheck(!nasty, "nasty binding of " << d <<
 			     " to variable with index " << v.index <<
 			     " detected in solve phase");
 	  if (nasty && (leftId ? rightExtend : leftExtend))
@@ -351,7 +348,7 @@ AU_Layer::bindVariables(RewritingContext& solution)
       else
 	{
 	  DagNode* d = solution.value(tv.index);
-	  Assert(d != 0, cerr << "variable should be bound");
+	  Assert(d != 0, "variable should be bound");
 	  if (!(subject->eliminateForward(d, start, end) && start == end + 1))
 	    return false;
 	}
@@ -360,7 +357,7 @@ AU_Layer::bindVariables(RewritingContext& solution)
     {
       if (!leftId)
 	extensionInfo->setExtraIdentity(false);
-      Assert(firstSubterm == 0, cerr << "non zero firstSubterm in left extension case");
+      Assert(firstSubterm == 0, "non zero firstSubterm in left extension case");
       int first = partition->end(0) + 1;
       extensionInfo->setFirstMatched(first);
       if (oneSidedId && !leftId && first != 0 && nrVariables > 0)

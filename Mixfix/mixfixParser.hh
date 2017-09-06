@@ -3,9 +3,6 @@
 //
 #ifndef _mixfixParser_hh_
 #define _mixfixParser_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #ifdef SCP
 #include "scp_parser.hh"
 #else

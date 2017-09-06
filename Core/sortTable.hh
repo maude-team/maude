@@ -3,9 +3,6 @@
 //
 #ifndef _sortTable_hh_
 #define _sortTable_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "opDeclaration.hh"
 #include "fullCompiler.hh"
 #include "connectedComponent.hh"
@@ -95,7 +92,7 @@ inline void
 SortTable::addOpDeclaration(const Vector<Sort*>& domainAndRange, bool constructorFlag)
 {
   Assert(domainAndRange.length() - 1 == nrArgs,
-	 cerr << "bad domain length of " <<
+	 "bad domain length of " <<
 	 domainAndRange.length() - 1 << " instead of " << nrArgs);
   int nrOpDeclarations = opDeclarations.length();
   opDeclarations.resize(nrOpDeclarations + 1);

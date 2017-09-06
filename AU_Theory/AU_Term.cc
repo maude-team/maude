@@ -1,9 +1,6 @@
 //
 //	Implementation for class AU_Term.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //	utility stuff
 #include "macros.hh"
@@ -41,7 +38,7 @@ AU_Term::AU_Term(AU_Symbol* symbol, const Vector<Term*>& arguments)
 : Term(symbol), argArray(arguments.length())
 {
   int nrArgs = arguments.length();
-  Assert(nrArgs >= 2, cerr << "insufficient arguments");
+  Assert(nrArgs >= 2, "insufficient arguments");
   for (int i = 0; i < nrArgs; i++)
     argArray[i].term = arguments[i];
 }
@@ -107,7 +104,7 @@ AU_Term::normalize(bool full, bool& changed)
       int p = nrArgs + expansion - 1;
       for (int i = nrArgs - 1; i >= 0; i--)
         {
-          Assert(p >= i, cerr << "loop invariant broken");
+          Assert(p >= i, "loop invariant broken");
           Term* t = argArray[i].term;
 	  if (t->symbol() == s)
             {
@@ -315,8 +312,8 @@ AU_Term::insertAbstractionVariables(VariableInfo& variableInfo)
             {
               t.abstractionVariableIndex = variableInfo.makeProtectedVariable();
               honorsGroundOutMatch = false;
-              DebugAdvisoryCheck(false, cerr << "Introduced abstraction variable for " <<
-				 t.term << " in " << this << '.');
+              DebugAdvisory("Introduced abstraction variable for " <<
+			    t.term << " in " << this << '.');
             }
         }
     }

@@ -1,9 +1,6 @@
 //
 //	Implementation for class DecBuf.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 #include "macros.hh"
 #include "decBuf.hh"
 
@@ -27,7 +24,7 @@ DecBuf::shiftAndAdd(int shift, Uint64 c)
 void
 DecBuf::ascii(char* s, int length)
 {
-  Assert(length <= nrDigits(), cerr << "bad length");
+  Assert(length <= nrDigits(), "bad length" << length);
   for (deque<char>::reverse_iterator i = buf.rbegin(); length > 0; ++i, --length)
     *s++ = *i + '0';
   *s = '\0';

@@ -1,9 +1,6 @@
 //
 //	Implementation for class EqualityConditionFragment.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //	utility stuff
 #include "macros.hh"
@@ -68,7 +65,7 @@ EqualityConditionFragment::preprocess()
 {
   lhs->symbol()->fillInSortInfo(lhs);
   rhs->symbol()->fillInSortInfo(rhs);
-  Assert(lhs->getComponent() == rhs->getComponent(), cerr << "component clash");
+  Assert(lhs->getComponent() == rhs->getComponent(), "component clash");
 }
 
 void

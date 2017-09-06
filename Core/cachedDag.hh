@@ -3,9 +3,6 @@
 //
 #ifndef _cachedDag_hh_
 #define _cachedDag_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "dagRoot.hh"
 
 class CachedDag

@@ -1,3 +1,106 @@
+2003-03-28  Steven Eker  <eker@goo.csl.sri.com>
+
+	* AU_Symbol.cc (computeBaseSort): fixed bug: we can't rely on
+	producedByAssignment() to know that we're not in the error sort in
+	the uniform sort case, since now we can have variables and
+	assignments at the kind level; instead we check for the uniform
+	sorts component being errorFree()
+
+2003-02-25  Steven Eker  <eker@goo.csl.sri.com>
+
+	* AU_Layer.cc (buildPartition): updated DebugAdvisoryCheck()
+	(bindVariables): updated Assert()s
+
+	* AU_Term.cc: removed #pragma
+	(Term): updated Assert()
+	(normalize): updated Assert()
+	(insertAbstractionVariables): DebugAdvisoryCheck() ->
+	DebugAdvisory()
+	
+	* AU_Term.hh: removed #pragma
+
+	* AU_Symbol.cc: removed #pragma
+	(eqRewrite): updated Assert()
+	(computeBaseSort): updated Assert()s
+	(normalizeAndComputeTrueSort): updated Assert()
+
+	* AU_Symbol.hh: removed #pragma
+
+	* AU_Subproblem.cc: removed #pragma
+	(AU_Subproblem): updated Assert()
+
+	* AU_Subproblem.hh: removed #pragma
+
+	* AU_RhsAutomaton.cc: removed #pragma
+
+	* AU_RhsAutomaton.hh: removed #pragma
+
+	* AU_Matcher.cc (match): updated Assert()s, DebugAdvisoryCheck()s
+	(matchRigidPart): updated Assert()s
+	(forcedLoneVariableCase): updated Assert()s
+	(determineRigidBlocks): updated Assert()s, DebugAdvisoryCheck()
+
+	* AU_LhsCompiler.cc (compileLhs2): updated Assert()s
+
+	* AU_LhsAutomaton.cc: removed #pragma
+
+	* AU_LhsAutomaton.hh: removed #pragma
+
+	* AU_Layer.cc: removed #pragma
+	(link): updated Assert()
+	(solvePatterns2): updated Assert()
+	(buildPartition): updated Assert()
+
+	* AU_Layer.hh: removed #pragma
+
+	* AU_GreedyMatcher.cc (greedyMatch): updated Assert()
+	(greedyMatchRigidBlock): updated Assert()s
+	(greedyMatchRigidBlock2): updated Assert()
+	(greedyMatchFixedLengthBlock): updated Assert()s
+	(greedyMatchBlocks): updated Assert()
+	(greedyMatchVariableBlock): updated Asserts(),
+	DebugAdvisoryCheck()
+
+	* AU_FullMatcher.cc (fullMatchRigidBlock): updated Assert()s
+	(fullMatchRigidBlock2): updated Assert()
+	(fullMatchFixedLengthBlock): updated Assert()s
+	(buildLeftmostPath): updated Assert()
+
+	* AU_ExtensionInfo.cc: removed #pragma
+	(buildMatchedPortion): updated Assert()
+
+	* AU_ExtensionInfo.hh: removed #pragma
+
+	* AU_DagOperations.cc (eliminateForward): updated Assert()
+	(eliminateBackward): updated Assert()
+	(makeFragment): updated Assert()
+
+	* AU_DagNode.cc: removed #pragma
+	(compareArguments): updated Assert()
+	(markArguments): updated Assert()
+	(normalizeAtTop): updated Assert()s
+
+	* AU_DagNode.hh: removed #pragma
+
+	* AU_DagArgumentIterator.cc: removed #pragma
+	(argument): updated Assert()
+	(next): updated Assert()
+
+	* AU_DagArgumentIterator.hh: removed #pragma
+
+	* AU_CollapseMatcher.cc (uniqueCollapseMatch): updated Assert()
+	(bindUnboundVariablesToIdentity): updated Assert()
+	(multiwayCollapseMatch): updated Assert()s
+	(collapseMatch): updated Assert()
+
+	* AU_ArgumentIterator.cc: removed #pragma
+	(argument): updated Assert()
+	(next): updated Assert()
+
+	* AU_ArgumentIterator.hh: removed #pragma
+	
+===================================Maude79===========================================
+
 2003-01-31  Steven Eker  <eker@goo.csl.sri.com>
 
 	* AU_Term.cc (analyseCollapses): becomes analyseCollapses2()

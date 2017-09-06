@@ -3,9 +3,6 @@
 //
 #ifndef _freeSymbol_hh_
 #define _freeSymbol_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "symbol.hh"
 #include "freeNet.hh"
 

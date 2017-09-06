@@ -15,7 +15,6 @@ MODULES =	ACU_Symbol.o \
 		ACU_NGA_LhsAutomaton.o \
 		ACU_VarLhsAutomaton.o \
 		ACU_GndLhsAutomaton.o \
-		ACU_AlienAlienLhsAutomaton.o \
 		ACU_NonLinearLhsAutomaton.o \
 		ACU_ArgumentIterator.o \
 		ACU_DagArgumentIterator.o \
@@ -37,7 +36,8 @@ libACU_Theory.a : $(MODULES)
 ACU_Term.o : ACU_LhsCompiler0.cc ACU_LhsCompiler1.cc ACU_LhsCompiler2.cc \
 	ACU_LhsCompiler3.cc
 
-ACU_LhsAutomaton.o : ACU_Matcher.cc ACU_GreedyMatcher.cc ACU_CollapseMatcher.cc 
+ACU_LhsAutomaton.o : ACU_Matcher.cc ACU_GreedyMatcher.cc \
+	ACU_CollapseMatcher.cc ACU_RedBlackMatcher.cc
 
 ACU_DagNode.o : ACU_DagNormalization.cc ACU_DagOperations.cc \
 	ACU_FastMerge.cc ACU_Normalize.cc ACU_Convert.cc \

@@ -33,7 +33,7 @@ MetaLevel::upType(Sort* sort, PointerMap& qidMap)
 DagNode*
 MetaLevel::upJoin(int id, Sort* sort, char sep, PointerMap& qidMap)
 {
-  Assert(sort != 0, cerr << "null sort");
+  Assert(sort != 0, "null sort");
   string fullName(Token::name(id));
   fullName += sep;
   if (sort->index() == Sort::ERROR_SORT)
@@ -70,7 +70,7 @@ MetaLevel::upDagNode(DagNode* dagNode,
 		     PointerMap& qidMap,
 		     PointerMap& dagNodeMap)
 {
-  Assert(dagNode != 0, cerr << "null dagNode");
+  Assert(dagNode != 0, "null dagNode");
   Vector<DagNode*> args(2);  // can't be static!
   //
   //	See if we have already up'd this dag node via a different path.
@@ -154,7 +154,7 @@ MetaLevel::upDagNode(DagNode* dagNode,
 DagNode*
 MetaLevel::upTerm(const Term* term, MixfixModule* m, PointerMap& qidMap)
 {
-  Assert(term != 0, cerr << "null term");
+  Assert(term != 0, "null term");
   Vector<DagNode*> args(2);  // can't be static!
   //
   //	Examine symbol to see if we have a special representation with its own
@@ -230,7 +230,7 @@ MetaLevel::upContext(DagNode* dagNode,
 		     PointerMap& qidMap,
 		     PointerMap& dagNodeMap)
 {
-  Assert(dagNode != 0, cerr << "null dagNode");
+  Assert(dagNode != 0, "null dagNode");
   //
   //	See if we have already up'd this dag node via a different path.
   //
@@ -271,7 +271,7 @@ MetaLevel::upContext(DagNode* dagNode,
 DagNode*
 MetaLevel::upResultPair(DagNode* dagNode, MixfixModule* m)
 {
-  Assert(dagNode != 0, cerr << "null dagNode");
+  Assert(dagNode != 0, "null dagNode");
   static Vector<DagNode*> args(2);
   PointerMap qidMap;
   PointerMap dagNodeMap;
@@ -283,7 +283,7 @@ MetaLevel::upResultPair(DagNode* dagNode, MixfixModule* m)
 DagNode*
 MetaLevel::upResultPair(Term* term, MixfixModule* m)
 {
-  Assert(term != 0, cerr << "null term");
+  Assert(term != 0, "null term");
   static Vector<DagNode*> args(2);
   PointerMap qidMap;
   args[0] = upTerm(term, m, qidMap);
@@ -297,7 +297,7 @@ MetaLevel::upResultTriple(DagNode* dagNode,
 			  const VariableInfo& variableInfo,
 			  MixfixModule* m)
 {
-  Assert(dagNode != 0, cerr << "null dagNode");
+  Assert(dagNode != 0, "null dagNode");
   static Vector<DagNode*> args(3);
   PointerMap qidMap;
   PointerMap dagNodeMap;
@@ -314,7 +314,7 @@ MetaLevel::upResult4Tuple(DagNode* dagNode,
 			  DagNode* metaContext,
 			  MixfixModule* m)
 {
-  Assert(dagNode != 0, cerr << "null dagNode");
+  Assert(dagNode != 0, "null dagNode");
   static Vector<DagNode*> args(4);
   PointerMap qidMap;
   PointerMap dagNodeMap;
@@ -419,7 +419,7 @@ MetaLevel::upNoParse(int badTokenIndex)
 DagNode*
 MetaLevel::upAmbiguity(Term* parse1, Term* parse2, MixfixModule* m)
 {
-  Assert(parse1 != 0 && parse2 != 0, cerr << "null term");
+  Assert(parse1 != 0 && parse2 != 0, "null term");
   static Vector<DagNode*> args(2);
   static Vector<DagNode*> args2(2);
   PointerMap qidMap;

@@ -1,9 +1,7 @@
 //
 //      Implementation for class Compiler.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
+
 #include <unistd.h>
 #include <strstream>  // HACK
 
@@ -207,7 +205,7 @@ Compiler::makeExecutable(PreModule* module, bool countRewrites)
 
   if(!(fullCompile(module, countRewrites)))
     {
-      IssueWarning(cerr << "compilation failed.");
+      IssueWarning("compilation failed.");
       currentExecutable = 0;  // assume corrupted
       return false;
     }

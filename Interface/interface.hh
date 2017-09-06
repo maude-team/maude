@@ -23,9 +23,5 @@ class RhsAutomaton;
 //
 class Subproblem;
 class ExtensionInfo;
-//
-//	Deriving from the following class is optional.
-//
-class HeuristicLhsAutomaton;
 
 #endif

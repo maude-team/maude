@@ -1,10 +1,6 @@
 //
 //      Implementation for class IntSet.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
- 
 #include "macros.hh"
 #include "vector.hh"
 #include "intSet.hh"
@@ -154,7 +150,7 @@ IntSet::disjoint(const IntSet& other) const
 int
 IntSet::findEntry(int k) const
 {
-  Assert(hashTable.length() != 0, cerr << "zero length hash table");
+  Assert(hashTable.length() != 0, "zero length hash table");
   int mask = hashTable.length() - 1;
   int i = hash(k) & mask;
   int j = hashTable[i];

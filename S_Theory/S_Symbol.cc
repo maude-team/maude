@@ -1,9 +1,6 @@
 //
 //      Implementation for class S_Symbol
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 #include <map>
 
 //	utility stuff
@@ -68,23 +65,23 @@ S_Symbol::ruleRewrite(DagNode* subject, RewritingContext& context)
 Term*
 S_Symbol::makeTerm(const Vector<Term*>& args)
 {
-  Assert(args.length() == 1, cerr << "bad number of arguments");
-  Assert(args[0] != 0, cerr << "null argument");
+  Assert(args.length() == 1, "bad number of arguments");
+  Assert(args[0] != 0, "null argument");
   return new S_Term(this, 1, args[0]);
 }
 
 DagNode*
 S_Symbol::makeDagNode(const Vector<DagNode*>& args)
 {
-  Assert(args.length() == 1, cerr << "bad number of arguments");
-  Assert(args[0] != 0, cerr << "null argument");
+  Assert(args.length() == 1, "bad number of arguments");
+  Assert(args[0] != 0, "null argument");
   return new S_DagNode(this, 1, args[0]);
 }
 
 bool
 S_Symbol::eqRewrite(DagNode* subject, RewritingContext& context)
 {
-  Assert(this == subject->symbol(), cerr << "bad symbol");
+  Assert(this == subject->symbol(), "bad symbol");
   S_DagNode* s = safeCast(S_DagNode*, subject);
   if (standardStrategy())
     {
@@ -199,7 +196,7 @@ S_Symbol::memoStrategy(MemoTable::SourceSet& from,
 void
 S_Symbol::computeBaseSort(DagNode* subject)
 {
-  Assert(this == subject->symbol(), cerr << "bad symbol");
+  Assert(this == subject->symbol(), "bad symbol");
   S_DagNode* s = safeCast(S_DagNode*, subject);
   const SortPath& path = sortPathTable[s->arg->getSortIndex()];
   const mpz_class& number = *(s->number);
@@ -227,7 +224,7 @@ S_Symbol::computeBaseSort(DagNode* subject)
 void
 S_Symbol::normalizeAndComputeTrueSort(DagNode* subject, RewritingContext& context)
 {
-  Assert(this == subject->symbol(), cerr << "bad symbol");
+  Assert(this == subject->symbol(), "bad symbol");
   S_DagNode* s = safeCast(S_DagNode*, subject);
   s->arg->computeTrueSort(context);
   s->normalizeAtTop();

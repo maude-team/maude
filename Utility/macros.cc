@@ -1,12 +1,7 @@
 //
-//	Implementation for macros; needed so that we can still link
-//	even when macros are not inlined (eg when compiling with
-//	optimization off).
+//	Now a mismomer - conrains random stuff that doesn't fit
+//	anywhere else.
 //
-#ifdef __GNUG__
-#pragma implementation "macros.hh"
-#pragma implementation "flagSet.hh"
-#endif
 #include <math.h>
 #ifdef SOLARIS
 #include <ieeefp.h>
@@ -24,7 +19,7 @@ bool globalVerboseFlag = false;
 const char*
 int64ToString(Int64 i, int base)
 {
-  Assert(base >= 2 && base <= 36, cerr << "bad base");
+  Assert(base >= 2 && base <= 36, "bad base " << base);
   const int MAX_STRING_SIZE = 64 + 1;  // 64 bits + sign
   const char digits[] = "0123456789abcdefghijklmnopqrstuvwxyz";
   static char text[MAX_STRING_SIZE + 1];
@@ -50,7 +45,7 @@ int64ToString(Int64 i, int base)
 Int64
 stringToInt64(const char* s, bool& error, int base)
 {
-  Assert(base >= 2 && base <= 36, cerr << "bad base");
+  Assert(base >= 2 && base <= 36, "bad base " << base);
   error = true;
   bool negative = false;
   switch (*s)

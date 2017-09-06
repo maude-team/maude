@@ -174,7 +174,7 @@ template<class T>
 inline
 Vector<T>::Vector(size_type length, size_type preallocate)
 {
-  Assert(preallocate >= length, cerr << "preallocate < length: "
+  Assert(preallocate >= length, "preallocate < length: "
 	 << preallocate << " < " << length);
   if (preallocate == 0)
     pv.initEmpty();
@@ -226,7 +226,7 @@ template<class T>
 inline const T& 
 Vector<T>::operator[](size_type i) const
 {
-  Assert(i < size(), cerr << "index (" << i << ") too big, length: " << length());
+  Assert(i < size(), "index (" << i << ") too big, length: " << length());
   return static_cast<const T*>(pv.getBase())[i];
 }
 
@@ -234,7 +234,7 @@ template<class T>
 inline T& 
 Vector<T>::operator[](size_type i)
 {
-  Assert(i < size(), cerr <<  "index (" << i << ") too big, length: " << length());
+  Assert(i < size(), "index (" << i << ") too big, length: " << length());
   return static_cast<T*>(pv.getBase())[i];
 }
 
@@ -243,7 +243,7 @@ inline void
 Vector<T>::expandTo(size_type newLength)
 {
   size_type oldLength = pv.getLength();
-  Assert(newLength >= oldLength, cerr << "new length < old length: " <<
+  Assert(newLength >= oldLength, "new length < old length: " <<
 	 newLength << " < " << oldLength);
   size_t neededBytes = newLength * sizeof(T);
   if (pv.getAllocatedBytes() < neededBytes)
@@ -285,7 +285,7 @@ inline void
 Vector<T>::contractTo(size_type newLength)
 {
   size_type oldLength = pv.getLength();
-  Assert(newLength <= oldLength, cerr << "new length > old length: " <<
+  Assert(newLength <= oldLength, "new length > old length: " <<
 	 newLength << " > " << oldLength);
   T* vector = static_cast<T*>(pv.getBase());
   if (vector != 0)

@@ -1,9 +1,6 @@
 //
 //      Implementation for class FreeDagArgumentIterator
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 #include "macros.hh"
 
@@ -27,14 +24,14 @@ FreeDagArgumentIterator::valid() const
 DagNode*
 FreeDagArgumentIterator::argument() const
 {
-  Assert(nrRemaining > 0, cerr << "no args left");
+  Assert(nrRemaining > 0, "no args left");
   return *position;
 }
 
 void
 FreeDagArgumentIterator::next()
 {
-  Assert(nrRemaining > 0, cerr << "no args left");
+  Assert(nrRemaining > 0, "no args left");
   ++position;
   --nrRemaining;
 }

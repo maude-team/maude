@@ -3,9 +3,6 @@
 //
 #ifndef _metaLevelOpSymbol_hh_
 #define _metaLevelOpSymbol_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "freeSymbol.hh"
 
 class MetaLevelOpSymbol : public FreeSymbol

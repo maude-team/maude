@@ -5,9 +5,6 @@
 //
 #ifndef _freeBinarySymbol_hh_
 #define _freeBinarySymbol_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "freeSymbol.hh"
 
 class FreeBinarySymbol : public FreeSymbol

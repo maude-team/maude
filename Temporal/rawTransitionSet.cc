@@ -1,9 +1,6 @@
 //
 //	Implementation for class RawTransitionSet.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 #include <algorithm>
 
 //	utility stuff

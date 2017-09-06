@@ -1,9 +1,6 @@
 //
 //      Implementation for class NumberOpSymbol.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //      utility stuff
 #include "macros.hh"
@@ -95,7 +92,7 @@ NumberOpSymbol::reset()
 bool
 NumberOpSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
 {
-  Assert(this == subject->symbol(), cerr << "bad symbol");
+  Assert(this == subject->symbol(), "bad symbol");
   int nrArgs = arity();
   FreeDagNode* d = safeCast(FreeDagNode*, subject);
   bool specialEval = (succSymbol != 0);
@@ -332,7 +329,7 @@ NumberOpSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
 			CantHappen("bad number op");
 		      }
 		    Assert(trueTerm.getTerm() != 0 && falseTerm.getTerm() != 0,
-			   cerr << "null true/false for relational op");
+			   "null true/false for relational op");
 		    return context.builtInReplace(subject, b ? trueTerm.getDag() :
 						  falseTerm.getDag());
 		  }
@@ -340,7 +337,7 @@ NumberOpSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
 	    }
 	  else
 	    {
-	      Assert(nrArgs == 3, cerr << "bad number of args");
+	      Assert(nrArgs == 3, "bad number of args");
 	      mpz_class storage2;
 	      DagNode* d2 = d->getArgument(2);
 	      const mpz_class& a2 = (d2->symbol() == minusSymbol) ? 
@@ -359,7 +356,7 @@ NumberOpSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
 		}
 	    }
 	}
-      Assert(minusSymbol != 0 || r >= 0, cerr << "can't make -ve int");
+      Assert(minusSymbol != 0 || r >= 0, "can't make -ve int");
       return (r >= 0) ? succSymbol->rewriteToNat(subject, context, r) :
 	context.builtInReplace(subject, minusSymbol->makeNegDag(r));
     }

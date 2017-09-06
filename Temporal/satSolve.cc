@@ -106,7 +106,7 @@ GenBuchiAutomaton::bfsToFairComponent(int& fairState, list<Bdd>& path) const
 
   for (;;)
     {
-      Assert(!(toVisit.empty()), cerr << "toVisit empty");
+      Assert(!(toVisit.empty()), "toVisit empty");
       int stateNr = toVisit.front();
       toVisit.pop();
       
@@ -156,7 +156,7 @@ GenBuchiAutomaton::bfsToMoreFairness(NatSet& fairness, int& start, list<Bdd>& pa
 
   for (;;)
     {
-      Assert(!(toVisit.empty()), cerr << "toVisit empty");
+      Assert(!(toVisit.empty()), "toVisit empty");
       int stateNr = toVisit.front();
       toVisit.pop();
      
@@ -211,7 +211,7 @@ GenBuchiAutomaton::bfsToTarget(int start, int target, list<Bdd>& path) const
 
   for (;;)
     {
-      Assert(!(toVisit.empty()), cerr << "toVisit empty");
+      Assert(!(toVisit.empty()), "toVisit empty");
       int stateNr = toVisit.front();
       toVisit.pop();
 

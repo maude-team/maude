@@ -3,9 +3,6 @@
 //
 #ifndef _freeOccurrence_hh_
 #define _freeOccurrence_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 class FreeOccurrence
 {

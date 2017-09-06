@@ -3,9 +3,6 @@
 //
 #ifndef _floatDagNode_hh_
 #define _floatDagNode_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "NA_DagNode.hh"
 
 class FloatDagNode : public NA_DagNode

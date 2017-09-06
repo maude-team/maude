@@ -12,9 +12,6 @@
 
 #ifndef _scp_kernel_hh_
 #define _scp_kernel_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 class ScpBaseNT
 {

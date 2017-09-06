@@ -1,9 +1,6 @@
 //
 //      Implementation for class MetaLevelOpSymbol.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
  
 //      utility stuff
 #include "macros.hh"
@@ -185,7 +182,7 @@ MetaLevelOpSymbol::term2Dag(Term* t)
 bool
 MetaLevelOpSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
 {
-  Assert(this == subject->symbol(), cerr << "Bad symbol");
+  Assert(this == subject->symbol(), "Bad symbol");
   if (metaLevel == 0)
     metaLevel = shareWith->metaLevel;
   FreeDagNode* d = static_cast<FreeDagNode*>(subject);

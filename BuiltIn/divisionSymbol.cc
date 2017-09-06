@@ -1,9 +1,6 @@
 //
 //      Implementation for class DivisionSymbol.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //      utility stuff
 #include "macros.hh"
@@ -69,7 +66,7 @@ DivisionSymbol::copyAttachments(Symbol* original, SymbolMap* map)
 bool
 DivisionSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
 {
-  Assert(this == subject->symbol(), cerr << "bad symbol");
+  Assert(this == subject->symbol(), "bad symbol");
 
   FreeDagNode* d = safeCast(FreeDagNode*, subject);
   DagNode* d0 = d->getArgument(0);
@@ -85,7 +82,7 @@ DivisionSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
       mpz_class storage0;
       const mpz_class& numerator = (d0->symbol() == minusSymbol) ? 
 	minusSymbol->getNeg(d0, storage0) : succSymbol->getNat(d0);
-      Assert(numerator != 0, cerr << "zero numerator");
+      Assert(numerator != 0, "zero numerator");
       mpz_class common;
       mpz_gcd(common.get_mpz_t(), numerator.get_mpz_t(), denominator.get_mpz_t());
       if (common > 1)
@@ -98,7 +95,7 @@ DivisionSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
 	    }
 	  (void) context.builtInReplace(subject, makeRatDag(numerator / common,
 							    denominator / common));
-	  Assert(this == subject->symbol(), cerr << "unexpectedly changed top symbol");
+	  Assert(this == subject->symbol(), "unexpectedly changed top symbol");
 	  //
 	  //  	we don't want to revisit this node since it is already simplified
 	  //	- so fall into regular case.
@@ -111,7 +108,7 @@ DivisionSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
 DagNode*
 DivisionSymbol::makeRatDag(const mpz_class& nr, const mpz_class& dr)
 {
-  Assert(nr != 0 && dr > 0, cerr << "not a strict rat");
+  Assert(nr != 0 && dr > 0, "not a strict rat");
   DagNode* d = (nr >= 0) ? succSymbol->makeNatDag(nr) : minusSymbol->makeNegDag(nr);
   if (dr == 1)
     return d;
@@ -126,7 +123,7 @@ bool
 DivisionSymbol::isRat(const DagNode* dagNode) const
 {
   Assert(this == static_cast<const Symbol*>(dagNode->symbol()),
-	 cerr << "bad symbol");
+	 "bad symbol");
   const FreeDagNode* d = safeCast(const FreeDagNode*, dagNode);
   DagNode* d0 = d->getArgument(0);
   DagNode* d1 = d->getArgument(1); 
@@ -140,35 +137,36 @@ const mpz_class&
 DivisionSymbol::getRat(const DagNode* dagNode, mpz_class& numerator) const
 {
   Assert(this == static_cast<const Symbol*>(dagNode->symbol()),
-	 cerr << "bad symbol");
+	 "bad symbol");
     const FreeDagNode* d = safeCast(const FreeDagNode*, dagNode);
   DagNode* d0 = d->getArgument(0);
   if (d0->symbol() == minusSymbol)
     (void) minusSymbol->getNeg(d0, numerator);
   else
     {
-      Assert(d0->symbol() == succSymbol, cerr << "bad numerator");
+      Assert(d0->symbol() == succSymbol, "bad numerator");
       numerator = succSymbol->getNat(d0);
     }
   DagNode* d1 = d->getArgument(1);
-  Assert(d1->symbol() == succSymbol, cerr << "bad denominator");
+  Assert(d1->symbol() == succSymbol, "bad denominator");
   return succSymbol->getNat(d1);
 }
 
 Term*
 DivisionSymbol::makeRatTerm(const mpz_class& nr, const mpz_class& dr)
 {
-  Assert(nr != 0 && dr > 0, cerr << "not a strict rat");
+  Assert(nr != 0 && dr > 0, "not a strict rat");
   Vector<Term*> args(2);
   args[0] = (nr >= 0) ? succSymbol->makeNatTerm(nr) : minusSymbol->makeIntTerm(nr);
   args[1] = succSymbol->makeNatTerm(dr);
   return makeTerm(args);
 }
+
 bool
 DivisionSymbol::isRat(/* const */ Term* term) const
 {
   Assert(this == static_cast<const Symbol*>(term->symbol()),
-	 cerr << "bad symbol");
+	 "bad symbol");
   ArgumentIterator i(*term);
   Term* t0 = i.argument();
   i.next();
@@ -183,18 +181,18 @@ const mpz_class&
 DivisionSymbol::getRat(/* const */ Term* term, mpz_class& numerator) const
 {
   Assert(this == static_cast<const Symbol*>(term->symbol()),
-	 cerr << "bad symbol");
+	 "bad symbol");
   ArgumentIterator i(*term);
   Term* t0 = i.argument();
   if (t0->symbol() == minusSymbol)
     (void) minusSymbol->getNeg(t0, numerator);
   else
     {
-      Assert(t0->symbol() == succSymbol, cerr << "bad numerator");
+      Assert(t0->symbol() == succSymbol, "bad numerator");
       numerator = succSymbol->getNat(t0);
     }
   i.next();
   Term* t1 = i.argument();
-  Assert(t1->symbol() == succSymbol, cerr << "bad denominator");
+  Assert(t1->symbol() == succSymbol, "bad denominator");
   return succSymbol->getNat(t1);
 }

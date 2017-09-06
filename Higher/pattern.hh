@@ -3,9 +3,6 @@
 //
 #ifndef _pattern_hh_
 #define _pattern_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "preEquation.hh"
 
 class Pattern : public PreEquation

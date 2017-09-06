@@ -3,9 +3,6 @@
 //
 #ifndef _subproblemSequence_hh_
 #define _subproblemSequence_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "subproblem.hh"
 
 class SubproblemSequence : public Subproblem

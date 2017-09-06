@@ -4,9 +4,6 @@
 
 #ifndef _intSet_hh_
 #define _intSet_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 class IntSet
 {

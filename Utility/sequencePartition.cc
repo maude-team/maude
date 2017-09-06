@@ -1,10 +1,6 @@
 //
 //      Implementation for class SequencePartition
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
- 
 #include "macros.hh"
 #include "vector.hh"
 #include "sequencePartition.hh"
@@ -21,9 +17,9 @@ SequencePartition::SequencePartition(int sequenceLength, int estNrParts)
 void
 SequencePartition::insertPart(int minLength, int maxLength)
 {
-  Assert(!closed, cerr << "system closed");
-  Assert(minLength >= 0, cerr << "minLength < 0");
-  Assert(minLength <= maxLength, cerr << "minLength > maxLength");
+  Assert(!closed, "system closed");
+  Assert(minLength >= 0, "minLength < 0");
+  Assert(minLength <= maxLength, "minLength > maxLength");
   int nrParts = parts.length();
   parts.expandBy(1);
   Part& p = parts[nrParts];
@@ -41,7 +37,7 @@ SequencePartition::solve()
   bool findFirst = !closed;
   if (findFirst)
     {
-      Assert(parts.length() > 0, cerr << "no parts");
+      Assert(parts.length() > 0, "no parts");
       closed = true;
       if (sequenceLength < minSum || sequenceLength > maxSum)
 	{
@@ -92,11 +88,10 @@ finishPartition:
       int start = p.sumPrevMin;  // leftMost start that leaves enough for previous parts
       if (nextStart - start > p.maxLength)
 	start = nextStart - p.maxLength;	// move right to respect our max length
-      Assert(nextStart - start >= p.minLength, cerr << "not enough for part " << i);
-      Assert(start <= p.sumPrevMax, cerr << "too much for parts preceeding " << i);
+      Assert(nextStart - start >= p.minLength, "not enough for part " << i);
+      Assert(start <= p.sumPrevMax, "too much for parts preceeding " << i);
       p.start = start;
       nextStart = start;
     }
   return true;
 }
-

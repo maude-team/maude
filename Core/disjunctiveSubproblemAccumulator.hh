@@ -3,9 +3,6 @@
 //
 #ifndef _disjunctiveSubproblemAccumulator_hh_
 #define _disjunctiveSubproblemAccumulator_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 class DisjunctiveSubproblemAccumulator
 {

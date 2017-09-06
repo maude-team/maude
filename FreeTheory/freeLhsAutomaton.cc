@@ -1,9 +1,6 @@
 //
 //      Implementation for class FreeLhsAutomaton.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //	utility stuff
 #include "macros.hh"
@@ -201,7 +198,7 @@ FreeLhsAutomaton::match(DagNode* subject,
 	  if (b == 0)
 	    {
 	      Assert(d->getSortIndex() != Sort::SORT_UNKNOWN,
-		     cerr << "missing sort information (2) for " << d);
+		     "missing sort information (2) for " << d);
 	      if (d->leq(i->sort))
 		solution.bind(v, d);
 	      else
@@ -250,7 +247,7 @@ FreeLhsAutomaton::match(DagNode* subject,
       //
       //	Match non-ground aliens
       //
-      Assert(nonGroundAliens.size() > 0, cerr << "no nrNonGroundAliens");
+      Assert(nonGroundAliens.size() > 0, "no nrNonGroundAliens");
       SubproblemAccumulator subproblems;
       const Vector<NonGroundAlien>& t = nonGroundAliens;
       Vector<NonGroundAlien>::const_iterator i = t.begin();

@@ -1,9 +1,6 @@
 //
 //      Implementation for class ACU_ArgumentIterator.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
  
 //	utility stuff
 #include "macros.hh"
@@ -27,14 +24,14 @@ ACU_ArgumentIterator::valid() const
 Term*
 ACU_ArgumentIterator::argument() const
 {
-  Assert(multiplicityRemaining > 0, cerr << "no args left");
+  Assert(multiplicityRemaining > 0, "no args left");
   return (*argArray)[position].term;
 }
 
 void
 ACU_ArgumentIterator::next()
 {
-  Assert(multiplicityRemaining > 0, cerr << "no args left");
+  Assert(multiplicityRemaining > 0, "no args left");
   --multiplicityRemaining;
   if (multiplicityRemaining == 0)
     {

@@ -1,10 +1,7 @@
 //
 //      Implementation for class AU_ExtensionInfo.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
- 
+
 //	utility stuff
 #include "macros.hh"
 #include "vector.hh"
@@ -25,7 +22,7 @@ AU_ExtensionInfo::buildMatchedPortion() const
   if (matchedWhole())
     return subject;
   int nrSubterms = last - first + 1;
-  Assert(nrSubterms + extraIdentityFlag >= 2, cerr << "at least 2 subterms must be matched");
+  Assert(nrSubterms + extraIdentityFlag >= 2, "at least 2 subterms must be matched");
   return subject->makeFragment(first, nrSubterms, extraIdentityFlag);
 }
 

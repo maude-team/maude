@@ -3,9 +3,6 @@
 //
 #ifndef _compiler_hh_
 #define _compiler_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 class Compiler
 {

@@ -3,9 +3,6 @@
 //
 #ifndef _branchSymbol_hh_
 #define _branchSymbol_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "freeSymbol.hh"
 
 class BranchSymbol : public FreeSymbol

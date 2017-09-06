@@ -1,9 +1,6 @@
 //
 //	Implementation for class VeryWeakAlternatingAutomaton.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 #include <set>
 
 //	utility stuff
@@ -144,7 +141,7 @@ VeryWeakAlternatingAutomaton::computeTransitionSet(int subformulaIndex)
 		}
 	      else
 		{
-		  Assert(op == LogicFormula::RELEASE, cerr << "bad op");
+		  Assert(op == LogicFormula::RELEASE, "bad op");
 		  TransitionSet sum(left);
 		  sum.insert(t);
 		  result.product(sum, right);

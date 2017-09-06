@@ -1,9 +1,6 @@
 //
 //	Implementation for class Rule.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //	utility stuff
 #include "macros.hh"
@@ -32,7 +29,7 @@ Rule::Rule(int label, Term* lhs, Term* rhs, const Vector<ConditionFragment*>& co
   : PreEquation(label, lhs, condition),
     rhs(rhs)
 {
-  Assert(rhs != 0, cerr << "null rhs");
+  Assert(rhs != 0, "null rhs");
   nonExtLhsAutomaton = 0;
   extLhsAutomaton = 0;
 }
@@ -61,7 +58,7 @@ Rule::preprocess()
 {
   PreEquation::preprocess();
   rhs->symbol()->fillInSortInfo(rhs);
-  Assert(getLhs()->getComponent() == rhs->getComponent(), cerr << "connected component clash");
+  Assert(getLhs()->getComponent() == rhs->getComponent(), "connected component clash");
 }
 
 LhsAutomaton*

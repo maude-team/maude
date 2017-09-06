@@ -3,9 +3,6 @@
 //
 #ifndef _stateTransitionGraph3_hh_
 #define _stateTransitionGraph3_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include <set>
 #include <map>
 #include "simpleRootContainer.hh"

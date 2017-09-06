@@ -6,9 +6,6 @@
 //
 #ifndef _bdd_hh_
 #define _bdd_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "bdd.h"
 
 class Bdd : public bdd

@@ -3,9 +3,6 @@
 //
 #ifndef _variableLhsAutomaton_hh_
 #define _variableLhsAutomaton_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "lhsAutomaton.hh"
 
 class VariableLhsAutomaton : public LhsAutomaton

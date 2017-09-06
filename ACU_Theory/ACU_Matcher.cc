@@ -1,5 +1,5 @@
 //
-//      Implementation for main AC/ACU matcher
+//      Implementation for main AC/ACU matcher.
 //
 
 local_inline bool
@@ -7,8 +7,6 @@ ACU_LhsAutomaton::multiplicityChecks(ACU_DagNode* subject)
 {
   //
   //	Copy argument multiplicities and check for trivial failure.
-  //	Because this turns out to be one of the most expensive steps for
-  //	AC/ACU rewriting we use hacks.
   //
   const ArgVec<ACU_DagNode::Pair>::const_iterator e = subject->argArray.end();
   if (maxPatternMultiplicity > 1)
@@ -45,12 +43,11 @@ okay:
 local_inline bool
 ACU_LhsAutomaton::eliminateGroundAliens(ACU_DagNode* subject)
 {
-  int nrGroundAliens = groundAliens.length();
-  for (int i = 0; i < nrGroundAliens; i++)
+  FOR_EACH_CONST(i, Vector<GroundAlien>, groundAliens)
     {
       int pos;
-      if (!(subject->binarySearch(groundAliens[i].term , pos)) ||
-	  (currentMultiplicity[pos] -= groundAliens[i].multiplicity) < 0)
+      if (!(subject->binarySearch(i->term , pos)) ||
+	  (currentMultiplicity[pos] -= i->multiplicity) < 0)
 	return false;
     }
   return true;
@@ -67,12 +64,16 @@ ACU_LhsAutomaton::eliminateBoundVariables(ACU_DagNode* subject,
       DagNode* d = solution.value(topVariables[i].index);
       if (d != 0)
 	{
-	  if (!(subject->
-		eliminateSubject(d, topVariables[i].multiplicity, currentMultiplicity)))
+	  if (!(subject->eliminateSubject(d,
+					  topVariables[i].multiplicity,
+					  currentMultiplicity)))
 	    return false;
 	}
       else
 	{
+	  //
+	  //	Make linked list of unbound variables.
+	  //
 	  topVariables[i].prevUnbound = lastUnboundVariable;
 	  lastUnboundVariable = i;
 	}
@@ -86,26 +87,30 @@ ACU_LhsAutomaton::eliminateGroundedOutAliens(ACU_DagNode* subject,
 {
   ArgVec<ACU_DagNode::Pair>& args = subject->argArray;
   int nrArgs = args.length();
-  int nrGroundedOutAliens = groundedOutAliens.length();
-  for (int i = 0; i < nrGroundedOutAliens; i++)
+  FOR_EACH_CONST(i, Vector<NonGroundAlien>, groundedOutAliens)
     {
-      NonGroundAlien& goa = groundedOutAliens[i];
-      Term* t = goa.term;
-      LhsAutomaton* a = goa.automaton;
-      int m = goa.multiplicity;
-      Subproblem* sp;
-      for (int j = (t == 0) ? 0 : subject->findFirstPotentialMatch(t, solution);
-	   j < nrArgs; j++)
+      Term* t = i->term;
+      int j = (t == 0) ? 0 : subject->findFirstPotentialMatch(t, solution);
+      if (j < nrArgs)
 	{
+	  LhsAutomaton* a = i->automaton;
 	  DagNode* d = args[j].dagNode;
-	  if (t != 0 && t->partialCompare(solution, d) == Term::GREATER)
-	    break;
-	  if (currentMultiplicity[j] >= m && a->match(d, solution, sp))
+	  do
 	    {
-	      Assert(sp == 0, cerr << "grounded out alien gave rise to subproblem!");
-	      currentMultiplicity[j] -= m;
-	      goto nextGroundedOutAlien;
+	      Subproblem* sp;
+	      if (a->match(d, solution, sp))
+		{
+		  Assert(sp == 0, "grounded out alien gave rise to subproblem!");
+		  if ((currentMultiplicity[j] -= i->multiplicity) < 0)
+		    return false;
+		  goto nextGroundedOutAlien;
+		}
+	      ++j;
+	      if (j == nrArgs)
+		break;
+	      d = args[j].dagNode;
 	    }
+	  while (t == 0 || t->partialCompare(solution, d) != Term::GREATER);
 	}
       return false;
     nextGroundedOutAlien:
@@ -114,7 +119,7 @@ ACU_LhsAutomaton::eliminateGroundedOutAliens(ACU_DagNode* subject,
   return true;
 }
 
-local_inline bool
+bool
 ACU_LhsAutomaton::forcedLoneVariableCase(ACU_DagNode* subject,
 					 Substitution& solution,
 					 Subproblem*& returnedSubproblem)
@@ -122,7 +127,7 @@ ACU_LhsAutomaton::forcedLoneVariableCase(ACU_DagNode* subject,
   TopVariable& loneVariable = topVariables[lastUnboundVariable];
   int m = loneVariable.multiplicity;
   //
-  //	Locate remaining subterms
+  //	Locate remaining subterms.
   //
   int nrArgs = currentMultiplicity.length();
   int nrSubterms = 0;
@@ -138,15 +143,29 @@ ACU_LhsAutomaton::forcedLoneVariableCase(ACU_DagNode* subject,
 	  lastSubterm = i;
 	}
     }
-  Assert(nrSubterms > 0, cerr << "no subterms");
   //
-  //	Build assignment for lone variable
+  //	Build assignment for lone variable.
   //
+  if (nrSubterms == 0)
+    {
+      //
+      //	Special case: assign identity.
+      //
+      if (loneVariable.takeIdentity)
+	{
+	  DagNode* d = topSymbol->getIdentityDag();
+	  solution.bind(loneVariable.index, d);
+	  if (loneVariable.abstracted != 0)
+	    return loneVariable.abstracted->match(d, solution, returnedSubproblem);
+	  return true;
+	}
+      return false;
+    }
   ArgVec<ACU_DagNode::Pair>& args = subject->argArray;
   if (nrSubterms == 1 && currentMultiplicity[lastSubterm] == m)
     {
       //
-      //	Special case: one subterm left which has same multiplicity as variable
+      //	Special case: assign one subject.
       //
       DagNode* d = args[lastSubterm].dagNode;
       solution.bind(loneVariable.index, d);
@@ -154,36 +173,33 @@ ACU_LhsAutomaton::forcedLoneVariableCase(ACU_DagNode* subject,
 	return loneVariable.abstracted->match(d, solution, returnedSubproblem);
       return d->leq(loneVariable.sort);
     }
-  else
+  //
+  //	General case: need to assign everything.
+  //
+  ACU_DagNode* d = new ACU_DagNode(topSymbol, nrSubterms);
+  int pos = 0;
+  for (int i = 0; i < nrArgs; i++)
     {
-      //
-      //	General case
-      //
-      ACU_DagNode* d = new ACU_DagNode(topSymbol, nrSubterms);
-      int pos = 0;
-      for (int i = 0; i < nrArgs; i++)
+      int cm = currentMultiplicity[i];
+      if (cm > 0)
 	{
-	  int cm = currentMultiplicity[i];
-	  if (cm > 0)
-	    {
-	      d->argArray[pos].dagNode = args[i].dagNode;
-	      d->argArray[pos].multiplicity = cm / m;
-	      ++pos;
-	    }
+	  d->argArray[pos].dagNode = args[i].dagNode;
+	  d->argArray[pos].multiplicity = cm / m;
+	  ++pos;
 	}
-      Assert(pos == nrSubterms, cerr << "inconsistant number of subterms");
-      solution.bind(loneVariable.index, d);
-      if (loneVariable.abstracted != 0)
-	return loneVariable.abstracted->match(d, solution, returnedSubproblem);
-      if (d->checkSort(loneVariable.sort, returnedSubproblem))
-	{
-	  d->setNormalizationStatus(ACU_DagNode::ASSIGNMENT);
-	  if (subject->isReduced() && d->getSortIndex() != Sort::SORT_UNKNOWN)
-	    d->setReduced();  // not worth checking if variable is useful
-	  return true;
-	}
-      return false;
     }
+  Assert(pos == nrSubterms, "inconsistant number of subterms");
+  solution.bind(loneVariable.index, d);
+  if (loneVariable.abstracted != 0)
+    return loneVariable.abstracted->match(d, solution, returnedSubproblem);
+  if (d->checkSort(loneVariable.sort, returnedSubproblem))
+    {
+      d->setNormalizationStatus(ACU_DagNode::ASSIGNMENT);
+      if (subject->isReduced() && d->getSortIndex() != Sort::SORT_UNKNOWN)
+	d->setReduced();  // not worth checking if variable is useful
+      return true;
+    }
+  return false;
 }
 
 local_inline bool 
@@ -199,7 +215,7 @@ ACU_LhsAutomaton::aliensOnlyMatch(ACU_DagNode* subject,
       //
       //	Anything matched by an independent alien can be "forced"
       //	since it can't be matched by another alien (except one that
-      //	subsumes the first) and there are no variables or extension
+      //	subsumes the first) and there are no variables or extension.
       //
       local.copy(solution);  // make a local copy of solution
       for (int i = 0; i < nrIndependentAliens; i++)
@@ -236,34 +252,34 @@ ACU_LhsAutomaton::aliensOnlyMatch(ACU_DagNode* subject,
   if (nonGroundAliens.length() > nrIndependentAliens)
     {
       //
-      //	Need to build bipartite graph for remaining aliens as usual
+      //	Need to build bipartite graph for remaining aliens as usual.
       //
-      ACU_Subproblem* sp = buildBipartiteGraph(subject, solution, 0, nrIndependentAliens);
+      ACU_Subproblem* sp = buildBipartiteGraph(subject,
+					       solution,
+					       0,
+					       nrIndependentAliens,
+					       subproblems);
       if (sp == 0)
 	return false;
-      subproblems.add(sp);
+      if (sp->noPatterns())
+	delete sp;  // remaining aliens were forced
+      else
+	{
+	  sp->addSubjects(currentMultiplicity);
+	  subproblems.add(sp);
+	}
     }
 
   returnedSubproblem = subproblems.extractSubproblem();
   return true;
 }
 
-local_inline void
-ACU_LhsAutomaton::copyMultiplicity()
-{
-  int nrArgs = currentMultiplicity.length();
-  subjects.resize(nrArgs);
-  for (int i = 0; i < nrArgs; i++)
-    subjects[i].multiplicity = currentMultiplicity[i];
-}
-
 local_inline int
 ACU_LhsAutomaton::computeTotalMultiplicity()
 {
   int totalSubjectMultiplicity = 0;
-  int nrArgs = currentMultiplicity.length();
-  for (int i = 0; i < nrArgs; i++)
-    totalSubjectMultiplicity += currentMultiplicity[i];
+  FOR_EACH_CONST(i, Vector<int>, currentMultiplicity)
+    totalSubjectMultiplicity += *i;
   return totalSubjectMultiplicity;
 }
 
@@ -279,13 +295,36 @@ ACU_LhsAutomaton::match(DagNode* subject,
 	return collapseMatch(subject, solution, returnedSubproblem, extensionInfo);
       return false;
     }
-  Assert(matchAtTop == (extensionInfo != 0), cerr << "matchAtTop disagreement");
-  ACU_DagNode* s = getACU_DagNode(subject);
-  if (!multiplicityChecks(s) || !eliminateGroundAliens(s) ||
-      !eliminateBoundVariables(s, solution) || !eliminateGroundedOutAliens(s, solution))
+  Assert(matchAtTop == (extensionInfo != 0), "matchAtTop disagreement");
+  returnedSubproblem = 0;
+  //
+  //	Check to see if we should use red-black matcher.
+  //
+  if (safeCast(ACU_BaseDagNode*, subject)->isTree())
+    {
+      ACU_TreeDagNode* t = safeCast(ACU_TreeDagNode*, subject);
+      if (redBlackOK)
+	{
+	  int r = redBlackMatch(t,
+				solution,
+				returnedSubproblem,
+				safeCast(ACU_ExtensionInfo*, extensionInfo));
+	  if (r == true || r == false)
+	    return r;
+	}
+      (void) ACU_TreeDagNode::treeToArgVec(t);
+    }
+  ACU_DagNode* s = safeCast(ACU_DagNode*, subject);
+  //
+  //	Check for trivial failure and eliminate stuff that can only
+  //	be matched in one way.
+  //
+  if (!multiplicityChecks(s) ||
+      !eliminateGroundAliens(s) ||
+      !eliminateBoundVariables(s, solution) ||
+      !eliminateGroundedOutAliens(s, solution))
     return false;
 
-  returnedSubproblem = 0;
   if (extensionInfo == 0)
     {
       //
@@ -302,45 +341,31 @@ ACU_LhsAutomaton::match(DagNode* subject,
 	}
       else
 	{
-	  Assert(matchStrategy != GROUND_OUT, cerr << "didn't ground out");
-	  Assert(matchStrategy != ALIENS_ONLY, cerr << "variable left");
+	  Assert(matchStrategy != GROUND_OUT, "didn't ground out");
+	  Assert(matchStrategy != ALIENS_ONLY, "variable left");
 	  TopVariable& tv = topVariables[lastUnboundVariable];
 	  if (tv.prevUnbound == NONE)
 	    {
 	      int needed = totalNonGroundAliensMultiplicity;
+	      if (needed == 0)
+		return forcedLoneVariableCase(s, solution, returnedSubproblem);
+	      //
+	      //	Check for trivial failure.
+	      //
 	      if (!(tv.takeIdentity))
 		needed += tv.multiplicity;
-	      int available = computeTotalMultiplicity();
-	      if (available < needed)
+	      if (computeTotalMultiplicity() < needed)
 		return false;
-	      if (totalNonGroundAliensMultiplicity == 0)
-		{
-		  if (available == 0)
-		    {
-		      Assert(tv.takeIdentity, cerr << "can't take identity");
-		      solution.bind(tv.index, topSymbol->getIdentityDag());
-		      if (tv.abstracted != 0)
-			{
-			  return tv.abstracted->match(solution.value(tv.index),
-						      solution,
-						      returnedSubproblem);
-			}
-		      return true;
-		    }
-		  else
-		    return forcedLoneVariableCase(s, solution, returnedSubproblem);
-		}
 	    }
-	  Assert(matchStrategy != LONE_VARIABLE, cerr << "> 1 variable left");
+	  Assert(matchStrategy != LONE_VARIABLE, "> 1 variable left");
 	}
     }
-
   //
   //	If we have are matching with extension we have to insure that at least
-  //	two real subterms are actually matched; i.e. extension cannot be whole subject
-  //	or whole subject except for one alien subterm.
+  //	two real subterms are actually matched; i.e. extension cannot be whole
+  //	subject or whole subject except for one alien subterm.
   //
-  ACU_ExtensionInfo* e = static_cast<ACU_ExtensionInfo*>(extensionInfo);
+  ACU_ExtensionInfo* e = safeCast(ACU_ExtensionInfo*, extensionInfo);
   if (e != 0)
     e->setUpperBound(totalMultiplicity - 2);
 
@@ -349,9 +374,15 @@ ACU_LhsAutomaton::match(DagNode* subject,
       //
       //	Greedy matching special cases:
       //
-      copyMultiplicity();
+      subjects.resize(currentMultiplicity.length());
+      Vector<Subject>::iterator dest = subjects.begin();
+      FOR_EACH_CONST(i, Vector<int>, currentMultiplicity)
+	{
+	  dest->multiplicity = *i;
+	  ++dest;
+	}
       int r = (totalNonGroundAliensMultiplicity != 0) ?
-	greedyMatch(s, solution, e) : greedyPureMatch(s, solution, e, false);
+	greedyMatch(s, solution, e) : greedyPureMatch(s, solution, e);
       if (r != UNDECIDED)
 	return r;
     }
@@ -367,59 +398,132 @@ ACU_LhsAutomaton::fullMatch(ACU_DagNode* subject,
 			    Subproblem*& returnedSubproblem,
 			    ACU_ExtensionInfo* extensionInfo)
 {
-  
-  ACU_Subproblem* subproblem = buildBipartiteGraph(subject, solution, extensionInfo, 0);
+  SubproblemAccumulator subproblems;
+  ACU_Subproblem* subproblem = buildBipartiteGraph(subject,
+						   solution,
+						   extensionInfo,
+						   0,
+						   subproblems);
   if (subproblem == 0)
     return false;
+  if (subproblem->noPatterns())
+    {
+      //
+      //	Check for trivial cases.
+      //
+      if (extensionInfo == 0)
+	{
+	  if (lastUnboundVariable == NONE)
+	    {
+	      delete subproblem;
+	      FOR_EACH_CONST(i, Vector<int>, currentMultiplicity)
+		{
+		  if (*i > 0)
+		    return false;
+		}
+	      goto succeed;
+	    }
+	  else
+	    {
+	      TopVariable& tv = topVariables[lastUnboundVariable];
+	      if (tv.prevUnbound == NONE)
+		{
+		  delete subproblem;
+		  Subproblem* sp = 0;
+		  if (forcedLoneVariableCase(subject, solution, sp))
+		    {
+		      subproblems.add(sp);
+		      goto succeed;
+		    } 
+		  return false;
+		}
+	    }
+	}
+      else
+	{
+	  if (lastUnboundVariable == NONE)
+	    {
+	      delete subproblem;
+	      extensionInfo->clear();
+	      int total = 0;
+	      int nrSubjects = currentMultiplicity.length();
+	      for (int i = 0; i < nrSubjects; i++)
+		{
+		  int t = currentMultiplicity[i];
+		  if (t > 0)
+		    {
+		      extensionInfo->setUnmatched(i, t);
+		      total += t;
+		    }
+		}
+	      if (total > extensionInfo->getUpperBound())
+		return false;  // would give extension too much
+	      extensionInfo->setMatchedWhole(total == 0);
+	      extensionInfo->setValidAfterMatch(true);
+	      goto succeed;
+	    }
+	}
+    }
   if (!handleElementVariables(subject, solution, subproblem))
     {
       delete subproblem;
       return false;
     }
-  SubproblemAccumulator subproblems;
+  subproblem->addSubjects(currentMultiplicity);
   subproblems.add(subproblem);
-  int nrVariables = solution.nrFragileBindings();
-  int nrTopVariables = topVariables.length();
-  for (int i = 0; i < nrTopVariables; i++)
-    {
-      TopVariable& tv = topVariables[i];
-      if ((tv.upperBound != 1 || tv.takeIdentity) && solution.value(tv.index) == 0)
-	{
-	  subproblem->addTopVariable(tv.index,
-				     tv.multiplicity,
-				     tv.takeIdentity ? 0 : 1,
-				     tv.upperBound,
-				     tv.sort);
-	  if (tv.abstracted != 0)
-	    {
-	      subproblems.add(new VariableAbstractionSubproblem(tv.abstracted,
-								tv.index,
-								nrVariables));
-	    }
-	}
-    }
-  returnedSubproblem = subproblems.extractSubproblem();
+  {
+    FOR_EACH_CONST(i, Vector<TopVariable>, topVariables)
+      {
+	if ((i->upperBound != 1 || i->takeIdentity) && solution.value(i->index) == 0)
+	  {
+	    subproblem->addTopVariable(i->index,
+				       i->multiplicity,
+				       i->takeIdentity ? 0 : 1,
+				       i->upperBound,
+				       i->sort);
+	    if (i->abstracted != 0)
+	      {
+		subproblems.add
+		  (new VariableAbstractionSubproblem(i->abstracted,
+						     i->index,
+						     solution.nrFragileBindings()));
+	      }
+	  }
+      }
+  }
   if (extensionInfo != 0)
-    extensionInfo->setValidAfterMatch(false);  // extension info will not be valid until solve
+    {
+      //
+      //	Extension info will not be valid until solve phase.
+      //
+      extensionInfo->setValidAfterMatch(false);
+    }
+ succeed:
+  returnedSubproblem = subproblems.extractSubproblem();
   return true;
 }
+
+//#include "tty.hh"
 
 ACU_Subproblem*
 ACU_LhsAutomaton::buildBipartiteGraph(ACU_DagNode* subject,
 				      Substitution& solution,
 				      ACU_ExtensionInfo* extensionInfo,
-				      int firstAlien)
+				      int firstAlien,
+				      SubproblemAccumulator& subproblems)
 {
   ArgVec<ACU_DagNode::Pair>& args = subject->argArray;
   int nrArgs = args.length();
   ACU_Subproblem* subproblem =
-    new ACU_Subproblem(subject, currentMultiplicity, extensionInfo);
+    new ACU_Subproblem(subject, extensionInfo);
   int nrNonGroundAliens = nonGroundAliens.length();
+  //cout << "\n bipartite: ";
   for (int i = firstAlien; i < nrNonGroundAliens; i++)
     {
-      bool matchable = false;
+      int nrMatches = 0;
       NonGroundAlien& nga = nonGroundAliens[i];
       Term* t = nga.term;
+      //cout << Tty(Tty::GREEN) << t << Tty(Tty::RESET) << ' ';
       LhsAutomaton* a = nga.automaton;
       int m = nga.multiplicity;
       int pn = subproblem->addPatternNode(m);
@@ -436,15 +540,66 @@ ACU_LhsAutomaton::buildBipartiteGraph(ACU_DagNode* subject,
               if (a->match(d, local, sp))
                 {
                   subproblem->addEdge(pn, j, local - solution, sp);
-                  matchable = true;
+		  ++nrMatches;
                 }
             }
         }
-      if (!matchable)
+      //cout << Tty(Tty::RED) << nrMatches << Tty(Tty::RESET) << ' ';
+      if (nrMatches == 0)
         {
           delete subproblem;
           return 0;
         }
+      if (nrMatches == 1)
+	{
+	  //cout << "forcing\n";
+	  //
+	  //	Only one match so we can force it.
+	  //
+	  int uniqueSubject;
+	  LocalBinding* lb;
+	  Subproblem* sp;
+	  subproblem->removePatternNode(uniqueSubject, lb, sp);
+	  currentMultiplicity[uniqueSubject] -= m;
+	  if (lb != 0)
+	    {
+	      lb->assert(solution);
+	      delete lb;
+	    }
+	  subproblems.add(sp);
+	  //
+	  //	We need to check if any of our unbound variables became bound.
+	  //
+	  int parent = NONE;
+	  for (int i = lastUnboundVariable; i != NONE;)
+	    {
+	      TopVariable& tv = topVariables[i];
+	      DagNode* d = solution.value(tv.index);
+	      if (d != 0)
+		{
+		  if (!(subject->eliminateSubject(d,
+						  tv.multiplicity,
+						  currentMultiplicity)))
+		    {
+		      delete subproblem;
+		      return 0;
+		    }
+		  //
+		  //	Need to unlink from linked list of unbound variables.
+		  //
+		  i = tv.prevUnbound;
+		  if (parent == NONE)
+		    lastUnboundVariable = i;
+		  else
+		    topVariables[parent].prevUnbound = i;
+		}
+	      else
+		{
+		  parent = i;
+		  i = tv.prevUnbound;
+		}
+	    }
+	}
     }
   return subproblem;
 }
@@ -459,24 +614,22 @@ ACU_LhsAutomaton::handleElementVariables(ACU_DagNode* subject,
   //
   //	Treat unbound variables that take exactly 1 subject like non-ground aliens.
   //
-  int nrTopVariables = topVariables.length();
-  for (int i = 0; i < nrTopVariables; i++)
+  FOR_EACH_CONST(i, Vector<TopVariable>, topVariables)
     {
-      TopVariable& tv = topVariables[i];
-      if (tv.upperBound == 1 && !tv.takeIdentity && solution.value(tv.index) == 0)
+      if (i->upperBound == 1 && !(i->takeIdentity) && solution.value(i->index) == 0)
 	{
 	  bool matchable = false;
-	  int m = tv.multiplicity;
+	  int m = i->multiplicity;
 	  int pn = subproblem->addPatternNode(m); 
 	  for (int j = 0; j < nrArgs; j++)
 	    {
 	      if (currentMultiplicity[j] >= m)
 		{
 		  DagNode* d = args[j].dagNode;
-		  if(d->leq(tv.sort))
+		  if(d->leq(i->sort))
 		    {
 		      LocalBinding* b = new LocalBinding(1);
-		      b->addBinding(tv.index, d);
+		      b->addBinding(i->index, d);
 		      subproblem->addEdge(pn, j, b, 0);
 		      matchable = true;
 		    }

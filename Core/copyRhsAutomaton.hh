@@ -4,9 +4,6 @@
 //
 #ifndef _copyRhsAutomaton_hh_
 #define _copyRhsAutomaton_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "rhsAutomaton.hh"
 
 class CopyRhsAutomaton : public RhsAutomaton

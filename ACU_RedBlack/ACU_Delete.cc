@@ -31,7 +31,7 @@ ACU_RedBlackNode::consDelete2(ACU_Stack& path, int multiplicity)
   
   ACU_RedBlackNode* victim = path.pop();
   int newMult = victim->getMultiplicity() - multiplicity;
-  Assert(newMult >= 0, cerr << "-ve newMult");
+  Assert(newMult >= 0, "-ve newMult");
 
   if (newMult > 0)
     {

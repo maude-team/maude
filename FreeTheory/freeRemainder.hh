@@ -4,9 +4,6 @@
 //
 #ifndef _freeRemainder_hh_
 #define _freeRemainder_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "freeLhsStructs.hh"
 
 class FreeRemainder : private FreeLhsStructs
@@ -77,7 +74,7 @@ FreeRemainder::fastMatchReplace(DagNode* subject,
 	  for (Vector<FreeVariable>::const_iterator i = freeVariables.begin(); i != e; ++i)
 	    {
 	      DagNode* d = stackBase[i->position][i->argIndex];
-	      Assert(d->getSortIndex() != Sort::SORT_UNKNOWN, cerr << "missing sort information");
+	      Assert(d->getSortIndex() != Sort::SORT_UNKNOWN, "missing sort information");
 	      context.bind(i->varIndex, d);
 	    }
 	}
@@ -89,7 +86,7 @@ FreeRemainder::fastMatchReplace(DagNode* subject,
 	  for (Vector<FreeVariable>::const_iterator i = freeVariables.begin(); i != e; ++i)
 	    {
 	      DagNode* d = stackBase[i->position][i->argIndex];
-	      Assert(d->getSortIndex() != Sort::SORT_UNKNOWN, cerr << "missing sort information");
+	      Assert(d->getSortIndex() != Sort::SORT_UNKNOWN, "missing sort information");
 	      if (d->leq(i->sort))
 		context.bind(i->varIndex, d);
 	      else

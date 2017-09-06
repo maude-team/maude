@@ -2,8 +2,7 @@ ROOT_DIR := ..
 
 include $(ROOT_DIR)/MakeOptions
 
-MODULES =	freeTheory.o \
-		freeSymbol.o \
+MODULES =	freeSymbol.o \
 		freeUnarySymbol.o \
 		freeBinarySymbol.o \
 		freeTernarySymbol.o \

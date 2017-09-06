@@ -1,9 +1,6 @@
 //
 //      Implementation for class AU_ArgumentIterator.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
  
 //	utility stuff
 #include "macros.hh"
@@ -26,13 +23,13 @@ AU_ArgumentIterator::valid() const
 Term*
 AU_ArgumentIterator::argument() const
 {
-  Assert(position < argArray.length(), cerr << "no args left");
+  Assert(position < argArray.length(), "no args left");
   return argArray[position].term;
 }
 
 void
 AU_ArgumentIterator::next()
 {
-  Assert(position < argArray.length(), cerr << "no args left");
+  Assert(position < argArray.length(), "no args left");
   ++position;
 }

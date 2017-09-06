@@ -1,10 +1,7 @@
 //
 //      Implementation for class CUI_DagArgumentIterator.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
- 
+
 //	utility stuff
 #include "macros.hh"
  
@@ -23,14 +20,14 @@ CUI_DagArgumentIterator::valid() const
 DagNode*
 CUI_DagArgumentIterator::argument() const
 {
-  Assert(nrRemaining > 0, cerr << "no args left");
+  Assert(nrRemaining > 0, "no args left");
   return *position;
 }
 
 void
 CUI_DagArgumentIterator::next()
 {
-  Assert(nrRemaining > 0, cerr << "no args left");
+  Assert(nrRemaining > 0, "no args left");
   ++position;
   --nrRemaining;
 }

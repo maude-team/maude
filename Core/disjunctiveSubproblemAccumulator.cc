@@ -4,9 +4,6 @@
 //
 //      Implementation for class SubproblemDisjunction
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //      utility stuff
 #include "macros.hh"
@@ -93,7 +90,7 @@ DisjunctiveSubproblemAccumulator::extract(Substitution& solution,
       if (firstDifference != 0)
 	{
 	  bool ok = firstDifference->assert(solution);
-	  Assert(ok, cerr << "binding clash");
+	  Assert(ok, "binding clash");
 	}
       returnedSubproblem = firstSubproblem;
       firstSubproblem = 0;  // so dtor won't delete it

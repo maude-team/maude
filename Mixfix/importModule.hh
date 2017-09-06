@@ -3,9 +3,6 @@
 //
 #ifndef _importModule_hh_
 #define _importModule_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "mixfixModule.hh"
 
 class ImportModule : public MixfixModule

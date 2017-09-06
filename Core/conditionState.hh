@@ -6,9 +6,6 @@
 //
 #ifndef _conditionState_hh_
 #define _conditionState_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 class ConditionState
 {

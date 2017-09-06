@@ -1,9 +1,6 @@
 //
 //      Implementation for class XmlBuffer.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //      utility stuff
 #include "macros.hh"
@@ -62,7 +59,7 @@ XmlBuffer::beginElement(const string& name)
 void
 XmlBuffer::endElement()
 {
-  Assert(!(elements.empty()), cerr << "empty element stack");
+  Assert(!(elements.empty()), "empty element stack");
 
   --indentLevel;
   if (startTagIncomplete)

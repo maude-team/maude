@@ -3,9 +3,6 @@
 //
 #ifndef _matchSearchState_hh_
 #define _matchSearchState_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "searchState.hh"
 
 class MatchSearchState : public SearchState

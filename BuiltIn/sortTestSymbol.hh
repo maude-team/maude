@@ -3,9 +3,6 @@
 //
 #ifndef _sortTestSymbol_hh_
 #define _sortTestSymbol_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "freeSymbol.hh"
 
 class SortTestSymbol : public FreeSymbol

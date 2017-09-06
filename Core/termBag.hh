@@ -5,9 +5,6 @@
 //
 #ifndef _termBag_hh_
 #define _termBag_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include <set>
 
 class TermBag

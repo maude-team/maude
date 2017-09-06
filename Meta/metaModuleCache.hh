@@ -3,9 +3,6 @@
 //
 #ifndef _metaModuleCache_hh_
 #define _metaModuleCache_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "importModule.hh"
 
 class MetaModuleCache : public ImportModule::Parent

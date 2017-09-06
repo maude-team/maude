@@ -3,9 +3,6 @@
 //
 #ifndef _label_hh_
 #define _label_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
  
 class Label : public NamedEntity
 {

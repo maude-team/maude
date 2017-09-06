@@ -3,10 +3,7 @@
 //
 #ifndef _sequencePartition_hh_
 #define _sequencePartition_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
- 
+
 class SequencePartition
 {
 public:
@@ -41,17 +38,18 @@ private:
 inline int
 SequencePartition::start(int partNr) const
 {
-  Assert(closed, cerr << "solve() not called");
-  Assert(!failed, cerr << "non-existent solution");
+  Assert(closed, "solve() not called");
+  Assert(!failed, "non-existent solution");
   return parts[partNr].start;
 }
 
 inline int
 SequencePartition::end(int partNr) const
 {
-  Assert(closed, cerr << "solve() not called");
-  Assert(!failed, cerr << "non-existent solution");
-  return (partNr == parts.length() - 1) ? sequenceLength - 1 : parts[partNr + 1].start - 1;
+  Assert(closed, "solve() not called");
+  Assert(!failed, "non-existent solution");
+  return (partNr == parts.length() - 1) ?
+    sequenceLength - 1 : parts[partNr + 1].start - 1;
 }
 
 inline int

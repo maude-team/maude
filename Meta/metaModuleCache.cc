@@ -1,9 +1,6 @@
 //
 //      Implementation for class MetaModuleCache.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //      utility stuff
 #include "macros.hh"
@@ -70,8 +67,8 @@ MetaModuleCache::find(DagNode* dag)
 MetaModule*
 MetaModuleCache::moveToFront(int chosen)
 {
-  DebugAdvisoryCheck(false, cerr << "cache hit (" << cache[chosen].module <<
-		     ") for #" << chosen << " cache size = " << cache.length());
+  DebugAdvisory("cache hit (" << cache[chosen].module <<
+		") for #" << chosen << " cache size = " << cache.length());
   if (chosen == 0)
     return cache[0].module;
   Pair p = cache[chosen];
@@ -84,8 +81,8 @@ MetaModuleCache::moveToFront(int chosen)
 void 
 MetaModuleCache::insert(DagNode* dag, MetaModule* module)
 {
-  DebugAdvisoryCheck(false, cerr << "cache miss (" << module <<
-		     "), cache size = " << cache.length());
+  DebugAdvisory("cache miss (" << module <<
+		"), cache size = " << cache.length());
   int size = cache.length();
   if (size == maxSize)
     cache[--size].clear();

@@ -3,9 +3,6 @@
 //
 #ifndef _mixfixModule_hh_
 #define _mixfixModule_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include <gmpxx.h>
 #include <set>
 #include <map>

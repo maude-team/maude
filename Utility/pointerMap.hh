@@ -3,9 +3,6 @@
 //
 #ifndef _pointerMap_hh_
 #define _pointerMap_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 class PointerMap
 {

@@ -1,9 +1,6 @@
 //
 //      Implementation for class MetaLevel.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //      utility stuff
 #include "macros.hh"
@@ -131,7 +128,7 @@ MetaLevel::MetaLevel(const MetaLevel* original, SymbolMap* map)
 bool
 MetaLevel::bind(const char* name, Term* term)
 {
-  Assert(term != 0, cerr << "null term for " << name);
+  Assert(term != 0, "null term for " << name);
   BIND_TERM(name, term, trueTerm);
   BIND_TERM(name, term, falseTerm);
   IssueWarning("unrecognized term hook name " << QUOTE(name) << '.');
@@ -164,7 +161,7 @@ MetaLevel::reset()
 bool
 MetaLevel::bind(const char* name, Symbol* symbol)
 {
-  Assert(symbol != 0, cerr << "null symbol for " << name);
+  Assert(symbol != 0, "null symbol for " << name);
 #define MACRO(SymbolName, SymbolClass, RequiredFlags, NrArgs) \
   if (strcmp(name, #SymbolName) == 0) SymbolName = static_cast<SymbolClass*>(symbol); else
 #include "metaLevelSignature.cc"

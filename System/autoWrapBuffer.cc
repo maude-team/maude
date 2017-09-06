@@ -1,9 +1,6 @@
 //
 //      Implementation for class AutoWrapBuffer.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //      utility stuff
 #include "macros.hh"
@@ -25,7 +22,7 @@ AutoWrapBuffer::AutoWrapBuffer(streambuf* outputBuffer, int lineWidth)
 int
 AutoWrapBuffer::sync()
 {
-  Assert(pptr() - pbase() == 0, cerr << "not supposed to have a buffer");
+  Assert(pptr() - pbase() == 0, "not supposed to have a buffer");
   //
   //	We don't dump the pending buffer here because stderr sync()s all
   //	the time and we would lose our opportunities for inserting a \n.
@@ -124,7 +121,7 @@ AutoWrapBuffer::legalPositionToBreak()
 int
 AutoWrapBuffer::overflow(int ch)
 {
-  Assert(pptr() - pbase() == 0, cerr << "not supposed to have a buffer");
+  Assert(pptr() - pbase() == 0, "not supposed to have a buffer");
   if (ch == EOF)
     return EOF;
   if (inEscape)

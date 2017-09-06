@@ -3,9 +3,6 @@
 //
 #ifndef _bddUser_hh_
 #define _bddUser_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "bdd.h"
 
 class BddUser

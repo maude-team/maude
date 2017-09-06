@@ -3,9 +3,6 @@
 //
 #ifndef _quotedIdentifierOpSymbol_hh_
 #define _quotedIdentifierOpSymbol_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "freeSymbol.hh"
 
 class QuotedIdentifierOpSymbol : public FreeSymbol

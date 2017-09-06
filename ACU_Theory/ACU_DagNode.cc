@@ -1,9 +1,6 @@
 //
 //      Implementation for class ACU_DagNode.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
  
 //	utility stuff
 #include "macros.hh"
@@ -91,7 +88,7 @@ ACU_DagNode::compareArguments(const DagNode* other) const
 	  ++i;
 	}
       while (i != e);
-      Assert(!j.valid(), cerr << "iterator problem");
+      Assert(!j.valid(), "iterator problem");
     }
   else
     {
@@ -115,7 +112,7 @@ ACU_DagNode::compareArguments(const DagNode* other) const
 	  ++i;
 	}
       while (i != e);
-      Assert(j == argArray2.end(), cerr << "iterator problem");
+      Assert(j == argArray2.end(), "iterator problem");
     }
   return 0;
 }
@@ -124,7 +121,7 @@ DagNode*
 ACU_DagNode::markArguments()
 {
   argArray.evacuate();
-  Assert(argArray.length() > 0, cerr << "no arguments");
+  Assert(argArray.length() > 0, "no arguments");
   
   const ArgVec<Pair>::const_iterator e = argArray.end() - 1;
   for (ArgVec<Pair>::const_iterator i = argArray.begin(); i != e; ++i)
@@ -214,7 +211,7 @@ ACU_DagNode::copyWithReplacement(int argIndex, DagNode* replacement)
 	    }
 	}
     }
-  Assert(p >= 1, cerr << "no arguments left");
+  Assert(p >= 1, "no arguments left");
   args2.contractTo(p);
   args2.expandBy(1);
   args2[p].dagNode = replacement;
@@ -329,9 +326,9 @@ ACU_DagNode::stackArguments(Vector<RedexPosition>& stack,
 void
 ACU_DagNode::partialReplace(DagNode* replacement, ExtensionInfo* extensionInfo)
 {
-  ACU_ExtensionInfo* e = static_cast<ACU_ExtensionInfo*>(extensionInfo);
+  ACU_ExtensionInfo* e = safeCast(ACU_ExtensionInfo*, extensionInfo);
   int nrArgs = argArray.length();
-  Assert(nrArgs > 0, cerr << "no arguments");
+  Assert(nrArgs > 0, "no arguments");
 
   ArgVec<Pair>::const_iterator source = argArray.begin();
   ArgVec<Pair>::iterator dest = argArray.begin();
@@ -351,7 +348,7 @@ ACU_DagNode::partialReplace(DagNode* replacement, ExtensionInfo* extensionInfo)
       ++i;
     }
   while (i < nrArgs);
-  Assert(p >= 1, cerr << "no arguments left");
+  Assert(p >= 1, "no arguments left");
   argArray.contractTo(p);
   argArray.expandBy(1);
   argArray[p].dagNode = replacement;
@@ -363,7 +360,7 @@ ACU_DagNode::partialReplace(DagNode* replacement, ExtensionInfo* extensionInfo)
 DagNode*
 ACU_DagNode::partialConstruct(DagNode* replacement, ExtensionInfo* extensionInfo)
 {
-  ACU_ExtensionInfo* e = static_cast<ACU_ExtensionInfo*>(extensionInfo);
+  ACU_ExtensionInfo* e = safeCast(ACU_ExtensionInfo*, extensionInfo);
   int nrArgs = argArray.length();
   ACU_Symbol* s = symbol();
   ACU_DagNode* n = new ACU_DagNode(s, nrArgs + 1);
@@ -380,7 +377,7 @@ ACU_DagNode::partialConstruct(DagNode* replacement, ExtensionInfo* extensionInfo
 	  ++p;
 	}
     }
-  Assert(p >= 1, cerr << "no arguments left");
+  Assert(p >= 1, "no arguments left");
   args2.contractTo(p);
   args2.expandBy(1);
   args2[p].dagNode = replacement;
@@ -411,7 +408,7 @@ ACU_DagNode::matchVariableWithExtension(int index,
   //
   //	May use runsBuffer
   //
-  ACU_ExtensionInfo* e = static_cast<ACU_ExtensionInfo*>(extensionInfo);
+  ACU_ExtensionInfo* e = safeCast(ACU_ExtensionInfo*, extensionInfo);
   int totalSubjectMultiplicity = 0;
   int nrArgs = argArray.length();
   Vector<int> currentMultiplicity(nrArgs);
@@ -423,9 +420,57 @@ ACU_DagNode::matchVariableWithExtension(int index,
     }
   e->setUpperBound(totalSubjectMultiplicity - 2);
 
-  ACU_Subproblem* subproblem = new ACU_Subproblem(this, currentMultiplicity, e);
+  ACU_Subproblem* subproblem = new ACU_Subproblem(this, e);
+  subproblem->addSubjects(currentMultiplicity);
   subproblem->addTopVariable(index, 1, 2, bound, sort);
   returnedSubproblem = subproblem;
   extensionInfo->setValidAfterMatch(false);
   return true;
+}
+
+int
+ACU_DagNode::argVecComputeBaseSort() const
+{
+  ACU_Symbol* s = symbol();
+  if (const Sort* uniSort = s->uniformSort())
+    {
+      //
+      //	If symbol has a uniform sort structure do a fast sort computation.
+      //
+      if (!(uniSort->component()->errorFree()))
+	{
+	  int lastIndex = Sort::SORT_UNKNOWN;
+	  const ArgVec<Pair>::const_iterator e = argArray.end();
+	  for (ArgVec<Pair>::const_iterator i = argArray.begin(); i != e; ++i)
+	    {
+	      int index = i->dagNode->getSortIndex();
+	      Assert(index >= Sort::ERROR_SORT, "bad sort index");
+	      if (index != lastIndex)
+		{
+		  if (!(::leq(index, uniSort)))
+		    return Sort::ERROR_SORT;
+		  lastIndex = index;
+		}
+	    }
+	}
+      return uniSort->index();
+    }
+  //
+  //	Standard sort calculation.
+  //
+  int sortIndex;
+  ArgVec<Pair>::const_iterator i = argArray.begin();
+  const ArgVec<Pair>::const_iterator e = argArray.end();
+  {
+    int index = i->dagNode->getSortIndex();
+    Assert(index >= Sort::ERROR_SORT, "bad sort index");
+    sortIndex = s->computeMultSortIndex(index, index, i->multiplicity - 1);
+  }
+  for (++i; i != e; ++i)
+    {
+      int index = i->dagNode->getSortIndex();
+      Assert(index >= Sort::ERROR_SORT, "bad sort index");
+      sortIndex = s->computeMultSortIndex(sortIndex, index, i->multiplicity);
+    }
+  return sortIndex;
 }

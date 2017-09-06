@@ -1,3 +1,82 @@
+2003-02-26  Steven Eker  <eker@goo.csl.sri.com>
+
+	* equalityConditionFragment.cc (preprocess): updated Assert()
+
+	* assignmentConditionFragment.cc (preprocess): updated Assert()
+
+	* rewriteSearchState.cc: removed #pragma
+
+	* rewriteSearchState.hh: removed #pragma
+
+	* temporalSymbol.cc: removed #pragma
+
+	* temporalSymbol.hh: removed #pragma
+
+	* stateTransitionGraph3.cc: removed #pragma
+
+	* stateTransitionGraph3.hh: removed #pragma
+
+	* sortTestConditionFragment.cc: removed #pragma
+	(preprocess): updated Assert()
+
+	* sortTestConditionFragment.hh: removed #pragma
+
+	* searchState.cc: removed #pragma
+
+	* searchState.hh: removed #pragma
+
+	* satSolverSymbol.cc: removed #pragma
+	(eqRewrite): updated Assert()
+	(makeFormula): updated Assert()s
+
+	* satSolverSymbol.hh: removed #pragma
+
+	* rewriteSequenceSearch.cc: removed #pragma
+
+	* rewriteSequenceSearch.hh: removed #pragma
+
+	* rewriteConditionState.cc: removed #pragma
+
+	* rewriteConditionState.hh: removed #pragma
+
+	* rewriteConditionFragment.cc: removed #pragma
+	(preprocess): updated Assert()
+
+	* rewriteConditionFragment.hh: removed #pragma
+
+	* positionState.cc: removed #pragma
+
+	* positionState.hh: removed #pragma
+	(getDagNode): updated Assert()
+	(getExtensionInfo): updated Assert()
+
+	* pattern.cc: removed #pragma
+
+	* pattern.hh: removed #pragma
+
+	* modelCheckerSymbol.cc: removed #pragma
+	(eqRewrite): updated Assert()
+
+	* modelCheckerSymbol.hh: removed #pragma
+
+	* matchSearchState.cc: removed #pragma
+
+	* matchSearchState.hh: removed #pragma
+
+	* equalityConditionFragment.cc: removed #pragma
+
+	* equalityConditionFragment.hh: removed #pragma
+
+	* assignmentConditionState.cc: removed #pragma
+
+	* assignmentConditionState.hh: removed #pragma
+
+	* assignmentConditionFragment.cc: removed #pragma
+
+	* assignmentConditionFragment.hh: removed #pragma
+	
+===================================Maude79===========================================
+
 2003-02-20  Steven Eker  <eker@goo.csl.sri.com>
 
 	* modelCheckerSymbol.hh (class ModelCheckerSymbol): parentSymbol

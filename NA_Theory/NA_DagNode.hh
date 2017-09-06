@@ -3,9 +3,6 @@
 //
 #ifndef _NA_DagNode_hh_
 #define _NA_DagNode_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "dagNode.hh"
 
 class NA_DagNode : public DagNode

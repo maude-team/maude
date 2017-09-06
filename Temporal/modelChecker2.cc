@@ -1,9 +1,6 @@
 //
 //      Implementation for class ModelChecker2.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //      utility stuff
 #include "macros.hh"
@@ -138,7 +135,7 @@ ModelChecker2::dfs2SystemTransitions(int systemStateNr, int propertyStateNr)
       if (n == NONE)
 	break;
       Assert(n < intersectionStates.length(),
-	     cerr << "visited system state for the first time on dfs2");
+	     "visited system state for the first time on dfs2");
       if (dfs2PropertyTransitions(n, propertyStateNr))
 	return true;
     }

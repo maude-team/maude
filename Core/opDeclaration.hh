@@ -3,9 +3,6 @@
 //
 #ifndef _opDeclaration_hh_
 #define _opDeclaration_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 class OpDeclaration
 {

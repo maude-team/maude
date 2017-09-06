@@ -41,7 +41,7 @@ PreModule::addType(bool kind, const Vector<Token>& tokens)
 void
 PreModule::convertSortsToKinds()
 {
-  Assert(!lastSawOpDecl, cerr << "missing sort specs");
+  Assert(!lastSawOpDecl, "missing sort specs");
   OpDef& opDef = opDefs[opDefs.length() - 1];
   int nrTypes = opDef.types.length();
   for (int i = 0; i < nrTypes; i++)

@@ -3,9 +3,6 @@
 //
 #ifndef _quotedIdentifierSymbol_hh_
 #define _quotedIdentifierSymbol_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "NA_Symbol.hh"
 
 class QuotedIdentifierSymbol : public NA_Symbol

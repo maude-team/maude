@@ -1,9 +1,6 @@
 //
 //      Implementation for class SubproblemDisjunction
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //      utility stuff
 #include "macros.hh"
@@ -54,7 +51,7 @@ SubproblemDisjunction::addOption(LocalBinding* difference,
   if (extensionInfo != 0)
     {
       Assert(realExtensionInfo == 0 || realExtensionInfo == extensionInfo,
-	     cerr << "extension info clash");
+	     "extension info clash");
       realExtensionInfo = extensionInfo;
     }
 }

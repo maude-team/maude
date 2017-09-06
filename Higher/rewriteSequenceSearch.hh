@@ -3,9 +3,6 @@
 //
 #ifndef _rewriteSequenceSearch_hh_
 #define _rewriteSequenceSearchState_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "stateTransitionGraph3.hh"
 #include "matchSearchState.hh"
 

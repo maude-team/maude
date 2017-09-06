@@ -3,9 +3,6 @@
 //
 #ifndef _indexedSet_hh_
 #define _indexedSet_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include <map>
 #include <vector>
 

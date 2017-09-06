@@ -1,10 +1,7 @@
 //
 //      Implementation for class AU_DagArgumentIterator.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
- 
+
 //	utility stuff
 #include "macros.hh"
 #include "vector.hh"
@@ -28,13 +25,13 @@ AU_DagArgumentIterator::valid() const
 DagNode*
 AU_DagArgumentIterator::argument() const
 {
-  Assert(position < argArray.length(), cerr << "no args left");
+  Assert(position < argArray.length(), "no args left");
   return argArray[position];
 }
 
 void
 AU_DagArgumentIterator::next()
 {
-  Assert(position < argArray.length(), cerr << "no args left");
+  Assert(position < argArray.length(), "no args left");
   ++position;
 }

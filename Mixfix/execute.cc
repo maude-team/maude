@@ -141,6 +141,10 @@ Interpreter::endRewriting(Timer& timer,
   UserLevelRewritingContext::clearDebug();  // even if we didn't start in debug mode
 }
 
+#if 1
+int CONVERT_THRESHOLD = 8;
+int MERGE_THRESHOLD = 16;
+
 void
 Interpreter::reduce(const Vector<Token>& subject, bool debug)
 {
@@ -162,6 +166,37 @@ Interpreter::reduce(const Vector<Token>& subject, bool debug)
       endRewriting(timer, context, fm);
     }
 }
+#else
+int CONVERT_THRESHOLD;
+int MERGE_THRESHOLD;
+
+void
+Interpreter::reduce(const Vector<Token>& subject, bool debug)
+{
+  if (DagNode* d = makeDag(subject))
+    {
+      for (int i = 0; i < 2; ++i)
+	{
+	  for (CONVERT_THRESHOLD = 0; CONVERT_THRESHOLD <= 20; CONVERT_THRESHOLD += 1)
+	    {
+	      for (MERGE_THRESHOLD = 0; MERGE_THRESHOLD <= 20; MERGE_THRESHOLD += 1)
+		{
+		  cout << "CONVERT_THRESHOLD = " << CONVERT_THRESHOLD <<
+		    "\tMERGE_THRESHOLD = " << MERGE_THRESHOLD << endl;
+		  DagNode* d = makeDag(subject);
+		  UserLevelRewritingContext* context = new UserLevelRewritingContext(d);
+		  VisibleModule* fm = currentModule->getFlatModule();
+		  startUsingModule(fm);
+		  beginRewriting(debug);
+		  Timer timer(getFlag(SHOW_TIMING));
+		  context->reduce();
+		  endRewriting(timer, context, fm);
+		}
+	    }
+	}
+    }
+}
+#endif
 
 void
 Interpreter::rewrite(const Vector<Token>& subject, Int64 limit, bool debug)
@@ -265,7 +300,7 @@ Interpreter::cont(Int64 limit, bool debug)
       if (continueFunc != 0)
 	(this->*continueFunc)(limit, debug);
       else
-	IssueWarning(cerr << "can't continue.");
+	IssueWarning("can't continue.");
     }
 }
 

@@ -4,9 +4,6 @@
 //
 #ifndef _variableInfo_hh_
 #define _variableInfo_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "natSet.hh"
 #include "variableTerm.hh"
 

@@ -4,9 +4,6 @@
 //
 #ifndef _dagRoot_hh_
 #define _dagRoot_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "rootContainer.hh"
 
 class DagRoot : private RootContainer

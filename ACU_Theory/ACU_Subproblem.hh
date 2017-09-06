@@ -5,9 +5,6 @@
 //
 #ifndef _ACU_Subproblem_hh_
 #define _ACU_Subproblem_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "subproblem.hh"
 
 class ACU_Subproblem : public Subproblem
@@ -16,11 +13,14 @@ class ACU_Subproblem : public Subproblem
 
 public:
   ACU_Subproblem(ACU_DagNode* subjectDagNode,
-		 Vector<int>& multiplicity,
 		 ACU_ExtensionInfo* extension);
   ~ACU_Subproblem();
 
   int addPatternNode(int multiplicity);
+  void removePatternNode(int& uniqueSubject,
+			 LocalBinding*& difference,
+			 Subproblem*& subproblem);
+  bool noPatterns() const;
   void addEdge(int pattern,
 	       int target,
 	       LocalBinding* difference,
@@ -30,6 +30,8 @@ public:
 		      int lowerBound,
 		      int upperBound,
 		      const Sort* sort);
+  void addSubjects(Vector<int>& multiplicity);
+
   bool solve(bool findFirst, RewritingContext& solution);
 
 #ifdef DUMP
@@ -85,5 +87,11 @@ private:
   Vector<int> subjectMap;
   Vector<int> afterMultiplicity;
 };
+
+inline bool
+ACU_Subproblem::noPatterns() const
+{
+  return patternNodes.empty();
+}
 
 #endif

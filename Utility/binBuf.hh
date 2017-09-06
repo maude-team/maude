@@ -3,9 +3,6 @@
 //
 #ifndef _binBuf_hh_
 #define _binBuf_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 class BinBuf
 {

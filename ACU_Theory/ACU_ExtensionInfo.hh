@@ -101,7 +101,7 @@ ACU_ExtensionInfo::reset()
 inline void
 ACU_ExtensionInfo::useUnmatched()
 {
-  Assert(!(subject->isTree()), cerr << "tree form!");
+  Assert(!(subject->isTree()), "tree form!");
   if (unmatched.getNode() != 0)
     convertToUnmatched();  // FIX name
 }

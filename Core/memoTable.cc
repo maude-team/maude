@@ -1,9 +1,6 @@
 //
 //      Implementation for class MemoTable.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 #include <map>
 
 //	utility stuff

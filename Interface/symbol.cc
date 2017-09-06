@@ -1,10 +1,6 @@
 //
 //      Implementation for base class Symbol.
 //
-#ifdef __GNUG__
-#pragma implementation "symbol.hh"
-#pragma implementation "symbol2.hh"
-#endif
 
 //	utility stuff
 #include "macros.hh"
@@ -131,9 +127,9 @@ Symbol::acceptRule(Rule* rule)
 void
 Symbol::fillInSortInfo(Term* subject)
 {
-  Assert(this == subject->symbol(), cerr << "Bad Symbol");
+  Assert(this == subject->symbol(), "Bad Symbol");
   ConnectedComponent* component = rangeComponent();  // should be const
-  Assert(component != 0, cerr << "couldn't get component");
+  Assert(component != 0, "couldn't get component");
 
   int nrArgs = arity();
   if (nrArgs == 0)
@@ -151,14 +147,14 @@ Symbol::fillInSortInfo(Term* subject)
       Term* t = a.argument();
       t->symbol()->fillInSortInfo(t);
       Assert(t->getComponent() == domainComponent(nrArgsSeen),
-	     cerr << "component error on arg " << nrArgsSeen <<
+	     "component error on arg " << nrArgsSeen <<
 	     " while computing sort of " << subject);
       step = traverse(step, t->getSortIndex());
 #ifndef NO_ASSERT
       ++nrArgsSeen;
 #endif
     }
-  Assert(nrArgsSeen == nrArgs, cerr << "bad # of args for op");
+  Assert(nrArgsSeen == nrArgs, "bad # of args for op");
   subject->setSortInfo(component, step);
 }
 
@@ -184,7 +180,7 @@ Symbol::finalizeSortInfo()
   if (sortConstraintFree())
     {
       Sort* s = getSingleNonErrorSort();
-      uniqueSortIndex = (s != 0 && !(canProduceErrorSort()))? s->index() : -1;
+      uniqueSortIndex = (s != 0 && !(canProduceErrorSort())) ? s->index() : -1;
     }
 }
 
@@ -262,7 +258,7 @@ void
 Symbol::computePossibleDomainSorts(const NatSet& rangeSorts,
 				   Vector<NatSet>& domainSorts)
 {
-  Assert(!(rangeSorts.empty()), cerr << "shouldn't be empty");
+  Assert(!(rangeSorts.empty()), "shouldn't be empty");
   //
   //	We compute the set of sorts that the specified argument can possibly have
   //	given that the range sort must be <= one of the specified range sorts.
@@ -330,7 +326,7 @@ Symbol::computePossibleDomainSorts(const NatSet& rangeSorts,
     while (changed);
   }
   Assert(!(allPossibleRangeSorts.contains(Sort::KIND)),
-	 cerr << "shouldn't contain kind");
+	 "shouldn't contain kind");
   {
     //
     //	Now examine our declarations to see what domain sorts are possible
@@ -398,7 +394,7 @@ Symbol::isConstructor(DagNode* subject)
 	for (DagArgumentIterator a(*subject); a.valid(); a.next())
 	  {
 	    int t = a.argument()->getSortIndex();
-	    Assert(t != Sort::SORT_UNKNOWN, cerr << "Unknown sort");
+	    Assert(t != Sort::SORT_UNKNOWN, "Unknown sort");
 	    state = ctorTraverse(state, t);
 	  }
 	return state;

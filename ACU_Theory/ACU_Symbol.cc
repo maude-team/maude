@@ -1,9 +1,6 @@
 //
 //      Implementation for class ACU_Symbol.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
  
 //	utility stuff
 #include "macros.hh"
@@ -79,7 +76,7 @@ ACU_Symbol::makeDagNode(const Vector<DagNode*>& args,
 			const Vector<int>& multiplicities)
 {
   int nrArgs = args.length();
-  Assert(multiplicities.length() == nrArgs, cerr << "length mismatch");
+  Assert(multiplicities.length() == nrArgs, "length mismatch");
   ACU_DagNode* a = new ACU_DagNode(this, nrArgs);
   ArgVec<ACU_DagNode::Pair>& args2 = a->argArray;
   for (int i = 0; i < nrArgs; i++)
@@ -127,7 +124,7 @@ ACU_Symbol::reduceArgumentsAndNormalize(DagNode* subject, RewritingContext& cont
 bool
 ACU_Symbol::eqRewrite(DagNode* subject, RewritingContext& context)
 {
-  Assert(this == subject->symbol(), cerr << "bad symbol");
+  Assert(this == subject->symbol(), "bad symbol");
   if (standardStrategy())
     {
       if (safeCast(ACU_BaseDagNode*, subject)->isTree())
@@ -313,76 +310,18 @@ ACU_Symbol::copyAndReduceSubterms(ACU_DagNode* subject, RewritingContext& contex
 void
 ACU_Symbol::computeBaseSort(DagNode* subject)
 {
-  Assert(this == subject->symbol(), cerr << "bad symbol");
-  if (safeCast(ACU_BaseDagNode*, subject)->getNormalizationStatus() ==
-      ACU_BaseDagNode::TREE)
-    {
-      ACU_TreeDagNode* s = safeCast(ACU_TreeDagNode*, subject);
-      s->computeBaseSort();
-    }
-  else
-    {
-      ACU_DagNode* s = safeCast(ACU_DagNode*, subject);
-      ArgVec<ACU_DagNode::Pair>& args = s->argArray;
-      int nrArgs = args.length();
-      //
-      //	If symbol has a uniform sort structure do a fast sort computation.
-      //
-      const Sort* uniSort = uniformSort();
-      if (uniSort != 0)
-	{
-	  if (s->getNormalizationStatus() != ACU_DagNode::ASSIGNMENT)
-	    {
-	      //
-	      //	Check we're not in the error sort.
-	      //
-	      int lastIndex = Sort::SORT_UNKNOWN;
-	      for (int i = 0; i < nrArgs; i++)
-		{
-		  int index = args[i].dagNode->getSortIndex();
-		  Assert(index != Sort::SORT_UNKNOWN, cerr << "bad sort");
-		  if (index != lastIndex)
-		    {
-		      if (!(leq(index, uniSort)))
-			{
-			  subject->setSortIndex(Sort::ERROR_SORT);
-			  return;
-			}
-		      lastIndex = index;
-		    }
-		}
-	    }
-	  subject->setSortIndex(uniSort->index());
-	  return;
-	}
-      //
-      //	Standard sort calculation.
-      //
-      int sortIndex = Sort::SORT_UNKNOWN;
-      for (int i = 0; i < nrArgs; i++)
-	{
-	  DagNode* d = args[i].dagNode;
-	  int t = d->getSortIndex();
-	  Assert(t >= 0, cerr << "bad sort index");
-	  int m = args[i].multiplicity;
-	  if (sortIndex == Sort::SORT_UNKNOWN)
-	    {
-	      sortIndex = t;
-	      if (--m == 0)
-		continue;
-	    }
-	  int state = traverse(0, t);  // commutative optimization for m > 1
-	  for (int j = 0; j < m; j++)
-	    sortIndex = traverse(state, sortIndex);
-	}
-      subject->setSortIndex(sortIndex);
-    }
+  Assert(this == subject->symbol(), "bad symbol");
+
+  subject->setSortIndex((safeCast(ACU_BaseDagNode*, subject)->
+			 getNormalizationStatus() == ACU_BaseDagNode::TREE) ?
+			safeCast(ACU_TreeDagNode*, subject)->treeComputeBaseSort() :
+			safeCast(ACU_DagNode*, subject)->argVecComputeBaseSort());
 }
 
 void
 ACU_Symbol::normalizeAndComputeTrueSort(DagNode* subject, RewritingContext& context)
 {
-  Assert(this == subject->symbol(), cerr << "bad symbol");
+  Assert(this == subject->symbol(), "bad symbol");
   ACU_DagNode* s = getACU_DagNode(subject);
   ArgVec<ACU_DagNode::Pair>& args = s->argArray;
   int nrArgs = args.length();

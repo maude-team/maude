@@ -3,9 +3,6 @@
 //
 #ifndef _ACU_NumberOpSymbol_hh_
 #define _ACU_NumberOpSymbol_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "ACU_Symbol.hh"
 
 class ACU_NumberOpSymbol : public ACU_Symbol

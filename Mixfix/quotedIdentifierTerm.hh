@@ -3,9 +3,6 @@
 //
 #ifndef _quotedIdentifierTerm_hh_
 #define _quotedIdentifierTerm_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "NA_Term.hh"
 
 class QuotedIdentifierTerm : public NA_Term

@@ -1,3 +1,151 @@
+2003-03-21  Steven Eker  <eker@goo.csl.sri.com>
+
+	* execute.cc (reduce): added threshold search version
+
+2003-03-18  Steven Eker  <eker@goo.csl.sri.com>
+
+	* search.cc (search): fixed symmetric bug
+
+	* match.cc (match): fixed bug where we were printing patternTerm
+	when we printed the command even though this may have been
+	invalidated by normalization
+
+2003-02-26  Steven Eker  <eker@goo.csl.sri.com>
+
+	* xmlBuffer.cc: removed #pragma
+	(endElement): updated Assert()
+
+	* xmlBuffer.hh: removed #pragma
+
+	* visibleModule.cc: removed #pragma
+	(showDecls): updated Assert()
+
+	* visibleModule.hh: removed #pragma
+
+	* userLevelRewritingContext.cc: removed #pragma
+	(tracePostEqRewrite): updated Assert()
+	(printSubstitution): updated Assert()
+
+	* userLevelRewritingContext.hh: removed #pragma
+
+	* token.cc: removed #pragma
+	(codeToInt64): DebugAdvisoryCheck() -> DebugAdvisory()
+	(codeToInt64): updated Assert()
+	(codeToDouble): updated Assert()
+	(bubbleToPrefixNameCode): updated Assert()
+	(getRational): updated Assert()
+
+	* token.hh: removed #pragma
+
+	* symbolType.cc: removed #pragma
+
+	* symbolType.hh: removed #pragma
+
+	* quotedIdentifierTerm.cc: removed #pragma
+
+	* quotedIdentifierTerm.hh: removed #pragma
+
+	* quotedIdentifierSymbol.cc: removed #pragma
+
+	* quotedIdentifierSymbol.hh: removed #pragma
+
+	* quotedIdentifierOpSymbol.cc: removed #pragma
+	(eqRewrite): updated Assert()
+
+	* quotedIdentifierOpSymbol.hh: removed #pragma
+
+	* quotedIdentifierDagNode.cc: removed #pragma
+
+	* quotedIdentifierDagNode.hh: removed #pragma
+
+	* profileModule.cc: removed #pragma
+
+	* profileModule.hh: removed #pragma
+
+	* process.cc (computeType): updated Assert()s
+
+	* prettyPrint.cc (computeGraphStatus): updated Assert()
+
+	* preModule.cc: removed #pragma
+	(regretToInform): updated Assert()
+
+	* preModule.hh: removed #pragma
+
+	* ops.cc (convertSortsToKinds): updated Assert()
+
+	* moduleDatabase.cc: removed #pragma
+
+	* moduleDatabase.hh: removed #pragma
+
+	* mixfixParser.cc: removed #pragma
+	(parseSentence): updated DebugAdvisoryCheck()
+	(parseSentence): updated Assert()
+	(makeTerms): updated Assert()
+	(insertStatement): updated Assert()
+	(makeMatchCommand): updated Assert()
+	(makeSearchCommand): updated Assert()
+	(makeTerm): updated Assert()s
+
+	* mixfixParser.hh: removed #pragma
+
+	* mixfixModule.cc: removed #pragma
+	(findSymbol): updated Assert()
+	(computePrecAndGather): updated Assert()s
+
+	* mixfixModule.hh: removed #pragma
+
+	* metadataStore.cc: removed #pragma
+
+	* metadataStore.hh: removed #pragma
+
+	* maudemlBuffer.cc: removed #pragma
+
+	* maudemlBuffer.hh: removed #pragma
+
+	* loopSymbol.cc: removed #pragma
+
+	* loopSymbol.hh: removed #pragma
+
+	* interpreter.cc: removed #pragma
+
+	* interpreter.hh: removed #pragma
+
+	* importTranslation.cc: removed #pragma
+	(translate): updated Assert() (both versions)
+
+	* importTranslation.hh: removed #pragma
+
+	* importModule.cc: removed #pragma
+	(donateOps): updated Assert()s
+	(fixUpDonatedOps): updated Assert()s
+
+	* importModule.hh: removed #pragma
+
+	* graphPrint.cc (graphCount): updated Assert()s
+
+	* fileTable.cc: removed #pragma
+
+	* fileTable.hh: removed #pragma
+
+	* execute.cc (cont): fixed buggy IssueWarning()
+
+	* entry.cc (addSort): updated Assert()
+	(hasSameDomain): updated Assert()s
+	(addOpDeclaration): updated Assert()
+
+	* dagNodePrint.cc (computeColor): updated Assert()
+
+	* compiler.cc: removed #pragma
+	(makeExecutable): fixed buggy IssueWarning()
+
+	* compiler.hh: removed #pragma
+
+	* commonTokens.cc: removed #pragma
+
+	* commonTokens.hh: removed #pragma
+	
+===================================Maude79===========================================
+
 2003-02-20  Steven Eker  <eker@goo.csl.sri.com>
 
 	* interact.cc (segmentationFaultHandler): updated bug report address

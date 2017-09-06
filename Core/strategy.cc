@@ -1,9 +1,6 @@
 //
 //      Implementation for abstract class Strategy.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //	utility stuff
 #include "macros.hh"

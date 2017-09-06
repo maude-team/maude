@@ -28,12 +28,7 @@ FreeNet::applyReplace2(DagNode* subject, RewritingContext& context)
 	  DagNode*** p;
 	  if (ds != n->symbol)
 	    {
-	      //	
-	      //	Comparing pointers that don't point into the same array
-	      //	is undefined according to the C++ standard, but provides
-	      //	a total ordering on any reasonable architecture.
-	      //
-	      i = (ds < n->symbol) ? n->less : n->greater;
+	      i = n->notEqual[getSignBit(ds->compare(n->symbol))];
 	      if (i <= 0)
 		{
 		  if (i == 0)
@@ -110,7 +105,7 @@ FreeNet::applyReplace2(DagNode* subject, RewritingContext& context)
 	      int p;
 	      if (ds != n->symbol)
 		{
-		  i = ds->compare(n->symbol) < 0 ? n->less : n->greater;
+		  i = n->notEqual[getSignBit(ds->compare(n->symbol))];
 		  if (i <= 0)
 		    break;
 		  n = &(netBase[i]);

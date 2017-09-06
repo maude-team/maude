@@ -1,9 +1,6 @@
 //
 //	Implementation for class FreeNet.
 //
-#ifdef __GNUG__
-#pragma implementation "freeNet.hh"
-#endif
 
 //	utility stuff
 #include "macros.hh"
@@ -77,7 +74,7 @@ FreeNet::fillOutNode(int nodeNr,
   Vector<Triple> triples(nrSymbols);
   for (int i = 0; i < nrSymbols; i++)
     {
-      Assert(symbols[i] != 0, cerr << "null symbol");
+      Assert(symbols[i] != 0, "null symbol");
       triples[i].symbol = symbols[i];
       triples[i].slot = slots[i];
       triples[i].subtree = targets[i];
@@ -165,15 +162,7 @@ FreeNet::buildRemainders(const Vector<Equation*>& equations,
 local_inline bool
 FreeNet::tripleLt(const Triple& p1, const Triple& p2)
 {
-#ifdef SPEED_HACKS
-  //	
-  //	Comparing pointers that don't point into the same array is undefined
-  //	according to the C++ standard, but works on reasonable architecture.
-  //
-  return p1.symbol < p2.symbol;
-#else
   return p1.symbol->compare(p2.symbol) < 0;
-#endif
 }
 
 void
@@ -197,18 +186,18 @@ FreeNet::buildTernaryTree(int& nodeIndex,
   net[i].equal = triples[testSymbol].subtree;
   if (first < testSymbol)
     {
-      net[i].less = nodeIndex;
+      net[i].notEqual[LESS] = nodeIndex;
       buildTernaryTree(nodeIndex, triples, first, testSymbol - 1, defaultSubtree, NONE, NONE);
     }
   else
-    net[i].less = defaultSubtree;
+    net[i].notEqual[LESS] = defaultSubtree;
   if (last > testSymbol)
     {
-      net[i].greater = nodeIndex;
+      net[i].notEqual[GREATER] = nodeIndex;
       buildTernaryTree(nodeIndex, triples, testSymbol + 1, last, defaultSubtree, NONE, NONE);
     }
   else
-    net[i].greater = defaultSubtree;
+    net[i].notEqual[GREATER] = defaultSubtree;
 }
 
 bool
@@ -257,8 +246,8 @@ FreeNet::dump(ostream& s, int indentLevel)
 	"\", slot " << net[i].slotPtr - &(stack[0]) <<
 #endif
 	", equal " << net[i].equal <<
-	", less " << net[i].less <<
-	", greater " << net[i].greater << '\n';
+	", notEqual[LESS] " << net[i].notEqual[LESS] <<
+	", notEqual[GREATER] " << net[i].notEqual[GREATER] << '\n';
     }
 
   s << Indent(indentLevel - 1) << "applicable:\n";

@@ -3,9 +3,6 @@
 //
 #ifndef _loopSymbol_hh_
 #define _loopSymbol_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "freeSymbol.hh"
 
 class LoopSymbol : public FreeSymbol

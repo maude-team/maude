@@ -3,9 +3,6 @@
 //
 #ifndef _dagNodeSet_hh_
 #define _dagNodeSet_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "pointerSet.hh"
 
 class DagNodeSet : private PointerSet

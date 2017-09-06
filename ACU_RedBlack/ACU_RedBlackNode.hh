@@ -33,6 +33,7 @@ public:
   ACU_RedBlackNode* getLeft() const;
   ACU_RedBlackNode* getRight() const;
   int getSize() const;
+  int getMaxMult() const;
 
   void setSortIndex(int index);
   int getSortIndex() const;
@@ -91,14 +92,19 @@ public:
 private:
   enum Values
   {
-    LEFT_INDEX = 0,
-    RIGHT_INDEX = 1
+    LEFT_INDEX = 1,
+    RIGHT_INDEX = 0
   };
 
   enum Flags
   {
     RED = 1
   };
+
+  //
+  //	Returns left child if negative, right child otherwise.
+  //
+  ACU_RedBlackNode* getChild(int sign) const;
 
   static ACU_RedBlackNode* copy(ACU_Stack& path,
 				ACU_RedBlackNode* n,
@@ -126,8 +132,6 @@ private:
 
   bool isRed() const;
   static bool isRed(const ACU_RedBlackNode* mightBeNull);
-
-  int getMaxMult() const;
   //
   //	Nasty cross casting stuff.
   //
@@ -159,7 +163,7 @@ ACU_RedBlackNode::operator new(size_t size)
   //	We rely on MemoryCell::allocateMemoryCell() setting the half word to
   //	Sort::SORT_UNKNOWN.
   //
-  Assert(size <= sizeof(MemoryCell), cerr << "red-black node too big");
+  Assert(size <= sizeof(MemoryCell), "red-black node too big");
   return MemoryCell::allocateMemoryCell();
 }
 
@@ -227,12 +231,12 @@ ACU_RedBlackNode::ACU_RedBlackNode(DagNode* dagNode,
   Assert(size == 1 +
 	 ((left == 0) ? 0 : left->size) +
 	 ((right == 0) ? 0 : right->size),
-	 cerr << "bad size");
+	 "bad size");
   Assert(maxMult ==
 	 min(SAT_MULT, max(multiplicity,
 			   max((left == 0) ? 0 : left->getMaxMult(),
 			       (right == 0) ? 0 : right->getMaxMult()))),
-	  cerr << "bad maxMult");
+	  "bad maxMult");
   getMemoryCell()->setByte(maxMult);
   children[LEFT_INDEX] = left;
   children[RIGHT_INDEX] = right;
@@ -260,6 +264,12 @@ inline ACU_RedBlackNode*
 ACU_RedBlackNode::getRight() const
 {
   return children[RIGHT_INDEX];
+}
+
+inline ACU_RedBlackNode*
+ACU_RedBlackNode::getChild(int sign) const
+{
+  return children[getSignBit(sign)];
 }
 
 inline int

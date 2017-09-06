@@ -3,9 +3,6 @@
 //
 #ifndef _CUI_NumberOpSymbol_hh_
 #define _CUI_NumberOpSymbol_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "CUI_Symbol.hh"
 
 class CUI_NumberOpSymbol : public CUI_Symbol

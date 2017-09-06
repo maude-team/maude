@@ -82,7 +82,7 @@ MixfixModule::graphCount(DagNode* dagNode, PointerSet& visited, Vector<mpz_class
 {
   visited.insert(dagNode);
   int index = counts.length();
-  Assert(index == visited.pointer2Index(dagNode), cerr << "counts out of step");
+  Assert(index == visited.pointer2Index(dagNode), "counts out of step");
   counts.append(0);
  
   mpz_class count(1);
@@ -92,7 +92,7 @@ MixfixModule::graphCount(DagNode* dagNode, PointerSet& visited, Vector<mpz_class
       if (!(visited.contains(d)))
         graphCount(d, visited, counts);
       mpz_class& childsCount = counts[visited.pointer2Index(d)];
-      Assert(childsCount != 0, cerr << "cycle in dag");
+      Assert(childsCount != 0, "cycle in dag");
       count += childsCount;
     }
   counts[index] = count;

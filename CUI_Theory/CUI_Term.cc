@@ -1,9 +1,6 @@
 //
 //	Implementation for class CUI_Term.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //	utility stuff
 #include "macros.hh"
@@ -45,7 +42,7 @@ CUI_Term::CUI_Term(CUI_Symbol* symbol, const Vector<Term*>& arguments)
   : Term(symbol),
     argArray(2)
 {
-  Assert(arguments.length() == 2, cerr << "bad number of arguments for " << symbol);
+  Assert(arguments.length() == 2, "bad number of arguments for " << symbol);
   argArray[0] = arguments[0];
   argArray[1] = arguments[1];
 }

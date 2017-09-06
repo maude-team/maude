@@ -3,9 +3,6 @@
 //
 #ifndef _S_RhsAutomaton_hh_
 #define _S_RhsAutomaton_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include <gmpxx.h>
 #include "rhsAutomaton.hh"
 

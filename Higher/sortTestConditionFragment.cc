@@ -1,9 +1,6 @@
 //
 //	Implementation for class SortTestConditionFragment.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //	utility stuff
 #include "macros.hh"
@@ -57,7 +54,7 @@ void
 SortTestConditionFragment::preprocess()
 {
   lhs->symbol()->fillInSortInfo(lhs);
-  Assert(lhs->getComponent() == sort->component(), cerr << "component clash");
+  Assert(lhs->getComponent() == sort->component(), "component clash");
 }
 
 void

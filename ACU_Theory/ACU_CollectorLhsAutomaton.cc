@@ -1,9 +1,6 @@
 //
 //      Implementation for class ACU_CollectorLhsAutomaton.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //	utility stuff
 #include "macros.hh"
@@ -13,8 +10,8 @@
 //      forward declarations
 #include "interface.hh"
 #include "core.hh"
-#include "ACU_Theory.hh"
 #include "ACU_RedBlack.hh"
+#include "ACU_Theory.hh"
 
 //      interface class definitions
 #include "associativeSymbol.hh"
@@ -32,24 +29,31 @@
 //	ACU theory class definitions
 #include "ACU_Symbol.hh"
 #include "ACU_DagNode.hh"
+#include "ACU_TreeDagNode.hh"
 #include "ACU_CollectorLhsAutomaton.hh"
 
-//	ACU Red-Black class definitions
-//#include "ACU_FastIter.hh"
-//#include "ACU_SlowIter.hh"
-//#include "ACU_RedBlackNode.hh"
-//#include "ACU_TreeDagArgumentIterator.hh"
-#include "ACU_TreeDagNode.hh"
-
-ACU_CollectorLhsAutomaton::ACU_CollectorLhsAutomaton(VariableTerm* collector)
-  : collectorVarIndex(collector->getIndex())
+ACU_CollectorLhsAutomaton::ACU_CollectorLhsAutomaton(ACU_Symbol* symbol,
+						     bool matchAtTop,
+						     bool collapsePossible,
+						     int nrVariables,
+						     VariableTerm* collector)
+  : ACU_LhsAutomaton(symbol, matchAtTop, collapsePossible, nrVariables),
+    collectorVarIndex(collector->getIndex())
 {
+  Assert(symbol->sortConstraintFree(), "not sort constraint free");
+
   collectorSort = collector->getSort();
-  if (collectorSort->index() == 1)
+  Assert(symbol->sortBound(collectorSort) == UNBOUNDED,
+	 "collector must have unbounded sort");
+
+  int index = collectorSort->index();
+  if (index == 0)
+    collectorSort = 0;  // kind can take anything
+  else if (index == 1)
     {
       ConnectedComponent* c = collectorSort->component();
       if (c->nrMaximalSorts() == 1 && c->errorFree())
-	collectorSort = 0;
+	collectorSort = 0;  // top sort in an error-free component can take anything
     }
 }
 
@@ -83,7 +87,9 @@ ACU_CollectorLhsAutomaton::collect(int stripped,
 	    return false;
 	}
     }
-
+  //
+  //	Make binding for collector variable.
+  //
   ArgVec<ACU_DagNode::Pair>::const_iterator source = subject->argArray.begin();
   const ArgVec<ACU_DagNode::Pair>::const_iterator e = subject->argArray.end();
   const ArgVec<ACU_DagNode::Pair>::const_iterator victim = source + stripped;
@@ -91,88 +97,47 @@ ACU_CollectorLhsAutomaton::collect(int stripped,
   if (strippedMultiplicity == 0)
     --nrArgs;
   ACU_Symbol* topSymbol = subject->symbol();
-
-  //cout << nrArgs << ' ';
-
   ACU_DagNode* d = new ACU_DagNode(topSymbol, nrArgs);
-  d->setNormalizationStatus(ACU_DagNode::ASSIGNMENT);
-
   ArgVec<ACU_DagNode::Pair>::iterator dest = d->argArray.begin();
+  for (; source != victim; ++dest, ++source)
+    *dest = *source;
+  if (strippedMultiplicity > 0)
+    {
+      dest->dagNode = source->dagNode;
+      dest->multiplicity = strippedMultiplicity;
+      ++dest;
+    }
+  for (++source; source != e; ++dest, ++source)
+    *dest = *source;
+  Assert(dest == d->argArray.end(), "iterators inconsistant");
+  //
+  //	Do any sort calculations needed.
+  //
   const Sort* cs = collectorSort;
   if (cs == 0)
     {
-      //
-      //	No sort check case.
-      //
-      for (; source != victim; ++dest, ++source)
-	*dest = *source;
-      if (strippedMultiplicity > 0)
+      if (subject->isReduced())
 	{
-	  dest->dagNode = source->dagNode;
-	  dest->multiplicity = strippedMultiplicity;
-	  ++dest;
+	  int index = topSymbol->getUniqueSortIndex();
+	  Assert(index != 0, "bad uniqueSortIndex");
+	  if (index < 0)
+	    index = d->argVecComputeBaseSort();
+	  d->setSortIndex(index);
+	  d->setReduced();
 	}
-      for (++source; source != e; ++dest, ++source)
-	*dest = *source;
-      Assert(dest == d->argArray.end(), cerr << "iterators inconsistant");
     }
   else
     {
-      //
-      //	Check each sort to see that it is lower than collector sort.
-      //
-      int lastIndex = Sort::SORT_UNKNOWN;
-      for (; source != victim; ++dest, ++source)
+      int index = d->argVecComputeBaseSort();
+      if (!leq(index, cs))
+	return false;
+      if (subject->isReduced())
 	{
-	  DagNode* sd = source->dagNode;
-	  int index = sd->getSortIndex();
-	  Assert(index != Sort::SORT_UNKNOWN, cerr << "bad sort");
-	  if (index != lastIndex)
-	    {
-	      if (!(leq(index, cs)))
-		return false;
-	      lastIndex = index;
-	    }
-	  dest->dagNode = sd;
-	  dest->multiplicity = source->multiplicity;
+	  d->setSortIndex(index);
+	  d->setReduced();
 	}
-      if (strippedMultiplicity > 0)
-	{
-	  DagNode* sd = source->dagNode;
-	  int index = sd->getSortIndex();
-	  Assert(index != Sort::SORT_UNKNOWN, cerr << "bad sort");
-	  if (index != lastIndex)
-	    {
-	      if (!(leq(index, cs)))
-		return false;
-	      lastIndex = index;
-	    }
-	  dest->dagNode = sd;
-	  dest->multiplicity = strippedMultiplicity;
-	  ++dest;
-	}
-      for (++source; source != e; ++dest, ++source)
-	{
-	  DagNode* sd = source->dagNode;
-	  int index = sd->getSortIndex();
-	  Assert(index != Sort::SORT_UNKNOWN, cerr << "bad sort");
-	  if (index != lastIndex)
-	    {
-	      if (!(leq(index, cs)))
-		return false;
-	      lastIndex = index;
-	    }
-	  dest->dagNode = sd;
-	  dest->multiplicity = source->multiplicity;
-	}
-      Assert(dest == d->argArray.end(), cerr << "iterators inconsistant");
     }
-
-  if (subject->isReduced() && topSymbol->sortConstraintFree())
-    {
-      topSymbol->computeBaseSort(d);
-      d->setReduced();
-    }
+  d->setNormalizationStatus(ACU_DagNode::ASSIGNMENT);
   solution.bind(collectorVarIndex, d);
   return true;
 }
@@ -182,25 +147,46 @@ ACU_CollectorLhsAutomaton::collect(ACU_Stack& stripped,  // destroyed
 				   ACU_TreeDagNode* subject,
 				   Substitution& solution) const
 {
-  DagNode* d = subject->makeDelete(stripped, 1);
+  ACU_RedBlackNode* n = ACU_RedBlackNode::consDelete(stripped, 1);
+  DagNode* d;
   const Sort* cs = collectorSort;
-  if (cs == 0)
+  if (n->getSize() == 1 && n->getMultiplicity() == 1)
     {
-      if (subject->isReduced() && d->symbol()->sortConstraintFree())
-	{
-	  d->symbol()->computeBaseSort(d);
-	  d->setReduced();
-	}
+      //
+      //	Only one argument left for collector.
+      //
+      d = n->getDagNode();
+      if (cs != 0 && !leq(d->getSortIndex(), cs))
+	return false;
     }
   else
     {
-      d->symbol()->computeBaseSort(d);
-      if (!leq(d->getSortIndex(), cs))
-	return false;
-      if (subject->isReduced() && d->symbol()->sortConstraintFree())
-	d->setReduced();
+      ACU_Symbol* topSymbol = subject->symbol();
+      ACU_TreeDagNode* t = new ACU_TreeDagNode(topSymbol, n);
+      if (cs == 0)
+	{
+	  if (subject->isReduced())
+	    {
+	      int index = topSymbol->getUniqueSortIndex();
+	      Assert(index != 0, "bad uniqueSortIndex");
+	      if (index < 0)
+		index = t->treeComputeBaseSort();
+	      t->setSortIndex(index);
+	      t->setReduced();
+	    }
+	}
       else
-	d->repudiateSortInfo();
+	{
+	  int index = t->treeComputeBaseSort();
+	  if (!leq(index, cs))
+	    return false;
+	  if (subject->isReduced())
+	    {
+	      t->setSortIndex(index);
+	      t->setReduced();
+	    }
+	}
+      d = t;
     }
   solution.bind(collectorVarIndex, d);
   return true;
@@ -217,6 +203,6 @@ ACU_CollectorLhsAutomaton::dump(ostream& s, const VariableInfo& variableInfo, in
     s << "(sort checks off)\n";
   else
     s << collectorSort << '\n';
-  HeuristicLhsAutomaton::dump(s, variableInfo, indentLevel);
+  ACU_LhsAutomaton::dump(s, variableInfo, indentLevel);
 }
 #endif

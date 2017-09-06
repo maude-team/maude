@@ -3,9 +3,6 @@
 //
 #ifndef _subproblemAccumulator_hh_
 #define _subproblemAccumulator_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "subproblemSequence.hh"
 
 class SubproblemAccumulator

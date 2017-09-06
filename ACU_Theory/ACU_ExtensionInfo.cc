@@ -38,7 +38,7 @@ ACU_ExtensionInfo::buildMatchedPortion() const
       if (unmatchedMultiplicity[i] != s->argArray[i].multiplicity)
 	++size;
     }
-  Assert(size >= 1, cerr << "no matched portion");
+  Assert(size >= 1, "no matched portion");
   //
   //	Build an ACU_DagNode for the matched portion.
   //
@@ -47,10 +47,10 @@ ACU_ExtensionInfo::buildMatchedPortion() const
   for (int i = 0; i < nrArgs; i++)
     {
       int d = s->argArray[i].multiplicity - unmatchedMultiplicity[i];
-      Assert(d >= 0, cerr << "multiplicity subproblem");
+      Assert(d >= 0, "multiplicity subproblem");
       if (d > 0)
 	{
-	  Assert(d > 1 || size > 1, cerr << "at least 2 args must be matched");
+	  Assert(d > 1 || size > 1, "at least 2 args must be matched");
 	  n->argArray[p].dagNode = s->argArray[i].dagNode;
 	  n->argArray[p].multiplicity = d;
 	  ++p;
@@ -80,7 +80,7 @@ ACU_ExtensionInfo::makeClone() const
 void
 ACU_ExtensionInfo::copy(ExtensionInfo* extensionInfo)
 {
-  ACU_ExtensionInfo* e = static_cast<ACU_ExtensionInfo*>(extensionInfo);
+  ACU_ExtensionInfo* e = safeCast(ACU_ExtensionInfo*, extensionInfo);
   setValidAfterMatch(e->validAfterMatch());
   bool whole = e->matchedWhole();
   setMatchedWhole(whole);
@@ -123,7 +123,7 @@ ACU_ExtensionInfo::convertToUnmatched()
 	  else
 	    *j = 0;
 	}
-      Assert(d == 0, cerr << "didn't finish unmatched ACU_TreeDagNode");
+      Assert(d == 0, "didn't finish unmatched ACU_TreeDagNode");
     }
   else
     {
@@ -140,7 +140,7 @@ ACU_ExtensionInfo::convertToUnmatched()
 	  else
 	    *j = 0;
 	}
-      Assert(d == 0, cerr << "didn't find single unmatched arg");
+      Assert(d == 0, "didn't find single unmatched arg");
     }
   unmatched.setNode(0);
 }

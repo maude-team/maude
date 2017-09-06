@@ -40,7 +40,7 @@ ACU_DagNode::extensionNormalizeAtTop()
 {
   int last = argArray.length() - 1;
   Assert(argArray[last].multiplicity == 1,
-	 cerr << "bad multiplicity for replacement term");
+	 "bad multiplicity for replacement term");
   DagNode* replacement = argArray[last].dagNode;
   if (replacement->symbol() == symbol())
     {

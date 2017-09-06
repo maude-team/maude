@@ -1,9 +1,6 @@
 //
 //      Implementation for class ImportTranslation.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //      utility stuff
 #include "macros.hh"
@@ -39,7 +36,7 @@ ImportTranslation::translate(const Sort* sort)
   if (sort->index() == Sort::ERROR_SORT)
     return translate(sort->component())->sort(Sort::ERROR_SORT);
   Sort* s = importer->findSort(sort->id());
-  Assert(s != 0, cerr << "no translation for sort " << sort <<
+  Assert(s != 0, "no translation for sort " << sort <<
 	 " in " << importer);
   return s;
 }
@@ -77,7 +74,7 @@ ImportTranslation::translate(Symbol* symbol)
 	break;
       }
     }
-  Assert(importerVersion != 0, cerr << "no translation for " << symbol <<
+  Assert(importerVersion != 0, "no translation for " << symbol <<
 	 " in " << importer);
   directMap.setMap(symbol, importerVersion);
   return importerVersion;

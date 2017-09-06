@@ -1,9 +1,6 @@
 //
 //      Implementation for abstract class SortTable.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //	utility stuff
 #include "macros.hh"
@@ -50,7 +47,7 @@ void
 SortTable::compileOpDeclarations()
 {
   int nrDeclarations = opDeclarations.length();
-  Assert(nrDeclarations > 0, cerr << "no operator declarations");
+  Assert(nrDeclarations > 0, "no operator declarations");
 
   componentVector.expandTo(nrArgs + 1);
   for (int i = 0; i <= nrArgs; i++)
@@ -64,10 +61,9 @@ SortTable::compileOpDeclarations()
       for (int j = 1; j < nrDeclarations; j++)
 	{
 	  Assert(c == (opDeclarations[j].getDomainAndRange()[i])->component(),
-		 ((cerr << "Sort declarations for operator " <<
-		   static_cast<Symbol*>(this) <<  // hack
-		   " disagree on the sort component for "),
-		  (i < nrArgs ? (cerr << "argument " << i + 1) : (cerr << "range"))));
+		 "Sort declarations for operator " <<
+		 static_cast<Symbol*>(this) <<  // hack
+		 " disagree on the sort component for argument " << i + 1);
 	}
 #endif
       componentVector[i] = c;

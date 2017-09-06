@@ -1,10 +1,7 @@
 //
 //      Implementation for class FloatDagNode.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
- 
+
 //      utility stuff
 #include "macros.hh"
 #include "vector.hh"

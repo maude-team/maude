@@ -1,9 +1,6 @@
 //
 //      Implementation for class ACU_Subproblem.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //	utility stuff
 #include "macros.hh"
@@ -36,27 +33,27 @@
 #include "ACU_Subproblem.hh"
 
 ACU_Subproblem::ACU_Subproblem(ACU_DagNode* subject,
-			       Vector<int>& multiplicity,
 			       ACU_ExtensionInfo* extensionInfo)
   : subject(subject),
-    extensionInfo(extensionInfo),
-    currentMultiplicity(multiplicity)
+    extensionInfo(extensionInfo)
 {
   system = 0;
 }
 
+void
+ACU_Subproblem::addSubjects(Vector<int>& multiplicity)
+{
+  currentMultiplicity = multiplicity;  // deep copy
+}
+
 ACU_Subproblem::~ACU_Subproblem()
 {
-  int nrPatternNodes = patternNodes.length();
-  for (int i = 0; i < nrPatternNodes; i++)
+  FOR_EACH_CONST(i, Vector<PatternNode>, patternNodes)
     {
-      PatternNode& p = patternNodes[i];
-      int nrEdges = p.edges.length();
-      for (int j = 0; j < nrEdges; j++)
+      FOR_EACH_CONST(j, Vector<Edge>, i->edges)
 	{
-	  Edge& e = p.edges[j];
-	  delete e.difference;
-	  delete e.subproblem;
+	  delete j->difference;
+	  delete j->subproblem;
 	}
     }
   delete system;
@@ -69,6 +66,21 @@ ACU_Subproblem::addPatternNode(int multiplicity)
   patternNodes.expandBy(1);
   patternNodes[nrPatternNodes].multiplicity = multiplicity;
   return nrPatternNodes;
+}
+
+void
+ACU_Subproblem::removePatternNode(int& uniqueSubject,
+				  LocalBinding*& difference,
+				  Subproblem*& subproblem)
+{
+  int newLen = patternNodes.length() - 1;
+  PatternNode& p = patternNodes[newLen];
+  Assert(p.edges.length() == 1, "can only remove pattern with single edge");
+  Edge& e = p.edges[0];
+  uniqueSubject = e.target;
+  difference = e.difference;
+  subproblem = e.subproblem;
+  patternNodes.contractTo(newLen);
 }
 
 void
@@ -233,11 +245,11 @@ ACU_Subproblem::solveVariables(bool findFirst, RewritingContext& solution)
   //	Unbind variables involved in Diophantine system
   //	(Can we guarentee that the same set of variables will be involved
   //	in each Diophantine system for this subproblem and avoid this; and
-  //	also reuse variableMap); Subjects (even number of subjects) will
+  //	also reuse variableMap?); Subjects (even number of subjects) will
   //	certainly change for each system.
   //
-  for (int i = 0; i < nrVars; i++)
-    solution.bind(topVariables[variableMap[i]].index, 0);
+  FOR_EACH_CONST(i, Vector<int>, variableMap)
+    solution.bind(topVariables[*i].index, 0);
   return false;
 }
 

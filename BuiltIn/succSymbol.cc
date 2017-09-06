@@ -1,9 +1,6 @@
 //
 //      Implementation for class SuccSymbol.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //      utility stuff
 #include "macros.hh"
@@ -77,7 +74,7 @@ Term*
 SuccSymbol::makeNatTerm(const mpz_class& nat)
 {
   Assert(zeroTerm.getTerm() != 0,
-	 cerr << "zero not defined for " << this);
+	 "zero not defined for " << this);
   Term* zero = zeroTerm.getTerm()->deepCopy();
   return (nat == 0) ? zero : (new S_Term(this, nat, zero));
 }
@@ -85,7 +82,7 @@ SuccSymbol::makeNatTerm(const mpz_class& nat)
 DagNode*
 SuccSymbol::makeNatDag(const mpz_class& nat)
 {
-  Assert(zeroTerm.getTerm() != 0, cerr << "zero not defined");
+  Assert(zeroTerm.getTerm() != 0, "zero not defined");
   DagNode* zero = zeroTerm.getDag();
   return (nat == 0) ? zero : (new S_DagNode(this, nat, zero));
 }
@@ -116,11 +113,11 @@ SuccSymbol::getNat(const Term* term) const
   const Symbol* s = term->symbol();
   if (s != this)
     {
-      Assert(zeroTerm.getTerm()->equal(term), cerr << "not a nat");
+      Assert(zeroTerm.getTerm()->equal(term), "not a nat");
       return zero;
     }
   const S_Term* st = safeCast(const S_Term*, term);
-  Assert(zeroTerm.getTerm()->equal(st->getArgument()), cerr << "arg not zero");
+  Assert(zeroTerm.getTerm()->equal(st->getArgument()), "arg not zero");
   return st->getNumber();
 }
 
@@ -132,11 +129,11 @@ SuccSymbol::getNat(const DagNode* dagNode) const
   const Symbol* s = dagNode->symbol();
   if (s != this)
     {
-      Assert(zeroTerm.getTerm()->equal(dagNode), cerr << "not a nat");
+      Assert(zeroTerm.getTerm()->equal(dagNode), "not a nat");
       return zero;
     }
   const S_DagNode* sd = safeCast(const S_DagNode*, dagNode);
-  Assert(zeroTerm.getTerm()->equal(sd->getArgument()), cerr << "arg not zero");
+  Assert(zeroTerm.getTerm()->equal(sd->getArgument()), "arg not zero");
   return sd->getNumber();
 }
 
@@ -175,8 +172,8 @@ SuccSymbol::getSignedInt64(const DagNode* dagNode, Int64& value) const
 bool
 SuccSymbol::rewriteToNat(DagNode* subject, RewritingContext& context, const mpz_class& result)
 {
-  Assert(result >= 0, cerr << "-ve");
-  Assert(zeroTerm.getTerm() != 0, cerr << "zero not defined");
+  Assert(result >= 0, "-ve");
+  Assert(zeroTerm.getTerm() != 0, "zero not defined");
 
   DagNode* zero = zeroTerm.getDag();
   if (result == 0)

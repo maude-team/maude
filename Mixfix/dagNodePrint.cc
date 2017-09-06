@@ -10,7 +10,7 @@ MixfixModule::computeColor(ColoringInfo& coloringInfo, DagNode* dagNode)
       if (dagNode->isReduced())
 	{
 	  int index = coloringInfo.visited.pointer2Index(dagNode);
-	  Assert(index != NONE, cerr << "didn't visit dag node");
+	  Assert(index != NONE, "didn't visit dag node");
 	  int status = coloringInfo.statusVec[index];
 	  if (!(status & CONSTRUCTOR))
 	    {

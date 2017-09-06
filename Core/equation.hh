@@ -3,9 +3,6 @@
 //
 #ifndef _equation_hh_
 #define _equation_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "preEquation.hh"
 #include "rhsBuilder.hh"
 

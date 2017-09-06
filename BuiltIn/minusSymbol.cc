@@ -1,9 +1,6 @@
 //
 //      Implementation for class MinusSymbol.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //      utility stuff
 #include "macros.hh"
@@ -56,7 +53,7 @@ MinusSymbol::attachData(const Vector<Sort*>& opDeclaration,
 DagNode*
 MinusSymbol::makeNegDag(const mpz_class& integer)
 {
-  Assert(integer < 0, cerr << "not negative");
+  Assert(integer < 0, "not negative");
   Vector<DagNode*> arg(1);
   arg[0] = getSuccSymbol()->makeNatDag(- integer);  // would like to avoid copy
   return makeDagNode(arg);
@@ -66,7 +63,7 @@ bool
 MinusSymbol::isNeg(const DagNode* dagNode) const
 {
   Assert(static_cast<const Symbol*>(dagNode->symbol()) == this,
-	 cerr << "symbol mismatch");
+	 "symbol mismatch");
   DagNode* a = safeCast(const FreeDagNode*, dagNode)->getArgument(0);
   return a->symbol() == getSuccSymbol() && getSuccSymbol()->isNat(a);
 }
@@ -75,7 +72,7 @@ const mpz_class&
 MinusSymbol::getNeg(const DagNode* dagNode, mpz_class& result) const
 {
   Assert(static_cast<const Symbol*>(dagNode->symbol()) == this,
-	 cerr << "symbol mismatch");
+	 "symbol mismatch");
   result = - getSuccSymbol()->getNat(safeCast(const FreeDagNode*, dagNode)->getArgument(0));
   return result;
 }
@@ -94,7 +91,7 @@ bool
 MinusSymbol::isNeg(/* const */ Term* term) const
 {
   Assert(static_cast<const Symbol*>(term->symbol()) == this,
-	 cerr << "symbol mismatch");
+	 "symbol mismatch");
   ArgumentIterator i(*term);
   Term* t = i.argument();
   return t->symbol() == getSuccSymbol() && getSuccSymbol()->isNat(t);
@@ -104,7 +101,7 @@ const mpz_class&
 MinusSymbol::getNeg(/* const */ Term* term, mpz_class& result) const
 {
   Assert(static_cast<const Symbol*>(term->symbol()) == this,
-	 cerr << "symbol mismatch");
+	 "symbol mismatch");
   ArgumentIterator i(*term);
   result = - getSuccSymbol()->getNat(i.argument());
   return result;

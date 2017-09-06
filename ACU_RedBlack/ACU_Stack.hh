@@ -52,7 +52,7 @@ ACU_Stack::empty() const
 inline ACU_RedBlackNode*
 ACU_Stack::top() const
 {
-  Assert(ptr > base, cerr << "ACU stack underflow");
+  Assert(ptr > base, "ACU stack underflow");
   return *(ptr - 1);
 }
 
@@ -65,28 +65,28 @@ ACU_Stack::clear()
 inline void
 ACU_Stack::push(ACU_RedBlackNode* node)
 {
-  Assert(ptr < base + STACK_SIZE, cerr << "ACU stack overflow");
+  Assert(ptr < base + STACK_SIZE, "ACU stack overflow");
   *ptr++ = node;
 }
 
 inline ACU_RedBlackNode*
 ACU_Stack::pop()
 {
-  Assert(ptr > base, cerr << "ACU stack underflow");
+  Assert(ptr > base, "ACU stack underflow");
   return *(--ptr);
 }
 
 inline void
 ACU_Stack::unpop()
 {
-  Assert(ptr < base + STACK_SIZE, cerr << "ACU stack overflow");
+  Assert(ptr < base + STACK_SIZE, "ACU stack overflow");
   ++ptr;
 }
 
 inline void
 ACU_Stack::multiPop(int nr)
 {
-  Assert(ptr - nr >= base, cerr << "ACU stack underflow");
+  Assert(ptr - nr >= base, "ACU stack underflow");
   ptr -= nr;
 }
 

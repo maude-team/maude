@@ -6,10 +6,6 @@
 //
 #ifndef _dagNode_hh_
 #define _dagNode_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
-//#include "memoryCell.hh"
 #include "redexPosition.hh"
 
 class DagNode
@@ -221,7 +217,7 @@ DagNode::operator new(size_t size)
   //	We rely on MemoryCell::allocateMemoryCell() setting the half word to
   //	Sort::SORT_UNKNOWN.
   //
-  Assert(size <= sizeof(MemoryCell), cerr << "dag node too big");
+  Assert(size <= sizeof(MemoryCell), "dag node too big");
   return MemoryCell::allocateMemoryCell();
 }
 
@@ -233,7 +229,7 @@ DagNode::operator new(size_t /* size */, DagNode* old)
   old->getMemoryCell()->clearAllExceptMarked();
   old->repudiateSortInfo();
   //DebugAdvisory("in place new called, old = " << (void*)(old));
-  Assert(old->getSortIndex() == Sort::SORT_UNKNOWN, cerr << "bad sort init");
+  Assert(old->getSortIndex() == Sort::SORT_UNKNOWN, "bad sort init");
   return static_cast<void*>(old);
 }
 
@@ -243,7 +239,7 @@ DagNode::DagNode(Symbol* symbol)
   topSymbol = symbol;
   //DebugAdvisory("created dag node for " << symbol << " at " << (void*)(this));
   //DebugAdvisoryCheck(getSortIndex() == Sort::SORT_UNKNOWN,
-  //	     cerr << "bad sort in dagnode");
+  //	     "bad sort in dagnode");
 }
 
 inline Symbol*
@@ -367,8 +363,8 @@ DagNode::reduce(RewritingContext& context)
 inline void
 DagNode::mark()
 {
-  Assert(this != 0, cerr << "bad dag node");
-  Assert(topSymbol->arity() >= 0, cerr << "bad symbol");
+  Assert(this != 0, "bad dag node");
+  Assert(topSymbol->arity() >= 0, "bad symbol");
   DagNode* d = this;
   while (!(d->getMemoryCell()->isMarked()))
     {

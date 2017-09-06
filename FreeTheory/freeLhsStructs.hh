@@ -3,9 +3,6 @@
 //
 #ifndef _freeLhsStructs_hh_
 #define _freeLhsStructs_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 class FreeLhsStructs
 {

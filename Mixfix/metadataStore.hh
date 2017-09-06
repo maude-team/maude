@@ -3,9 +3,6 @@
 //
 #ifndef _metadataStore_hh_
 #define _metadataStore_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include <map>
 
 class MetadataStore

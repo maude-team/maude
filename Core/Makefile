@@ -2,8 +2,7 @@ ROOT_DIR := ..
 
 include $(ROOT_DIR)/MakeOptions
 
-MODULES =	core.o \
-		memoryCell.o \
+MODULES =	memoryCell.o \
 		rhsBuilder.o \
 		termBag.o \
 		bindingLhsAutomaton.o \
@@ -49,8 +48,6 @@ CXXFLAGS =	$(DFLAGS) $(IFLAGS)
 
 libcore.a : $(MODULES)
 	$(AR) $(ARFLAGS) libcore.a $(MODULES)
-
-memoryCell.o : memoryManager.cc
 
 rewritingContext.o : run.cc
 

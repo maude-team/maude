@@ -1,9 +1,6 @@
 //
 //      Implementation for class AssociativeSymbol.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 #include <map>
 
 //	utility stuff
@@ -111,7 +108,7 @@ AssociativeSymbol::associativeSortCheck()
 {
   const ConnectedComponent* component = rangeComponent();
   Assert(domainComponent(0) == component && domainComponent(1) == component,
-	 cerr << "Associative operator " << this <<
+	 "Associative operator " << this <<
 	 " has a domain sort in a different connected component from its range sort");
   int nrSorts = component->nrSorts();
   //
@@ -346,14 +343,14 @@ AssociativeSymbol::associativeSortStructureAnalysis()
 void
 AssociativeSymbol::fillInSortInfo(Term* subject)
 {
-  Assert(this == subject->symbol(), cerr << "Bad Symbol");
+  Assert(this == subject->symbol(), "bad Symbol");
   ConnectedComponent* component = rangeComponent();  // should be const
-  Assert(component != 0, cerr << "couldn't get component");
+  Assert(component != 0, "couldn't get component");
 
   ArgumentIterator a(*subject);
   Term* t = a.argument();
   t->symbol()->fillInSortInfo(t);
-  Assert(t->getComponent() == component, cerr << "assoc component error");
+  Assert(t->getComponent() == component, "assoc component error");
   int si = t->getSortIndex();
 #ifndef NO_ASSERT
   int nrArgsSeen = 1;
@@ -362,13 +359,13 @@ AssociativeSymbol::fillInSortInfo(Term* subject)
     {
       Term* t = a.argument();
       t->symbol()->fillInSortInfo(t);
-      Assert(t->getComponent() == component, cerr << "assoc component error");
+      Assert(t->getComponent() == component, "assoc component error");
       si = traverse(traverse(0, si), t->getSortIndex());
 #ifndef NO_ASSERT
       ++nrArgsSeen;
 #endif
     }
-  Assert(nrArgsSeen >= 2, cerr << "bad # of args for assoc op");
+  Assert(nrArgsSeen >= 2, "bad # of args for assoc op");
   subject->setSortInfo(component, si);
 }
 

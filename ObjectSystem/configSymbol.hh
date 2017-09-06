@@ -3,9 +3,6 @@
 //
 #ifndef _configSymbol_hh_
 #define _configSymbol_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "natSet.hh"
 #include "ACU_Symbol.hh"
 

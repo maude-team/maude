@@ -1,11 +1,8 @@
 //
-//  Class for argument iterators in the free theory
+//	Class for argument iterators in the free theory.
 //
 #ifndef _freeArgumentIterator_hh_
 #define _freeArgumentIteraror_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 class FreeArgumentIterator : public RawArgumentIterator 
 {

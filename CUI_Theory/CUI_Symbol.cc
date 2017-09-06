@@ -1,9 +1,6 @@
 //
 //      Implementation for class CUI_Symbol.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
  
 //	utility stuff
 #include "macros.hh"
@@ -84,7 +81,7 @@ CUI_Symbol::makeDagNode(const Vector<DagNode*>& args)
 bool
 CUI_Symbol::eqRewrite(DagNode* subject, RewritingContext& context)
 {
-  Assert(this == subject->symbol(), cerr << "bad symbol");
+  Assert(this == subject->symbol(), "bad symbol");
   CUI_DagNode* s = static_cast<CUI_DagNode*>(subject);
   DagNode** args = s->argArray;
   if (standardStrategy())
@@ -215,18 +212,18 @@ CUI_Symbol::memoStrategy(MemoTable::SourceSet& from,
 void
 CUI_Symbol::computeBaseSort(DagNode* subject)
 {
-  Assert(this == subject->symbol(), cerr << "bad symbol");
+  Assert(this == subject->symbol(), "bad symbol");
   DagNode** args = static_cast<CUI_DagNode*>(subject)->argArray;
   int i0 = args[0]->getSortIndex();
   int i1 = args[1]->getSortIndex();
-  Assert(i0 >= 0 && i1 >= 0, cerr << "bad sort index");
+  Assert(i0 >= 0 && i1 >= 0, "bad sort index");
   subject->setSortIndex(traverse(traverse(0, i0), i1));
 }
 
 void
 CUI_Symbol::normalizeAndComputeTrueSort(DagNode* subject, RewritingContext& context)
 {
-  Assert(this == subject->symbol(), cerr << "bad symbol");
+  Assert(this == subject->symbol(), "bad symbol");
   CUI_DagNode* s = static_cast<CUI_DagNode*>(subject);
   DagNode** args = s->argArray;
   //

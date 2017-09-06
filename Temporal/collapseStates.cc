@@ -52,7 +52,7 @@ GenBuchiAutomaton::transformFairTransitionSet(FairTransitionSet& transformed,
     {
       FairTransition f;
       f.first.first = states[i->first.first];
-      Assert(f.first.first != UNDEFINED, cerr << "state not generated");
+      Assert(f.first.first != UNDEFINED, "state not generated");
       f.first.second = i->first.second;
       f.second = i->second;
       insertFairTransition2(transformed, f);
@@ -63,7 +63,7 @@ void
 GenBuchiAutomaton::insertFairTransition2(FairTransitionSet& fts, const FairTransition& ft)
 {
   Bdd formula = ft.second;
-  Assert(formula != bdd_false(), cerr << "tried to insert false transition");
+  Assert(formula != bdd_false(), "tried to insert false transition");
   const FairTransitionSet::iterator e = fts.end();
   FairTransitionSet::iterator equal = e;
   for (FairTransitionSet::iterator i = fts.begin(); i != e;)
@@ -92,7 +92,7 @@ GenBuchiAutomaton::insertFairTransition2(FairTransitionSet& fts, const FairTrans
   if (equal == e)
     {
       pair<FairTransitionSet::iterator, bool> p = fts.insert(ft);
-      Assert(p.second, cerr << "failed to insert");
+      Assert(p.second, "failed to insert");
       p.first->second = formula;
     }
   else

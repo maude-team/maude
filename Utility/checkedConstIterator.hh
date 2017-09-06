@@ -26,6 +26,7 @@ public:
   //
   const_iterator();
   const_iterator(const const_iterator& other);
+  const_iterator(const iterator& other);  // conversion ctor
   const_iterator& operator=(const const_iterator& other);
   bool operator==(const const_iterator& other) const;
   bool operator!=(const const_iterator& other) const;
@@ -68,24 +69,24 @@ template<class T>
 inline void
 Vector<T>::const_iterator::checkValid() const
 {
-  Assert(parent != 0, cerr << "uninitialized iterator");
+  Assert(parent != 0, "uninitialized iterator");
   Assert(index <= parent->pv.getLength(),
-	 cerr << "index > length (" << index << " > " <<
+	 "index > length (" << index << " > " <<
 	 parent->pv.getLength() << ')');
   Assert(ptr == static_cast<const_pointer>(parent->pv.getBase()) + index,
-	 cerr << "bad pointer");
+	 "bad pointer");
 }
 
 template<class T>
 inline void
 Vector<T>::const_iterator::checkDereferenceable() const
 {
-  Assert(parent != 0, cerr << "uninitialized iterator");
+  Assert(parent != 0, "uninitialized iterator");
   Assert(index < parent->pv.getLength(),
-	 cerr << "index >= length (" << index << " >= " <<
+	 "index >= length (" << index << " >= " <<
 	 parent->pv.getLength() << ')');
   Assert(ptr == static_cast<const_pointer>(parent->pv.getBase()) + index,
-	 cerr << "bad pointer");
+	 "bad pointer");
 }
 
 template<class T>
@@ -98,6 +99,17 @@ Vector<T>::const_iterator::const_iterator()
 template<class T>
 inline
 Vector<T>::const_iterator::const_iterator(const const_iterator& other)
+{
+  if (other.parent != 0)
+    other.checkValid();
+  ptr = other.ptr;
+  parent = other.parent;
+  index = other.index;
+}
+
+template<class T>
+inline
+Vector<T>::const_iterator::const_iterator(const iterator& other)
 {
   if (other.parent != 0)
     other.checkValid();
@@ -185,7 +197,7 @@ inline typename Vector<T>::const_iterator&
 Vector<T>::const_iterator::operator--()
 {
   checkValid();
-  Assert(index > 0, cerr << "decrementing past start");
+  Assert(index > 0, "decrementing past start");
   --ptr;
   --index;
   return *this;
@@ -205,7 +217,7 @@ inline typename Vector<T>::const_iterator&
 Vector<T>::const_iterator::operator+=(difference_type delta)
 {
   checkValid();
-  Assert(index + delta <= parent->pv.getLength(), cerr << "past end");
+  Assert(index + delta <= parent->pv.getLength(), "past end");
   ptr += delta;
   index += delta;
   return *this;
@@ -224,7 +236,7 @@ inline typename Vector<T>::const_iterator&
 Vector<T>::const_iterator::operator-=(difference_type delta)
 {
   checkValid();
-  Assert(index - delta <= parent->pv.getLength(), cerr << "past end");
+  Assert(index - delta <= parent->pv.getLength(), "past end");
   ptr -= delta;
   index -= delta;
   return *this;
@@ -243,7 +255,7 @@ inline typename Vector<T>::const_reference
 Vector<T>::const_iterator::operator[](difference_type i) const
 {
   checkValid();
-  Assert(index + i <= parent->pv.getLength(), cerr << "past end");
+  Assert(index + i <= parent->pv.getLength(), "past end");
   return ptr[i];
 }
 
@@ -253,7 +265,7 @@ Vector<T>::const_iterator::operator<(const const_iterator& other) const
 {
   checkValid();
   other.checkValid();
-  Assert(parent == other.parent, cerr << "incomparable iterators");
+  Assert(parent == other.parent, "incomparable iterators");
   return ptr < other.ptr;
 }
 
@@ -263,6 +275,6 @@ Vector<T>::const_iterator::operator-(const const_iterator& other) const
 {
   checkValid();
   other.checkValid();
-  Assert(parent == other.parent, cerr << "incomparable iterators");
+  Assert(parent == other.parent, "incomparable iterators");
   return ptr - other.ptr;
 }

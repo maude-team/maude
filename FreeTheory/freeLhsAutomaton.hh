@@ -3,9 +3,6 @@
 //
 #ifndef _freeLhsAutomaton_hh_
 #define _freeLhsAutomaton_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "lhsAutomaton.hh"
 #include "freeLhsStructs.hh"
 

@@ -3,9 +3,6 @@
 //
 #ifndef _importTranslation_hh_
 #define _importTranslation_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "symbolMap.hh"
 #include "pointerMap.hh"
 

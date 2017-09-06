@@ -3,9 +3,6 @@
 //
 #ifndef _unionFind_hh_
 #define _unionFind_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 class UnionFind
 {

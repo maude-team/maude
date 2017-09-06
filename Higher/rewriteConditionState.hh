@@ -3,9 +3,6 @@
 //
 #ifndef _rewriteConditionState_hh_
 #define _rewriteConditionState_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "conditionState.hh"
 #include "stateTransitionGraph3.hh"
 #include "substitution.hh"

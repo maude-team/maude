@@ -3,9 +3,6 @@
 //
 #ifndef _AU_Term_hh_
 #define _AU_Term_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "term.hh"
 #include "variable.hh"
 #include "AU_Symbol.hh"

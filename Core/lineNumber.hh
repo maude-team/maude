@@ -3,9 +3,6 @@
 //
 #ifndef _lineNumber_hh_
 #define _lineNumber_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 class LineNumber
 {

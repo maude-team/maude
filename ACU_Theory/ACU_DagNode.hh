@@ -3,12 +3,14 @@
 //
 #ifndef _ACU_DagNode_hh_
 #define _ACU_DagNode_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "ACU_BaseDagNode.hh"
 #include "argVec.hh"
 #include "ACU_FastIter.hh"
+
+#if 1
+extern int CONVERT_THRESHOLD;
+extern int MERGE_THRESHOLD;
+#endif
 
 class ACU_DagNode : public ACU_BaseDagNode
 {
@@ -45,19 +47,23 @@ public:
   int nrArgs() const;
   DagNode* getArgument(int i) const;
   int getMultiplicity(int i) const;
+  int argVecComputeBaseSort() const;
 
 private:
   enum Sizes
   {
-    INITIAL_RUNS_BUFFER_SIZE = 4,	// must be > 0
-    CONVERT_THRESHOLD = 16,
-    MERGE_THRESHOLD = 32
+#if 0
+    //CONVERT_THRESHOLD = 16,
+    //MERGE_THRESHOLD = 32,
 
-    //CONVERT_THRESHOLD = 0,
-    //MERGE_THRESHOLD = 0
+    CONVERT_THRESHOLD = 0,
+    MERGE_THRESHOLD = 0,
 
     //CONVERT_THRESHOLD = 25,
-    //MERGE_THRESHOLD = 50
+    //MERGE_THRESHOLD = 50,
+#endif
+
+    INITIAL_RUNS_BUFFER_SIZE = 4	// must be > 0
   };
   
   struct Pair
@@ -116,7 +122,6 @@ private:
   //
   //	Functions for ACU specific operations.
   //
-  int findFirstOccurrence(Symbol* key) const;
   int findFirstPotentialMatch(Term* key, const Substitution& partial) const;
   bool binarySearch(DagNode* key, int& pos) const;
   bool binarySearch(Term* key, int& pos) const;

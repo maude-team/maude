@@ -1,10 +1,6 @@
 //
 //      Implementation for class Indent
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
-
 #include "macros.hh"
 #include "tty.hh"
 

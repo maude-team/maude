@@ -16,9 +16,6 @@
 //
 #ifndef _transitionSet_hh_
 #define _transitionSet_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include <map>
 #include "natSet.hh"
 #include "bdd.hh"

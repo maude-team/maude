@@ -1,3 +1,77 @@
+2003-03-24  Steven Eker  <eker@goo.csl.sri.com>
+
+	* symbol.hh (getUniqueSortIndex): added
+
+2003-03-04  Steven Eker  <eker@goo.csl.sri.com>
+
+	* interface.hh: removed class HeuristicLhsAutomaton
+
+	* heuristicLhsAutomaton.cc: deleted
+
+	* heuristicLhsAutomaton.hh: deleted
+
+2003-02-24  Steven Eker  <eker@goo.csl.sri.com>
+
+	* term.cc: removed #pragmas
+	(commonSymbols): updated Assert()
+
+	* term.hh: removed #pragmas
+	(dagify): updated Assert()s
+
+	* symbol.cc: removed #pragmas
+	(fillInSortInfo): updated Assert()s
+	(computePossibleDomainSorts): updated Assert()s
+	(isConstructor): updated Assert()
+
+	* symbol2.hh: removed #pragma
+
+	* symbol.hh: removed #pragma
+
+	* rhsAutomaton.hh: removed #pragma
+
+	* rawArgumentIterator.hh: removed #pragma
+
+	* rawDagArgumentIterator.hh: removed #pragma
+
+	* lhsAutomaton.hh: removed #pragma
+
+	* interface.cc: deleted
+
+	* subproblem.hh (class Subproblem): added empty implementation for
+	dump() 
+	removed #pragma
+
+	* heuristicLhsAutomaton.cc: removed #pragma
+
+	* heuristicLhsAutomaton.hh: removed #pragma
+
+	* extensionInfo.hh: removed #pragma
+
+	* dagNode.cc: removed #pragma
+
+	* dagNode.hh: removed #pragma
+	(new): updated Assert() (both versions)
+	(mark): updated Assert()s
+
+	* binarySymbol.cc: removed #pragma
+	(commutativeSortCompletion): updated Assert()
+	(processIdentity): updated Assert()
+	(leftIdentitySortCheck): updated Assert()s
+	(rightIdentitySortCheck): updated Assert()s
+	(idempotentSortCheck): updated Assert()
+
+	* binarySymbol.hh: removed #pragma
+	(setIdentity): updated Assert()
+	(getIdentityDag): updated Assert()
+
+	* associativeSymbol.cc: removed #pragma
+	(associativeSortCheck): updated Assert()
+	(fillInSortInfo): updated Assert()s
+
+	* associativeSymbol.hh: removed #pragma
+	
+===================================Maude79===========================================
+
 2003-01-31  Steven Eker  <eker@goo.csl.sri.com>
 
 	* term.hh (stable): use flags data member
@@ -26,7 +100,7 @@
 	* extensionInfo.hh (class ExtensionInfo): added comments to
 	explain data members
 	
-===================================Maude79===========================================
+===================================Maude78===========================================
 
 2003-01-07  Steven Eker  <eker@goo.csl.sri.com>
 
@@ -44,8 +118,6 @@
 	(partialCompare): added
 	(class Term): added decls for partialCompareArguments() and
 	partialCompare()
-
-===================================Maude78==================================================
 
 2002-11-26  Steven Eker  <eker@goo.csl.sri.com>
 

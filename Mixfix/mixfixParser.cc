@@ -1,9 +1,6 @@
 //
 //      Implementation for class MixfixParser.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //      utility stuff
 #include "macros.hh"
@@ -238,7 +235,7 @@ MixfixParser::parseSentence(const Vector<Token>& original,
   cout << ", " << root << '\n';
 #endif
   nrParses = parser.parseSentence(sentence, root);
-  DebugAdvisoryCheck(nrParses == 1, cerr << "MSCP10 returned " << nrParses << " parses");
+  DebugAdvisoryCheck(nrParses == 1, "MSCP10 returned " << nrParses << " parses");
   if (nrParses < 0)
     nrParses = INT_MAX;  // assume a wrap around error
   else if (nrParses == 0)  // no parse
@@ -250,7 +247,7 @@ MixfixParser::parseSentence(const Vector<Token>& original,
 	{
 	  int errorPos = parser.getErrorPosition(1);
 	  Assert(errorPos >= 0 && errorPos <= nrTokens,
-		 cerr << "parser return bad error position " << errorPos);
+		 "parser return bad error position " << errorPos);
 	  firstBad = begin + parser.getErrorPosition(1);
 	}
       else
@@ -268,7 +265,7 @@ MixfixParser::parseSentence(const Vector<Token>& original,
 void
 MixfixParser::makeTerms(Term*& first, Term*& second)
 {
-  Assert(nrParses > 0, cerr << "no parses");
+  Assert(nrParses > 0, "no parses");
   int node = ROOT_NODE;
   first = makeTerm(node);
   second = 0;
@@ -286,7 +283,7 @@ MixfixParser::makeTerms(Term*& first, Term*& second)
 void
 MixfixParser::insertStatement()
 {
-  Assert(nrParses > 0, cerr << "no parses");
+  Assert(nrParses > 0, "no parses");
   makeStatement(ROOT_NODE);
 }
 
@@ -295,7 +292,7 @@ MixfixParser::makeMatchCommand(Term*& pattern,
 			       Term*& subject,
 			       Vector<ConditionFragment*>& condition)
 {
-  Assert(nrParses > 0, cerr << "no parses");
+  Assert(nrParses > 0, "no parses");
   int node = ROOT_NODE;
   int matchPair = parser.getChild(node, 0);
   pattern = makeTerm(parser.getChild(matchPair, 0));
@@ -311,7 +308,7 @@ MixfixParser::makeSearchCommand(Term*& initial,
 				Term*& target,
 				Vector<ConditionFragment*>& condition)
 {
-  Assert(nrParses > 0, cerr << "no parses");
+  Assert(nrParses > 0, "no parses");
   int node = ROOT_NODE;
   int searchPair = parser.getChild(node, 0);
   initial = makeTerm(parser.getChild(searchPair, 0));
@@ -407,7 +404,7 @@ MixfixParser::makeTerm(int node)
 	char* s = new char[strlen(name) + 1];
 	strcpy(s, name);
 	char* p = index(s, '/');
-	Assert(p != 0, cerr << "no /");
+	Assert(p != 0, "no /");
 	*p = '\0';
 	mpz_class numerator(s, 10);
 	mpz_class denominator(p + 1, 10);
@@ -453,7 +450,7 @@ MixfixParser::makeTerm(int node)
 	int sortName;
 	Token::split((*currentSentence)[pos].code(), varName, sortName);
 	Assert(sortName == NONE || sortName == sort->id(),
-	       cerr << "sort name clash");
+	       "sort name clash");
 	t = new VariableTerm(symbol, varName);
 	break;
       }
@@ -479,7 +476,7 @@ MixfixParser::makeTerm(int node)
 	int opName;
 	mpz_class number;
 	Token::split((*currentSentence)[pos].code(), opName, number);
-	Assert(opName == symbol->id(), cerr << "iter symbol name clash");
+	Assert(opName == symbol->id(), "iter symbol name clash");
 	Term* arg = makeTerm(parser.getChild(node, 1));
 	t = new S_Term(symbol, number, arg);
 	break;

@@ -1,9 +1,6 @@
 //
 //      Implementation for class ACU_NGA_LhsAutomaton.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //	utility stuff
 #include "macros.hh"
@@ -14,8 +11,8 @@
 #include "interface.hh"
 #include "core.hh"
 #include "variable.hh"
-#include "ACU_Theory.hh"
 #include "ACU_RedBlack.hh"
+#include "ACU_Theory.hh"
 
 //      interface class definitions
 #include "associativeSymbol.hh"
@@ -26,28 +23,32 @@
 //      core class definitions
 #include "substitution.hh"
 
+//	ACU Red-Black class definitions
+#include "ACU_SlowIter.hh"
+
 //	ACU theory class definitions
 #include "ACU_Symbol.hh"
 #include "ACU_DagNode.hh"
+#include "ACU_TreeDagNode.hh"
 #include "ACU_NGA_LhsAutomaton.hh"
 
-//	ACU Red-Black class definitions
-#include "ACU_TreeDagNode.hh"
-#include "ACU_SlowIter.hh"
-
-ACU_NGA_LhsAutomaton::ACU_NGA_LhsAutomaton(ACU_Symbol* topSymbol,
+ACU_NGA_LhsAutomaton::ACU_NGA_LhsAutomaton(ACU_Symbol* symbol,
+					   bool matchAtTop,
 					   bool collapsePossible,
+					   int nrVariables,
 					   LhsAutomaton* stripperAutomaton,
 					   Term* stripperTerm,
-					   int nrVariables,
 					   VariableTerm* collector)
-  : ACU_CollectorLhsAutomaton(collector),
-    topSymbol(topSymbol),
-    collapsePossible(collapsePossible),
-    stripperAutomaton(stripperAutomaton),
-    stripperTerm(stripperTerm),
-    local(nrVariables)
+  : ACU_CollectorLhsAutomaton(symbol,
+			      matchAtTop,
+			      collapsePossible,
+			      nrVariables,
+			      collector),
+  stripperAutomaton(stripperAutomaton),
+  stripperTerm(stripperTerm)
 {
+  Assert(!(stripperTerm->ground()), "stripper term must be non-ground");
+  Assert(stripperTerm->stable(), "stripper term must be stable");
 }
 
 ACU_NGA_LhsAutomaton::~ACU_NGA_LhsAutomaton()
@@ -63,7 +64,7 @@ ACU_NGA_LhsAutomaton::match(DagNode* subject,
 {
   if (collectorFree(solution))
     {
-      if (subject->symbol() == topSymbol)
+      if (subject->symbol() == getSymbol())
 	{
 	  //
 	  //	Non-collapse case.
@@ -81,38 +82,37 @@ ACU_NGA_LhsAutomaton::match(DagNode* subject,
 							    i))
 		{
 		  DagNode* d = i.getDagNode();
-		  for(;;)
+		  Substitution& local = getLocal();
+		  do
 		    {
 		      local.copy(solution);
 		      if (stripperAutomaton->match(d, local, returnedSubproblem))
 			{
 			  if (returnedSubproblem == 0)
 			    {
-			      if (collect(i, s, local))
+			      if (!collect(i, s, local))
+				goto fullMatch;  // collect() destroys i
+			      if (extensionInfo)
 				{
-				  if (extensionInfo)
-				    extensionInfo->setMatchedWhole(true);
-				  solution.copy(local);
-				  return true;
+				  extensionInfo->setValidAfterMatch(true);
+				  extensionInfo->setMatchedWhole(true);
 				}
+			      solution.copy(local);
+			      return true;
 			    }
 			  else
-			    delete returnedSubproblem;
-			  return fullMatch(subject,
-					   solution,
-					   returnedSubproblem,
-					   extensionInfo);
+			    {
+			      delete returnedSubproblem;
+			      goto fullMatch;
+			    }
 			}
 		      i.next();
 		      if (!i.valid())
 			break;
 		      d = i.getDagNode();
-		      if (stripperTerm->partialCompare(solution, d) == Term::GREATER)
-			break;
 		    }
+		  while (stripperTerm->partialCompare(solution, d) != Term::GREATER);
 		}
-	      else
-		return false;
 	    }
 	  else
 	    {
@@ -122,55 +122,61 @@ ACU_NGA_LhsAutomaton::match(DagNode* subject,
 	      ACU_DagNode* s = safeCast(ACU_DagNode*, subject);
 	      int nrArgs = s->argArray.length();
 	      int i = s->findFirstPotentialMatch(stripperTerm, solution);
-	      if (i >= nrArgs)
-		return false;
-	      DagNode* d = s->argArray[i].dagNode;
-	      for (;;)
+	      if (i < nrArgs)
 		{
-		  local.copy(solution);
-		  if (stripperAutomaton->match(d, local, returnedSubproblem))
+		  DagNode* d = s->argArray[i].dagNode;
+		  Substitution& local = getLocal();
+		  do
 		    {
-		      if (returnedSubproblem == 0)
+		      local.copy(solution);
+		      if (stripperAutomaton->match(d, local, returnedSubproblem))
 			{
-			  if (collect(i, s, local))
+			  if (returnedSubproblem == 0)
 			    {
+			      if (!collect(i, s, local))
+				goto fullMatch;  // on a hiding to nothing
 			      if (extensionInfo)
-				extensionInfo->setMatchedWhole(true);
+				{
+				  extensionInfo->setValidAfterMatch(true);
+				  extensionInfo->setMatchedWhole(true);
+				}
 			      solution.copy(local);
 			      return true;
 			    }
+			  else
+			    {
+			      delete returnedSubproblem;
+			      goto fullMatch;
+			    }
 			}
-		      else
-			delete returnedSubproblem;
-		      return fullMatch(subject, solution, returnedSubproblem, extensionInfo);
+		      ++i;
+		      if (i >= nrArgs)
+			break;
+		      d = s->argArray[i].dagNode;
 		    }
-		  ++i;
-		  if (i >=  nrArgs)
-		    break;
-		  d = s->argArray[i].dagNode;
-		  if (stripperTerm->partialCompare(solution, d) == Term::GREATER)
-		    break;
+		  while (stripperTerm->partialCompare(solution, d) != Term::GREATER);
 		}
-	      return false;
 	    }
+	  return false;
 	}
       else
 	{
 	  //
 	  //	Collapse case.
 	  //
-	  if (!collapsePossible)
+	  if (!getCollapsePossible())
 	    return false;
 	  Assert(extensionInfo == 0 &&
 		 subject->getSortIndex() != Sort::SORT_UNKNOWN,
-		 cerr << "collapse to top not handled by ACU_NGA_LhsAutomaton");
+		 "collapse to top not handled by ACU_NGA_LhsAutomaton");
 	  if (!(stripperAutomaton->match(subject, solution, returnedSubproblem)))
 	    return false;
-	  collapse(topSymbol, solution);
+	  collapse(solution);
 	  return true;
 	}
     }
-  return fullMatch(subject, solution, returnedSubproblem, extensionInfo);
+ fullMatch:
+  return ACU_LhsAutomaton::match(subject, solution, returnedSubproblem, extensionInfo);
 }
 
 #ifdef DUMP
@@ -179,9 +185,7 @@ ACU_NGA_LhsAutomaton::dump(ostream& s, const VariableInfo& variableInfo, int ind
 {
   s << Indent(indentLevel) << "Begin{ACU_NGA_LhsAutomaton}\n";
   ++indentLevel;
-  s << Indent(indentLevel) << "topSymbol = \"" << topSymbol <<
-    "\"\tcollapsePossible = " << collapsePossible << '\n' <<
-    "\tstripperTerm = \"" << stripperTerm << "\"\n";
+  s << Indent(indentLevel) << "\tstripperTerm = \"" << stripperTerm << "\"\n";
   s << Indent(indentLevel) << "stripperAutomaton =\n";
   stripperAutomaton->dump(s, variableInfo, indentLevel + 1);
   ACU_CollectorLhsAutomaton::dump(s, variableInfo, indentLevel);

@@ -3,9 +3,6 @@
 //
 #ifndef _assignmentConditionState_hh_
 #define _assignmentConditionState_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "conditionState.hh"
 #include "substitution.hh"
 

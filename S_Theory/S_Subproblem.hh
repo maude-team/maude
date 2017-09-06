@@ -3,9 +3,6 @@
 //
 #ifndef _S_Subproblem_hh_
 #define _S_Subproblem_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include <gmpxx.h>
 #include "subproblem.hh"
 
@@ -17,7 +14,7 @@ public:
   S_Subproblem(S_DagNode* subject,
 	       const mpz_class& leftOver,
 	       int varIndex,
-	       Sort* varSort,
+	       const Sort* varSort,
 	       S_ExtensionInfo* extension);
   //
   //	Member functions required by theory interface.
@@ -33,7 +30,7 @@ private:
   const mpz_class leftOver;
   S_ExtensionInfo* const extensionInfo;
   const int varIndex;
-  Sort* const varSort;
+  const Sort* const varSort;
 };
 
 #endif

@@ -3,9 +3,6 @@
 //
 #ifndef _rhsBuilder_hh_
 #define _rhsBuilder_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "rhsAutomaton.hh"
 
 class RhsBuilder
@@ -55,11 +52,11 @@ RhsBuilder::construct(Substitution& matcher) const
 {
   if (!automata.isNull())
     {
-      int nrAutomata = automata.length();
-      int i = 0;
+      Vector<RhsAutomaton*>::const_iterator i = automata.begin();
+      const Vector<RhsAutomaton*>::const_iterator e = automata.end();
       do
-	(void) automata[i]->construct(matcher);
-      while (++i < nrAutomata);
+	(void) (*i)->construct(matcher);
+      while (++i != e);
     }
   return lastAutomaton->construct(matcher);
 }
@@ -69,11 +66,11 @@ RhsBuilder::safeConstruct(Substitution& matcher) const
 {
   if (!automata.isNull())
     {
-      int nrAutomata = automata.length();
-      int i = 0;
+      Vector<RhsAutomaton*>::const_iterator i = automata.begin();
+      const Vector<RhsAutomaton*>::const_iterator e = automata.end();
       do
-	(void) automata[i]->construct(matcher);
-      while (++i < nrAutomata);
+	(void) (*i)->construct(matcher);
+      while (++i != e);
     }
   if (lastAutomaton != 0)
     (void) lastAutomaton->construct(matcher);
@@ -84,11 +81,11 @@ RhsBuilder::replace(DagNode* old, Substitution& matcher) const
 {
   if (!automata.isNull())
     {
-      int nrAutomata = automata.length();
-      int i = 0;
+      Vector<RhsAutomaton*>::const_iterator i = automata.begin();
+      const Vector<RhsAutomaton*>::const_iterator e = automata.end();
       do
-	(void) automata[i]->construct(matcher);
-      while (++i < nrAutomata);
+	(void) (*i)->construct(matcher);
+      while (++i != e);
     }
   lastAutomaton->replace(old, matcher);
 }

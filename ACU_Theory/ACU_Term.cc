@@ -1,9 +1,6 @@
 //
 //	Implementation for class ACU_Term.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //	utility stuff
 #include "macros.hh"
@@ -60,7 +57,7 @@ ACU_Term::ACU_Term(ACU_Symbol* symbol, const Vector<Term*>& arguments)
 : Term(symbol), argArray(arguments.length())
 {
   int nrArgs = arguments.length();
-  Assert(nrArgs >= 2, cerr << "insufficient arguments for operator " << symbol);
+  Assert(nrArgs >= 2, "insufficient arguments for operator " << symbol);
   for (int i = 0; i < nrArgs; i++)
     {
       argArray[i].term = arguments[i];
@@ -119,7 +116,7 @@ ACU_Term::normalizeAliensAndFlatten()
       if (t->symbol() == s)
 	{
 	  changed = true;
-	  ACU_Term* ac = static_cast<ACU_Term*>(t);
+	  ACU_Term* ac = safeCast(ACU_Term*, t);
 	  (void) ac->normalizeAliensAndFlatten();
 	  expansion += ac->argArray.length() - 1;
 	  needToFlatten = true;
@@ -133,7 +130,7 @@ ACU_Term::normalizeAliensAndFlatten()
 	      changed = true;
 	      if (t->symbol() == s)
 		{
-		  ACU_Term* ac = static_cast<ACU_Term*>(t);
+		  ACU_Term* ac = safeCast(ACU_Term*, t);
 		  expansion += ac->argArray.length() - 1;
 		  needToFlatten = true;
 		}
@@ -149,12 +146,12 @@ ACU_Term::normalizeAliensAndFlatten()
       int p = nrArgs + expansion - 1;
       for (int i = nrArgs - 1; i >= 0; i--)
 	{
-	  Assert(p >= i, cerr << "loop invariant broken");
+	  Assert(p >= i, "loop invariant broken");
 	  Term* t = argArray[i].term;
 	  if (t->symbol() == s)
 	    {
 	      int m = argArray[i].multiplicity;
-	      Vector<Pair>& argArray2 = static_cast<ACU_Term*>(t)->argArray;
+	      Vector<Pair>& argArray2 = safeCast(ACU_Term*, t)->argArray;
 	      for (int j = argArray2.length() - 1; j >= 0; j--)
 		{
 		  argArray[p].term = argArray2[j].term;
@@ -288,7 +285,7 @@ ACU_Term::compareArguments(const Term* other) const
       ++i;
     }
   while (i != e);
-  Assert(j == argArray2.end(), cerr << "iterator problem");
+  Assert(j == argArray2.end(), "iterator problem");
   return 0;
 }
 
@@ -318,7 +315,7 @@ ACU_Term::compareArguments(const DagNode* other) const
 	  ++i;
 	}
       while (i != e);
-      Assert(!j.valid(), cerr << "iterator problem");
+      Assert(!j.valid(), "iterator problem");
     }
   else
     {
@@ -342,7 +339,7 @@ ACU_Term::compareArguments(const DagNode* other) const
 	  ++i;
 	}
       while (i != e);
-      Assert(j == argArray2.end(), cerr << "iterator problem");
+      Assert(j == argArray2.end(), "iterator problem");
     }
   return 0;
 }
@@ -463,7 +460,7 @@ ACU_Term::insertAbstractionVariables(VariableInfo& variableInfo)
 	    {
 	      p.abstractionVariableIndex = variableInfo.makeProtectedVariable();
 	      honorsGroundOutMatch = false;
-	      DebugAdvisoryCheck(false, cerr << "Introduced abstraction variable for " <<
+	      DebugAdvisoryCheck(false, "Introduced abstraction variable for " <<
 				 p.term << " in " << this << '.');
 	    }
 	}

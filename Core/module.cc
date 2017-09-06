@@ -1,9 +1,6 @@
 //
 //      Implementation for class Module.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //	utility stuff
 #include "macros.hh"
@@ -37,7 +34,7 @@ Module::Module(int id)
 void
 Module::insertSortConstraint(SortConstraint* sortConstraint)
 {
-  Assert(status < THEORY_CLOSED, cerr << "bad status");
+  Assert(status < THEORY_CLOSED, "bad status");
   sortConstraint->setModuleInfo(this, sortConstraints.length());
   sortConstraints.append(sortConstraint);
   sortConstraint->check();
@@ -46,7 +43,7 @@ Module::insertSortConstraint(SortConstraint* sortConstraint)
 void
 Module::insertEquation(Equation* equation)
 {
-  Assert(status < THEORY_CLOSED, cerr << "bad status");
+  Assert(status < THEORY_CLOSED, "bad status");
   equation->setModuleInfo(this, equations.length());
   equations.append(equation);
   equation->check();
@@ -55,7 +52,7 @@ Module::insertEquation(Equation* equation)
 void
 Module::insertRule(Rule* rule)
 {
-  Assert(status < THEORY_CLOSED, cerr << "bad status");
+  Assert(status < THEORY_CLOSED, "bad status");
   rule->setModuleInfo(this, rules.length());
   rules.append(rule);
   rule->check();
@@ -100,7 +97,7 @@ Module::~Module()
 void
 Module::closeSortSet()
 {
-  Assert(status == OPEN, cerr << "bad status");
+  Assert(status == OPEN, "bad status");
   int nrSorts = sorts.length();
   for (int i = 0; i < nrSorts; i++)
     {
@@ -118,14 +115,14 @@ Module::closeSortSet()
 void
 Module::closeSignature()
 {
-  Assert(status == SORT_SET_CLOSED, cerr << "bad status");
+  Assert(status == SORT_SET_CLOSED, "bad status");
   status = SIGNATURE_CLOSED;
 }
 
 void
 Module::closeFixUps()
 {
-  Assert(status == SIGNATURE_CLOSED, cerr << "bad status");
+  Assert(status == SIGNATURE_CLOSED, "bad status");
   status = FIX_UPS_CLOSED;
   int nrSymbols = symbols.length();
   //
@@ -161,7 +158,7 @@ Module::closeTheory()
   //	This is where most of the work for analyzing and (semi-)compiling
   //	a module is done.
   //
-  Assert(status == FIX_UPS_CLOSED, cerr << "bad status");
+  Assert(status == FIX_UPS_CLOSED, "bad status");
   status = THEORY_CLOSED;
   int nrSymbols = symbols.length();
   //
@@ -333,7 +330,7 @@ Module::indexRules()
 void
 Module::insertLateSymbol(Symbol*s)
 {
-  Assert(status >= SIGNATURE_CLOSED, cerr << "bad status");
+  Assert(status >= SIGNATURE_CLOSED, "bad status");
   s->setModuleInfo(this, symbols.length());
   symbols.append(s);
 

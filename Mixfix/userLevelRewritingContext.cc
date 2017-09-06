@@ -1,9 +1,7 @@
 //
 //      Implementation for class UserLevelRewritingContext
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
+
 #include <unistd.h>  // HACK
 
 //      utility stuff
@@ -156,7 +154,7 @@ UserLevelRewritingContext::tracePostEqRewrite(DagNode* replacement)
 {
   if (tracePostFlag)
     {
-      Assert(!abortFlag, cerr << "abort flag set");
+      Assert(!abortFlag, "abort flag set");
       cout << replacement << '\n';
       if (traceWholeFlag)
 	cout << "New: " << root() << '\n';
@@ -238,7 +236,7 @@ UserLevelRewritingContext::printSubstitution(const Substitution& substitution,
       for (int i = 0; i < nrVars; i++)
 	{
 	  Term* v = varInfo.index2Variable(i);
-	  Assert(v != 0, cerr << "null variable");
+	  Assert(v != 0, "null variable");
 	  cout << v << " --> ";
 	  DagNode* d = substitution.value(i);
 	  if (d == 0)

@@ -1,11 +1,8 @@
 //
-//	Class for digraphs
+//	Class for digraphs.
 //
 #ifndef _digraph_hh_
 #define _digraph_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 class Digraph
 {

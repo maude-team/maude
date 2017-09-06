@@ -4,9 +4,6 @@
 //
 #ifndef _freePreNet_hh_
 #define _freePreNet_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include <map>
 #include "unionFind.hh"
 #include "freePositionTable.hh"

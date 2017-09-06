@@ -13,7 +13,7 @@ ACU_RedBlackNode::find(ACU_RedBlackNode* root,
       int r = dagNode->compare(root->getDagNode());
       if (r == 0)
 	return true;
-      root = (r < 0) ? root->getLeft() : root->getRight();
+      root = root->getChild(r);
     }
   while (root != 0);
   return false;
@@ -30,7 +30,7 @@ ACU_RedBlackNode::find(ACU_RedBlackNode* root,
       int r = term->compare(root->getDagNode());
       if (r == 0)
 	return true;
-      root = (r < 0) ? root->getLeft() : root->getRight();
+      root = root->getChild(r);
     }
   while (root != 0);
   return false;
@@ -82,7 +82,7 @@ ACU_RedBlackNode::findGeqMult(ACU_RedBlackNode* root,
 			      int multiplicity,
 			      ACU_Stack& path)
 {
-  Assert(multiplicity <= SAT_MULT, cerr << "multiplicity >= SAT_MULT");
+  Assert(multiplicity <= SAT_MULT, "multiplicity > SAT_MULT");
   
   if (root->getMaxMult() >= multiplicity)
     {
@@ -98,7 +98,7 @@ ACU_RedBlackNode::findGeqMult(ACU_RedBlackNode* root,
 	    {
 	      root = root->getRight();
 	      Assert(root != 0 && root->getMaxMult() >= multiplicity,
-		     cerr << "maxMult invariant failed");
+		     "maxMult invariant failed");
 	    }
 	}
       return true;
@@ -112,7 +112,7 @@ ACU_RedBlackNode::findIth(ACU_RedBlackNode* root,
 			  ACU_Stack& path)
 {
   Assert(index >= 0 && index < root->getSize(),
-	 cerr << "index out of range " << index);
+	 "index out of range " << index);
   for(;;)
     {
       path.push(root);

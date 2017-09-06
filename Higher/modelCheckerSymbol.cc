@@ -1,9 +1,6 @@
 //
 //      Implementation for class ModelCheckerSymbol.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //      utility stuff
 #include "macros.hh"
@@ -188,7 +185,7 @@ ModelCheckerSymbol::makeCounterexample(const StateTransitionGraph3& states,
 bool
 ModelCheckerSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
 {
-  Assert(this == subject->symbol(), cerr << "Bad symbol");
+  Assert(this == subject->symbol(), "bad symbol");
   //
   //	Compute normalization of negated formula.
   //

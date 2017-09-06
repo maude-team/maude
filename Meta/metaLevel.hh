@@ -3,9 +3,6 @@
 //
 #ifndef _metaLevel_hh_
 #define _metaLevel_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "cachedDag.hh"
 #include "metaModuleCache.hh"
 

@@ -88,8 +88,8 @@ AU_LhsAutomaton::fullMatchRigidBlock(AU_DagNode* subject,
 				     int& matchShift,
 				     Subproblem*& subproblem)
 {
-  Assert(minShift <= maxShift, cerr << "bad shift range");
-  Assert(block.start <= block.end, cerr << "bad block range");
+  Assert(minShift <= maxShift, "bad shift range");
+  Assert(block.start <= block.end, "bad block range");
   int shiftFactor;
   for (int i = minShift; i <= maxShift; i += shiftFactor)
     {
@@ -121,7 +121,7 @@ AU_LhsAutomaton::fullMatchRigidBlock2(AU_DagNode* subject,
       if (skip == NOT_FIXED)
 	{
 	  DagNode* d = local.value(f.variable.index);
-	  Assert(d != 0, cerr << "unbound variable in rigid block");
+	  Assert(d != 0, "unbound variable in rigid block");
 	  if (!(subject->eliminateForward(d, nextSubject, rightPos)))  // better limit?
 	    return false;
 	  skip = 1;
@@ -164,7 +164,7 @@ AU_LhsAutomaton::fullMatchFixedLengthBlock(ArgVec<DagNode*>& args,
 	case VARIABLE:
           {
             Assert(f.variable.upperBound == 1 && !f.variable.takeIdentity,
-                   cerr << "non-unit variable in fixed length block");
+                   "non-unit variable in fixed length block");
             DagNode* v = local.value(f.variable.index);
             if (v == 0)
               {
@@ -176,7 +176,7 @@ AU_LhsAutomaton::fullMatchFixedLengthBlock(ArgVec<DagNode*>& args,
             else
               {
                 Assert(v->symbol() != topSymbol,
-                       cerr << "illegal binding to unit variable");
+                       "illegal binding to unit variable");
                 if (!(v->equal(d)))
                   return false;
               }
@@ -210,7 +210,7 @@ AU_LhsAutomaton::buildLeftmostPath(AU_DagNode* subject,
   Assert(extensionInfo != 0 || nrRigid == 0 ||
 	 (rigidBlocks[0].start > flexLeftPos &&
 	  rigidBlocks[nrRigid - 1].end < flexRightPos),
-	 cerr << "missing unbound variable(s)");
+	 "missing unbound variable(s)");
   int spare = rightPos - leftPos + 1 - nrSubjectsUsed;
   if (spare < 0)
     return 0;

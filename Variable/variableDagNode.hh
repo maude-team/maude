@@ -3,9 +3,6 @@
 //
 #ifndef _variableDagNode_hh_
 #define _variableDagNode_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "dagNode.hh"
 #include "namedEntity.hh"
 

@@ -1,9 +1,6 @@
 //
 //	Implementation for class AssignmentConditionFragment.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //	utility stuff
 #include "macros.hh"
@@ -70,7 +67,7 @@ AssignmentConditionFragment::preprocess()
   lhs->symbol()->fillInSortInfo(lhs);
   lhs->analyseCollapses();
   rhs->symbol()->fillInSortInfo(rhs);
-  Assert(lhs->getComponent() == rhs->getComponent(), cerr << "component clash");
+  Assert(lhs->getComponent() == rhs->getComponent(), "component clash");
 }
 
 void

@@ -1,9 +1,6 @@
 //
 //      Implementation for class AU_DagNode.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
  
 //	utility stuff
 #include "macros.hh"
@@ -53,7 +50,7 @@ AU_DagNode::compareArguments(const DagNode* other) const
   const ArgVec<DagNode*>& argArray2 = static_cast<const AU_DagNode*>(other)->argArray;
   int nrArgs2 = argArray2.length();
   int limit = min(nrArgs, nrArgs2);
-  Assert(limit >= 1, cerr << "no arguments");
+  Assert(limit >= 1, "no arguments");
   
   ArgVec<DagNode*>::const_iterator i = argArray.begin();
   ArgVec<DagNode*>::const_iterator j = argArray2.begin();
@@ -74,7 +71,7 @@ AU_DagNode::markArguments()
 {
   argArray.evacuate();
   int nrArgs = argArray.length();
-  Assert(nrArgs > 0, cerr << "no arguments");
+  Assert(nrArgs > 0, "no arguments");
 
   ArgVec<DagNode*>::const_iterator i = argArray.begin();
   while (--nrArgs > 0)
@@ -188,7 +185,7 @@ AU_DagNode::normalizeAtTop()
       int p = nrArgs + expansion - 1;
       for (int i = nrArgs - 1; i >= 0; i--)
 	{
-	  Assert(p >= i, cerr << "loop invarient failed");
+	  Assert(p >= i, "loop invarient failed");
 	  DagNode* d = argArray[i];
 	  if (d->symbol() == s)
 	    {
@@ -199,7 +196,7 @@ AU_DagNode::normalizeAtTop()
 	  else
 	    argArray[p--] = argArray[i];
 	}
-      Assert(p == -1, cerr << "bad argArray length");
+      Assert(p == -1, "bad argArray length");
       DagNode::okToCollectGarbage();  // needed because of pathological nesting
       return FLATTENED;
     }
@@ -250,7 +247,7 @@ AU_DagNode::normalizeAtTop()
 		 ((i > 0 && s->rightId()) || (i < nrArgs - 1 && s->leftId()))))
 	buffer[p++] = d;
     }
-  Assert(p == nrArgs + expansion - nrIdentities, cerr << "bad buffer size");
+  Assert(p == nrArgs + expansion - nrIdentities, "bad buffer size");
   argArray.swap(buffer);
   DagNode::okToCollectGarbage();  // needed because of pathological nesting
   return FLATTENED;

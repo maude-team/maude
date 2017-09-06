@@ -1,3 +1,36 @@
+2003-03-21  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_Find.cc (find): use getChild() (both versions)
+
+	* ACU_RedBlackNode.hh (getChild): added
+	(class ACU_RedBlackNode): flipped LEFT_INDEX and RIGHT_INDEX
+	values
+
+2003-03-10  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_RedBlackNode.hh (class ACU_RedBlackNode): made getMaxMult()
+	public
+
+2003-02-25  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_Insert.cc (consInsert2): updated Assert()
+
+	* ACU_Find.cc (findGeqMult): updated Assert()s
+	(findIth): updated Assert()
+
+	* ACU_Delete.cc (consDelete2): updated Assert()
+
+	* ACU_Stack.hh (top): updated Assert()
+	(push): updated Assert()
+	(pop): updated Assert()
+	(unpop): updated Assert()
+	(multiPop): updated Assert()
+
+	* ACU_RedBlackNode.hh (new): updated Assert()
+	(ACU_RedBlackNode): updated Assert()s
+	
+===================================Maude79===========================================
+
 2003-02-13  Steven Eker  <eker@goo.csl.sri.com>
 
 	* ACU_RedBlackNode.hh (class ACU_RedBlackNode): deleted decls for

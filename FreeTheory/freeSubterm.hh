@@ -3,9 +3,6 @@
 //
 #ifndef _freeSubterm_hh_
 #define _freeSubterm_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 class FreeSubterm
 {

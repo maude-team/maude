@@ -7,9 +7,6 @@
 //
 #ifndef _binarySymbol_hh_
 #define _binarySymbol_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "symbol.hh"
 #include "term.hh"
 #include "cachedDag.hh"
@@ -69,7 +66,7 @@ BinarySymbol::getPermuteStrategy() const
 inline void
 BinarySymbol::setIdentity(Term* id)
 {
-  Assert(identityTerm.getTerm() == 0, cerr << "overwriting identity for " << this);
+  Assert(identityTerm.getTerm() == 0, "overwriting identity for " << this);
   identityTerm.setTerm(id);
 }
 
@@ -89,7 +86,7 @@ BinarySymbol::takeIdentity(const Sort* sort)
 inline DagNode*
 BinarySymbol::getIdentityDag()
 {
-  Assert(identityTerm.getTerm() != 0, cerr << "null identity for symbol " << this);
+  Assert(identityTerm.getTerm() != 0, "null identity for symbol " << this);
   return identityTerm.getDag();
 }
 

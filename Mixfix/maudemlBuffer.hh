@@ -3,9 +3,6 @@
 //
 #ifndef _maudemlBuffer_hh_
 #define _maudemlBuffer_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "xmlBuffer.hh"
 
 class MaudemlBuffer : public XmlBuffer

@@ -3,9 +3,6 @@
 //
 #ifndef _positionState_hh_
 #define _positionState_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include <stack>
 #include "redexPosition.hh"
 
@@ -53,14 +50,14 @@ PositionState::getFlags() const
 inline DagNode*
 PositionState::getDagNode() const
 {
-  Assert(nextToReturn >= 0, cerr << "findNextPosition() not called");
+  Assert(nextToReturn >= 0, "findNextPosition() not called");
   return positionQueue[nextToReturn].node();
 }
 
 inline ExtensionInfo* 
 PositionState::getExtensionInfo() const
 {
-  Assert(nextToReturn >= 0, cerr << "findNextPosition() not called");
+  Assert(nextToReturn >= 0, "findNextPosition() not called");
   return extensionInfo;
 }
 

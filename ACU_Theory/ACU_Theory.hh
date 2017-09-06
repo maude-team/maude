@@ -17,7 +17,6 @@ class ACU_CollectorLhsAutomaton;
 class ACU_NGA_LhsAutomaton;
 class ACU_VarLhsAutomaton;
 class ACU_GndLhsAutomaton;
-class ACU_AlienAlienLhsAutomaton;
 class ACU_NonLinearLhsAutomaton;
 class ACU_RhsAutomaton;
 class ACU_Subproblem;

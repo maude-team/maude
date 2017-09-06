@@ -16,9 +16,6 @@
 //
 #ifndef _genBuchiAutomaton_hh_
 #define _genBuchiAutomaton_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include <stack>
 #include <list>
 #include "bddUser.hh"

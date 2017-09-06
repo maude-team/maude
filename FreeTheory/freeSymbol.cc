@@ -1,9 +1,6 @@
 //
 //	Implementation for class FreeSymbol.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //	utility stuff
 #include "macros.hh"
@@ -116,7 +113,7 @@ bool
 FreeSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
 {
   // cout << "attempting " << this << "\n";
-  Assert(this == subject->symbol(), cerr << "Bad symbol");  
+  Assert(this == subject->symbol(), "bad symbol");  
   if (standardStrategy())
     {
       int nrArgs = arity();
@@ -232,7 +229,7 @@ FreeSymbol::memoStrategy(MemoTable::SourceSet& from,
 void
 FreeSymbol::computeBaseSort(DagNode* subject)
 {
-  Assert(this == subject->symbol(), cerr << "Bad symbol");
+  Assert(this == subject->symbol(), "bad symbol");
   int nrArgs = arity();
   if (nrArgs == 0)
     {
@@ -245,7 +242,7 @@ FreeSymbol::computeBaseSort(DagNode* subject)
   for (int i = 0; i < nrArgs; i++)
     {
       int t = args[i]->getSortIndex();
-      Assert(t != Sort::SORT_UNKNOWN, cerr << "Unknown sort");
+      Assert(t != Sort::SORT_UNKNOWN, "unknown sort");
       state = traverse(state, t);
     }
   subject->setSortIndex(state);
@@ -254,7 +251,7 @@ FreeSymbol::computeBaseSort(DagNode* subject)
 void
 FreeSymbol::normalizeAndComputeTrueSort(DagNode* subject, RewritingContext& context)
 {
-  Assert(this == subject->symbol(), cerr << "Bad symbol");
+  Assert(this == subject->symbol(), "bad symbol");
   int nrArgs = arity();
   DagNode** args = static_cast<FreeDagNode*>(subject)->argArray();
   //

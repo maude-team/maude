@@ -1,9 +1,6 @@
 //
 //      Implementation for class S_Subproblem.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //	utility stuff
 #include "macros.hh"
@@ -34,7 +31,7 @@
 S_Subproblem::S_Subproblem(S_DagNode* subject,
 			   const mpz_class& leftOver,
 			   int varIndex,
-			   Sort* varSort,
+			   const Sort* varSort,
 			   S_ExtensionInfo* extensionInfo)
   : subject(subject),
     leftOver(leftOver),
@@ -42,8 +39,8 @@ S_Subproblem::S_Subproblem(S_DagNode* subject,
     varIndex(varIndex),
     varSort(varSort)
 {
-  Assert(leftOver > 0, cerr << "only makes sense with leftOver > 0");
-  Assert(extensionInfo != 0, cerr << "only makes sense with extensionInfo");
+  Assert(leftOver > 0, "only makes sense with leftOver > 0");
+  Assert(extensionInfo != 0, "only makes sense with extensionInfo");
 }
 
 bool
@@ -64,7 +61,7 @@ S_Subproblem::solve(bool findFirst, RewritingContext& solution)
     {
       const mpz_class& unmatched = extensionInfo->getUnmatched();
       int result  = cmp(leftOver, unmatched);
-      Assert(result >= 0, cerr << "unmatched > diff");
+      Assert(result >= 0, "unmatched > diff");
       if (result == 0)
 	break;  // fail
       

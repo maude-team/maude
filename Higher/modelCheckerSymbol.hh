@@ -3,9 +3,6 @@
 //
 #ifndef _modelCheckerSymbol_hh_
 #define _modelCheckerSymbol_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "temporalSymbol.hh"
 #include "cachedDag.hh"
 #include "modelChecker2.hh"

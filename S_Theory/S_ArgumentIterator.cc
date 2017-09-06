@@ -1,10 +1,7 @@
 //
 //      Implementation for class S_ArgumentIterator.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
- 
+
 //	utility stuff
 #include "macros.hh"
  
@@ -25,13 +22,13 @@ S_ArgumentIterator::valid() const
 Term*
 S_ArgumentIterator::argument() const
 {
-  Assert(valid(), cerr << "no args left");
+  Assert(valid(), "no args left");
   return arg;
 }
 
 void
 S_ArgumentIterator::next()
 {
-  Assert(valid(), cerr << "no args left");
+  Assert(valid(), "no args left");
   arg = 0;
 }

@@ -3,9 +3,6 @@
 //
 #ifndef _flagSet_hh_
 #define _flagSet_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 class FlagSet
 {

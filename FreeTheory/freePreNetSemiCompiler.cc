@@ -35,7 +35,7 @@ FreePreNet::semiCompileNode(FreeNet& freeNet, int nodeNr, const SlotMap& slotMap
 	{
 	  Symbol* symbol = n.sons[i].label;
 	  int target = n.sons[i].target;
-	  Assert(symbol != 0, cerr << "null symbol");
+	  Assert(symbol != 0, "null symbol");
 	  symbols[i] = symbol;
 	  if (dynamic_cast<FreeSymbol*>(symbol) != 0 && symbol->arity() > 0)
 	    {
@@ -56,7 +56,7 @@ FreePreNet::semiCompileNode(FreeNet& freeNet, int nodeNr, const SlotMap& slotMap
 
       int parentIndex = positions.parentIndex(n.testPositionIndex);
       SlotMap::const_iterator i = slotMap.find(parentIndex);
-      Assert(i != slotMap.end(), cerr << "missing slot");
+      Assert(i != slotMap.end(), "missing slot");
       freeNet.fillOutNode(n.freeNetIndex,
 			  (*i).second,
 			  testPosition[testPosition.length() - 1],
@@ -116,7 +116,7 @@ FreePreNet::allocateSlot(const NatSet& liveSet,
   int slot = slots.makeElement();
   conflicts.expandBy(1);
   Assert(slot == conflicts.length() - 1,
-	 cerr << "slot/conflict data structures out of sync");
+	 "slot/conflict data structures out of sync");
 
   // cerr << symbol << endl;
   const NatSet::const_iterator e = liveSet.end();
@@ -164,7 +164,7 @@ FreePreNet::buildSlotTranslation(Vector<int>& slotTranslation)
 	  slotTranslation[i] = repTrans;
 	}
     }
-  Assert(slotTranslation[0] == 0, cerr << "initial translation failed to preserve slot 0");
+  Assert(slotTranslation[0] == 0, "initial translation failed to preserve slot 0");
   //
   //	Now build final slot translation by using graph coloring to collapse
   //	non-conflicting slots and numbering them 0...nrColors-1
@@ -185,6 +185,6 @@ FreePreNet::buildSlotTranslation(Vector<int>& slotTranslation)
   int nrColors = graph.color(coloring);
   for (int i = 0; i < nrSlots; i++)
     slotTranslation[i] = coloring[slotTranslation[i]];
-  Assert(slotTranslation[0] == 0, cerr << "final translation failed to preserve slot 0");
+  Assert(slotTranslation[0] == 0, "final translation failed to preserve slot 0");
   return nrColors;
 }

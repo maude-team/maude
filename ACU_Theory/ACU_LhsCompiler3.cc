@@ -32,7 +32,8 @@ ACU_Term::compileGreedyAndFullCases(ACU_LhsAutomaton* automaton,
 				   subAutomata[j],
 				   nonGroundAliens[j].multiplicity);
     }
-  automaton->complete(subproblemLikely ? ACU_LhsAutomaton::FULL : ACU_LhsAutomaton::GREEDY,
+  automaton->complete(subproblemLikely ? ACU_LhsAutomaton::FULL :
+		      ACU_LhsAutomaton::GREEDY,
 		      nrIndependent);
 }
 
@@ -79,7 +80,7 @@ ACU_Term::findGreedySequence(const Vector<Pair>& aliens, Vector<int>& sequence)
       if (!(used.contains(i)))
 	sequence.append(i);
     }
-  Assert(sequence.length() == aliens.length(), cerr << "length mis-match");
+  Assert(sequence.length() == aliens.length(), "length mis-match");
   return nrIndependent;
 }
 

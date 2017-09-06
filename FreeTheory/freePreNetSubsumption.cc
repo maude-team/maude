@@ -27,7 +27,7 @@ FreePreNet::subsumesWrtReducedFringe(Term* subsumer,
 	  //
 	  if (FreeTerm* vf = dynamic_cast<FreeTerm*>(victim))
 	    {
-	      Assert(sf->symbol() == vf->symbol(), cerr << "free symbol clash");
+	      Assert(sf->symbol() == vf->symbol(), "free symbol clash");
 	      //
 	      //	victim subterm has the same free symbol on top; check if
 	      //	subsumers arguments subsume victims arguments.
@@ -82,7 +82,7 @@ FreePreNet::subsumesWrtReducedFringe(Term* subsumer,
 {
   if (!(reducedFringe.contains(currentPositionIndex)))
     {
-      if (FreeTerm* sf = dynamic_cast<FreeTerm*>(subsumer))
+      if (dynamic_cast<FreeTerm*>(subsumer) != 0)
 	{
 	  Symbol* symbol = subsumer->symbol();
 	  int nrArgs = symbol->arity();

@@ -3,9 +3,6 @@
 //
 #ifndef _symbol2_hh_
 #define _symbol2_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 inline void
 Symbol::fastComputeTrueSort(DagNode* subject, RewritingContext& context)

@@ -3,9 +3,6 @@
 //
 #ifndef _variableAbstractionSubproblem_hh_
 #define _variableAbstractionSubproblem_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "subproblem.hh"
 
 class VariableAbstractionSubproblem : public Subproblem

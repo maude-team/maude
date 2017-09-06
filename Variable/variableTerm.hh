@@ -3,9 +3,6 @@
 //
 #ifndef _variableTerm_hh_
 #define _variableTerm_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "term.hh"
 #include "namedEntity.hh"
 #include "variableSymbol.hh"

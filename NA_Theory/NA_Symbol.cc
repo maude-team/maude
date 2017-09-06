@@ -1,9 +1,6 @@
 //
 //      Implementation for class NA_Symbol.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
  
 //      utility stuff
 #include "macros.hh"
@@ -28,14 +25,14 @@ NA_Symbol::NA_Symbol(int id)
 Term*
 NA_Symbol::makeTerm(const Vector<Term*>& /* args */)
 {
-  Assert(false, cerr << "makeTerm() not useable on non-algebraic symbol " << this);
+  CantHappen("makeTerm() not useable on non-algebraic symbol " << this);
   return 0;
 }
 
 DagNode* 
 NA_Symbol::makeDagNode(const Vector<DagNode*>& /* args */)
 {
-  Assert(false, cerr << "makeDagNode() not useable on non-algebraic symbol " << this);
+  CantHappen("makeDagNode() not useable on non-algebraic symbol " << this);
   return 0;
 }
 

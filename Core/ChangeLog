@@ -1,3 +1,276 @@
+2003-03-27  Steven Eker  <eker@goo.csl.sri.com>
+
+	* substitution.cc (operator-): optimized using const_iterators
+
+	* substitution.hh (copy): code cleaning
+
+	* localBinding.hh (addBinding): moved here; use ref; made inline
+
+	* localBinding.cc (retract): use FOR_EACH_CONST()
+	(assert): use iterators
+
+2003-03-24  Steven Eker  <eker@goo.csl.sri.com>
+
+	* rhsBuilder.hh (construct): use iterators
+	(safeConstruct): use iterators
+	(replace): use iterators
+
+2003-03-21  Steven Eker  <eker@goo.csl.sri.com>
+
+	* substitution.cc (Substitution): deleted
+
+	* substitution.hh (copy): use iter comparison rather than
+	decrementing size
+	(class Substitution): deleted decl for copy ctor; use NO_COPYING()
+
+	* equationTable.cc (applyReplace): use FOR_EACH_CONST
+
+2003-02-24  Steven Eker  <eker@goo.csl.sri.com>
+
+	* preEquation.cc (cleanStack): updated DebugAdvisoryCheck()
+
+	* rewritingContext.hh (RewritingContext): updated Assert()
+
+	* subproblemAccumulator.hh: removed #pragma
+
+	* termSet.cc: removed #pragma
+
+	* termSet.hh: removed #pragma
+
+	* sortConstraintTable.cc: removed #pragma
+
+	* sortConstraintTable.hh: removed #pragma
+
+	* rawRootContainer.cc: removed #pragma
+
+	* rootContainer.hh: removed #pragma
+
+	* rhsBuilder.cc: removed #pragma
+
+	* rhsBuilder.hh: removed #pragma
+
+	* rewritingContext.cc: removed #pragma
+	(markReachableNodes): updated Assert()
+	(rebuildUptoRoot): updated Assert()
+
+	* rewritingContext.hh: removed #pragma
+
+	* redexPosition.hh: removed #pragma
+
+	* variableInfo.cc: removed #pragma
+	(variable2Index): updated Assert()s
+
+	* variableInfo.hh: removed #pragma
+
+	* variableAbstractionSubproblem.cc: removed #pragma
+	(solve): updated Assert()
+
+	* variableAbstractionSubproblem.hh: removed #pragma
+
+	* trivialRhsAutomaton.cc: removed #pragma
+
+	* trivialRhsAutomaton.hh: removed #pragma
+
+	* termBag.cc: removed #pragma
+	(insertBuiltTerm): updated Assert()s
+
+	* termBag.hh: removed #pragma
+
+	* symbolMap.hh: removed #pragma
+
+	* substitution.cc: removed #pragma
+	(operator-): updated Assert()
+
+	* substitution.hh: removed #pragma
+	(clear): updated Assert()s
+	(value): updated Assert()s
+	(bind): updated Assert()s
+	(copy): updated Assert()
+
+	* subproblemSequence.cc: removed #pragma
+
+	* subproblemSequence.hh: removed #pragma
+
+	* subproblemDisjunction.cc: removed #pragma
+	(addOption): updated Assert()
+
+	* subproblemDisjunction.hh: removed #pragma
+
+	* strategy.cc: removed #pragma
+
+	* strategy.hh: removed #pragma
+
+	* sortTable.cc: removed #pragma
+	(compileOpDeclarations): updated Assert()s; simplified fancy
+	Assert() now that we no longer allow actions in Assert()s
+
+	* sortTable.hh: removed #pragma
+	(addOpDeclaration): updated Assert()
+
+	* sortConstraint.cc: removed #pragma
+	(SortConstraint): updated Assert()
+	(preprocess): updated Assert()
+
+	* sortConstraint.hh: removed #pragma
+
+	* sortCheckSubproblem.cc: removed #pragma
+
+	* sortCheckSubproblem.hh: removed #pragma
+
+	* sort.cc: removed #pragma
+
+	* sort.hh: removed #pragma
+	(leq): updated Assert()
+
+	* simpleRootContainer.hh: removed #pragma
+
+	* run.cc (fairTraversal): updated Assert()
+
+	* ruleTable.cc: removed #pragma
+	(applyRules): updated Assert()
+
+	* ruleTable.hh: removed #pragma
+
+	* rule.cc: removed #pragma
+	(Rule): updated Assert()
+	(preprocess): updated Assert()
+
+	* rule.hh: removed #pragma
+
+	* rootContainer.cc: removed #pragma
+
+	* rawRootContainer.hh: removed #pragma
+
+	* preEquation.cc: removed #pragma
+	(PreEquation): updated Assert()
+	(checkCondition): updated Assert()s (both versions)
+
+	* preEquation.hh: 
+
+	* opDeclaration.hh: removed #pragma
+
+	* namedEntity.hh: removed #pragma
+
+	* moduleItem.hh: removed #pragma
+
+	* module.cc: removed #pragma
+	(insertSortConstraint): updated Assert()
+	(insertEquation): updated Assert()
+	(insertRule): updated Assert()
+	(closeSortSet): updated Assert()
+	(closeSignature): updated Assert()
+	(closeFixUps): updated Assert()
+	(closeTheory): updated Assert()
+	(insertLateSymbol): updated Assert()
+
+	* module.hh: removed #pragma
+
+	* memoryCell.cc: removed #pragma
+	(slowNew): updated Assert()s
+
+	* memoryCell.hh: removed #pragma
+	(allocateStorage): updated Assert()
+	(allocateMemoryCell): updated Assert()s
+
+	* memoTable.cc: removed #pragma
+
+	* memoTable.hh: removed #pragma
+
+	* localBinding.cc: removed #pragma
+	(markReachableNodes): updated Assert()
+
+	* localBinding.hh: removed #pragma
+
+	* lineNumber.hh: removed #pragma
+
+	* label.hh: removed #pragma
+
+	* extensionMatchSubproblem.cc: removed #pragma
+
+	* extensionMatchSubproblem.hh: removed #pragma
+
+	* equationTable.cc: removed #pragma
+
+	* equationTable.hh: removed #pragma
+
+	* equation.cc: removed #pragma
+	(Equation): updated Assert()
+	(preprocess): updated Assert()
+
+	* equation.hh: removed #pragma
+
+	* equalitySubproblem.cc: removed #pragma
+
+	* equalitySubproblem.hh: removed #pragma
+
+	* disjunctiveSubproblemAccumulator.cc: removed #pragma
+	(extract): updated Assert()
+
+	* disjunctiveSubproblemAccumulator.hh: removed #pragma
+
+	* dagRoot.cc: removed #pragma
+
+	* dagRoot.hh: removed #pragma
+
+	* dagNodeSet.cc: removed #pragma
+
+	* dagNodeSet.hh: removed #pragma
+
+	* dagArgumentIterator.hh: removed #pragma
+
+	* core.cc: deleted
+
+	* copyRhsAutomaton.cc: removed #pragma
+
+	* copyRhsAutomaton.hh: removed #pragma
+
+	* connectedComponent.cc: removed #pragma
+	(leq): updated Assert()s
+	(findMaximalSorts): updated Assert()
+	(getLeqSorts): updated Assert()
+
+	* connectedComponent.hh: removed #pragma
+
+	* conditionState.hh: removed #pragma
+
+	* conditionFragment.hh: removed #pragma
+
+	* checkedArgVecIterator.hh (checkValid): updated Assert()s
+	(checkDereferenceable): updated Assert()s
+	(operator--): updated Assert()
+	(operator+=): updated Assert()
+	(operator-=): updated Assert()
+	(operator[]): updated Assert()
+	(operator<): updated Assert()
+	(operator-): updated Assert()
+
+	* checkedArgVecConstIterator.hh (checkValid): updated Assert()s
+	(checkDereferenceable): updated Assert()s
+	(operator--): updated Assert()
+	(operator+=): updated Assert()
+	(operator-=): updated Assert()
+	(operator[]): updated Assert()
+	(operator<): updated Assert()
+	(operator-): updated Assert()
+
+	* cachedDag.cc: removed #pragma
+
+	* cachedDag.hh: removed #pragma
+
+	* bindingLhsAutomaton.cc: removed #pragma
+
+	* bindingLhsAutomaton.hh: removed #pragma
+
+	* badFlag.hh: removed #pragma
+
+	* argumentIterator.hh: removed #pragma
+
+	* argVec.hh: removed #pragma
+	(operator[]): updated Assert() (both versions)
+	(contractTo): updated Assert()
+
+===================================Maude79===========================================
+
 2003-02-03  Steven Eker  <eker@goo.csl.sri.com>
 
 	* equationTable.cc (applyReplace): DagNode::okToCollectGarbage()

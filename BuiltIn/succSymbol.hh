@@ -3,9 +3,6 @@
 //
 #ifndef _succSymbol_hh_
 #define _succSymbol_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include <gmpxx.h>
 #include "S_Symbol.hh"
 #include "cachedDag.hh"

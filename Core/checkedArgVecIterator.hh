@@ -69,20 +69,20 @@ template<class T>
 inline void
 ArgVec<T>::iterator::checkValid() const
 {
-  Assert(parent != 0, cerr << "uninitialized iterator");
+  Assert(parent != 0, "uninitialized iterator");
   Assert(index <= parent->len,
-	 cerr << "index > len (" << index << " > " << parent->len << ')');
-  Assert(ptr == parent->basePtr + index, cerr << "bad pointer");
+	 "index > len (" << index << " > " << parent->len << ')');
+  Assert(ptr == parent->basePtr + index, "bad pointer");
 }
 
 template<class T>
 inline void
 ArgVec<T>::iterator::checkDereferenceable() const
 {
-  Assert(parent != 0, cerr << "uninitialized iterator");
+  Assert(parent != 0, "uninitialized iterator");
   Assert(index < parent->len,
-	 cerr << "index >= len (" << index << " >= " << parent->len << ')');
-  Assert(ptr == parent->basePtr + index, cerr << "bad pointer");
+	 "index >= len (" << index << " >= " << parent->len << ')');
+  Assert(ptr == parent->basePtr + index, "bad pointer");
 }
 
 template<class T>
@@ -182,7 +182,7 @@ inline typename ArgVec<T>::iterator&
 ArgVec<T>::iterator::operator--()
 {
   checkValid();
-  Assert(index > 0, cerr << "decrementing past start");
+  Assert(index > 0, "decrementing past start");
   --ptr;
   --index;
   return *this;
@@ -202,7 +202,7 @@ inline typename ArgVec<T>::iterator&
 ArgVec<T>::iterator::operator+=(difference_type delta)
 {
   checkValid();
-  Assert(index + delta <= parent->len, cerr << "past end");
+  Assert(index + delta <= parent->len, "past end");
   ptr += delta;
   index += delta;
   return *this;
@@ -221,7 +221,7 @@ inline typename ArgVec<T>::iterator&
 ArgVec<T>::iterator::operator-=(difference_type delta)
 {
   checkValid();
-  Assert(index - delta <= parent->len, cerr << "past end");
+  Assert(index - delta <= parent->len, "past end");
   ptr -= delta;
   index -= delta;
   return *this;
@@ -240,7 +240,7 @@ inline typename ArgVec<T>::reference
 ArgVec<T>::iterator::operator[](difference_type i) const
 {
   checkValid();
-  Assert(index + i <= parent->len, cerr << "past end");
+  Assert(index + i <= parent->len, "past end");
   return ptr[i];
 }
 
@@ -250,7 +250,7 @@ ArgVec<T>::iterator::operator<(const iterator& other) const
 {
   checkValid();
   other.checkValid();
-  Assert(parent == other.parent, cerr << "incomparable iterators");
+  Assert(parent == other.parent, "incomparable iterators");
   return ptr < other.ptr;
 }
 
@@ -260,6 +260,6 @@ ArgVec<T>::iterator::operator-(const iterator& other) const
 {
   checkValid();
   other.checkValid();
-  Assert(parent == other.parent, cerr << "incomparable iterators");
+  Assert(parent == other.parent, "incomparable iterators");
   return ptr - other.ptr;
 }

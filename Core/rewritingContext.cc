@@ -1,9 +1,6 @@
 //
 //	Implementation for class RewritingContext.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //	utility stuff
 #include "macros.hh"
@@ -27,7 +24,7 @@ bool RewritingContext::traceFlag = false;
 void
 RewritingContext::markReachableNodes()
 {
-  Assert(rootNode != 0, cerr << "null root");
+  Assert(rootNode != 0, "null root");
   rootNode->mark();
   int nrFragile = nrFragileBindings();
   for (int i = 0; i < nrFragile; i++)
@@ -129,7 +126,7 @@ RewritingContext::rebuildUptoRoot()
 {
   //  cout << "\nroot was " << rootNode << endl;
   //  cout << "rebuilding from " << currentIndex << endl;
-  Assert(currentIndex >= 0, cerr << "bad currentIndex");
+  Assert(currentIndex >= 0, "bad currentIndex");
   //
   //	Locate deepest stack node  with a stale parent.
   //

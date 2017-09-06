@@ -3,9 +3,6 @@
 //
 #ifndef _indent_hh_
 #define _indent_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 //#define INDENT_STRING	": "
 #define INDENT_STRING	"  "

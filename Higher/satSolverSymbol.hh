@@ -3,9 +3,6 @@
 //
 #ifndef _satSolverSymbol_hh_
 #define _satSolverSymbol_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "temporalSymbol.hh"
 #include "cachedDag.hh"
 

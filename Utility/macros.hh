@@ -3,9 +3,6 @@
 //
 #ifndef _macros_hh_
 #define _macros_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 //
 //	C stuff.
 //
@@ -146,10 +143,11 @@ enum SpecialConstants
 #ifndef NO_ASSERT
 
 #define \
-Assert(condition, action) \
+Assert(condition, message) \
 if (!(condition)) \
-((cerr << "ASSERT FAILED: " << __FILE__ << ':' << __LINE__ << '\n'), \
-(action), (cerr << '\n'), abort())
+((cerr << "ASSERT FAILED: " << \
+__FILE__ << ':' << __LINE__ << '\n' << message << endl), \
+abort())
 
 #define \
 CantHappen(message) \
@@ -158,9 +156,9 @@ __FILE__ << ':' << __LINE__ << '\n' << message << endl), \
 abort())
 
 #define \
-DebugAdvisoryCheck(condition, action)\
+DebugAdvisoryCheck(condition, message)\
 if (!(condition)) \
-((cerr << "DEBUG ADVISORY: "), (action), (cerr << endl))
+((cerr << "DEBUG ADVISORY: " << message << endl))
 
 #define \
 DebugAdvisory(message) \
@@ -168,9 +166,9 @@ DebugAdvisory(message) \
 
 #else
 
-#define Assert(condition, action)
+#define Assert(condition, message)
 #define CantHappen(message)
-#define DebugAdvisoryCheck(condition, action)
+#define DebugAdvisoryCheck(condition, message)
 #define DebugAdvisory(message)
 
 #endif
@@ -220,6 +218,16 @@ union MachineWord
   size_t size;
 };
 
+//
+//	Macro for common const_iterator loop.
+//
+//	Too bad we don't have a portable typeof operator.
+//
+#define FOR_EACH_CONST(var, conType, container) \
+const conType::const_iterator var##_end = container.end(); \
+for (conType::const_iterator var = container.begin(); var != var##_end; ++var)
+
+
 inline void
 swap(int& a, int& b)
 {
@@ -256,7 +264,7 @@ floorDivision(int dividend, int divisor)
     }
   else
     {
-      Assert(divisor < 0, cerr << "zero divisor");
+      Assert(divisor < 0, "zero divisor");
       return (dividend >= 0) ? -((dividend - divisor - 1) / (-divisor))
 	: ((-dividend) / (-divisor));
     }
@@ -272,7 +280,7 @@ ceilingDivision(int dividend, int divisor)
     }
   else
     {
-      Assert(divisor < 0, cerr << "zero divisor");
+      Assert(divisor < 0, "zero divisor");
       return (dividend >= 0) ? -(dividend / (-divisor))
 	: (((-dividend) + (-divisor) - 1) / (-divisor));
     }
@@ -308,6 +316,15 @@ setOnGeq(int& d, int v, int t)
   //	set d to v iff t >= 0
   //
   d += (~(t >> (BITS_PER_INT - 1))) & (v - d);
+}
+
+inline int
+getSignBit(int n)
+{
+  //
+  //	Return 1 if -ve, 0 owise.
+  //
+  return (n >> (BITS_PER_INT - 1)) & 1;
 }
 
 const char* int64ToString(Int64 i, int base = 10);

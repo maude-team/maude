@@ -1,9 +1,6 @@
 //
 //	Implementation for class FreeTerm.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //	utility stuff
 #include "macros.hh"
@@ -53,7 +50,7 @@ FreeTerm::FreeTerm(FreeSymbol* symbol, const Vector<Term*>& arguments)
 {
   int nrArgs = arguments.length();
   Assert(symbol->arity() == nrArgs,
-	 cerr << "number of arguments does not match symbol definition for " << symbol);
+	 "number of arguments does not match symbol definition for " << symbol);
   for (int i = 0; i < nrArgs; i++)
     argArray[i] = arguments[i];
   slotIndex = -1;
@@ -121,7 +118,7 @@ FreeTerm::normalize(bool full, bool& changed)
 int
 FreeTerm::compareArguments(const Term* other) const
 {
-  Assert(symbol() == other->symbol(), cerr << "symbols differ");
+  Assert(symbol() == other->symbol(), "symbols differ");
   int nrArgs = argArray.length();
   Vector<Term*>& ta = (const_cast<FreeTerm*>(static_cast<const FreeTerm*>(other)))->argArray;
   for (int i = 0; i < nrArgs; i++)
@@ -136,7 +133,7 @@ FreeTerm::compareArguments(const Term* other) const
 int
 FreeTerm::compareArguments(const DagNode* other) const
 {
-  Assert(symbol() == other->symbol(), cerr << "symbols differ");
+  Assert(symbol() == other->symbol(), "symbols differ");
   int nrArgs = argArray.length();
   if (nrArgs != 0)
     {
@@ -155,7 +152,7 @@ int
 FreeTerm::partialCompareArguments(const Substitution& partialSubstitution,
 				  DagNode* other) const
 {
-  Assert(symbol() == other->symbol(), cerr << "symbols differ");
+  Assert(symbol() == other->symbol(), "symbols differ");
   int nrArgs = argArray.length();
   if (nrArgs != 0)
     {
@@ -262,7 +259,7 @@ FreeTerm::findActiveSlots(NatSet& slots)
     }
   if (active)
     {
-      Assert(slotIndex != NONE, cerr << "no slot index for active FreeTerm " << this);
+      Assert(slotIndex != NONE, "no slot index for active FreeTerm " << this);
       slots.insert(slotIndex);
     }
 }

@@ -3,9 +3,6 @@
 //
 #ifndef _extensionInfo_hh_
 #define _extensionInfo_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 class ExtensionInfo
 {

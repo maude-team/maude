@@ -9,9 +9,6 @@
 //
 #ifndef _rewritingContext_hh_
 #define _rewritingContext_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "substitution.hh"
 #include "simpleRootContainer.hh"
 #include "dagNode.hh"
@@ -121,7 +118,7 @@ inline
 RewritingContext::RewritingContext(DagNode* root)
   : rootNode(root)
 {
-  Assert(root != 0, cerr << "null root");
+  Assert(root != 0, "null root");
   mbCount = 0;
   eqCount = 0;
   rlCount = 0;

@@ -3,9 +3,6 @@
 //
 #ifndef _associativeSymbol_hh_
 #define _associativeSymbol_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "binarySymbol.hh"
 
 class AssociativeSymbol : public BinarySymbol
@@ -15,7 +12,8 @@ public:
   {
     UNSTRUCTURED,	// no guarantees
     LIMIT_SORT,		// s_1 <= s & s_2 <= s ===> s_f(s_1, s_2) <= s
-    PURE_SORT		// replaces ===> with <===>, taking sort constraints in to account
+    PURE_SORT		// replaces ===> with <===>,
+    			// taking sort constraints in to account
   };
 
   AssociativeSymbol(int id,

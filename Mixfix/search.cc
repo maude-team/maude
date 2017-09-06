@@ -43,7 +43,7 @@ Interpreter::search(const Vector<Token>& bubble, Int64 limit)
       if (limit != NONE)
 	cout << '[' << limit << "] ";
       cout << "in " << currentModule << " : " << subjectDag << ' ' <<
-	searchTypeSymbol[searchType] << ' ' << target;
+	searchTypeSymbol[searchType] << ' ' << pattern->getLhs();
       if (condition.length() > 0)
 	{
 	  cout << " such that ";

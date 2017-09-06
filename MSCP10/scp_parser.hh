@@ -11,9 +11,6 @@
 
 #ifndef _scp_parser_hh_
 #define _scp_parser_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 #include "macros.hh"
 #include "vector.hh"

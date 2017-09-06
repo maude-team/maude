@@ -4,9 +4,6 @@
 //
 #ifndef _equalitySubproblem_hh_
 #define _equalitySubproblem_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "subproblem.hh"
 
 class EqualitySubproblem : public Subproblem

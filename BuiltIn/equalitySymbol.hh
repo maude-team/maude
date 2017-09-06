@@ -3,9 +3,6 @@
 //
 #ifndef _equalitySymbol_hh_
 #define _equalitySymbol_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "freeSymbol.hh"
 #include "cachedDag.hh"
 #include "fullCompiler.hh"

@@ -1,9 +1,6 @@
 //
 //      Implementation for class TermBag
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //	utility stuff
 #include "macros.hh"
@@ -42,12 +39,12 @@ TermBag::insertBuiltTerm(Term* term, bool eagerContext)
   if (eagerContext)
     {
       pair<TermSet::iterator, bool> p = termsUsableInEagerContext.insert(term);
-      Assert(p.second, cerr << "re-insertion of " << term);
+      Assert(p.second, "re-insertion of " << term);
     }
   else
     {
       pair<TermSet::iterator, bool> p = termsUsableInLazyContext.insert(term);
-      Assert(p.second, cerr << "re-insertion of " << term);
+      Assert(p.second, "re-insertion of " << term);
     }
 }
 

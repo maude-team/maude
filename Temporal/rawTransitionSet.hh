@@ -6,9 +6,6 @@
 //
 #ifndef _rawTransitionSet_hh_
 #define _rawTransitionSet_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include <set>
 #include "transitionSet.hh"
 

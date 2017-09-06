@@ -1,9 +1,7 @@
 //
 //      Implementation for class QuotedIdentifierOpSymbol.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
+
 #include <strstream>  // HACK
 
 //      utility stuff
@@ -86,7 +84,7 @@ QuotedIdentifierOpSymbol::copyAttachments(Symbol* original, SymbolMap* map)
 bool
 QuotedIdentifierOpSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
 {
-  Assert(this == subject->symbol(), cerr << "Bad symbol");
+  Assert(this == subject->symbol(), "bad symbol");
   FreeDagNode* d = static_cast<FreeDagNode*>(subject);
   //
   //	Evaluate our arguments.

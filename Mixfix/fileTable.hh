@@ -3,9 +3,6 @@
 //
 #ifndef _fileTable_hh_
 #define _fileTable_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "stringTable.hh"
 #include "token.hh"
 

@@ -3,9 +3,6 @@
 //
 #ifndef _redexPosition_hh_
 #define _redexPosition_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 class RedexPosition
 {

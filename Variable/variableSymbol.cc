@@ -1,9 +1,6 @@
 //
 //      Implementation for class VariableSymbol.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //	utility stuff
 #include "macros.hh"
@@ -31,14 +28,14 @@ VariableSymbol::VariableSymbol(int id)
 Term*
 VariableSymbol::makeTerm(const Vector<Term*>& args)
 {
-  Assert(false, cerr << "makeTerm() not useable on variable symbol " << this);
+  Assert(false, "makeTerm() not useable on variable symbol " << this);
   return 0;
 }
 
 DagNode*
 VariableSymbol::makeDagNode(const Vector<DagNode*>& args)
 {
-  Assert(false, cerr << "makeDagNode() not useable on variable symbol " << this);
+  Assert(false, "makeDagNode() not useable on variable symbol " << this);
   return 0;
 }
 

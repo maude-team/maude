@@ -147,7 +147,7 @@ GenBuchiAutomaton::handleComponent(int number)
 		  //
 		  //	External transition.
 		  //
-		  Assert(targetComponentNr < number, cerr << "SCC partial order problem");
+		  Assert(targetComponentNr < number, "SCC partial order problem");
 		  if (componentInfo[targetComponentNr].status != DEAD)
 		    reachLiveScc = true;
 		}

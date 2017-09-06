@@ -3,9 +3,6 @@
 //
 #ifndef _AU_Layer_hh_
 #define _AU_Layer_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "sequencePartition.hh"
 
 class AU_Layer

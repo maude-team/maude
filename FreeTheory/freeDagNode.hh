@@ -3,9 +3,6 @@
 //
 #ifndef _freeDagNode_hh_
 #define _freeDagNode_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "dagNode.hh"
 
 class FreeDagNode : public DagNode
@@ -75,9 +72,9 @@ FreeDagNode::FreeDagNode(Symbol* symbol) : DagNode(symbol)
 inline DagNode*
 FreeDagNode::getArgument(int i) const
 {
-  Assert(i >= 0, cerr << "-ve arg number");
+  Assert(i >= 0, "-ve arg number");
   int nrArgs = symbol()->arity();
-  Assert(i < nrArgs, cerr << "arg number too big");
+  Assert(i < nrArgs, "arg number too big");
   return (nrArgs > nrWords) ? external[i] : internal[i];
 }
 

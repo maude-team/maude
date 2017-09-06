@@ -1,3 +1,29 @@
+2003-02-25  Steven Eker  <eker@goo.csl.sri.com>
+
+	* NA_Term.cc: removed #pragma
+
+	* NA_Term.hh: removed #pragma
+
+	* NA_Symbol.cc: removed #pragma
+	(makeTerm): Assert() -> CantHappen()
+	(makeDagNode): Assert() -> CantHappen()
+
+	* NA_Symbol.hh: removed #pragma
+
+	* NA_RhsAutomaton.cc: removed #pragma
+
+	* NA_RhsAutomaton.hh: removed #pragma
+
+	* NA_LhsAutomaton.cc: removed #pragma
+
+	* NA_LhsAutomaton.hh: removed #pragma
+
+	* NA_DagNode.cc: removed #pragma
+
+	* NA_DagNode.hh: removed #pragma
+	
+===================================Maude79===========================================
+
 2002-10-08  Steven Eker  <eker@goo.csl.sri.com>
 
 	* NA_DagNode.cc (copyWithReplacement): (both versions) use

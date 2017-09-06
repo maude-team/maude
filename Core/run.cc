@@ -145,7 +145,7 @@ RewritingContext::fairTraversal(bool newTraversal)
 	{
 	  Assert(redexStack[currentIndex].parentIndex() ==
 		 redexStack[currentIndex + 1].parentIndex(),
-		 cerr << "redexStack corrupt");
+		 "redexStack corrupt");
 	  ++currentIndex;  // across to sibling
 	  descend();
 	  argsUnstackable = true;

@@ -3,9 +3,6 @@
 //
 #ifndef _freeDagArgumentIterator_hh_
 #define _freeDagArgumentIteraror_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 class FreeDagArgumentIterator : public RawDagArgumentIterator
 {

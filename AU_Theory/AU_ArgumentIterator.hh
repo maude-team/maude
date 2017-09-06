@@ -3,9 +3,6 @@
 //
 #ifndef _AU_ArgumentIterator_hh_
 #define _AU_ArgumentIterator_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "rawArgumentIterator.hh"
 #include "AU_Term.hh"
 

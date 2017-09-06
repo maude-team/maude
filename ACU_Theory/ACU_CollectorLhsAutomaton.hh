@@ -1,19 +1,20 @@
 //
-//      Abstract base class for ACU stripper-collector algorithm left hand side automata.
+//      Base class for ACU stripper-collector left hand side automata.
 //
 #ifndef _ACU_CollectorLhsAutomaton_hh_
 #define _ACU_CollectorLhsAutomaton_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
-#include "heuristicLhsAutomaton.hh"
+#include "ACU_LhsAutomaton.hh"
 
-class ACU_CollectorLhsAutomaton : public HeuristicLhsAutomaton
+class ACU_CollectorLhsAutomaton : public ACU_LhsAutomaton
 {
   NO_COPYING(ACU_CollectorLhsAutomaton);
 
 public:
-  ACU_CollectorLhsAutomaton(VariableTerm* collector);
+  ACU_CollectorLhsAutomaton(ACU_Symbol* symbol,
+			    bool matchAtTop,
+			    bool collapsePossible,
+			    int nrVariables,
+			    VariableTerm* collector);
 
 #ifdef DUMP
   void dump(ostream& s, const VariableInfo& variableInfo, int indentLevel);
@@ -25,7 +26,7 @@ protected:
   bool collect(ACU_Stack& stripped,  // destroyed
 	       ACU_TreeDagNode* subject,
 	       Substitution& solution) const;
-  void collapse(ACU_Symbol* topSymbol, Substitution& solution) const;
+  void collapse(Substitution& solution) const;
 
 private:
   //
@@ -35,9 +36,9 @@ private:
   //
   const int collectorVarIndex;
   //
-  //	The collector sort must be limit or pure w.r.t. topSymbol; If it is
-  //	the unique maximal sort of an error free component we set it to 0
-  //	to switch off sort checks since they should always succeed.
+  //	The collector sort must be unbounded. If it is the error sort
+  //	or the unique maximal sort of an error free component we set
+  //	it to 0 to switch off sort checks since they should always succeed.
   //
   const Sort* collectorSort;
 };
@@ -49,9 +50,9 @@ ACU_CollectorLhsAutomaton::collectorFree(Substitution& solution) const
 }
 
 inline void
-ACU_CollectorLhsAutomaton::collapse(ACU_Symbol* topSymbol, Substitution& solution) const
+ACU_CollectorLhsAutomaton::collapse(Substitution& solution) const
 {
-  solution.bind(collectorVarIndex, topSymbol->getIdentityDag());
+  solution.bind(collectorVarIndex, getSymbol()->getIdentityDag());
 }
 
 #endif

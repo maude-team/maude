@@ -3,9 +3,6 @@
 //
 #ifndef _rewriteSearchState_hh_
 #define _rewriteSearchState_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "searchState.hh"
 
 class RewriteSearchState : public SearchState

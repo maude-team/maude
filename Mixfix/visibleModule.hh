@@ -3,9 +3,6 @@
 //
 #ifndef _visibleModule_hh_
 #define _visibleModule_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "importModule.hh"
 
 class VisibleModule : public ImportModule

@@ -1,10 +1,6 @@
 //
 //      Implementation for class PreVector.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
-
 #include "macros.hh"
 #include "preVector.hh"
 

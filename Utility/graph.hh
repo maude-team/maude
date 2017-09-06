@@ -1,11 +1,8 @@
 //
-//	Class for graphs
+//	Class for graphs.
 //
 #ifndef _graph_hh_
 #define _graph_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 class Graph
 {

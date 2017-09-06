@@ -1,10 +1,7 @@
 //
 //      Implementation for class VariableAbstractionSubproblem.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
- 
+
 //      utility stuff
 #include "macros.hh"
 #include "vector.hh"
@@ -48,7 +45,7 @@ VariableAbstractionSubproblem::solve(bool findFirst, RewritingContext& solution)
     {
       local.copy(solution);
       DagNode* v = solution.value(abstractionVariable);
-      Assert(v != 0, cerr << "Unbound abstraction variable");
+      Assert(v != 0, "Unbound abstraction variable");
       if (!(abstractedPattern->match(v, local, subproblem, 0)))
 	return false;
       difference = local - solution;

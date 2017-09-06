@@ -1,9 +1,6 @@
 //
 //      Implementation for class ACU_DagArgumentIterator.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
  
 //	utility stuff
 #include "macros.hh"
@@ -29,14 +26,14 @@ ACU_DagArgumentIterator::valid() const
 DagNode*
 ACU_DagArgumentIterator::argument() const
 {
-  Assert(multiplicityRemaining > 0, cerr << "no args left");
+  Assert(multiplicityRemaining > 0, "no args left");
   return (*argArray)[position].dagNode;
 }
 
 void
 ACU_DagArgumentIterator::next()
 {
-  Assert(multiplicityRemaining > 0, cerr << "no args left");
+  Assert(multiplicityRemaining > 0, "no args left");
   --multiplicityRemaining;
   if (multiplicityRemaining == 0)
     {

@@ -3,9 +3,6 @@
 //
 #ifndef _memoTable_hh_
 #define _memoTable_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "simpleRootContainer.hh"
 
 class MemoTable

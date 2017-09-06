@@ -5,10 +5,6 @@
 //	resolved by open addressing (with double hashing)
 //	See Cormen, Lieserson & Rivest p235
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
-
 #include "macros.hh"
 #include "vector.hh"
 #include "stringTable.hh"

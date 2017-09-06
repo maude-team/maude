@@ -3,9 +3,6 @@
 //
 #ifndef _SearchState_hh_
 #define _SearchState_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include <stack>
 #include "positionState.hh"
 #include "rewritingContext.hh"

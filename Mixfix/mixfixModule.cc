@@ -1,9 +1,6 @@
 //
 //      Implementation for class MixfixModule.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //      utility stuff
 #include "macros.hh"
@@ -260,7 +257,7 @@ MixfixModule::findSymbol(int name,
       for (int i = firstSymbols[index]; i != NONE; i = symbolInfo[i].next)
 	{
 	  Symbol* s = getSymbols()[i];
-	  Assert(s->id() == name, cerr << "name lookup error " <<
+	  Assert(s->id() == name, "name lookup error " <<
 		 Token::name(s->id()) << " vs " << Token::name(name));
 	  if (s->arity() == nrArgs)
 	    {
@@ -698,7 +695,7 @@ MixfixModule::computePrecAndGather(int nrArgs, SymbolInfo& si, Symbol* symbol)
     }
   if (si.gather.length() > 0)
     {
-      Assert(si.gather.length() == nrArgs, cerr << "gather length != nrArgs");
+      Assert(si.gather.length() == nrArgs, "gather length != nrArgs");
       for (int i = 0; i < nrArgs; i++)
 	{
 	  int g = si.gather[i];
@@ -770,6 +767,6 @@ MixfixModule::computePrecAndGather(int nrArgs, SymbolInfo& si, Symbol* symbol)
 		}
 	    }
 	}
-      Assert(si.gather.length() == nrArgs, cerr << "gather length != nrArgs");
+      Assert(si.gather.length() == nrArgs, "gather length != nrArgs");
     }
 }

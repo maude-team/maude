@@ -1,9 +1,6 @@
 //
 //      Implementation for class SatSolverSymbol.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 #include <list>
 
 //      utility stuff
@@ -107,7 +104,7 @@ SatSolverSymbol::reset()
 bool
 SatSolverSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
 {
-  Assert(this == subject->symbol(), cerr << "Bad symbol");
+  Assert(this == subject->symbol(), "bad symbol");
 
   FreeDagNode* f = safeCast(FreeDagNode*, subject);
   DagNode* formulaDag = f->getArgument(0);
@@ -187,7 +184,7 @@ SatSolverSymbol::makeFormula(const DagNodeSet& propositions,
   BddUser::dump(cout,  pi);
   cout << endl;
 #endif
-  Assert(pi != bdd_false(), cerr << "bad formula");
+  Assert(pi != bdd_false(), "bad formula");
   while (pi != bdd_true())
     {
       int var = bdd_var(pi);
@@ -199,7 +196,7 @@ SatSolverSymbol::makeFormula(const DagNodeSet& propositions,
 	}
       else
 	{
-	  Assert(bdd_high(pi) == bdd_false(), cerr << "bad formula");
+	  Assert(bdd_high(pi) == bdd_false(), "bad formula");
 	  args.append(negate(propositions.index2DagNode(var)));
 	  pi = lo;
 	}

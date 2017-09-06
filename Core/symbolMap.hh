@@ -3,10 +3,7 @@
 //
 #ifndef _symbolMap_hh_
 #define _symbolMap_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
- 
+
 class SymbolMap
 {
 public:

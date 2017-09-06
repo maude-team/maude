@@ -411,7 +411,7 @@ MixfixModule::computeGraphStatus(DagNode* dagNode,
   visited.insert(dagNode);
   int index = statusVec.length();
   Assert(index == visited.pointer2Index(dagNode),
-	 cerr << "statusVec out of step");
+	 "statusVec out of step");
   statusVec.resize(index + 1);
   //
   //	We have strangeness below if we are reduced and one of our arguments

@@ -1,9 +1,6 @@
 //
 //	Implementation for class Equation.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //	utility stuff
 #include "macros.hh"
@@ -34,7 +31,7 @@ Equation::Equation(int label,
 {
   if (owise)
     setFlags(OWISE);
-  Assert(rhs != 0, cerr << "null rhs");
+  Assert(rhs != 0, "null rhs");
 }
 
 Equation::~Equation()
@@ -69,7 +66,7 @@ Equation::preprocess()
   PreEquation::preprocess();
   rhs->symbol()->fillInSortInfo(rhs);
   Assert(getLhs()->getComponent() == rhs->getComponent(),
-	 cerr << "connected component clash");
+	 "connected component clash");
 }
 
 void

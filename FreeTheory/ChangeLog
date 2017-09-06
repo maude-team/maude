@@ -1,3 +1,125 @@
+2003-03-03  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeNet.cc (buildTernaryTree): use notEqual[] in place of less
+	and greater
+	(dump): use notEqual[] in place of less and greater
+	(tripleLt): removed pointer comparison SPEED_HACK
+
+	* freeNetExec.cc (applyReplace2): use notEqual[] and getSignBit()
+	to do branch-free choice in discrimination net
+
+	* freeNet.hh (class FreeNet): notEqual array replaces less and
+	greater in struct TestNode
+	(class FreeNet): added enum SpecialValues
+
+2003-02-25  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freePreNetSubsumption.cc (subsumesWrtReducedFringe): removed
+	unused variable sf
+
+	* freeUnarySymbol.cc: removed #pragma
+
+	* freeUnarySymbol.hh: removed #pragma
+
+	* freeTheory.cc: deleted
+
+	* freeTernarySymbol.cc: removed #pragma
+
+	* freeTernarySymbol.hh: removed #pragma
+
+	* freeTerm.cc: removed #pragma
+	(FreeTerm): updated Assert()
+	(compareArguments): updated Assert() (both versions)
+	(partialCompareArguments): updated Assert()
+	(findActiveSlots): updated Assert()
+
+	* freeTerm.hh: removed #pragma
+
+	* freeSymbol.cc: removed #pragma
+	(eqRewrite): updated Assert()
+	(computeBaseSort): updated Assert()s
+	(normalizeAndComputeTrueSort): updated Assert()
+
+	* freeSymbol.hh: removed #pragma
+
+	* freeSubterm.hh: removed #pragma
+
+	* freeRhsAutomaton.cc: removed #pragma
+
+	* freeRhsAutomaton.hh: removed #pragma
+
+	* freeRemainder.hh (fastMatchReplace): updated Assert()s
+
+	* freeRemainder.cc: removed #pragma
+	(FreeRemainder): updated Assert()s
+	(slowMatchReplace2): updated Assert()
+
+	* freeRemainder.hh: removed #pragma
+
+	* freePreNetSubsumption.cc (subsumesWrtReducedFringe): updated
+	Assert()
+
+	* freePreNetSemiCompiler.cc (semiCompileNode): updated Assert()s
+	(allocateSlot): updated Assert()
+	(buildSlotTranslation): updated Assert()s
+
+	* freePreNetFullCompiler.cc (allocateVariables): updated Assert()
+
+	* freePreNet.cc: removed #pragma
+	(buildNet): DebugAdvisoryCheck() -> DebugAdvisory()
+	(makeNode): updated Assert()
+	(partiallySubsumed): updated Assert()
+
+	* freePreNet.hh: removed #pragma
+
+	* freePositionTable.cc: removed #pragma
+
+	* freePositionTable.hh: removed #pragma
+
+	* freeOccurrence.hh: removed #pragma
+
+	* freeNet.cc: removed #pragma
+	(fillOutNode): updated Assert()
+
+	* freeNet.hh: removed #pragma
+
+	* freeLhsStructs.hh: removed #pragma
+
+	* freeLhsCompiler.cc (compileRemainder): updated Assert()
+	(compileLhs2): updated Assert()
+	(findConstraintPropagationSequence): updated Assert()
+
+	* freeLhsAutomaton.cc: removed #pragma
+	(match): updated Assert()s
+
+	* freeLhsAutomaton.hh: removed #pragma
+
+	* freeDagNode.cc: removed #pragma
+	(compareArguments): updated Assert()
+	(copyWithReplacement): updated Assert()
+	(copyWithReplacement): updated Assert()s
+
+	* freeDagNode.hh: removed #pragma
+	(getArgument): updated Assert()s
+
+	* freeDagArgumentIterator.cc: removed #pragma
+	(argument): updated Assert()
+	(next): updated Assert()
+
+	* freeDagArgumentIterator.hh: removed #pragma
+
+	* freeBinarySymbol.cc: removed #pragma
+
+	* freeBinarySymbol.hh: removed #pragma
+
+	* freeArgumentIterator.cc: removed #pragma
+	(argument): updated Assert()
+	(next): updated Assert()
+
+	* freeArgumentIterator.hh: removed #pragma
+	
+===================================Maude79===========================================
+
 2003-01-07  Steven Eker  <eker@goo.csl.sri.com>
 
 	* freeTerm.hh (class FreeTerm): added decl for

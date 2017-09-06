@@ -3,9 +3,6 @@
 //
 #ifndef _NA_LhsAutomaton_hh_
 #define _NA_LhsAutomaton_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "lhsAutomaton.hh"
 
 class NA_LhsAutomaton : public LhsAutomaton

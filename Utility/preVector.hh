@@ -3,9 +3,6 @@
 //
 #ifndef _preVector_hh_
 #define _preVector_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 //
 //	This is a very low-level class that will only be use by the
@@ -104,7 +101,7 @@ PreVector::empty() const
 inline void
 PreVector::setLength(size_t length)
 {
-  Assert(ptr != 0, cerr << "ptr null");
+  Assert(ptr != 0, "ptr null");
   ptr[-1].length = length;
 }
 

@@ -5,10 +5,6 @@
 //      clashes being resolved by open addressing (with double hashing)
 //      See Cormen, Lieserson & Rivest p235
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
-
 #include "macros.hh"
 #include "vector.hh"
 #include "pointerMap.hh"
@@ -42,7 +38,7 @@ PointerMap::PointerMap(int size)
 void*
 PointerMap::setMap(void* from, void* to)
 {
-  Assert(from != 0, cerr << "can't map null pointer");
+  Assert(from != 0, "can't map null pointer");
   if (hashTable.length() <= 2 * used)
     resize();
   Pair& p = hashTable[findEntry(from)];
@@ -62,7 +58,7 @@ PointerMap::setMap(void* from, void* to)
 void*
 PointerMap::getMap(void* from) const
 {
-  Assert(from != 0, cerr << "can't map null pointer");
+  Assert(from != 0, "can't map null pointer");
   const Pair& p = hashTable[findEntry(from)];
   return (p.from == 0) ? 0 : p.to;
 }

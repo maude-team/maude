@@ -1,10 +1,7 @@
 //
 //      Implementation for class AU_Symbol.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
- 
+
 //	utility stuff
 #include "macros.hh"
 #include "vector.hh"
@@ -71,7 +68,7 @@ AU_Symbol::makeDagNode(const Vector<DagNode*>& args)
 bool
 AU_Symbol::eqRewrite(DagNode* subject, RewritingContext& context)
 {
-  Assert(this == subject->symbol(), cerr << "Bad symbol");
+  Assert(this == subject->symbol(), "bad symbol");
   AU_DagNode* s = static_cast<AU_DagNode*>(subject);
   ArgVec<DagNode*>& args = s->argArray;
   if (standardStrategy())
@@ -203,7 +200,7 @@ AU_Symbol::copyAndReduceSubterms(AU_DagNode* subject, RewritingContext& context)
 void
 AU_Symbol::computeBaseSort(DagNode* subject)
 {
-  Assert(this == subject->symbol(), cerr << "Bad symbol");
+  Assert(this == subject->symbol(), "bad symbol");
   AU_DagNode* s = static_cast<AU_DagNode*>(subject);
   ArgVec<DagNode*>& args = s->argArray;
   int nrArgs = args.length();
@@ -213,7 +210,7 @@ AU_Symbol::computeBaseSort(DagNode* subject)
   const Sort* uniSort = uniformSort();
   if (uniSort != 0)
     {
-      if (!(s->producedByAssignment()))
+      if (!(uniSort->component()->errorFree()))
 	{
 	  //
 	  //	Check we're not in the error sort.
@@ -243,7 +240,7 @@ AU_Symbol::computeBaseSort(DagNode* subject)
   for (int i = 0; i < nrArgs; i++)
     {
       int t = args[i]->getSortIndex();
-      Assert(t >= 0, cerr << "bad sort index");
+      Assert(t >= 0, "bad sort index");
       sortIndex = (sortIndex == Sort::SORT_UNKNOWN) ? t : traverse(traverse(0, sortIndex), t);
     }
   subject->setSortIndex(sortIndex);
@@ -252,7 +249,7 @@ AU_Symbol::computeBaseSort(DagNode* subject)
 void
 AU_Symbol::normalizeAndComputeTrueSort(DagNode* subject, RewritingContext& context)
 {
-  Assert(this == subject->symbol(), cerr << "bad symbol");
+  Assert(this == subject->symbol(), "bad symbol");
   AU_DagNode* s = static_cast<AU_DagNode*>(subject);
   ArgVec<DagNode*>& args = s->argArray;
   int nrArgs = args.length();

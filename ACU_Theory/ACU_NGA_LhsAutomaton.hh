@@ -1,11 +1,8 @@
 //
-//      Class for ACU Non-ground alien stripper-collector algorithm lhs automaton.
+//      Class for ACU non-ground alien stripper-collector algorithm lhs automaton.
 //
 #ifndef _ACU_NGA_LhsAutomaton_hh_
 #define _ACU_NGA_LhsAutomaton_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "ACU_CollectorLhsAutomaton.hh"
 
 class ACU_NGA_LhsAutomaton : public ACU_CollectorLhsAutomaton
@@ -13,11 +10,12 @@ class ACU_NGA_LhsAutomaton : public ACU_CollectorLhsAutomaton
   NO_COPYING(ACU_NGA_LhsAutomaton);
 
 public:
-  ACU_NGA_LhsAutomaton(ACU_Symbol* topSymbol,
+  ACU_NGA_LhsAutomaton(ACU_Symbol* symbol,
+		       bool matchAtTop,
 		       bool collapsePossible,
+		       int nrVariables,
 		       LhsAutomaton* stripperAutomaton,
 		       Term* stripperTerm,
-		       int nrVariables,
 		       VariableTerm* collector);
   ~ACU_NGA_LhsAutomaton();
   //
@@ -33,17 +31,12 @@ public:
 #endif
 
 private:
-  ACU_Symbol* const topSymbol;
-  const bool collapsePossible;
   //
-  //	The stripper automaton strips off one argument.
+  //	The stripper automaton strips off one argument; it must be
+  //	non-ground and stable.
   //
   LhsAutomaton* const stripperAutomaton;
   Term* const stripperTerm;
-  //
-  //	Data storage for match-time use.
-  //
-  Substitution local;
 };
 
 #endif

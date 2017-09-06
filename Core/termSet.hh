@@ -3,9 +3,6 @@
 //
 #ifndef _termSet_hh_
 #define _termSet_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "pointerSet.hh"
 
 class TermSet : private PointerSet

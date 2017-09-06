@@ -1,10 +1,6 @@
 //
 //      Implementation for class NatSet.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
-
 #include "macros.hh"
 #include "vector.hh"
 #include "natSet.hh"
@@ -12,7 +8,7 @@
 int
 NatSet::topBit(Word w)
 {
-  Assert(w != 0, cerr << "zero word");
+  Assert(w != 0, "zero word");
   int i = WORD_SIZE - 1;
   for (Word mask = (1 << i); (mask & w) == 0; mask >>= 1)
     --i;
@@ -22,7 +18,7 @@ NatSet::topBit(Word w)
 int
 NatSet::bottomBit(Word w)
 {
-  Assert(w != 0, cerr << "zero word");
+  Assert(w != 0, "zero word");
   int i = 0;
   for (Word mask = 1; (mask & w) == 0; mask <<= 1)
     ++i;
@@ -42,14 +38,14 @@ NatSet::countBits(Word w)
 local_inline NatSet::Word
 NatSet::getMask(value_type i)
 {
-  Assert(i >= 0, cerr << "-ve argument");
+  Assert(i >= 0, "-ve argument");
   return 1 << (i & (WORD_SIZE - 1));
 }
 
 local_inline int
 NatSet::getWordNr(value_type i)
 {
-  Assert(i >= 0, cerr << "-ve argument");
+  Assert(i >= 0, "-ve argument");
   return i >> LOG_WORD_SIZE;
 }
 
@@ -69,7 +65,7 @@ bool
 NatSet::arrayContains(value_type i) const
 {
   int w = getWordNr(i);
-  Assert(i > 0, cerr << "bad value");
+  Assert(i > 0, "bad value");
   if (w > array.length())
     return false;
   return array[w - 1] & getMask(i);
@@ -78,7 +74,7 @@ NatSet::arrayContains(value_type i) const
 void
 NatSet::insert(value_type i)
 {
-  Assert(i >= 0, cerr << "-ve argument");
+  Assert(i >= 0, "-ve argument");
   if (i < WORD_SIZE)
     firstWord |= (1 << i);
   else
@@ -119,7 +115,7 @@ NatSet::insert(const NatSet& other)
 void
 NatSet::subtract(value_type i)
 {
-  Assert(i >= 0, cerr << "-ve argument");
+  Assert(i >= 0, "-ve argument");
   if (i < WORD_SIZE)
     firstWord &= ~(1 << i);
   else
@@ -260,7 +256,7 @@ NatSet::operator<(const NatSet& other) const
 NatSet::iterator&
 NatSet::iterator::operator++()
 {
-  Assert(element != -1, cerr << "bad increment");
+  Assert(element != -1, "bad increment");
   int w = getWordNr(element);
   Word word = (w == 0) ? natSet->firstWord : natSet->array[w - 1];
   Word mask = getMask(element);

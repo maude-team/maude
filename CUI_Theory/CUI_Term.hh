@@ -3,9 +3,6 @@
 //
 #ifndef _CUI_Term_hh_
 #define _CUI_Term_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "term.hh"
 
 class CUI_Term : public Term

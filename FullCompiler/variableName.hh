@@ -3,9 +3,6 @@
 //
 #ifndef _variableName_hh_
 #define _variableName_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 class VariableName
 {

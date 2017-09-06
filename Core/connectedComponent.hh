@@ -3,9 +3,6 @@
 //
 #ifndef _connectedComponent_hh_
 #define _connectedComponent_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "moduleItem.hh"
 #include "natSet.hh"
 

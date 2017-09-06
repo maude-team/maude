@@ -3,9 +3,6 @@
 //
 #ifndef _CUI_Symbol_hh_
 #define _CUI_Symbol_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "binarySymbol.hh"
 
 class CUI_Symbol : public BinarySymbol

@@ -3,9 +3,6 @@
 //
 #ifndef _xmlBuffer_hh_
 #define _xmlBuffer_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include <string>
 #include <stack>
 

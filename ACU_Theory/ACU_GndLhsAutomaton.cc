@@ -1,9 +1,6 @@
 //
 //      Implementation for class ACU_GndLhsAutomaton.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //	utility stuff
 #include "macros.hh"
@@ -14,8 +11,8 @@
 #include "interface.hh"
 #include "core.hh"
 #include "variable.hh"
-#include "ACU_Theory.hh"
 #include "ACU_RedBlack.hh"
+#include "ACU_Theory.hh"
 
 //      interface class definitions
 #include "associativeSymbol.hh"
@@ -24,31 +21,31 @@
 #include "extensionInfo.hh"
 
 //      core class definitions
-//#include "variableInfo.hh"
 #include "substitution.hh"
 
-//      variable class definitions
-//#include "variableSymbol.hh"
-//#include "variableTerm.hh"
+//	ACU Red-Black class definitions
+#include "ACU_SlowIter.hh"
 
 //	ACU theory class definitions
 #include "ACU_Symbol.hh"
 #include "ACU_DagNode.hh"
 #include "ACU_GndLhsAutomaton.hh"
-
-//	ACU Red-Black class definitions
 #include "ACU_TreeDagNode.hh"
-#include "ACU_SlowIter.hh"
 
-ACU_GndLhsAutomaton::ACU_GndLhsAutomaton(ACU_Symbol* topSymbol,
+ACU_GndLhsAutomaton::ACU_GndLhsAutomaton(ACU_Symbol* symbol,
+					 bool matchAtTop,
 					 bool collapsePossible,
+					 int nrVariables,
 					 Term* stripperTerm,
 					 VariableTerm* collector)
-  : ACU_CollectorLhsAutomaton(collector),
-    topSymbol(topSymbol),
-    collapsePossible(collapsePossible),
-    stripperTerm(stripperTerm)
+  : ACU_CollectorLhsAutomaton(symbol,
+			      matchAtTop,
+			      collapsePossible,
+			      nrVariables,
+			      collector),
+  stripperTerm(stripperTerm)
 {
+  Assert(stripperTerm->ground(), "stripper term must be ground");
 }
 
 bool
@@ -59,13 +56,16 @@ ACU_GndLhsAutomaton::match(DagNode* subject,
 {
   if (collectorFree(solution))
     {
-      if (subject->symbol() == topSymbol)
+      if (subject->symbol() == getSymbol())
 	{
 	  //
 	  //	Non-collapse case.
 	  //
 	  if (safeCast(ACU_BaseDagNode*, subject)->isTree())
 	    {
+	      //
+	      //	Red-black case.
+	      //
 	      ACU_TreeDagNode* s = safeCast(ACU_TreeDagNode*, subject);
 	      ACU_SlowIter i;
 	      if (!ACU_RedBlackNode::find(s->getRoot(), stripperTerm, i))
@@ -74,18 +74,18 @@ ACU_GndLhsAutomaton::match(DagNode* subject,
 		{
 		  returnedSubproblem = 0;
 		  if (extensionInfo)
-		    extensionInfo->setMatchedWhole(true);
+		    {
+		      extensionInfo->setValidAfterMatch(true);
+		      extensionInfo->setMatchedWhole(true);
+		    }
 		  return true;
 		}
-	      //
-	      //	This collect() does a precise sort calculation
-	      //	except for memberships.
-	      //
-	      if (topSymbol->sortConstraintFree())
-		return false;
 	    }
 	  else
 	    {
+	      //
+	      //	ArgVec case.
+	      //
 	      ACU_DagNode* s = safeCast(ACU_DagNode*, subject);
 	      int pos;
 	      if (!(s->binarySearch(stripperTerm, pos)))
@@ -94,34 +94,34 @@ ACU_GndLhsAutomaton::match(DagNode* subject,
 		{
 		  returnedSubproblem = 0;
 		  if (extensionInfo)
-		    extensionInfo->setMatchedWhole(true);
+		    {
+		      extensionInfo->setValidAfterMatch(true);
+		      extensionInfo->setMatchedWhole(true);
+		    }
 		  return true;
 		}
-	      //
-	      //	This collect() can fail because it only does approximate
-	      //	sort tests so we can't do anything better than fall
-	      //	into the full matcher.
-	      //
 	    }
+	  if (extensionInfo == 0)
+	    return false;  // no extension implies true failure
 	}
       else
 	{
 	  //
 	  //	Collapse case.
 	  //
-	  if (!collapsePossible)
+	  if (!getCollapsePossible())
 	    return false;
 	  Assert(extensionInfo == 0 &&
 		 subject->getSortIndex() != Sort::SORT_UNKNOWN,
-		 cerr << "collapse to top not handled by ACU_GndLhsAutomaton");
+		 "collapse to top not handled by ACU_GndLhsAutomaton");
 	  if (!(stripperTerm->equal(subject)))
 	    return false;
 	  returnedSubproblem = 0;
-	  collapse(topSymbol, solution);
+	  collapse(solution);
 	  return true;
 	}
     }
-  return fullMatch(subject, solution, returnedSubproblem, extensionInfo);
+  return ACU_LhsAutomaton::match(subject, solution, returnedSubproblem, extensionInfo);
 }
 
 #ifdef DUMP
@@ -130,11 +130,8 @@ ACU_GndLhsAutomaton::dump(ostream& s, const VariableInfo& variableInfo, int inde
 {
   s << Indent(indentLevel) << "Begin{ACU_GndLhsAutomaton}\n";
   ++indentLevel;
-  s << Indent(indentLevel) << "topSymbol = \"" << topSymbol <<
-    "\"\tcollapsePossible = " << collapsePossible << '\n' <<
-    "stripperTerm = \"" << stripperTerm << "\"\n";
+  s << Indent(indentLevel) << "stripperTerm = \"" << stripperTerm << '\n';
   ACU_CollectorLhsAutomaton::dump(s, variableInfo, indentLevel);
   s << Indent(indentLevel - 1) << "End{ACU_GndLhsAutomaton}\n";
 }
 #endif
-

@@ -22,7 +22,7 @@ AU_LhsAutomaton::uniqueCollapseMatch(DagNode* subject,
       if (r.type == VARIABLE && r.variable.takeIdentity)
 	{
 	  DagNode* d = solution.value(r.variable.index);
-	  Assert(d != 0, cerr << "unbound variable that can take identity in rigid part");
+	  Assert(d != 0, "unbound variable that can take identity in rigid part");
 	  if (!(identity->equal(d)))
 	    return false;
 	}
@@ -73,7 +73,7 @@ AU_LhsAutomaton::bindUnboundVariablesToIdentity(Substitution& solution, int exce
   for (int i = 0; i < nrFlexVariables; i++)
     {
       Assert(flexPart[i].type == VARIABLE && flexPart[i].variable.takeIdentity,
-	     cerr << "non variable in multiway collapse");
+	     "non variable in multiway collapse");
       if (i != exception)
 	{
 	  int index = flexPart[i].variable.index;
@@ -95,11 +95,11 @@ AU_LhsAutomaton::multiwayCollapseMatch(DagNode* subject,
   int rigidLength = rigidPart.length();
   for (int i = 0; i < rigidLength; i++)
     {
-      Assert(rigidPart[i].type == VARIABLE, cerr << "non variable in multiway collapse");
+      Assert(rigidPart[i].type == VARIABLE, "non variable in multiway collapse");
       TopVariable& tv = rigidPart[i].variable;
-      Assert(tv.takeIdentity, cerr << "variable can't take identity");
+      Assert(tv.takeIdentity, "variable can't take identity");
       DagNode* d = solution.value(tv.index);
-      Assert(d != 0, cerr << "unbound variable that can take identity in rigid part");
+      Assert(d != 0, "unbound variable that can take identity in rigid part");
       if (!(identity->equal(d)))
 	{
 	  if (matchingVariable != NONE)  // repeated variable fails 2nd time around
@@ -113,9 +113,9 @@ AU_LhsAutomaton::multiwayCollapseMatch(DagNode* subject,
   int nrFlexVariables = flexPart.length();
   for (int i = 0; i < nrFlexVariables; i++)
     {
-      Assert(flexPart[i].type == VARIABLE, cerr << "non variable in multiway collapse");
+      Assert(flexPart[i].type == VARIABLE, "non variable in multiway collapse");
       TopVariable& tv = flexPart[i].variable;
-      Assert(tv.takeIdentity, cerr << "variable can't take identity");
+      Assert(tv.takeIdentity, "variable can't take identity");
       DagNode* d = solution.value(tv.index);
       if (d != 0)
 	{
@@ -186,7 +186,7 @@ AU_LhsAutomaton::multiwayCollapseMatch(DagNode* subject,
       if (extensionInfo == 0)
 	return false;
       TopVariable& tv = flexPart[0].variable;  // pick any since they are all bound to identity
-      Assert(identity->equal(solution.value(tv.index)), cerr << "should be identity");
+      Assert(identity->equal(solution.value(tv.index)), "should be identity");
       return subject->matchVariable(tv.index,
 				    tv.sort,
 				    matchAtTop,
@@ -264,7 +264,7 @@ AU_LhsAutomaton::collapseMatch(DagNode* subject,
   int nrFlexVariables = flexPart.length();
   for (int i = 0; i < nrFlexVariables; i++)
     {
-      Assert(flexPart[i].type == VARIABLE, cerr << "non variable in multiway collapse");
+      Assert(flexPart[i].type == VARIABLE, "non variable in multiway collapse");
       TopVariable& tv = flexPart[i].variable;
       if (tv.abstracted != 0)
 	{

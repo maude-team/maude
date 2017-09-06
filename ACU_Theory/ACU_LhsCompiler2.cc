@@ -23,14 +23,14 @@ ACU_Term::compileAliensOnlyCase(ACU_LhsAutomaton* automaton,
       subproblemLikely = subproblemLikely || spl;
       automaton->addNonGroundAlien(p.term, subAutomaton, p.multiplicity);
     }
-  Assert(boundUniquely == bestSequence.bound, cerr << "bound clash");
+  Assert(boundUniquely == bestSequence.bound, "bound clash");
 
   addIndependentAliens(nonGroundAliens, bestSequence);
   int nrNonGroundAliens = nonGroundAliens.length();
   if (bestSequence.nrIndependent < nrNonGroundAliens)
     {
       Assert(nrNonGroundAliens - bestSequence.nrIndependent >= 2,
-	     cerr << "lone non-independent alien is impossible");
+	     "lone non-independent alien is impossible");
       subproblemLikely = true;
       weakConstraintPropagation(nonGroundAliens, boundUniquely,
 				bestSequence.nrIndependent, bestSequence.sequence);
@@ -61,7 +61,7 @@ ACU_Term::findConstraintPropagationSequence(const Vector<Pair>& aliens,
   bestSequence.cardinality = -1;
   findConstraintPropagationSequence(aliens, currentSequence, boundUniquely,
 				    0, bestSequence);
-  Assert(bestSequence.cardinality >= 0, cerr << "didn't find a sequence");
+  Assert(bestSequence.cardinality >= 0, "didn't find a sequence");
 }
 
 void

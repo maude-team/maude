@@ -3,9 +3,6 @@
 //
 #ifndef _rhsAutomaton_hh_
 #define _rhsAutomaton_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 class RhsAutomaton
 {

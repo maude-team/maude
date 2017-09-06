@@ -14,7 +14,7 @@ AU_LhsAutomaton::match(DagNode* subject,
         return collapseMatch(subject, solution, returnedSubproblem, extensionInfo);
       return false;
     }
-  Assert(matchAtTop == (extensionInfo != 0), cerr << "matchAtTop disagreement");
+  Assert(matchAtTop == (extensionInfo != 0), "matchAtTop disagreement");
   
   AU_DagNode* s = static_cast<AU_DagNode*>(subject);
   int nrArgs = s->argArray.length();
@@ -37,7 +37,7 @@ AU_LhsAutomaton::match(DagNode* subject,
       if (flexRemaining == 0)
 	{
 	  DebugAdvisoryCheck(matchStrategy == GROUND_OUT,
-			     cerr << "match strategy changed from " << matchStrategy <<
+			     "match strategy changed from " << matchStrategy <<
 			     " to GROUND_OUT at match time (top symbol = \"" <<
 			     topSymbol << "\")");
 	  if (rightPos - leftPos + 1 != 0)
@@ -48,7 +48,7 @@ AU_LhsAutomaton::match(DagNode* subject,
 	{
 	  DebugAdvisoryCheck(matchStrategy == LONE_VARIABLE ||
 			     matchStrategy == FAST_LONE_VARIABLE,
-			     cerr << "match strategy changed from " << matchStrategy <<
+			     "match strategy changed from " << matchStrategy <<
 			     " to LONE_VARIABLE at match time (top symbol = \"" <<
 			     topSymbol << "\")");
 	  Subproblem* sp;
@@ -60,7 +60,7 @@ AU_LhsAutomaton::match(DagNode* subject,
     }
   Assert(matchStrategy != GROUND_OUT &&
 	 matchStrategy != LONE_VARIABLE &&
-	 matchStrategy != FAST_LONE_VARIABLE, cerr << "bad strategy");
+	 matchStrategy != FAST_LONE_VARIABLE, "bad strategy");
   determineRigidBlocks(solution);
   if (matchStrategy == GREEDY)
     {
@@ -115,9 +115,9 @@ AU_LhsAutomaton::matchRigidPart(AU_DagNode* subject,
 		//	Unbound non-identity unit variable case.
 		//
 		Assert(tv.upperBound == 1,
-		       cerr << "unbound non-unit variable in rigid part");
+		       "unbound non-unit variable in rigid part");
 		Assert(!(tv.takeIdentity),
-		       cerr << "unbound variable which can take identity in rigid part");
+		       "unbound variable which can take identity in rigid part");
 		if (rightPos - leftPos < flexLowerBound)
 		  return false;
 		DagNode* d = args[r.leftEnd ? leftPos++ : rightPos--];
@@ -305,12 +305,12 @@ AU_LhsAutomaton::forcedLoneVariableCase(AU_DagNode* subject,
 					Substitution& solution,
 					Subproblem*& returnedSubproblem)
 {
-  Assert(flexPart[flexLeftPos].type == VARIABLE, cerr << "lone variable is not a variable");
+  Assert(flexPart[flexLeftPos].type == VARIABLE, "lone variable is not a variable");
   returnedSubproblem = 0;
   ArgVec<DagNode*>& args = subject->argArray;
   int nrSubjectsRemaining = rightPos - leftPos + 1;
   TopVariable& loneVariable = flexPart[flexLeftPos].variable;
-  Assert(solution.value(loneVariable.index) == 0, cerr << "lone variable bound");
+  Assert(solution.value(loneVariable.index) == 0, "lone variable bound");
 
   if (nrSubjectsRemaining == 0)
     {
@@ -335,7 +335,7 @@ AU_LhsAutomaton::forcedLoneVariableCase(AU_DagNode* subject,
       int pos = 0;
       for (int i = leftPos; i <= rightPos; i++)
 	d->argArray[pos++] = args[i];
-      Assert(pos == nrSubjectsRemaining, cerr << "inconsistant number of subterms");
+      Assert(pos == nrSubjectsRemaining, "inconsistant number of subterms");
       solution.bind(loneVariable.index, d);
       if (loneVariable.abstracted != 0)
 	return loneVariable.abstracted->match(d, solution, returnedSubproblem);
@@ -359,7 +359,7 @@ AU_LhsAutomaton::forcedLoneVariableCase(AU_DagNode* subject,
 	{
 	  DagNode* sd = *i;
 	  int index = sd->getSortIndex();
-	  Assert(index != Sort::SORT_UNKNOWN, cerr << "bad sort");
+	  Assert(index != Sort::SORT_UNKNOWN, "bad sort");
 	  if (index != lastIndex)
 	    {
 	      if (!(leq(index, cs)))
@@ -368,7 +368,7 @@ AU_LhsAutomaton::forcedLoneVariableCase(AU_DagNode* subject,
 	    }
 	  *j = sd;
 	}
-      Assert(j == d->argArray.end(), cerr << "iterator problem");
+      Assert(j == d->argArray.end(), "iterator problem");
       if (subject->isReduced() && topSymbol->sortConstraintFree())
 	{
 	  topSymbol->computeBaseSort(d);
@@ -429,11 +429,11 @@ AU_LhsAutomaton::determineRigidBlocks(Substitution& solution)
 	      nrSubjectsUsed += n;
 	      if (nasty)
 		{
-		  DebugAdvisoryCheck(false, cerr << "nasty binding of " << d <<
+		  DebugAdvisoryCheck(false, "nasty binding of " << d <<
 				     " to variable with index " << f.variable.index <<
 				     " detected in match phase");
 		  Assert(matchAtTop,
-			 cerr << "can't have nasty binding without extension");
+			 "can't have nasty binding without extension");
 		  //
 		  //	Unbound variable terminates current rigid block (if there is one).
 		  //	We treat variables with nasty bindings as being unbound
@@ -471,7 +471,7 @@ AU_LhsAutomaton::determineRigidBlocks(Substitution& solution)
   //
   if (r.start != NONE)
     {
-      Assert(matchAtTop, cerr << "missing extension");
+      Assert(matchAtTop, "missing extension");
       r.end = flexRightPos;
       rigidBlocks.append(r);
       nrSubjectsForRightVars = 0;

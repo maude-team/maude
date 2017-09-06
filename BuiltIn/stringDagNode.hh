@@ -3,9 +3,6 @@
 //
 #ifndef _stringDagNode_hh_
 #define _stringDagNode_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #ifdef LIBv3
 #include <ext/rope>
 using namespace __gnu_cxx;

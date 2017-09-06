@@ -1,9 +1,6 @@
 //
 //	Implementation for class S_Term.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //	utility stuff
 #include "macros.hh"
@@ -40,7 +37,7 @@ S_Term::S_Term(S_Symbol* symbol, const mpz_class& number, Term* arg)
     number(number),
     arg(arg)
 {
-  Assert(arg != 0, cerr << "null arg");
+  Assert(arg != 0, "null arg");
 }
 
 S_Term::S_Term(const S_Term& original, SymbolMap* map)
@@ -72,9 +69,9 @@ S_Term::deepCopy2(SymbolMap* map) const
 Term*
 S_Term::normalize(bool full, bool& changed)
 {
-  Assert(arg != 0, cerr << "null arg");
+  Assert(arg != 0, "null arg");
   arg = arg->normalize(full, changed);
-  Assert(arg != 0, cerr << "null arg after normalize");
+  Assert(arg != 0, "null arg after normalize");
   if (arg->symbol() == symbol())
     {
       S_Term* a = safeCast(S_Term*, arg);
@@ -144,8 +141,8 @@ S_Term::insertAbstractionVariables(VariableInfo& variableInfo)
     {
       abstractionVariableIndex = variableInfo.makeProtectedVariable();
       honorsGroundOutMatch = false;
-      DebugAdvisoryCheck(false, cerr << "Introduced abstraction variable for " <<
-			 arg << " in " << this << '.');
+      DebugAdvisory("Introduced abstraction variable for " <<
+		    arg << " in " << this << '.');
     }
   else
     abstractionVariableIndex = NONE;

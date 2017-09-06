@@ -3,9 +3,6 @@
 //
 #ifndef _AU_Symbol_hh_
 #define _AU_Symbol_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "associativeSymbol.hh"
 
 class AU_Symbol : public AssociativeSymbol

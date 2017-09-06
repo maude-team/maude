@@ -1,9 +1,6 @@
 //
 //      Implementation for class SortTestSymbol.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
  
 //	utility stuff
 #include "macros.hh"
@@ -54,7 +51,7 @@ SortTestSymbol::SortTestSymbol(int id,
 bool
 SortTestSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
 {
-  Assert(this == subject->symbol(), cerr << "Bad symbol");
+  Assert(this == subject->symbol(), "bad symbol");
   DagNode *t = static_cast<FreeDagNode*>(subject)->getArgument(0);
   if (eagerFlag)
     t->reduce(context);

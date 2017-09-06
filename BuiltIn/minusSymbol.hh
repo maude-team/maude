@@ -3,9 +3,6 @@
 //
 #ifndef _minusSymbol_hh_
 #define _minusSymbol_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "numberOpSymbol.hh"
 
 class MinusSymbol : public NumberOpSymbol

@@ -3,9 +3,6 @@
 //
 #ifndef _AU_ExtensionInfo_hh_
 #define _AU_ExtensionInfo_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "extensionInfo.hh"
 
 class AU_ExtensionInfo : public ExtensionInfo

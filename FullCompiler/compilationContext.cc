@@ -1,9 +1,6 @@
 //
 //	Implementation for class CompilationContext.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //	utility stuff
 #include "macros.hh"

@@ -3,9 +3,6 @@
 //
 #ifndef _stringOpSymbol_hh_
 #define _stringOpSymbol_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #ifdef LIBv3
 #include <ext/rope>
 #else

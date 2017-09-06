@@ -5,9 +5,6 @@
 //
 #ifndef _badFlag_hh_
 #define _badFlag_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "flagSet.hh"
 
 class BadFlag : public FlagSet

@@ -3,9 +3,6 @@
 //
 #ifndef _preModule_hh_
 #define _preModule_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "namedEntity.hh"
 #include "lineNumber.hh"
 #include "commonTokens.hh"

@@ -9,9 +9,6 @@
 //
 #ifndef _veryWeakAlternationAutomaton_hh_
 #define _veryWeakAlternationAutomaton_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "bddUser.hh"
 #include "transitionSet.hh"
 #include "natSet.hh"

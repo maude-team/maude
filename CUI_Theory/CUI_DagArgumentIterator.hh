@@ -3,9 +3,6 @@
 //
 #ifndef _CUI_DagArgumentIterator_hh_
 #define _CUI_DagArgumentIterator_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "rawDagArgumentIterator.hh"
 
 class CUI_DagArgumentIterator : public RawDagArgumentIterator

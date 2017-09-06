@@ -216,6 +216,6 @@ MetaLevel::upConditionFragment(const ConditionFragment* fragment,
       s = rewriteConditionSymbol;
     }
   else
-    Assert(false, cerr << "bad condition fragment");
+    CantHappen("bad condition fragment");
   return s->makeDagNode(args);
 }

@@ -1,9 +1,6 @@
 //
 //	Implementation for class ConditionFragment.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //	utility stuff
 #include "macros.hh"
@@ -67,7 +64,7 @@ RewriteConditionFragment::preprocess()
 {
   lhs->symbol()->fillInSortInfo(lhs);
   rhs->symbol()->fillInSortInfo(rhs);
-  Assert(lhs->getComponent() == rhs->getComponent(), cerr << "component clash");
+  Assert(lhs->getComponent() == rhs->getComponent(), "component clash");
   rhs->analyseCollapses();
 }
 

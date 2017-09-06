@@ -1,9 +1,6 @@
 //
 //      Implementation for class CUI_DagNode.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
  
 //	utility stuff
 #include "macros.hh"
@@ -119,7 +116,7 @@ CUI_DagNode::copyWithReplacement(int argIndex, DagNode* replacement)
     }
   else
     {
-      Assert(argIndex == 1, cerr << "bad argument index");
+      Assert(argIndex == 1, "bad argument index");
       d->argArray[0] = argArray[0];
       d->argArray[1] = replacement;
     }
@@ -134,7 +131,7 @@ CUI_DagNode::copyWithReplacement(Vector<RedexPosition>& redexStack,
   if (first == last)
     return copyWithReplacement(redexStack[first].argIndex(), redexStack[first].node());
 
-  Assert(first + 1 == last, cerr << "nrArgs clash");
+  Assert(first + 1 == last, "nrArgs clash");
   CUI_DagNode* d = new CUI_DagNode(symbol());
   d->argArray[0] = redexStack[first].node();
   d->argArray[1] = redexStack[last].node();

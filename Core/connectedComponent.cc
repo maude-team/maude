@@ -1,9 +1,6 @@
 //
 //      Implementation for class ConnectedComponent
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //	utility stuff
 #include "macros.hh"
@@ -59,8 +56,8 @@ ConnectedComponent::~ConnectedComponent()
 bool
 ConnectedComponent::leq(int index1, int index2) const
 {
-  Assert(index1 != Sort::SORT_UNKNOWN, cerr << "bad index1");
-  Assert(index2 != Sort::SORT_UNKNOWN, cerr << "bad index2");
+  Assert(index1 != Sort::SORT_UNKNOWN, "bad index1");
+  Assert(index2 != Sort::SORT_UNKNOWN, "bad index2");
   return sorts[index2]->getLeqSorts().contains(index1);
 }
 
@@ -70,7 +67,7 @@ ConnectedComponent::findMaximalSorts(const NatSet& uSorts, Vector<int>& indices)
   NatSet unionSoFar;
   for (int i = 0; unionSoFar != uSorts; i++)
     {
-      Assert(i < sortCount, cerr << "index overrun");
+      Assert(i < sortCount, "index overrun");
       if (uSorts.contains(i))
         {
           const NatSet& leqSorts = sorts[i]->getLeqSorts();
@@ -98,7 +95,7 @@ ConnectedComponent::findIndex(const NatSet& leqSorts) const
 const NatSet&
 ConnectedComponent::getLeqSorts(int index) const
 {
-  Assert(index != Sort::SORT_UNKNOWN, cerr << "bad sort index");
+  Assert(index != Sort::SORT_UNKNOWN, "bad sort index");
   return sorts[index]->getLeqSorts();
 }
 

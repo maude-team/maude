@@ -1,9 +1,6 @@
 //
 //      Implementation for class PreModule.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //      utility stuff
 #include "macros.hh"
@@ -82,7 +79,7 @@ PreModule::~PreModule()
 void
 PreModule::regretToInform(ImportModule* doomedModule)
 {
-  Assert(doomedModule == flatModule, cerr << "module pointer error");
+  Assert(doomedModule == flatModule, "module pointer error");
   flatModule = 0;
 #ifdef COMPILER
   interpreter.invalidate(this);

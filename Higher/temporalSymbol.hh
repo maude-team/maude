@@ -3,9 +3,6 @@
 //
 #ifndef _temporalSymbol_hh_
 #define _temporalSymbol_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "freeSymbol.hh"
 #include "dagNodeSet.hh"
 #include "bddUser.hh"

@@ -3,9 +3,6 @@
 //
 #ifndef _floatSymbol_hh_
 #define _floatSymbol_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "NA_Symbol.hh"
 
 class FloatSymbol : public NA_Symbol

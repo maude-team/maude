@@ -1,3 +1,169 @@
+2003-03-11  Steven Eker  <eker@goo.csl.sri.com>
+
+	* macros.hh: added FOR_EACH_CONST() macro
+
+2003-03-03  Steven Eker  <eker@goo.csl.sri.com>
+
+	* macros.hh (getSignBit): added
+
+2003-02-26  Steven Eker  <eker@goo.csl.sri.com>
+
+	* checkedIterator.hh (difference_type>): made class const_iterator
+	a friend
+
+	* checkedConstIterator.hh (difference_type>): added decl for
+	conversion ctor
+	(const_iterator): added conversion version
+
+2003-02-24  Steven Eker  <eker@goo.csl.sri.com>
+
+	* vector.hh (Vector): updated Assert()
+	(operator[]): updated Assert() (both versions)
+	(expandTo): updated Assert()
+	(clear): updated Assert()
+
+	* unionFind.cc: 
+
+	* unionFind.hh: 
+
+	* ttyAttributes.hh: removed #pragma
+
+	* tty.cc: removed #pragma
+
+	* tty.hh: removed #pragma
+
+	* timer.cc: removed #pragma
+
+	* timer.hh: removed #pragma
+
+	* stringTable.cc: removed #pragma
+
+	* stringTable.hh: removed #pragma
+
+	* sequencePartition.cc (SequencePartition): removed #pragma
+	(insertPart): updated Assert()s
+	(solve): updated Assert()
+	(mainSolve): updated Assert()s
+
+	* sequencePartition.hh: removed #pragma
+	(start): updated Assert()s
+	(end): updated Assert()s
+
+	* preVector.cc: removed #pragma
+
+	* preVector.hh: removed #pragma
+	(setLength): updated Assert()
+
+	* pointerSet.cc: removed #pragma
+	(findEntry): updated Assert()
+
+	* pointerSet.hh: removed #pragma
+
+	* pointerMap.cc: removed #pragma
+	(setMap): updated Assert()
+	(getMap): updated Assert()
+
+	* pointerMap.hh: removed #pragma
+
+	* natSet.cc: removed #pragma
+	(topBit): updated Assert()
+	(bottomBit): updated Assert()
+	(getMask): updated Assert()
+	(getWordNr): updated Assert()
+	(arrayContains): updated Assert()
+	(insert): updated Assert()
+	(subtract): updated Assert()
+	(operator++): updated Assert()
+
+	* natSet.hh: removed #pragma
+	(contains): updated Assert()
+	(operator*): updated Assert()
+
+	* intSet.cc: removed #pragma
+	(findEntry): updated Assert()
+
+	* intSet.hh: removed #pragma
+
+	* indexedSet.hh: removed #pragma
+
+	* indent.cc: removed #pragma
+
+	* indent.hh: removed #pragma
+
+	* graph.cc: removed #pragma
+
+	* diophantineSystem.cc: removed #pragma
+
+	* graph.hh: removed #pragma
+
+	* diophantineSystem.cc (insertRow): updated Assert()s
+	(insertColumn): updated Assert()s
+	(solve): updated Assert()
+	(buildSolubilityVectors): updated Assert()
+	(precompute): updated Assert()s
+	(multisetSelect): updated Assert()s
+	(multisetComplex): updated Assert()s
+	(solveLastRowComplex): updated Assert()
+	(solveRowComplex): updated Assert()s
+
+	* diophantineSystem.hh: removed #pragma
+	(solution): updated Assert()s
+
+	* digraph.cc: removed #pragma
+
+	* digraph.hh: removed #pragma
+
+	* decBuf.cc: removed #pragma
+	(ascii): updated Assert()
+
+	* decBuf.hh: removed #pragma
+
+	* binBuf.cc: removed #pragma
+	(init): updated Assert()
+
+	* binBuf.hh: removed #pragma
+
+	* checkedIterator.hh (checkValid): updated Assert()s
+	(checkDereferenceable): updated Assert()s
+	(operator--): updated Assert()
+	(operator+): updated Assert()
+	(operator-): updated Assert()
+	(operator[]): updated Assert()
+	(operator<): updated Assert()
+	(operator-): updated Assert()
+
+	* checkedConstIterator.hh (checkValid): updated Assert()s
+	(checkDereferenceable): updated Assert()s
+	(operator--): updated Assert()
+	(operator+): updated Assert()
+	(operator-): updated Assert()
+	(operator[]): updated Assert()
+	(operator<): updated Assert()
+	(operator-): updated Assert()
+
+	* bddUser.cc: removed #pragma
+
+	* bddUser.hh: removed #pragma
+
+	* bdd.cc: removed #pragma
+
+	* bdd.hh: removed #pragma
+
+	* macros.hh (floorDivision): updated Assert()
+	(ceilingDivision): updated Assert()
+
+	* flagSet.hh: removed #pragma
+
+	* macros.cc: removed #pragmas
+	(int64ToString): updated Assert()
+	(stringToInt64): updated Assert()
+
+	* macros.hh: removed #pragma
+	(DebugAdvisoryCheck): message rather than action
+	(Assert): message rather than action
+
+===================================Maude79===========================================
+
 2003-02-12  Steven Eker  <eker@goo.csl.sri.com>
 
 	* macros.hh (safeCast): handle null pointers in the assert case

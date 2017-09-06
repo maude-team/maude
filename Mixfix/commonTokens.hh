@@ -3,9 +3,6 @@
 //
 #ifndef _commonTokens_hh_
 #define _commonTokens_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 class CommonTokens
 {

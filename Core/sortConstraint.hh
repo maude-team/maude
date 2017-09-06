@@ -3,9 +3,6 @@
 //
 #ifndef _sortConstraint_hh_
 #define _sortConstraint_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "preEquation.hh"
 
 class SortConstraint : public PreEquation

@@ -1,10 +1,6 @@
 //
 //      Implementation for class Digraph
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
- 
 #include "macros.hh"
 #include "vector.hh"
 #include "digraph.hh"

@@ -20,7 +20,7 @@ constTest(const Vector<int>& v)
   cout << endl;
 }
 
-
+/*
 extern void foo();
 extern void bar();
 
@@ -67,7 +67,7 @@ itorTest3(Vector<int>& v)
   for (int i = 0; i < len; i++)
     foo(v[i]);
 }
-
+*/
 int
 main(int argc, char* argv[])
 {

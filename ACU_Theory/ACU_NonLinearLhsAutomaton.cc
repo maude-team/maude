@@ -1,9 +1,6 @@
 //
 //      Implementation for class ACU_NonLinearLhsAutomaton.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //	utility stuff
 #include "macros.hh"
@@ -13,8 +10,8 @@
 //      forward declarations
 #include "interface.hh"
 #include "core.hh"
-#include "ACU_Theory.hh"
 #include "ACU_RedBlack.hh"
+#include "ACU_Theory.hh"
 
 //      interface class definitions
 #include "associativeSymbol.hh"
@@ -29,28 +26,33 @@
 #include "variableSymbol.hh"
 #include "variableTerm.hh"
 
+//	ACU Red-Black class definitions
+#include "ACU_SlowIter.hh"
+
 //	ACU theory class definitions
 #include "ACU_Symbol.hh"
 #include "ACU_DagNode.hh"
+#include "ACU_TreeDagNode.hh"
 #include "ACU_NonLinearLhsAutomaton.hh"
 #include "ACU_ExtensionInfo.hh"
 
-//	ACU Red-Black class definitions
-#include "ACU_TreeDagNode.hh"
-#include "ACU_SlowIter.hh"
-
-ACU_NonLinearLhsAutomaton::ACU_NonLinearLhsAutomaton(ACU_Symbol* topSymbol,
+ACU_NonLinearLhsAutomaton::ACU_NonLinearLhsAutomaton(ACU_Symbol* symbol,
+						     int nrVariables,
 						     int varIndex,
 						     int multiplicity,
 						     Sort* varSort)
-  : topSymbol(topSymbol),
+  : ACU_LhsAutomaton(symbol, true, false, nrVariables),
     varIndex(varIndex),
     multiplicity(multiplicity),
     varSort(varSort),
-    unitSort(topSymbol->sortBound(varSort) == 1)
+    unitSort(symbol->sortBound(varSort) == 1),
+    pureSort(symbol->sortStructure(varSort) == AssociativeSymbol::PURE_SORT)
 {
-  Assert(unitSort || topSymbol->sortStructure(varSort) == AssociativeSymbol::PURE_SORT,
-	 cerr << "bad sort");
+  Assert(unitSort || pureSort ||
+	 symbol->sortStructure(varSort) == AssociativeSymbol::LIMIT_SORT,
+	 "bad sort");
+  Assert(multiplicity >= 2 && multiplicity <= ACU_RedBlackNode::SAT_MULT,
+	 "bad multiplicity");
 }
 
 void
@@ -73,93 +75,9 @@ fillOutExtensionInfo(ACU_DagNode* subject,
 	  int m = args->multiplicity;
 	  extensionInfo->setUnmatched(i, args == chosen ? (m - multiplicity) : m);
 	}
-      Assert(args == subject->argArray.end(), cerr << "iterator inconsistent");
+      Assert(args == subject->argArray.end(), "iterator inconsistent");
     }
   extensionInfo->setValidAfterMatch(true);
-}
-
-bool
-ACU_NonLinearLhsAutomaton::treeMatch(ACU_TreeDagNode* subject,
-				     Substitution& solution,
-				     Subproblem*& returnedSubproblem,
-				     ACU_ExtensionInfo* extensionInfo)
-{
-  if (extensionInfo != 0)
-    {
-      ACU_SlowIter i;
-      ACU_RedBlackNode* r = subject->getRoot();
-      if (!ACU_RedBlackNode::findGeqMult(r, multiplicity, i))
-	return false;
-      ACU_Symbol* s = subject->symbol();
-      DagNode* d = i.getDagNode();
-      int currentSortIndex = d->getSortIndex();
-      
-      if (leq(currentSortIndex, varSort))
-	{
-	  //
-	  //	We have a match; now try to find a "better" substitution.
-	  //
-	  int m = i.getMultiplicity();
-	  int a = m / multiplicity;
-	  Assert(a > 0, cerr << "multiplicity error");
-	  if (a > 1)
-	    {
-	      currentSortIndex = s->computeMultBaseSort(currentSortIndex, a);
-	      if (!leq(currentSortIndex, varSort))
-		{
-		  r = ACU_RedBlackNode::consDelete(i, multiplicity);
-		  goto finishUp;  // quit trying to improve substitution
-		}
-	    }
-	  matched.clear();
-	  do
-	    {
-	      matched.append(ACU_DagNode::Pair(d, a));
-	      r = ACU_RedBlackNode::consDelete(i, a * multiplicity);
-	      if (r == 0 || !ACU_RedBlackNode::findGeqMult(r, multiplicity, i))
-		break;
-	      d = i.getDagNode();
-	      m = i.getMultiplicity();
-	      a = m / multiplicity;
-	      Assert(a > 0, cerr << "multiplicity error");
-	      currentSortIndex =
-		s->computeBaseSort(currentSortIndex,
-				   s->computeMultBaseSort(d->getSortIndex(), a));
-	    }
-	  while (leq(currentSortIndex, varSort));
-	  //
-	  //	Make binding for high multiplicity variable.
-	  //
-	  {
-	    int nrMatched = matched.length();
-	    if (nrMatched == 1 && matched[0].multiplicity == 1)
-	      d = matched[0].dagNode;
-	    else
-	      {
-		ACU_DagNode* d2 = new ACU_DagNode(s, nrMatched);
-		d2->setNormalizationStatus(ACU_DagNode::ASSIGNMENT);
-		for (int i = 0; i < nrMatched; i++)
-		  d2->argArray[i] = matched[i];
-		d = d2;
-	      }
-	  }
-	  //
-	  //	Bind variable and set up extension.
-	  //
-	finishUp:
-	  solution.bind(varIndex, d);
-	  extensionInfo->setValidAfterMatch(true);
-	  if (r == 0)
-	    extensionInfo->setMatchedWhole(true);
-	  else
-	    {
-	      extensionInfo->setMatchedWhole(false);
-	      extensionInfo->setUnmatched(new ACU_TreeDagNode(s, r));
-	    }
-	  return true;
-	}
-    }
-  return fullMatch(subject, solution, returnedSubproblem, extensionInfo);
 }
 
 bool
@@ -168,170 +86,163 @@ ACU_NonLinearLhsAutomaton::match(DagNode* subject,
 				 Subproblem*& returnedSubproblem,
 				 ExtensionInfo* extensionInfo)
 {
-  if (subject->symbol() != topSymbol)
+  Assert(extensionInfo != 0, "should only be called in extension case");
+
+  if (subject->symbol() != getSymbol())
     return false;
   if (solution.value(varIndex) != 0)
-    return fullMatch(subject, solution, returnedSubproblem, extensionInfo);
+    goto undecided;
   returnedSubproblem = 0;
 
   if (safeCast(ACU_BaseDagNode*, subject)->isTree())
     {
-      return treeMatch(safeCast(ACU_TreeDagNode*, subject),
-		       solution,
-		       returnedSubproblem,
-		       safeCast(ACU_ExtensionInfo*, extensionInfo));
+      //
+      //	Red-black case.
+      //
+      ACU_RedBlackNode* r = safeCast(ACU_TreeDagNode*, subject)->getRoot();
+      if (r->getMaxMult() < multiplicity)
+	return false;
+      DagNode* d = makeHighMultiplicityAssignment(multiplicity, varSort, r);
+      if (d == 0)
+	{
+	  //
+	  //	Because makeHighMultiplicityAssignment() just looks at
+	  //	first argument with enough multiplicity we must assume we
+	  //	may have missed a match.
+	  //
+	  goto undecided;
+	}
+      solution.bind(varIndex, d);
+      ACU_ExtensionInfo* e = safeCast(ACU_ExtensionInfo*, extensionInfo);
+      e->setValidAfterMatch(true);
+      if (r == 0)
+	e->setMatchedWhole(true);
+      else
+	{
+	  e->setMatchedWhole(false);
+	  if (r->getSize() == 1 && r->getMultiplicity() == 1)
+	    e->setUnmatched(r->getDagNode());
+	  else
+	    e->setUnmatched(new ACU_TreeDagNode(getSymbol(), r));
+	}
+      return true;
     }
   else
     {
+      //
+      //	ArgVec case.
+      //
       ACU_DagNode* s = safeCast(ACU_DagNode*, subject);
-      int nrArgs = s->argArray.length();
       int fastMult = multiplicity;  // register copy to avoid reloading after writes
-      if (extensionInfo == 0)
+      ACU_ExtensionInfo* e = safeCast(ACU_ExtensionInfo*, extensionInfo);
+
+      if (unitSort)
 	{
 	  //
-	  //	Non-extension cases.
+	  //	Can only assign one subject.
 	  //
-	  const ArgVec<ACU_DagNode::Pair>::const_iterator b = s->argArray.begin();
-	  if (nrArgs == 1 && b->multiplicity == fastMult)
+	  FOR_EACH_CONST(i, ArgVec<ACU_DagNode::Pair>, s->argArray)
 	    {
-	      if (b->dagNode->leq(varSort))
+	      if (i->multiplicity >= fastMult && i->dagNode->leq(varSort))
 		{
-		  solution.bind(varIndex, b->dagNode);
+		  solution.bind(varIndex, i->dagNode);
+		  fillOutExtensionInfo(s, i, e);
 		  return true;
 		}
-	      return false;
 	    }
-	  else
-	    {
-	      if (unitSort)
-		return false;
-	      const ArgVec<ACU_DagNode::Pair>::const_iterator ei = s->argArray.end();
-	      for (ArgVec<ACU_DagNode::Pair>::const_iterator i = b; i != ei; ++i)
-		{
-		  if (i->multiplicity % fastMult != 0 ||
-		      !(i->dagNode->leq(varSort)))
-		    return false;
-		}
-	      ACU_DagNode* d = new ACU_DagNode(topSymbol, nrArgs);
-	      d->setNormalizationStatus(ACU_DagNode::ASSIGNMENT);
-	      ArgVec<ACU_DagNode::Pair>::iterator j = d->argArray.begin();
-	      for (ArgVec<ACU_DagNode::Pair>::const_iterator i = b; i != ei; ++i, ++j)
-		{
-		  j->dagNode = i->dagNode;
-		  j->multiplicity = i->multiplicity / fastMult;
-		}
-	      Assert(j == d->argArray.end(), cerr << "arg list mismatch");
-	      if (s->isReduced() && topSymbol->sortConstraintFree())
-		{
-		  topSymbol->computeBaseSort(d);
-		  d->setReduced();
-		}
-	      solution.bind(varIndex, d);
-	      return true;
-	    }
+	  return false;
 	}
       else
 	{
 	  //
-	  //	Extension cases.
+	  //	First find out how many subjects are assignable.
 	  //
-	  const ArgVec<ACU_DagNode::Pair>::const_iterator ei = s->argArray.end();
-	  ACU_ExtensionInfo* e = static_cast<ACU_ExtensionInfo*>(extensionInfo);
-	  e->setValidAfterMatch(true);
-	  if (unitSort)
+	  int size = 0;
+	  ArgVec<ACU_DagNode::Pair>::const_iterator last;
+	  FOR_EACH_CONST(i, ArgVec<ACU_DagNode::Pair>, s->argArray)
 	    {
-	      for (ArgVec<ACU_DagNode::Pair>::const_iterator i = s->argArray.begin();
-		   i != ei; ++i)
+	      if (i->multiplicity >= fastMult && i->dagNode->leq(varSort))
 		{
-		  if (i->multiplicity >= fastMult &&
-		      i->dagNode->leq(varSort))
-		    {
-		      solution.bind(varIndex, i->dagNode);
-		      fillOutExtensionInfo(s, i, e);
-		      return true;
-		    }
+		  ++size;
+		  last = i;
 		}
-	      return false;
+	    }
+	  if (size == 0)
+	    {
+	      if (pureSort)
+		return false;
+	      goto undecided;
+	    }
+	  //
+	  //	Now make binding.
+	  //
+	  if (size == 1 && last->multiplicity < 2 * fastMult)
+	    {
+	      solution.bind(varIndex, last->dagNode);
+	      fillOutExtensionInfo(s, last, e);
 	    }
 	  else
 	    {
-	      int size = 0;
-	      ArgVec<ACU_DagNode::Pair>::const_iterator last;
-	      for (ArgVec<ACU_DagNode::Pair>::const_iterator i = s->argArray.begin();
-		   i != ei; ++i)
+	      ACU_DagNode* d = new ACU_DagNode(getSymbol(), size);
+	      d->setNormalizationStatus(ACU_DagNode::ASSIGNMENT);
+	      ArgVec<ACU_DagNode::Pair>::iterator j = d->argArray.begin();
+	      e->reset();
+	      bool whole = true;
+	      FOR_EACH_CONST(i, ArgVec<ACU_DagNode::Pair>, s->argArray)
 		{
-		  if (i->multiplicity >= fastMult &&
-		      i->dagNode->leq(varSort))
+		  int m = i->multiplicity;
+		  if (m >= fastMult && i->dagNode->leq(varSort))
 		    {
-		      ++size;
-		      last = i;
-		    }
-		}
-	      if (size > 0)
-		{
-		  if (size == 1 && last->multiplicity < 2 * fastMult)
-		    {
-		      solution.bind(varIndex, last->dagNode);
-		      fillOutExtensionInfo(s, last, e);
+		      int rem = m % fastMult;
+		      int result = m / fastMult;
+		      j->dagNode = i->dagNode;;
+		      j->multiplicity = result;
+		      ++j;
+		      e->setUnmatched(i - s->argArray.begin(), rem);
+		      if (rem != 0)
+			whole = false;
 		    }
 		  else
 		    {
-		      ACU_DagNode* d = new ACU_DagNode(topSymbol, size);
-		      d->setNormalizationStatus(ACU_DagNode::ASSIGNMENT);
-		      ArgVec<ACU_DagNode::Pair>::iterator j = d->argArray.begin();
-		      e->reset();
-		      bool whole = true;
-		      for (ArgVec<ACU_DagNode::Pair>::const_iterator i = s->argArray.begin();
-			   i != ei; ++i)
-			{
-			  int m = i->multiplicity;
-			  if (m >= fastMult && i->dagNode->leq(varSort))
-			    {
-			      int rem = m % fastMult;
-			      int result = m / fastMult;
-			      j->dagNode = i->dagNode;;
-			      j->multiplicity = result;
-			      ++j;
-			      e->setUnmatched(i - s->argArray.begin(), rem);
-			      if (rem != 0)
-				whole = false;
-			    }
-			  else
-			    {
-			      e->setUnmatched(i - s->argArray.begin(), m);
-			      whole = false;
-			    }
-			}
-		      Assert(j == d->argArray.end(), cerr << "arg list mismatch");
-		      e->setMatchedWhole(whole);
-		      e->setValidAfterMatch(true);
-		      if (s->isReduced() && topSymbol->sortConstraintFree())
-			{
-			  topSymbol->computeBaseSort(d);
-			  d->setReduced();
-			}
-		      solution.bind(varIndex, d);
+		      e->setUnmatched(i - s->argArray.begin(), m);
+		      whole = false;
 		    }
-		  return true;
 		}
+	      Assert(j == d->argArray.end(), "arg list mismatch");
+	      e->setMatchedWhole(whole);
+	      e->setValidAfterMatch(true);
+	      if (s->isReduced() && getSymbol()->sortConstraintFree())
+		{
+		  getSymbol()->computeBaseSort(d);
+		  d->setReduced();
+		}
+	      solution.bind(varIndex, d);
 	    }
+	  return true;
 	}
     }
-  return false;
+ undecided:
+  return ACU_LhsAutomaton::match(subject,
+				 solution,
+				 returnedSubproblem,
+				 extensionInfo);
 }
 
 #ifdef DUMP
 void
-ACU_NonLinearLhsAutomaton::dump(ostream& s, const VariableInfo& variableInfo, int indentLevel)
+ACU_NonLinearLhsAutomaton::dump(ostream& s,
+				const VariableInfo& variableInfo,
+				int indentLevel)
 {
   s << Indent(indentLevel) << "Begin{ACU_NonLinearLhsAutomaton}\n";
   ++indentLevel;
-  s << Indent(indentLevel) << "topSymbol = \"" << topSymbol <<
-    "\tvarIndex = " << varIndex << " \"" << variableInfo.index2Variable(varIndex) <<
+  s << Indent(indentLevel) <<
+    "varIndex = " << varIndex << " \"" << variableInfo.index2Variable(varIndex) <<
     "\tmultiplicity = " << multiplicity << '\n';
   s << Indent(indentLevel) << "varSort = " << varSort <<
-    "\tunitSort = " << unitSort << '\n';
-  HeuristicLhsAutomaton::dump(s, variableInfo, indentLevel);
+    "\tunitSort = " << unitSort <<
+    "\tpureSort = " << pureSort << '\n';
+  ACU_LhsAutomaton::dump(s, variableInfo, indentLevel);
   s << Indent(indentLevel - 1) << "End{ACU_NonLinearLhsAutomaton}\n";
 }
 #endif

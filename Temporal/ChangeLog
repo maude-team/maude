@@ -1,3 +1,55 @@
+2003-02-25  Steven Eker  <eker@goo.csl.sri.com>
+
+	* veryWeakAlternatingAutomaton.cc: removed #pragma
+	(computeTransitionSet): updated Assert()
+
+	* veryWeakAlternatingAutomaton.hh: removed #pragma
+
+	* transitionSet.cc: removed #pragma
+	(insert): updated Assert()
+	(rename): updated Assert()
+
+	* transitionSet.hh: removed #pragma
+
+	* sccAnalysis.cc (handleComponent): updated Assert()
+
+	* satSolve.cc (bfsToFairComponent): updated Assert()
+	(bfsToMoreFairness): updated Assert()
+	(bfsToTarget): updated Assert()
+
+	* rawTransitionSet.cc: removed #pragma
+
+	* rawTransitionSet.hh: removed #pragma
+
+	* parityGame.cc: removed #pragma
+	(makeNode): updated Assert()s
+
+	* parityGame.hh: removed #pragma
+
+	* modelChecker2.cc: removed #pragma
+	(dfs2SystemTransitions): updated Assert()
+
+	* modelChecker2.hh: removed #pragma
+
+	* logicFormula.cc: removed #pragma
+
+	* logicFormula.hh: removed #pragma
+
+	* genBuchiAutomaton.cc: removed #pragma
+	(getStateIndex): updated Assert()
+	(insertFairTransition): updated Assert()s
+
+	* genBuchiAutomaton.hh: removed #pragma
+
+	* collapseStates.cc (transformFairTransitionSet): updated Assert()
+	(insertFairTransition2): updated Assert()s
+
+	* buchiAutomaton2.cc: removed #pragma
+
+	* buchiAutomaton2.hh: removed #pragma
+	
+===================================Maude79===========================================
+
 2002-03-01  Steven Eker  <eker@goo.csl.sri.com>
 
 	* parityGame.hh: created

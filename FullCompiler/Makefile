@@ -2,8 +2,7 @@ ROOT_DIR := ..
 
 include $(ROOT_DIR)/MakeOptions
 
-MODULES =	fullCompiler.o \
-		compilationContext.o
+MODULES =	compilationContext.o
 
 BORROWED_MODULES =	$(ROOT_DIR)/Utility/pointerSet.o \
 			$(ROOT_DIR)/Utility/preVector.o

@@ -88,7 +88,7 @@ FreePreNet::allocateVariables(int nodeNr)
 	  //	this pointer in.
 	  //
 	  Assert(n.positionsTested.contains(testParentIndex),
-		 cerr << "missing parent index");
+		 "missing parent index");
 	  if (findSlot(n.slotMap, testParentIndex) == NONE)
 	    slotMapInsert(n.slotMap, testParentIndex, slots.makeElement());
 	}

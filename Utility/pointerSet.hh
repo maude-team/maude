@@ -8,9 +8,6 @@
 
 #ifndef _pointerSet_hh_
 #define _pointerSet_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 class PointerSet
 {

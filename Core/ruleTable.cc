@@ -1,9 +1,6 @@
 //
 //      Implementation for abstract class RuleTable.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //	utility stuff
 #include "macros.hh"
@@ -52,7 +49,7 @@ RuleTable::applyRules(DagNode* subject,
 		      RewritingContext& context,
 		      ExtensionInfo* extensionInfo)
 {
-  Assert(subject->getSortIndex() != Sort::SORT_UNKNOWN, cerr << "sort unknown");
+  Assert(subject->getSortIndex() != Sort::SORT_UNKNOWN, "sort unknown");
   int nrRules = rules.length();
   int n = nextRule;
   for (int i = 0; i < nrRules; i++, n++)

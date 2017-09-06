@@ -1,14 +1,13 @@
 //
-//	Class for substitutions
+//	Class for substitutions.
 //
 #ifndef _substitution_hh_
 #define _substitution_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 class Substitution
 {
+  NO_COPYING(Substitution);
+
 public:
   Substitution();
   Substitution(int size);  // for local substitutions in lhs automata
@@ -25,7 +24,7 @@ public:
   int nrFragileBindings();
 
 private:
-  Substitution(const Substitution& original);
+  // Substitution(const Substitution& original);
   static int allocateSize;
 
   Vector<DagNode*> values;
@@ -58,8 +57,8 @@ Substitution::notify(int size)
 inline void
 Substitution::clear(int size)
 {
-  Assert(size >= 0, cerr << "-ve size");
-  Assert(size <= allocateSize, cerr << "size > notified");
+  Assert(size >= 0, "-ve size");
+  Assert(size <= allocateSize, "size > notified");
   //
   //	We alway clear at least 1 value in order to get a faster loop
   //	since the case size = 0 occurs very infrequently, and clearing
@@ -76,16 +75,16 @@ Substitution::clear(int size)
 inline DagNode*
 Substitution::value(int index) const
 {
-  Assert(index >= 0, cerr << "-ve index");
-  Assert(index < allocateSize, cerr << "index too big");
+  Assert(index >= 0, "-ve index");
+  Assert(index < allocateSize, "index too big");
   return values[index];
 }
 
 inline void
 Substitution::bind(int index, DagNode* value)
 {
-  Assert(index >= 0, cerr << "-ve index");
-  Assert(index < allocateSize, cerr << "index too big");
+  Assert(index >= 0, "-ve index");
+  Assert(index < allocateSize, "index too big");
   values[index] = value;
 }
 
@@ -104,20 +103,20 @@ Substitution::finished()
 inline void
 Substitution::copy(const Substitution& original)
 {
-  Assert(copySize == original.copySize, cerr << "size mismatch (" << copySize <<
+  Assert(copySize == original.copySize, "size mismatch (" << copySize <<
 	 " vs " << original.copySize << ')');
-  int size = copySize;
-  if (size > 0)
+  if (copySize > 0)
     {
       Vector<DagNode*>::iterator dest = values.begin();
       Vector<DagNode*>::const_iterator source = original.values.begin();
+      Vector<DagNode*>::const_iterator end = source + copySize;
       do
 	{
 	  *dest = *source;
 	  ++dest;
 	  ++source;
 	}
-      while (--size > 0);
+      while (source != end);
     }
 }
 

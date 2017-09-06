@@ -5,7 +5,7 @@
 Sort*
 MixfixModule::addSort(int name)
 {
-  Assert(findSort(name) == 0, cerr << "Redecl of sort" << Token::name(name));
+  Assert(findSort(name) == 0, "redeclaration of sort" << Token::name(name));
   Sort* s = new Sort(name);
   Module::insertSort(s);
   (void) sortNames.insert(SortMap::value_type(name, s));
@@ -31,7 +31,7 @@ MixfixModule::hasSameDomain(const Vector<Sort*>& domainAndRange1,
   else if (assoc1)
     {
       Assert(nrArgs1 == 2 && nrArgs2 > 2,
-	     cerr << "shouldn't have been called");
+	     "shouldn't have been called");
       for (int i = 0; i < nrArgs2; i++)
 	{
 	  if (domainAndRange1[0]->component() != domainAndRange2[i]->component())
@@ -41,7 +41,7 @@ MixfixModule::hasSameDomain(const Vector<Sort*>& domainAndRange1,
   else
     {
       Assert(assoc2 && nrArgs2 == 2 && nrArgs1 > 2,
-	     cerr << "shouldn't have been called");
+	     "shouldn't have been called");
       for (int i = 0; i < nrArgs1; i++)
 	{
 	  if (domainAndRange1[i]->component() != domainAndRange2[0]->component())
@@ -63,7 +63,7 @@ MixfixModule::addOpDeclaration(Token prefixName,
 			       bool& firstDecl)
 {
   Assert(symbolType.getBasicType() != SymbolType::VARIABLE,
-	 cerr << "we don't handle variables anymore");
+	 "we don't handle variables anymore");
 
   if (symbolType.dittoProblem())
     {
@@ -312,7 +312,7 @@ MixfixModule::addOpDeclaration(Token prefixName,
       si.next = NONE;
       firstSymbols.append(nrSymbols);
       Assert(symbolNames.cardinality() == firstSymbols.length(),
-	     cerr << "symbolNames & firstSymbols out of sync");
+	     "symbolNames & firstSymbols out of sync");
     }
   else
     {

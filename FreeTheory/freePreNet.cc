@@ -1,9 +1,6 @@
 //
 //	Implementation for class FreeNet.
 //
-#ifdef __GNUG__
-#pragma implementation "freePreNet.hh"
-#endif
 
 //	utility stuff
 #include "macros.hh"
@@ -84,7 +81,7 @@ FreePreNet::buildNet(FreeSymbol* symbol)
 	{
 	  if ((patterns[j].flags & SUBSUMER) && patterns[j].term->subsumes(p, false))
 	    {
-	      DebugAdvisoryCheck(false, cerr << e << " subsumed");
+	      DebugAdvisory(e << " subsumed");
 	      goto subsumedAtTop;
 	    }
 	}
@@ -218,7 +215,7 @@ FreePreNet::makeNode(const NatSet& liveSet,
 		      newLiveSet);
 	  reduceFringe(newLiveSet, newFringe);
 	  Assert(!(newLiveSet.empty()),
-		 cerr << "empty live set on arc labeled with symbol");
+		 "empty live set on arc labeled with symbol");
 	  int t = makeNode(newLiveSet, newFringe, newPositionsTested);
 	  net[nrNodes].sons[i].target = t;
 	}
@@ -352,7 +349,7 @@ FreePreNet::partiallySubsumed(const NatSet& liveSet,
   NatSet::const_iterator e = liveSet.end();
   for (NatSet::const_iterator i = liveSet.begin(); i != e; ++i)
     {
-      Assert(*i < victim, cerr << "current liveSet contains pattern >= victim");
+      Assert(*i < victim, "current liveSet contains pattern >= victim");
       if ((patterns[*i].flags & SUBSUMER) &&
 	  subsumesWrtReducedFringe(patterns[*i].term, vp, topPositionIndex, fringe))
 	return true;

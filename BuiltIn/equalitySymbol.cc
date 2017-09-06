@@ -1,9 +1,6 @@
 //
 //      Implementation for class EqualitySymbol.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
  
 //	utility stuff
 #include "macros.hh"
@@ -70,7 +67,7 @@ EqualitySymbol::reset()
 bool
 EqualitySymbol::eqRewrite(DagNode* subject, RewritingContext& context)
 {
-  Assert(this == subject->symbol(), cerr << "Bad symbol");
+  Assert(this == subject->symbol(), "bad symbol");
   FreeDagNode* f = static_cast<FreeDagNode*>(subject);
   DagNode* l = f->getArgument(0);
   DagNode* r = f->getArgument(1);

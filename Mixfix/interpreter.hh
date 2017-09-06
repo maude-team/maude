@@ -3,9 +3,6 @@
 //
 #ifndef _interpreter_hh_
 #define _interpreter_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "moduleDatabase.hh"
 #include "compiler.hh"
 #include "intSet.hh"

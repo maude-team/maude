@@ -1,3 +1,21 @@
+2003-02-26  Steven Eker  <eker@goo.csl.sri.com>
+
+	* directoryManager.cc: removed #pragma
+
+	* directoryManager.hh: removed #pragma
+
+	* autoWrapBuffer.cc: removed #pragma
+	(sync): updated Assert()
+	(overflow): updated Assert()
+
+	* autoWrapBuffer.hh: removed #pragma
+
+	* IO_Manager.cc: removed #pragma
+
+	* IO_Manager.hh: removed #pragma
+	
+===================================Maude79===========================================
+
 2002-11-19  Steven Eker  <eker@goo.csl.sri.com>
 
 	* IO_Manager.cc (getInput): output a prompt if we are reading from

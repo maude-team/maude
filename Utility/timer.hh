@@ -3,9 +3,6 @@
 //
 #ifndef _timer_hh_
 #define _timer_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include <sys/time.h>
 
 class Timer

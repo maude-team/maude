@@ -1,9 +1,6 @@
 //
 //      Implementation for class S_RhsAutomaton.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //	utility stuff
 #include "macros.hh"
@@ -24,7 +21,10 @@
 #include "S_DagNode.hh"
 #include "S_RhsAutomaton.hh"
 
-S_RhsAutomaton::S_RhsAutomaton(S_Symbol* symbol, mpz_class& number, int source, int destination)
+S_RhsAutomaton::S_RhsAutomaton(S_Symbol* symbol,
+			       mpz_class& number,
+			       int source,
+			       int destination)
   : topSymbol(symbol),
     number(number),
     source(source),

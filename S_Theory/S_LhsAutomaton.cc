@@ -1,9 +1,6 @@
 //
 //      Implementation for class S_LhsAutomaton.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //	utility stuff
 #include "macros.hh"
@@ -247,7 +244,7 @@ S_LhsAutomaton::match(DagNode* subject,
 {
   if (subject->symbol() != topSymbol)
     return false;
-  Assert(matchAtTop == (extensionInfo != 0), cerr << "matchAtTop disagreement");
+  Assert(matchAtTop == (extensionInfo != 0), "matchAtTop disagreement");
   S_DagNode* s = static_cast<S_DagNode*>(subject);
   const mpz_class& subjectNumber = s->getNumber();
 

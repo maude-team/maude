@@ -1,9 +1,6 @@
 //
 //      Implementation for class MetadataStore.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //      utility stuff
 #include "macros.hh"

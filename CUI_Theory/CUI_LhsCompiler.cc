@@ -77,7 +77,7 @@ CUI_Term::compileLhs2(bool matchAtTop,
       else if (matchAtTop && idemCollapsePossible && t1->ground())
 	{
 	  Assert(!(t0->ground()),
-		 cerr << "can't have idem collapse with two ground terms");
+		 "can't have idem collapse with two ground terms");
 	  swap = true;
 	}
     }

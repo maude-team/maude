@@ -1,10 +1,6 @@
 //
 //      Implementation for class DiophantineSystem
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
- 
 #include "macros.hh"
 #include "vector.hh"
 #include "diophantineSystem.hh"
@@ -22,10 +18,10 @@ DiophantineSystem::DiophantineSystem(int estNrRows, int estNrColumns)
 void
 DiophantineSystem::insertRow(int coeff, int minSize, int maxSize)
 {
-  Assert(!closed, cerr << "system closed");
-  Assert(coeff > 0, cerr << "bad row coefficient");
-  Assert(minSize >= 0, cerr << "minSize < 0");
-  Assert(minSize <= maxSize, cerr << "minSize > maxSize");
+  Assert(!closed, "system closed");
+  Assert(coeff > 0, "bad row coefficient " << coeff);
+  Assert(minSize >= 0, "negative minSize " << minSize);
+  Assert(minSize <= maxSize, "minSize > maxSize");
   int nrRows = rows.length();
   rows.expandBy(1);
   Row& r = rows[nrRows];
@@ -38,8 +34,8 @@ DiophantineSystem::insertRow(int coeff, int minSize, int maxSize)
 void
 DiophantineSystem::insertColumn(int value)
 {
-  Assert(value > 0, cerr << "bad column value");
-  Assert(!closed, cerr << "system closed");
+  Assert(value > 0, "bad column value " << value);
+  Assert(!closed, "system closed");
   columns.append(value);
   columnSum += value;
   if (value > maxColumnValue)
@@ -52,7 +48,7 @@ DiophantineSystem::solve()
   bool findFirst = !closed;
   if (findFirst && !precompute())
     return false;
-  Assert(!failed, cerr << "attempt to solve failed system");
+  Assert(!failed, "attempt to solve failed system");
 #ifdef DIO_STATS
   bool r = complex ? solveComplex(findFirst) : solveSimple(findFirst);
   cout << (r ? "success\t" : "failure\n");
@@ -83,9 +79,9 @@ bool
 DiophantineSystem::precompute()
 {
   int nrRows = rows.length();
-  Assert(nrRows > 0, cerr << "no rows");
+  Assert(nrRows > 0, "no rows");
   int nrColumns = columns.length();
-  Assert(nrColumns > 0, cerr << "no columns");
+  Assert(nrColumns > 0, "no columns");
   closed = true;
 
 #ifdef DIO_STATS
@@ -200,7 +196,7 @@ DiophantineSystem::buildSolubilityVectors()
 		  for (int k = j - maxSize * coeff; prev[k].min == INSOLUBLE;
 		       k += coeff)
 		    --newMax;
-		  Assert(newMax >= next[t].min + 1, cerr << "bad newMax");
+		  Assert(newMax >= next[t].min + 1, "bad newMax");
 		  next[j].max = newMax;
 		}
 	    }
@@ -276,7 +272,7 @@ DiophantineSystem::Row::multisetSelect(Vector<int>& bag, bool findFirst)
 	  undone = 0;
 	  for (int j = 0; j < bagLength; j++)
 	    {
-	      Assert(selection[j].extra <= selection[j].maxExtra, cerr << "extra > maxExtra");
+	      Assert(selection[j].extra <= selection[j].maxExtra, "extra > maxExtra");
 	      int t = selection[j].extra;
 	      if (undone > 0 && t < selection[j].maxExtra)
 		{
@@ -300,7 +296,7 @@ DiophantineSystem::Row::multisetSelect(Vector<int>& bag, bool findFirst)
 forwards:
   for(int j = 0; undone > 0; j++)
     {
-      Assert(j < bagLength, cerr << "overran bag");
+      Assert(j < bagLength, "overran bag");
       int t = min(undone, selection[j].maxExtra);
       if (t > 0)
 	{
@@ -435,14 +431,14 @@ DiophantineSystem::Row::multisetComplex(Vector<int>& bag,
 	backtrack:
 	  for (int j = 0; j < bagLength; j++)
 	    {
-	      Assert(selection[j].extra <= selection[j].maxExtra, cerr << "extra > maxExtra");
+	      Assert(selection[j].extra <= selection[j].maxExtra, "extra > maxExtra");
 	      int t = selection[j].extra;
 	      if (undone > 0 && t < selection[j].maxExtra)
 		{
 		  int c = bag[j];
 		  for(int e = 1; e <= undone; e++)
 		    {
-		      Assert(t + e <= selection[j].maxExtra, cerr << "t + e > maxExtra");
+		      Assert(t + e <= selection[j].maxExtra, "t + e > maxExtra");
 		      c -= coeff;
 		      if (soluble[c].min != INSOLUBLE)
 			{
@@ -468,7 +464,7 @@ DiophantineSystem::Row::multisetComplex(Vector<int>& bag,
 forwards:
   for (int j = 0; undone > 0; j++)
     {
-      Assert(j < bagLength, cerr << "overran bag");
+      Assert(j < bagLength, "overran bag");
       int t = selection[j].maxExtra;
       if (t <= undone)
 	{
@@ -504,7 +500,7 @@ DiophantineSystem::solveLastRowComplex()
   for (int i = 0; i < nrColumns; i++)
     {
       int t = soluble[columns[i]].min;
-      Assert(t != INSOLUBLE, cerr << "solubility bug");
+      Assert(t != INSOLUBLE, "solubility bug");
       selection[i].extra = t;
     }
 }
@@ -540,10 +536,10 @@ DiophantineSystem::solveRowComplex(int rowNr, bool findFirst)
 	{
 	  int t = columns[i];
 	  int min = soluble[t].min;
-	  Assert(min != INSOLUBLE, cerr << "min insoluble");
+	  Assert(min != INSOLUBLE, "min insoluble");
 	  int max = soluble[t].max;
-	  Assert(max != INSOLUBLE, cerr << "max insoluble");
-	  Assert(min <= max, cerr << "min > max");
+	  Assert(max != INSOLUBLE, "max insoluble");
+	  Assert(min <= max, "min > max");
 
 	  selection[i].base = min;
 	  selection[i].extra = 0;
@@ -566,7 +562,7 @@ DiophantineSystem::solveRowComplex(int rowNr, bool findFirst)
 	  if (selection[i].base > 0)
 	    {
 	      columns[i] -= selection[i].base * coeff;
-	      Assert(columns[i] >= 0, cerr << "value -ve");
+	      Assert(columns[i] >= 0, "value -ve");
 	    }
 	}
     }
@@ -586,7 +582,7 @@ DiophantineSystem::solveRowComplex(int rowNr, bool findFirst)
       if (selection[i].base > 0)
 	{
 	  columns[i] += selection[i].base * coeff;
-	  Assert(columns[i] <= maxColumnValue, cerr << "value too big");
+	  Assert(columns[i] <= maxColumnValue, "value too big");
 	}
     }
   return false;

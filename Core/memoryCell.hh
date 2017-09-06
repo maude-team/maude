@@ -3,9 +3,6 @@
 //
 #ifndef _memoryCell_hh_
 #define _memoryCell_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "sort.hh"
 
 class MemoryCell
@@ -254,7 +251,7 @@ inline void*
 MemoryCell::allocateStorage(size_t bytesNeeded)
 {
   Assert(bytesNeeded % sizeof(MachineWord) == 0,
-	 cerr << "only whole machine words can be allocated");
+	 "only whole machine words can be allocated");
   storageInUse += bytesNeeded;
   for (Bucket* b = bucketList; b; b = b->nextBucket)
     {
@@ -301,7 +298,7 @@ MemoryCell::allocateMemoryCell()
 	  c->initialize();
 	  nextNode = c + 1;
 	  //DebugAdvisory("gc new nondtor case at "<< (void*)(c));
-	  Assert(c->h.halfWord == Sort::SORT_UNKNOWN, cerr << "bad sort init");
+	  Assert(c->h.halfWord == Sort::SORT_UNKNOWN, "bad sort init");
 	  return c;
 	}
       if ((c->h.flags & MARKED) == 0)
@@ -310,7 +307,7 @@ MemoryCell::allocateMemoryCell()
 	  c->initialize();
 	  nextNode = c + 1;
 	  //DebugAdvisory("gc new dtor case at " << (void*)(c));
-	  Assert(c->h.halfWord == Sort::SORT_UNKNOWN, cerr << "bad sort init");
+	  Assert(c->h.halfWord == Sort::SORT_UNKNOWN, "bad sort init");
 	  return c;
 	}
       c->clearFlag(MARKED);

@@ -1,9 +1,6 @@
 //
 //      Implementation for class Substitution
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //	utility stuff
 #include "macros.hh"
@@ -34,38 +31,29 @@ LocalBinding::markReachableNodes()
   int nrBindings = bindings.length();
   for (int i = 0; i < nrBindings; i++)
     {
-      Assert(bindings[i].value != 0, cerr << "null local binding at index " << i);
+      Assert(bindings[i].value != 0, "null local binding at index " << i);
       bindings[i].value->mark();
     }
-}
-
-void
-LocalBinding::addBinding(int index, DagNode* value)
-{
-  int t = bindings.length();
-  bindings.expandBy(1);
-  bindings[t].variableIndex = index;
-  bindings[t].value = value;
-  bindings[t].active = false;
 }
 
 bool
 LocalBinding::assert(Substitution& substitution)
 {
-  int nrBindings = bindings.length();
-  for (int i = 0; i < nrBindings; i++)
+  const Vector<Binding>::iterator b = bindings.begin();
+  const Vector<Binding>::iterator e = bindings.end();
+  for (Vector<Binding>::iterator i = b; i != e; ++i)
     {
-      DagNode* d = substitution.value(bindings[i].variableIndex);
-      if (d != 0 && !(d->equal(bindings[i].value)))
+      DagNode* d = substitution.value(i->variableIndex);
+      if (d != 0 && !(d->equal(i->value)))
         return false;
     }
-  for (int i = 0; i < nrBindings; i++)
+  for (Vector<Binding>::iterator i = b; i != e; ++i)
     {
-      int index = bindings[i].variableIndex;
+      int index = i->variableIndex;
       if (substitution.value(index) == 0)
 	{
-	  substitution.bind(index, bindings[i].value);
-	  bindings[i].active = true;
+	  substitution.bind(index, i->value);
+	  i->active = true;
 	}
     }
   return true;
@@ -74,13 +62,13 @@ LocalBinding::assert(Substitution& substitution)
 void
 LocalBinding::retract(Substitution& substitution)
 {
-  int nrBindings = bindings.length();
-  for (int i = 0; i < nrBindings; i++)
+  const Vector<Binding>::iterator e = bindings.end();
+  for (Vector<Binding>::iterator i = bindings.begin(); i != e; ++i)
     {
-      if (bindings[i].active)
+      if (i->active)
         {
-          bindings[i].active = false;
-          substitution.bind(bindings[i].variableIndex, 0);
+          i->active = false;
+          substitution.bind(i->variableIndex, 0);
         }
     }
 }

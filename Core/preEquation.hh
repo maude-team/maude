@@ -3,9 +3,6 @@
 //
 #ifndef _preEquation_hh_
 #define _preEquation_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include <stack>
 #include "lineNumber.hh"
 #include "variableInfo.hh"

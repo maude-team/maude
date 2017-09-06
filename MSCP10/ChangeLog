@@ -1,0 +1,7 @@
+2003-02-25  Steven Eker  <eker@goo.csl.sri.com>
+
+	* scp_parser.hh: removed #pragma
+
+	* scp_kernel.hh: removed #pragma
+
+===================================Maude79===========================================

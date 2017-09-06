@@ -4,9 +4,6 @@
 //
 #ifndef _simpleRootContainer_hh_
 #define _simpleRootContainer_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "rootContainer.hh"
 
 class SimpleRootContainer : protected RootContainer

@@ -3,9 +3,6 @@
 //
 #ifndef _natSet_hh_
 #define _natSet_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 class NatSet
 {
@@ -142,7 +139,7 @@ NatSet::end() const
 inline bool
 NatSet::contains(value_type i) const
 {
-  Assert(i >= 0, cerr << "-ve argument");
+  Assert(i >= 0, "-ve argument");
   return i < WORD_SIZE ? (firstWord & (1 << i)) : arrayContains(i);
 }
 
@@ -189,7 +186,7 @@ NatSet::iterator::operator!=(const iterator& other) const
 inline NatSet::value_type
 NatSet::iterator::operator*() const
 {
-  Assert(element != -1, cerr << "bad dereference");
+  Assert(element != -1, "bad dereference");
   return element;
 }
 

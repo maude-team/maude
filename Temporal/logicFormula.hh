@@ -3,9 +3,6 @@
 //
 #ifndef _logicFormula_hh_
 #define _logicFormula_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 class LogicFormula
 {

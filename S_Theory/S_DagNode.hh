@@ -3,9 +3,6 @@
 //
 #ifndef _S_DagNode_hh_
 #define _S_DagNode_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include <gmpxx.h>
 #include "dagNode.hh"
 

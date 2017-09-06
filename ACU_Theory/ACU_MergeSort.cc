@@ -63,7 +63,7 @@ ACU_DagNode::mergeSortAndUniquize()
 	}
       if (i < nrRuns)
 	{
-	  Assert(rd < i, cerr << "floor(nrRuns/2) >= nrRuns - 1");
+	  Assert(rd < i, "floor(nrRuns/2) >= nrRuns - 1");
 	  runsBuffer[rd++] = d;  // Assert guarantees we don't overwrite runsBuffer[i]
 	  //
 	  //	Copy odd run into merge buffer

@@ -1,16 +1,14 @@
 //
 //	Implementation for class BinBuf.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 #include "macros.hh"
 #include "binBuf.hh"
 
 void
 BinBuf::init(Uint64 bits, int leadingZeros)
 {
-  Assert(leadingZeros <= 32 * (MAX_WORDS - 2), cerr << "too many leading zeros");
+  Assert(leadingZeros <= 32 * (MAX_WORDS - 2),
+	 "too many leading zeros" << leadingZeros);
   int zeroWords = leadingZeros >> 5;
   int rightShift = leadingZeros & 31;
   //

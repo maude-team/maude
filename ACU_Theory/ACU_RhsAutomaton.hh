@@ -3,9 +3,6 @@
 //
 #ifndef _ACU_RhsAutomaton_hh_
 #define _ACU_RhsAutomaton_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "rhsAutomaton.hh"
 
 class ACU_RhsAutomaton : public RhsAutomaton

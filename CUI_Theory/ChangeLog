@@ -1,3 +1,49 @@
+2003-02-25  Steven Eker  <eker@goo.csl.sri.com>
+
+	* CUI_Term.cc: removed #pragma
+	(CUI_Term): updated Assert()
+
+	* CUI_Term.hh: removed #pragma
+
+	* CUI_Symbol.cc: removed #pragma
+	(eqRewrite): updated Assert()
+	(computeBaseSort): updated Assert()s
+	(normalizeAndComputeTrueSort): updated Assert()
+
+	* CUI_Symbol.hh: removed #pragma
+
+	* CUI_RhsAutomaton.cc: removed #pragma
+
+	* CUI_RhsAutomaton.hh: removed #pragma
+
+	* CUI_Matcher.cc (match): updated Assert()
+
+	* CUI_LhsCompiler.cc (compileLhs2): updated Assert()
+
+	* CUI_LhsAutomaton.cc: removed #pragma
+
+	* CUI_LhsAutomaton.hh: removed #pragma
+
+	* CUI_DagNode.cc: removed #pragma
+	(copyWithReplacement): updated Assert() (both versions)
+
+	* CUI_DagNode.hh: removed #pragma
+	(getArgument): updated Assert()
+
+	* CUI_DagArgumentIterator.cc: removed #pragma
+	(argument): updated Assert()
+	(next): updated Assert()
+
+	* CUI_DagArgumentIterator.hh: removed #pragma
+
+	* CUI_ArgumentIterator.cc: removed #pragma
+	(argument): updated Assert()
+	(next): updated Assert()
+
+	* CUI_ArgumentIterator.hh: removed #pragma
+	
+===================================Maude79===========================================
+
 2003-01-31  Steven Eker  <eker@goo.csl.sri.com>
 
 	* CUI_Term.cc (analyseCollapses): becomes analyseCollapses2()
@@ -5,7 +51,7 @@
 	* CUI_Term.hh (class CUI_Term): analyseCollapses() ->
 	analyseCollapses2()
 	
-===================================Maude79===========================================
+===================================Maude78===========================================
 
 2002-10-16  Steven Eker  <eker@goo.csl.sri.com>
 

@@ -3,9 +3,6 @@
 //
 #ifndef _tty_hh_
 #define _tty_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 class Tty
 {

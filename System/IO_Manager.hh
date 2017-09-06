@@ -3,9 +3,6 @@
 //
 #ifndef _IO_Manager_hh_
 #define _IO_Manager_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 struct GetLine;  // to avoid sucking in the tecla header file
 

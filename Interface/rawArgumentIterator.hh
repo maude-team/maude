@@ -3,9 +3,6 @@
 //
 #ifndef _rawArgumentIterator_hh_
 #define _rawArgumentIterator_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 class RawArgumentIterator
 {

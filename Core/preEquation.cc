@@ -1,9 +1,6 @@
 //
 //	Implementation for class PreEquation.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //	utility stuff
 #include "macros.hh"
@@ -34,7 +31,7 @@ PreEquation::PreEquation(int label, Term* lhs, const Vector<ConditionFragment*>&
   : label(label),
     lhs(lhs)
 {
-  Assert(lhs != 0, cerr << "null lhs");
+  Assert(lhs != 0, "null lhs");
   lhsAutomaton = 0;
   if (cond.length() > 0)  // insure that isNull() is true for empty condition
     condition = cond;  // semi-deep copy
@@ -69,7 +66,7 @@ PreEquation::preprocess()
   lhs->symbol()->fillInSortInfo(lhs);
   /*
   AdvisoryCheck(lhs->getSortIndex() != Sort::ERROR_SORT,
-		cerr << "lhs pattern " << lhs <<
+		"lhs pattern " << lhs <<
 		" has different operational semantics in Maude 2.0.");
   */
   lhs->analyseCollapses();
@@ -113,7 +110,7 @@ PreEquation::checkCondition(DagNode* subject,
   int trialRef =  UNDEFINED;
   stack<ConditionState*> state;
   bool result = checkCondition(true, subject, context, subproblem, trialRef, state);
-  Assert(result || state.empty(), cerr << "non-empty condition state stack");
+  Assert(result || state.empty(), "non-empty condition state stack");
   while (!state.empty())
     {
       delete state.top();
@@ -130,8 +127,8 @@ PreEquation::checkCondition(bool findFirst,
 			    int& trialRef,
 			    stack<ConditionState*>& state) const
 {
-  Assert(condition.length() != 0, cerr << "no condition");
-  Assert(!findFirst || state.empty(), cerr << "non-empty condition state stack");
+  Assert(condition.length() != 0, "no condition");
+  Assert(!findFirst || state.empty(), "non-empty condition state stack");
   if (findFirst)
     trialRef = UNDEFINED;
   do
@@ -159,7 +156,7 @@ PreEquation::checkCondition(bool findFirst,
 	}
       if (success)
 	return true;
-      Assert(state.empty(), cerr << "non-empty condition state stack");
+      Assert(state.empty(), "non-empty condition state stack");
       findFirst = true;
       trialRef = UNDEFINED;
       //
@@ -214,7 +211,7 @@ void
 PreEquation::cleanStack(stack<ConditionState*>& conditionStack)
 {
   DebugAdvisoryCheck(conditionStack.empty(),
-		     cerr << "cleaning condition stack because of abort");
+		     "cleaning condition stack because of abort");
   while (!conditionStack.empty())
     {
       delete conditionStack.top();

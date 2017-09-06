@@ -1,9 +1,7 @@
 //
 //      Implementation for class IO_Manager.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
+
 #include <unistd.h>
 #include <signal.h>
 #include <sys/ioctl.h>

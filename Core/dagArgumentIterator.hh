@@ -3,9 +3,6 @@
 //
 #ifndef _dagArgumentIterator_hh_
 #define _dagArgumentIterator_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "rawDagArgumentIterator.hh"
 
 class DagArgumentIterator

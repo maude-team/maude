@@ -1,9 +1,6 @@
 //
 //      Implementation for class Token.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //      utility stuff
 #include "macros.hh"
@@ -594,11 +591,10 @@ Token::codeToInt64(int code)
   Int64 i = stringToInt64(stringTable.name(code), error, 10);
   if (error)  // HACK
     {
-      DebugAdvisoryCheck(false,
-			 cerr << "converting out of range integer to 0");
+      DebugAdvisory("converting out of range integer to 0");
       return 0;
     }
-  Assert(!error, cerr << "bad machine integer string");
+  Assert(!error, "bad machine integer string");
   return i;
 }
 
@@ -619,7 +615,7 @@ Token::codeToDouble(int code)
 {
   bool error;
   double d = stringToDouble(stringTable.name(code), error);
-  Assert(!error, cerr << "bad float string");
+  Assert(!error, "bad float string");
   return d;
 }
 
@@ -861,7 +857,7 @@ Token::bubbleToPrefixNameCode(const Vector<Token>& opBubble)
     {
       const char* name = stringTable.name(opBubble[i].codeNr);
       char c = name[0];
-      Assert(c != '`', cerr << "can't start token with `");
+      Assert(c != '`', "can't start token with `");
       if (specialChar(c) || (!lastCharSpecial && c != '_'))
 	result += '`';
       result += name;
@@ -925,7 +921,7 @@ Token::getRational(mpz_class& numerator, mpz_class& denominator)
   char* s = new char[strlen(name) + 1];
   strcpy(s, name);
   char* p = index(s, '/');
-  Assert(p != 0, cerr << "no /");
+  Assert(p != 0, "no /");
   *p = '\0';
   mpz_set_str(numerator.get_mpz_t(), s, 10);
   mpz_set_str(denominator.get_mpz_t(), p + 1, 10);

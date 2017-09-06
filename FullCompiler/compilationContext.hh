@@ -3,9 +3,6 @@
 //
 #ifndef _compilationContext_hh_
 #define _compilationContext_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "natSet.hh"
 
 class CompilationContext

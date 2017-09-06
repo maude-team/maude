@@ -3,36 +3,11 @@
 //
 
 int
-ACU_DagNode::findFirstOccurrence(Symbol* key) const
-{
-  const ArgVec<Pair>::const_iterator args = argArray.begin();  // for speed
-  int first = argArray.length();  // return index beyond arg array if no occurrence
-  Assert(first > 0, cerr << "no args");
-  int upper = first - 1;
-  int lower = 0;
-  do
-    {
-      int probe = (upper + lower) / 2;
-      int r = key->compare(args[probe].dagNode->symbol());
-      if (r > 0)
-	lower = probe + 1;
-      else
-	{
-	  if (r == 0)
-	    first = probe;
-	  upper = probe - 1; 
-	}
-    }
-  while (lower <= upper);
-  return first;
-}
-
-int
 ACU_DagNode::findFirstPotentialMatch(Term* key, const Substitution& partial) const
 {
   const ArgVec<Pair>::const_iterator args = argArray.begin();  // for speed
-  int first = argArray.length();  // return index beyond arg array propects
-  Assert(first > 0, cerr << "no args");
+  int first = argArray.length();  // return index beyond arg array prospects
+  Assert(first > 0, "no args");
   int upper = first - 1;
   int lower = 0;
   do
@@ -73,7 +48,7 @@ ACU_DagNode::binarySearch(DagNode* key, int& pos) const
 {
   const ArgVec<Pair>::const_iterator args = argArray.begin();  // for speed
   int upper = argArray.length() - 1;
-  Assert(upper >= 0, cerr << "no args");
+  Assert(upper >= 0, "no args");
   int lower = 0;
   do
     {
@@ -103,7 +78,7 @@ ACU_DagNode::binarySearch(Term* key, int& pos) const
 {
   const ArgVec<Pair>::const_iterator args = argArray.begin();  // for speed
   int upper = argArray.length() - 1;
-  Assert(upper >= 0, cerr << "no args");
+  Assert(upper >= 0, "no args");
   int lower = 0;
   do
     {

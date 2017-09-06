@@ -1,9 +1,6 @@
 //
 //      Implementation for class FloatSymbol.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 #ifdef SOLARIS
 #include <ieeefp.h>
 #else

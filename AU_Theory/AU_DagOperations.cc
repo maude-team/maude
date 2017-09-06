@@ -11,7 +11,7 @@ AU_DagNode::eliminateForward(const DagNode* target, int& pos, int limit) const
   //	pos may point to 1 beyond limit to indicate that target must match nothing.
   //
   Assert(pos >= 0 && limit <= last && pos <= limit + 1,
-	 cerr << "bad pos or limit");
+	 "bad pos or limit");
   AU_Symbol* s = symbol();
   bool leftId = s->leftId();
   bool rightId = s->rightId();
@@ -64,7 +64,7 @@ AU_DagNode::eliminateBackward(const DagNode* target, int& pos, int limit) const
   //	pos may point to 1 before limit to indicate that target must match nothing.
   //
   Assert(pos <= last && limit >= 0 && pos >= limit - 1,
-	 cerr << "bad pos or limit");
+	 "bad pos or limit");
   AU_Symbol* s = symbol();
   bool leftId = s->leftId();
   bool rightId = s->rightId();
@@ -112,7 +112,7 @@ AU_DagNode::eliminateBackward(const DagNode* target, int& pos, int limit) const
 DagNode*
 AU_DagNode::makeFragment(int start, int nrSubterms, bool extraId) const
 {
-  Assert(nrSubterms > 0, cerr << "no subterms");
+  Assert(nrSubterms > 0, "no subterms");
   if (extraId)
     ++nrSubterms;
   if (nrSubterms == 1)

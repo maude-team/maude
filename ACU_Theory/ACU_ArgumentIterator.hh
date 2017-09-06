@@ -3,9 +3,6 @@
 //
 #ifndef _ACU_ArgumentIterator_hh_
 #define _ACU_ArgumentIterator_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "rawArgumentIterator.hh"
 
 class ACU_ArgumentIterator : public RawArgumentIterator

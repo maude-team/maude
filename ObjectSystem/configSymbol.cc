@@ -1,9 +1,6 @@
 //
 //      Implementation for class ConfigSymbol.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 #include <list>
 #include <map>
 
@@ -127,7 +124,7 @@ ConfigSymbol::checkArgs(Term* pattern, Term*& object, Term*& message)
 	    return false;
 	}
     }
-  Assert(object != 0 && message != 0, cerr << "object-message check error");
+  Assert(object != 0 && message != 0, "object-message check error");
   return true;
 }
 

@@ -3,9 +3,6 @@
 //
 #ifndef _AU_DagNode_hh_
 #define _AU_DagNode_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "dagNode.hh"
 #include "argVec.hh"
 

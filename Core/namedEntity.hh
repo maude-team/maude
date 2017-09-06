@@ -3,9 +3,6 @@
 //
 #ifndef _namedEntity_hh_
 #define _namedEntity_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
  
 class NamedEntity
 {

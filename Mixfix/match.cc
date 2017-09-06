@@ -48,7 +48,7 @@ Interpreter::match(const Vector<Token>& bubble, bool withExtension, Int64 limit)
       cout << "match ";
       if (limit != NONE)
 	cout << '[' << limit << "] ";
-      cout << "in " << currentModule << " : " << patternTerm <<
+      cout << "in " << currentModule << " : " << pattern->getLhs() <<
 	" <=? " << subjectDag;
       if (condition.length() > 0)
 	{

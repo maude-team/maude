@@ -5,9 +5,6 @@
 //
 #ifndef _AU_Subproblem_hh_
 #define _AU_Subproblem_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "subproblem.hh"
 #include "AU_Layer.hh"
 

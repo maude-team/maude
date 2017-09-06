@@ -3,9 +3,6 @@
 //
 #ifndef _rawRootContainer_hh_
 #define _rawRootContainer_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 class RawRootContainer
 {

@@ -60,10 +60,7 @@
 
 #ifndef _diophantineSystem_hh_
 #define _diophantineSystem_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
- 
+
 class DiophantineSystem
 {
 public:
@@ -156,8 +153,8 @@ private:
 inline int
 DiophantineSystem::solution(int r, int c) const
 {
-  Assert(closed, cerr << "solve() not called");
-  Assert(!failed, cerr << "non-existent solution");
+  Assert(closed, "solve() not called");
+  Assert(!failed, "non-existent solution");
   const Select& s = rows[rowPermute[r]].selection[c];
   return s.base + s.extra;
 }

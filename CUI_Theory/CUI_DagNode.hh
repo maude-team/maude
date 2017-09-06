@@ -3,9 +3,6 @@
 //
 #ifndef _CUI_DagNode_hh_
 #define _CUI_DagNode_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "dagNode.hh"
 
 class CUI_DagNode : public DagNode
@@ -77,7 +74,7 @@ CUI_DagNode::symbol() const
 inline DagNode*
 CUI_DagNode::getArgument(int i) const
 {
-  Assert(i == 0 || i == 1, cerr << "bad argument index");
+  Assert(i == 0 || i == 1, "bad argument index");
   return argArray[i];
 }
 

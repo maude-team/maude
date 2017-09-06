@@ -1,9 +1,6 @@
 //
 //      Implementation for base class DagNode
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //	utility stuff
 #include "macros.hh"
@@ -27,8 +24,6 @@
 #include "dagArgumentIterator.hh"
 #include "module.hh"
 #include "rootContainer.hh"
-
-//#include "memoryManager.cc"
 
 bool
 DagNode::checkSort(const Sort* boundSort, Subproblem*& returnedSubproblem)

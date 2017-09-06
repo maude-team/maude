@@ -3,9 +3,6 @@
 //
 #ifndef _sortConstraintTable_hh_
 #define _sortConstraintTable_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 class SortConstraintTable
 {

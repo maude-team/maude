@@ -1,9 +1,6 @@
 //
 //      Implementation for class StringOpSymbol.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //      utility stuff
 #include "macros.hh"
@@ -119,7 +116,7 @@ StringOpSymbol::reset()
 bool
 StringOpSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
 {
-  Assert(this == subject->symbol(), cerr << "Bad symbol");
+  Assert(this == subject->symbol(), "bad symbol");
   int nrArgs = arity();
   FreeDagNode* d = safeCast(FreeDagNode*, subject);
   //
@@ -208,13 +205,13 @@ StringOpSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
 		    CantHappen("bad string op");
 		  }
 		Assert(trueTerm.getTerm() != 0 && falseTerm.getTerm() != 0,
-		       cerr << "null true/false for relational op");
+		       "null true/false for relational op");
 		return context.builtInReplace(subject, r ? trueTerm.getDag() : falseTerm.getDag());
 	      }
 	    else if (op == CODE('r', 'a'))
 	      {
 		DagNode* a1 = d->getArgument(1);
-		Assert(succSymbol != 0, cerr << "succSymbol undefined");
+		Assert(succSymbol != 0, "succSymbol undefined");
 		if (succSymbol->isNat(a1))
 		  {
 		    const mpz_class& n1 = succSymbol->getNat(a1);
@@ -248,7 +245,7 @@ StringOpSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
 		{
 		  DagNode* a1 = d->getArgument(1);
 		  DagNode* a2 = d->getArgument(2);
-		  Assert(succSymbol != 0, cerr << "succSymbol undefined");
+		  Assert(succSymbol != 0, "succSymbol undefined");
 		  if (succSymbol->isNat(a1) && succSymbol->isNat(a2))
 		    {
 		      const mpz_class& n1 = succSymbol->getNat(a1);
@@ -266,7 +263,7 @@ StringOpSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
 		    {
 		      const crope& pattern = safeCast(StringDagNode*, a1)->getValue();
 		      DagNode* a2 = d->getArgument(2);
-		      Assert(succSymbol != 0, cerr << "succSymbol undefined");
+		      Assert(succSymbol != 0, "succSymbol undefined");
 		      if (succSymbol->isNat(a2))
 			{
 			  const mpz_class& n2 = succSymbol->getNat(a2);
@@ -283,7 +280,7 @@ StringOpSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
 			    default:
 			      CantHappen("bad string op");
 			    }
-			  Assert(notFoundTerm.getTerm() != 0, cerr << "null notFound for find op");
+			  Assert(notFoundTerm.getTerm() != 0, "null notFound for find op");
 			  if (r == NONE)
 			    return context.builtInReplace(subject, notFoundTerm.getDag());
 			  return succSymbol->rewriteToNat(subject, context, r);
@@ -305,8 +302,8 @@ StringOpSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
       else if (nrArgs == 2 && op == CODE('d', 'e'))
 	{
 	  DagNode* a1 = d->getArgument(1);
-	  Assert(succSymbol != 0, cerr << "succSymbol undefined");
-	  Assert(minusSymbol != 0, cerr << "minusSymbol undefined");
+	  Assert(succSymbol != 0, "succSymbol undefined");
+	  Assert(minusSymbol != 0, "minusSymbol undefined");
 	  if (succSymbol->isNat(a1))
 	    {
 	      double fl = safeCast(FloatDagNode*, a0)->getValue();
@@ -329,7 +326,7 @@ StringOpSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
   else if (op == CODE('s', 't') && nrArgs == 2)
     {
       DagNode* a1 = d->getArgument(1);
-      Assert(succSymbol != 0, cerr << "succSymbol undefined");
+      Assert(succSymbol != 0, "succSymbol undefined");
       if (succSymbol->isNat(a1))
 	{
 	  const mpz_class& n1 = succSymbol->getNat(a1);
@@ -384,7 +381,7 @@ StringOpSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
 	case CODE('c', 'h'):  // char
 	  {
 	    DagNode* a0 = d->getArgument(0);
-	    Assert(succSymbol != 0, cerr << "succSymbol undefined");
+	    Assert(succSymbol != 0, "succSymbol undefined");
 	    if (succSymbol->isNat(a0))
 	      {
 		const mpz_class& n0 = succSymbol->getNat(a0);
@@ -443,7 +440,7 @@ StringOpSymbol::fwdFind(const crope& subject, const crope& pattern, crope::size_
 {
   crope::size_type sLen = subject.length();
   if (pattern.empty())
-    return (start <= sLen) ? start : NONE;
+    return (start <= sLen) ? static_cast<int>(start) : NONE;
   //
   //	Testing start < sLen is important because otherwise 2nd test
   //	could succeed by wrap around.

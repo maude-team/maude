@@ -3,9 +3,6 @@
 //
 #ifndef _stringSymbol_hh_
 #define _stringSymbol_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "NA_Symbol.hh"
 
 class StringSymbol : public NA_Symbol

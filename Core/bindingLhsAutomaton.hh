@@ -4,9 +4,6 @@
 //
 #ifndef _bindingLhsAutomaton_hh_
 #define _bindingLhsAutomaton_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "lhsAutomaton.hh"
 
 class BindingLhsAutomaton : public LhsAutomaton

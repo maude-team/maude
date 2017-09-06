@@ -1,9 +1,6 @@
 //
 //	Implementation for class FreePositionTable.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //	utility stuff
 #include "macros.hh"

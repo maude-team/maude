@@ -17,7 +17,7 @@ AU_LhsAutomaton::greedyMatch(AU_DagNode* subject,
     {
       extensionInfo->setExtraIdentity(false);
       extensionInfo->setValidAfterMatch(true);
-      Assert(extensionInfo->bigEnough(), cerr << "didn't match enough of subject");
+      Assert(extensionInfo->bigEnough(), "didn't match enough of subject");
     }
   return true;
 }
@@ -70,8 +70,8 @@ AU_LhsAutomaton::greedyMatchRigidBlock(AU_DagNode* subject,
 				       int maxShift,
 				       int& matchShift)
 {
-  Assert(minShift <= maxShift, cerr << "bad shift range");
-  Assert(block.start <= block.end, cerr << "bad block range");
+  Assert(minShift <= maxShift, "bad shift range");
+  Assert(block.start <= block.end, "bad block range");
   int shiftFactor;
   for (int i = minShift; i <= maxShift; i += shiftFactor)
     {
@@ -105,7 +105,7 @@ AU_LhsAutomaton::greedyMatchRigidBlock2(AU_DagNode* subject,
       if (skip == NOT_FIXED)
 	{
 	  DagNode* d = scratch.value(f.variable.index);
-	  Assert(d != 0, cerr << "unbound variable in rigid block");
+	  Assert(d != 0, "unbound variable in rigid block");
 	  if (!(subject->eliminateForward(d, nextSubject, rightPos)))  // better limit?
 	    return false;
 	  skip = 1;
@@ -141,7 +141,7 @@ AU_LhsAutomaton::greedyMatchFixedLengthBlock(ArgVec<DagNode*>& args,
 	case VARIABLE:
           {
             Assert(f.variable.upperBound == 1 && !f.variable.takeIdentity,
-                   cerr << "non-unit variable in fixed length block");
+                   "non-unit variable in fixed length block");
             DagNode* v = scratch.value(f.variable.index);
             if (v == 0)
               {
@@ -153,7 +153,7 @@ AU_LhsAutomaton::greedyMatchFixedLengthBlock(ArgVec<DagNode*>& args,
             else
               {
                 Assert(v->symbol() != topSymbol,
-                       cerr << "illegal binding to unit variable");
+                       "illegal binding to unit variable");
                 if (!(v->equal(d)))
                   return false;
               }
@@ -189,7 +189,7 @@ AU_LhsAutomaton::greedyMatchBlocks(AU_DagNode* subject, AU_ExtensionInfo* extens
   Assert(extensionInfo != 0 || nrRigid == 0 ||
 	 (rigidBlocks[0].start > flexLeftPos &&
 	  rigidBlocks[nrRigid - 1].end < flexRightPos),
-	 cerr << "missing unbound variable(s)");
+	 "missing unbound variable(s)");
   int spare = rightPos - leftPos + 1 - nrSubjectsUsed;
   if (spare < 0)
     return false;
@@ -347,9 +347,9 @@ AU_LhsAutomaton::greedyMatchVariableBlock(ArgVec<DagNode*>& args,
       //	Left extension gets the whole thing.
       //
       Assert(!rightExtend,
-	     cerr << "whole subject in extension should not happen in greedy match");
+	     "whole subject in extension should not happen in greedy match");
       DebugAdvisoryCheck(blockLength == 0,
-			 cerr << "worst case scenario for AU greedy match");
+			 "worst case scenario for AU greedy match");
       extensionInfo->setFirstMatched(firstSubject + nrSubjects);
       return true;
     }
@@ -361,7 +361,7 @@ AU_LhsAutomaton::greedyMatchVariableBlock(ArgVec<DagNode*>& args,
       TopVariable& lv = flexPart[blockStart + blockLength - 1].variable;
       for (; spare > 0; spare--, pos++)
 	{
-	  Assert(pos < firstSubject + nrSubjects, cerr << "pos overrun");
+	  Assert(pos < firstSubject + nrSubjects, "pos overrun");
 	  if (!(args[pos]->leq(lv.sort)))
 	    {
 	      if (rightExtend)

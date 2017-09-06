@@ -3,9 +3,6 @@
 //
 #ifndef _sort_hh_
 #define _sort_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "namedEntity.hh"
 #include "lineNumber.hh"
 #include "moduleItem.hh"
@@ -112,7 +109,7 @@ leq(const Sort* sort1, const Sort* sort2)
 inline bool
 leq(int index1, const Sort* sort2)
 {
-  Assert(index1 != Sort::SORT_UNKNOWN, cerr << "unknown sort");
+  Assert(index1 != Sort::SORT_UNKNOWN, "unknown sort");
   if (index1 >= sort2->fastTest)
     return true;
   return sort2->leqSorts.contains(index1);

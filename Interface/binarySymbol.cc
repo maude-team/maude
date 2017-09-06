@@ -1,9 +1,6 @@
 //
 //      Implementation for class BinarySymbol.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //	utility stuff
 #include "macros.hh"
@@ -103,8 +100,8 @@ void
 BinarySymbol::commutativeSortCompletion()
 {
   Assert(domainComponent(0) == domainComponent(1),
-	     cerr << "Commutative operator " << this <<
-	     " has its arguments in different sort components");
+	 "Commutative operator " << this <<
+	 " has its arguments in different sort components");
   Vector<Sort*> newDecl(3);
   const Vector<OpDeclaration>& opDecls = getOpDeclarations();
   int nrOpDecls = opDecls.length();
@@ -144,7 +141,7 @@ BinarySymbol::processIdentity()
 	       " for operator " << QUOTE(this) << " contains variables.");
   id->symbol()->fillInSortInfo(id);
   int index = id->getSortIndex();  // is this valid?
-  Assert(index != Sort::SORT_UNKNOWN, cerr << "unknown sort for identity element");
+  Assert(index != Sort::SORT_UNKNOWN, "unknown sort for identity element");
   WarningCheck(index != Sort::ERROR_SORT,
 	       *id << ": identity element " << QUOTE(id) <<
 	       " for operator " << QUOTE(this) << " has error sort.");
@@ -192,10 +189,10 @@ BinarySymbol::leftIdentitySortCheck()
   Term* id = identityTerm.getTerm();
   const ConnectedComponent* component = rangeComponent();
   Assert(component == domainComponent(1),
-	 cerr << "operator with left identity " << this <<
+	 "operator with left identity " << this <<
 	 " has right argument and range in different sort components");
   Assert(id->getComponent() == domainComponent(0),
-	 cerr << "operator " << this <<
+	 "operator " << this <<
 	 " has left identity and left argument is different sort components");
   int nrSorts = component->nrSorts();
   //
@@ -220,10 +217,10 @@ BinarySymbol::rightIdentitySortCheck()
   Term* id = identityTerm.getTerm();
   const ConnectedComponent* component = rangeComponent();
   Assert(component == domainComponent(0),
-	 cerr << "operator with right identity " << this <<
+	 "operator with right identity " << this <<
 	 " has left argument and range in different sort components");
   Assert(id->getComponent() == domainComponent(1),
-	 cerr << "operator " << this <<
+	 "operator " << this <<
 	 " has right identity and right argument is different sort components");
   int nrSorts = component->nrSorts();
   //
@@ -248,7 +245,7 @@ BinarySymbol::idempotentSortCheck()
 {
   const ConnectedComponent* component = rangeComponent();
   Assert(domainComponent(0) == component && domainComponent(1) == component,
-	 cerr << "Idempotent operator " << this <<
+	 "Idempotent operator " << this <<
 	 " has a domain sort in a different connected component from its range sort");
   int nrSorts = component->nrSorts();
   for (int i = 1; i < nrSorts; i++)

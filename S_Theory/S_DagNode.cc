@@ -1,9 +1,6 @@
 //
 //      Implementation for class S_DagNode.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
  
 //	utility stuff
 #include "macros.hh"
@@ -22,6 +19,7 @@
 #include "S_DagNode.hh"
 #include "S_DagArgumentIterator.hh"
 #include "S_ExtensionInfo.hh"
+#include "S_Subproblem.hh"
 
 S_DagNode::S_DagNode(S_Symbol* symbol, const mpz_class& number, DagNode* arg)
   : DagNode(symbol),
@@ -111,7 +109,7 @@ S_DagNode::normalizeAtTop()
 DagNode*
 S_DagNode::copyWithReplacement(int argIndex, DagNode* replacement)
 {
-  Assert(argIndex == 0, cerr << "bad arg index");
+  Assert(argIndex == 0, "bad arg index");
   return new S_DagNode(symbol(), *number, replacement);
 }
 
@@ -120,7 +118,7 @@ S_DagNode::copyWithReplacement(Vector<RedexPosition>& redexStack,
 			       int first,
 			       int last)
 {
-  Assert(first == last, cerr << "nrArgs clash");
+  Assert(first == last, "nrArgs clash");
   return new S_DagNode(symbol(), *number, redexStack[first].node());
 }
 
@@ -156,14 +154,18 @@ S_DagNode::makeExtensionInfo()
   return new S_ExtensionInfo(this);
 }
 
-
 bool
 S_DagNode::matchVariableWithExtension(int index,
 				      const Sort* sort,
-				      Substitution&  solution ,
+				      Substitution& /* solution */,
 				      Subproblem*& returnedSubproblem,
 				      ExtensionInfo* extensionInfo)
 {
-  Assert(false, cerr << "not supported");
-  return false;
+  returnedSubproblem =
+    new S_Subproblem(this,
+		     *number,
+		     index,
+		     sort,
+		     safeCast(S_ExtensionInfo*, extensionInfo));
+  return true;
 }

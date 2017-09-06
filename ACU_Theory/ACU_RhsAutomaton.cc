@@ -1,9 +1,6 @@
 //
 //      Implementation for class ACU_RhsAutomaton.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //	utility stuff
 #include "macros.hh"
@@ -60,7 +57,7 @@ ACU_RhsAutomaton::buildArguments(ArgVec<ACU_DagNode::Pair>& argArray, Substituti
 {
   Vector<Argument>::const_iterator j = arguments.begin();
   const Vector<Argument>::const_iterator e = arguments.end();
-  Assert(j != e, cerr << "no args");
+  Assert(j != e, "no args");
   ArgVec<ACU_DagNode::Pair>::iterator i = argArray.begin();
   do
     {
@@ -70,7 +67,7 @@ ACU_RhsAutomaton::buildArguments(ArgVec<ACU_DagNode::Pair>& argArray, Substituti
       ++j;
     }
   while (j != e);
-  Assert(i == argArray.end(), cerr << "iterator inconsistent");
+  Assert(i == argArray.end(), "iterator inconsistent");
 }
 
 DagNode*

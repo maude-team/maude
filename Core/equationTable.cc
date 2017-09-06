@@ -1,9 +1,6 @@
 //
 //      Implementation for abstract class EquationTable.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //	utility stuff
 #include "macros.hh"
@@ -41,9 +38,8 @@ EquationTable::applyReplace(DagNode* subject,
 			    RewritingContext& context,
 			    ExtensionInfo* extensionInfo)
 {
-  Vector<Equation*>::iterator e = equations.end();
-  for (Vector<Equation*>::iterator i = equations.begin(); i != e; ++i)
-   {
+  FOR_EACH_CONST(i, Vector<Equation*>, equations)
+    {
       Subproblem* sp;
       Equation* eq = *i;
       int nrVariables = eq->fastNrVariables();

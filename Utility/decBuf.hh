@@ -3,9 +3,6 @@
 //
 #ifndef _decBuf_hh_
 #define _decBuf_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include <deque>
 
 class DecBuf

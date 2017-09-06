@@ -1,9 +1,6 @@
 //
 //	Implementation for class GenBuchiAutomaton.
 //
-#ifdef __GNUG__
-#pragma implementation
-#endif
 
 //	utility stuff
 #include "macros.hh"
@@ -133,7 +130,7 @@ GenBuchiAutomaton::getStateIndex(const NatSet& stateSet)
   int index = vwaaStateSets.insert(stateSet);
   if (index >= states.length())
     {
-      Assert(index == states.length(), cerr << "states synch error");
+      Assert(index == states.length(), "states synch error");
       states.expandTo(index + 1);
       states[index] = UNDEFINED;
     }
@@ -144,7 +141,7 @@ void
 GenBuchiAutomaton::insertFairTransition(FairTransitionSet& fts, const FairTransition& ft)
 {
   Bdd formula = ft.second;
-  Assert(formula != bdd_false(), cerr << "tried to insert false transition");
+  Assert(formula != bdd_false(), "tried to insert false transition");
   const FairTransitionSet::iterator e = fts.end();
   FairTransitionSet::iterator equal = e;
   for (FairTransitionSet::iterator i = fts.begin(); i != e;)
@@ -175,7 +172,7 @@ GenBuchiAutomaton::insertFairTransition(FairTransitionSet& fts, const FairTransi
   if (equal == e)
     {
       pair<FairTransitionSet::iterator, bool> p = fts.insert(ft);
-      Assert(p.second, cerr << "failed to insert");
+      Assert(p.second, "failed to insert");
       p.first->second = formula;
     }
   else

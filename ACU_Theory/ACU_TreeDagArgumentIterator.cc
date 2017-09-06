@@ -23,14 +23,14 @@ ACU_TreeDagArgumentIterator::valid() const
 DagNode*
 ACU_TreeDagArgumentIterator::argument() const
 {
-  Assert(valid(), cerr << "no args left");
+  Assert(valid(), "no args left");
   return iter.getDagNode();
 }
 
 void
 ACU_TreeDagArgumentIterator::next()
 {
-  Assert(valid(), cerr << "no args left");
+  Assert(valid(), "no args left");
   --multiplicityRemaining;
   if (multiplicityRemaining == 0)
     {

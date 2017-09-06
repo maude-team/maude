@@ -6,9 +6,6 @@
 //
 #ifndef _freePositionTable_hh_
 #define _freePositionTable_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 
 class FreePositionTable
 {

@@ -5,9 +5,6 @@
 //
 #ifndef _freeUnarySymbol_hh_
 #define _freeUnarySymbol_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "freeSymbol.hh"
 
 class FreeUnarySymbol : public FreeSymbol

@@ -3,9 +3,6 @@
 //
 #ifndef _subproblemDisjunction_hh_
 #define _subproblemDisjunction_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "subproblem.hh"
 
 class SubproblemDisjunction : public Subproblem
