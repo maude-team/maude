@@ -264,9 +264,14 @@ MetaLevelOpSymbol::metaXapply(FreeDagNode* subject, RewritingContext& context)
 	    DagNode* replacement = state->getReplacement()->makeClone();  // for unique ptr
 	    Substitution* substitution = state->getContext();
 	    RewriteSearchState::DagPair top = state->rebuildDag(replacement);
+	    //
+	    //	Can't use dagNodeMap after reduce since the from dagNodes might
+	    //	garbage collected or even rewritten in place.
+	    //
 	    PointerMap qidMap;
 	    PointerMap dagNodeMap;
 	    DagRoot metaContext(metaLevel->upContext(top.first, m, replacement, qidMap, dagNodeMap));
+
 	    RewritingContext* resultContext =
 	      context.makeSubcontext(top.first, UserLevelRewritingContext::META_EVAL);
 	    if (trace)

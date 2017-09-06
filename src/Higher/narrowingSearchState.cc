@@ -80,6 +80,7 @@ NarrowingSearchState::NarrowingSearchState(RewritingContext* context,
       cout << i << '\t' << static_cast<DagNode*>(v) << '\t' << v->getIndex() << endl;
     }
   */
+  incompleteFlag = false;
   unificationProblem = 0;
   noFurtherPositions = false;
 }
@@ -101,6 +102,7 @@ NarrowingSearchState::findNextNarrowing()
       //
       if (unificationProblem->findNextUnifier())
 	return true;
+      incompleteFlag |= unificationProblem->isIncomplete();
       delete unificationProblem;
     }
   else
@@ -127,26 +129,31 @@ NarrowingSearchState::findNextNarrowing()
       //	getDagNode(), might collapse into another theory under unification.
       //
       // //cout << " at " << getDagNode() << endl;
-      const Vector<Rule*>& rules = getDagNode()->symbol()->getRules();
-      for (int nrRules = rules.length(); ruleIndex < nrRules; ruleIndex++)
+      DagNode* d = getDagNode();
+      if (dynamic_cast<VariableDagNode*>(d) == 0)  // only consider non-variable positions
 	{
-	  Rule* rl = rules[ruleIndex];
-	  if (!(rl->hasCondition())  &&  // we don't attempt narrowing with conditional rules
-	      (allowNonexec || !(rl->isNonexec())) &&  // check executability
-	      (label == UNDEFINED || rl->getLabel().id() == label))  // check label
+	  const Vector<Rule*>& rules = d->symbol()->getRules();
+	  for (int nrRules = rules.length(); ruleIndex < nrRules; ruleIndex++)
 	    {
-	      ////cout << "trying rule " << ruleIndex << " " << rl << " at " << getDagNode() << endl;
-	      unificationProblem = new NarrowingUnificationProblem(rl,
-								   getDagNode(),
-								   variableInfo,
-								   freshVariableGenerator,
-								   odd);
-	      if (unificationProblem->findNextUnifier())
+	      Rule* rl = rules[ruleIndex];
+	      if (!(rl->hasCondition())  &&  // we don't attempt narrowing with conditional rules
+		  (allowNonexec || !(rl->isNonexec())) &&  // check executability
+		  (label == UNDEFINED || rl->getLabel().id() == label))  // check label
 		{
-		  noFurtherPositions = getFlags() & SINGLE_POSITION;
-		  return true;
+		  ////cout << "trying rule " << ruleIndex << " " << rl << " at " << getDagNode() << endl;
+		  unificationProblem = new NarrowingUnificationProblem(rl,
+								       getDagNode(),
+								       variableInfo,
+								       freshVariableGenerator,
+								       odd);
+		  if (unificationProblem->findNextUnifier())
+		    {
+		      noFurtherPositions = getFlags() & SINGLE_POSITION;
+		      return true;
+		    }
+		  incompleteFlag |= unificationProblem->isIncomplete();
+		  delete unificationProblem;
 		}
-	      delete unificationProblem;
 	    }
 	}
       ruleIndex = 0;

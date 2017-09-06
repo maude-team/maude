@@ -28,12 +28,17 @@
 
 class NarrowingVariableInfo
 {
-public: 
+  NO_COPYING(NarrowingVariableInfo);
+
+public:
+  NarrowingVariableInfo() {}
+
   int getNrVariables() const;
   //
   //	These two functions map between indexes and variables.
   //
   int variable2Index(VariableDagNode* variableTerm);
+  int variable2IndexNoAdd(VariableDagNode* variableTerm) const;
   VariableDagNode* index2Variable(int index) const;
 
 private:

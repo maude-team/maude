@@ -58,7 +58,7 @@ VariantNarrowingSearchState::VariantNarrowingSearchState(RewritingContext* conte
 							 const Vector<DagNode*>& variantSubstitution,
 							 const Vector<DagNode*>& blockerDags,
 							 FreshVariableGenerator* freshVariableGenerator,
-							 bool odd,
+							 int variableFamily,
 							 const NarrowingVariableInfo& originalVariables,
 							 bool unificationMode)
 
@@ -113,7 +113,7 @@ VariantNarrowingSearchState::VariantNarrowingSearchState(RewritingContext* conte
 											a.argument(),
 											variableInfo,
 											freshVariableGenerator,
-											odd);
+											variableFamily);
       collectUnifiers(unificationProblem, 0, NONE);
       incompleteFlag |= unificationProblem->isIncomplete();
       delete unificationProblem;
@@ -145,7 +145,7 @@ VariantNarrowingSearchState::VariantNarrowingSearchState(RewritingContext* conte
 												    d,
 												    variableInfo,
 												    freshVariableGenerator,
-												    odd);
+												    variableFamily);
 		  collectUnifiers(unificationProblem, positionIndex, eq->getIndexWithinModule());
 		  incompleteFlag |= unificationProblem->isIncomplete();
 		  delete unificationProblem;
@@ -246,6 +246,7 @@ VariantNarrowingSearchState::findNextVariant(DagNode*& newVariantTerm, Vector<Da
 		// cout << "instantiated to " << d << endl;
 		d->computeTrueSort(*context);  // also handles theory normalization
 		if (d->reducibleByVariantEquation(*context))
+		  //{cout << "blocked " << endl ; goto nextUnifier;}
 		  goto nextUnifier;
 	      }
 	    //cout << "irreducible\n";

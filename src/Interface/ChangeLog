@@ -1,3 +1,10 @@
+2016-11-10  Steven Eker  <eker@install.csl.sri.com>
+
+	* dagNode.hh (D): added decl for copyAll2()
+	(copyAll): added
+
+===================================Maude111===========================================
+
 2016-03-25  Steven Eker  <eker@install.csl.sri.com>
 
 	* dagNode.cc (computeGeneralizedSort2): use theory specific

@@ -1,3 +1,11 @@
+2016-11-10  Steven Eker  <eker@install.csl.sri.com>
+
+	* freeDagNode.hh (DagNode): added decl for copyAll2()
+
+	* freeDagNode.cc (copyAll2): added
+
+===================================Maude111===========================================
+
 2016-03-17  Steven Eker  <eker@install.csl.sri.com>
 
 	* freeSymbol.hh (Symbol): added decl for computeGeneralizedSort2()
@@ -17,7 +25,7 @@
 	* freeDagArgumentIterator.hh (_freeDagArgumentIterator_hh_): fixed
 	type in guard #define
 
-===================================Maude108===========================================
+===================================Maude108a===========================================
 
 2015-09-18  Steven Eker  <eker@ape.csl.sri.com>
 

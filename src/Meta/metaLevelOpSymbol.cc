@@ -68,6 +68,7 @@
 #include "narrowingSequenceSearch.hh"
 #include "unificationProblem.hh"
 #include "variantSearch.hh"
+#include "narrowingSearchState2.hh"
 
 //      free theory class definitions
 #include "freeNet.hh"

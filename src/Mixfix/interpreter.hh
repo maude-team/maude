@@ -223,6 +223,8 @@ public:
   ImportModule* getModuleOrIssueWarning(int name, const LineNumber& lineNumber);
   ImportModule* makeModule(const ModuleExpression* expr, ImportModule* enclosingModule = 0);
 
+  void newNarrow(const Vector<Token>& bubble);
+
 private:
   typedef void (Interpreter::*ContinueFuncPtr)(Int64 limit, bool debug);
 

@@ -59,6 +59,12 @@ NA_DagNode::copyEagerUptoReduced2()
   return makeClone();
 }
 
+DagNode*
+NA_DagNode::copyAll2()
+{
+  return makeClone();
+}
+
 void
 NA_DagNode::clearCopyPointers2()
 {

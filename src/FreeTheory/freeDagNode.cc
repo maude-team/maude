@@ -175,6 +175,22 @@ FreeDagNode::copyEagerUptoReduced2()
   return n;
 }
 
+DagNode*
+FreeDagNode::copyAll2()
+{
+  FreeSymbol* s = symbol();
+  FreeDagNode* n = new FreeDagNode(s);
+  int nrArgs = s->arity();
+  if (nrArgs != 0)
+    {
+      DagNode** p = argArray();
+      DagNode** q = n->argArray();
+      for (int i = nrArgs; i > 0; i--, p++, q++)
+	*q = (*p)->copyAll();
+    }
+  return n;
+}
+
 void
 FreeDagNode::clearCopyPointers2()
 {

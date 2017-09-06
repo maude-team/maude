@@ -61,4 +61,7 @@ class VariantNarrowingSearchState;
 class VariantSearch;
 class VariantFolder;
 
+class VariantUnificationProblem;
+class NarrowingSearchState2;
+
 #endif

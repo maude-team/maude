@@ -561,7 +561,8 @@ Interpreter::variantUnify(const Vector<Token>& bubble, Int64 limit, bool debug)
       int counter = 0;
       const Vector<DagNode*>* unifier;
       int nrFreeVariables;
-      while (counter != limit && (unifier = vs.getNextUnifier(nrFreeVariables)))
+      int dummy;
+      while (counter != limit && (unifier = vs.getNextUnifier(nrFreeVariables, dummy)))
 	{
 	  ++counter;
 	  cout << "Unifier #" << counter << endl;
@@ -587,3 +588,55 @@ Interpreter::variantUnify(const Vector<Token>& bubble, Int64 limit, bool debug)
   (void) fm->unprotect();
   UserLevelRewritingContext::clearDebug();
 }
+
+/*
+#include "narrowingSearchState2.hh"
+
+void
+Interpreter::newNarrow(const Vector<Token>& bubble)
+{
+  if (DagNode* d = makeDag(bubble))
+    {
+      cout << "newNarrow: " << d << endl;
+      UserLevelRewritingContext* context = new UserLevelRewritingContext(d);
+
+      VisibleModule* fm = currentModule->getFlatModule();
+      startUsingModule(fm);
+      beginRewriting(false);
+      Timer timer(getFlag(SHOW_TIMING));
+      FreshVariableGenerator* freshVariableGenerator = new FreshVariableSource(fm);
+      Vector<DagNode*> blockerDags;  // dummy
+      NarrowingSearchState2 n(context, blockerDags, freshVariableGenerator, 0);
+
+      int solutionNr = 0;
+      while (n.findNextNarrowing())
+	{
+	  ++solutionNr;
+	  cout << "\nSolution " << solutionNr << endl;
+	  DagNode* replacement;
+	  cout << "Narrowed dag: " <<  n.getNarrowedDag(replacement) << endl;
+	  cout << "replacement: " << replacement << endl;
+	  Rule* rule = n.getRule();
+	  cout << "Rule: " << rule << endl;
+	  {
+	    const Substitution& substitution =  n.getSubstitution();
+
+	    cout << "Rule variable bindings:\n";
+	    UserLevelRewritingContext::printSubstitution(substitution, *rule);
+
+	    cout << "Subject variable bindings:\n";
+	    int firstTargetSlot = fm->getMinimumSubstitutionSize();
+	    const NarrowingVariableInfo& variableInfo = n.getVariableInfo();
+	    int nrVariables = variableInfo.getNrVariables();
+	    for (int i = 0; i < nrVariables; ++i)
+	      cout << (DagNode*) variableInfo.index2Variable(i) << " |-> " << substitution.value(firstTargetSlot + i) << endl;
+	    cout << "nr variables: " << nrVariables << endl;
+	    cout << "variable family: " << n.getVariableFamily() << endl;
+	  }
+	}
+      cout << "no more solutions" << endl;
+      (void) fm->unprotect();
+      UserLevelRewritingContext::clearDebug();
+    }
+}
+*/

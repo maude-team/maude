@@ -1,3 +1,11 @@
+2016-11-10  Steven Eker  <eker@install.csl.sri.com>
+
+	* variableDagNode.hh (NamedEntity): added decl for copyAll2()
+
+	* variableDagNode.cc (copyAll2): added
+
+===================================Maude111===========================================
+
 2016-03-24  Steven Eker  <eker@install.csl.sri.com>
 
 	* variableSymbol.hh (Symbol): added decl for computeGeneralizedSort2()

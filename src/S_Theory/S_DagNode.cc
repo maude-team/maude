@@ -100,6 +100,12 @@ S_DagNode::copyEagerUptoReduced2()
   return new S_DagNode(s, *number, argCopy);
 }
 
+DagNode*
+S_DagNode::copyAll2()
+{
+  return new S_DagNode(symbol(), *number, arg->copyAll());
+}
+
 void
 S_DagNode::clearCopyPointers2()
 {

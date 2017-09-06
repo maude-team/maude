@@ -45,11 +45,13 @@
 //	variable class definitions
 #include "variableDagNode.hh"
 
-UnificationContext::UnificationContext(FreshVariableGenerator* freshVariableGenerator, int nrOriginalVariables, bool odd)
+UnificationContext::UnificationContext(FreshVariableGenerator* freshVariableGenerator,
+				       int nrOriginalVariables,
+				       int variableFamily)
   : Substitution(nrOriginalVariables),
     freshVariableGenerator(freshVariableGenerator),
     nrOriginalVariables(nrOriginalVariables),
-    odd(odd)
+    variableFamily(variableFamily)
 {
 }
 
@@ -85,7 +87,7 @@ UnificationContext::makeFreshVariable(const ConnectedComponent* component)
   int freshVariableNr = index - nrOriginalVariables;
   freshVariableSorts.resize(freshVariableNr + 1);
   freshVariableSorts[freshVariableNr] = s;
-  int name = freshVariableGenerator->getFreshVariableName(freshVariableNr, odd);
+  int name = freshVariableGenerator->getFreshVariableName(freshVariableNr, variableFamily);
   VariableDagNode* v = new VariableDagNode(vs, name, index);
   DebugAdvisory("created " << safeCast(DagNode*, v) << " with index = " << index);
   //cout << "created " << safeCast(DagNode*, v) << " with index = " << index << endl;

@@ -78,7 +78,7 @@ IntSystem::initializeUpperBounds()
 	*i = UNBOUNDED;
     }
   else
-    Assert(nrVariables == upperBounds.size(), "row size differs");
+    Assert(static_cast<size_t>(nrVariables) == upperBounds.size(), "row size differs");
 }
 
 bool

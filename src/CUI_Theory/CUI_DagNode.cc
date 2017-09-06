@@ -102,6 +102,16 @@ CUI_DagNode::copyEagerUptoReduced2()
   return n;
 }
 
+DagNode*
+CUI_DagNode::copyAll2()
+{
+  CUI_Symbol* s = symbol();
+  CUI_DagNode* n = new CUI_DagNode(s);
+  n->argArray[0] = argArray[0]->copyAll();
+  n->argArray[1] = argArray[1]->copyAll();
+  return n;
+}
+
 void
 CUI_DagNode::clearCopyPointers2()
 {

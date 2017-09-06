@@ -1,3 +1,9 @@
+2016-12-19  Steven Eker  <eker@install.csl.sri.com>
+
+	* tests/Meta/metaNarrow.maude: created
+
+	* tests/Meta/metaNarrow (MAUDE_LIB): created
+
 2016-06-27  Steven Eker  <eker@install.csl.sri.com>
 
 	* tests/Misc/smtTest (MAUDE_LIB): skip test if we don't define USE_CVC4

@@ -224,6 +224,8 @@ command		:	KW_SELECT		{ lexBubble(END_COMMAND, 1); }
 			  lexerInitialMode();
 			  if (interpreter.setCurrentModule(moduleExpr, 1))
 			    interpreter.test(lexerBubble);
+			    //interpreter.newNarrow(lexerBubble);
+
 			}
 		|	KW_LOOP
 			{

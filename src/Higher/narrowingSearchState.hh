@@ -66,6 +66,7 @@ public:
   int getNrOfVariablesInSubject() const;
   const NarrowingVariableInfo& getVariableInfo() const;
   bool isOdd() const;
+  bool isIncomplete() const;
 
 private:
   RewritingContext* context;
@@ -74,13 +75,11 @@ private:
   const int label;
   const bool withExtension;
 
-
   NarrowingVariableInfo variableInfo;
-
   int ruleIndex;  // index of current rule being tried
-
   NarrowingUnificationProblem* unificationProblem;
   bool noFurtherPositions;
+  bool incompleteFlag;
 };
 
 inline bool
@@ -105,6 +104,15 @@ inline const NarrowingVariableInfo&
 NarrowingSearchState::getVariableInfo() const
 {
   return variableInfo;
+}
+
+inline bool
+NarrowingSearchState::isIncomplete() const
+{
+  //
+  //	Returns true if any incompleteness has been encountered so far.
+  //
+  return incompleteFlag;
 }
 
 #endif

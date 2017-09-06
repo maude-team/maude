@@ -2,7 +2,7 @@
 
     This file is part of the Maude 2 interpreter.
 
-    Copyright 1997-2014 SRI International, Menlo Park, CA 94025, USA.
+    Copyright 1997-2016 SRI International, Menlo Park, CA 94025, USA.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 
 ***
 ***	SMT bindings.
-***	Version alpha 104.
+***	Version alpha 111.
 ***
 
 set include BOOL off .
@@ -98,5 +98,3 @@ fmod REAL-INTEGER is
   op toInteger : Real -> Integer [special (id-hook SMT_Symbol (toInteger))] .
   op isInteger : Real -> Boolean [special (id-hook SMT_Symbol (isInteger))] .
 endfm
-
-set include BOOLEAN on .

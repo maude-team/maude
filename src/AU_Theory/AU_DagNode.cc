@@ -142,6 +142,17 @@ AU_DagNode::copyEagerUptoReduced2()
   return n;
 }
 
+DagNode*
+AU_DagNode::copyAll2()
+{
+  int nrArgs = argArray.length();
+  AU_Symbol* s = symbol();
+  AU_DagNode* n = new AU_DagNode(s, nrArgs);
+  for (int i = 0; i < nrArgs; i++)
+    n->argArray[i] = argArray[i]->copyAll();
+  return n;
+}
+
 void
 AU_DagNode::clearCopyPointers2()
 {

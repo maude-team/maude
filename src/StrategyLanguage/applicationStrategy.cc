@@ -55,7 +55,7 @@ ApplicationStrategy::ApplicationStrategy(int label,
 	 "substitutions and condition strategies aren't allowed without a label");
   top = false;
   int nrValues = values.size();
-  Assert(variables.size() == nrValues, "bad substitution");
+  Assert(variables.size() == static_cast<size_t>(nrValues), "bad substitution");
   for (int i = 0; i < nrValues; ++i)
     {
       valueDags[i].setTerm(values[i]);

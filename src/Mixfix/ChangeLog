@@ -1,3 +1,45 @@
+2016-12-15  Steven Eker  <eker@install.csl.sri.com>
+
+	* freshVariableSource.hh (FreshVariableGenerator): added decl for
+	belongsToFamily()
+
+	* freshVariableSource.cc (belongsToFamily): added
+
+2016-12-08  Steven Eker  <eker@install.csl.sri.com>
+
+	* freshVariableSource.hh (FreshVariableGenerator): added decl
+	for getFamily()
+
+	* freshVariableSource.cc (getFamily): added
+
+2016-12-07  Steven Eker  <eker@install.csl.sri.com>
+
+	* freshVariableSource.cc (getBaseName): added
+
+	* freshVariableSource.hh (FreshVariableGenerator): added decl for
+	getBaseName()
+
+2016-11-01  Steven Eker  <eker@install.csl.sri.com>
+
+	* search.cc (variantUnify): pass dummy argument to getNextUnifier()
+
+2016-10-28  Steven Eker  <eker@install.csl.sri.com>
+
+	* doParse.cc (parseTerm): fix bug where we were calling fillInSortInfo()
+	before the module was semi-compiled and sort diagrams had been generated
+
+2016-10-26  Steven Eker  <eker@install.csl.sri.com>
+
+	* freshVariableSource.cc (getFreshVariableName): rewritten to handle
+	multiple families of fresh variables
+
+	* freshVariableSource.hh (FreshVariableGenerator): updated decl for
+	getFreshVariableName()
+	(FreshVariableGenerator): deleted data members cache, oddCache; added
+	data member caches
+
+===================================Maude111===========================================
+
 2016-06-27  Steven Eker  <eker@install.csl.sri.com>
 
 	* banner.cc (printBanner): update copyright year
