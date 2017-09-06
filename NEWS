@@ -1,3 +1,7 @@
+Overview of Changes in Maude alpha93c
+=====================================
+* fixed bug where upView was producing bad metaViews
+
 Overview of Changes in Maude alpha93b
 =====================================
 * fixed bug in handing of metaRenamings

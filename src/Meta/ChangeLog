@@ -1,3 +1,9 @@
+2010-05-05  Steven Eker  <eker@rho>
+
+	* metaUpView.cc (MetaLevel::upOpMappings): fixed bug where we
+	using sort mapping set constructors rather than the op mapping
+	ones
+
 2010-04-30  Steven Eker  <eker@rho>
 
 	* metaDown.cc (MetaLevel::downParameterDecl): fix bug by passing m
