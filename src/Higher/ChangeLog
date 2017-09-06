@@ -1,3 +1,13 @@
+2007-08-24  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unificationProblem.cc (~UnificationProblem): varsOK ->
+	problemOkay
+	(UnificationProblem): varsOK -> problemOkay
+	(UnificationProblem): check for unimplemented theories
+
+	* unificationProblem.hh (variablesOK): becomes problemOK
+	(class UnificationProblem): varsOK becomes problemOkay
+
 2007-08-06  Steven Eker  <eker@goo.csl.sri.com>
 
 	* unificationProblem.cc (UnificationProblem): fix bug where we

@@ -60,6 +60,7 @@
 UnificationProblem::UnificationProblem(Vector<Term*>& lhs, Vector<Term*>& rhs, FreshVariableGenerator* freshVariableGenerator, bool withExtension)
   : freshVariableGenerator(freshVariableGenerator)
 {
+  problemOkay = false;  // until we have verified it is ok
   Assert(lhs.size() == rhs.size(), "lhs/rhs size clash");
   leftHandSides.swap(lhs);
   rightHandSides.swap(rhs);
@@ -87,11 +88,9 @@ UnificationProblem::UnificationProblem(Vector<Term*>& lhs, Vector<Term*>& rhs, F
       if (freshVariableGenerator->variableNameConflict(safeCast(VariableTerm*, v)->id()))
 	{
 	  IssueWarning("Unsafe variable name " << QUOTE(v) << " in unification problem.");
-	  varsOK = false;
 	  return;
 	}
     }
-  varsOK = true;
   //
   //	Create corresponding dags.
   //
@@ -100,10 +99,13 @@ UnificationProblem::UnificationProblem(Vector<Term*>& lhs, Vector<Term*>& rhs, F
   for (int i = 0; i < nrEquations; ++i)
     {
       leftHandDags[i] = leftHandSides[i]->term2Dag();
-      leftHandDags[i]->computeBaseSortForGroundSubterms();
+      if (leftHandDags[i]->computeBaseSortForGroundSubterms() == DagNode::UNIMPLEMENTED)
+	return;
       rightHandDags[i] = rightHandSides[i]->term2Dag();
-      rightHandDags[i]->computeBaseSortForGroundSubterms();
+      if (rightHandDags[i]->computeBaseSortForGroundSubterms() == DagNode::UNIMPLEMENTED)
+	return;
     }
+  problemOkay = true;
   //
   //	Created extensionInfo object if needed.
   //
@@ -136,6 +138,9 @@ UnificationProblem::UnificationProblem(Vector<Term*>& lhs, Vector<Term*>& rhs, F
     {
       if (!(leftHandDags[i]->computeSolvedForm(rightHandDags[i], *unsortedSolution, subproblem, extensionInfo)))
 	{
+#if 0
+	  cout << "NO SOLVED FORM" << endl;
+#endif
 	  viable = false;
 	  subproblem = 0;  // for safe destruction
 	  return;
@@ -149,7 +154,7 @@ UnificationProblem::UnificationProblem(Vector<Term*>& lhs, Vector<Term*>& rhs, F
 UnificationProblem::~UnificationProblem()
 {
   delete freshVariableGenerator;
-  if (varsOK)
+  if (problemOkay)
     {
       delete subproblem;
       delete orderSortedUnifiers;
@@ -210,7 +215,12 @@ UnificationProblem::findNextUnifier()
       //	First solution.
       //
       if (subproblem != 0 && !(subproblem->unificationSolve(true, *unsortedSolution)))
-	return false;
+	{
+#if 0
+	  cout << "No first solution to subproblem" << endl;
+#endif
+	  return false;
+	}
 
 
       //cerr << "first unsorted solution";

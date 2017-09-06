@@ -473,11 +473,50 @@ ACU_DagNode::argVecComputeBaseSort() const
   return sortIndex;
 }
 
+//
+//	Unification code.
+//
+
+DagNode::ReturnResult
+ACU_DagNode::computeBaseSortForGroundSubterms()
+{
+  ACU_Symbol* s = symbol();
+  if (s->getIdentity() != 0)
+    {
+      //
+      //	We only support unification for AC at the moment
+      //	so let the backstop version handle it.
+      //
+      return DagNode::computeBaseSortForGroundSubterms();
+    }
+  bool ground = true;
+  int nrArgs = argArray.length();
+  for (int i = 0; i < nrArgs; ++i)
+    {
+      switch (argArray[i].dagNode->computeBaseSortForGroundSubterms())
+	{
+	case NONGROUND:
+	  {
+	    ground = false;
+	    break;
+	  }
+	case UNIMPLEMENTED:
+	  return UNIMPLEMENTED;
+	}
+    }
+  if (ground)
+    {
+      s->computeBaseSort(this);
+      return GROUND;
+    }
+  return NONGROUND;
+}
+
 bool
-ACU_DagNode::computeSolvedForm(DagNode* rhs,
-			       Substitution& solution,
-			       Subproblem*& returnedSubproblem,
-			       ExtensionInfo* extensionInfo)
+ACU_DagNode::computeSolvedForm2(DagNode* rhs,
+				Substitution& solution,
+				Subproblem*& returnedSubproblem,
+				ExtensionInfo* extensionInfo)
 {
   if (symbol() == rhs->symbol())
     {
@@ -492,6 +531,10 @@ ACU_DagNode::computeSolvedForm(DagNode* rhs,
       //	We merge together the two aguments lists to get the
       //	list of abstracted terms in the Diophantine problem.
       //
+#if 0
+      cout << "ACU_DagNode::computeSolvedForm() top symbol = " << symbol() << endl;
+      cout << this << " against " << rhs << endl;
+#endif
       ACU_DagNode* other = safeCast(ACU_DagNode*, rhs);
       int nrArgs = argArray.length();
       int nrArgs2 = other->argArray.length();
@@ -564,20 +607,21 @@ ACU_DagNode::computeSolvedForm(DagNode* rhs,
 	}
       //cout << endl;
       system.setUpperBounds(upperBounds);
-      /*
+#if 0
       for (int i = 0; i < nrDioVars; ++i)
-	cout << abstracted[i] << '\t';
+	cout << "abstract " << i << '\t' << abstracted[i] << '\n';
       cout << endl;
-      */
+#endif
       MpzSystem::IntVec dioSol;
       ACU_UnificationSubproblem* sp = new ACU_UnificationSubproblem(symbol(), abstracted);
       while (system.findNextMinimalSolution(dioSol))
 	{
 	  sp->addBasisElement(dioSol);
-
-	  //for (int i = 0; i < nrDioVars; ++i)
-	  //  cout << dioSol[i] << '\t';
-	  //cout << endl;
+#if 0
+	  for (int i = 0; i < nrDioVars; ++i)
+	    cout << dioSol[i] << '\t';
+	  cout << endl;
+#endif
 	}
       if (!(sp->coverable()))
 	{
@@ -608,21 +652,6 @@ ACU_DagNode::insertVariables2(NatSet& occurs)
   int nrArgs = argArray.length();
   for (int i = 0; i < nrArgs; i++)
     argArray[i].dagNode->insertVariables(occurs);
-}
-
-bool
-ACU_DagNode::computeBaseSortForGroundSubterms()
-{
-  bool ground = true;
-  int nrArgs = argArray.length();
-  for (int i = 0; i < nrArgs; ++i)
-    {
-      if (!(argArray[i].dagNode->computeBaseSortForGroundSubterms()))
-	ground = false;
-    }
-  if (ground)
-    symbol()->computeBaseSort(this);  // HACK
-  return ground;
 }
 
 DagNode*

@@ -66,7 +66,7 @@ MetaLevelOpSymbol::metaUnify2(FreeDagNode* subject, RewritingContext& context, b
 	      if (!metaLevel->downUnificationProblem(subject->getArgument(1), lhs, rhs, m, disjoint))
 		return false;
 	      unification = new UnificationProblem(lhs, rhs, new FreshVariableSource(m, varIndex));
-	      if (!(unification->variablesOK()))
+	      if (!(unification->problemOK()))
 		{
 		  delete unification;
 		  return false;
@@ -142,7 +142,7 @@ MetaLevelOpSymbol::metaXunify2(FreeDagNode* subject, RewritingContext& context, 
               if (!metaLevel->downTermPair(subject->getArgument(1), subject->getArgument(2), lhs[0], rhs[0], m, disjoint))
                 return false;
 	      unification = new UnificationProblem(lhs, rhs, new FreshVariableSource(m, varIndex), true);
-	      if (!(unification->variablesOK()))
+	      if (!(unification->problemOK()))
 		{
 		  delete unification;
 		  return false;

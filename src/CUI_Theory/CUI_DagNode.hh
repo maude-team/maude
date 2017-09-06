@@ -47,15 +47,15 @@ public:
 		      int parentIndex,
 		      bool respectFrozen);
   //
-  //	Unification stuff.
+  //	Unification member functions.
   //
-  bool computeSolvedForm(DagNode* rhs,
-			 Substitution& solution,
-			 Subproblem*& returnedSubproblem,
-			 ExtensionInfo* extensionInfo = 0);
+  ReturnResult computeBaseSortForGroundSubterms();
+  bool computeSolvedForm2(DagNode* rhs,
+			  Substitution& solution,
+			  Subproblem*& returnedSubproblem,
+			  ExtensionInfo* extensionInfo);
   mpz_class nonVariableSize();
   void insertVariables2(NatSet& occurs);
-  bool computeBaseSortForGroundSubterms();
   DagNode* instantiate2(Substitution& substitution);
   //
   //    Functions particular to CUI_DagNode.

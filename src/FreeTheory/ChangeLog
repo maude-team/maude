@@ -1,3 +1,21 @@
+2007-08-24  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeDagNode.cc (computeBaseSortForGroundSubterms): rewritten
+
+	* freeDagNode.hh (class FreeDagNode): updated decl for
+	computeBaseSortForGroundSubterms()
+
+2007-08-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeDagNode.cc (computeSolvedForm): becomes computeSolvedForm2()
+	(computeSolvedForm2): simplified now that we should be called on
+	ground terms, e.g. constants
+
+	* freeDagNode.hh (class FreeDagNode): computeSolvedForm() ->
+	computeSolvedForm2()
+
+===================================Maude89g===========================================
+
 2007-06-28  Steven Eker  <eker@goo.csl.sri.com>
 
 	* freeDagNode.hh (class FreeDagNode): updated decl for

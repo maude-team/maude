@@ -107,11 +107,11 @@ public:
 		     DagNode* hole,
 		     PointerMap& qidMap,
 		     PointerMap& dagNodeMap);
-  DagNode* upSubstition(const Substitution& substitution,
-			const VariableInfo& variableInfo,
-			MixfixModule* m,
-			PointerMap& qidMap,
-			PointerMap& dagNodeMap);
+  DagNode* upSubstitution(const Substitution& substitution,
+			  const VariableInfo& variableInfo,
+			  MixfixModule* m,
+			  PointerMap& qidMap,
+			  PointerMap& dagNodeMap);
   DagNode* upNoUnifierPair();
   DagNode* upNoUnifierTriple();
   DagNode* upNoUnifierContextTriple();

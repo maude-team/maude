@@ -1,3 +1,9 @@
+Overview of Changes in Maude alpha89g
+=====================================
+* fixed selection from basis bug in AC unification algorithm
+* allow unification to work on ground terms from unimplemented
+  theories; made recovery in unimplemented cases consistent
+
 Overview of Changes in Maude alpha89f
 =====================================
 * fixed bug where large AC dags could get normalized into tree form

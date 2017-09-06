@@ -1,3 +1,20 @@
+2007-08-24  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaUnify.cc (metaXunify2): variablesOK() -> problemOK()
+	(metaUnify2): variablesOK() -> problemOK()
+
+	* metaUp.cc (upResultTriple, upResult4Tuple, upUnificationPair) 
+	(upUnificationContextTriple, upMatchPair): upSubstition() ->
+	upSubstitution()
+	(upSubstition): becomes upSubstitution()
+
+	* metaMatch.cc (metaMatch): upSubstition() -> upSubstitution()
+
+	* metaLevel.hh (class MetaLevel): upSubstition() ->
+	upSubstitution()
+
+===================================Maude89g===========================================
+
 2007-07-09  Steven Eker  <eker@goo.csl.sri.com>
 
 	* metaLevel.cc (MetaLevel): fix nasty bug where we weren't

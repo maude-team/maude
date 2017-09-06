@@ -44,7 +44,7 @@ public:
 
   bool unificationSolve(bool findFirst, UnificationContext& solution);
 
-  void addBasisElement(MpzSystem::IntVec element);
+  void addBasisElement(MpzSystem::IntVec& element);
   bool coverable() const;
 
 #ifdef DUMP

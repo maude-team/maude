@@ -1,3 +1,38 @@
+2007-08-24  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_DagNode.cc (computeBaseSortForGroundSubterms): rewritten
+
+	* ACU_DagNode.hh (class ACU_DagNode): updated decl for
+	computeBaseSortForGroundSubterms()
+
+	* ACU_UnificationSubproblem.cc (unificationSolve): added comments
+	to indicate that fresh variables are deallocated when done with
+
+2007-08-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_UnificationSubproblem.cc (buildSolution): use
+	sortAndUniquize() in place of dumbNormalizeAtTop()
+
+	* ACU_DagNode.cc (computeSolvedForm): becomes computeSolvedForm2()
+
+	* ACU_DagNode.hh (class ACU_DagNode): computeSolvedForm() ->
+	computeSolvedForm2()
+
+2007-08-21  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_UnificationSubproblem.cc (initialize): simplify and comment
+	(initialize): fix nasty bug by clearing previous selections
+
+2007-08-17  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_UnificationSubproblem.hh (class ACU_UnificationSubproblem):
+	update decl for addBasisElement()
+
+	* ACU_UnificationSubproblem.cc (addBasisElement): pass element by
+	reference; made assignment in if statement obvious
+
+===================================Maude89g===========================================
+
 2007-08-09  Steven Eker  <eker@goo.csl.sri.com>
 
 	* ACU_DagNode.hh (class ACU_DagNode): added decl for

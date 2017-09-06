@@ -1,3 +1,12 @@
+2007-08-24  Steven Eker  <eker@goo.csl.sri.com>
+
+	* NA_DagNode.cc (computeBaseSortForGroundSubterms) 
+	(computeSolvedForm, nonVariableSize): deleted
+
+	* NA_DagNode.hh (class NA_DagNode): deleted decls for
+	computeBaseSortForGroundSubterms(), computeSolvedForm(),
+	nonVariableSize()
+
 2007-06-28  Steven Eker  <eker@goo.csl.sri.com>
 
 	* NA_DagNode.hh (class NA_DagNode): updated decl for
