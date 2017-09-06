@@ -27,7 +27,8 @@ libutility_a_SOURCES = \
 	mpzSystem.cc \
 	intSystem.cc \
 	allSat.cc \
-	sequenceAssignment.cc
+	sequenceAssignment.cc \
+	pigPug.cc
 
 noinst_HEADERS = \
 	bdd.hh \
@@ -60,7 +61,8 @@ noinst_HEADERS = \
 	mpzSystem.hh \
 	intSystem.hh \
 	allSat.hh \
-	sequenceAssignment.hh
+	sequenceAssignment.hh \
+	pigPug.hh
 
 EXTRA_DIST = \
 	intContejeanDevie.cc \

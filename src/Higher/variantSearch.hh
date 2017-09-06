@@ -53,6 +53,14 @@ public:
   const Vector<DagNode*>* getNextVariant(int& nrFreeVariables);
   const Vector<DagNode*>* getNextUnifier(int& nrFreeVariables);
   RewritingContext* getContext() const;
+  //
+  //	Returns the last variant returned by getNextVariant().
+  //
+  const Vector<DagNode*>* getLastReturnedVariant(int& nrFreeVariables);
+  //
+  //	Returns the last unifier returned by getNextUnifier().
+  //
+  const Vector<DagNode*>* getLastReturnedUnifier(int& nrFreeVariables);
 
 private:
   typedef Vector<int> VariantIndexVec;
@@ -92,6 +100,18 @@ inline RewritingContext*
 VariantSearch::getContext() const
 {
   return context;
+}
+
+inline const Vector<DagNode*>*
+VariantSearch::getLastReturnedVariant(int& nrFreeVariables)
+{
+  return variantCollection.getLastReturnedVariant(nrFreeVariables);
+}
+
+inline const Vector<DagNode*>*
+VariantSearch::getLastReturnedUnifier(int& nrFreeVariables)
+{
+  return variantCollection.getLastReturnedVariant(nrFreeVariables);
 }
 
 #endif

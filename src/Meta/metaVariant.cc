@@ -99,19 +99,29 @@ MetaLevelOpSymbol::metaGetVariant2(FreeDagNode* subject, RewritingContext& conte
 	  DagNode* result;
 	  const Vector<DagNode*>* variant;
 	  int nrFreeVariables;
-	  Assert(lastSolutionNr < solutionNr, "bad solution number");
-	  while (lastSolutionNr < solutionNr)
+	  if (lastSolutionNr == solutionNr)
 	    {
-	      variant = vs->getNextVariant(nrFreeVariables);
-	      if (variant == 0)
+	      //
+	      //	So the user can ask for the same variant over and over again without
+	      //	a horrible loss of performance.
+	      //
+	      variant = vs->getLastReturnedVariant(nrFreeVariables);
+	    }
+	  else
+	    {
+	      while (lastSolutionNr < solutionNr)
 		{
-		  delete vs;
-		  result = metaLevel->upNoVariant();
-		  goto fail;
+		  variant = vs->getNextVariant(nrFreeVariables);
+		  if (variant == 0)
+		    {
+		      delete vs;
+		      result = metaLevel->upNoVariant();
+		      goto fail;
+		    }
+		  
+		  context.transferCount(*(vs->getContext()));
+		  ++lastSolutionNr;
 		}
-
-	      context.transferCount(*(vs->getContext()));
-	      ++lastSolutionNr;
 	    }
 	  {
 	    m->insert(subject, vs, solutionNr);
@@ -199,19 +209,29 @@ MetaLevelOpSymbol::metaVariantUnify2(FreeDagNode* subject, RewritingContext& con
 	  DagNode* result;
 	  const Vector<DagNode*>* unifier;
 	  int nrFreeVariables;
-	  Assert(lastSolutionNr < solutionNr, "bad solution number");
-	  while (lastSolutionNr < solutionNr)
+	  if (lastSolutionNr == solutionNr)
 	    {
-	      unifier = vs->getNextUnifier(nrFreeVariables);
-	      if (unifier == 0)
+	      //
+	      //	So the user can ask for the same unifier over and over again without
+	      //	a horrible loss of performance.
+	      //
+	      unifier = vs->getLastReturnedUnifier(nrFreeVariables);
+	    }
+	  else
+	    {
+	      while (lastSolutionNr < solutionNr)
 		{
-		  delete vs;
-		  result = disjoint ? metaLevel->upNoUnifierTriple() : metaLevel->upNoUnifierPair();
-		  goto fail;
-		}
+		  unifier = vs->getNextUnifier(nrFreeVariables);
+		  if (unifier == 0)
+		    {
+		      delete vs;
+		      result = disjoint ? metaLevel->upNoUnifierTriple() : metaLevel->upNoUnifierPair();
+		      goto fail;
+		    }
 
-	      context.transferCount(*(vs->getContext()));
-	      ++lastSolutionNr;
+		  context.transferCount(*(vs->getContext()));
+		  ++lastSolutionNr;
+		}
 	    }
 	  {
 	    m->insert(subject, vs, solutionNr);

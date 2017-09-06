@@ -1,3 +1,14 @@
+2014-11-20  Steven Eker  <eker@ape.csl.sri.com>
+
+	* parameterization.cc (handleRegularImports): added
+	DebugAdvisory() for handling import of parameterized module during
+	instantiation
+
+	* renaming.cc (makeCanonicalVersion): added DebugAdvisory() for
+	empty canonical renaming case
+
+===================================Maude107===========================================
+
 2014-11-19  Steven Eker  <eker@ape.csl.sri.com>
 
 	* importTranslation.cc (translateRegularSymbol): more detailed Assert()

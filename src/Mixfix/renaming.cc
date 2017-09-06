@@ -352,6 +352,7 @@ Renaming::makeCanonicalVersion(ImportModule* module) const
       canonical->labelMap.empty())
     {
       delete canonical;
+      DebugAdvisory("renaming " << this << " on " << module << " resulted in empty canonical renaming");
       return 0;
     }
   return canonical;

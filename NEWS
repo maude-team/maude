@@ -1,3 +1,8 @@
+Overview of Changes in alpha107
+===============================
+* fixed bug where asking for the same variant or variant unify twice in
+succession from the metalevel resulted in memory corruption
+
 Overview of Changes in alpha106
 ===============================
 * improvements to linear associative unification integration

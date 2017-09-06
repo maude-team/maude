@@ -1,3 +1,53 @@
+2015-02-12  Steven Eker  <eker@ape.csl.sri.com>
+
+	* pigPug.hh (P): remapVariables() -> renameVariables()
+
+	* pigPug.cc (renameVariables): was remapVariables()
+
+2015-02-11  Steven Eker  <eker@ape.csl.sri.com>
+
+	* pigPug.hh (P): added decls for fullyConstrained() and feasible()
+
+	* pigPug.cc (fullyConstrained): added
+	(feasible): added
+
+	* pigPug.hh: added decls for remapVariables(),
+	collectRangeVariables()
+	(P): updated delc for extractUnifier()
+
+	* pigPug.cc (extractUnifier): do variable remapping
+	(remapVariables, collectRangeVariables): added
+
+	* pigPug.hh (P): added data member lastOriginalVariable; deleted
+	data member linear
+
+	* pigPug.cc (PigPug): take lastOriginalVariable argument
+
+2015-02-10  Steven Eker  <eker@ape.csl.sri.com>
+
+	* pigPug.cc (dump): added
+	(compose): (partial replacement version) fixed a nasty bug where
+	we were looking at the wrong variable in the existing substitution
+
+	* pigPug.hh (P): adde decl for dump()
+
+	* pigPug.cc (extractUnifier): added
+
+	* pigPug.hh (P): added decls for cancel(), compose(), compose2()
+
+	* pigPug.cc (cancel): added
+	(firstMove): use cancel()
+	(compose, compose2): added
+	(extractUnifier): use compose(), compose2()
+
+2015-02-09  Steven Eker  <eker@ape.csl.sri.com>
+
+	* pigPug.cc: created
+
+	* pigPug.hh: created
+
+===================================Maude107===========================================
+
 2014-11-17  Steven Eker  <eker@ape.csl.sri.com>
 
 	* sequenceAssignment.cc (computeBoundSum): instrumented
