@@ -1,3 +1,21 @@
+2007-03-16  Steven Eker  <eker@goo.csl.sri.com>
+
+	* CUI_DagNode.cc (unify, occurs2): deleted
+
+	* CUI_DagNode.hh (class CUI_DagNode): deleted decls for unify()
+	and occurs2()
+
+2007-03-15  Steven Eker  <eker@goo.csl.sri.com>
+
+	* CUI_DagNode.cc (computeSolvedForm): clear local substitutions
+
+	* CUI_Symbol.cc (computeGeneralizedSort): pass realToBdd by ref
+
+	* CUI_Symbol.hh (class CUI_Symbol): fix computeGeneralizedSort()
+	decl
+
+===================================Maude89a===========================================
+
 2007-03-05  Steven Eker  <eker@goo.csl.sri.com>
 
 	* CUI_DagNode.cc (nonVariableSize): return mpz_class

@@ -1,3 +1,11 @@
+2007-03-16  Steven Eker  <eker@goo.csl.sri.com>
+
+	* NA_DagNode.cc (unify): deleted
+
+	* NA_DagNode.hh (class NA_DagNode): deleted decl for unify()
+
+===================================Maude89a===========================================
+
 2007-03-05  Steven Eker  <eker@goo.csl.sri.com>
 
 	* NA_DagNode.cc (nonVariableSize): return mpz_class

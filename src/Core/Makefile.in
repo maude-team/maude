@@ -69,7 +69,6 @@ am_libcore_a_OBJECTS = libcore_a-memoryCell.$(OBJEXT) \
 	libcore_a-localBinding.$(OBJEXT) \
 	libcore_a-subproblemSequence.$(OBJEXT) \
 	libcore_a-subproblemDisjunction.$(OBJEXT) \
-	libcore_a-unificationSubproblemDisjunction.$(OBJEXT) \
 	libcore_a-solvedFormSubproblemDisjunction.$(OBJEXT) \
 	libcore_a-sortCheckSubproblem.$(OBJEXT) \
 	libcore_a-disjunctiveSubproblemAccumulator.$(OBJEXT) \
@@ -223,7 +222,6 @@ libcore_a_SOURCES = \
 	localBinding.cc \
 	subproblemSequence.cc \
 	subproblemDisjunction.cc \
-	unificationSubproblemDisjunction.cc \
 	solvedFormSubproblemDisjunction.cc \
 	sortCheckSubproblem.cc \
 	disjunctiveSubproblemAccumulator.cc \
@@ -298,7 +296,6 @@ noinst_HEADERS = \
 	strategy.hh \
 	subproblemAccumulator.hh \
 	subproblemDisjunction.hh \
-	unificationSubproblemDisjunction.hh \
 	solvedFormSubproblemDisjunction.hh \
 	subproblemSequence.hh \
 	substitution.hh \
@@ -395,7 +392,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcore_a-termSet.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcore_a-trivialRhsAutomaton.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcore_a-unificationContext.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcore_a-unificationSubproblemDisjunction.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcore_a-variableAbstractionSubproblem.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcore_a-variableInfo.Po@am__quote@
 
@@ -692,20 +688,6 @@ libcore_a-subproblemDisjunction.obj: subproblemDisjunction.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='subproblemDisjunction.cc' object='libcore_a-subproblemDisjunction.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libcore_a-subproblemDisjunction.obj `if test -f 'subproblemDisjunction.cc'; then $(CYGPATH_W) 'subproblemDisjunction.cc'; else $(CYGPATH_W) '$(srcdir)/subproblemDisjunction.cc'; fi`
-
-libcore_a-unificationSubproblemDisjunction.o: unificationSubproblemDisjunction.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libcore_a-unificationSubproblemDisjunction.o -MD -MP -MF "$(DEPDIR)/libcore_a-unificationSubproblemDisjunction.Tpo" -c -o libcore_a-unificationSubproblemDisjunction.o `test -f 'unificationSubproblemDisjunction.cc' || echo '$(srcdir)/'`unificationSubproblemDisjunction.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libcore_a-unificationSubproblemDisjunction.Tpo" "$(DEPDIR)/libcore_a-unificationSubproblemDisjunction.Po"; else rm -f "$(DEPDIR)/libcore_a-unificationSubproblemDisjunction.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='unificationSubproblemDisjunction.cc' object='libcore_a-unificationSubproblemDisjunction.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libcore_a-unificationSubproblemDisjunction.o `test -f 'unificationSubproblemDisjunction.cc' || echo '$(srcdir)/'`unificationSubproblemDisjunction.cc
-
-libcore_a-unificationSubproblemDisjunction.obj: unificationSubproblemDisjunction.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libcore_a-unificationSubproblemDisjunction.obj -MD -MP -MF "$(DEPDIR)/libcore_a-unificationSubproblemDisjunction.Tpo" -c -o libcore_a-unificationSubproblemDisjunction.obj `if test -f 'unificationSubproblemDisjunction.cc'; then $(CYGPATH_W) 'unificationSubproblemDisjunction.cc'; else $(CYGPATH_W) '$(srcdir)/unificationSubproblemDisjunction.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libcore_a-unificationSubproblemDisjunction.Tpo" "$(DEPDIR)/libcore_a-unificationSubproblemDisjunction.Po"; else rm -f "$(DEPDIR)/libcore_a-unificationSubproblemDisjunction.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='unificationSubproblemDisjunction.cc' object='libcore_a-unificationSubproblemDisjunction.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libcore_a-unificationSubproblemDisjunction.obj `if test -f 'unificationSubproblemDisjunction.cc'; then $(CYGPATH_W) 'unificationSubproblemDisjunction.cc'; else $(CYGPATH_W) '$(srcdir)/unificationSubproblemDisjunction.cc'; fi`
 
 libcore_a-solvedFormSubproblemDisjunction.o: solvedFormSubproblemDisjunction.cc
 @am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcore_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libcore_a-solvedFormSubproblemDisjunction.o -MD -MP -MF "$(DEPDIR)/libcore_a-solvedFormSubproblemDisjunction.Tpo" -c -o libcore_a-solvedFormSubproblemDisjunction.o `test -f 'solvedFormSubproblemDisjunction.cc' || echo '$(srcdir)/'`solvedFormSubproblemDisjunction.cc; \

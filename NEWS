@@ -1,5 +1,15 @@
-Overview of Changes in Maude alpha89
+Overview of Changes in Maude alpha89a
 =====================================
+* fixed bug where syntax could leave renaming in bad state
+* fixed bug where were were passing variable->BDD mappings by value
+rather than by reference
+* fixed bug where we weren't clear new substitutions in CUI
+unification
+* fixed bug where we weren't deleting subproblems in unification
+problems
+
+Overview of Changes in Maude alpha89
+====================================
 * fixed bug where new unsorted unifier would not be look for after an
   unsorted unifier failed to have at least one sorted solution
 * fixed bug where non-unifiers were generated in deeply nested
@@ -7,6 +17,7 @@ Overview of Changes in Maude alpha89
 * fixed bug where command line files were ignored with -no-prelude
   flag
 * use dag solved forms for unification
+* first support for AC unification
 
 Overview of Changes in Maude alpha88f
 =====================================

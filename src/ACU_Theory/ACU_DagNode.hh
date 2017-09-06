@@ -64,10 +64,8 @@ public:
 				  ExtensionInfo* extensionInfo);
   void partialReplace(DagNode* replacement, ExtensionInfo* extensionInfo);
   DagNode* partialConstruct(DagNode* replacement, ExtensionInfo* extensionInfo);
-
-  DagNode* instantiate2(Substitution& substitution);
   //
-  //	Alternative interface for unification experiments.
+  //	Unification stuff.
   //
   bool computeSolvedForm(DagNode* rhs,
 				 Substitution& solution,
@@ -75,6 +73,7 @@ public:
   mpz_class nonVariableSize();
   void insertVariables2(NatSet& occurs);
   bool computeBaseSortForGroundSubterms();
+  DagNode* instantiate2(Substitution& substitution);
   //
   //    Functions particular to ACU_DagNode.
   //

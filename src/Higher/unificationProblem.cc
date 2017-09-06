@@ -51,8 +51,6 @@
 #include "freshVariableGenerator.hh"
 #include "unificationProblem.hh"
 
-#define SOLVED_FORM	1
-
 UnificationProblem::UnificationProblem(Term* lhs, Term* rhs, FreshVariableGenerator* freshVariableGenerator)
   : lhs(lhs),
     rhs(rhs),
@@ -86,7 +84,6 @@ UnificationProblem::UnificationProblem(Term* lhs, Term* rhs, FreshVariableGenera
       unsortedSolution->bind(i, 0);  // HACK
     }
   //unsortedSolution->clear(nrOriginalVariables);  // unsafe!
-#if SOLVED_FORM
   //  cout << "=== computing solved form ===" << endl;
   viable = lhsDag->computeSolvedForm(rhsDag, *unsortedSolution, subproblem);
   /*
@@ -101,13 +98,11 @@ UnificationProblem::UnificationProblem(Term* lhs, Term* rhs, FreshVariableGenera
     }
   cout << "=== end of solved form ===" << endl;
   */
-#else
-  viable = lhsDag->unify(rhsDag, *unsortedSolution, subproblem, 0);
-#endif
 }
 
 UnificationProblem::~UnificationProblem()
 {
+  delete subproblem;
   delete orderSortedUnifiers;
   delete freshVariableGenerator;
   delete unsortedSolution;
@@ -157,9 +152,8 @@ UnificationProblem::findNextUnifier()
       if (subproblem != 0 && !(subproblem->unificationSolve(true, *unsortedSolution)))
 	return false;
       //cerr << "first unsorted solution";
-#if SOLVED_FORM
       //cout << "=== final solved form ===" << endl;
-      int nrRealVariables = getNrProtectedVariables();
+      //int nrRealVariables = getNrProtectedVariables();
       /*
       cout << "total variables = " << unsortedSolution->nrFragileBindings() << endl;
       for (int i = 0; i < nrRealVariables; ++i)
@@ -174,7 +168,6 @@ UnificationProblem::findNextUnifier()
       */
       if (!extractUnifier())
 	goto nextUnsorted;
-#endif
       findOrderSortedUnifiers();
       if (orderSortedUnifiers == 0)
 	goto nextUnsorted;
@@ -194,10 +187,8 @@ UnificationProblem::findNextUnifier()
 	  if (subproblem == 0 || !(subproblem->unificationSolve(false, *unsortedSolution)))
 	    return false;
 	  //cerr << "next unsorted solution";
-#if SOLVED_FORM
 	  if (!extractUnifier())
 	    goto nextUnsorted;
-#endif
 	  //freshVariableGenerator->reset();
 	  findOrderSortedUnifiers();
 	  if (orderSortedUnifiers == 0)

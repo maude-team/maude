@@ -1,3 +1,17 @@
+2007-03-16  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_Symbol.cc (computeGeneralizedSort): reuse bddPair between
+	iterations
+
+2007-03-15  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_Symbol.cc (computeGeneralizedSort): pass realToBdd by ref
+
+	* ACU_Symbol.hh (class ACU_Symbol): fix decl for
+	computeGeneralizedSort()
+
+===================================Maude89a===========================================
+
 2007-03-14  Steven Eker  <eker@goo.csl.sri.com>
 
 	* ACU_UnificationSubproblem.hh (class ACU_UnificationSubproblem):

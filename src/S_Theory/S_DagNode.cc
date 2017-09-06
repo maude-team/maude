@@ -194,47 +194,6 @@ S_DagNode::matchVariableWithExtension(int index,
 }
 
 bool
-S_DagNode::unify(DagNode* rhs,
-		 Substitution& solution,
-		 Subproblem*& returnedSubproblem,
-		 ExtensionInfo* extensionInfo)
-{
-  //cout << this << " vs " << rhs << endl;
-  S_Symbol* s = symbol();
-  if (s == rhs->symbol())
-    {
-      S_DagNode* rhs2 = safeCast(S_DagNode*, rhs);
-      mpz_class diff = *(rhs2->number) - *number;
-      if (diff == 0)
-	return arg->unify(rhs2->arg, solution, returnedSubproblem, 0);
-      if (diff > 0)
-	{
-	  if (dynamic_cast<VariableDagNode*>(arg))
-	    {
-	      DagNode* d = new S_DagNode(s, diff, rhs2->arg);
-	      if (rhs2->arg->getSortIndex() != Sort::SORT_UNKNOWN)
-		s->computeBaseSort(d);
-	      return arg->unify(d, solution, returnedSubproblem, 0);
-	    }
-	}
-      else
-	{
-	  if (dynamic_cast<VariableDagNode*>(rhs2->arg))
-	    {
-	      DagNode* d = new S_DagNode(s, -diff, arg);
-	      if (arg->getSortIndex() != Sort::SORT_UNKNOWN)
-		s->computeBaseSort(d);
-	      return rhs2->arg->unify(d, solution, returnedSubproblem, 0);
-	    }
-	}
-      return 0;
-    }
-  if (dynamic_cast<VariableDagNode*>(rhs))
-    return rhs->unify(this, solution, returnedSubproblem, 0);
-  return false;
-}
-
-bool
 S_DagNode::computeBaseSortForGroundSubterms()
 {
   if (arg->computeBaseSortForGroundSubterms())
@@ -264,12 +223,6 @@ S_DagNode::instantiate2(Substitution& substitution)
       return d;
     }
   return 0;
-}
-
-bool
-S_DagNode::occurs2(int index)
-{
-  return arg->occurs(index);
 }
 
 bool

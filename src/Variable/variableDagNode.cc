@@ -120,18 +120,6 @@ VariableDagNode::stackArguments(Vector<RedexPosition>& /* stack */,
 }
 
 bool
-VariableDagNode::unify(DagNode* rhs,
-		       Substitution& solution,
-		       Subproblem*& returnedSubproblem,
-		       ExtensionInfo* extensionInfo)
-{
-  if (DagNode* b = solution.value(index))
-    return b->unify(rhs, solution, returnedSubproblem, 0);
-  returnedSubproblem = 0;
-  return solution.unificationBind(index, safeCast(VariableSymbol*, symbol())->getSort(), rhs);
-}
-
-bool
 VariableDagNode::computeBaseSortForGroundSubterms()
 {
   return false;
@@ -143,11 +131,6 @@ VariableDagNode::instantiate2(Substitution& substitution)
   return substitution.value(index);
 }
 
-bool
-VariableDagNode::occurs2(int index)
-{
-  return index == this->index;
-}
 
 bool
 VariableDagNode::computeSolvedForm(DagNode* rhs,

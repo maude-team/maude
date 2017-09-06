@@ -1,3 +1,19 @@
+2007-03-16  Steven Eker  <eker@goo.csl.sri.com>
+
+	* S_DagNode.cc (occurs2, unify): deleted
+
+	* S_DagNode.hh (class S_DagNode): deleted decls for unify() and
+	occurs2()
+
+2007-03-15  Steven Eker  <eker@goo.csl.sri.com>
+
+	* S_Symbol.cc (computeGeneralizedSort): pass realToBdd by ref
+
+	* S_Symbol.hh (class S_Symbol): fix decl for
+	computeGeneralizedSort()
+
+===================================Maude89a===========================================
+
 2007-03-05  Steven Eker  <eker@goo.csl.sri.com>
 
 	* S_DagNode.cc (nonVariableSize): return mpz_class

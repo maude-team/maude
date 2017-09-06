@@ -1,3 +1,16 @@
+2007-03-16  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unificationProblem.cc (UnificationProblem): removed support for
+	Robinson style unification
+	(findNextUnifier): removed support for Robinson style unification
+
+2007-03-15  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unificationProblem.cc (UnificationProblem): need to delete
+	subproblem
+
+===================================Maude89===========================================
+
 2007-03-14  Steven Eker  <eker@goo.csl.sri.com>
 
 	* unificationProblem.cc (UnificationProblem): don't call
