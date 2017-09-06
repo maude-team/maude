@@ -1,3 +1,9 @@
+2006-03-07  Steven Eker  <eker@goo.csl.sri.com>
+
+	* cachedDag.hh (getDagRoot): added
+
+===================================Maude87===========================================
+
 2005-11-10  Steven Eker  <eker@goo.csl.sri.com>
 
 	* module.cc (insertLateSymbol): do interSymbolPass() and

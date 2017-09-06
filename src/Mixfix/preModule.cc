@@ -37,6 +37,7 @@
 #include "freeTheory.hh"
 #include "AU_Theory.hh"
 #include "higher.hh"
+#include "strategyLanguage.hh"
 #include "mixfix.hh"
 
 //      interface class definitions

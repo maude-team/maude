@@ -92,10 +92,10 @@ Interpreter::search(const Vector<Token>& bubble, Int64 limit)
 
 void
 Interpreter::doSearching(Timer& timer,
-		       VisibleModule* module,
-		       RewriteSequenceSearch* state,
-		       int solutionCount,
-		       int limit)
+			 VisibleModule* module,
+			 RewriteSequenceSearch* state,
+			 int solutionCount,
+			 int limit)
 {
   const VariableInfo* variableInfo = state->getGoal();
   int i = 0;
@@ -103,7 +103,7 @@ Interpreter::doSearching(Timer& timer,
     {
       bool result = state->findNextMatch();
       if (UserLevelRewritingContext::aborted())
-	break;
+	break;  // HACK: Is this safe - shouldn't we destroy context?
       if (!result)
 	{
 	  cout << ((solutionCount == 0) ? "\nNo solution.\n" : "\nNo more solutions.\n");

@@ -140,6 +140,9 @@ public:
 			 Term*& pattern,
 			 Term*& subject,
 			 Vector<ConditionFragment*>& condition);
+  bool parseStrategyCommand(const Vector<Token>& bubble,
+			    Term*& subject,
+			    StrategyExpression*& strategy);
   //
   //	Get functions.
   //
@@ -236,7 +239,14 @@ public:  // HACK
     PREFIX_PREC = 0,
     PREFIX_GATHER = 95,		// to allow _,_ to work correctly
     UNARY_PREC = 15,		// backward compatibility with OBJ3 defaults
-    INFIX_PREC = 41		// backward compatibility with OBJ3 defaults
+    INFIX_PREC = 41,		// backward compatibility with OBJ3 defaults
+    //
+    //	Precedences for strategy language.
+    //
+    ASSIGNMENT_PREC = 75,
+    STRAT_SEQ_PREC = 95,
+    STRAT_UNION_PREC = 97,
+    STRAT_BRANCH_PREC = 99
   };
 
 private:
@@ -308,11 +318,16 @@ private:
     MATCH_PAIR = -30,
     SEARCH_PAIR = -31,
     SUCH_THAT = -32,
+    STRATEGY_EXPRESSION = -33,
 
-    MATCH_COMMAND = -33,
-    SEARCH_COMMAND = -34,
+    MATCH_COMMAND = -34,
+    SEARCH_COMMAND = -35,
+    STRATEGY_COMMAND = -36,
 
-    COMPLEX_BASE = -35
+    ASSIGNMENT = -37,
+    SUBSTITUTION = -38,
+
+    COMPLEX_BASE = -39
   };
 
   enum NonTerminalType
@@ -402,6 +417,7 @@ private:
 
   void makeGrammar(bool complexFlag = false);
   void makeComplexProductions();
+  void makeStrategyLanguageProductions();
   void makeStatementProductions();
   void makeConditionProductions();
   void makeAttributeProductions();

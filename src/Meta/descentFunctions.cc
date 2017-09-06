@@ -404,7 +404,19 @@ MetaLevelOpSymbol::metaRewrite(FreeDagNode* subject, RewritingContext& context)
               (void) m->unprotect();
               return context.builtInReplace(subject, d);
             }
+	  else
+	    {
+	      DebugAdvisory("bad metaterm " << QUOTE(subject->getArgument(1)));
+	    }
         }
+      else
+	{
+	  DebugAdvisory("bad bound " << QUOTE(subject->getArgument(2)));
+	}
+    }
+  else
+    {
+      DebugAdvisory("bad metamodule " << QUOTE(subject->getArgument(0)));
     }
   return false;
 }

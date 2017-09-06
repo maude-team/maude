@@ -93,7 +93,20 @@ public:
     //
     //	Command construction actions.
     //
-    CONDITIONAL_COMMAND
+    CONDITIONAL_COMMAND,
+    //
+    //	Strategy expression construction actions
+    //
+    MAKE_TRIVIAL,
+    MAKE_ALL,
+    MAKE_APPLICATION,
+    MAKE_APPLICATION_WITH_SUBSTITUTION,
+    MAKE_SEQUENCE,
+    MAKE_UNION,
+    MAKE_ITERATION,
+    MAKE_BRANCH,
+
+    MAKE_SUBSTITUTION
   };
 
   MixfixParser(MixfixModule& client);
@@ -137,6 +150,11 @@ public:
 			 int& searchType,
 			 Term*& target,
 			 Vector<ConditionFragment*>& condition);
+  void makeStrategyCommand(Term*& subject, StrategyExpression*& strategy);
+
+  void makeAssignment(int node, Vector<Term*>& variables, Vector<Term*>& values);
+  void makeSubstitution(int node, Vector<Term*>& variables, Vector<Term*>& values);
+
   //
   //	Functions to get info about the parser.
   //
@@ -160,6 +178,7 @@ private:
 
   Sort* getSort(int node);
   Term* makeTerm(int node);
+  StrategyExpression* makeStrategy(int node);
   ConditionFragment* makeConditionFragment(int node);
   void makeCondition(int node, Vector<ConditionFragment*>& condition);
   void makeStatement(int node);

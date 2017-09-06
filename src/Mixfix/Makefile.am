@@ -38,9 +38,11 @@ maude_CPPFLAGS = \
 	-I$(top_srcdir)/src/AU_Theory \
 	-I$(top_srcdir)/src/Meta \
 	-I$(top_srcdir)/src/3rdParty \
-	-I$(top_srcdir)/src/FullCompiler
+	-I$(top_srcdir)/src/FullCompiler \
+	-I$(top_srcdir)/src/StrategyLanguage
 
 maude_LDADD = \
+	../StrategyLanguage/libstrategyLanguage.a \
 	../Meta/libmeta.a \
 	../ObjectSystem/libobjectSystem.a \
 	../BuiltIn/libbuiltIn.a \

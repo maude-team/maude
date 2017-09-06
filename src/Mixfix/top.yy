@@ -36,6 +36,7 @@
 #include "interface.hh"
 #include "core.hh"
 #include "higher.hh"
+#include "strategyLanguage.hh"
 #include "mixfix.hh"
 
 //	core class definitions
@@ -115,7 +116,7 @@ int yylex(YYSTYPE* lvalp);
 %token <yyToken> KW_MOD KW_OMOD KW_VIEW
 %token KW_PARSE KW_NORMALIZE KW_REDUCE KW_REWRITE
 %token KW_LOOP KW_NARROW KW_MATCH KW_XMATCH KW_UNIFY KW_XUNIFY
-%token KW_EREWRITE KW_FREWRITE KW_OREWRITE
+%token KW_EREWRITE KW_FREWRITE KW_SREWRITE
 %token KW_CONTINUE KW_SEARCH
 %token KW_SET KW_SHOW KW_ON KW_OFF 
 %token KW_TRACE KW_BODY KW_WHOLE KW_SELECT KW_DESELECT KW_CONDITION KW_SUBSTITUTION

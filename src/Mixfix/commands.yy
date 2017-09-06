@@ -98,7 +98,7 @@ command		:	KW_SELECT		{ lexerCmdMode(); clear(); }
 			  number = NONE;
 			  number2 = NONE;
 			}
-			numberModuleTerm
+			numbersModuleTerm
 			{
 			  lexerInitialMode();
 			  if (interpreter.setCurrentModule(moduleExpr, 1))
@@ -117,6 +117,19 @@ command		:	KW_SELECT		{ lexerCmdMode(); clear(); }
 			  lexerInitialMode();
 			  if (interpreter.setCurrentModule(moduleExpr, 1))
 			    interpreter.fRewrite(bubble, number, number2, $1);
+			}
+		|	optDebug KW_SREWRITE
+			{
+			  lexerCmdMode();
+			  clear();
+			  moduleExpr.contractTo(0);
+			  number = NONE;
+			}
+			numberModuleTerm
+			{
+			  lexerInitialMode();
+			  if (interpreter.setCurrentModule(moduleExpr, 1))
+			    interpreter.sRewrite(bubble, number, $1);
 			}
 		|	KW_SEARCH
 			{

@@ -37,6 +37,7 @@
 #include "freeTheory.hh"
 #include "NA_Theory.hh"
 #include "builtIn.hh"
+#include "strategyLanguage.hh"
 #include "mixfix.hh"
  
 //      interface class definitions

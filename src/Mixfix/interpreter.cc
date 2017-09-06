@@ -34,6 +34,7 @@
 #include "core.hh"
 #include "AU_Theory.hh"
 #include "higher.hh"
+#include "strategyLanguage.hh"
 #include "mixfix.hh"
 
 //      interface class definitions
@@ -47,6 +48,10 @@
 
 //	object system class definitions
 #include "pseudoThread.hh"
+
+//	strategy languages definitions
+#include "strategyExpression.hh"
+#include "setGenerator.hh"
 
 //	front end class definitions
 #include "timer.hh"

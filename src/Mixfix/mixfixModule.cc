@@ -46,6 +46,7 @@
 #include "higher.hh"
 #include "objectSystem.hh"
 #include "meta.hh"
+#include "strategyLanguage.hh"
 #include "mixfix.hh"
 
 //      interface class definitions

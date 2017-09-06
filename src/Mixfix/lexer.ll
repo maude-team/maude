@@ -32,6 +32,7 @@
 #include "interface.hh"
 #include "core.hh"
 #include "higher.hh"
+#include "strategyLanguage.hh"
 #include "mixfix.hh"
 
 //	core class definitions
@@ -121,7 +122,7 @@ cred|creduce				return KW_CREDUCE;
 rew|rewrite				return KW_REWRITE;
 erew|erewrite				return KW_EREWRITE;
 frew|frewrite				return KW_FREWRITE;
-orew|orewrite				return KW_OREWRITE;
+srew|srewrite				return KW_SREWRITE;
 loop					return KW_LOOP;
 cont|continue				return KW_CONTINUE;
 nar|narrow				return KW_NARROW;

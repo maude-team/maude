@@ -1,0 +1,155 @@
+2006-03-24  Steven Eker  <eker@goo.csl.sri.com>
+
+	* applicationStrategy.cc (ApplicationStrategy): need to call
+	normalize() and prepare() on cached dags
+
+	* unionSetGenerator.cc (findNextSolution): fix memory leak where
+	we were not deleting failed set generators
+
+2006-03-21  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unionSetGenerator.cc: created
+
+	* unionSetGenerator.hh: created
+
+	* strategyLanguage.hh: added decls for classes UnionStrategy and
+	UnionSetGenerator
+
+	* strategySequence.hh (class StrategySequence): made strategies const
+
+2006-03-20  Steven Eker  <eker@goo.csl.sri.com>
+
+	* applicationStrategy.hh (class ApplicationStrategy): fix ctor decl
+
+	* applicationStrategy.cc (ApplicationStrategy): pass strategies by reference
+
+	* unionStrategy.cc: created
+
+	* unionStrategy.hh: created
+
+	* strategyLanguage.hh: added decls for classes BranchStrategy and
+	BranchSetGenerator
+
+	* branchSetGenerator.hh: created
+
+	* branchSetGenerator.cc: created
+
+	* branchStrategy.hh: created
+
+	* branchStrategy.cc: created
+
+2006-03-17  Steven Eker  <eker@goo.csl.sri.com>
+
+	* iterationStrategy.cc (~IterationStrategy): added
+
+2006-03-07  Steven Eker  <eker@goo.csl.sri.com>
+
+	* applicationStrategy.cc (execute): implemented
+
+	* applicationSetGenerator.cc: created
+
+	* strategyLanguage.hh: added class ApplicationSetGenerator
+
+	* applicationSetGenerator.hh: created
+
+2006-03-06  Steven Eker  <eker@goo.csl.sri.com>
+
+	* iterationSetGenerator.cc: created
+
+	* iterationSetGenerator.hh (class IterationSetGenerator):
+	strategies -> strategy
+	(class IterationSetGenerator): added data member start
+	(class IterationSetGenerator): added data member zeroReturnable
+	(class IterationSetGenerator): added typedef GenQueue
+
+2006-02-27  Steven Eker  <eker@goo.csl.sri.com>
+
+	* strategyLanguage.hh: added decls for IterationStrategy,
+	IterationSetGenerator
+
+	* iterationSetGenerator.hh: created
+
+	* iterationStrategy.hh: created
+
+	* iterationStrategy.cc: created
+
+	* sequenceSetGenerator.cc (SequenceSetGenerator) 
+	(findNextSolution): simplified on the assumption that execute()
+	never returns 0
+	(findNextSolution): change of variable
+
+	* strategySequence.cc (execute): use SequenceSetGenerator()
+
+	* strategyLanguage.hh: added decls for StrategySequence,
+	TrivialSetGenerator, SequenceSetGenerator
+
+	* sequenceSetGenerator.hh: updated
+
+	* sequenceSetGenerator.cc: created
+
+2006-02-15  Steven Eker  <eker@goo.csl.sri.com>
+
+	* strategySequence.hh (StrategyExpression): created
+
+	* trivialStrategy.cc (execute): use TrivialSetGenerator()
+
+	* applicationStrategy.cc: was application.cc
+
+	* applicationStrategy.hh: was application.hh
+
+	* trivial.cc: becomes trivialStrategy.cc
+
+	* trivial.hh: becomes trivialStrategy.hh
+
+	* trivialSetGenerator.hh (class TrivialSetGenerator): created
+
+	* trivialSetGenerator.cc: created
+
+	* strategyLanguage.hh: created
+
+	* application.cc (execute): updated
+
+	* application.hh (StrategyExpression): update decl forexecute()
+
+	* trivial.hh (StrategyExpression): update decl forexecute()
+
+	* strategyExpression.hh (class StrategyExpression): update decl
+	for execute()
+
+	* setGenerator.hh (class SetGenerator): created
+
+2006-02-13  Steven Eker  <eker@goo.csl.sri.com>
+
+	* application.cc (Application): Assert() to check for label ==
+	NONE case
+
+	* application.hh (StrategyExpression): added data member top
+	(setTop): added
+
+2006-02-06  Steven Eker  <eker@goo.csl.sri.com>
+
+	* trivial.cc (Trivial): added ctor
+
+	* trivial.hh (StrategyExpression): decl for ctor
+
+	* application.cc (Application): added Assert()
+
+2006-02-02  Steven Eker  <eker@goo.csl.sri.com>
+
+	* application.cc (Application, ~Application): added
+
+2006-02-01  Steven Eker  <eker@goo.csl.sri.com>
+
+	* application.cc: created
+
+	* idle.cc: becomes trivial.cc
+
+	* idle.hh: becomes trivial.hh; add data member result
+
+	* application.hh: created
+
+	* strategyExpression.hh: created
+
+	* idle.hh: created
+
+	* idle.cc: created
