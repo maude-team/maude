@@ -56,73 +56,124 @@
 
 VariantNarrowingSearchState::VariantNarrowingSearchState(RewritingContext* context,  // contains the variant term
 							 const Vector<DagNode*>& variantSubstitution,
+							 const Vector<DagNode*>& blockerDags,
 							 FreshVariableGenerator* freshVariableGenerator,
 							 bool odd,
-							 const NarrowingVariableInfo& originalVariables)
+							 const NarrowingVariableInfo& originalVariables,
+							 bool unificationMode)
+
   :  PositionState(context->root(), 0, 0, UNBOUNDED),
      context(context),
      variantSubstitution(variantSubstitution),
+     blockerDags(blockerDags),
      freshVariableGenerator(freshVariableGenerator),
      originalVariables(originalVariables),
-     module(context->root()->symbol()->getModule())
+     module(context->root()->symbol()->getModule()),
+     blockerSubstitution(originalVariables.getNrVariables())  // could be larger than variant substitution because of variables peculiar to blockerDags
 {
+  blockerSubstitution.clear(originalVariables.getNrVariables());  // this ensures that any variables peculiar to blockerDags are cleared
   //
-  //	Index all variables occuring in the variant term and the variant subsitution.
+  //	Index all variables occuring in the variant term and the variant substitution.
   //	These VariableDagNodes are coming from dags that are assumed to be protected by the caller and thus we assume
   //	are safe from garbage collection.
   //
   int firstTargetSlot = module->getMinimumSubstitutionSize();
   context->root()->indexVariables(variableInfo, firstTargetSlot);
+  //
+  //	Only variables that occur in the term part of the variant are considered interesting.
+  //
+  int nrInterestingVariables = variableInfo.getNrVariables();
   FOR_EACH_CONST(i, Vector<DagNode*>, variantSubstitution)
     (*i)->indexVariables(variableInfo, firstTargetSlot);
+  //
+  //	We filter unifiers by subsumption on interesting variables.
+  //
+  unifiers = new UnifierFilter(firstTargetSlot, nrInterestingVariables);
+  //
+  //	Generate all unifiers between non-variable subterms in our variant term and variant equations in our module
+  //	and insert them in our unifier filter.
+  //
+  if (unificationMode)
+    {
+      //
+      //	If we are in unification mode, get the lhs and rhs from under the pairing symbol and try to unify them.
+      //
+      DagArgumentIterator a(context->root());
+      Assert(a.valid(), "bad 1st argument in unification mode");
+      DagNode* lhs = a.argument();
+      a.next();
+      Assert(a.valid(), "bad 2nd argument in unification mode");
 
-  int nrInterestingVariables = variableInfo.getNrVariables();
-  unifiers = new UnifierFilter(firstTargetSlot, variableInfo.getNrVariables());
-  //
-  //	Generate all unifiers between subterms in our variant term and equations in our module and insert them in our unifier filter.
-  //
+      //for (int i = 0; i < variableInfo.getNrVariables(); ++i)
+      //  cout << "var index " << i << " is " << (DagNode*) variableInfo.index2Variable(i) << endl;
+      NarrowingUnificationProblem* unificationProblem = new NarrowingUnificationProblem(lhs,
+											a.argument(),
+											variableInfo,
+											freshVariableGenerator,
+											odd);
+      collectUnifiers(unificationProblem, 0, NONE);
+      delete unificationProblem;
+    }
+
   while (findNextPosition())
     {
       DagNode* d = getDagNode();
-
       //cout << "looking at subterm: " << d << endl;
 
-      if (dynamic_cast<VariableDagNode*>(d) != 0)
-	continue;  // don't unify at variable positions
-
-      int positionIndex = getPositionIndex();
-      //cout << "has position " << positionIndex << endl;
-      //
-      //	If the top symbol is unstable, we need to consider all the equations, rather than just the ones indexed under the top symbol.
-      //
-      Symbol* s = d->symbol();
-      const Vector<Equation*>& equations = s->isStable() ? s->getEquations() : module->getEquations();
-
-      FOR_EACH_CONST(i, Vector<Equation*>, equations)
+      if (dynamic_cast<VariableDagNode*>(d) == 0)  // only consider non-variable positions
 	{
-	  Equation* eq = *i;
-	  if (eq->isVariant())
+	  int positionIndex = getPositionIndex();
+	  //cout << "has position " << positionIndex << endl;
+	  //
+	  //	If the top symbol is unstable, we need to consider all the equations, rather than just the ones indexed under the top symbol.
+	  //
+	  Symbol* s = d->symbol();
+	  const Vector<Equation*>& equations = s->isStable() ? s->getEquations() : module->getEquations();
+
+	  FOR_EACH_CONST(i, Vector<Equation*>, equations)
 	    {
-	      int equationIndex = eq->getIndexWithinModule();
-	      NarrowingUnificationProblem* unificationProblem = new NarrowingUnificationProblem(eq,
-												d,
-												variableInfo,
-												freshVariableGenerator,
-												odd);
-	      while (unificationProblem->findNextUnifier())
+	      Equation* eq = *i;
+	      if (eq->isVariant())  // only consider equations with the variant attribute
 		{
-		  const Substitution& solution = unificationProblem->getSolution();
-		  //
-		  //	Unifier filter requires that each interesting variable have the sorts computed in its binding
-		  //	so that subsumption checking (matching) can happen.
-		  //
-		  for (int j = 0; j < nrInterestingVariables; ++j)
-		    solution.value(firstTargetSlot + j)->computeTrueSort(*context);
-		  unifiers->insertUnifier(solution, positionIndex, equationIndex /*, unificationProblem->getNrFreeVariables() */);
+		  NarrowingUnificationProblem* unificationProblem = new NarrowingUnificationProblem(eq,
+												    d,
+												    variableInfo,
+												    freshVariableGenerator,
+												    odd);
+		  collectUnifiers(unificationProblem, positionIndex, eq->getIndexWithinModule());
+		  delete unificationProblem;
 		}
-	      delete unificationProblem;
 	    }
 	}
+    }
+}
+
+void
+VariantNarrowingSearchState::collectUnifiers(NarrowingUnificationProblem* unificationProblem, int positionIndex, int equationIndex)
+{
+  int firstTargetSlot = module->getMinimumSubstitutionSize();
+  int nrInterestingVariables = variableInfo.getNrVariables();
+
+  while (unificationProblem->findNextUnifier())
+    {
+      const Substitution& solution = unificationProblem->getSolution();
+      //
+      //	Check for reducibility on interesting variables.
+      //
+      for (int j = 0; j < nrInterestingVariables; ++j)
+	{
+	  DagNode* d = solution.value(firstTargetSlot + j);
+	  d->computeTrueSort(*context);  // needed for matching
+	  //
+	  //	If a unifier fails this check, since anything it might have subsumed will be an instance
+	  //	of it and also fail the check, we lose nothing by tossing it now.
+	  //
+	  if (d->reducibleByVariantEquation(*context))
+	    goto nextUnifier;
+	}
+      unifiers->insertUnifier(solution, positionIndex, equationIndex);
+    nextUnifier:
+      ;
     }
 }
 
@@ -132,7 +183,7 @@ VariantNarrowingSearchState::~VariantNarrowingSearchState()
 }
 
 bool
-VariantNarrowingSearchState::findNextVariant(DagNode*& newVariantTerm, Vector<DagNode*>& newVariantSubstitution /*, int& nrFreeVariables */)
+VariantNarrowingSearchState::findNextVariant(DagNode*& newVariantTerm, Vector<DagNode*>& newVariantSubstitution)
 {
   int variantSubstitutionSize = variantSubstitution.size();
   newVariantSubstitution.resize(variantSubstitutionSize);
@@ -140,17 +191,47 @@ VariantNarrowingSearchState::findNextVariant(DagNode*& newVariantTerm, Vector<Da
   Substitution* survivor;
   int positionIndex;
   int equationIndex;
-  while (unifiers->getNextSurvivingUnifier(survivor, positionIndex, equationIndex /*, nrFreeVariables */))
+  while (unifiers->getNextSurvivingUnifier(survivor, positionIndex, equationIndex))
     {
+      //
+      //	Compute accumulated substitution and check for reducibility.
+      //
       for (int i = 0; i < variantSubstitutionSize; ++i)
 	{
 	  DagNode* d = variantSubstitution[i]->instantiate(*survivor);
 	  if (d == 0)
 	    d = variantSubstitution[i];  // no change
 	  d->computeTrueSort(*context);  // also handles theory normalization
-	  if (reducibleByVariantEquation(d))
+	  if (d->reducibleByVariantEquation(*context))
 	    goto nextUnifier;
 	  newVariantSubstitution[i] = d;
+	  blockerSubstitution.bind(i, d);
+	}
+      //
+      //	Check if this variant causes any of the blocker dags to become reducible.
+      //
+      {
+	FOR_EACH_CONST(i, Vector<DagNode*>, blockerDags)
+	  {
+	    // cout << "checking blocker dag " << *i << endl;
+	    DagNode* d = (*i)->instantiate(blockerSubstitution);
+	    if (d != 0)
+	      {
+		// cout << "instantiated to " << d << endl;
+		d->computeTrueSort(*context);  // also handles theory normalization
+		if (d->reducibleByVariantEquation(*context))
+		  goto nextUnifier;
+	      }
+	    //cout << "irreducible\n";
+	  }
+      }
+      if (equationIndex == NONE)
+	{
+	  //
+	  //	Virtual rewrite; this means we're in unificationMode and just found a solution to the variant unification problem.
+	  //
+	  newVariantTerm = 0;
+	  return true;
 	}
       {
 	Equation* eq = module->getEquations()[equationIndex];
@@ -161,7 +242,16 @@ VariantNarrowingSearchState::findNextVariant(DagNode*& newVariantTerm, Vector<Da
 	//
 	int firstVariantVariable = module->getMinimumSubstitutionSize();
 	int lastVariantVariable = firstVariantVariable + variableInfo.getNrVariables() - 1;
-	newVariantTerm = rebuildAndInstantiateDag(replacement, *survivor, firstVariantVariable, lastVariantVariable, positionIndex).first;
+	newVariantTerm = rebuildAndInstantiateDag(replacement, *survivor, firstVariantVariable, lastVariantVariable, positionIndex);
+	//
+	//	However we still need to clear those slots because the unifier belongs to the UnifierFilter that will do GC protection on it.
+	//
+	//	The variables belonging to the equation are in slots 0,..., eq->getNrRealVariables() - 1
+	//	Protected variables needed for matching are in slots eq->getNrRealVariables(),..., eq->getNrProtectedVariables() - 1
+	//	Construction slots start from eq->getNrProtectedVariables() and must end by firstVariantVariable - 1
+	//
+	for (int i = eq->getNrProtectedVariables(); i < firstVariantVariable; ++i)
+	  survivor->bind(i, 0);
 
 	if (RewritingContext::getTraceStatus())
 	  {
@@ -184,49 +274,5 @@ VariantNarrowingSearchState::findNextVariant(DagNode*& newVariantTerm, Vector<Da
     nextUnifier:
       ;
     }
-  return false;
-}
-
-bool
-VariantNarrowingSearchState::reducibleByVariantEquation(DagNode* dag)
-{
-  //
-  //	If it is already reduce wrt all equations it clearly can't be reduced by a variant equation.
-  //
-  if (dag->isReduced())
-    return false;
-  //
-  //	Naive and inefficient approach.
-  //
-  for (DagArgumentIterator a(dag); a.valid(); a.next())
-    {
-      if (reducibleByVariantEquation(a.argument()))
-	return true;
-    }
-
-  Subproblem* sp;
-  ExtensionInfo* extensionInfo = dag->makeExtensionInfo();
-
-  const Vector<Equation*>& equations = dag->symbol()->getEquations();
-  FOR_EACH_CONST(i, Vector<Equation*>, equations)
-    {
-      Equation* eq = *i;
-      if (eq->isVariant())
-	{
-	  int nrVariables = eq->getNrProtectedVariables();
-	  context->clear(nrVariables);
-	  if (eq->getLhsAutomaton()->match(dag, *context, sp, extensionInfo))
-	    {
-	      if (sp == 0 || sp->solve(true, *context))
-		{
-		  delete extensionInfo;
-		  delete sp;
-		  return true;
-		}
-	      delete sp;
-	    }
-	}
-    }
-  delete extensionInfo;
   return false;
 }

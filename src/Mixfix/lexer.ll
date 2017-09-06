@@ -53,7 +53,12 @@
 
 #define YY_DECL int yylex(YYSTYPE* lvalp)
 
-#define YY_INPUT(buf, result, max_size)		getInput(buf, result, max_size)
+void getInput(char* buf, yy_size_t& result, yy_size_t max_size);
+//
+//	result might be an int or a yy_size_t depending on flex version, so we use a temporary.
+//
+#define YY_INPUT(buf, result, max_size) \
+  { yy_size_t safeResult; getInput(buf, safeResult, max_size); result = safeResult; }
 
 #define RETURN(token) \
   { lvalp->yyToken.tokenize(yytext, lineNumber); return (token); }
@@ -158,8 +163,9 @@ loop					return KW_LOOP;
 cont|continue				return KW_CONTINUE;
 nar|narrow				return KW_NARROW;
 xg-narrow				return KW_XG_NARROW;
-generate|get				return KW_GENERATE;
+get					return KW_GET;
 variants				return KW_VARIANTS;
+variant					return KW_VARIANT;
 match					return KW_MATCH;
 xmatch					return KW_XMATCH;
 search					return KW_SEARCH;

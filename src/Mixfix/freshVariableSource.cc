@@ -63,8 +63,8 @@ FreshVariableSource::FreshVariableSource(MixfixModule* module, const mpz_class& 
 int
 FreshVariableSource::getFreshVariableName(int index, bool odd)
 {
-  Vector<int>& cacheToUse = /* odd ? oddCache : */ cache;
-  char charToUse = /* odd ? '%' : */ '#';
+  Vector<int>& cacheToUse = odd ? oddCache : cache;
+  char charToUse = odd ? '%' : '#';
 
   int nrCached = cacheToUse.size();
   if (index < nrCached)
@@ -75,11 +75,13 @@ FreshVariableSource::getFreshVariableName(int index, bool odd)
     }
   //
   //	In order to avoid allocating the name twice we convert the negative index to a
-  //	string and replace the minus sign with a '#' or '%'
+  //	string and replace the minus sign with a '#' or '%'.
+  //
+  //	We ultimately map index to (index + baseNumber + 1).
   //
   int negIndex = -(index + 1);
   mpz_class negativeIndex = negIndex - baseNumber;
-  char* name = mpz_get_str (0, 10, negativeIndex.get_mpz_t());
+  char* name = mpz_get_str(0, 10, negativeIndex.get_mpz_t());
   name[0] = charToUse;
   int code = Token::encode(name);
   free(name);
@@ -105,8 +107,12 @@ FreshVariableSource::getBaseVariableSymbol(Sort* sort)
 bool
 FreshVariableSource::variableNameConflict(int id)
 {
+  //
+  //	If an identifier looks like an internally generated variable name, check to see if
+  //	the index > baseNumber as this will produce a potential conflict with fresh variables.
+  //
   const char* name = Token::name(Token::unflaggedCode(id));
-  if ((name[0] != '#' /* && name[0] != '%' */) || name[1] == '0' || name[1] == '\0')
+  if ((name[0] != '#' && name[0] != '%') || name[1] == '0' || name[1] == '\0')
     return false;
   for (const char* p = name + 1; *p; ++p)
     {

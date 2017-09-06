@@ -1,3 +1,16 @@
+2012-07-30  Steven Eker  <eker@ape.csl.sri.com>
+
+	* prelude.maude: updated declarations for metaVariantUnify() and
+	metaVariantDisjointUnify()
+
+2012-07-20  Steven Eker  <eker@ape.csl.sri.com>
+
+	* prelude.maude: metaGenerateVariant() replaced by
+	metaGetVariant(); Term and Substitution arguments switched in meta
+	variant ctor; added hood for emptyTermListSymbol
+
+===================================Maude96a===========================================
+
 2012-05-03  Steven Eker  <eker@ape.csl.sri.com>
 
 	* prelude.maude: added meta representation of variant attribute

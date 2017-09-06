@@ -1,3 +1,17 @@
+2012-07-13  Steven Eker  <eker@ape.csl.sri.com>
+
+	* dagNode.hh (D): added decl for reducibleByVariantEquation()
+
+	* dagNode.cc (reducibleByVariantEquation): added
+
+2012-07-12  Steven Eker  <eker@ape.csl.sri.com>
+
+	* dagNode.hh (D): added IRREDUCIBLE_BY_VARIANT_EQUATIONS
+	(setIrreducibleByVariantEquations)
+	(isIrreducibleByVariantEquations): added
+
+===================================Maude96a==========================================
+
 2012-04-13  Steven Eker  <eker@ape.csl.sri.com>
 
 	* dagNode.hh (D): added declarations for instantiateWithCopies(),

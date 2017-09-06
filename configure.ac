@@ -3,7 +3,7 @@
 #
 #	Initialize autoconf stuff.
 #
-AC_INIT(Maude, alpha96, [maude-bugs@maude.cs.uiuc.edu])
+AC_INIT(Maude, alpha96a, [maude-bugs@maude.cs.uiuc.edu])
 #
 #	Allow directory names that look like macros.
 #
@@ -16,7 +16,7 @@ AC_CANONICAL_HOST
 #
 #	Initialize automake stuff.
 #
-AM_INIT_AUTOMAKE(Maude, alpha96)
+AM_INIT_AUTOMAKE(Maude, alpha96a)
 #
 #	Cause defines to be put in a header file rather than passed as
 #	compiler flags.
@@ -93,6 +93,21 @@ else
   TECLA_LIBS=""
 fi
 AC_SUBST(TECLA_LIBS)
+#
+#	Check to see if we should use hacked version of Mac rope implementation.
+#
+AC_ARG_WITH(rope-ugly-hack,
+	    AC_HELP_STRING([--with-rope-ugly-hack],
+                           [use hacked up version of Mac rope implentation [default=no]]),
+			   [WITH_ROPE_UGLY_HACK=$withval],
+			   [WITH_ROPE_UGLY_HACK=no])
+if (test $WITH_ROPE_UGLY_HACK = yes) then
+#
+#	Define flag so we include local hacked up version rather than system version of
+#	rope and ropeimpl.h
+#
+  AC_DEFINE([USE_ROPE_UGLY_HACK], [], [use hacked up version of Mac rope implementation])
+fi
 #
 #	Check to see if we should use libsigsegv to handle segmentation faults.
 #

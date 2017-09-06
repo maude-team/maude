@@ -40,9 +40,11 @@ public:
   //
   VariantNarrowingSearchState(RewritingContext* context,  // contains the variant term
 			      const Vector<DagNode*>& variantSubstitution,
+			      const Vector<DagNode*>& blockerDags,
 			      FreshVariableGenerator* freshVariableGenerator,
 			      bool odd,
-			      const NarrowingVariableInfo& originalVariables);
+			      const NarrowingVariableInfo& originalVariables,
+			      bool unificationMode = false);
   ~VariantNarrowingSearchState();
 
   //
@@ -51,16 +53,18 @@ public:
   bool findNextVariant(DagNode*& variantTerm, Vector<DagNode*>& variantSubstitution /*, int& nrFreeVariables */);
 
 private:
-  bool reducibleByVariantEquation(DagNode* dag);
+  void collectUnifiers(NarrowingUnificationProblem* unificationProblem, int positionIndex, int equationIndex);
 
   RewritingContext* const context;  // has own GC protection
-  const Vector<DagNode*> variantSubstitution;  // assumed to be protected from GC by whatever passed it to us
+  const Vector<DagNode*>& variantSubstitution;  // assumed to be protected from GC by whatever passed it to us
+  const Vector<DagNode*>& blockerDags;  // assumed to be protected from GC by whatever passed it to us
   FreshVariableGenerator* const freshVariableGenerator;
   const NarrowingVariableInfo& originalVariables;  // assumed to be protected from GC by whatever passed it to us; only needed for tracing
   Module* const module;
 
   NarrowingVariableInfo variableInfo;
   UnifierFilter* unifiers;  // has own GC protection
+  Substitution blockerSubstitution;  // filled out and done with before GC happens
 };
 
 #endif

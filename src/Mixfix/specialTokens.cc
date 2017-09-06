@@ -111,6 +111,7 @@
   MACRO(match, "match")
   MACRO(xmatch, "xmatch")
   MACRO(amatch, "amatch")
+  MACRO(irreducible, "irreducible")
     //
     //	Special hook identifier tokens.
     //

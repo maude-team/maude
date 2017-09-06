@@ -1965,7 +1965,7 @@ fmod META-LEVEL is
   op {_,_} : Substitution Context -> MatchPair [ctor] .
   op {_,_} : Substitution Nat -> UnificationPair [ctor] .
   op {_,_,_} : Substitution Substitution Nat -> UnificationTriple [ctor] .
-  op {_,_,_} : Substitution Term Nat -> Variant [ctor] .
+  op {_,_,_} : Term Substitution Nat -> Variant [ctor] .
   op {_,_,_} : Term Type Rule -> TraceStep [ctor] .
   op nil : -> Trace [ctor] .
   op __ : Trace Trace -> Trace [ctor assoc id: nil format (d n d)] .
@@ -2030,6 +2030,7 @@ fmod META-LEVEL is
         op-hook qidSymbol		(<Qids> : ~> Qid)
         op-hook metaTermSymbol		(_[_] : Qid NeTermList ~> Term)
         op-hook metaArgSymbol		(_,_ : NeTermList NeTermList ~> NeTermList)
+	op-hook emptyTermListSymbol	(empty : ~> GroundTermList)
 
         op-hook assignmentSymbol	(_<-_ : Qid Term ~> Assignment)
         op-hook substitutionSymbol
@@ -2191,7 +2192,7 @@ fmod META-LEVEL is
         op-hook matchPairSymbol		({_,_} : Substitution Context ~> MatchPair)
         op-hook unificationPairSymbol	({_,_} : Substitution Nat ~> UnificationPair)
         op-hook unificationTripleSymbol	({_,_,_} : Substitution Substitution Nat ~> UnificationTriple)
-        op-hook variantSymbol		({_,_,_} : Substitution Term Nat ~> Variant)
+        op-hook variantSymbol		({_,_,_} : Term Substitution Nat ~> Variant)
 
         op-hook traceStepSymbol		({_,_,_} : Term Type Rule ~> TraceStep)
         op-hook nilTraceSymbol		(nil : ~> Trace)
@@ -2286,17 +2287,17 @@ fmod META-LEVEL is
            id-hook MetaLevelOpSymbol	(metaNarrow2)
            op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .
 
-  op metaGenerateVariant : Module Term Nat Nat ~> Variant?
+  op metaGetVariant : Module Term TermList Nat Nat ~> Variant?
         [special (
-           id-hook MetaLevelOpSymbol	(metaGenerateVariant)
+           id-hook MetaLevelOpSymbol	(metaGetVariant)
            op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .
 
-  op metaVariantUnify : Module UnificationProblem Nat Nat ~> UnificationPair?
+  op metaVariantUnify : Module UnificationProblem TermList Nat Nat ~> UnificationPair?
         [special (
            id-hook MetaLevelOpSymbol	(metaVariantUnify)
            op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .
 
-  op metaVariantDisjointUnify : Module UnificationProblem Nat Nat ~> UnificationTriple?
+  op metaVariantDisjointUnify : Module UnificationProblem TermList Nat Nat ~> UnificationTriple?
         [special (
            id-hook MetaLevelOpSymbol	(metaVariantDisjointUnify)
            op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .

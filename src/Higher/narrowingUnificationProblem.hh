@@ -36,6 +36,8 @@
 //	substitution slot space.
 //	(5) Narrowing unification does not corrupt previously generated unifiers when making the next unifier, at
 //	the cost of more copying if an unsorted unifier corresponds to multiple order-sorted unifiers.
+//	(6) Narrowing unification supports the idea of "odd" and "even" variables to avoid clashing variable
+//	names on successive steps of narrowing.
 //
 #ifndef _narrowingUnificationProblem_hh_
 #define _narrowingUnificationProblem_hh_
@@ -49,11 +51,22 @@ class NarrowingUnificationProblem : private SimpleRootContainer
   NO_COPYING(NarrowingUnificationProblem);
 
 public:
+  //
+  //	The usual case is that we are unifying the lhs of a rule or variant equation against a DagNode* target.
+  //
   NarrowingUnificationProblem(PreEquation* preEquation,
 			      DagNode* target,
 			      const NarrowingVariableInfo& variableInfo,
 			      FreshVariableGenerator* freshVariableGenerator,
 			      bool odd = false);
+  //
+  //	However for variant unification, we also need to unify a pair of DagNode* arguments.
+  //
+  NarrowingUnificationProblem(DagNode* lhs,
+			      DagNode* rhs,
+			      const NarrowingVariableInfo& variableInfo,
+			      FreshVariableGenerator* freshVariableGenerator,
+			      bool odd);
 
   ~NarrowingUnificationProblem();
 
@@ -63,12 +76,14 @@ public:
 
 private:
   void markReachableNodes();
-  void findOrderSortedUnifiers();
+  Sort* variableIndexToSort(int index);
+  void bindFreeVariables();
+  bool findOrderSortedUnifiers();
   bool extractUnifier();
   bool explore(int index);
 
   PreEquation* const preEquation;
-  DagNode* const target;
+  const int nrPreEquationVariables;
   const NarrowingVariableInfo& variableInfo;
   FreshVariableGenerator* const freshVariableGenerator;
   const bool odd;
@@ -81,6 +96,7 @@ private:
   PendingUnificationStack pendingStack;
   bool viable;				// true if problem didn't fail computeSolvedForm() pass
   NatSet freeVariables;	     		// indices (slots) of unbound variables in unsorted unifier
+  NatSet sortConstrainedVariables;	// subset of the above whose sorts are constrained by their appearence in bindings of other variables
   AllSat* orderSortedUnifiers;		// satisfiability problem encoding sorts for order-sorted unifiers
   Substitution* sortedSolution;		// for construction order-sorted unifiers
   //

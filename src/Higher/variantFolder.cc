@@ -51,7 +51,6 @@
 VariantFolder::VariantFolder()
 {
   startedExtractingVariants = false;
-
 }
 
 VariantFolder::~VariantFolder()
@@ -163,12 +162,13 @@ VariantFolder::getNextSurvivingVariant(int& nrFreeVariables)
   if (nextVariant == mostGeneralSoFar.end())
     return 0;
 
+  //cout << "Internal variant number = " << nextVariant->first << " parent = " << nextVariant->second->parentIndex << endl;
   nrFreeVariables = nextVariant->second->nrFreeVariables;
   return &(nextVariant->second->variant);
 }
 
 bool
-VariantFolder::subsumes(const RetainedVariant* retainedVariant, const Vector<DagNode*> variant)
+VariantFolder::subsumes(const RetainedVariant* retainedVariant, const Vector<DagNode*>& variant)
 {
   //
   //	We check if retained variant is at least as general as a new variant.
@@ -182,7 +182,7 @@ VariantFolder::subsumes(const RetainedVariant* retainedVariant, const Vector<Dag
   matcher.clear(nrVariablesToUse);
 
   int nrDagsToCheck = variant.size();
-  for (int i = 0; i < nrDagsToCheck; ++i)
+  for (int i = nrDagsToCheck - 1; i >= 0; --i)
     {
       Subproblem* subproblem;
 
@@ -217,17 +217,13 @@ VariantFolder::RetainedVariant::RetainedVariant(const Vector<DagNode*> original)
     matchingAutomata(original.size())
 {
   VariableInfo variableInfo;  // does this need to be retained?
-
-  NatSet boundUniquely;
-  bool subproblemLikely;
   
   int nrDags = original.size();
-
   for (int i = 0; i < nrDags; ++i)
     {
       DagNode* d = original[i];
       Term* t = d->symbol()->termify(d);
-      t = t->normalize(true);  // needed? or will variant always be in normal form?
+      t = t->normalize(true);  // needed even though we should have a normal form, in order to set hash value
       t->indexVariables(variableInfo); 
       t->symbol()->fillInSortInfo(t);
       t->analyseCollapses();
@@ -236,7 +232,10 @@ VariantFolder::RetainedVariant::RetainedVariant(const Vector<DagNode*> original)
 
   nrFreeVariables = variableInfo.getNrRealVariables();
 
-  for (int i = 0; i < nrDags; ++i)
+  NatSet boundUniquely;
+  bool subproblemLikely;
+
+  for (int i = nrDags - 1; i >= 0; --i)
     {
       Term* t = terms[i];
       for (int j = 0; j < nrDags; ++j)

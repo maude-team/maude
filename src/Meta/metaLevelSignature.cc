@@ -36,6 +36,7 @@
      MACRO(qidSymbol, QuotedIdentifierSymbol, SymbolType::QUOTED_IDENTIFIER, 0)
      MACRO(metaTermSymbol, FreeSymbol, 0, 2)
      MACRO(metaArgSymbol, Symbol, SymbolType::ASSOC, 2)
+     MACRO(emptyTermListSymbol, Symbol, 0, 0)
      //
      //	Substitution and context constructors.
      //

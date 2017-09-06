@@ -96,6 +96,7 @@ private:
 						   FreeDagNode* subject,
 						   RewritingContext& context) const;
   bool metaUnify2(FreeDagNode* subject, RewritingContext& context, bool disjoint);
+  bool metaVariantUnify2(FreeDagNode* subject, RewritingContext& context, bool disjoint);
   bool okToBind();
   bool downSearchType(DagNode* arg, SequenceSearch::SearchType& searchType) const;
 

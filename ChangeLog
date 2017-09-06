@@ -1,3 +1,27 @@
+2012-08-06  Steven Eker  <eker@ape.csl.sri.com>
+
+	* src/3rdParty/ropeimpl_UGLY_HACK.h: hacked up verison of Mac ropeimpl.h
+
+	* src/3rdParty/rope_UGLY_HACK: version of Mac rope that uses ropeimpl_UGLY_HACK.h
+
+	* configure.ac: added flag for rope ugly hack
+
+2012-07-31  Steven Eker  <eker@ape.csl.sri.com>
+
+	* tests/Misc/variantNarrowing (MAUDE_LIB): created
+
+	* tests/Misc/variantNarrowing.maude: created
+
+	* tests/Meta/metaVariantUnify (MAUDE_LIB): created
+
+	* tests/Meta/metaVariantUnify.maude: created
+
+	* tests/Misc/variantUnification.maude: created
+
+	* tests/Misc/variantUnification (MAUDE_LIB): created
+
+===================================Maude96a===========================================
+
 2010-05-21  Steven Eker  <eker@rho>
 
 	* tests/ResolvedBugs/CUIbug12-22-09.maude (CUI_DagNode): use set

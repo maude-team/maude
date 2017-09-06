@@ -16,7 +16,8 @@ libmeta_a_CPPFLAGS = \
 	-I$(top_srcdir)/src/BuiltIn \
 	-I$(top_srcdir)/src/MSCP10 \
 	-I$(top_srcdir)/src/IO_Stuff \
-	-I$(top_srcdir)/src/StrategyLanguage
+	-I$(top_srcdir)/src/StrategyLanguage \
+	-I$(top_srcdir)/src/3rdParty
 
 libmeta_a_SOURCES = \
 	metaModuleCache.cc \

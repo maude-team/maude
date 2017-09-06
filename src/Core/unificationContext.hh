@@ -37,7 +37,7 @@
 class UnificationContext : public Substitution, private SimpleRootContainer
 {
 public:
-  UnificationContext(FreshVariableGenerator* freshVariableGenerator, int nrOriginalVariables);
+  UnificationContext(FreshVariableGenerator* freshVariableGenerator, int nrOriginalVariables, bool odd = false);
 
   VariableDagNode* makeFreshVariable(const ConnectedComponent* component);
   Sort* getFreshVariableSort(int index) const;
@@ -58,6 +58,8 @@ protected:
 private:
   FreshVariableGenerator* const freshVariableGenerator;
   const int nrOriginalVariables;
+  const bool odd;
+
   Vector<Sort*> freshVariableSorts;
   Vector<VariableDagNode*> variableDagNodes;
 };

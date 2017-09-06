@@ -18,98 +18,98 @@ Z:Nat --> #3:NzNat
 unify [100] in NAT : X:Nat + X:Nat + Y:Nat =? A:Nat + B:Nat + C:Nat .
 
 Solution 1
-X:Nat --> #1:Nat + #2:Nat + #3:Nat + #6:Nat + #8:Nat + #5:Nat
-Y:Nat --> #7:Nat + #9:Nat + #4:Nat
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat + #6:Nat + #8:Nat
+Y:Nat --> #4:Nat + #7:Nat + #9:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
-B:Nat --> #2:Nat + #6:Nat + #7:Nat + #5:Nat + #5:Nat
+B:Nat --> #2:Nat + #5:Nat + #5:Nat + #6:Nat + #7:Nat
 C:Nat --> #3:Nat + #6:Nat + #8:Nat + #8:Nat + #9:Nat
 
 Solution 2
-X:Nat --> #1:Nat + #2:Nat + #3:Nat + #6:Nat + #8:Nat + #5:Nat
-Y:Nat --> #7:Nat + #4:Nat
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat + #6:Nat + #8:Nat
+Y:Nat --> #4:Nat + #7:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
-B:Nat --> #2:Nat + #6:Nat + #7:Nat + #5:Nat + #5:Nat
+B:Nat --> #2:Nat + #5:Nat + #5:Nat + #6:Nat + #7:Nat
 C:Nat --> #3:Nat + #6:Nat + #8:Nat + #8:Nat
 
 Solution 3
-X:Nat --> #1:Nat + #2:Nat + #3:Nat + #6:Nat + #5:Nat
-Y:Nat --> #7:Nat + #8:Nat + #4:Nat
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat + #6:Nat
+Y:Nat --> #4:Nat + #7:Nat + #8:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
-B:Nat --> #2:Nat + #6:Nat + #7:Nat + #5:Nat + #5:Nat
+B:Nat --> #2:Nat + #5:Nat + #5:Nat + #6:Nat + #7:Nat
 C:Nat --> #3:Nat + #6:Nat + #8:Nat
 
 Solution 4
-X:Nat --> #1:Nat + #2:Nat + #3:Nat + #6:Nat + #5:Nat
-Y:Nat --> #7:Nat + #4:Nat
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat + #6:Nat
+Y:Nat --> #4:Nat + #7:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
-B:Nat --> #2:Nat + #6:Nat + #7:Nat + #5:Nat + #5:Nat
+B:Nat --> #2:Nat + #5:Nat + #5:Nat + #6:Nat + #7:Nat
 C:Nat --> #3:Nat + #6:Nat
 
 Solution 5
-X:Nat --> #1:Nat + #2:Nat + #3:Nat + #6:Nat + #7:Nat + #5:Nat
-Y:Nat --> #8:Nat + #4:Nat
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat + #6:Nat + #7:Nat
+Y:Nat --> #4:Nat + #8:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
-B:Nat --> #2:Nat + #6:Nat + #5:Nat + #5:Nat
+B:Nat --> #2:Nat + #5:Nat + #5:Nat + #6:Nat
 C:Nat --> #3:Nat + #6:Nat + #7:Nat + #7:Nat + #8:Nat
 
 Solution 6
-X:Nat --> #1:Nat + #2:Nat + #3:Nat + #6:Nat + #7:Nat + #5:Nat
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat + #6:Nat + #7:Nat
 Y:Nat --> #4:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
-B:Nat --> #2:Nat + #6:Nat + #5:Nat + #5:Nat
+B:Nat --> #2:Nat + #5:Nat + #5:Nat + #6:Nat
 C:Nat --> #3:Nat + #6:Nat + #7:Nat + #7:Nat
 
 Solution 7
-X:Nat --> #1:Nat + #2:Nat + #3:Nat + #6:Nat + #5:Nat
-Y:Nat --> #7:Nat + #4:Nat
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat + #6:Nat
+Y:Nat --> #4:Nat + #7:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
-B:Nat --> #2:Nat + #6:Nat + #5:Nat + #5:Nat
+B:Nat --> #2:Nat + #5:Nat + #5:Nat + #6:Nat
 C:Nat --> #3:Nat + #6:Nat + #7:Nat
 
 Solution 8
-X:Nat --> #1:Nat + #2:Nat + #3:Nat + #6:Nat + #5:Nat
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat + #6:Nat
 Y:Nat --> #4:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
-B:Nat --> #2:Nat + #6:Nat + #5:Nat + #5:Nat
+B:Nat --> #2:Nat + #5:Nat + #5:Nat + #6:Nat
 C:Nat --> #3:Nat + #6:Nat
 
 Solution 9
-X:Nat --> #1:Nat + #2:Nat + #3:Nat + #7:Nat + #5:Nat
-Y:Nat --> #6:Nat + #8:Nat + #4:Nat
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat + #7:Nat
+Y:Nat --> #4:Nat + #6:Nat + #8:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
-B:Nat --> #2:Nat + #6:Nat + #5:Nat + #5:Nat
+B:Nat --> #2:Nat + #5:Nat + #5:Nat + #6:Nat
 C:Nat --> #3:Nat + #7:Nat + #7:Nat + #8:Nat
 
 Solution 10
-X:Nat --> #1:Nat + #2:Nat + #3:Nat + #7:Nat + #5:Nat
-Y:Nat --> #6:Nat + #4:Nat
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat + #7:Nat
+Y:Nat --> #4:Nat + #6:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
-B:Nat --> #2:Nat + #6:Nat + #5:Nat + #5:Nat
+B:Nat --> #2:Nat + #5:Nat + #5:Nat + #6:Nat
 C:Nat --> #3:Nat + #7:Nat + #7:Nat
 
 Solution 11
 X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat
-Y:Nat --> #6:Nat + #7:Nat + #4:Nat
+Y:Nat --> #4:Nat + #6:Nat + #7:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
-B:Nat --> #2:Nat + #6:Nat + #5:Nat + #5:Nat
+B:Nat --> #2:Nat + #5:Nat + #5:Nat + #6:Nat
 C:Nat --> #3:Nat + #7:Nat
 
 Solution 12
 X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat
-Y:Nat --> #6:Nat + #4:Nat
+Y:Nat --> #4:Nat + #6:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
-B:Nat --> #2:Nat + #6:Nat + #5:Nat + #5:Nat
+B:Nat --> #2:Nat + #5:Nat + #5:Nat + #6:Nat
 C:Nat --> #3:Nat
 
 Solution 13
-X:Nat --> #1:Nat + #2:Nat + #3:Nat + #6:Nat + #5:Nat
-Y:Nat --> #7:Nat + #4:Nat
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat + #6:Nat
+Y:Nat --> #4:Nat + #7:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
 B:Nat --> #2:Nat + #5:Nat + #5:Nat
 C:Nat --> #3:Nat + #6:Nat + #6:Nat + #7:Nat
 
 Solution 14
-X:Nat --> #1:Nat + #2:Nat + #3:Nat + #6:Nat + #5:Nat
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat + #6:Nat
 Y:Nat --> #4:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
 B:Nat --> #2:Nat + #5:Nat + #5:Nat
@@ -117,7 +117,7 @@ C:Nat --> #3:Nat + #6:Nat + #6:Nat
 
 Solution 15
 X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat
-Y:Nat --> #6:Nat + #4:Nat
+Y:Nat --> #4:Nat + #6:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
 B:Nat --> #2:Nat + #5:Nat + #5:Nat
 C:Nat --> #3:Nat + #6:Nat
@@ -130,53 +130,53 @@ B:Nat --> #2:Nat + #5:Nat + #5:Nat
 C:Nat --> #3:Nat
 
 Solution 17
-X:Nat --> #1:Nat + #2:Nat + #3:Nat + #7:Nat + #5:Nat
-Y:Nat --> #6:Nat + #8:Nat + #4:Nat
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat + #7:Nat
+Y:Nat --> #4:Nat + #6:Nat + #8:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
-B:Nat --> #2:Nat + #6:Nat + #5:Nat
-C:Nat --> #3:Nat + #7:Nat + #7:Nat + #8:Nat + #5:Nat
+B:Nat --> #2:Nat + #5:Nat + #6:Nat
+C:Nat --> #3:Nat + #5:Nat + #7:Nat + #7:Nat + #8:Nat
 
 Solution 18
-X:Nat --> #1:Nat + #2:Nat + #3:Nat + #7:Nat + #5:Nat
-Y:Nat --> #6:Nat + #4:Nat
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat + #7:Nat
+Y:Nat --> #4:Nat + #6:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
-B:Nat --> #2:Nat + #6:Nat + #5:Nat
-C:Nat --> #3:Nat + #7:Nat + #7:Nat + #5:Nat
+B:Nat --> #2:Nat + #5:Nat + #6:Nat
+C:Nat --> #3:Nat + #5:Nat + #7:Nat + #7:Nat
 
 Solution 19
 X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat
-Y:Nat --> #6:Nat + #7:Nat + #4:Nat
+Y:Nat --> #4:Nat + #6:Nat + #7:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
-B:Nat --> #2:Nat + #6:Nat + #5:Nat
-C:Nat --> #3:Nat + #7:Nat + #5:Nat
+B:Nat --> #2:Nat + #5:Nat + #6:Nat
+C:Nat --> #3:Nat + #5:Nat + #7:Nat
 
 Solution 20
 X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat
-Y:Nat --> #6:Nat + #4:Nat
+Y:Nat --> #4:Nat + #6:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
-B:Nat --> #2:Nat + #6:Nat + #5:Nat
+B:Nat --> #2:Nat + #5:Nat + #6:Nat
 C:Nat --> #3:Nat + #5:Nat
 
 Solution 21
-X:Nat --> #1:Nat + #2:Nat + #3:Nat + #6:Nat + #5:Nat
-Y:Nat --> #7:Nat + #4:Nat
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat + #6:Nat
+Y:Nat --> #4:Nat + #7:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
 B:Nat --> #2:Nat + #5:Nat
-C:Nat --> #3:Nat + #6:Nat + #6:Nat + #7:Nat + #5:Nat
+C:Nat --> #3:Nat + #5:Nat + #6:Nat + #6:Nat + #7:Nat
 
 Solution 22
-X:Nat --> #1:Nat + #2:Nat + #3:Nat + #6:Nat + #5:Nat
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat + #6:Nat
 Y:Nat --> #4:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
 B:Nat --> #2:Nat + #5:Nat
-C:Nat --> #3:Nat + #6:Nat + #6:Nat + #5:Nat
+C:Nat --> #3:Nat + #5:Nat + #6:Nat + #6:Nat
 
 Solution 23
 X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat
-Y:Nat --> #6:Nat + #4:Nat
+Y:Nat --> #4:Nat + #6:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
 B:Nat --> #2:Nat + #5:Nat
-C:Nat --> #3:Nat + #6:Nat + #5:Nat
+C:Nat --> #3:Nat + #5:Nat + #6:Nat
 
 Solution 24
 X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat
@@ -187,7 +187,7 @@ C:Nat --> #3:Nat + #5:Nat
 
 Solution 25
 X:Nat --> #1:Nat + #2:Nat + #3:Nat + #6:Nat
-Y:Nat --> #7:Nat + #4:Nat + #5:Nat
+Y:Nat --> #4:Nat + #5:Nat + #7:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
 B:Nat --> #2:Nat + #5:Nat
 C:Nat --> #3:Nat + #6:Nat + #6:Nat + #7:Nat
@@ -201,7 +201,7 @@ C:Nat --> #3:Nat + #6:Nat + #6:Nat
 
 Solution 27
 X:Nat --> #1:Nat + #2:Nat + #3:Nat
-Y:Nat --> #6:Nat + #4:Nat + #5:Nat
+Y:Nat --> #4:Nat + #5:Nat + #6:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
 B:Nat --> #2:Nat + #5:Nat
 C:Nat --> #3:Nat + #6:Nat
@@ -215,10 +215,10 @@ C:Nat --> #3:Nat
 
 Solution 29
 X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat
-Y:Nat --> #6:Nat + #4:Nat
+Y:Nat --> #4:Nat + #6:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
 B:Nat --> #2:Nat
-C:Nat --> #3:Nat + #6:Nat + #5:Nat + #5:Nat
+C:Nat --> #3:Nat + #5:Nat + #5:Nat + #6:Nat
 
 Solution 30
 X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat
@@ -242,56 +242,56 @@ B:Nat --> #2:Nat
 C:Nat --> #3:Nat
 
 Solution 33
-X:Nat --> #1:Nat + #2:Nat + #3:Nat + #7:Nat + #4:Nat + #5:Nat
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat + #5:Nat + #7:Nat
 Y:Nat --> #6:Nat + #8:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
-B:Nat --> #2:Nat + #6:Nat + #4:Nat + #4:Nat + #5:Nat
-C:Nat --> #3:Nat + #7:Nat + #7:Nat + #8:Nat + #5:Nat
+B:Nat --> #2:Nat + #4:Nat + #4:Nat + #5:Nat + #6:Nat
+C:Nat --> #3:Nat + #5:Nat + #7:Nat + #7:Nat + #8:Nat
 
 Solution 34
-X:Nat --> #1:Nat + #2:Nat + #3:Nat + #7:Nat + #4:Nat + #5:Nat
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat + #5:Nat + #7:Nat
 Y:Nat --> #6:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
-B:Nat --> #2:Nat + #6:Nat + #4:Nat + #4:Nat + #5:Nat
-C:Nat --> #3:Nat + #7:Nat + #7:Nat + #5:Nat
+B:Nat --> #2:Nat + #4:Nat + #4:Nat + #5:Nat + #6:Nat
+C:Nat --> #3:Nat + #5:Nat + #7:Nat + #7:Nat
 
 Solution 35
 X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat + #5:Nat
 Y:Nat --> #6:Nat + #7:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
-B:Nat --> #2:Nat + #6:Nat + #4:Nat + #4:Nat + #5:Nat
-C:Nat --> #3:Nat + #7:Nat + #5:Nat
+B:Nat --> #2:Nat + #4:Nat + #4:Nat + #5:Nat + #6:Nat
+C:Nat --> #3:Nat + #5:Nat + #7:Nat
 
 Solution 36
 X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat + #5:Nat
 Y:Nat --> #6:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
-B:Nat --> #2:Nat + #6:Nat + #4:Nat + #4:Nat + #5:Nat
+B:Nat --> #2:Nat + #4:Nat + #4:Nat + #5:Nat + #6:Nat
 C:Nat --> #3:Nat + #5:Nat
 
 Solution 37
-X:Nat --> #1:Nat + #2:Nat + #3:Nat + #6:Nat + #4:Nat + #5:Nat
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat + #5:Nat + #6:Nat
 Y:Nat --> #7:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
 B:Nat --> #2:Nat + #4:Nat + #4:Nat + #5:Nat
-C:Nat --> #3:Nat + #6:Nat + #6:Nat + #7:Nat + #5:Nat
+C:Nat --> #3:Nat + #5:Nat + #6:Nat + #6:Nat + #7:Nat
 
 Solution 38
 X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat + #5:Nat
 Y:Nat --> #6:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
 B:Nat --> #2:Nat + #4:Nat + #4:Nat + #5:Nat
-C:Nat --> #3:Nat + #6:Nat + #5:Nat
+C:Nat --> #3:Nat + #5:Nat + #6:Nat
 
 Solution 39
-X:Nat --> #1:Nat + #2:Nat + #3:Nat + #6:Nat + #4:Nat
-Y:Nat --> #7:Nat + #5:Nat
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat + #6:Nat
+Y:Nat --> #5:Nat + #7:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
 B:Nat --> #2:Nat + #4:Nat + #4:Nat + #5:Nat
 C:Nat --> #3:Nat + #6:Nat + #6:Nat + #7:Nat
 
 Solution 40
-X:Nat --> #1:Nat + #2:Nat + #3:Nat + #6:Nat + #4:Nat
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat + #6:Nat
 Y:Nat --> #5:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
 B:Nat --> #2:Nat + #4:Nat + #4:Nat + #5:Nat
@@ -299,7 +299,7 @@ C:Nat --> #3:Nat + #6:Nat + #6:Nat
 
 Solution 41
 X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat
-Y:Nat --> #6:Nat + #5:Nat
+Y:Nat --> #5:Nat + #6:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
 B:Nat --> #2:Nat + #4:Nat + #4:Nat + #5:Nat
 C:Nat --> #3:Nat + #6:Nat
@@ -316,7 +316,7 @@ X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat + #5:Nat
 Y:Nat --> #6:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
 B:Nat --> #2:Nat + #4:Nat + #4:Nat
-C:Nat --> #3:Nat + #6:Nat + #5:Nat + #5:Nat
+C:Nat --> #3:Nat + #5:Nat + #5:Nat + #6:Nat
 
 Solution 44
 X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat
@@ -326,25 +326,25 @@ B:Nat --> #2:Nat + #4:Nat + #4:Nat
 C:Nat --> #3:Nat + #5:Nat
 
 Solution 45
-X:Nat --> #1:Nat + #2:Nat + #3:Nat + #6:Nat + #4:Nat
-Y:Nat --> #7:Nat + #5:Nat
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat + #6:Nat
+Y:Nat --> #5:Nat + #7:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
 B:Nat --> #2:Nat + #4:Nat + #5:Nat
-C:Nat --> #3:Nat + #6:Nat + #6:Nat + #7:Nat + #4:Nat
+C:Nat --> #3:Nat + #4:Nat + #6:Nat + #6:Nat + #7:Nat
 
 Solution 46
-X:Nat --> #1:Nat + #2:Nat + #3:Nat + #6:Nat + #4:Nat
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat + #6:Nat
 Y:Nat --> #5:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
 B:Nat --> #2:Nat + #4:Nat + #5:Nat
-C:Nat --> #3:Nat + #6:Nat + #6:Nat + #4:Nat
+C:Nat --> #3:Nat + #4:Nat + #6:Nat + #6:Nat
 
 Solution 47
 X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat
-Y:Nat --> #6:Nat + #5:Nat
+Y:Nat --> #5:Nat + #6:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
 B:Nat --> #2:Nat + #4:Nat + #5:Nat
-C:Nat --> #3:Nat + #6:Nat + #4:Nat
+C:Nat --> #3:Nat + #4:Nat + #6:Nat
 
 Solution 48
 X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat
@@ -358,7 +358,7 @@ X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat + #5:Nat
 Y:Nat --> #6:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
 B:Nat --> #2:Nat + #4:Nat
-C:Nat --> #3:Nat + #6:Nat + #4:Nat + #5:Nat + #5:Nat
+C:Nat --> #3:Nat + #4:Nat + #5:Nat + #5:Nat + #6:Nat
 
 Solution 50
 X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat
@@ -369,10 +369,10 @@ C:Nat --> #3:Nat + #4:Nat + #5:Nat
 
 Solution 51
 X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat
-Y:Nat --> #6:Nat + #4:Nat
+Y:Nat --> #4:Nat + #6:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
 B:Nat --> #2:Nat + #4:Nat
-C:Nat --> #3:Nat + #6:Nat + #5:Nat + #5:Nat
+C:Nat --> #3:Nat + #5:Nat + #5:Nat + #6:Nat
 
 Solution 52
 X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat
@@ -410,53 +410,53 @@ B:Nat --> #2:Nat
 C:Nat --> #3:Nat + #4:Nat
 
 Solution 57
-X:Nat --> #1:Nat + #2:Nat + #7:Nat + #4:Nat + #5:Nat
+X:Nat --> #1:Nat + #2:Nat + #4:Nat + #5:Nat + #7:Nat
 Y:Nat --> #3:Nat + #6:Nat + #8:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
-B:Nat --> #2:Nat + #6:Nat + #4:Nat + #4:Nat + #5:Nat
-C:Nat --> #7:Nat + #7:Nat + #8:Nat + #5:Nat
+B:Nat --> #2:Nat + #4:Nat + #4:Nat + #5:Nat + #6:Nat
+C:Nat --> #5:Nat + #7:Nat + #7:Nat + #8:Nat
 
 Solution 58
-X:Nat --> #1:Nat + #2:Nat + #7:Nat + #4:Nat + #5:Nat
+X:Nat --> #1:Nat + #2:Nat + #4:Nat + #5:Nat + #7:Nat
 Y:Nat --> #3:Nat + #6:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
-B:Nat --> #2:Nat + #6:Nat + #4:Nat + #4:Nat + #5:Nat
-C:Nat --> #7:Nat + #7:Nat + #5:Nat
+B:Nat --> #2:Nat + #4:Nat + #4:Nat + #5:Nat + #6:Nat
+C:Nat --> #5:Nat + #7:Nat + #7:Nat
 
 Solution 59
 X:Nat --> #1:Nat + #2:Nat + #4:Nat + #5:Nat
 Y:Nat --> #3:Nat + #6:Nat + #7:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
-B:Nat --> #2:Nat + #6:Nat + #4:Nat + #4:Nat + #5:Nat
-C:Nat --> #7:Nat + #5:Nat
+B:Nat --> #2:Nat + #4:Nat + #4:Nat + #5:Nat + #6:Nat
+C:Nat --> #5:Nat + #7:Nat
 
 Solution 60
 X:Nat --> #1:Nat + #2:Nat + #4:Nat + #5:Nat
 Y:Nat --> #3:Nat + #6:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
-B:Nat --> #2:Nat + #6:Nat + #4:Nat + #4:Nat + #5:Nat
+B:Nat --> #2:Nat + #4:Nat + #4:Nat + #5:Nat + #6:Nat
 C:Nat --> #5:Nat
 
 Solution 61
-X:Nat --> #1:Nat + #2:Nat + #6:Nat + #4:Nat + #5:Nat
+X:Nat --> #1:Nat + #2:Nat + #4:Nat + #5:Nat + #6:Nat
 Y:Nat --> #3:Nat + #7:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
 B:Nat --> #2:Nat + #4:Nat + #4:Nat + #5:Nat
-C:Nat --> #6:Nat + #6:Nat + #7:Nat + #5:Nat
+C:Nat --> #5:Nat + #6:Nat + #6:Nat + #7:Nat
 
 Solution 62
-X:Nat --> #1:Nat + #2:Nat + #6:Nat + #4:Nat + #5:Nat
+X:Nat --> #1:Nat + #2:Nat + #4:Nat + #5:Nat + #6:Nat
 Y:Nat --> #3:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
 B:Nat --> #2:Nat + #4:Nat + #4:Nat + #5:Nat
-C:Nat --> #6:Nat + #6:Nat + #5:Nat
+C:Nat --> #5:Nat + #6:Nat + #6:Nat
 
 Solution 63
 X:Nat --> #1:Nat + #2:Nat + #4:Nat + #5:Nat
 Y:Nat --> #3:Nat + #6:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
 B:Nat --> #2:Nat + #4:Nat + #4:Nat + #5:Nat
-C:Nat --> #6:Nat + #5:Nat
+C:Nat --> #5:Nat + #6:Nat
 
 Solution 64
 X:Nat --> #1:Nat + #2:Nat + #4:Nat + #5:Nat
@@ -466,14 +466,14 @@ B:Nat --> #2:Nat + #4:Nat + #4:Nat + #5:Nat
 C:Nat --> #5:Nat
 
 Solution 65
-X:Nat --> #1:Nat + #2:Nat + #6:Nat + #4:Nat
-Y:Nat --> #3:Nat + #7:Nat + #5:Nat
+X:Nat --> #1:Nat + #2:Nat + #4:Nat + #6:Nat
+Y:Nat --> #3:Nat + #5:Nat + #7:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
 B:Nat --> #2:Nat + #4:Nat + #4:Nat + #5:Nat
 C:Nat --> #6:Nat + #6:Nat + #7:Nat
 
 Solution 66
-X:Nat --> #1:Nat + #2:Nat + #6:Nat + #4:Nat
+X:Nat --> #1:Nat + #2:Nat + #4:Nat + #6:Nat
 Y:Nat --> #3:Nat + #5:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
 B:Nat --> #2:Nat + #4:Nat + #4:Nat + #5:Nat
@@ -481,7 +481,7 @@ C:Nat --> #6:Nat + #6:Nat
 
 Solution 67
 X:Nat --> #1:Nat + #2:Nat + #4:Nat
-Y:Nat --> #3:Nat + #6:Nat + #5:Nat
+Y:Nat --> #3:Nat + #5:Nat + #6:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
 B:Nat --> #2:Nat + #4:Nat + #4:Nat + #5:Nat
 C:Nat --> #6:Nat
@@ -491,7 +491,7 @@ X:Nat --> #1:Nat + #2:Nat + #4:Nat + #5:Nat
 Y:Nat --> #3:Nat + #6:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
 B:Nat --> #2:Nat + #4:Nat + #4:Nat
-C:Nat --> #6:Nat + #5:Nat + #5:Nat
+C:Nat --> #5:Nat + #5:Nat + #6:Nat
 
 Solution 69
 X:Nat --> #1:Nat + #2:Nat + #4:Nat + #5:Nat
@@ -508,25 +508,25 @@ B:Nat --> #2:Nat + #4:Nat + #4:Nat
 C:Nat --> #5:Nat
 
 Solution 71
-X:Nat --> #1:Nat + #2:Nat + #6:Nat + #4:Nat
-Y:Nat --> #3:Nat + #7:Nat + #5:Nat
+X:Nat --> #1:Nat + #2:Nat + #4:Nat + #6:Nat
+Y:Nat --> #3:Nat + #5:Nat + #7:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
 B:Nat --> #2:Nat + #4:Nat + #5:Nat
-C:Nat --> #6:Nat + #6:Nat + #7:Nat + #4:Nat
+C:Nat --> #4:Nat + #6:Nat + #6:Nat + #7:Nat
 
 Solution 72
-X:Nat --> #1:Nat + #2:Nat + #6:Nat + #4:Nat
+X:Nat --> #1:Nat + #2:Nat + #4:Nat + #6:Nat
 Y:Nat --> #3:Nat + #5:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
 B:Nat --> #2:Nat + #4:Nat + #5:Nat
-C:Nat --> #6:Nat + #6:Nat + #4:Nat
+C:Nat --> #4:Nat + #6:Nat + #6:Nat
 
 Solution 73
 X:Nat --> #1:Nat + #2:Nat + #4:Nat
-Y:Nat --> #3:Nat + #6:Nat + #5:Nat
+Y:Nat --> #3:Nat + #5:Nat + #6:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
 B:Nat --> #2:Nat + #4:Nat + #5:Nat
-C:Nat --> #6:Nat + #4:Nat
+C:Nat --> #4:Nat + #6:Nat
 
 Solution 74
 X:Nat --> #1:Nat + #2:Nat + #4:Nat
@@ -540,7 +540,7 @@ X:Nat --> #1:Nat + #2:Nat + #4:Nat + #5:Nat
 Y:Nat --> #3:Nat + #6:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
 B:Nat --> #2:Nat + #4:Nat
-C:Nat --> #6:Nat + #4:Nat + #5:Nat + #5:Nat
+C:Nat --> #4:Nat + #5:Nat + #5:Nat + #6:Nat
 
 Solution 76
 X:Nat --> #1:Nat + #2:Nat + #4:Nat + #5:Nat
@@ -565,10 +565,10 @@ C:Nat --> #4:Nat
 
 Solution 79
 X:Nat --> #1:Nat + #2:Nat + #5:Nat
-Y:Nat --> #3:Nat + #6:Nat + #4:Nat
+Y:Nat --> #3:Nat + #4:Nat + #6:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
 B:Nat --> #2:Nat + #4:Nat
-C:Nat --> #6:Nat + #5:Nat + #5:Nat
+C:Nat --> #5:Nat + #5:Nat + #6:Nat
 
 Solution 80
 X:Nat --> #1:Nat + #2:Nat + #5:Nat
@@ -606,25 +606,25 @@ B:Nat --> #2:Nat
 C:Nat --> #4:Nat
 
 Solution 85
-X:Nat --> #1:Nat + #2:Nat + #3:Nat + #6:Nat + #4:Nat
-Y:Nat --> #7:Nat + #5:Nat
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat + #6:Nat
+Y:Nat --> #5:Nat + #7:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat
 B:Nat --> #2:Nat + #3:Nat + #3:Nat + #4:Nat + #5:Nat
-C:Nat --> #6:Nat + #6:Nat + #7:Nat + #4:Nat
+C:Nat --> #4:Nat + #6:Nat + #6:Nat + #7:Nat
 
 Solution 86
-X:Nat --> #1:Nat + #2:Nat + #3:Nat + #6:Nat + #4:Nat
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat + #6:Nat
 Y:Nat --> #5:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat
 B:Nat --> #2:Nat + #3:Nat + #3:Nat + #4:Nat + #5:Nat
-C:Nat --> #6:Nat + #6:Nat + #4:Nat
+C:Nat --> #4:Nat + #6:Nat + #6:Nat
 
 Solution 87
 X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat
-Y:Nat --> #6:Nat + #5:Nat
+Y:Nat --> #5:Nat + #6:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat
 B:Nat --> #2:Nat + #3:Nat + #3:Nat + #4:Nat + #5:Nat
-C:Nat --> #6:Nat + #4:Nat
+C:Nat --> #4:Nat + #6:Nat
 
 Solution 88
 X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat
@@ -638,7 +638,7 @@ X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat + #5:Nat
 Y:Nat --> #6:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat
 B:Nat --> #2:Nat + #3:Nat + #3:Nat + #4:Nat
-C:Nat --> #6:Nat + #4:Nat + #5:Nat + #5:Nat
+C:Nat --> #4:Nat + #5:Nat + #5:Nat + #6:Nat
 
 Solution 90
 X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat
@@ -649,10 +649,10 @@ C:Nat --> #4:Nat + #5:Nat
 
 Solution 91
 X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat
-Y:Nat --> #6:Nat + #4:Nat
+Y:Nat --> #4:Nat + #6:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat
 B:Nat --> #2:Nat + #3:Nat + #3:Nat + #4:Nat
-C:Nat --> #6:Nat + #5:Nat + #5:Nat
+C:Nat --> #5:Nat + #5:Nat + #6:Nat
 
 Solution 92
 X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat
@@ -684,10 +684,10 @@ C:Nat --> #4:Nat
 
 Solution 96
 X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat
-Y:Nat --> #6:Nat + #4:Nat
+Y:Nat --> #4:Nat + #6:Nat
 A:Nat --> #1:Nat + #1:Nat + #2:Nat
 B:Nat --> #2:Nat + #3:Nat + #4:Nat
-C:Nat --> #3:Nat + #6:Nat + #5:Nat + #5:Nat
+C:Nat --> #3:Nat + #5:Nat + #5:Nat + #6:Nat
 
 Solution 97
 X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat
@@ -888,98 +888,98 @@ No unifier.
 unify in AC : f(X, X, Y) =? f(A, B, C) .
 
 Solution 1
-X --> f(#1:Foo, #2:Foo, #3:Foo, #6:Foo, #8:Foo, #5:Foo)
-Y --> f(#7:Foo, #9:Foo, #4:Foo)
+X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo, #6:Foo, #8:Foo)
+Y --> f(#4:Foo, #7:Foo, #9:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo, #4:Foo)
-B --> f(#2:Foo, #6:Foo, #7:Foo, #5:Foo, #5:Foo)
+B --> f(#2:Foo, #5:Foo, #5:Foo, #6:Foo, #7:Foo)
 C --> f(#3:Foo, #6:Foo, #8:Foo, #8:Foo, #9:Foo)
 
 Solution 2
-X --> f(#1:Foo, #2:Foo, #3:Foo, #6:Foo, #8:Foo, #5:Foo)
-Y --> f(#7:Foo, #4:Foo)
+X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo, #6:Foo, #8:Foo)
+Y --> f(#4:Foo, #7:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo, #4:Foo)
-B --> f(#2:Foo, #6:Foo, #7:Foo, #5:Foo, #5:Foo)
+B --> f(#2:Foo, #5:Foo, #5:Foo, #6:Foo, #7:Foo)
 C --> f(#3:Foo, #6:Foo, #8:Foo, #8:Foo)
 
 Solution 3
-X --> f(#1:Foo, #2:Foo, #3:Foo, #6:Foo, #5:Foo)
-Y --> f(#7:Foo, #8:Foo, #4:Foo)
+X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo, #6:Foo)
+Y --> f(#4:Foo, #7:Foo, #8:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo, #4:Foo)
-B --> f(#2:Foo, #6:Foo, #7:Foo, #5:Foo, #5:Foo)
+B --> f(#2:Foo, #5:Foo, #5:Foo, #6:Foo, #7:Foo)
 C --> f(#3:Foo, #6:Foo, #8:Foo)
 
 Solution 4
-X --> f(#1:Foo, #2:Foo, #3:Foo, #6:Foo, #5:Foo)
-Y --> f(#7:Foo, #4:Foo)
+X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo, #6:Foo)
+Y --> f(#4:Foo, #7:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo, #4:Foo)
-B --> f(#2:Foo, #6:Foo, #7:Foo, #5:Foo, #5:Foo)
+B --> f(#2:Foo, #5:Foo, #5:Foo, #6:Foo, #7:Foo)
 C --> f(#3:Foo, #6:Foo)
 
 Solution 5
-X --> f(#1:Foo, #2:Foo, #3:Foo, #6:Foo, #7:Foo, #5:Foo)
-Y --> f(#8:Foo, #4:Foo)
+X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo, #6:Foo, #7:Foo)
+Y --> f(#4:Foo, #8:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo, #4:Foo)
-B --> f(#2:Foo, #6:Foo, #5:Foo, #5:Foo)
+B --> f(#2:Foo, #5:Foo, #5:Foo, #6:Foo)
 C --> f(#3:Foo, #6:Foo, #7:Foo, #7:Foo, #8:Foo)
 
 Solution 6
-X --> f(#1:Foo, #2:Foo, #3:Foo, #6:Foo, #7:Foo, #5:Foo)
+X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo, #6:Foo, #7:Foo)
 Y --> #4:Foo
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo, #4:Foo)
-B --> f(#2:Foo, #6:Foo, #5:Foo, #5:Foo)
+B --> f(#2:Foo, #5:Foo, #5:Foo, #6:Foo)
 C --> f(#3:Foo, #6:Foo, #7:Foo, #7:Foo)
 
 Solution 7
-X --> f(#1:Foo, #2:Foo, #3:Foo, #6:Foo, #5:Foo)
-Y --> f(#7:Foo, #4:Foo)
+X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo, #6:Foo)
+Y --> f(#4:Foo, #7:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo, #4:Foo)
-B --> f(#2:Foo, #6:Foo, #5:Foo, #5:Foo)
+B --> f(#2:Foo, #5:Foo, #5:Foo, #6:Foo)
 C --> f(#3:Foo, #6:Foo, #7:Foo)
 
 Solution 8
-X --> f(#1:Foo, #2:Foo, #3:Foo, #6:Foo, #5:Foo)
+X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo, #6:Foo)
 Y --> #4:Foo
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo, #4:Foo)
-B --> f(#2:Foo, #6:Foo, #5:Foo, #5:Foo)
+B --> f(#2:Foo, #5:Foo, #5:Foo, #6:Foo)
 C --> f(#3:Foo, #6:Foo)
 
 Solution 9
-X --> f(#1:Foo, #2:Foo, #3:Foo, #7:Foo, #5:Foo)
-Y --> f(#6:Foo, #8:Foo, #4:Foo)
+X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo, #7:Foo)
+Y --> f(#4:Foo, #6:Foo, #8:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo, #4:Foo)
-B --> f(#2:Foo, #6:Foo, #5:Foo, #5:Foo)
+B --> f(#2:Foo, #5:Foo, #5:Foo, #6:Foo)
 C --> f(#3:Foo, #7:Foo, #7:Foo, #8:Foo)
 
 Solution 10
-X --> f(#1:Foo, #2:Foo, #3:Foo, #7:Foo, #5:Foo)
-Y --> f(#6:Foo, #4:Foo)
+X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo, #7:Foo)
+Y --> f(#4:Foo, #6:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo, #4:Foo)
-B --> f(#2:Foo, #6:Foo, #5:Foo, #5:Foo)
+B --> f(#2:Foo, #5:Foo, #5:Foo, #6:Foo)
 C --> f(#3:Foo, #7:Foo, #7:Foo)
 
 Solution 11
 X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo)
-Y --> f(#6:Foo, #7:Foo, #4:Foo)
+Y --> f(#4:Foo, #6:Foo, #7:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo, #4:Foo)
-B --> f(#2:Foo, #6:Foo, #5:Foo, #5:Foo)
+B --> f(#2:Foo, #5:Foo, #5:Foo, #6:Foo)
 C --> f(#3:Foo, #7:Foo)
 
 Solution 12
 X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo)
-Y --> f(#6:Foo, #4:Foo)
+Y --> f(#4:Foo, #6:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo, #4:Foo)
-B --> f(#2:Foo, #6:Foo, #5:Foo, #5:Foo)
+B --> f(#2:Foo, #5:Foo, #5:Foo, #6:Foo)
 C --> #3:Foo
 
 Solution 13
-X --> f(#1:Foo, #2:Foo, #3:Foo, #6:Foo, #5:Foo)
-Y --> f(#7:Foo, #4:Foo)
+X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo, #6:Foo)
+Y --> f(#4:Foo, #7:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo, #4:Foo)
 B --> f(#2:Foo, #5:Foo, #5:Foo)
 C --> f(#3:Foo, #6:Foo, #6:Foo, #7:Foo)
 
 Solution 14
-X --> f(#1:Foo, #2:Foo, #3:Foo, #6:Foo, #5:Foo)
+X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo, #6:Foo)
 Y --> #4:Foo
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo, #4:Foo)
 B --> f(#2:Foo, #5:Foo, #5:Foo)
@@ -987,7 +987,7 @@ C --> f(#3:Foo, #6:Foo, #6:Foo)
 
 Solution 15
 X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo)
-Y --> f(#6:Foo, #4:Foo)
+Y --> f(#4:Foo, #6:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo, #4:Foo)
 B --> f(#2:Foo, #5:Foo, #5:Foo)
 C --> f(#3:Foo, #6:Foo)
@@ -1000,53 +1000,53 @@ B --> f(#2:Foo, #5:Foo, #5:Foo)
 C --> #3:Foo
 
 Solution 17
-X --> f(#1:Foo, #2:Foo, #3:Foo, #7:Foo, #5:Foo)
-Y --> f(#6:Foo, #8:Foo, #4:Foo)
+X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo, #7:Foo)
+Y --> f(#4:Foo, #6:Foo, #8:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo, #4:Foo)
-B --> f(#2:Foo, #6:Foo, #5:Foo)
-C --> f(#3:Foo, #7:Foo, #7:Foo, #8:Foo, #5:Foo)
+B --> f(#2:Foo, #5:Foo, #6:Foo)
+C --> f(#3:Foo, #5:Foo, #7:Foo, #7:Foo, #8:Foo)
 
 Solution 18
-X --> f(#1:Foo, #2:Foo, #3:Foo, #7:Foo, #5:Foo)
-Y --> f(#6:Foo, #4:Foo)
+X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo, #7:Foo)
+Y --> f(#4:Foo, #6:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo, #4:Foo)
-B --> f(#2:Foo, #6:Foo, #5:Foo)
-C --> f(#3:Foo, #7:Foo, #7:Foo, #5:Foo)
+B --> f(#2:Foo, #5:Foo, #6:Foo)
+C --> f(#3:Foo, #5:Foo, #7:Foo, #7:Foo)
 
 Solution 19
 X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo)
-Y --> f(#6:Foo, #7:Foo, #4:Foo)
+Y --> f(#4:Foo, #6:Foo, #7:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo, #4:Foo)
-B --> f(#2:Foo, #6:Foo, #5:Foo)
-C --> f(#3:Foo, #7:Foo, #5:Foo)
+B --> f(#2:Foo, #5:Foo, #6:Foo)
+C --> f(#3:Foo, #5:Foo, #7:Foo)
 
 Solution 20
 X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo)
-Y --> f(#6:Foo, #4:Foo)
+Y --> f(#4:Foo, #6:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo, #4:Foo)
-B --> f(#2:Foo, #6:Foo, #5:Foo)
+B --> f(#2:Foo, #5:Foo, #6:Foo)
 C --> f(#3:Foo, #5:Foo)
 
 Solution 21
-X --> f(#1:Foo, #2:Foo, #3:Foo, #6:Foo, #5:Foo)
-Y --> f(#7:Foo, #4:Foo)
+X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo, #6:Foo)
+Y --> f(#4:Foo, #7:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo, #4:Foo)
 B --> f(#2:Foo, #5:Foo)
-C --> f(#3:Foo, #6:Foo, #6:Foo, #7:Foo, #5:Foo)
+C --> f(#3:Foo, #5:Foo, #6:Foo, #6:Foo, #7:Foo)
 
 Solution 22
-X --> f(#1:Foo, #2:Foo, #3:Foo, #6:Foo, #5:Foo)
+X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo, #6:Foo)
 Y --> #4:Foo
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo, #4:Foo)
 B --> f(#2:Foo, #5:Foo)
-C --> f(#3:Foo, #6:Foo, #6:Foo, #5:Foo)
+C --> f(#3:Foo, #5:Foo, #6:Foo, #6:Foo)
 
 Solution 23
 X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo)
-Y --> f(#6:Foo, #4:Foo)
+Y --> f(#4:Foo, #6:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo, #4:Foo)
 B --> f(#2:Foo, #5:Foo)
-C --> f(#3:Foo, #6:Foo, #5:Foo)
+C --> f(#3:Foo, #5:Foo, #6:Foo)
 
 Solution 24
 X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo)
@@ -1057,7 +1057,7 @@ C --> f(#3:Foo, #5:Foo)
 
 Solution 25
 X --> f(#1:Foo, #2:Foo, #3:Foo, #6:Foo)
-Y --> f(#7:Foo, #4:Foo, #5:Foo)
+Y --> f(#4:Foo, #5:Foo, #7:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo, #4:Foo)
 B --> f(#2:Foo, #5:Foo)
 C --> f(#3:Foo, #6:Foo, #6:Foo, #7:Foo)
@@ -1071,7 +1071,7 @@ C --> f(#3:Foo, #6:Foo, #6:Foo)
 
 Solution 27
 X --> f(#1:Foo, #2:Foo, #3:Foo)
-Y --> f(#6:Foo, #4:Foo, #5:Foo)
+Y --> f(#4:Foo, #5:Foo, #6:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo, #4:Foo)
 B --> f(#2:Foo, #5:Foo)
 C --> f(#3:Foo, #6:Foo)
@@ -1085,10 +1085,10 @@ C --> #3:Foo
 
 Solution 29
 X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo)
-Y --> f(#6:Foo, #4:Foo)
+Y --> f(#4:Foo, #6:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo, #4:Foo)
 B --> #2:Foo
-C --> f(#3:Foo, #6:Foo, #5:Foo, #5:Foo)
+C --> f(#3:Foo, #5:Foo, #5:Foo, #6:Foo)
 
 Solution 30
 X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo)
@@ -1112,56 +1112,56 @@ B --> #2:Foo
 C --> #3:Foo
 
 Solution 33
-X --> f(#1:Foo, #2:Foo, #3:Foo, #7:Foo, #4:Foo, #5:Foo)
+X --> f(#1:Foo, #2:Foo, #3:Foo, #4:Foo, #5:Foo, #7:Foo)
 Y --> f(#6:Foo, #8:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
-B --> f(#2:Foo, #6:Foo, #4:Foo, #4:Foo, #5:Foo)
-C --> f(#3:Foo, #7:Foo, #7:Foo, #8:Foo, #5:Foo)
+B --> f(#2:Foo, #4:Foo, #4:Foo, #5:Foo, #6:Foo)
+C --> f(#3:Foo, #5:Foo, #7:Foo, #7:Foo, #8:Foo)
 
 Solution 34
-X --> f(#1:Foo, #2:Foo, #3:Foo, #7:Foo, #4:Foo, #5:Foo)
+X --> f(#1:Foo, #2:Foo, #3:Foo, #4:Foo, #5:Foo, #7:Foo)
 Y --> #6:Foo
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
-B --> f(#2:Foo, #6:Foo, #4:Foo, #4:Foo, #5:Foo)
-C --> f(#3:Foo, #7:Foo, #7:Foo, #5:Foo)
+B --> f(#2:Foo, #4:Foo, #4:Foo, #5:Foo, #6:Foo)
+C --> f(#3:Foo, #5:Foo, #7:Foo, #7:Foo)
 
 Solution 35
 X --> f(#1:Foo, #2:Foo, #3:Foo, #4:Foo, #5:Foo)
 Y --> f(#6:Foo, #7:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
-B --> f(#2:Foo, #6:Foo, #4:Foo, #4:Foo, #5:Foo)
-C --> f(#3:Foo, #7:Foo, #5:Foo)
+B --> f(#2:Foo, #4:Foo, #4:Foo, #5:Foo, #6:Foo)
+C --> f(#3:Foo, #5:Foo, #7:Foo)
 
 Solution 36
 X --> f(#1:Foo, #2:Foo, #3:Foo, #4:Foo, #5:Foo)
 Y --> #6:Foo
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
-B --> f(#2:Foo, #6:Foo, #4:Foo, #4:Foo, #5:Foo)
+B --> f(#2:Foo, #4:Foo, #4:Foo, #5:Foo, #6:Foo)
 C --> f(#3:Foo, #5:Foo)
 
 Solution 37
-X --> f(#1:Foo, #2:Foo, #3:Foo, #6:Foo, #4:Foo, #5:Foo)
+X --> f(#1:Foo, #2:Foo, #3:Foo, #4:Foo, #5:Foo, #6:Foo)
 Y --> #7:Foo
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
 B --> f(#2:Foo, #4:Foo, #4:Foo, #5:Foo)
-C --> f(#3:Foo, #6:Foo, #6:Foo, #7:Foo, #5:Foo)
+C --> f(#3:Foo, #5:Foo, #6:Foo, #6:Foo, #7:Foo)
 
 Solution 38
 X --> f(#1:Foo, #2:Foo, #3:Foo, #4:Foo, #5:Foo)
 Y --> #6:Foo
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
 B --> f(#2:Foo, #4:Foo, #4:Foo, #5:Foo)
-C --> f(#3:Foo, #6:Foo, #5:Foo)
+C --> f(#3:Foo, #5:Foo, #6:Foo)
 
 Solution 39
-X --> f(#1:Foo, #2:Foo, #3:Foo, #6:Foo, #4:Foo)
-Y --> f(#7:Foo, #5:Foo)
+X --> f(#1:Foo, #2:Foo, #3:Foo, #4:Foo, #6:Foo)
+Y --> f(#5:Foo, #7:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
 B --> f(#2:Foo, #4:Foo, #4:Foo, #5:Foo)
 C --> f(#3:Foo, #6:Foo, #6:Foo, #7:Foo)
 
 Solution 40
-X --> f(#1:Foo, #2:Foo, #3:Foo, #6:Foo, #4:Foo)
+X --> f(#1:Foo, #2:Foo, #3:Foo, #4:Foo, #6:Foo)
 Y --> #5:Foo
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
 B --> f(#2:Foo, #4:Foo, #4:Foo, #5:Foo)
@@ -1169,7 +1169,7 @@ C --> f(#3:Foo, #6:Foo, #6:Foo)
 
 Solution 41
 X --> f(#1:Foo, #2:Foo, #3:Foo, #4:Foo)
-Y --> f(#6:Foo, #5:Foo)
+Y --> f(#5:Foo, #6:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
 B --> f(#2:Foo, #4:Foo, #4:Foo, #5:Foo)
 C --> f(#3:Foo, #6:Foo)
@@ -1186,7 +1186,7 @@ X --> f(#1:Foo, #2:Foo, #3:Foo, #4:Foo, #5:Foo)
 Y --> #6:Foo
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
 B --> f(#2:Foo, #4:Foo, #4:Foo)
-C --> f(#3:Foo, #6:Foo, #5:Foo, #5:Foo)
+C --> f(#3:Foo, #5:Foo, #5:Foo, #6:Foo)
 
 Solution 44
 X --> f(#1:Foo, #2:Foo, #3:Foo, #4:Foo)
@@ -1196,25 +1196,25 @@ B --> f(#2:Foo, #4:Foo, #4:Foo)
 C --> f(#3:Foo, #5:Foo)
 
 Solution 45
-X --> f(#1:Foo, #2:Foo, #3:Foo, #6:Foo, #4:Foo)
-Y --> f(#7:Foo, #5:Foo)
+X --> f(#1:Foo, #2:Foo, #3:Foo, #4:Foo, #6:Foo)
+Y --> f(#5:Foo, #7:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
 B --> f(#2:Foo, #4:Foo, #5:Foo)
-C --> f(#3:Foo, #6:Foo, #6:Foo, #7:Foo, #4:Foo)
+C --> f(#3:Foo, #4:Foo, #6:Foo, #6:Foo, #7:Foo)
 
 Solution 46
-X --> f(#1:Foo, #2:Foo, #3:Foo, #6:Foo, #4:Foo)
+X --> f(#1:Foo, #2:Foo, #3:Foo, #4:Foo, #6:Foo)
 Y --> #5:Foo
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
 B --> f(#2:Foo, #4:Foo, #5:Foo)
-C --> f(#3:Foo, #6:Foo, #6:Foo, #4:Foo)
+C --> f(#3:Foo, #4:Foo, #6:Foo, #6:Foo)
 
 Solution 47
 X --> f(#1:Foo, #2:Foo, #3:Foo, #4:Foo)
-Y --> f(#6:Foo, #5:Foo)
+Y --> f(#5:Foo, #6:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
 B --> f(#2:Foo, #4:Foo, #5:Foo)
-C --> f(#3:Foo, #6:Foo, #4:Foo)
+C --> f(#3:Foo, #4:Foo, #6:Foo)
 
 Solution 48
 X --> f(#1:Foo, #2:Foo, #3:Foo, #4:Foo)
@@ -1228,7 +1228,7 @@ X --> f(#1:Foo, #2:Foo, #3:Foo, #4:Foo, #5:Foo)
 Y --> #6:Foo
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
 B --> f(#2:Foo, #4:Foo)
-C --> f(#3:Foo, #6:Foo, #4:Foo, #5:Foo, #5:Foo)
+C --> f(#3:Foo, #4:Foo, #5:Foo, #5:Foo, #6:Foo)
 
 Solution 50
 X --> f(#1:Foo, #2:Foo, #3:Foo, #4:Foo)
@@ -1239,10 +1239,10 @@ C --> f(#3:Foo, #4:Foo, #5:Foo)
 
 Solution 51
 X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo)
-Y --> f(#6:Foo, #4:Foo)
+Y --> f(#4:Foo, #6:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
 B --> f(#2:Foo, #4:Foo)
-C --> f(#3:Foo, #6:Foo, #5:Foo, #5:Foo)
+C --> f(#3:Foo, #5:Foo, #5:Foo, #6:Foo)
 
 Solution 52
 X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo)
@@ -1280,53 +1280,53 @@ B --> #2:Foo
 C --> f(#3:Foo, #4:Foo)
 
 Solution 57
-X --> f(#1:Foo, #2:Foo, #7:Foo, #4:Foo, #5:Foo)
+X --> f(#1:Foo, #2:Foo, #4:Foo, #5:Foo, #7:Foo)
 Y --> f(#3:Foo, #6:Foo, #8:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
-B --> f(#2:Foo, #6:Foo, #4:Foo, #4:Foo, #5:Foo)
-C --> f(#7:Foo, #7:Foo, #8:Foo, #5:Foo)
+B --> f(#2:Foo, #4:Foo, #4:Foo, #5:Foo, #6:Foo)
+C --> f(#5:Foo, #7:Foo, #7:Foo, #8:Foo)
 
 Solution 58
-X --> f(#1:Foo, #2:Foo, #7:Foo, #4:Foo, #5:Foo)
+X --> f(#1:Foo, #2:Foo, #4:Foo, #5:Foo, #7:Foo)
 Y --> f(#3:Foo, #6:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
-B --> f(#2:Foo, #6:Foo, #4:Foo, #4:Foo, #5:Foo)
-C --> f(#7:Foo, #7:Foo, #5:Foo)
+B --> f(#2:Foo, #4:Foo, #4:Foo, #5:Foo, #6:Foo)
+C --> f(#5:Foo, #7:Foo, #7:Foo)
 
 Solution 59
 X --> f(#1:Foo, #2:Foo, #4:Foo, #5:Foo)
 Y --> f(#3:Foo, #6:Foo, #7:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
-B --> f(#2:Foo, #6:Foo, #4:Foo, #4:Foo, #5:Foo)
-C --> f(#7:Foo, #5:Foo)
+B --> f(#2:Foo, #4:Foo, #4:Foo, #5:Foo, #6:Foo)
+C --> f(#5:Foo, #7:Foo)
 
 Solution 60
 X --> f(#1:Foo, #2:Foo, #4:Foo, #5:Foo)
 Y --> f(#3:Foo, #6:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
-B --> f(#2:Foo, #6:Foo, #4:Foo, #4:Foo, #5:Foo)
+B --> f(#2:Foo, #4:Foo, #4:Foo, #5:Foo, #6:Foo)
 C --> #5:Foo
 
 Solution 61
-X --> f(#1:Foo, #2:Foo, #6:Foo, #4:Foo, #5:Foo)
+X --> f(#1:Foo, #2:Foo, #4:Foo, #5:Foo, #6:Foo)
 Y --> f(#3:Foo, #7:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
 B --> f(#2:Foo, #4:Foo, #4:Foo, #5:Foo)
-C --> f(#6:Foo, #6:Foo, #7:Foo, #5:Foo)
+C --> f(#5:Foo, #6:Foo, #6:Foo, #7:Foo)
 
 Solution 62
-X --> f(#1:Foo, #2:Foo, #6:Foo, #4:Foo, #5:Foo)
+X --> f(#1:Foo, #2:Foo, #4:Foo, #5:Foo, #6:Foo)
 Y --> #3:Foo
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
 B --> f(#2:Foo, #4:Foo, #4:Foo, #5:Foo)
-C --> f(#6:Foo, #6:Foo, #5:Foo)
+C --> f(#5:Foo, #6:Foo, #6:Foo)
 
 Solution 63
 X --> f(#1:Foo, #2:Foo, #4:Foo, #5:Foo)
 Y --> f(#3:Foo, #6:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
 B --> f(#2:Foo, #4:Foo, #4:Foo, #5:Foo)
-C --> f(#6:Foo, #5:Foo)
+C --> f(#5:Foo, #6:Foo)
 
 Solution 64
 X --> f(#1:Foo, #2:Foo, #4:Foo, #5:Foo)
@@ -1336,14 +1336,14 @@ B --> f(#2:Foo, #4:Foo, #4:Foo, #5:Foo)
 C --> #5:Foo
 
 Solution 65
-X --> f(#1:Foo, #2:Foo, #6:Foo, #4:Foo)
-Y --> f(#3:Foo, #7:Foo, #5:Foo)
+X --> f(#1:Foo, #2:Foo, #4:Foo, #6:Foo)
+Y --> f(#3:Foo, #5:Foo, #7:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
 B --> f(#2:Foo, #4:Foo, #4:Foo, #5:Foo)
 C --> f(#6:Foo, #6:Foo, #7:Foo)
 
 Solution 66
-X --> f(#1:Foo, #2:Foo, #6:Foo, #4:Foo)
+X --> f(#1:Foo, #2:Foo, #4:Foo, #6:Foo)
 Y --> f(#3:Foo, #5:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
 B --> f(#2:Foo, #4:Foo, #4:Foo, #5:Foo)
@@ -1351,7 +1351,7 @@ C --> f(#6:Foo, #6:Foo)
 
 Solution 67
 X --> f(#1:Foo, #2:Foo, #4:Foo)
-Y --> f(#3:Foo, #6:Foo, #5:Foo)
+Y --> f(#3:Foo, #5:Foo, #6:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
 B --> f(#2:Foo, #4:Foo, #4:Foo, #5:Foo)
 C --> #6:Foo
@@ -1361,7 +1361,7 @@ X --> f(#1:Foo, #2:Foo, #4:Foo, #5:Foo)
 Y --> f(#3:Foo, #6:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
 B --> f(#2:Foo, #4:Foo, #4:Foo)
-C --> f(#6:Foo, #5:Foo, #5:Foo)
+C --> f(#5:Foo, #5:Foo, #6:Foo)
 
 Solution 69
 X --> f(#1:Foo, #2:Foo, #4:Foo, #5:Foo)
@@ -1378,25 +1378,25 @@ B --> f(#2:Foo, #4:Foo, #4:Foo)
 C --> #5:Foo
 
 Solution 71
-X --> f(#1:Foo, #2:Foo, #6:Foo, #4:Foo)
-Y --> f(#3:Foo, #7:Foo, #5:Foo)
+X --> f(#1:Foo, #2:Foo, #4:Foo, #6:Foo)
+Y --> f(#3:Foo, #5:Foo, #7:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
 B --> f(#2:Foo, #4:Foo, #5:Foo)
-C --> f(#6:Foo, #6:Foo, #7:Foo, #4:Foo)
+C --> f(#4:Foo, #6:Foo, #6:Foo, #7:Foo)
 
 Solution 72
-X --> f(#1:Foo, #2:Foo, #6:Foo, #4:Foo)
+X --> f(#1:Foo, #2:Foo, #4:Foo, #6:Foo)
 Y --> f(#3:Foo, #5:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
 B --> f(#2:Foo, #4:Foo, #5:Foo)
-C --> f(#6:Foo, #6:Foo, #4:Foo)
+C --> f(#4:Foo, #6:Foo, #6:Foo)
 
 Solution 73
 X --> f(#1:Foo, #2:Foo, #4:Foo)
-Y --> f(#3:Foo, #6:Foo, #5:Foo)
+Y --> f(#3:Foo, #5:Foo, #6:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
 B --> f(#2:Foo, #4:Foo, #5:Foo)
-C --> f(#6:Foo, #4:Foo)
+C --> f(#4:Foo, #6:Foo)
 
 Solution 74
 X --> f(#1:Foo, #2:Foo, #4:Foo)
@@ -1410,7 +1410,7 @@ X --> f(#1:Foo, #2:Foo, #4:Foo, #5:Foo)
 Y --> f(#3:Foo, #6:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
 B --> f(#2:Foo, #4:Foo)
-C --> f(#6:Foo, #4:Foo, #5:Foo, #5:Foo)
+C --> f(#4:Foo, #5:Foo, #5:Foo, #6:Foo)
 
 Solution 76
 X --> f(#1:Foo, #2:Foo, #4:Foo, #5:Foo)
@@ -1435,10 +1435,10 @@ C --> #4:Foo
 
 Solution 79
 X --> f(#1:Foo, #2:Foo, #5:Foo)
-Y --> f(#3:Foo, #6:Foo, #4:Foo)
+Y --> f(#3:Foo, #4:Foo, #6:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
 B --> f(#2:Foo, #4:Foo)
-C --> f(#6:Foo, #5:Foo, #5:Foo)
+C --> f(#5:Foo, #5:Foo, #6:Foo)
 
 Solution 80
 X --> f(#1:Foo, #2:Foo, #5:Foo)
@@ -1476,25 +1476,25 @@ B --> #2:Foo
 C --> #4:Foo
 
 Solution 85
-X --> f(#1:Foo, #2:Foo, #3:Foo, #6:Foo, #4:Foo)
-Y --> f(#7:Foo, #5:Foo)
+X --> f(#1:Foo, #2:Foo, #3:Foo, #4:Foo, #6:Foo)
+Y --> f(#5:Foo, #7:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo)
 B --> f(#2:Foo, #3:Foo, #3:Foo, #4:Foo, #5:Foo)
-C --> f(#6:Foo, #6:Foo, #7:Foo, #4:Foo)
+C --> f(#4:Foo, #6:Foo, #6:Foo, #7:Foo)
 
 Solution 86
-X --> f(#1:Foo, #2:Foo, #3:Foo, #6:Foo, #4:Foo)
+X --> f(#1:Foo, #2:Foo, #3:Foo, #4:Foo, #6:Foo)
 Y --> #5:Foo
 A --> f(#1:Foo, #1:Foo, #2:Foo)
 B --> f(#2:Foo, #3:Foo, #3:Foo, #4:Foo, #5:Foo)
-C --> f(#6:Foo, #6:Foo, #4:Foo)
+C --> f(#4:Foo, #6:Foo, #6:Foo)
 
 Solution 87
 X --> f(#1:Foo, #2:Foo, #3:Foo, #4:Foo)
-Y --> f(#6:Foo, #5:Foo)
+Y --> f(#5:Foo, #6:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo)
 B --> f(#2:Foo, #3:Foo, #3:Foo, #4:Foo, #5:Foo)
-C --> f(#6:Foo, #4:Foo)
+C --> f(#4:Foo, #6:Foo)
 
 Solution 88
 X --> f(#1:Foo, #2:Foo, #3:Foo, #4:Foo)
@@ -1508,7 +1508,7 @@ X --> f(#1:Foo, #2:Foo, #3:Foo, #4:Foo, #5:Foo)
 Y --> #6:Foo
 A --> f(#1:Foo, #1:Foo, #2:Foo)
 B --> f(#2:Foo, #3:Foo, #3:Foo, #4:Foo)
-C --> f(#6:Foo, #4:Foo, #5:Foo, #5:Foo)
+C --> f(#4:Foo, #5:Foo, #5:Foo, #6:Foo)
 
 Solution 90
 X --> f(#1:Foo, #2:Foo, #3:Foo, #4:Foo)
@@ -1519,10 +1519,10 @@ C --> f(#4:Foo, #5:Foo)
 
 Solution 91
 X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo)
-Y --> f(#6:Foo, #4:Foo)
+Y --> f(#4:Foo, #6:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo)
 B --> f(#2:Foo, #3:Foo, #3:Foo, #4:Foo)
-C --> f(#6:Foo, #5:Foo, #5:Foo)
+C --> f(#5:Foo, #5:Foo, #6:Foo)
 
 Solution 92
 X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo)
@@ -1554,10 +1554,10 @@ C --> #4:Foo
 
 Solution 96
 X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo)
-Y --> f(#6:Foo, #4:Foo)
+Y --> f(#4:Foo, #6:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo)
 B --> f(#2:Foo, #3:Foo, #4:Foo)
-C --> f(#3:Foo, #6:Foo, #5:Foo, #5:Foo)
+C --> f(#3:Foo, #5:Foo, #5:Foo, #6:Foo)
 
 Solution 97
 X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo)
@@ -1630,53 +1630,53 @@ B --> #2:Foo
 C --> #3:Foo
 
 Solution 107
-X --> f(#1:Foo, #2:Foo, #7:Foo, #4:Foo, #5:Foo)
+X --> f(#1:Foo, #2:Foo, #4:Foo, #5:Foo, #7:Foo)
 Y --> f(#3:Foo, #6:Foo, #8:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
-B --> f(#6:Foo, #4:Foo, #4:Foo, #5:Foo)
-C --> f(#2:Foo, #7:Foo, #7:Foo, #8:Foo, #5:Foo)
+B --> f(#4:Foo, #4:Foo, #5:Foo, #6:Foo)
+C --> f(#2:Foo, #5:Foo, #7:Foo, #7:Foo, #8:Foo)
 
 Solution 108
-X --> f(#1:Foo, #2:Foo, #7:Foo, #4:Foo, #5:Foo)
+X --> f(#1:Foo, #2:Foo, #4:Foo, #5:Foo, #7:Foo)
 Y --> f(#3:Foo, #6:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
-B --> f(#6:Foo, #4:Foo, #4:Foo, #5:Foo)
-C --> f(#2:Foo, #7:Foo, #7:Foo, #5:Foo)
+B --> f(#4:Foo, #4:Foo, #5:Foo, #6:Foo)
+C --> f(#2:Foo, #5:Foo, #7:Foo, #7:Foo)
 
 Solution 109
 X --> f(#1:Foo, #2:Foo, #4:Foo, #5:Foo)
 Y --> f(#3:Foo, #6:Foo, #7:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
-B --> f(#6:Foo, #4:Foo, #4:Foo, #5:Foo)
-C --> f(#2:Foo, #7:Foo, #5:Foo)
+B --> f(#4:Foo, #4:Foo, #5:Foo, #6:Foo)
+C --> f(#2:Foo, #5:Foo, #7:Foo)
 
 Solution 110
 X --> f(#1:Foo, #2:Foo, #4:Foo, #5:Foo)
 Y --> f(#3:Foo, #6:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
-B --> f(#6:Foo, #4:Foo, #4:Foo, #5:Foo)
+B --> f(#4:Foo, #4:Foo, #5:Foo, #6:Foo)
 C --> f(#2:Foo, #5:Foo)
 
 Solution 111
-X --> f(#1:Foo, #2:Foo, #6:Foo, #4:Foo, #5:Foo)
+X --> f(#1:Foo, #2:Foo, #4:Foo, #5:Foo, #6:Foo)
 Y --> f(#3:Foo, #7:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
 B --> f(#4:Foo, #4:Foo, #5:Foo)
-C --> f(#2:Foo, #6:Foo, #6:Foo, #7:Foo, #5:Foo)
+C --> f(#2:Foo, #5:Foo, #6:Foo, #6:Foo, #7:Foo)
 
 Solution 112
-X --> f(#1:Foo, #2:Foo, #6:Foo, #4:Foo, #5:Foo)
+X --> f(#1:Foo, #2:Foo, #4:Foo, #5:Foo, #6:Foo)
 Y --> #3:Foo
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
 B --> f(#4:Foo, #4:Foo, #5:Foo)
-C --> f(#2:Foo, #6:Foo, #6:Foo, #5:Foo)
+C --> f(#2:Foo, #5:Foo, #6:Foo, #6:Foo)
 
 Solution 113
 X --> f(#1:Foo, #2:Foo, #4:Foo, #5:Foo)
 Y --> f(#3:Foo, #6:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
 B --> f(#4:Foo, #4:Foo, #5:Foo)
-C --> f(#2:Foo, #6:Foo, #5:Foo)
+C --> f(#2:Foo, #5:Foo, #6:Foo)
 
 Solution 114
 X --> f(#1:Foo, #2:Foo, #4:Foo, #5:Foo)
@@ -1686,14 +1686,14 @@ B --> f(#4:Foo, #4:Foo, #5:Foo)
 C --> f(#2:Foo, #5:Foo)
 
 Solution 115
-X --> f(#1:Foo, #2:Foo, #6:Foo, #4:Foo)
-Y --> f(#3:Foo, #7:Foo, #5:Foo)
+X --> f(#1:Foo, #2:Foo, #4:Foo, #6:Foo)
+Y --> f(#3:Foo, #5:Foo, #7:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
 B --> f(#4:Foo, #4:Foo, #5:Foo)
 C --> f(#2:Foo, #6:Foo, #6:Foo, #7:Foo)
 
 Solution 116
-X --> f(#1:Foo, #2:Foo, #6:Foo, #4:Foo)
+X --> f(#1:Foo, #2:Foo, #4:Foo, #6:Foo)
 Y --> f(#3:Foo, #5:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
 B --> f(#4:Foo, #4:Foo, #5:Foo)
@@ -1701,7 +1701,7 @@ C --> f(#2:Foo, #6:Foo, #6:Foo)
 
 Solution 117
 X --> f(#1:Foo, #2:Foo, #4:Foo)
-Y --> f(#3:Foo, #6:Foo, #5:Foo)
+Y --> f(#3:Foo, #5:Foo, #6:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
 B --> f(#4:Foo, #4:Foo, #5:Foo)
 C --> f(#2:Foo, #6:Foo)
@@ -1718,7 +1718,7 @@ X --> f(#1:Foo, #2:Foo, #4:Foo, #5:Foo)
 Y --> f(#3:Foo, #6:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
 B --> f(#4:Foo, #4:Foo)
-C --> f(#2:Foo, #6:Foo, #5:Foo, #5:Foo)
+C --> f(#2:Foo, #5:Foo, #5:Foo, #6:Foo)
 
 Solution 120
 X --> f(#1:Foo, #2:Foo, #4:Foo, #5:Foo)
@@ -1742,25 +1742,25 @@ B --> f(#4:Foo, #4:Foo)
 C --> #2:Foo
 
 Solution 123
-X --> f(#1:Foo, #2:Foo, #6:Foo, #4:Foo)
-Y --> f(#3:Foo, #7:Foo, #5:Foo)
+X --> f(#1:Foo, #2:Foo, #4:Foo, #6:Foo)
+Y --> f(#3:Foo, #5:Foo, #7:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
 B --> f(#4:Foo, #5:Foo)
-C --> f(#2:Foo, #6:Foo, #6:Foo, #7:Foo, #4:Foo)
+C --> f(#2:Foo, #4:Foo, #6:Foo, #6:Foo, #7:Foo)
 
 Solution 124
-X --> f(#1:Foo, #2:Foo, #6:Foo, #4:Foo)
+X --> f(#1:Foo, #2:Foo, #4:Foo, #6:Foo)
 Y --> f(#3:Foo, #5:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
 B --> f(#4:Foo, #5:Foo)
-C --> f(#2:Foo, #6:Foo, #6:Foo, #4:Foo)
+C --> f(#2:Foo, #4:Foo, #6:Foo, #6:Foo)
 
 Solution 125
 X --> f(#1:Foo, #2:Foo, #4:Foo)
-Y --> f(#3:Foo, #6:Foo, #5:Foo)
+Y --> f(#3:Foo, #5:Foo, #6:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
 B --> f(#4:Foo, #5:Foo)
-C --> f(#2:Foo, #6:Foo, #4:Foo)
+C --> f(#2:Foo, #4:Foo, #6:Foo)
 
 Solution 126
 X --> f(#1:Foo, #2:Foo, #4:Foo)
@@ -1774,7 +1774,7 @@ X --> f(#1:Foo, #2:Foo, #4:Foo, #5:Foo)
 Y --> f(#3:Foo, #6:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
 B --> #4:Foo
-C --> f(#2:Foo, #6:Foo, #4:Foo, #5:Foo, #5:Foo)
+C --> f(#2:Foo, #4:Foo, #5:Foo, #5:Foo, #6:Foo)
 
 Solution 128
 X --> f(#1:Foo, #2:Foo, #4:Foo, #5:Foo)
@@ -1799,10 +1799,10 @@ C --> f(#2:Foo, #4:Foo)
 
 Solution 131
 X --> f(#1:Foo, #2:Foo, #5:Foo)
-Y --> f(#3:Foo, #6:Foo, #4:Foo)
+Y --> f(#3:Foo, #4:Foo, #6:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo, #3:Foo)
 B --> #4:Foo
-C --> f(#2:Foo, #6:Foo, #5:Foo, #5:Foo)
+C --> f(#2:Foo, #5:Foo, #5:Foo, #6:Foo)
 
 Solution 132
 X --> f(#1:Foo, #2:Foo, #5:Foo)
@@ -1826,25 +1826,25 @@ B --> #4:Foo
 C --> #2:Foo
 
 Solution 135
-X --> f(#1:Foo, #2:Foo, #3:Foo, #6:Foo, #4:Foo)
-Y --> f(#7:Foo, #5:Foo)
+X --> f(#1:Foo, #2:Foo, #3:Foo, #4:Foo, #6:Foo)
+Y --> f(#5:Foo, #7:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo)
 B --> f(#3:Foo, #3:Foo, #4:Foo, #5:Foo)
-C --> f(#2:Foo, #6:Foo, #6:Foo, #7:Foo, #4:Foo)
+C --> f(#2:Foo, #4:Foo, #6:Foo, #6:Foo, #7:Foo)
 
 Solution 136
-X --> f(#1:Foo, #2:Foo, #3:Foo, #6:Foo, #4:Foo)
+X --> f(#1:Foo, #2:Foo, #3:Foo, #4:Foo, #6:Foo)
 Y --> #5:Foo
 A --> f(#1:Foo, #1:Foo, #2:Foo)
 B --> f(#3:Foo, #3:Foo, #4:Foo, #5:Foo)
-C --> f(#2:Foo, #6:Foo, #6:Foo, #4:Foo)
+C --> f(#2:Foo, #4:Foo, #6:Foo, #6:Foo)
 
 Solution 137
 X --> f(#1:Foo, #2:Foo, #3:Foo, #4:Foo)
-Y --> f(#6:Foo, #5:Foo)
+Y --> f(#5:Foo, #6:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo)
 B --> f(#3:Foo, #3:Foo, #4:Foo, #5:Foo)
-C --> f(#2:Foo, #6:Foo, #4:Foo)
+C --> f(#2:Foo, #4:Foo, #6:Foo)
 
 Solution 138
 X --> f(#1:Foo, #2:Foo, #3:Foo, #4:Foo)
@@ -1858,7 +1858,7 @@ X --> f(#1:Foo, #2:Foo, #3:Foo, #4:Foo, #5:Foo)
 Y --> #6:Foo
 A --> f(#1:Foo, #1:Foo, #2:Foo)
 B --> f(#3:Foo, #3:Foo, #4:Foo)
-C --> f(#2:Foo, #6:Foo, #4:Foo, #5:Foo, #5:Foo)
+C --> f(#2:Foo, #4:Foo, #5:Foo, #5:Foo, #6:Foo)
 
 Solution 140
 X --> f(#1:Foo, #2:Foo, #3:Foo, #4:Foo)
@@ -1869,10 +1869,10 @@ C --> f(#2:Foo, #4:Foo, #5:Foo)
 
 Solution 141
 X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo)
-Y --> f(#6:Foo, #4:Foo)
+Y --> f(#4:Foo, #6:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo)
 B --> f(#3:Foo, #3:Foo, #4:Foo)
-C --> f(#2:Foo, #6:Foo, #5:Foo, #5:Foo)
+C --> f(#2:Foo, #5:Foo, #5:Foo, #6:Foo)
 
 Solution 142
 X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo)
@@ -1911,10 +1911,10 @@ C --> f(#2:Foo, #4:Foo)
 
 Solution 147
 X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo)
-Y --> f(#6:Foo, #4:Foo)
+Y --> f(#4:Foo, #6:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo)
 B --> f(#3:Foo, #4:Foo)
-C --> f(#2:Foo, #3:Foo, #6:Foo, #5:Foo, #5:Foo)
+C --> f(#2:Foo, #3:Foo, #5:Foo, #5:Foo, #6:Foo)
 
 Solution 148
 X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo)
@@ -1980,25 +1980,25 @@ B --> #3:Foo
 C --> #2:Foo
 
 Solution 157
-X --> f(#1:Foo, #3:Foo, #6:Foo, #4:Foo)
-Y --> f(#2:Foo, #7:Foo, #5:Foo)
+X --> f(#1:Foo, #3:Foo, #4:Foo, #6:Foo)
+Y --> f(#2:Foo, #5:Foo, #7:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo)
 B --> f(#3:Foo, #3:Foo, #4:Foo, #5:Foo)
-C --> f(#6:Foo, #6:Foo, #7:Foo, #4:Foo)
+C --> f(#4:Foo, #6:Foo, #6:Foo, #7:Foo)
 
 Solution 158
-X --> f(#1:Foo, #3:Foo, #6:Foo, #4:Foo)
+X --> f(#1:Foo, #3:Foo, #4:Foo, #6:Foo)
 Y --> f(#2:Foo, #5:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo)
 B --> f(#3:Foo, #3:Foo, #4:Foo, #5:Foo)
-C --> f(#6:Foo, #6:Foo, #4:Foo)
+C --> f(#4:Foo, #6:Foo, #6:Foo)
 
 Solution 159
 X --> f(#1:Foo, #3:Foo, #4:Foo)
-Y --> f(#2:Foo, #6:Foo, #5:Foo)
+Y --> f(#2:Foo, #5:Foo, #6:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo)
 B --> f(#3:Foo, #3:Foo, #4:Foo, #5:Foo)
-C --> f(#6:Foo, #4:Foo)
+C --> f(#4:Foo, #6:Foo)
 
 Solution 160
 X --> f(#1:Foo, #3:Foo, #4:Foo)
@@ -2012,7 +2012,7 @@ X --> f(#1:Foo, #3:Foo, #4:Foo, #5:Foo)
 Y --> f(#2:Foo, #6:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo)
 B --> f(#3:Foo, #3:Foo, #4:Foo)
-C --> f(#6:Foo, #4:Foo, #5:Foo, #5:Foo)
+C --> f(#4:Foo, #5:Foo, #5:Foo, #6:Foo)
 
 Solution 162
 X --> f(#1:Foo, #3:Foo, #4:Foo, #5:Foo)
@@ -2037,10 +2037,10 @@ C --> #4:Foo
 
 Solution 165
 X --> f(#1:Foo, #3:Foo, #5:Foo)
-Y --> f(#2:Foo, #6:Foo, #4:Foo)
+Y --> f(#2:Foo, #4:Foo, #6:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo)
 B --> f(#3:Foo, #3:Foo, #4:Foo)
-C --> f(#6:Foo, #5:Foo, #5:Foo)
+C --> f(#5:Foo, #5:Foo, #6:Foo)
 
 Solution 166
 X --> f(#1:Foo, #3:Foo, #5:Foo)
@@ -2079,10 +2079,10 @@ C --> #4:Foo
 
 Solution 171
 X --> f(#1:Foo, #3:Foo, #5:Foo)
-Y --> f(#2:Foo, #6:Foo, #4:Foo)
+Y --> f(#2:Foo, #4:Foo, #6:Foo)
 A --> f(#1:Foo, #1:Foo, #2:Foo)
 B --> f(#3:Foo, #4:Foo)
-C --> f(#3:Foo, #6:Foo, #5:Foo, #5:Foo)
+C --> f(#3:Foo, #5:Foo, #5:Foo, #6:Foo)
 
 Solution 172
 X --> f(#1:Foo, #3:Foo, #5:Foo)
@@ -2156,10 +2156,10 @@ C --> #4:Foo
 
 Solution 182
 X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo)
-Y --> f(#6:Foo, #4:Foo)
+Y --> f(#4:Foo, #6:Foo)
 A --> f(#1:Foo, #1:Foo)
 B --> f(#2:Foo, #2:Foo, #3:Foo, #4:Foo)
-C --> f(#3:Foo, #6:Foo, #5:Foo, #5:Foo)
+C --> f(#3:Foo, #5:Foo, #5:Foo, #6:Foo)
 
 Solution 183
 X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo)
@@ -2295,53 +2295,53 @@ B --> #2:Foo
 C --> #3:Foo
 
 Solution 202
-X --> f(#1:Foo, #2:Foo, #7:Foo, #4:Foo, #5:Foo)
+X --> f(#1:Foo, #2:Foo, #4:Foo, #5:Foo, #7:Foo)
 Y --> f(#3:Foo, #6:Foo, #8:Foo)
 A --> f(#1:Foo, #2:Foo, #3:Foo)
-B --> f(#1:Foo, #6:Foo, #4:Foo, #4:Foo, #5:Foo)
-C --> f(#2:Foo, #7:Foo, #7:Foo, #8:Foo, #5:Foo)
+B --> f(#1:Foo, #4:Foo, #4:Foo, #5:Foo, #6:Foo)
+C --> f(#2:Foo, #5:Foo, #7:Foo, #7:Foo, #8:Foo)
 
 Solution 203
-X --> f(#1:Foo, #2:Foo, #7:Foo, #4:Foo, #5:Foo)
+X --> f(#1:Foo, #2:Foo, #4:Foo, #5:Foo, #7:Foo)
 Y --> f(#3:Foo, #6:Foo)
 A --> f(#1:Foo, #2:Foo, #3:Foo)
-B --> f(#1:Foo, #6:Foo, #4:Foo, #4:Foo, #5:Foo)
-C --> f(#2:Foo, #7:Foo, #7:Foo, #5:Foo)
+B --> f(#1:Foo, #4:Foo, #4:Foo, #5:Foo, #6:Foo)
+C --> f(#2:Foo, #5:Foo, #7:Foo, #7:Foo)
 
 Solution 204
 X --> f(#1:Foo, #2:Foo, #4:Foo, #5:Foo)
 Y --> f(#3:Foo, #6:Foo, #7:Foo)
 A --> f(#1:Foo, #2:Foo, #3:Foo)
-B --> f(#1:Foo, #6:Foo, #4:Foo, #4:Foo, #5:Foo)
-C --> f(#2:Foo, #7:Foo, #5:Foo)
+B --> f(#1:Foo, #4:Foo, #4:Foo, #5:Foo, #6:Foo)
+C --> f(#2:Foo, #5:Foo, #7:Foo)
 
 Solution 205
 X --> f(#1:Foo, #2:Foo, #4:Foo, #5:Foo)
 Y --> f(#3:Foo, #6:Foo)
 A --> f(#1:Foo, #2:Foo, #3:Foo)
-B --> f(#1:Foo, #6:Foo, #4:Foo, #4:Foo, #5:Foo)
+B --> f(#1:Foo, #4:Foo, #4:Foo, #5:Foo, #6:Foo)
 C --> f(#2:Foo, #5:Foo)
 
 Solution 206
-X --> f(#1:Foo, #2:Foo, #6:Foo, #4:Foo, #5:Foo)
+X --> f(#1:Foo, #2:Foo, #4:Foo, #5:Foo, #6:Foo)
 Y --> f(#3:Foo, #7:Foo)
 A --> f(#1:Foo, #2:Foo, #3:Foo)
 B --> f(#1:Foo, #4:Foo, #4:Foo, #5:Foo)
-C --> f(#2:Foo, #6:Foo, #6:Foo, #7:Foo, #5:Foo)
+C --> f(#2:Foo, #5:Foo, #6:Foo, #6:Foo, #7:Foo)
 
 Solution 207
-X --> f(#1:Foo, #2:Foo, #6:Foo, #4:Foo, #5:Foo)
+X --> f(#1:Foo, #2:Foo, #4:Foo, #5:Foo, #6:Foo)
 Y --> #3:Foo
 A --> f(#1:Foo, #2:Foo, #3:Foo)
 B --> f(#1:Foo, #4:Foo, #4:Foo, #5:Foo)
-C --> f(#2:Foo, #6:Foo, #6:Foo, #5:Foo)
+C --> f(#2:Foo, #5:Foo, #6:Foo, #6:Foo)
 
 Solution 208
 X --> f(#1:Foo, #2:Foo, #4:Foo, #5:Foo)
 Y --> f(#3:Foo, #6:Foo)
 A --> f(#1:Foo, #2:Foo, #3:Foo)
 B --> f(#1:Foo, #4:Foo, #4:Foo, #5:Foo)
-C --> f(#2:Foo, #6:Foo, #5:Foo)
+C --> f(#2:Foo, #5:Foo, #6:Foo)
 
 Solution 209
 X --> f(#1:Foo, #2:Foo, #4:Foo, #5:Foo)
@@ -2351,14 +2351,14 @@ B --> f(#1:Foo, #4:Foo, #4:Foo, #5:Foo)
 C --> f(#2:Foo, #5:Foo)
 
 Solution 210
-X --> f(#1:Foo, #2:Foo, #6:Foo, #4:Foo)
-Y --> f(#3:Foo, #7:Foo, #5:Foo)
+X --> f(#1:Foo, #2:Foo, #4:Foo, #6:Foo)
+Y --> f(#3:Foo, #5:Foo, #7:Foo)
 A --> f(#1:Foo, #2:Foo, #3:Foo)
 B --> f(#1:Foo, #4:Foo, #4:Foo, #5:Foo)
 C --> f(#2:Foo, #6:Foo, #6:Foo, #7:Foo)
 
 Solution 211
-X --> f(#1:Foo, #2:Foo, #6:Foo, #4:Foo)
+X --> f(#1:Foo, #2:Foo, #4:Foo, #6:Foo)
 Y --> f(#3:Foo, #5:Foo)
 A --> f(#1:Foo, #2:Foo, #3:Foo)
 B --> f(#1:Foo, #4:Foo, #4:Foo, #5:Foo)
@@ -2366,7 +2366,7 @@ C --> f(#2:Foo, #6:Foo, #6:Foo)
 
 Solution 212
 X --> f(#1:Foo, #2:Foo, #4:Foo)
-Y --> f(#3:Foo, #6:Foo, #5:Foo)
+Y --> f(#3:Foo, #5:Foo, #6:Foo)
 A --> f(#1:Foo, #2:Foo, #3:Foo)
 B --> f(#1:Foo, #4:Foo, #4:Foo, #5:Foo)
 C --> f(#2:Foo, #6:Foo)
@@ -2383,7 +2383,7 @@ X --> f(#1:Foo, #2:Foo, #4:Foo, #5:Foo)
 Y --> f(#3:Foo, #6:Foo)
 A --> f(#1:Foo, #2:Foo, #3:Foo)
 B --> f(#1:Foo, #4:Foo, #4:Foo)
-C --> f(#2:Foo, #6:Foo, #5:Foo, #5:Foo)
+C --> f(#2:Foo, #5:Foo, #5:Foo, #6:Foo)
 
 Solution 215
 X --> f(#1:Foo, #2:Foo, #4:Foo, #5:Foo)
@@ -2407,25 +2407,25 @@ B --> f(#1:Foo, #4:Foo, #4:Foo)
 C --> #2:Foo
 
 Solution 218
-X --> f(#1:Foo, #2:Foo, #6:Foo, #4:Foo)
-Y --> f(#3:Foo, #7:Foo, #5:Foo)
+X --> f(#1:Foo, #2:Foo, #4:Foo, #6:Foo)
+Y --> f(#3:Foo, #5:Foo, #7:Foo)
 A --> f(#1:Foo, #2:Foo, #3:Foo)
 B --> f(#1:Foo, #4:Foo, #5:Foo)
-C --> f(#2:Foo, #6:Foo, #6:Foo, #7:Foo, #4:Foo)
+C --> f(#2:Foo, #4:Foo, #6:Foo, #6:Foo, #7:Foo)
 
 Solution 219
-X --> f(#1:Foo, #2:Foo, #6:Foo, #4:Foo)
+X --> f(#1:Foo, #2:Foo, #4:Foo, #6:Foo)
 Y --> f(#3:Foo, #5:Foo)
 A --> f(#1:Foo, #2:Foo, #3:Foo)
 B --> f(#1:Foo, #4:Foo, #5:Foo)
-C --> f(#2:Foo, #6:Foo, #6:Foo, #4:Foo)
+C --> f(#2:Foo, #4:Foo, #6:Foo, #6:Foo)
 
 Solution 220
 X --> f(#1:Foo, #2:Foo, #4:Foo)
-Y --> f(#3:Foo, #6:Foo, #5:Foo)
+Y --> f(#3:Foo, #5:Foo, #6:Foo)
 A --> f(#1:Foo, #2:Foo, #3:Foo)
 B --> f(#1:Foo, #4:Foo, #5:Foo)
-C --> f(#2:Foo, #6:Foo, #4:Foo)
+C --> f(#2:Foo, #4:Foo, #6:Foo)
 
 Solution 221
 X --> f(#1:Foo, #2:Foo, #4:Foo)
@@ -2439,7 +2439,7 @@ X --> f(#1:Foo, #2:Foo, #4:Foo, #5:Foo)
 Y --> f(#3:Foo, #6:Foo)
 A --> f(#1:Foo, #2:Foo, #3:Foo)
 B --> f(#1:Foo, #4:Foo)
-C --> f(#2:Foo, #6:Foo, #4:Foo, #5:Foo, #5:Foo)
+C --> f(#2:Foo, #4:Foo, #5:Foo, #5:Foo, #6:Foo)
 
 Solution 223
 X --> f(#1:Foo, #2:Foo, #4:Foo, #5:Foo)
@@ -2464,10 +2464,10 @@ C --> f(#2:Foo, #4:Foo)
 
 Solution 226
 X --> f(#1:Foo, #2:Foo, #5:Foo)
-Y --> f(#3:Foo, #6:Foo, #4:Foo)
+Y --> f(#3:Foo, #4:Foo, #6:Foo)
 A --> f(#1:Foo, #2:Foo, #3:Foo)
 B --> f(#1:Foo, #4:Foo)
-C --> f(#2:Foo, #6:Foo, #5:Foo, #5:Foo)
+C --> f(#2:Foo, #5:Foo, #5:Foo, #6:Foo)
 
 Solution 227
 X --> f(#1:Foo, #2:Foo, #5:Foo)
@@ -2519,25 +2519,25 @@ B --> #1:Foo
 C --> #2:Foo
 
 Solution 234
-X --> f(#1:Foo, #2:Foo, #3:Foo, #6:Foo, #4:Foo)
-Y --> f(#7:Foo, #5:Foo)
+X --> f(#1:Foo, #2:Foo, #3:Foo, #4:Foo, #6:Foo)
+Y --> f(#5:Foo, #7:Foo)
 A --> f(#1:Foo, #2:Foo)
 B --> f(#1:Foo, #3:Foo, #3:Foo, #4:Foo, #5:Foo)
-C --> f(#2:Foo, #6:Foo, #6:Foo, #7:Foo, #4:Foo)
+C --> f(#2:Foo, #4:Foo, #6:Foo, #6:Foo, #7:Foo)
 
 Solution 235
-X --> f(#1:Foo, #2:Foo, #3:Foo, #6:Foo, #4:Foo)
+X --> f(#1:Foo, #2:Foo, #3:Foo, #4:Foo, #6:Foo)
 Y --> #5:Foo
 A --> f(#1:Foo, #2:Foo)
 B --> f(#1:Foo, #3:Foo, #3:Foo, #4:Foo, #5:Foo)
-C --> f(#2:Foo, #6:Foo, #6:Foo, #4:Foo)
+C --> f(#2:Foo, #4:Foo, #6:Foo, #6:Foo)
 
 Solution 236
 X --> f(#1:Foo, #2:Foo, #3:Foo, #4:Foo)
-Y --> f(#6:Foo, #5:Foo)
+Y --> f(#5:Foo, #6:Foo)
 A --> f(#1:Foo, #2:Foo)
 B --> f(#1:Foo, #3:Foo, #3:Foo, #4:Foo, #5:Foo)
-C --> f(#2:Foo, #6:Foo, #4:Foo)
+C --> f(#2:Foo, #4:Foo, #6:Foo)
 
 Solution 237
 X --> f(#1:Foo, #2:Foo, #3:Foo, #4:Foo)
@@ -2551,7 +2551,7 @@ X --> f(#1:Foo, #2:Foo, #3:Foo, #4:Foo, #5:Foo)
 Y --> #6:Foo
 A --> f(#1:Foo, #2:Foo)
 B --> f(#1:Foo, #3:Foo, #3:Foo, #4:Foo)
-C --> f(#2:Foo, #6:Foo, #4:Foo, #5:Foo, #5:Foo)
+C --> f(#2:Foo, #4:Foo, #5:Foo, #5:Foo, #6:Foo)
 
 Solution 239
 X --> f(#1:Foo, #2:Foo, #3:Foo, #4:Foo)
@@ -2562,10 +2562,10 @@ C --> f(#2:Foo, #4:Foo, #5:Foo)
 
 Solution 240
 X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo)
-Y --> f(#6:Foo, #4:Foo)
+Y --> f(#4:Foo, #6:Foo)
 A --> f(#1:Foo, #2:Foo)
 B --> f(#1:Foo, #3:Foo, #3:Foo, #4:Foo)
-C --> f(#2:Foo, #6:Foo, #5:Foo, #5:Foo)
+C --> f(#2:Foo, #5:Foo, #5:Foo, #6:Foo)
 
 Solution 241
 X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo)
@@ -2604,10 +2604,10 @@ C --> f(#2:Foo, #4:Foo)
 
 Solution 246
 X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo)
-Y --> f(#6:Foo, #4:Foo)
+Y --> f(#4:Foo, #6:Foo)
 A --> f(#1:Foo, #2:Foo)
 B --> f(#1:Foo, #3:Foo, #4:Foo)
-C --> f(#2:Foo, #3:Foo, #6:Foo, #5:Foo, #5:Foo)
+C --> f(#2:Foo, #3:Foo, #5:Foo, #5:Foo, #6:Foo)
 
 Solution 247
 X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo)
@@ -2687,25 +2687,25 @@ B --> #1:Foo
 C --> f(#2:Foo, #3:Foo)
 
 Solution 258
-X --> f(#1:Foo, #3:Foo, #6:Foo, #4:Foo)
-Y --> f(#2:Foo, #7:Foo, #5:Foo)
+X --> f(#1:Foo, #3:Foo, #4:Foo, #6:Foo)
+Y --> f(#2:Foo, #5:Foo, #7:Foo)
 A --> f(#1:Foo, #2:Foo)
 B --> f(#1:Foo, #3:Foo, #3:Foo, #4:Foo, #5:Foo)
-C --> f(#6:Foo, #6:Foo, #7:Foo, #4:Foo)
+C --> f(#4:Foo, #6:Foo, #6:Foo, #7:Foo)
 
 Solution 259
-X --> f(#1:Foo, #3:Foo, #6:Foo, #4:Foo)
+X --> f(#1:Foo, #3:Foo, #4:Foo, #6:Foo)
 Y --> f(#2:Foo, #5:Foo)
 A --> f(#1:Foo, #2:Foo)
 B --> f(#1:Foo, #3:Foo, #3:Foo, #4:Foo, #5:Foo)
-C --> f(#6:Foo, #6:Foo, #4:Foo)
+C --> f(#4:Foo, #6:Foo, #6:Foo)
 
 Solution 260
 X --> f(#1:Foo, #3:Foo, #4:Foo)
-Y --> f(#2:Foo, #6:Foo, #5:Foo)
+Y --> f(#2:Foo, #5:Foo, #6:Foo)
 A --> f(#1:Foo, #2:Foo)
 B --> f(#1:Foo, #3:Foo, #3:Foo, #4:Foo, #5:Foo)
-C --> f(#6:Foo, #4:Foo)
+C --> f(#4:Foo, #6:Foo)
 
 Solution 261
 X --> f(#1:Foo, #3:Foo, #4:Foo)
@@ -2719,7 +2719,7 @@ X --> f(#1:Foo, #3:Foo, #4:Foo, #5:Foo)
 Y --> f(#2:Foo, #6:Foo)
 A --> f(#1:Foo, #2:Foo)
 B --> f(#1:Foo, #3:Foo, #3:Foo, #4:Foo)
-C --> f(#6:Foo, #4:Foo, #5:Foo, #5:Foo)
+C --> f(#4:Foo, #5:Foo, #5:Foo, #6:Foo)
 
 Solution 263
 X --> f(#1:Foo, #3:Foo, #4:Foo, #5:Foo)
@@ -2744,10 +2744,10 @@ C --> #4:Foo
 
 Solution 266
 X --> f(#1:Foo, #3:Foo, #5:Foo)
-Y --> f(#2:Foo, #6:Foo, #4:Foo)
+Y --> f(#2:Foo, #4:Foo, #6:Foo)
 A --> f(#1:Foo, #2:Foo)
 B --> f(#1:Foo, #3:Foo, #3:Foo, #4:Foo)
-C --> f(#6:Foo, #5:Foo, #5:Foo)
+C --> f(#5:Foo, #5:Foo, #6:Foo)
 
 Solution 267
 X --> f(#1:Foo, #3:Foo, #5:Foo)
@@ -2786,10 +2786,10 @@ C --> #4:Foo
 
 Solution 272
 X --> f(#1:Foo, #3:Foo, #5:Foo)
-Y --> f(#2:Foo, #6:Foo, #4:Foo)
+Y --> f(#2:Foo, #4:Foo, #6:Foo)
 A --> f(#1:Foo, #2:Foo)
 B --> f(#1:Foo, #3:Foo, #4:Foo)
-C --> f(#3:Foo, #6:Foo, #5:Foo, #5:Foo)
+C --> f(#3:Foo, #5:Foo, #5:Foo, #6:Foo)
 
 Solution 273
 X --> f(#1:Foo, #3:Foo, #5:Foo)
@@ -2884,10 +2884,10 @@ C --> #3:Foo
 
 Solution 286
 X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo)
-Y --> f(#6:Foo, #4:Foo)
+Y --> f(#4:Foo, #6:Foo)
 A --> #1:Foo
 B --> f(#1:Foo, #2:Foo, #2:Foo, #3:Foo, #4:Foo)
-C --> f(#3:Foo, #6:Foo, #5:Foo, #5:Foo)
+C --> f(#3:Foo, #5:Foo, #5:Foo, #6:Foo)
 
 Solution 287
 X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo)
@@ -3037,25 +3037,25 @@ B --> #1:Foo
 C --> #2:Foo
 
 Solution 308
-X --> f(#1:Foo, #3:Foo, #6:Foo, #4:Foo)
-Y --> f(#2:Foo, #7:Foo, #5:Foo)
+X --> f(#1:Foo, #3:Foo, #4:Foo, #6:Foo)
+Y --> f(#2:Foo, #5:Foo, #7:Foo)
 A --> f(#1:Foo, #2:Foo)
 B --> f(#3:Foo, #3:Foo, #4:Foo, #5:Foo)
-C --> f(#1:Foo, #6:Foo, #6:Foo, #7:Foo, #4:Foo)
+C --> f(#1:Foo, #4:Foo, #6:Foo, #6:Foo, #7:Foo)
 
 Solution 309
-X --> f(#1:Foo, #3:Foo, #6:Foo, #4:Foo)
+X --> f(#1:Foo, #3:Foo, #4:Foo, #6:Foo)
 Y --> f(#2:Foo, #5:Foo)
 A --> f(#1:Foo, #2:Foo)
 B --> f(#3:Foo, #3:Foo, #4:Foo, #5:Foo)
-C --> f(#1:Foo, #6:Foo, #6:Foo, #4:Foo)
+C --> f(#1:Foo, #4:Foo, #6:Foo, #6:Foo)
 
 Solution 310
 X --> f(#1:Foo, #3:Foo, #4:Foo)
-Y --> f(#2:Foo, #6:Foo, #5:Foo)
+Y --> f(#2:Foo, #5:Foo, #6:Foo)
 A --> f(#1:Foo, #2:Foo)
 B --> f(#3:Foo, #3:Foo, #4:Foo, #5:Foo)
-C --> f(#1:Foo, #6:Foo, #4:Foo)
+C --> f(#1:Foo, #4:Foo, #6:Foo)
 
 Solution 311
 X --> f(#1:Foo, #3:Foo, #4:Foo)
@@ -3069,7 +3069,7 @@ X --> f(#1:Foo, #3:Foo, #4:Foo, #5:Foo)
 Y --> f(#2:Foo, #6:Foo)
 A --> f(#1:Foo, #2:Foo)
 B --> f(#3:Foo, #3:Foo, #4:Foo)
-C --> f(#1:Foo, #6:Foo, #4:Foo, #5:Foo, #5:Foo)
+C --> f(#1:Foo, #4:Foo, #5:Foo, #5:Foo, #6:Foo)
 
 Solution 313
 X --> f(#1:Foo, #3:Foo, #4:Foo, #5:Foo)
@@ -3094,10 +3094,10 @@ C --> f(#1:Foo, #4:Foo)
 
 Solution 316
 X --> f(#1:Foo, #3:Foo, #5:Foo)
-Y --> f(#2:Foo, #6:Foo, #4:Foo)
+Y --> f(#2:Foo, #4:Foo, #6:Foo)
 A --> f(#1:Foo, #2:Foo)
 B --> f(#3:Foo, #3:Foo, #4:Foo)
-C --> f(#1:Foo, #6:Foo, #5:Foo, #5:Foo)
+C --> f(#1:Foo, #5:Foo, #5:Foo, #6:Foo)
 
 Solution 317
 X --> f(#1:Foo, #3:Foo, #5:Foo)
@@ -3150,10 +3150,10 @@ C --> #1:Foo
 
 Solution 324
 X --> f(#1:Foo, #3:Foo, #5:Foo)
-Y --> f(#2:Foo, #6:Foo, #4:Foo)
+Y --> f(#2:Foo, #4:Foo, #6:Foo)
 A --> f(#1:Foo, #2:Foo)
 B --> f(#3:Foo, #4:Foo)
-C --> f(#1:Foo, #3:Foo, #6:Foo, #5:Foo, #5:Foo)
+C --> f(#1:Foo, #3:Foo, #5:Foo, #5:Foo, #6:Foo)
 
 Solution 325
 X --> f(#1:Foo, #3:Foo, #5:Foo)
@@ -3234,10 +3234,10 @@ C --> #1:Foo
 
 Solution 336
 X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo)
-Y --> f(#6:Foo, #4:Foo)
+Y --> f(#4:Foo, #6:Foo)
 A --> #1:Foo
 B --> f(#2:Foo, #2:Foo, #3:Foo, #4:Foo)
-C --> f(#1:Foo, #3:Foo, #6:Foo, #5:Foo, #5:Foo)
+C --> f(#1:Foo, #3:Foo, #5:Foo, #5:Foo, #6:Foo)
 
 Solution 337
 X --> f(#1:Foo, #2:Foo, #3:Foo, #5:Foo)
@@ -3388,10 +3388,10 @@ C --> #1:Foo
 
 Solution 358
 X --> f(#2:Foo, #3:Foo, #5:Foo)
-Y --> f(#1:Foo, #6:Foo, #4:Foo)
+Y --> f(#1:Foo, #4:Foo, #6:Foo)
 A --> #1:Foo
 B --> f(#2:Foo, #2:Foo, #3:Foo, #4:Foo)
-C --> f(#3:Foo, #6:Foo, #5:Foo, #5:Foo)
+C --> f(#3:Foo, #5:Foo, #5:Foo, #6:Foo)
 
 Solution 359
 X --> f(#2:Foo, #3:Foo, #5:Foo)
@@ -4038,10 +4038,10 @@ unify in AC2 : g(f(X, Y), f(X, U, Z)) =? g(f(U, V), f(W, A)) .
 
 Solution 1
 X --> f(#3:Set, #4:Set)
-Y --> f(#6:Set, #5:Set)
+Y --> f(#5:Set, #6:Set)
 Z --> f(#1:Elt, #2:Set)
 U --> f(#3:Set, #5:Set)
-V --> f(#6:Set, #4:Set)
+V --> f(#4:Set, #6:Set)
 A --> #1:Elt
 W --> f(#2:Set, #3:Set, #3:Set, #4:Set, #5:Set)
 
@@ -4164,10 +4164,10 @@ W --> f(#2:Set, #3:Set)
 
 Solution 15
 X --> f(#1:Elt, #3:Set, #4:Set)
-Y --> f(#6:Set, #5:Set)
+Y --> f(#5:Set, #6:Set)
 Z --> #2:Set
 U --> f(#1:Elt, #3:Set, #5:Set)
-V --> f(#6:Set, #4:Set)
+V --> f(#4:Set, #6:Set)
 A --> #1:Elt
 W --> f(#1:Elt, #2:Set, #3:Set, #3:Set, #4:Set, #5:Set)
 
@@ -4254,10 +4254,10 @@ W --> f(#1:Elt, #2:Set)
 
 Solution 25
 X --> f(#1:Elt, #3:Set, #4:Set)
-Y --> f(#6:Set, #5:Set)
+Y --> f(#5:Set, #6:Set)
 Z --> #2:Set
 U --> f(#3:Set, #5:Set)
-V --> f(#1:Elt, #6:Set, #4:Set)
+V --> f(#1:Elt, #4:Set, #6:Set)
 A --> #1:Elt
 W --> f(#2:Set, #3:Set, #3:Set, #4:Set, #5:Set)
 
@@ -4344,10 +4344,10 @@ W --> f(#2:Set, #3:Set)
 
 Solution 35
 X --> f(#3:Set, #4:Set)
-Y --> f(#1:Elt, #6:Set, #5:Set)
+Y --> f(#1:Elt, #5:Set, #6:Set)
 Z --> #2:Set
 U --> f(#1:Elt, #3:Set, #5:Set)
-V --> f(#6:Set, #4:Set)
+V --> f(#4:Set, #6:Set)
 A --> #1:Elt
 W --> f(#2:Set, #3:Set, #3:Set, #4:Set, #5:Set)
 
@@ -4466,10 +4466,10 @@ unify in AC+C : g(f(X, Y), f(X, U, Z)) =? g(f(U, V), f(W, A)) .
 
 Solution 1
 X --> f(#2:Set, #3:Elt, #4:Set)
-Y --> f(#6:Set, #5:Set)
+Y --> f(#5:Set, #6:Set)
 Z --> #1:Set
 U --> f(#2:Set, #3:Elt, #5:Set)
-V --> f(#6:Set, #4:Set)
+V --> f(#4:Set, #6:Set)
 W --> f(#1:Set, #2:Set, #2:Set, #3:Elt, #4:Set, #5:Set)
 A --> #3:Elt
 
@@ -4511,7 +4511,7 @@ A --> #3:Elt
 
 Solution 6
 X --> f(#2:Set, #3:Set)
-Y --> f(#6:Set, #4:Set)
+Y --> f(#4:Set, #6:Set)
 Z --> f(#1:Set, #5:Elt)
 U --> f(#2:Set, #4:Set)
 V --> f(#3:Set, #6:Set)
@@ -4529,10 +4529,10 @@ A --> #5:Elt
 
 Solution 8
 X --> f(#2:Set, #3:Set, #5:Elt)
-Y --> f(#6:Set, #4:Set)
+Y --> f(#4:Set, #6:Set)
 Z --> #1:Set
 U --> f(#2:Set, #4:Set)
-V --> f(#3:Set, #6:Set, #5:Elt)
+V --> f(#3:Set, #5:Elt, #6:Set)
 W --> f(#1:Set, #2:Set, #2:Set, #3:Set, #4:Set)
 A --> #5:Elt
 
@@ -4547,7 +4547,7 @@ A --> #5:Elt
 
 Solution 10
 X --> f(#2:Set, #3:Set)
-Y --> f(#6:Set, #4:Set, #5:Elt)
+Y --> f(#4:Set, #5:Elt, #6:Set)
 Z --> #1:Set
 U --> f(#2:Set, #4:Set, #5:Elt)
 V --> f(#3:Set, #6:Set)
