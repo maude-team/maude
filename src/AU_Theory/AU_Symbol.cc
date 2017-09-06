@@ -127,6 +127,16 @@ AU_Symbol::rewriteAtTop(AU_DagNode* subject, RewritingContext& context)
 }
 
 bool
+AU_Symbol::rewriteAtTopNoOwise(AU_DagNode* subject, RewritingContext& context)
+{
+  //
+  //	Same idea as above.
+  //	
+  AU_ExtensionInfo extensionInfo(subject);
+  return applyReplaceNoOwise(subject, context, &extensionInfo);
+}
+
+bool
 AU_Symbol::eqRewrite(DagNode* subject, RewritingContext& context)
 {
   Assert(this == subject->symbol(), "bad symbol");
@@ -192,14 +202,22 @@ AU_Symbol::complexStrategy(AU_DagNode* subject, RewritingContext& context)
       if (subject->normalizeAtTop() == AU_DagNode::COLLAPSED)
 	return !(subject->isReduced());
     }
-  if (rewriteAtTop(subject, context))
-    return true;
+
   if (getPermuteStrategy() == LAZY)
-    return false;
+    {
+      if (rewriteAtTop(subject, context))
+	return true;
+      return false;
+    }
+  //
+  //	Semi-eager case.
+  //
+  if (rewriteAtTopNoOwise(subject, context))
+    return true;
   copyAndReduceSubterms(subject, context);
   if (subject->normalizeAtTop() == AU_DagNode::COLLAPSED)
     return false;
-  subject->repudiateSortInfo();  // rewriteAtTop() might have left sort behind
+  subject->repudiateSortInfo();  // rewriteAtTopNoOwise() might have left sort behind
   return rewriteAtTop(subject, context);
 }
 
@@ -241,23 +259,30 @@ AU_Symbol::memoStrategy(MemoTable::SourceSet& from,
 	  if (s->normalizeAtTop() == AU_DagNode::COLLAPSED)
 	    return !(s->isReduced());  // the only place we might return true
 	}
+
       if (memoRewrite(from, subject, context))
 	return false;
-      if (rewriteAtTop(s, context))
+
+      if (getPermuteStrategy() == LAZY)
+	{
+	  if (rewriteAtTop(s, context))
+	    subject->reduce(context);
+	  return false;
+	}
+      //
+      //	Semi-eager case.
+      //
+      if (rewriteAtTopNoOwise(s, context))
 	{
 	  subject->reduce(context);
 	  return false;
 	}
-      if (strat == LAZY)
-	return false;
       copyAndReduceSubterms(s, context);
       if (s->normalizeAtTop() == AU_DagNode::COLLAPSED)
 	return false;
-      s->repudiateSortInfo();  // rewriteAtTop() might have left sort behind
+      s->repudiateSortInfo();  // rewriteAtTopNoOwise() might have left sort behind
     }
-  if (memoRewrite(from, subject, context))
-    return false;
-  if (rewriteAtTop(s, context))
+  if (!memoRewrite(from, subject, context) && rewriteAtTop(s, context))
     subject->reduce(context);
   return false;
 }

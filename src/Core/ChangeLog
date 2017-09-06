@@ -1,3 +1,12 @@
+2003-08-28  Steven Eker  <eker@goo.csl.sri.com>
+
+	* equationTable.hh (class EquationTable): added decl for
+	applyReplaceNoOwise()
+
+	* equationTable.cc (applyReplaceNoOwise): added
+	
+===================================Maude82==================================
+
 2003-07-24  Steven Eker  <eker@goo.csl.sri.com>
 
 	* badFlag.hh (class BadFlag): BAD -> BAD_FLAG for the benefit of

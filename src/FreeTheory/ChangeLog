@@ -1,3 +1,25 @@
+2003-09-02  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeSymbol.cc (complexStrategy): use applyReplaceNoOwise()
+	(memoStrategy): use applyReplaceNoOwise()
+
+	* freeRemainder.hh (isOwise): added
+
+	* freeNetExec.cc (applyReplaceNoOwise2): added
+
+	* freeNet.hh (applyReplaceNoOwise): added
+
+	* freeNetExec.cc (applyReplace2): removed non-SPEED_HACKS version
+
+	* freeNet.cc (translateSlots): removed SPEED_HACKS #ifndef and the
+	non-SPEED_HACKS code
+	(buildRemainders): removed SPEED_HACKS #ifdef
+	(dump): removed SPEED_HACKS #ifndefs and the non-SPEED_HACKS code
+
+	* freeNet.hh (class FreeNet): removed SPEED_HACKS #ifdef
+	
+===================================Maude82===========================================
+
 2003-07-14  Steven Eker  <eker@goo.csl.sri.com>
 
 	* freeNet.hh (class FreeNet): test SIZEOF_VOID_P and SIZEOF_SHORT

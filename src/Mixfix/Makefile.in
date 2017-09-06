@@ -193,6 +193,7 @@ maude_LDADD = \
 
 
 maude_SOURCES = \
+	moduleExpression.cc \
 	importModule.cc \
 	importTranslation.cc \
 	fileTable.cc \
@@ -220,6 +221,10 @@ maude_SOURCES = \
 	lexer.cc \
 	surface.cc \
 	$(COMPILER_SRC)
+
+
+EXTRA_maude_SOURCES = \
+	compiler.cc
 
 
 BUILT_SOURCES = surface.yy surface.cc surface.h lexer.cc
@@ -259,6 +264,7 @@ EXTRA_DIST = \
 
 
 noinst_HEADERS = \
+	moduleExpression.hh \
 	commonTokens.hh \
 	compiler.hh \
 	fileTable.hh \
@@ -294,9 +300,9 @@ bin_PROGRAMS = maude$(EXEEXT)
 PROGRAMS = $(bin_PROGRAMS)
 
 @BUILD_COMPILER_TRUE@am__objects_1 = maude-compiler.$(OBJEXT)
-am_maude_OBJECTS = maude-importModule.$(OBJEXT) \
-	maude-importTranslation.$(OBJEXT) maude-fileTable.$(OBJEXT) \
-	maude-loopSymbol.$(OBJEXT) \
+am_maude_OBJECTS = maude-moduleExpression.$(OBJEXT) \
+	maude-importModule.$(OBJEXT) maude-importTranslation.$(OBJEXT) \
+	maude-fileTable.$(OBJEXT) maude-loopSymbol.$(OBJEXT) \
 	maude-quotedIdentifierSymbol.$(OBJEXT) \
 	maude-quotedIdentifierDagNode.$(OBJEXT) \
 	maude-quotedIdentifierTerm.$(OBJEXT) \
@@ -415,6 +421,7 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/maude-mixfixModule.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/maude-mixfixParser.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/maude-moduleDatabase.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/maude-moduleExpression.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/maude-preModule.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/maude-profileModule.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/maude-quotedIdentifierDagNode.Po \
@@ -432,13 +439,13 @@ CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 CXXLD = $(CXX)
 CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
 	-o $@
-DIST_SOURCES = $(maude_SOURCES)
+DIST_SOURCES = $(maude_SOURCES) $(EXTRA_maude_SOURCES)
 DATA = $(data_DATA)
 
 HEADERS = $(noinst_HEADERS)
 
 DIST_COMMON = $(noinst_HEADERS) ChangeLog Makefile.am Makefile.in
-SOURCES = $(maude_SOURCES)
+SOURCES = $(maude_SOURCES) $(EXTRA_maude_SOURCES)
 
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -474,6 +481,7 @@ uninstall-binPROGRAMS:
 
 clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
+maude-moduleExpression.$(OBJEXT): moduleExpression.cc
 maude-importModule.$(OBJEXT): importModule.cc
 maude-importTranslation.$(OBJEXT): importTranslation.cc
 maude-fileTable.$(OBJEXT): fileTable.cc
@@ -526,6 +534,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-mixfixModule.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-mixfixParser.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-moduleDatabase.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-moduleExpression.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-preModule.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-profileModule.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-quotedIdentifierDagNode.Po@am__quote@
@@ -563,6 +572,28 @@ distclean-depend:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXXCOMPILE) -c -o $@ `if test -f '$<'; then $(CYGPATH_W) '$<'; else $(CYGPATH_W) '$(srcdir)/$<'`
+
+maude-moduleExpression.o: moduleExpression.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-moduleExpression.o -MD -MP -MF "$(DEPDIR)/maude-moduleExpression.Tpo" \
+@am__fastdepCXX_TRUE@	  -c -o maude-moduleExpression.o `test -f 'moduleExpression.cc' || echo '$(srcdir)/'`moduleExpression.cc; \
+@am__fastdepCXX_TRUE@	then mv "$(DEPDIR)/maude-moduleExpression.Tpo" "$(DEPDIR)/maude-moduleExpression.Po"; \
+@am__fastdepCXX_TRUE@	else rm -f "$(DEPDIR)/maude-moduleExpression.Tpo"; exit 1; \
+@am__fastdepCXX_TRUE@	fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='moduleExpression.cc' object='maude-moduleExpression.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/maude-moduleExpression.Po' tmpdepfile='$(DEPDIR)/maude-moduleExpression.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-moduleExpression.o `test -f 'moduleExpression.cc' || echo '$(srcdir)/'`moduleExpression.cc
+
+maude-moduleExpression.obj: moduleExpression.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-moduleExpression.obj -MD -MP -MF "$(DEPDIR)/maude-moduleExpression.Tpo" \
+@am__fastdepCXX_TRUE@	  -c -o maude-moduleExpression.obj `if test -f 'moduleExpression.cc'; then $(CYGPATH_W) 'moduleExpression.cc'; else $(CYGPATH_W) '$(srcdir)/moduleExpression.cc'`; \
+@am__fastdepCXX_TRUE@	then mv "$(DEPDIR)/maude-moduleExpression.Tpo" "$(DEPDIR)/maude-moduleExpression.Po"; \
+@am__fastdepCXX_TRUE@	else rm -f "$(DEPDIR)/maude-moduleExpression.Tpo"; exit 1; \
+@am__fastdepCXX_TRUE@	fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='moduleExpression.cc' object='maude-moduleExpression.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/maude-moduleExpression.Po' tmpdepfile='$(DEPDIR)/maude-moduleExpression.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-moduleExpression.obj `if test -f 'moduleExpression.cc'; then $(CYGPATH_W) 'moduleExpression.cc'; else $(CYGPATH_W) '$(srcdir)/moduleExpression.cc'`
 
 maude-importModule.o: importModule.cc
 @am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-importModule.o -MD -MP -MF "$(DEPDIR)/maude-importModule.Tpo" \

@@ -176,7 +176,8 @@ FreeSymbol::complexStrategy(DagNode* subject, RewritingContext& context)
 		args[j]->computeTrueSort(context);
 	      seenZero = true;
 	    }
-	  if (discriminationNet.applyReplace(subject, context))
+	  if ((i + 1 == stratLen) ? discriminationNet.applyReplace(subject, context) :
+	      discriminationNet.applyReplaceNoOwise(subject, context))
 	    return true;
 	}
       else
@@ -224,7 +225,8 @@ FreeSymbol::memoStrategy(MemoTable::SourceSet& from,
 	    }
 	  if (memoRewrite(from, subject, context))
 	    return;
-	  if (discriminationNet.applyReplace(subject, context))
+	  if ((i + 1 == stratLen) ? discriminationNet.applyReplace(subject, context) :
+	      discriminationNet.applyReplaceNoOwise(subject, context))
 	    {
 	      subject->reduce(context);
 	      return;

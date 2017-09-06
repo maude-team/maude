@@ -1,3 +1,10 @@
+2003-10-01  Steven Eker  <eker@goo.csl.sri.com>
+
+	* macros.cc (stringToDouble): work around for versions of atof()
+	that don't handle Infinity
+	
+===================================Maude82===========================================
+
 2003-07-29  Steven Eker  <eker@goo.csl.sri.com>
 
 	* macros.hh: don't do Darwin fix here

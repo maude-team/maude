@@ -52,6 +52,7 @@ public:
   //	Function to use a FreeNet.
   //
   bool applyReplace(DagNode* subject, RewritingContext& context);
+  bool applyReplaceNoOwise(DagNode* subject, RewritingContext& context);
 
 #ifdef DUMP
   void dump(ostream& s, int indentLevel = 0);
@@ -114,12 +115,11 @@ private:
 			    int argIndex);
   bool moreImportant(Symbol* first, Symbol* second);
   bool applyReplace2(DagNode* subject, RewritingContext& context);
-  
+  bool applyReplaceNoOwise2(DagNode* subject, RewritingContext& context);
+
   Vector<DagNode**> stack;
   Vector<TestNode> net;
-#ifdef SPEED_HACKS
   Vector<Vector<FreeRemainder*> > fastApplicable;
-#endif
   Vector<FreeRemainder*> remainders;
   Vector<NatSet> applicable;
 };
@@ -128,6 +128,12 @@ inline bool
 FreeNet::applyReplace(DagNode* subject, RewritingContext& context)
 {
   return !applicable.isNull() ? applyReplace2(subject, context) : false;
+}
+
+inline bool
+FreeNet::applyReplaceNoOwise(DagNode* subject, RewritingContext& context)
+{
+  return !applicable.isNull() ? applyReplaceNoOwise2(subject, context) : false;
 }
 
 #endif

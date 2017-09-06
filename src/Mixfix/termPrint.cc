@@ -50,15 +50,6 @@ MixfixModule::computeColor(SymbolType st)
   return 0;
 }
 
-/*
-void
-MixfixModule::prefix(ostream& s, bool needDisambig)
-{
-  if (needDisambig)
-    s << '(';
-}
-*/
-
 void
 MixfixModule::suffix(ostream& s,
 		     Term* term,

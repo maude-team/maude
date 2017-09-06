@@ -162,7 +162,8 @@ EXTRA_DIST = \
 	AU_CollapseMatcher.cc \
 	AU_FullMatcher.cc \
 	AU_GreedyMatcher.cc \
-	AU_DequeMatcher.cc
+	AU_DequeMatcher.cc \
+	ChangeLog.A_Theory
 
 
 noinst_HEADERS = \

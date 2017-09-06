@@ -52,6 +52,8 @@ public:
 			RewritingContext& context,
 			Vector<DagNode**>& stack) const;
 
+  bool isOwise() const;
+
 #ifdef DUMP
   void dump(ostream& s, int indentLevel = 0);
 #endif
@@ -124,6 +126,12 @@ FreeRemainder::fastMatchReplace(DagNode* subject,
     }
 slow:
   return slowMatchReplace(subject, context, stack);
+}
+
+inline bool
+FreeRemainder::isOwise() const
+{
+  return equation->isOwise();
 }
 
 #endif

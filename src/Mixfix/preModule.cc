@@ -27,6 +27,7 @@
 //      utility stuff
 #include "macros.hh"
 #include "vector.hh"
+#include "timer.hh"
 
 //      forward declarations
 #include "interface.hh"
@@ -57,7 +58,7 @@
 //#include "dagNodeSet.hh"
 
 //	front end class definitions
-#include "timer.hh"
+#include "moduleExpression.hh"
 #include "fileTable.hh"
 #include "userLevelRewritingContext.hh"
 #include "quotedIdentifierSymbol.hh"
@@ -157,6 +158,15 @@ PreModule::finishModule()
 PreModule::OpDef::OpDef()
 {
   prec = DEFAULT;
+}
+
+void
+PreModule::addImport(Token mode, ModuleExpression* expr)
+{
+  int nrImports = imports.length();
+  imports.resize(nrImports + 1);
+  imports[nrImports].mode = mode;
+  imports[nrImports].expr = expr;
 }
 
 void

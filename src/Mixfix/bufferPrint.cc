@@ -31,6 +31,25 @@ MixfixModule::bufferPrint(Vector<int>& buffer, Term* term)
   prettyPrint(buffer, term, UNBOUNDED, UNBOUNDED, 0, UNBOUNDED, 0, false);
 }
 
+void
+MixfixModule::handleVariable(Vector<int>& buffer, Term* term)
+{
+  VariableTerm* v = safeCast(VariableTerm*, term);
+  string fullName(Token::name(v->id()));
+  fullName += ':';
+  Sort* sort = v->getSort();
+  if (sort->index() == Sort::KIND)
+    {
+      buffer.append(Token::encode(fullName.c_str()));
+      printKind(buffer, sort);
+    }
+  else
+    {
+      fullName += Token::name(sort->id());
+      buffer.append(Token::encode(fullName.c_str()));
+    }
+}
+
 bool
 MixfixModule::handleIter(Vector<int>& buffer,
 			 Term* term,
@@ -180,15 +199,8 @@ MixfixModule::prettyPrint(Vector<int>& buffer,
 
   if (needDisambig)
     buffer.append(leftParen);
-  if (basicType == SymbolType::VARIABLE) // HACK
-    {
-      VariableTerm* v = safeCast(VariableTerm*, term);
-      string fullName(Token::name(v->id()));
-      Sort* sort = v->getSort();
-      fullName += ':';
-      fullName += Token::name(sort->id());  // not correct for kinds
-      buffer.append(Token::encode(fullName.c_str()));
-    }
+  if (basicType == SymbolType::VARIABLE)
+    handleVariable(buffer, term);
   else if (basicType == SymbolType::FLOAT)
     buffer.append(Token::doubleToCode(mfValue));
   else if (basicType == SymbolType::STRING)
@@ -295,12 +307,32 @@ MixfixModule::prettyPrint(Vector<int>& buffer,
   if (needDisambig)
     {
       int sortIndex = term->getSortIndex();
-      if (sortIndex <= Sort::ERROR_SORT)
+      if (sortIndex <= Sort::KIND)
 	sortIndex = chooseDisambiguator(symbol);
       buffer.append(rightParen);
-      // THIS IS NOT CORRECT FOR KINDS
+      //
+      //	sortIndex will never be the index of a kind.
+      //
       buffer.append(Token::dotNameCode(symbol->rangeComponent()->sort(sortIndex)->id()));
     }
+}
+
+void
+MixfixModule::printKind(Vector<int>& buffer, const Sort* kind)
+{
+  Assert(kind != 0, "null kind");
+  ConnectedComponent* c = kind->component();
+  Assert(c != 0, "null conponent");
+
+  buffer.append(leftBracket);
+  buffer.append(c->sort(1)->id());
+  int nrMax = c->nrMaximalSorts();
+  for (int i = 2; i <= nrMax; i++)
+    {
+      buffer.append(comma);
+      buffer.append(c->sort(i)->id());
+    }
+  buffer.append(rightBracket);
 }
 
 int

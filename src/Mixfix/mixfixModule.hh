@@ -152,6 +152,7 @@ public:
   //	Polymorph functions.
   //
   void fixUpPolymorph(int polymorphIndex, const Vector<Term*>& specialTerms);
+  void fixUpPolymorph(int polymorphIndex, Symbol* shareWithSymbol);
   void copyFixUpPolymorph(int polymorphIndex,
 			  const MixfixModule* originalModule,
 			  int originalPolymorphIndex,
@@ -301,6 +302,7 @@ private:
     Vector<Sort*> domainAndRange;
     Vector<int> strategy;
     Vector<Term*> specialTerms;
+    Symbol* shareWithSymbol;
     Vector<Symbol*> instantiations;
     SymbolInfo symbolInfo;
   };
@@ -374,6 +376,9 @@ private:
 		   int rightCapture,
 		   const ConnectedComponent* rightCaptureComponent,
 		   bool rangeKnown);
+  static void handleVariable(Vector<int>& buffer, Term* term);
+  static void printKind(Vector<int>& buffer, const Sort* kind);
+
   static int computeGraphStatus(DagNode* dagNode,
 				PointerSet& visited,
 				Vector<int>& statusVec);

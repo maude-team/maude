@@ -191,6 +191,7 @@ PreModule::checkOpTypes()
       switch (def.symbolType.getBasicType())
 	{
 	case SymbolType::BRANCH_SYMBOL:
+	case SymbolType::DOWN_SYMBOL:
 	  {
 	    checkType(def.types[0]);
 	    break;
@@ -198,6 +199,11 @@ PreModule::checkOpTypes()
 	case SymbolType::EQUALITY_SYMBOL:
 	  {
 	    checkType(def.types[2]);
+	    break;
+	  }
+	case SymbolType::UP_SYMBOL:
+	  {
+	    checkType(def.types[1]);
 	    break;
 	  }
 	default:
@@ -231,6 +237,7 @@ PreModule::computeOpTypes()
       switch (def.symbolType.getBasicType())
 	{
 	case SymbolType::BRANCH_SYMBOL:
+	case SymbolType::DOWN_SYMBOL:
 	  {
 	    def.domainAndRange[0] = computeType(def.types[0]);
 	    for (int j = 1; j < nrTypes; j++)
@@ -242,6 +249,12 @@ PreModule::computeOpTypes()
 	    def.domainAndRange[0] = 0;
 	    def.domainAndRange[1] = 0;
 	    def.domainAndRange[2] = computeType(def.types[2]);
+	    break;
+	  }
+	case SymbolType::UP_SYMBOL:
+	  {
+	    def.domainAndRange[0] = 0;
+	    def.domainAndRange[1] = computeType(def.types[1]);
 	    break;
 	  }
 	default:

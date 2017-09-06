@@ -331,7 +331,8 @@ MixfixModule::findSymbol(int name,
       Polymorph& p = polymorphs[i];
       if (p.name == name && p.domainAndRange.length() - 1 == nrArgs)
 	{
-	  int detArgNr = (p.symbolInfo.symbolType.getBasicType() == SymbolType::BRANCH_SYMBOL) ? 1 : 0;
+	  int t = p.symbolInfo.symbolType.getBasicType();
+	  int detArgNr = (t == SymbolType::BRANCH_SYMBOL || t == SymbolType::DOWN_SYMBOL) ? 1 : 0;
 	  return instantiatePolymorph(i, domainComponents[detArgNr]->getIndexWithinModule());
 	}
     }
@@ -496,20 +497,50 @@ MixfixModule::instantiatePolymorph(int polymorphIndex, int kindIndex)
     {
       Sort* s = getConnectedComponents()[kindIndex]->sort(Sort::KIND);
       bool isConstructor = p.symbolInfo.symbolType.hasFlag(SymbolType::CTOR);
-      if (p.symbolInfo.symbolType.getBasicType() == SymbolType::BRANCH_SYMBOL)
+      switch (p.symbolInfo.symbolType.getBasicType())
 	{
-	  symbol = new BranchSymbol(p.name, p.specialTerms);
-	  p.domainAndRange[1] = s;
-	  p.domainAndRange[2] = s;
-	  p.domainAndRange[3] = s;
-	  symbol->addOpDeclaration(p.domainAndRange, isConstructor);
-	}
-      else
-	{
-	  symbol = new EqualitySymbol(p.name, p.specialTerms[0], p.specialTerms[1], p.strategy);
-	  p.domainAndRange[0] = s;
-	  p.domainAndRange[1] = s;
-	  symbol->addOpDeclaration(p.domainAndRange, isConstructor);
+	case SymbolType::BRANCH_SYMBOL:
+	  {
+	    symbol = new BranchSymbol(p.name, p.specialTerms);
+	    p.domainAndRange[1] = s;
+	    p.domainAndRange[2] = s;
+	    p.domainAndRange[3] = s;
+	    symbol->addOpDeclaration(p.domainAndRange, isConstructor);
+	    break;
+	  }
+	case SymbolType::EQUALITY_SYMBOL:
+	  {
+	    symbol = new EqualitySymbol(p.name, p.specialTerms[0], p.specialTerms[1], p.strategy);
+	    p.domainAndRange[0] = s;
+	    p.domainAndRange[1] = s;
+	    symbol->addOpDeclaration(p.domainAndRange, isConstructor);
+	    break;
+	  }
+	case SymbolType::UP_SYMBOL:
+	  {
+	    symbol = new MetaLevelOpSymbol(p.name, 1);
+	    p.domainAndRange[0] = s;
+	    symbol->addOpDeclaration(p.domainAndRange, isConstructor);
+	    Vector<const char*> data(1);
+	    data[0] = "metaUpTerm";
+	    symbol->attachData(p.domainAndRange, "", data);
+	    symbol->attachSymbol("shareWith", p.shareWithSymbol);
+	    break;
+	  }
+	case SymbolType::DOWN_SYMBOL:
+	  {
+	    symbol = new MetaLevelOpSymbol(p.name, 2);
+	    p.domainAndRange[1] = s;
+	    p.domainAndRange[2] = s;
+	    symbol->addOpDeclaration(p.domainAndRange, isConstructor);
+	    Vector<const char*> data(1);
+	    data[0] = "metaDownTerm";
+	    symbol->attachData(p.domainAndRange, "", data);
+	    symbol->attachSymbol("shareWith", p.shareWithSymbol);
+	    break;
+	  }
+	default:
+	  CantHappen("bad basic type for polymorph");
 	}
       int nrSymbols = symbolInfo.length();
       symbolInfo.expandBy(1);
@@ -554,6 +585,12 @@ MixfixModule::fixUpPolymorph(int polymorphIndex, const Vector<Term*>& specialTer
 }
 
 void
+MixfixModule::fixUpPolymorph(int polymorphIndex, Symbol* shareWithSymbol)
+{
+  polymorphs[polymorphIndex].shareWithSymbol = shareWithSymbol;
+}
+
+void
 MixfixModule::copyFixUpPolymorph(int polymorphIndex,
 				 const MixfixModule* originalModule,
 				 int originalPolymorphIndex,
@@ -566,6 +603,9 @@ MixfixModule::copyFixUpPolymorph(int polymorphIndex,
   specialTerms.expandTo(nrSpecialTerms);
   for (int i = 0; i < nrSpecialTerms; i++)
     specialTerms[i] = originalSpecialTerms[i]->deepCopy(map);
+  Symbol* shareWithSymbol = originalModule->polymorphs[originalPolymorphIndex].shareWithSymbol;
+  if (shareWithSymbol != 0)
+    polymorphs[polymorphIndex].shareWithSymbol = map->translate(shareWithSymbol);
 }
 
 int
@@ -577,16 +617,36 @@ MixfixModule::copyPolymorph(const MixfixModule* originalModule,
   Polymorph& p = polymorphs[nrPolymorphs];
   const Polymorph& original = originalModule->polymorphs[originalPolymorphIndex];
   p.name = original.name;
+  p.shareWithSymbol = 0;
   SymbolType symbolType = original.symbolInfo.symbolType;
-  if (symbolType.getBasicType() == SymbolType::BRANCH_SYMBOL)
+  switch (symbolType.getBasicType())
     {
-      p.domainAndRange.expandTo(4);
-      p.domainAndRange[0] = findSort(original.domainAndRange[0]->id());
-    }
-  else
-    {
-      p.domainAndRange.expandTo(3);
-      p.domainAndRange[2] = findSort(original.domainAndRange[2]->id());
+    case SymbolType::BRANCH_SYMBOL:
+      {
+	p.domainAndRange.expandTo(4);
+	p.domainAndRange[0] = findSort(original.domainAndRange[0]->id());
+	break;
+      }
+    case SymbolType::EQUALITY_SYMBOL:
+      {
+	p.domainAndRange.expandTo(3);
+	p.domainAndRange[2] = findSort(original.domainAndRange[2]->id());
+	break;
+      }
+    case SymbolType::UP_SYMBOL:
+      {
+	p.domainAndRange.expandTo(2);
+	p.domainAndRange[1] = findSort(original.domainAndRange[1]->id());
+	break;
+      }
+    case SymbolType::DOWN_SYMBOL:
+      {
+	p.domainAndRange.expandTo(3);
+	p.domainAndRange[0] = findSort(original.domainAndRange[0]->id());
+	break;
+      }
+    default:
+      CantHappen("bad basic type for polymorph");
     }
   p.strategy = original.strategy;  // deep copy
   p.symbolInfo.mixfixSyntax = original.symbolInfo.mixfixSyntax;  // deep copy

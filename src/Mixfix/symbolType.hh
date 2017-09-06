@@ -47,6 +47,8 @@ public:
     //	
     BRANCH_SYMBOL,
     EQUALITY_SYMBOL,
+    UP_SYMBOL,
+    DOWN_SYMBOL,
     //
     //	Special symbols that do not deal with attachments.
     //
@@ -208,15 +210,14 @@ inline bool
 SymbolType::isPolymorph() const
 {
   int t = getBasicType();
-  return t == BRANCH_SYMBOL | t == EQUALITY_SYMBOL;
+  return t >= BRANCH_SYMBOL && t <= DOWN_SYMBOL;
 }
 
 inline bool
 SymbolType::isCreatedOnTheFly() const
 {
   int t = getBasicType();
-  return t == BRANCH_SYMBOL | t == EQUALITY_SYMBOL |
-    t == VARIABLE | t == SORT_TEST;
+  return isPolymorph() || t == VARIABLE || t == SORT_TEST;
 }
 
 #endif

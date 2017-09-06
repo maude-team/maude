@@ -22,7 +22,7 @@
 
 ***
 ***	Maude interpreter standard prelude.
-***	Version 2.0.
+***	Version Alpha 82
 ***
 ***	Some of the overall structure is taken from the OBJ3
 ***	interpreter standard prelude.
@@ -148,7 +148,7 @@ fmod NAT is
 	[special (id-hook NumberOpSymbol (modExp)
 		  op-hook succSymbol (s_ : Nat ~> NzNat))] .
  
-  op gcd : NzNat NzNat -> NzNat
+  op gcd : NzNat Nat -> NzNat
 	[assoc comm
 	 special (id-hook ACU_NumberOpSymbol (gcd)
 		  op-hook succSymbol (s_ : Nat ~> NzNat))] .
@@ -279,7 +279,7 @@ fmod INT is
 		  op-hook minusSymbol (-_ : NzNat ~> Int))] .
   op abs : Int -> Nat [ditto] .
 
-  op gcd : NzInt NzInt -> NzNat
+  op gcd : NzInt Int -> NzNat
 	[assoc comm
 	 special (id-hook ACU_NumberOpSymbol (gcd)
 		  op-hook succSymbol (s_ : Nat ~> NzNat)
@@ -386,6 +386,7 @@ fmod RAT is
   var K : Int .
   var Z : Nat .
   var Q : NzRat .
+  var R : Rat .
 
   op _/_ : NzRat NzRat -> NzRat [ditto] .
   op _/_ : Rat NzRat -> Rat [ditto] .
@@ -414,6 +415,15 @@ fmod RAT is
   eq (I / N) * (J / M) = (I * J) / (N * M).
   eq (I / N) * K = (I * K) / N .
 
+  op _quo_ : Rat NzRat -> Int [ditto] .
+  eq (I / N) quo Q = I quo (N * Q) .
+  eq K quo (J / M) = (K * M) quo J .
+
+  op _rem_ : Rat NzRat -> Rat [ditto] .
+  eq (I / N) rem (J / M) = ((I * M) rem (J * N)) / (N * M) .
+  eq K rem (J / M) = ((K * M) rem J) / M .
+  eq (I / N) rem J = (I rem (J * N)) / N .
+
   op _^_ : Rat Nat -> Rat [ditto] .
   op _^_ : NzRat Nat -> NzRat [ditto] .
   eq (I / N) ^ Z = (I ^ Z) / (N ^ Z) .
@@ -421,6 +431,14 @@ fmod RAT is
   op abs : NzRat -> NzRat [ditto] .
   op abs : Rat -> Rat [ditto] .
   eq abs(I / N) = abs(I) / N .
+
+  op gcd : NzRat Rat -> NzRat [ditto] .
+  op gcd : Rat Rat -> Rat [ditto] .
+  eq gcd(I / N, R) = gcd(I, N * R) / N .
+
+  op lcm : NzRat NzRat -> NzRat [ditto] .
+  op lcm : Rat Rat -> Rat [ditto] .
+  eq lcm(I / N, R) = lcm(I, N * R) / N .
 
   op _<_ : Rat Rat -> Bool [ditto] .
   eq (I / N) < (J / M) = (I * M) < (J * N) .
@@ -441,6 +459,10 @@ fmod RAT is
   eq (I / N) >= (J / M) = (I * M) >= (J * N) .
   eq (I / N) >= K = I >= (K * N) .
   eq K >= (J / M) = (K * M) >= J .
+
+  op _divides_ : NzRat Rat -> Bool [ditto] .
+  eq (I / N) divides K = I divides N * K .
+  eq Q divides (J / M) = Q * M divides J .
 
   op trunc : Rat -> Int .
   eq trunc(K) = K .
@@ -1329,6 +1351,16 @@ fmod META-LEVEL is
   op upRls : Qid Bool ~> RuleSet
 	[special (
 	   id-hook MetaLevelOpSymbol	(metaUpRls)
+	   op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .
+
+  op upTerm : Universal -> Term
+	[special (
+	   id-hook UpSymbol
+	   op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .
+
+  op downTerm : Term Universal -> Universal
+	[special (
+	   id-hook DownSymbol
 	   op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .
 endfm
 

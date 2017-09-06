@@ -219,6 +219,8 @@ rat|rational				return KW_RAT;
   *	are recognized.
   */
 <ID_MODE>{
+to					RETURN(KW_TO)
+label					RETURN(KW_LABEL)
 assoc|associative			RETURN(KW_ASSOC)
 comm|commutative			RETURN(KW_COMM)
 id:|identity:				RETURN(KW_ID)
@@ -263,7 +265,7 @@ endom					RETURN(KW_ENDOM)
 "->"					RETURN(KW_ARROW)
 "=>"					RETURN(KW_ARROW2)
 "~>"					RETURN(KW_PARTIAL)
-[:()\[\].,<=|]				RETURN(*yytext)
+[:()\[\].,<=|+*]			RETURN(*yytext)
 {maudeId}|[{}]				FIX_UP(IDENTIFIER)
 }
 

@@ -838,8 +838,13 @@ MixfixModule::makePolymorphProductions()
     {
       Polymorph& p = polymorphs[i];
       int nrArgs = p.domainAndRange.length() - 1;
-      bool branchSymbol = (p.symbolInfo.symbolType.getBasicType() == SymbolType::BRANCH_SYMBOL);
-      Sort* specialSort = p.domainAndRange[branchSymbol ? 0 : 2];
+      int type = p.symbolInfo.symbolType.getBasicType();
+      int specialIndex = 0;
+      if (type == SymbolType::EQUALITY_SYMBOL)
+	specialIndex = 2;
+      else if (type == SymbolType::UP_SYMBOL)
+	specialIndex = 1;
+      Sort* specialSort = p.domainAndRange[specialIndex];
       int specialNt = nonTerminal(specialSort->component()->getIndexWithinModule(), TERM_TYPE);
       //
       //	Prefix syntax.
@@ -877,19 +882,23 @@ MixfixModule::makePolymorphProductions()
       //
       //	Now duplicate syntax in each connected component.
       //
+      int first = 0;
+      if (type == SymbolType::BRANCH_SYMBOL || type == SymbolType::DOWN_SYMBOL)
+	first = 1;
       for (int j = 0; j < nrComponents; j++)
 	{
 	  if (!(bubbleComponents.contains(j)))
 	    {
 	      int termNt = nonTerminal(j, TERM_TYPE);
-	      int rangeNt = branchSymbol ? termNt : specialNt;
-	      for (int k = branchSymbol ? 1 : 0; k < nrArgs; k++)
+	      int rangeNt = (type == SymbolType::BRANCH_SYMBOL ||
+			     type == SymbolType::DOWN_SYMBOL) ? termNt : specialNt;
+	      for (int k = first; k < nrArgs; k++)
 		rhs[2 + 2 * k] = termNt;
 	      parser->insertProduction(rangeNt, rhs, 0, gather,
 				       MixfixParser::MAKE_POLYMORPH, j, i);
 	      if (nrItems > 0)
 		{
-		  for (int k = branchSymbol ? 1 : 0; k < nrArgs; k++)
+		  for (int k = first; k < nrArgs; k++)
 		    mixfixRhs[underscores[k]] = termNt;
 		  parser->insertProduction(rangeNt,
 					   mixfixRhs,

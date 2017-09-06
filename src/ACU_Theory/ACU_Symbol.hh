@@ -74,6 +74,7 @@ private:
   static bool normalize(DagNode* subject, RewritingContext& context);
   static bool copyReduceSubtermsAndNormalize(DagNode* subject, RewritingContext& context);
   bool rewriteAtTop(DagNode* subject, RewritingContext& context);
+  bool rewriteAtTopNoOwise(DagNode* subject, RewritingContext& context);
   bool complexStrategy(DagNode* subject, RewritingContext& context);
   bool memoStrategy(MemoTable::SourceSet& from, DagNode* subject, RewritingContext& context);
 

@@ -233,11 +233,12 @@ MetaLevel::fixUpPolymorph(DagNode* metaHookList, MetaModule* m, int polymorphInd
   terms[1] = 0;
   for (DagArgumentIterator i(metaHookList); i.valid(); i.next())
     {
+      int purpose;
+      Symbol* op;
       DagNode* metaHook = i.argument();
       if (metaHook->symbol() == termHookSymbol)
 	{
 	  FreeDagNode* f = safeCast(FreeDagNode*, metaHook);
-	  int purpose;
 	  if (downQid(f->getArgument(0), purpose))
 	    {
 	      int index = NONE;
@@ -257,6 +258,12 @@ MetaLevel::fixUpPolymorph(DagNode* metaHookList, MetaModule* m, int polymorphInd
 	      else
 		return false;  // potential memory leak
 	    }
+	}
+      else if (downOpHook(metaHook, m, purpose, op) &&
+	       strcmp(Token::name(purpose), "shareWith") == 0)
+	{
+	  m->fixUpPolymorph(polymorphIndex, op);
+	  return true;
 	}
     }
   if (terms[0] != 0 && terms[1] != 0)

@@ -192,6 +192,18 @@ PreModule::fixUpSymbols()
 		  FIX_UP_FAILED;
 		break;
 	      }
+	    case SymbolType::UP_SYMBOL:
+	    case SymbolType::DOWN_SYMBOL:
+	      {
+		int h = findHook(opDef.special, OP_HOOK, Token::encode("shareWith"));
+		if (h == NONE)
+		  FIX_UP_FAILED;
+		Symbol* shareWithSymbol = findHookSymbol(opDef.special[h].details);
+		if (shareWithSymbol == 0)
+		  FIX_UP_FAILED;
+		flatModule->fixUpPolymorph(opDecl.polymorphIndex, shareWithSymbol);
+		break;
+	      }
 	    case SymbolType::BUBBLE:
 	      {
 		int h = findHook(opDef.special, OP_HOOK, Token::encode("qidSymbol"));

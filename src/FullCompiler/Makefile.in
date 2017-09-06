@@ -151,6 +151,11 @@ target_alias = @target_alias@
 @BUILD_COMPILER_TRUE@	runtime.cc
 
 
+EXTRA_DIST = \
+	compilationContext.cc \
+	runtime.cc
+
+
 noinst_HEADERS = \
 	compilationContext.hh \
 	fullCompiler.hh \

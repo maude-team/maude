@@ -391,9 +391,9 @@ VisibleModule::showAttributes(ostream& s, Symbol* symbol, bool ctor) const
       s << space;
       space = " ";
       if (!(st.hasFlag(SymbolType::LEFT_ID | SymbolType::COMM)))
-	s << "right";
+	s << "right ";
       else if (!(st.hasFlag(SymbolType::RIGHT_ID | SymbolType::COMM)))
-	s << "left";
+	s << "left ";
       s << "id: ";
       Term* id = safeCast(BinarySymbol*, symbol)->getIdentity();
       if (id != 0)

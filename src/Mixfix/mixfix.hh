@@ -51,5 +51,7 @@ class MixfixParser;
 class VisibleModule;
 class CommonTokens;
 class MetadataStore;
+class ModuleExpression;
+class Renaming;
 
 #endif

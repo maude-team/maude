@@ -53,7 +53,7 @@ public:
   void finishModule();
   bool isComplete();
 
-  void addImport(const Vector<Token>& import);
+  void addImport(Token mode, ModuleExpression* expr);
   void addSortDecl(const Vector<Token>& sortDecl);
   void addSubsortDecl(const Vector<Token>& subsortDecl);
   void addOpDecl(const Vector<Token>& opName);
@@ -129,6 +129,14 @@ private:
     Vector<Sort*> domainAndRange;
   };
 
+  struct Import
+  {
+    Token mode;
+    ModuleExpression* expr;
+  };
+
+  static void printAttributes(ostream& s, const OpDef& opDef);
+
   void regretToInform(ImportModule* doomedModule);
   int findHook(const Vector<Hook>& hookList, HookType type, int name);
 
@@ -157,7 +165,7 @@ private:
   MixfixModule::ModuleType moduleType;
   Bool lastSawOpDecl;
   Bool isCompleteFlag;
-  Vector<Vector<Token> > imports;
+  Vector<Import> imports;
   Vector<Vector<Token> > sortDecls;
   Vector<Vector<Token> > subsortDecls;
   Vector<OpDecl> opDecls;
@@ -174,12 +182,6 @@ inline bool
 PreModule::isComplete()
 {
   return isCompleteFlag;
-}
-
-inline void
-PreModule::addImport(const Vector<Token>& import)
-{
-  imports.append(import);
 }
 
 inline void

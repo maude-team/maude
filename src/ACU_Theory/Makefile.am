@@ -40,7 +40,8 @@ EXTRA_DIST = \
 	ACU_DagOperations.cc \
 	ACU_FastMerge.cc \
 	ACU_Normalize.cc \
-	ACU_MergeSort.cc
+	ACU_MergeSort.cc \
+	ChangeLog.AC_Theory
 
 noinst_HEADERS = \
 	ACU_ArgumentIterator.hh \

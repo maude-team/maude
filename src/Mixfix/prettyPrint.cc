@@ -54,11 +54,11 @@ operator<<(ostream& s, const Sort* sort)
 {
   if (sort == 0)
     return s << "(sort not calculated)";
-  if (sort->index() == Sort::ERROR_SORT)
+  
+  ConnectedComponent* c = sort->component();
+  if (c != 0 && sort->index() == Sort::KIND)
     {
-      s << '[';
-      ConnectedComponent* c = sort->component();
-      s << Token::name(c->sort(1)->id());
+      s << '[' << Token::name(c->sort(1)->id());
       int nrMax = c->nrMaximalSorts();
       for (int i = 2; i <= nrMax; i++)
 	s << ',' << Token::name(c->sort(i)->id());

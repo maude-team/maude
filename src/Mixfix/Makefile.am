@@ -64,6 +64,7 @@ maude_LDADD = \
 	$(DLMALLOC_LIB)
 
 maude_SOURCES = \
+	moduleExpression.cc \
 	importModule.cc \
 	importTranslation.cc \
 	fileTable.cc \
@@ -91,6 +92,9 @@ maude_SOURCES = \
 	lexer.cc \
 	surface.cc \
 	$(COMPILER_SRC)
+
+EXTRA_maude_SOURCES = \
+	compiler.cc
 
 BUILT_SOURCES = surface.yy surface.cc surface.h lexer.cc
 CLEANFILES = surface.yy surface.cc surface.h lexer.cc
@@ -151,6 +155,7 @@ EXTRA_DIST = \
 	model-checker.maude
 
 noinst_HEADERS = \
+	moduleExpression.hh \
 	commonTokens.hh \
 	compiler.hh \
 	fileTable.hh \

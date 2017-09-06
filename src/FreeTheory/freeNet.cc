@@ -125,19 +125,13 @@ FreeNet::translateSlots(int nrRealSlots, const Vector<int>& slotTranslation)
   int nrNodes = net.length();
   for (int i = 0; i < nrNodes; i++)
     {
-#ifndef SPEED_HACKS
-      if (net[i].slot != NONE)
-	net[i].slot = slotTranslation[net[i].slot];
-      if (net[i].position != NONE)
-	net[i].position = slotTranslation[net[i].position];
-#else
       //
       //	Pointerize slots and positions for added speed.
       //
-      net[i].slotPtr = (net[i].slot == NONE) ? 0 : &(stack[slotTranslation[net[i].slot]]);
+      net[i].slotPtr = (net[i].slot == NONE) ? 0 :
+	&(stack[slotTranslation[net[i].slot]]);
       net[i].positionPtr = (net[i].position == NONE) ? 0 :
 	&(stack[slotTranslation[net[i].position]]);
-#endif
     }
 }
 
@@ -161,7 +155,6 @@ FreeNet::buildRemainders(const Vector<Equation*>& equations,
       else 
 	remainders[i] = 0;
     }
-#ifdef SPEED_HACKS
   //
   //	Build null terminated pointer version of applicable for added speed.
   //
@@ -178,7 +171,6 @@ FreeNet::buildRemainders(const Vector<Equation*>& equations,
 	*r++ = remainders[*j];
       *r = 0;
     }
-#endif
 }
 
 local_inline bool
@@ -255,18 +247,10 @@ FreeNet::dump(ostream& s, int indentLevel)
   for (int i = 0; i < net.length(); i++)
     {
       s << Indent(indentLevel) << "Node " << i <<
-#ifndef SPEED_HACKS
-	": position " << net[i].position <<
-#else
 	": position " << net[i].positionPtr - &(stack[0]) <<
-#endif
 	", argIndex " << net[i].argIndex <<
 	", symbol \"" << net[i].symbol <<
-#ifndef SPEED_HACKS
-	"\", slot " << net[i].slot <<
-#else
 	"\", slot " << net[i].slotPtr - &(stack[0]) <<
-#endif
 	", equal " << net[i].equal <<
 	", notEqual[LESS] " << net[i].notEqual[LESS] <<
 	", notEqual[GREATER] " << net[i].notEqual[GREATER] << '\n';

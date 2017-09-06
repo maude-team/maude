@@ -1,3 +1,15 @@
+2003-08-28  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_Symbol.hh (class ACU_Symbol): added decl for
+	rewriteAtTopNoOwise()
+
+	* ACU_Symbol.cc (complexStrategy): rewritten to use
+	rewriteAtTopNoOwise() for first 0 in semi-eager case
+	(memoStrategy): ditto
+	(rewriteAtTopNoOwise): added
+	
+===================================Maude82===========================================
+
 2003-07-31  Steven Eker  <eker@goo.csl.sri.com>
 
 	* ACU_LazySubproblem.cc (bindCollector): fixed nasty bug where we
