@@ -95,7 +95,7 @@ UserLevelRewritingContext::makeSubcontext(DagNode* root, int purpose)
 {
   return new UserLevelRewritingContext(root, this, purpose,
 				       localTraceFlag &&
-				       (purpose != CONDITION_EVAL || interpreter.getFlag(Interpreter::TRACE_EQ)));
+				       (purpose != CONDITION_EVAL || interpreter.getFlag(Interpreter::TRACE_CONDITION)));
 }
 
 bool

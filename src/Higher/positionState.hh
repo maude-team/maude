@@ -42,6 +42,7 @@ public:
   };
 
   typedef int PositionIndex;
+  typedef pair<DagNode*, DagNode*> DagPair;
 
   //
   //	maxDepth = -1		means at top, no extension
@@ -53,10 +54,11 @@ public:
 
   bool findNextPosition();  // should this be protected?
   DagNode* getDagNode() const;
+  DagNode* getDagNode(PositionIndex index) const;
   ExtensionInfo* getExtensionInfo();
   PositionIndex getPositionIndex() const;
-  DagNode* rebuildDag(DagNode* replacement) const;
-  DagNode* rebuildDag(DagNode* replacement, ExtensionInfo* extInfo, PositionIndex index) const;
+  DagPair rebuildDag(DagNode* replacement) const;
+  DagPair rebuildDag(DagNode* replacement, ExtensionInfo* extInfo, PositionIndex index) const;
 
   int getFlags() const;
 
@@ -90,6 +92,13 @@ PositionState::getDagNode() const
   return positionQueue[nextToReturn].node();
 }
 
+inline DagNode*
+PositionState::getDagNode(PositionIndex index) const
+{
+  Assert(index >= 0 && index <= nextToReturn, "bad index");
+  return positionQueue[index].node();
+}
+
 inline ExtensionInfo* 
 PositionState::getExtensionInfo()
 {
@@ -109,12 +118,11 @@ PositionState::getPositionIndex() const
   return nextToReturn;
 }
 
-inline DagNode*
+inline PositionState::DagPair
 PositionState::rebuildDag(DagNode* replacement) const
 {
   Assert(nextToReturn >= 0, "findNextPosition() not called");
   return rebuildDag(replacement, extensionInfo, nextToReturn);
 }
-
 
 #endif

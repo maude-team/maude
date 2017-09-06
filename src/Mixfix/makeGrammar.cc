@@ -203,20 +203,57 @@ MixfixModule::makeStrategyLanguageProductions()
   rhs[0] = all;
   parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, emptyGather, MixfixParser::MAKE_ALL);
 
-  rhs[0] = LABEL;
-  parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, gatherAny, MixfixParser::MAKE_APPLICATION);
-
   {
     //
-    //	<strategy expression> = <label> [ substitution> ]
+    //	<strategy expression> = <label> [ <substitution> ] { <strategy list> }
     //
-    Vector<int> rhs(4);
+    Vector<int> rhs(7);
     rhs[0] = LABEL;
     rhs[1] = leftBracket;
     rhs[2] = SUBSTITUTION;
     rhs[3] = rightBracket;
+    rhs[4] = leftBrace;
+    rhs[5] = STRATEGY_LIST;
+    rhs[6] = rightBrace;
+    parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, gatherAnyAnyAny,
+			     MixfixParser::MAKE_APPLICATION, true, true);
+
+    //
+    //	<strategy expression> = <label> [ <substitution> ]
+    //
+    rhs.resize(4);
     parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, gatherAnyAny,
-			     MixfixParser::MAKE_APPLICATION_WITH_SUBSTITUTION);
+			     MixfixParser::MAKE_APPLICATION, true, false);
+    //
+    //	<strategy expression> = <label> { <strategy list> }
+    //
+    rhs[1] = leftBrace;
+    rhs[2] = STRATEGY_LIST;
+    rhs[3] = rightBrace;
+    parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, gatherAnyAny,
+			     MixfixParser::MAKE_APPLICATION, false, true);
+    //
+    //	<strategy expression> = <label>
+    //
+    rhs.resize(1);
+    parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, gatherAny,
+			     MixfixParser::MAKE_APPLICATION, false, false);
+  }
+  {
+    //
+    //	<strategy list> = <strategy expression> , <strategy list>
+    //
+    Vector<int> rhs(3);
+    rhs[0] = STRATEGY_EXPRESSION;
+    rhs[1] = comma;
+    rhs[2] = STRATEGY_LIST;
+    parser->insertProduction(STRATEGY_LIST, rhs, PREFIX_GATHER, gatherPrefixPrefix,
+			     MixfixParser::MAKE_STRATEGY_LIST);
+    //
+    //	<strategy list> = <strategy expression>
+    //
+    rhs.resize(1);
+    parser->insertProduction(STRATEGY_LIST, rhs, 0, gatherAny, MixfixParser::PASS_THRU);
   }
   {
     //
@@ -264,7 +301,7 @@ MixfixModule::makeStrategyLanguageProductions()
     parser->insertProduction(STRATEGY_EXPRESSION, rhs, STRAT_UNION_PREC, gather, MixfixParser::MAKE_UNION);
     gather[0] = STRAT_ORELSE_PREC - 1;
     gather[1] = STRAT_ORELSE_PREC;
-     rhs[1] = orelse;
+    rhs[1] = orelse;
     parser->insertProduction(STRATEGY_EXPRESSION, rhs, STRAT_ORELSE_PREC, gather,
 			     MixfixParser::MAKE_BRANCH, BranchStrategy::PASS_THRU, BranchStrategy::NEW_STRATEGY);
   }
@@ -307,8 +344,10 @@ MixfixModule::makeStrategyLanguageProductions()
     //
     //	<strategy expression> = match <term> such that <condition>
     //	<strategy expression> = xmatch <term> such that <condition>
-    //	<strategy expression> = xmatch <term>
+    //	<strategy expression> = amatch <term> such that <condition>
     //	<strategy expression> = match <term>
+    //	<strategy expression> = xmatch <term>
+    //	<strategy expression> = amatch <term>
     //
     Vector<int> gather(3);
     Vector<int> rhs(4);
@@ -319,14 +358,19 @@ MixfixModule::makeStrategyLanguageProductions()
     rhs[1] = TERM;
     rhs[2] = SUCH_THAT;
     rhs[3] = CONDITION;
-    parser->insertProduction(STRATEGY_EXPRESSION, rhs, STRAT_TEST_PREC, gather, MixfixParser::MAKE_TEST, false);
+    parser->insertProduction(STRATEGY_EXPRESSION, rhs, STRAT_TEST_PREC, gather, MixfixParser::MAKE_TEST, -1);
     rhs[0] = xmatch;
-    parser->insertProduction(STRATEGY_EXPRESSION, rhs, STRAT_TEST_PREC, gather, MixfixParser::MAKE_TEST, true);
+    parser->insertProduction(STRATEGY_EXPRESSION, rhs, STRAT_TEST_PREC, gather, MixfixParser::MAKE_TEST, 0);
+    rhs[0] = amatch;
+    parser->insertProduction(STRATEGY_EXPRESSION, rhs, STRAT_TEST_PREC, gather, MixfixParser::MAKE_TEST, UNBOUNDED);
     gather.resize(1);
     rhs.resize(2);
-    parser->insertProduction(STRATEGY_EXPRESSION, rhs, STRAT_TEST_PREC, gather, MixfixParser::MAKE_TEST, true);
     rhs[0] = match;
-    parser->insertProduction(STRATEGY_EXPRESSION, rhs, STRAT_TEST_PREC, gather, MixfixParser::MAKE_TEST, false);
+    parser->insertProduction(STRATEGY_EXPRESSION, rhs, STRAT_TEST_PREC, gather, MixfixParser::MAKE_TEST, -1);
+    rhs[0] = xmatch;
+    parser->insertProduction(STRATEGY_EXPRESSION, rhs, STRAT_TEST_PREC, gather, MixfixParser::MAKE_TEST, 0);
+    rhs[0] = amatch;
+    parser->insertProduction(STRATEGY_EXPRESSION, rhs, STRAT_TEST_PREC, gather, MixfixParser::MAKE_TEST, UNBOUNDED);
   }
   {
     //

@@ -67,6 +67,10 @@ StrategicExecution::~StrategicExecution()
   //	value of executionSucceeded() or executionsExhausted() (task) and
   //	a succeeded() or finished() call would have unlinked us.
   //
+  //	The upshot of this is that a StrategicProcess must always call succeeded() or
+  //	finished() before requesing deletion, otherwise there will be a dangling pointer
+  //	in its owners slave list.
+  //
 }
 
 void

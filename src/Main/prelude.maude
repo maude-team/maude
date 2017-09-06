@@ -22,13 +22,13 @@
 
 ***
 ***	Maude interpreter standard prelude.
-***	Version alpha88a.
+***	Version 2.3.
 ***
 ***	Some of the overall structure is taken from the OBJ3
 ***	interpreter standard prelude.
 ***
 
-set protect BOOL off .
+set include BOOL off .
 
 fmod TRUTH-VALUE is
   sort Bool .
@@ -76,9 +76,10 @@ fmod BOOL is
   eq A implies B = not(A xor A and B) .
 endfm
 
-set protect BOOL on .
+set include BOOL on .
 
 fmod EXT-BOOL is
+  protecting BOOL .
   op _and-then_ : Bool Bool -> Bool [strat (1 0) gather (e E) prec 55] .
   op _or-else_ : Bool Bool -> Bool [strat (1 0) gather (e E) prec 59] .
   var B : [Bool] .
@@ -93,6 +94,7 @@ endfm
 ***
 
 fmod NAT is
+  protecting BOOL .
   sorts Zero NzNat Nat .
   subsort Zero NzNat < Nat .
   op 0 : -> Zero [ctor] .
@@ -524,6 +526,7 @@ fmod RAT is
 endfm
 
 fmod FLOAT is
+  protecting BOOL .
   sorts FiniteFloat Float .
   subsort FiniteFloat < Float .
   op <Floats> : -> FiniteFloat [special (id-hook FloatSymbol)] .
@@ -1415,6 +1418,7 @@ fmod SET*{X :: TRIV} is
 endfm
 
 fmod MAP{X :: TRIV, Y :: TRIV} is
+  protecting BOOL .
   sorts Entry{X,Y} Map{X,Y} .
   subsort Entry{X,Y} < Map{X,Y} .
 
@@ -1447,6 +1451,7 @@ fmod MAP{X :: TRIV, Y :: TRIV} is
 endfm
 
 fmod ARRAY{X :: TRIV, Y :: DEFAULT} is
+  protecting BOOL .
   sorts Entry{X,Y} Array{X,Y} .
   subsort Entry{X,Y} < Array{X,Y} .
 

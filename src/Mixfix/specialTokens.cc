@@ -107,6 +107,7 @@
   MACRO(orelse, "or-else")
   MACRO(match, "match")
   MACRO(xmatch, "xmatch")
+  MACRO(amatch, "amatch")
     //
     //	Special hook identifier tokens.
     //

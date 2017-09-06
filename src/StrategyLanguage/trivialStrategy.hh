@@ -31,11 +31,18 @@ class TrivialStrategy : public StrategyExpression
 {
 public:
   TrivialStrategy(bool result);
+  bool getResult() const;
 
   StrategicExecution::Survival decompose(StrategicSearch& searchObject, DecompositionProcess* remainder);
 
 private:
   const bool result;
 };
+
+inline bool
+TrivialStrategy::getResult() const
+{
+  return result;
+}
 
 #endif

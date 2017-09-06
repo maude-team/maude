@@ -30,8 +30,10 @@
 class StrategyExpression
 {
 public:
-  virtual ~StrategyExpression() {};
+  virtual ~StrategyExpression() {}
   virtual StrategicExecution::Survival decompose(StrategicSearch& searchObject, DecompositionProcess* remainder) = 0;
 };
+
+ostream& operator<<(ostream& s, StrategyExpression* strategy);
 
 #endif

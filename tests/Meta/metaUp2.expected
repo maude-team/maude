@@ -125,12 +125,13 @@ subsort 'Type < 'Type? .
 ==========================================
 reduce in META-LEVEL : upImports('META-LEVEL) .
 rewrites: 1
-result ImportList: protecting 'BOOL .
+result ImportList: including 'BOOL .
 protecting 'META-MODULE .
 ==========================================
 reduce in META-LEVEL : upImports('NAT) .
 rewrites: 1
-result Import: protecting 'BOOL .
+result ImportList: including 'BOOL .
+protecting 'BOOL .
 ==========================================
 reduce in META-LEVEL : upImports('TRUTH-VALUE) .
 rewrites: 1
@@ -2264,7 +2265,7 @@ endfm
 reduce in META-LEVEL : upModule('META-LEVEL, false) .
 rewrites: 1
 result FModule: fmod 'META-LEVEL is
-  protecting 'BOOL .
+  including 'BOOL .
   protecting 'META-MODULE .
   sorts 'Bound ; 'MatchPair ; 'MatchPair? ; 'PrintOption ; 'PrintOptionSet ;
     'Result4Tuple ; 'Result4Tuple? ; 'ResultPair ; 'ResultPair? ; 'ResultTriple
@@ -2856,6 +2857,7 @@ result ResultPair: {'s_^166['0.Zero],'NzNat}
 reduce in META-LEVEL : upModule('NAT, false) .
 rewrites: 1
 result FModule: fmod 'NAT is
+  including 'BOOL .
   protecting 'BOOL .
   sorts 'Nat ; 'NzNat ; 'Zero .
   subsort 'NzNat < 'Nat .

@@ -54,6 +54,7 @@ public:
   DagNode* value(int index) const;
   void bind(int index, DagNode* value);
   void copy(const Substitution& original);
+  void clone(const Substitution& original);
   LocalBinding* operator-(const Substitution& original) const;
 
   int nrFragileBindings() const;
@@ -139,6 +140,29 @@ Substitution::copy(const Substitution& original)
 {
   Assert(copySize == original.copySize, "size mismatch (" << copySize <<
 	 " vs " << original.copySize << ')');
+  if (copySize > 0)
+    {
+      Vector<DagNode*>::iterator dest = values.begin();
+      Vector<DagNode*>::const_iterator source = original.values.begin();
+      Vector<DagNode*>::const_iterator end = source + copySize;
+      do
+	{
+	  *dest = *source;
+	  ++dest;
+	  ++source;
+	}
+      while (source != end);
+    }
+}
+
+inline void
+Substitution::clone(const Substitution& original)
+{
+  //
+  //	Unlike copy, we set the copy size from original instead of assuming them
+  //	to be the same.
+  //
+  copySize = original.copySize;
   if (copySize > 0)
     {
       Vector<DagNode*>::iterator dest = values.begin();

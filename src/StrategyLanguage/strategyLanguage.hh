@@ -36,11 +36,17 @@ class UnionStrategy;
 class TestStrategy;
 
 class StrategicExecution;
+
 class StrategicProcess;
 class DecompositionProcess;
 class ApplicationProcess;
+class MatchProcess;
+
 class StrategicTask;
 class StrategicSearch;
 class BranchTask;
+class RewriteTask;
+
+class SharedRewriteSearchState;
 
 #endif

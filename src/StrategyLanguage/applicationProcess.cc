@@ -36,10 +36,12 @@
 
 //	interface class definitions
 #include "term.hh"
+#include "subproblem.hh"
 
 //	core class definitions
 #include "cachedDag.hh"
 #include "rule.hh"
+#include "rewritingContext.hh"
 
 //	higher class definitions
 #include "assignmentConditionFragment.hh"
@@ -49,8 +51,10 @@
 #include "strategicSearch.hh"
 #include "strategyExpression.hh"
 #include "applicationStrategy.hh"
-#include "applicationProcess.hh"
 #include "decompositionProcess.hh"
+#include "matchProcess.hh"
+#include "rewriteTask.hh"
+#include "applicationProcess.hh"
 
 ApplicationProcess::ApplicationProcess(StrategicSearch& searchObject,
 				       DagNode* start,
@@ -61,12 +65,7 @@ ApplicationProcess::ApplicationProcess(StrategicSearch& searchObject,
 
 
   : StrategicProcess(taskSibling, insertionPoint),
-    initial(searchObject.getContext()->makeSubcontext(start)),
-    rewriteState(initial,
-		 strategy->getLabel(),
-		 RewriteSearchState::ALLOW_NONEXEC /*  | RewriteSearchState::IGNORE_CONDITION */,
-		 0,
-		 strategy->getTop() ? NONE : UNBOUNDED),
+    rewriteState(searchObject.getContext(), start, strategy->getLabel(), strategy->getTop() ? NONE : UNBOUNDED),
     pending(pending),
     strategy(strategy)
 {
@@ -78,23 +77,31 @@ ApplicationProcess::ApplicationProcess(StrategicSearch& searchObject,
       Vector<DagRoot*> tmpValues(nrValues);
       for (int i = 0; i < nrValues; ++i)
 	tmpValues[i] = values[i].getDagRoot();
-      rewriteState.setInitialSubstitution(tmpVariables, tmpValues);
+      rewriteState->setInitialSubstitution(tmpVariables, tmpValues);
     }
-}
-
-ApplicationProcess::~ApplicationProcess()
-{
-  //cout << "ApplicationProcess::~ApplicationProcess(): pending size: " << pending.size() << endl;
-  delete initial;
 }
 
 StrategicExecution::Survival
 ApplicationProcess::run(StrategicSearch& searchObject)
 {
-  if (rewriteState.findNextRewrite())
+  if (rewriteState->findNextRewrite())
     {
-      if (0 /*rewriteState.getRule()->hasCondition()*/)
+      Rule* rule = rewriteState->getRule();
+      if (rule->hasCondition())
 	{
+	  //
+	  //	Need to check that we have the correct number of substrategies for our rule.
+	  //
+	  int nrStrategies = strategy->getStrategies().size();
+	  int nrRewriteFragments = 0;
+	  const Vector<ConditionFragment*>& condition = rule->getCondition();
+	  FOR_EACH_CONST(i, Vector<ConditionFragment*>, condition)
+	    {
+	      if (dynamic_cast<RewriteConditionFragment*>(*i))
+		++nrRewriteFragments;
+	    }
+	  if (nrStrategies != nrRewriteFragments)
+	    return SURVIVE;  // might match a different rule on later runs
 	  //
 	  //	We need to check the condition in a fair way, given
 	  //	that rewrite conditions may have to follow a given strategy
@@ -102,51 +109,94 @@ ApplicationProcess::run(StrategicSearch& searchObject)
 	  //	bind substitution entries needed to build an instance of
 	  //	the rhs of the rule.
 	  //
-	  return resolveRemainingConditionFragments(searchObject,
-						    rewriteState,
-						    0,
-						    strategy->getStrategies(),
-						    0,
-						    pending,
-						    this,
-						    this);
+	  if (resolveRemainingConditionFragments(searchObject,
+						 rewriteState,
+						 rewriteState->getPositionIndex(),
+						 rewriteState->getExtensionInfo(),
+						 rewriteState->getContext(),
+						 rule,
+						 0,
+						 strategy->getStrategies(),
+						 0,
+						 pending,
+						 this,
+						 this) == SURVIVE)
+	    return SURVIVE;
 	}
       else
 	{
-	  if (DagNode* r = doRewrite(rewriteState, *(searchObject.getContext())))
+	  if (strategy->getStrategies().size() > 0)
+	    return SURVIVE;  // might match a different rule on later runs
+	  if (DagNode* r = doRewrite(searchObject,
+				     rewriteState,
+				     rewriteState->getPositionIndex(),
+				     rewriteState->getExtensionInfo(),
+				     rewriteState->getContext(),
+				     rule))
 	    {
-	      r = searchObject.index2DagNode(searchObject.insert(r));  // protect r from garbage collection
 	      (void) new DecompositionProcess(r, pending, this, this);
 	      return SURVIVE;  // stick around to look for another rewrite
 	    }
 	}
     }
-  finished(this);
+  finished(this);  // need to unlink ourself from slave list before we request deletion
   return DIE;  // request deletion
 }
 
 DagNode*
-ApplicationProcess::doRewrite(RewriteSearchState& rewriteState,
-			      RewritingContext& context)
+ApplicationProcess::doRewrite(StrategicSearch& searchObject,
+			      SharedRewriteSearchState::Ptr rewriteState,
+			      PositionState::PositionIndex redexIndex,
+			      ExtensionInfo* extensionInfo,
+			      Substitution* substitution,
+			      Rule* rule)
 {
-  Rule* rule = rewriteState.getRule();
+  //
+  //	The rule for using substitution is tricky:
+  //	It does not belong to us and we should never bind variables that
+  //	occur in the rule pattern or any fragment pattern in case we
+  //	disrupt matching in other branches of the search. But it is fine
+  //	to bind constructed entries, protected or not, since they will
+  //	simply be overwritten in other branches.
+  //
+  RewritingContext* baseContext = rewriteState->getContext();
   bool trace = RewritingContext::getTraceStatus();
   if (trace)
     {
-      context.tracePreRuleRewrite(rewriteState.getDagNode(), rule);
-      if (context.traceAbort())
+      //
+      //	We have a problem: the whole term that is being rewritten is in the
+      //	rewriting context rewriteState->getContext() while the substitution we
+      //	will use is in context which may be a different rewriting context with
+      //	a different whole term.
+      //
+      //	We resolve the issue by creating a special context containing the correct
+      //	whole term and substitution just for tracing.
+      //
+      RewritingContext* tracingContext = baseContext->makeSubcontext(baseContext->root());
+      tracingContext->clone(*substitution);
+      tracingContext->tracePreRuleRewrite(rewriteState->getDagNode(redexIndex), rule);
+      delete tracingContext;
+      if (baseContext->traceAbort())
 	return 0;
     }
-
-  DagNode* replacement = rewriteState.getReplacement();
-  DagNode* r = rewriteState.rebuildDag(replacement);
-  //cout << "ApplicationProcess::doRewrite(): solution: "  << r << endl;
-
-  RewritingContext* c = context.makeSubcontext(r);
-  context.incrementRlCount();
+  //
+  //	Instantiate the rhs of the rule with the substitution.
+  //
+  //cout << "ApplicationProcess::doRewrite() nrFragileBindings = " << substitution->nrFragileBindings() << endl;
+  DagNode* replacement = rule->getRhsBuilder().construct(*substitution);
+  //
+  //	Rebuild the original term, using the replacement in place of the redex,
+  //	also accounting for any extension info; count this a rule rewrite
+  //
+  RewriteSearchState::DagPair r = rewriteState->rebuildDag(replacement, extensionInfo, redexIndex);
+  searchObject.getContext()->incrementRlCount();
+  //
+  //	Make a new subcontext to equationally reduce the new term.
+  //
+  RewritingContext* c = baseContext->makeSubcontext(r.first);
   if (trace)
     {
-      c->tracePostRuleRewrite(replacement);
+      c->tracePostRuleRewrite(r.second);
       if (c->traceAbort())
 	{
 	  delete c;
@@ -159,15 +209,18 @@ ApplicationProcess::doRewrite(RewriteSearchState& rewriteState,
       delete c;
       return 0;
     }
-  context.addInCount(*c);
+  searchObject.getContext()->addInCount(*c);
   delete c;
-  return r;
+  return searchObject.index2DagNode(searchObject.insert(r.first));
 }
-
 
 StrategicExecution::Survival
 ApplicationProcess::resolveRemainingConditionFragments(StrategicSearch& searchObject,
-						       RewriteSearchState& rewriteState,
+						       SharedRewriteSearchState::Ptr rewriteState,
+						       PositionState::PositionIndex redexIndex,
+						       ExtensionInfo* extensionInfo,
+						       Substitution* substitutionSoFar,
+						       Rule* rule,
 						       int fragmentNr,
 						       const Vector<StrategyExpression*>& strategies,
 						       int strategyNr,
@@ -175,48 +228,102 @@ ApplicationProcess::resolveRemainingConditionFragments(StrategicSearch& searchOb
 						       StrategicExecution* taskSibling,
 						       StrategicProcess* other)
 {
-  Rule* rule = rewriteState.getRule();
   const Vector<ConditionFragment*>& fragments = rule->getCondition();
-  int nrFragments = fragments.size();
-  for (;;)
+  for (int nrFragments = fragments.size(); fragmentNr < nrFragments; ++fragmentNr)
     {
       ConditionFragment* fragment = fragments[fragmentNr];
       if (RewriteConditionFragment* rf = dynamic_cast<RewriteConditionFragment*>(fragment))
 	{
-	  // need to do a fair search
+	  (void) new RewriteTask(searchObject,
+				 rewriteState,
+				 redexIndex,
+				 extensionInfo,
+				 substitutionSoFar,
+				 rule,
+				 fragmentNr,
+				 strategies,
+				 strategyNr,
+				 pending,
+				 taskSibling,
+				 other);
 	  return SURVIVE;
 	}
       else if (AssignmentConditionFragment* af = dynamic_cast<AssignmentConditionFragment*>(fragment))
 	{
-	  // need to do a fair match
+	  //
+	  //	Find the L := R fragment that we are going to test.
+	  //
+	  AssignmentConditionFragment* acf = safeCast(AssignmentConditionFragment*, (rule->getCondition())[fragmentNr]);
+	  //
+	  //	Make a subcontext, construct and evalutate the instance of R.
+	  //
+	  RewritingContext* newContext = rewriteState->getContext()->
+	    makeSubcontext(acf->makeRhsInstance(*substitutionSoFar), RewritingContext::CONDITION_EVAL);
+	  newContext->reduce();
+	  //
+	  //	We transfer, rather than simply add in the rewrite count because MatchProcess may do
+	  //	some more rewriting with newContext.
+	  //
+	  searchObject.getContext()->transferCount(*newContext);
+	  newContext->clone(*substitutionSoFar);
+	  Subproblem* subproblem;
+	  if (acf->matchRoot(*newContext, subproblem))
+	    {
+	      (void) new MatchProcess(rewriteState,
+				      redexIndex,
+				      extensionInfo,
+				      newContext,  // MatchProcess takes over ownership of newContext
+				      subproblem,  // MatchProcess takes over ownership of subproblem
+				      rule,
+				      fragmentNr,
+				      strategies,
+				      strategyNr,
+				      pending,
+				      taskSibling,
+				      other);
+	    }
+	  else
+	    {
+	      delete subproblem;
+	      delete newContext;
+	    }
 	  return SURVIVE;
 	}
       //
       //	Since we don't recognize the fragment as needing special treatment, assume it
-      //	is branch free and evaluate with a dummy state stack.
+      //	is branch free and solve it with a specially created context (to have the correct
+      //	root and substitution) and dummy state stack.
       //
+      RewritingContext* baseContext = rewriteState->getContext();
+      RewritingContext* solveContext = baseContext->makeSubcontext(baseContext->root());
+      solveContext->clone(*substitutionSoFar);
       stack<ConditionState*> dummy;
-      if (fragment->solve(true, *(rewriteState.getContext()), dummy))
+      bool success = fragment->solve(true, *solveContext, dummy);
+      searchObject.getContext()->addInCount(*solveContext);
+      if (!success)
 	{
-	  ++fragmentNr;
-	  if (fragmentNr == nrFragments)
-	    {
-	      //
-	      //	The condition succeeded so now we need to do the rewrite and
-	      //	resume the strategy.
-	      //
-	      if (DagNode* r = doRewrite(rewriteState, *(searchObject.getContext())))
-		{
-		  r = searchObject.index2DagNode(searchObject.insert(r));  // protect r from garbage collection
-		  (void) new DecompositionProcess(r, pending, taskSibling, other);
-		  return SURVIVE;  // stick around to look for another rewrite
-		}
-	      else
-		return DIE;
-	    }
+	  //
+	  //	A fragment failed so this branch of the search is pruned. But the process
+	  //	or task that called us should survive to generate other possibilities.
+	  //
+	  delete solveContext;
+	  return SURVIVE;
 	}
-      else
-	break;
+      //
+      //	solve() may have bound some protected slots in solveContext as part of
+      //	making instantiations; for example eager copies of variables. These
+      //	must be copied back into substitutionSoFar.
+      //
+      substitutionSoFar->clone(*solveContext);
+      delete solveContext;
     }
-  return SURVIVE;;
+  //
+  //	The condition succeeded so now we need to do the rewrite and resume the strategy.
+  //
+  if (DagNode* r = doRewrite(searchObject, rewriteState, redexIndex, extensionInfo, substitutionSoFar, rule))
+    {
+      (void) new DecompositionProcess(r, pending, taskSibling, other);
+      return SURVIVE;  // stick around to look for another rewrite
+    }
+  return DIE;  // only happens when we are aborting
 }

@@ -68,7 +68,10 @@ am_libstrategyLanguage_a_OBJECTS =  \
 	libstrategyLanguage_a-strategicProcess.$(OBJEXT) \
 	libstrategyLanguage_a-decompositionProcess.$(OBJEXT) \
 	libstrategyLanguage_a-applicationProcess.$(OBJEXT) \
-	libstrategyLanguage_a-strategicSearch.$(OBJEXT)
+	libstrategyLanguage_a-strategicSearch.$(OBJEXT) \
+	libstrategyLanguage_a-sharedRewriteSearchState.$(OBJEXT) \
+	libstrategyLanguage_a-matchProcess.$(OBJEXT) \
+	libstrategyLanguage_a-rewriteTask.$(OBJEXT)
 libstrategyLanguage_a_OBJECTS = $(am_libstrategyLanguage_a_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
@@ -203,7 +206,10 @@ libstrategyLanguage_a_SOURCES = \
 	strategicProcess.cc \
 	decompositionProcess.cc \
 	applicationProcess.cc \
-	strategicSearch.cc
+	strategicSearch.cc \
+	sharedRewriteSearchState.cc \
+	matchProcess.cc \
+	rewriteTask.cc
 
 noinst_HEADERS = \
 	strategyLanguage.hh \
@@ -221,7 +227,10 @@ noinst_HEADERS = \
 	strategicProcess.hh \
 	decompositionProcess.hh \
 	applicationProcess.hh \
-	strategicSearch.hh
+	strategicSearch.hh \
+	sharedRewriteSearchState.hh \
+	matchProcess.hh \
+	rewriteTask.hh
 
 all: all-am
 
@@ -277,6 +286,9 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstrategyLanguage_a-concatenationStrategy.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstrategyLanguage_a-decompositionProcess.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstrategyLanguage_a-iterationStrategy.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstrategyLanguage_a-matchProcess.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstrategyLanguage_a-rewriteTask.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstrategyLanguage_a-sharedRewriteSearchState.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstrategyLanguage_a-strategicExecution.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstrategyLanguage_a-strategicProcess.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstrategyLanguage_a-strategicSearch.Po@am__quote@
@@ -494,6 +506,48 @@ libstrategyLanguage_a-strategicSearch.obj: strategicSearch.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='strategicSearch.cc' object='libstrategyLanguage_a-strategicSearch.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-strategicSearch.obj `if test -f 'strategicSearch.cc'; then $(CYGPATH_W) 'strategicSearch.cc'; else $(CYGPATH_W) '$(srcdir)/strategicSearch.cc'; fi`
+
+libstrategyLanguage_a-sharedRewriteSearchState.o: sharedRewriteSearchState.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-sharedRewriteSearchState.o -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-sharedRewriteSearchState.Tpo" -c -o libstrategyLanguage_a-sharedRewriteSearchState.o `test -f 'sharedRewriteSearchState.cc' || echo '$(srcdir)/'`sharedRewriteSearchState.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-sharedRewriteSearchState.Tpo" "$(DEPDIR)/libstrategyLanguage_a-sharedRewriteSearchState.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-sharedRewriteSearchState.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='sharedRewriteSearchState.cc' object='libstrategyLanguage_a-sharedRewriteSearchState.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-sharedRewriteSearchState.o `test -f 'sharedRewriteSearchState.cc' || echo '$(srcdir)/'`sharedRewriteSearchState.cc
+
+libstrategyLanguage_a-sharedRewriteSearchState.obj: sharedRewriteSearchState.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-sharedRewriteSearchState.obj -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-sharedRewriteSearchState.Tpo" -c -o libstrategyLanguage_a-sharedRewriteSearchState.obj `if test -f 'sharedRewriteSearchState.cc'; then $(CYGPATH_W) 'sharedRewriteSearchState.cc'; else $(CYGPATH_W) '$(srcdir)/sharedRewriteSearchState.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-sharedRewriteSearchState.Tpo" "$(DEPDIR)/libstrategyLanguage_a-sharedRewriteSearchState.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-sharedRewriteSearchState.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='sharedRewriteSearchState.cc' object='libstrategyLanguage_a-sharedRewriteSearchState.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-sharedRewriteSearchState.obj `if test -f 'sharedRewriteSearchState.cc'; then $(CYGPATH_W) 'sharedRewriteSearchState.cc'; else $(CYGPATH_W) '$(srcdir)/sharedRewriteSearchState.cc'; fi`
+
+libstrategyLanguage_a-matchProcess.o: matchProcess.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-matchProcess.o -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-matchProcess.Tpo" -c -o libstrategyLanguage_a-matchProcess.o `test -f 'matchProcess.cc' || echo '$(srcdir)/'`matchProcess.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-matchProcess.Tpo" "$(DEPDIR)/libstrategyLanguage_a-matchProcess.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-matchProcess.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='matchProcess.cc' object='libstrategyLanguage_a-matchProcess.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-matchProcess.o `test -f 'matchProcess.cc' || echo '$(srcdir)/'`matchProcess.cc
+
+libstrategyLanguage_a-matchProcess.obj: matchProcess.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-matchProcess.obj -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-matchProcess.Tpo" -c -o libstrategyLanguage_a-matchProcess.obj `if test -f 'matchProcess.cc'; then $(CYGPATH_W) 'matchProcess.cc'; else $(CYGPATH_W) '$(srcdir)/matchProcess.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-matchProcess.Tpo" "$(DEPDIR)/libstrategyLanguage_a-matchProcess.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-matchProcess.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='matchProcess.cc' object='libstrategyLanguage_a-matchProcess.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-matchProcess.obj `if test -f 'matchProcess.cc'; then $(CYGPATH_W) 'matchProcess.cc'; else $(CYGPATH_W) '$(srcdir)/matchProcess.cc'; fi`
+
+libstrategyLanguage_a-rewriteTask.o: rewriteTask.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-rewriteTask.o -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-rewriteTask.Tpo" -c -o libstrategyLanguage_a-rewriteTask.o `test -f 'rewriteTask.cc' || echo '$(srcdir)/'`rewriteTask.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-rewriteTask.Tpo" "$(DEPDIR)/libstrategyLanguage_a-rewriteTask.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-rewriteTask.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='rewriteTask.cc' object='libstrategyLanguage_a-rewriteTask.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-rewriteTask.o `test -f 'rewriteTask.cc' || echo '$(srcdir)/'`rewriteTask.cc
+
+libstrategyLanguage_a-rewriteTask.obj: rewriteTask.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-rewriteTask.obj -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-rewriteTask.Tpo" -c -o libstrategyLanguage_a-rewriteTask.obj `if test -f 'rewriteTask.cc'; then $(CYGPATH_W) 'rewriteTask.cc'; else $(CYGPATH_W) '$(srcdir)/rewriteTask.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-rewriteTask.Tpo" "$(DEPDIR)/libstrategyLanguage_a-rewriteTask.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-rewriteTask.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='rewriteTask.cc' object='libstrategyLanguage_a-rewriteTask.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-rewriteTask.obj `if test -f 'rewriteTask.cc'; then $(CYGPATH_W) 'rewriteTask.cc'; else $(CYGPATH_W) '$(srcdir)/rewriteTask.cc'; fi`
 uninstall-info-am:
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)

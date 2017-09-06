@@ -73,7 +73,7 @@
 #include "assignmentConditionFragment.hh"
 #include "rewriteConditionFragment.hh"
 
-//	strategy languages definitions
+//	strategy languages class definitions
 #include "trivialStrategy.hh"
 #include "applicationStrategy.hh"
 #include "concatenationStrategy.hh"
@@ -419,16 +419,14 @@ MixfixParser::makeStrategy(int node)
 	Vector<Term*> variables;
 	Vector<Term*> values;
 	Vector<StrategyExpression*> strategies;
-	s = new ApplicationStrategy(label, variables, values, strategies);
-	break;
-      }
-    case MAKE_APPLICATION_WITH_SUBSTITUTION:
-      {
-	int label = actions[parser.getProductionNumber(parser.getChild(node, 0))].data;
-	Vector<Term*> variables;
-	Vector<Term*> values;
-	makeSubstitution(parser.getChild(node, 1), variables, values);
-	Vector<StrategyExpression*> strategies;
+	int child = 1;
+	if (a.data)
+	  {
+	    makeSubstitution(parser.getChild(node, 1), variables, values);
+	    ++child;
+	  }
+	if (a.data2)
+	  makeStrategyList(parser.getChild(node, child), strategies);
 	s = new ApplicationStrategy(label, variables, values, strategies);
 	break;
       }
@@ -499,6 +497,18 @@ MixfixParser::makeStrategy(int node)
       }
     }
   return s;
+}
+
+void
+MixfixParser::makeStrategyList(int node, Vector<StrategyExpression*>& strategies)
+{
+  while (actions[parser.getProductionNumber(node)].action == MAKE_STRATEGY_LIST)
+    {
+      strategies.append(makeStrategy(parser.getChild(node, 0)));
+      node = parser.getChild(node, 1);
+    }
+  Assert(actions[parser.getProductionNumber(node)].action == PASS_THRU, "unexpected action");
+  strategies.append(makeStrategy(parser.getChild(node, 0)));
 }
 
 Sort*

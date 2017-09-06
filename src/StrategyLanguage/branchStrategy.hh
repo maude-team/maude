@@ -46,14 +46,50 @@ public:
 		 StrategyExpression* failureStrategy);
   ~BranchStrategy();
 
+  StrategyExpression* getInitialStrategy() const;
+  StrategyExpression* getSuccessStrategy() const;
+  StrategyExpression* getFailureStrategy() const;
+  Action getSuccessAction() const;
+  Action getFailureAction() const;
+
   StrategicExecution::Survival decompose(StrategicSearch& searchObject, DecompositionProcess* remainder);
 
 private:
   StrategyExpression* const initialStrategy;
-  const Action successAction;
   StrategyExpression* const successStrategy;
-  const Action failureAction;
   StrategyExpression* const failureStrategy;
+  const Action successAction;
+  const Action failureAction;
 };
+
+inline StrategyExpression*
+BranchStrategy::getInitialStrategy() const
+{
+  return initialStrategy;
+}
+
+inline StrategyExpression*
+BranchStrategy::getSuccessStrategy() const
+{
+  return successStrategy;
+}
+
+inline StrategyExpression*
+BranchStrategy::getFailureStrategy() const
+{
+  return failureStrategy;
+}
+
+inline BranchStrategy::Action
+BranchStrategy::getSuccessAction() const
+{
+  return successAction;
+}
+
+inline BranchStrategy::Action
+BranchStrategy::getFailureAction() const
+{
+  return failureAction;
+}
 
 #endif

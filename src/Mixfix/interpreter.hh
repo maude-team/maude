@@ -211,11 +211,17 @@ private:
   bool contLoop2(const Vector<Token>& input);
   void doLoop(DagNode* d, VisibleModule* module);
   void searchCont(Int64 limit, bool debug);
+  void sRewriteCont(Int64 limit, bool debug);
   void doSearching(Timer& timer,
 		   VisibleModule* module,
 		   RewriteSequenceSearch* state,
 		   int solutionCount,
 		   int limit);
+  void doStrategicSearch(Timer& timer,
+			 VisibleModule* module,
+			 StrategicSearch* state,
+			 int solutionCount,
+			 int limit);
   void printMatchTiming(const Timer& timer);
   void printSearchTiming(const Timer& timer,  RewriteSequenceSearch* state);
   void doMatching(Timer& timer,
@@ -239,6 +245,7 @@ private:
   UserLevelRewritingContext* savedContext;
   MatchSearchState* savedMatchSearchState;
   RewriteSequenceSearch* savedRewriteSequenceSearch;
+  StrategicSearch* savedStrategicSearch;
   int savedSolutionCount;
   VisibleModule* savedModule;
   ContinueFuncPtr continueFunc;
