@@ -453,6 +453,12 @@ Symbol::isConstructor(DagNode* subject)
   return false;
 }
 
+int 
+Symbol::unificationPriority() const
+{
+  return 100;
+}
+
 #ifdef COMPILER
 void
 Symbol::fullCompile(CompilationContext& context, bool inLine) const

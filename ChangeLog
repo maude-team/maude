@@ -1,3 +1,13 @@
+2008-04-18  Steven Eker  <eker@goo.csl.sri.com>
+
+	* tests/Meta/metaUnify (MAUDE_LIB): created
+
+	* tests/Misc/unification (MAUDE_LIB): created
+
+	* tests/Misc/unification.maude: created
+
+===================================Maude91===========================================
+
 2006-10-06  Steven Eker  <eker@goo.csl.sri.com>
 
 	* tests/Meta/metaMetadata (MAUDE_LIB): Mixfix -> Main

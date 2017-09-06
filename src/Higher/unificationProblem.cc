@@ -57,9 +57,13 @@
 //	higher class definitions
 #include "unificationProblem.hh"
 
-UnificationProblem::UnificationProblem(Vector<Term*>& lhs, Vector<Term*>& rhs, FreshVariableGenerator* freshVariableGenerator, bool withExtension)
+UnificationProblem::UnificationProblem(Vector<Term*>& lhs,
+				       Vector<Term*>& rhs,
+				       FreshVariableGenerator* freshVariableGenerator,
+				       bool withExtension)
   : freshVariableGenerator(freshVariableGenerator)
 {
+  //cerr << this << " UnificationProblem " << lhs[0] << " " << rhs[0] << endl;
   problemOkay = false;  // until we have verified it is ok
   Assert(lhs.size() == rhs.size(), "lhs/rhs size clash");
   leftHandSides.swap(lhs);
@@ -87,7 +91,7 @@ UnificationProblem::UnificationProblem(Vector<Term*>& lhs, Vector<Term*>& rhs, F
       Term* v = variableInfo.index2Variable(i);
       if (freshVariableGenerator->variableNameConflict(safeCast(VariableTerm*, v)->id()))
 	{
-	  IssueWarning("Unsafe variable name " << QUOTE(v) << " in unification problem.");
+	  IssueWarning("unsafe variable name " << QUOTE(v) << " in unification problem.");
 	  return;
 	}
     }
@@ -154,6 +158,7 @@ UnificationProblem::UnificationProblem(Vector<Term*>& lhs, Vector<Term*>& rhs, F
 
 UnificationProblem::~UnificationProblem()
 {
+  //cerr << this << " ~UnificationProblem()" << endl;
   delete freshVariableGenerator;
   if (problemOkay)
     {
@@ -177,6 +182,7 @@ UnificationProblem::~UnificationProblem()
 void
 UnificationProblem::markReachableNodes()
 {
+  //cerr << this << " markReachableNodes()" << endl;
   {
     int nrEquations = leftHandSides.size();
     for (int i = 0; i < nrEquations; ++i)

@@ -56,7 +56,6 @@
 //	ACU theory class definitions
 #include "ACU_Symbol.hh"
 #include "ACU_DagNode.hh"
-//#include "ACU_ExtensionInfo.hh"
 #include "ACU_UnificationSubproblem2.hh"
 
 ACU_UnificationSubproblem2::ACU_UnificationSubproblem2(ACU_Symbol* topSymbol)
@@ -269,9 +268,11 @@ ACU_UnificationSubproblem2::buildAndSolveDiophantineSystem(UnificationContext& s
 {
 #ifndef NO_ASSERT
       DebugAdvisory("building DiophantineSystem for ACU_UnificationSubproblem2 " << ((void*) this));
+      /*
       for (int i = 0; i < subterms.length(); ++i)
 	cerr << subterms[i] << '\t';
       cerr << endl;
+      */
 #endif
   //
   //	Each distinct alien subdag from a unification problem that didn't get cancelled
@@ -296,9 +297,11 @@ ACU_UnificationSubproblem2::buildAndSolveDiophantineSystem(UnificationContext& s
       system.insertEqn(equation);
 #ifndef NO_ASSERT
       DebugAdvisory("added equation for ACU_UnificationSubproblem2 " << ((void*) this));
+      /*
       for (int i = 0; i < equation.length(); ++i)
 	cerr << equation[i] << '\t';
       cerr << endl;
+      */
 #endif
     }
   //
@@ -328,9 +331,11 @@ ACU_UnificationSubproblem2::buildAndSolveDiophantineSystem(UnificationContext& s
     {
 #ifndef NO_ASSERT
       DebugAdvisory("added basis element for ACU_UnificationSubproblem2 " << ((void*) this));
+      /*
       for (int i = 0; i < dioSol.length(); ++i)
 	cerr << dioSol[i] << '\t';
       cerr << endl;
+      */
 #endif
       basis.push_front(Entry());
       Entry& e = basis.front();

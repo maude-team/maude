@@ -131,6 +131,7 @@ public:
   //	Interface for unification.
   //
   virtual UnificationSubproblem* makeUnificationSubproblem() { CantHappen("Not implemented"); return 0; }
+  virtual int unificationPriority() const;
 
 #ifdef COMPILER
   void fullCompile(CompilationContext& context, bool inLine) const;
