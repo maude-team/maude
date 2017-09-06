@@ -126,7 +126,7 @@ private:
   };
 
   typedef map<NodeIndex, NodeBody> NodeMap;
-
+  /*
   struct Node
   {
     LiveSet liveSet;	// set of indices to live patterns 
@@ -154,7 +154,7 @@ private:
     int nrParents;
     int nrVisits;
   };
-
+  */
   int makeNode(const LiveSet& liveSet,
 	       const NatSet& reducedFringe,
 	       const NatSet& positionsTested);

@@ -1,3 +1,21 @@
+2013-10-29  Steven Eker  <eker@ape.csl.sri.com>
+
+	* execute.cc (sreduce): rewritten
+
+===================================Maude100===========================================
+
+2013-09-24  Steven Eker  <eker@ape.csl.sri.com>
+
+	* modules.yy (viewEndOpMap): add missing ; after lexBubble call
+
+	* commands.yy (command): add missing ; after lexBubble() calls
+
+===================================Maude98===========================================
+
+2013-08-15  Steven Eker  <eker@ape.csl.sri.com>
+
+	* execute.cc (sreduce): use new execute() mechanism
+
 2013-03-06  Steven Eker  <eker@ape.csl.sri.com>
 
 	* loopMode.cc (printBubble): fixed a bug where printing the empty

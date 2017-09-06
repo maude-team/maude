@@ -51,8 +51,10 @@ libcore_a_SOURCES = \
 	pendingUnificationStack.cc \
 	unificationSubproblemDisjunction.cc \
 	compoundCycleSubproblem.cc \
-	stackMachine.cc
-
+	stackMachine.cc \
+	stackMachineRhsCompiler.cc \
+	returnInstruction.cc \
+	nullInstruction.cc
 
 EXTRA_DIST = \
 	run.cc \
@@ -126,4 +128,7 @@ noinst_HEADERS = \
 	unificationSubproblemDisjunction.hh \
 	compoundCycleSubproblem.hh \
 	frame.hh \
-	stackMachine.hh
+	stackMachine.hh \
+	stackMachineRhsCompiler.hh \
+	returnInstruction.hh \
+	nullInstruction.hh

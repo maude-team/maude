@@ -1,3 +1,7 @@
+Overview of Changes in Maude alpha100 (source trees 97, 98, 99 abandoned)
+==========================================================================
+* added crude Maude VM based interpreter (sreduce)
+
 Overview of Changes in Maude alpha96c
 =====================================
 * added unification support for CU, U, Ul and Ur theories

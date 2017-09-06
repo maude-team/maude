@@ -57,11 +57,11 @@ public:
   Symbol(int id, int arity, bool memoFlag = false);
   virtual ~Symbol();
 
-  unsigned int getHashValue();
+  unsigned int getHashValue() const;
   int compare(const Symbol* other) const;
   bool mightMatchPattern(Term* pattern);
   void fastComputeTrueSort(DagNode* subject, RewritingContext& context);  // maybe should be const?
-  int getUniqueSortIndex();
+  int getUniqueSortIndex() const;
   //
   //	Functions needed for sophisticated sort analysis.
   //
@@ -151,6 +151,15 @@ public:
   //
   virtual DagNode* makeCanonicalCopy(DagNode* original, HashConsSet* hcs) = 0;
 
+  //
+  //	Generate instructions for stack based interpreter.
+  //
+  virtual Instruction* generateFinalInstruction(const Vector<int>& argumentSlots) {return 0;}
+  virtual Instruction* generateInstruction(int destination, const Vector<int>& argumentSlots, Instruction* nextInstruction) {return 0;}
+
+  int getMatchIndex() const;
+  void setMatchIndex(int index);
+
 #ifdef COMPILER
   void fullCompile(CompilationContext& context, bool inLine) const;
   virtual void generateCode(CompilationContext& context) const;
@@ -171,12 +180,13 @@ private:
 
   static int symbolCount;
 
-  const int orderInt;
-  int uniqueSortIndex;
+  const int orderInt;  // unique integer for comparing symbols
+  int uniqueSortIndex;  // > 0 for symbols that only produce an unique sort; -1 for fast case; 0 for slow case
+  int matchIndex;  // for fast matching in new engine
 };
 
 inline unsigned int
-Symbol::getHashValue()
+Symbol::getHashValue() const
 {
   return orderInt;
 }
@@ -188,9 +198,22 @@ Symbol::compare(const Symbol* other) const
 }
 
 inline int
-Symbol::getUniqueSortIndex()
+Symbol::getUniqueSortIndex() const
 {
   return uniqueSortIndex;
+}
+
+inline int
+Symbol::getMatchIndex() const
+{
+  return matchIndex;
+}
+
+inline void
+Symbol::setMatchIndex(int index)
+{
+  Assert(matchIndex == 0, "trying to set match index of " << this << " to " << index << " when it is already " << matchIndex);
+  matchIndex = index;
 }
 
 #endif

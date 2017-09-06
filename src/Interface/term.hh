@@ -184,6 +184,12 @@ public:
   //
   virtual Term* instantiate2(const Vector<Term*>& varBindings, SymbolMap* translator);
 
+  //
+  //	The following function should be redefined for any theory that uses
+  //	index based matching.
+  //
+  virtual void computeMatchIndices() const;
+
 #ifdef COMPILER
   void generateRhs(CompilationContext& context,
 		   int indentLevel,

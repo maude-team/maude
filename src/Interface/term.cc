@@ -71,6 +71,14 @@ Term::term2Dag(bool setSortInfo)
   return dagify();
 }
 
+void
+Term::computeMatchIndices() const
+{
+  //
+  //	Default is we do nothing; thus this term cannot be safely compiled for index based matching.
+  //
+}
+
 int
 Term::compileRhs(RhsBuilder& rhsBuilder,
 		 VariableInfo& variableInfo,

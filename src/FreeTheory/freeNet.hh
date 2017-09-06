@@ -75,7 +75,27 @@ private:
 
   struct TestNode
   {
+    int notEqual[2];  // index of next test node to take for > and < cases (-ve encodes index of applicable list, 0 encodes failure)
+    int position;  // stack slot to get free dagnode argument list from (-1 indicates use old argument)
+    int argIndex;   // index of argument to test
+    long symbolIndex;  // index within module of symbol we test against
+    int slot;  // index of stack slot to store free dagnode argument list in (-1 indicates do not store)
+    int equal;  // index of next test node to take for == case (-ve encode index of applicable list)
+
+#if SIZEOF_LONG == 4  // 32-bit machines
+    int pad_struct_to_32_bytes_on_32_bit_machines;
+#endif
+  };
+
+  /*
+  struct TestNode
+  {
     int symbolIndex;  // index within module of symbol we test against
+    //
+    //QUICK HACK
+    //int position;  // stack slot to get free dagnode argument list from (-1 indicates use old argument)
+    //int slot;  // index of stack slot to store free dagnode argument list in (-1 indicates do not store)
+ 
     short position;  // stack slot to get free dagnode argument list from (-1 indicates use old argument)
     short slot;  // index of stack slot to store free dagnode argument list in (-1 indicates do not store)
     int argIndex;   // index of argument to test
@@ -87,6 +107,7 @@ private:
     int on_32_bit_machines;
 #endif
   };
+  */
 
   struct Triple
   {
@@ -115,7 +136,9 @@ private:
   Vector<FreeRemainder*> remainders;
   Vector<PatternSet> applicable;
 
-  friend class FreeBinaryFastExtor;
+  friend class FreeInstruction;
+  friend class FreeGeneralExtor;
+  friend class FreeGeneralExtorFinal;
 };
 
 inline bool

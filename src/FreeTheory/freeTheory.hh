@@ -27,6 +27,11 @@
 #define _freeTheory_hh_
 
 class FreeSymbol;
+class FreeNullarySymbol;
+class FreeUnarySymbol;
+class FreeBinarySymbol;
+class FreeTernarySymbol;
+
 class FreeTerm;
 class FreeArgumentIterator;
 class FreeDagNode;
@@ -39,8 +44,11 @@ class FreeRemainder;
 class FreePositionTable;
 class FreeLhsStructs;
 
-class FreeBinaryCtor;
-class FreeBinaryCtorFinal;
-class FreeBinaryFastExtor;
+class FreeInstruction;
+class FreeFastInstruction;
+class FreeGeneralCtor;
+class FreeGeneralCtorFinal;
+class FreeGeneralExtor;
+class FreeGeneralExtorFinal;
 
 #endif

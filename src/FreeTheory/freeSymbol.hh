@@ -28,6 +28,10 @@
 #include "symbol.hh"
 #include "freeNet.hh"
 
+#define GET_NET getNet
+#define DISC_NET discriminationNet
+#define FREE_NET FreeNet
+
 class FreeSymbol : public Symbol
 {
   NO_COPYING(FreeSymbol);
@@ -62,6 +66,12 @@ public:
   //
   DagNode* makeCanonical(DagNode* original, HashConsSet* hcs);
   DagNode* makeCanonicalCopy(DagNode* original, HashConsSet* hcs);
+  //
+  //	Stack machine stuff.
+  //
+  Instruction* generateFinalInstruction(const Vector<int>& argumentSlots);
+  Instruction* generateInstruction(int destination, const Vector<int>& argumentSlots, Instruction* nextInstruction);
+  FreeNet& getNet();
 
 #ifdef COMPILER
   void generateCode(CompilationContext& context) const;
@@ -79,5 +89,11 @@ private:
 protected:
   FreeNet discriminationNet;
 };
+
+inline FreeNet&
+FreeSymbol::getNet()
+{
+  return discriminationNet;
+}
 
 #endif

@@ -89,7 +89,7 @@ private:
   Vector<GroundAlien> groundAliens;
   Vector<NonGroundAlien> nonGroundAliens;
 
-  Instruction* firstInstruction;
+  //Instruction* firstInstruction;
 };
 
 inline bool 
@@ -143,14 +143,27 @@ inline bool
 FreeRemainder::fastCheckAndBind(DagNode** binding, Vector<DagNode**>& stack) const
 {
   Vector<DagNode**>::const_iterator stackBase = stack.begin();
-  FOR_EACH_CONST(i, Vector<FreeVariable>, freeVariables)
+  if (fast > 0)
     {
-      DagNode* d = stackBase[i->position][i->argIndex];
-      Assert(d->getSortIndex() != Sort::SORT_UNKNOWN, "missing sort information");
-      if (d->leq(i->sort))
-	binding[i->varIndex] = d;
-      else
-	return false;
+       FOR_EACH_CONST(i, Vector<FreeVariable>, freeVariables)
+	 {
+	   DagNode* d = stackBase[i->position][i->argIndex];
+	   Assert(d->getSortIndex() != Sort::SORT_UNKNOWN, "missing sort information");
+	   Assert(d->leq(i->sort), "super-fase case fails sort check");
+	   binding[i->varIndex] = d;
+	 }
+    }
+  else
+    {
+      FOR_EACH_CONST(i, Vector<FreeVariable>, freeVariables)
+	{
+	  DagNode* d = stackBase[i->position][i->argIndex];
+	  Assert(d->getSortIndex() != Sort::SORT_UNKNOWN, "missing sort information");
+	  if (d->leq(i->sort))
+	    binding[i->varIndex] = d;
+	  else
+	    return false;
+	}
     }
   return true;
 }
@@ -158,7 +171,7 @@ FreeRemainder::fastCheckAndBind(DagNode** binding, Vector<DagNode**>& stack) con
 inline Instruction*
 FreeRemainder::getFirstInstruction() const
 {
-  return firstInstruction;
+  return equation->getInstructionSequence();  // HACK - eventually we should snap this pointer to avoid the extra dereference
 }
  
 #endif

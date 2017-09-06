@@ -34,7 +34,7 @@ class DagNode
   NO_COPYING(DagNode);
 
 public:
-  DagNode(Symbol* symbol);
+  DagNode(Symbol* symbol, int sortIndex = Sort::SORT_UNKNOWN);
   virtual ~DagNode() {}
   void setCallDtor();
   //
@@ -47,6 +47,7 @@ public:
   //
   void* operator new(size_t size);
   void* operator new(size_t size, DagNode* old);
+  void* operator new(size_t size, int);
   //
   //	These member functions should not be overridden.
   //
@@ -328,11 +329,40 @@ inline void*
 DagNode::operator new(size_t size)
 {
   //
-  //	We rely on MemoryCell::allocateMemoryCell() setting the half word to
-  //	Sort::SORT_UNKNOWN.
+  //	MemoryCell::allocateMemoryCell() no longer sets the half word to
+  //	Sort::SORT_UNKNOWN. This reposibility is shifted to DagNode::DagNode()
+  //	which can set it to other values as an optimization.
   //
   Assert(size <= sizeof(MemoryCell), "dag node too big");
-  return MemoryCell::allocateMemoryCell();
+  MemoryCell* m = MemoryCell::allocateMemoryCell();
+  //
+  //	We are obligated to clear the flags. We do this here rather than in
+  //	MemoryCell::allocateMemoryCell() to allow the compiler to optimize any
+  //	flag setting our caller might do.
+  //
+  m->clearAllFlags();
+  return m;
+}
+
+
+inline void*
+DagNode::operator new(size_t size, int)
+{
+  //
+  //	This is a specialized version of the above which creates the DagNode
+  //	with its reduced flag already set, to save an instruction.
+  //
+  //	The int parameter is a dummy to allow this version to be selected.
+  //
+  Assert(size <= sizeof(MemoryCell), "dag node too big");
+  MemoryCell* m = MemoryCell::allocateMemoryCell();
+  //
+  //	We are obligated to clear the flags. We do this here rather than in
+  //	MemoryCell::allocateMemoryCell() to allow the compiler to optimize any
+  //	flag setting our caller might do.
+  //
+  m->initFlags(REDUCED);
+  return m;
 }
 
 inline void*
@@ -341,15 +371,16 @@ DagNode::operator new(size_t /* size */, DagNode* old)
   if (old->getMemoryCell()->needToCallDtor())
     old->~DagNode();	// explicitly call virtual destructor
   old->getMemoryCell()->clearAllExceptMarked();
-  old->repudiateSortInfo();
+  // old->repudiateSortInfo();  // shouldn't be needed now that sort info setting has been shifted to DagNode::DagNode()
   //DebugAdvisory("in place new called, old = " << (void*)(old));
-  Assert(old->getSortIndex() == Sort::SORT_UNKNOWN, "bad sort init");
+  //Assert(old->getSortIndex() == Sort::SORT_UNKNOWN, "bad sort init");
   return static_cast<void*>(old);
 }
 
 inline
-DagNode::DagNode(Symbol* symbol)
+DagNode::DagNode(Symbol* symbol, int sortIndex)
 {
+  setSortIndex(sortIndex);
   topSymbol = symbol;
   //DebugAdvisory("created dag node for " << symbol << " at " << (void*)(this));
   //DebugAdvisoryCheck(getSortIndex() == Sort::SORT_UNKNOWN,

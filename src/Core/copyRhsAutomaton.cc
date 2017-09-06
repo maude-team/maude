@@ -40,6 +40,7 @@
 //      core class definitions
 #include "substitution.hh"
 #include "variableInfo.hh"
+#include "stackMachineRhsCompiler.hh"
 #include "copyRhsAutomaton.hh"
 
 CopyRhsAutomaton::CopyRhsAutomaton(int originalIndex, int copyIndex)
@@ -53,6 +54,16 @@ CopyRhsAutomaton::remapIndices(VariableInfo& variableInfo)
 {
   originalIndex = variableInfo.remapIndex(originalIndex);
   copyIndex = variableInfo.remapIndex(copyIndex);
+}
+
+
+bool
+CopyRhsAutomaton::recordInfo(StackMachineRhsCompiler& compiler)
+{
+  Vector<int> sources(1);
+  sources[0] = originalIndex;
+  compiler.recordFunctionEval(0, copyIndex, sources, false);
+  return true;
 }
 
 DagNode*

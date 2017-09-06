@@ -25,6 +25,7 @@
 //
 #ifndef _natSet_hh_
 #define _natSet_hh_
+#include "vector.hh"
 
 class NatSet
 {
@@ -79,7 +80,6 @@ public:
   //
   void makeEmpty();
   int cardinality() const;
-
 
 private:
   //
