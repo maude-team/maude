@@ -10,31 +10,37 @@ libstrategyLanguage_a_CPPFLAGS = \
 
 libstrategyLanguage_a_SOURCES = \
 	trivialStrategy.cc \
-	applicationStrategy.cc \
-	strategySequence.cc \
-	iterationStrategy.cc \
-	branchStrategy.cc \
-	unionStrategy.cc \
 	trivialSetGenerator.cc \
-	sequenceSetGenerator.cc \
-	iterationSetGenerator.cc \
+	applicationStrategy.cc \
 	applicationSetGenerator.cc \
+	concatenationStrategy.cc \
+	concatenationSetGenerator.cc \
+	iterationStrategy.cc \
+	iterationSetGenerator.cc \
+	branchStrategy.cc \
 	branchSetGenerator.cc \
-	unionSetGenerator.cc
+	unionStrategy.cc \
+	unionSetGenerator.cc \
+	unaryStrategy.cc \
+	unarySetGenerator.cc \
+	stateCache.cc
 
 noinst_HEADERS = \
 	strategyLanguage.hh \
 	strategyExpression.hh \
-	trivialStrategy.hh \
-	applicationStrategy.hh \
-	strategySequence.hh \
-	iterationStrategy.hh \
-	branchStrategy.hh \
-	unionStrategy.hh \
 	setGenerator.hh \
+	trivialStrategy.hh \
 	trivialSetGenerator.hh \
-	sequenceSetGenerator.hh \
-	iterationSetGenerator.hh \
+	applicationStrategy.hh \
 	applicationSetGenerator.hh \
+	concatenationStrategy.hh \
+	concatenationSetGenerator.hh \
+	iterationStrategy.hh \
+	iterationSetGenerator.hh \
+	branchStrategy.hh \
 	branchSetGenerator.hh \
-	unionSetGenerator.hh
+	unionStrategy.hh \
+	unionSetGenerator.hh \
+	unaryStrategy.hh \
+	unarySetGenerator.hh \
+	stateCache.hh

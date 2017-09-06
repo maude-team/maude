@@ -75,5 +75,5 @@ ApplicationStrategy::~ApplicationStrategy()
 SetGenerator*
 ApplicationStrategy::execute(DagNode* subject, RewritingContext& context)
 {
-  return new ApplicationSetGenerator(subject, context, label, variables, valueDags);
+  return new ApplicationSetGenerator(subject, context, label, top, variables, valueDags);
 }

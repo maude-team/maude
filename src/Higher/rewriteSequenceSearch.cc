@@ -21,7 +21,7 @@
 */
 
 //
-//	Implementation for class RewriteSearchState.
+//	Implementation for class RewriteSequenceSearch.
 //
 
 //	utility stuff

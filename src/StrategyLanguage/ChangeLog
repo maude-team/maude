@@ -1,3 +1,91 @@
+2006-05-04  Steven Eker  <eker@goo.csl.sri.com>
+
+	* strategyLanguage.hh: added class StateCache
+
+	* stateCache.hh: created
+
+	* stateCache.cc: created
+
+2006-04-24  Steven Eker  <eker@goo.csl.sri.com>
+
+	* strategyLanguage.hh: added classes UnaryStrategy and
+	UnarySetGenerator
+
+2006-04-21  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unarySetGenerator.cc: created
+
+	* unaryStrategy.cc: created
+
+	* unarySetGenerator.hh: created
+
+	* unaryStrategy.hh: created
+
+2006-04-18  Steven Eker  <eker@goo.csl.sri.com>
+
+	* iterationStrategy.cc (IterationStrategy): set normalForm flag
+	(execute): pass normalForm flag
+
+	* iterationStrategy.hh (class IterationStrategy): added data
+	member normalForm
+
+2006-04-17  Steven Eker  <eker@goo.csl.sri.com>
+
+	* iterationSetGenerator.hh (class IterationSetGenerator): updated
+	decl for ctor
+
+	* iterationSetGenerator.cc (IterationSetGenerator) 
+	(findNextSolution): support normalForm flag
+	(IterationSetGenerator): updated
+
+	* branchSetGenerator.hh (class BranchSetGenerator): rewritten for
+	fairness
+
+	* branchSetGenerator.cc: rewritten for fairness
+
+2006-04-13  Steven Eker  <eker@goo.csl.sri.com>
+
+	* applicationSetGenerator.hh (class ApplicationSetGenerator):
+	update ctor decl
+
+	* applicationStrategy.cc (execute): pass top flag to ApplicationSetGenerator()
+
+	* applicationSetGenerator.cc (ApplicationSetGenerator): take and
+	handle top flag
+
+2006-04-12  Steven Eker  <eker@goo.csl.sri.com>
+
+	* strategyLanguage.hh: removed classes StrategySequence and
+	SequenceSetGenerator
+
+	* strategySequence.hh: deleted
+	
+	* sequenceSetGenerator.hh: deleted
+	
+	* strategySequence.cc: deleted
+
+	* sequenceSetGenerator.cc: deleted
+
+	* concatenationSetGenerator.cc: created
+
+2006-04-11  Steven Eker  <eker@goo.csl.sri.com>
+
+	* concatenationSetGenerator.hh: created
+
+2006-04-06  Steven Eker  <eker@goo.csl.sri.com>
+
+	* concatenationStrategy.cc: created
+
+	* concatenationStrategy.hh (class ConcatenationStrategy): created
+
+2006-04-05  Steven Eker  <eker@goo.csl.sri.com>
+
+	* applicationSetGenerator.cc (ApplicationSetGenerator): pass min
+	and max depth args to RewriteSeachState init to fix bug that
+	defaults only allow rewriting at top without extension
+
+===================================Maude87a===========================================
+
 2006-03-24  Steven Eker  <eker@goo.csl.sri.com>
 
 	* applicationStrategy.cc (ApplicationStrategy): need to call

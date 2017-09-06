@@ -35,6 +35,7 @@ public:
   ApplicationSetGenerator(DagNode* start,
 			  RewritingContext& context,
 			  int label,
+			  bool top,
 			  const Vector<Term*>& variables,
 			  Vector<CachedDag>& values);
   ~ApplicationSetGenerator();

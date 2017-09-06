@@ -49,19 +49,19 @@ BranchSetGenerator::BranchSetGenerator(DagNode* start,
     failure(failure)
 {
   testGen = 0;
-  contGen = 0;
 }
 
 BranchSetGenerator::~BranchSetGenerator()
 {
   delete testGen;
-  delete contGen;
+  FOR_EACH_CONST(i, GenQueue, genQueue)
+    delete *i;
 }
 
 DagNode*
 BranchSetGenerator::findNextSolution()
 {
-  if (contGen == 0)
+  if (genQueue.empty())
     {
       testGen = test->execute(start.getNode(), context);
       DagNode* testResult = testGen->findNextSolution();
@@ -69,25 +69,43 @@ BranchSetGenerator::findNextSolution()
 	{
 	  delete testGen;
 	  testGen = 0;
-	  contGen = failure->execute(start.getNode(), context);
+	  genQueue.push_back(failure->execute(start.getNode(), context));
 	}
       else
-	contGen = success->execute(testResult, context);
+	{
+	  genQueue.push_back(success->execute(testResult, context));
+	  genQueue.push_back(0);  // dummy as marker for testGen
+	}
     }
- 
-  for(;;)
+
+  do
     {
-      DagNode* result = contGen->findNextSolution();
+      SetGenerator* g = genQueue.front();
+      genQueue.pop_front();
+      if (g == 0)
+	{
+	  //
+	  //	If it's the dummy generators turn, it means we need to
+	  //	interleave a run of the test generator.
+	  //
+	  DagNode* testResult = testGen->findNextSolution();
+	  if (testResult == 0)
+	    {
+	      delete testGen;
+	      testGen = 0;
+	      continue;
+	    }
+	  genQueue.push_back(0);  // requeue dummy
+	  g = success->execute(testResult, context);
+	}
+      DagNode* result = g->findNextSolution();
       if (result != 0)
-	return result;
-      delete contGen;
-      contGen = 0;
-      if (testGen == 0)
-	break;
-      DagNode* testResult = testGen->findNextSolution();
-      if (testResult == 0)
-	break;
-      contGen = success->execute(testResult, context);
+	{
+	  genQueue.push_back(g);
+	  return result;
+	}
+      delete g;
     }
+  while (!genQueue.empty());
   return 0;
 }

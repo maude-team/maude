@@ -43,13 +43,15 @@ public:
   DagNode* findNextSolution();
 
 private:
+  typedef list<SetGenerator*> GenQueue;
+
   DagRoot start;
   RewritingContext& context;
   StrategyExpression* test;
   StrategyExpression* success;
   StrategyExpression* failure;
   SetGenerator* testGen;
-  SetGenerator* contGen;
+  GenQueue genQueue;
 };
 
 #endif

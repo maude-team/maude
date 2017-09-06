@@ -21,36 +21,38 @@
 */
 
 //
-//      Implementation for abstract class Strategy.
+//      Class for generators that apply a concatenation of strategies.
 //
+#ifndef _concatenationSetGenerator_hh_
+#define _concatenationSetGenerator_hh_
+#include <list>
+#include "dagRoot.hh"
+#include "setGenerator.hh"
 
-//	utility stuff
-#include "macros.hh"
-#include "vector.hh"
-
-//      forward declarations
-#include "interface.hh"
-#include "core.hh"
-#include "strategyLanguage.hh"
-
-//	strategy language class definitions
-#include "iterationStrategy.hh"
-#include "iterationSetGenerator.hh"
-
-IterationStrategy::IterationStrategy(StrategyExpression* child, bool zeroAllowed, bool normalForm)
-  : child(child),
-    zeroAllowed(zeroAllowed),
-    normalForm(normalForm)
+class ConcatenationSetGenerator : public SetGenerator
 {
-}
+public:
+  ConcatenationSetGenerator(DagNode* subject,
+			    RewritingContext& context,
+			    const Vector<StrategyExpression*>& strategies);
 
-IterationStrategy::~IterationStrategy()
-{
-  delete child;
-}
+  ~ConcatenationSetGenerator();
 
-SetGenerator*
-IterationStrategy::execute(DagNode* subject, RewritingContext& context)
-{
-  return new IterationSetGenerator(subject, context, child, zeroAllowed, normalForm);
-}
+  DagNode* findNextSolution();
+
+private:
+  struct SearchNode
+  {
+    SetGenerator* generator;
+    int nextStrategy;
+  };
+
+  typedef list<SearchNode> GenQueue;
+
+  DagRoot start;
+  RewritingContext& context;
+  const Vector<StrategyExpression*>& strategies;
+  GenQueue genQueue;
+};
+
+#endif

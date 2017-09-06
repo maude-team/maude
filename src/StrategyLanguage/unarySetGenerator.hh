@@ -21,36 +21,33 @@
 */
 
 //
-//      Implementation for abstract class Strategy.
+//      Class for generators for simple unary strategy combinators.
 //
+#ifndef _branchSetGenerator_hh_
+#define _branchSetGenerator_hh_
+#include <list>
+#include "dagRoot.hh"
+#include "setGenerator.hh"
+#include "unaryStrategy.hh"
 
-//	utility stuff
-#include "macros.hh"
-#include "vector.hh"
-
-//      forward declarations
-#include "interface.hh"
-#include "core.hh"
-#include "strategyLanguage.hh"
-
-//	strategy language class definitions
-#include "iterationStrategy.hh"
-#include "iterationSetGenerator.hh"
-
-IterationStrategy::IterationStrategy(StrategyExpression* child, bool zeroAllowed, bool normalForm)
-  : child(child),
-    zeroAllowed(zeroAllowed),
-    normalForm(normalForm)
+class UnarySetGenerator : public SetGenerator
 {
-}
+public:
+  UnarySetGenerator(DagNode* start,
+		    RewritingContext& context,
+		    StrategyExpression* test,
+		    UnaryStrategy::StrategyType type);
+  ~UnarySetGenerator();
 
-IterationStrategy::~IterationStrategy()
-{
-  delete child;
-}
+  DagNode* findNextSolution();
 
-SetGenerator*
-IterationStrategy::execute(DagNode* subject, RewritingContext& context)
-{
-  return new IterationSetGenerator(subject, context, child, zeroAllowed, normalForm);
-}
+private:
+  DagRoot start;
+  RewritingContext& context;
+  StrategyExpression* test;
+  const UnaryStrategy::StrategyType type;
+  SetGenerator* testGen;
+  bool first;
+};
+
+#endif

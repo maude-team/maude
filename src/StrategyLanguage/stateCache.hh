@@ -21,24 +21,49 @@
 */
 
 //
-//      Class for iteration strategies.
+//	Class for holding the set of (dag, remaining strategy) pairs encountered
+//	during rewriting with a strategy. Rather than keep an explicit representation of
+//	the remaining strategy, callers are instead assigned a unique identifier.
 //
-#ifndef _iterationStrategy_hh_
-#define _iterationStrategy_hh_
-#include "strategyExpression.hh"
+#ifndef _stateCache_hh_
+#define _stateCache_hh_
+#include <set>
+#include "simpleRootContainer.hh"
+#include "dagNodeSet.hh"
 
-class IterationStrategy : public StrategyExpression
+class StateCache : private SimpleRootContainer
 {
-public:
-  IterationStrategy(StrategyExpression* child, bool zeroAllowed, bool normalForm);
-  ~IterationStrategy();
+  NO_COPYING(StateCache);
 
-  SetGenerator* execute(DagNode* subject, RewritingContext& context);
+public:
+  typedef int StrategyId;  // might make this Int64 at some point
+
+  ~StateCache();
+
+  StrategyId newStratId();
+  bool insertState(DagNode* dag, StrategyId stratPos);
 
 private:
-  StrategyExpression* const child;
-  const bool zeroAllowed;
-  const bool normalForm;
+  typedef set<StrategyId> IdSet;
+
+  struct Pair
+  {
+    DagNode* dag;
+    IdSet ids;
+  };
+
+  void markReachableNodes();
+
+  StrategyId counter;
+  DagNodeSet seenSet;
+  Vector<IdSet*> seen;
 };
+
+inline StateCache::StrategyId
+StateCache::newStratId()
+{
+  ++counter;
+  return counter;
+}
 
 #endif

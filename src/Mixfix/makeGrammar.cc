@@ -220,6 +220,30 @@ MixfixModule::makeStrategyLanguageProductions()
   }
   {
     //
+    //	<strategy expression> = top ( <strategy expression> )
+    //	<strategy expression> = not ( <strategy expression> )
+    //	<strategy expression> = test ( <strategy expression> )
+    //	<strategy expression> = try ( <strategy expression> )
+    //
+    Vector<int> rhs(4);
+    rhs[0] = Token::encode("top");
+    rhs[1] = leftParen;
+    rhs[2] = STRATEGY_EXPRESSION;
+    rhs[3] = rightParen;
+    parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, gatherAny,
+			     MixfixParser::MAKE_TOP);
+    rhs[0] = Token::encode("not");
+    parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, gatherAny,
+			     MixfixParser::MAKE_UNARY, UnaryStrategy::NOT);
+    rhs[0] = Token::encode("test");
+    parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, gatherAny,
+			     MixfixParser::MAKE_UNARY, UnaryStrategy::TEST);
+    rhs[0] = Token::encode("try");
+    parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, gatherAny,
+			     MixfixParser::MAKE_UNARY, UnaryStrategy::TRY);
+  }
+  {
+    //
     //	<strategy expression> = <strategy expression> ; <strategy expression>
     //	<strategy expression> = <strategy expression> | <strategy expression>
     //
@@ -230,7 +254,7 @@ MixfixModule::makeStrategyLanguageProductions()
     rhs[0] = STRATEGY_EXPRESSION;
     rhs[1] = Token::encode(";");
     rhs[2] = STRATEGY_EXPRESSION;
-    parser->insertProduction(STRATEGY_EXPRESSION, rhs, STRAT_SEQ_PREC, gather, MixfixParser::MAKE_SEQUENCE);
+    parser->insertProduction(STRATEGY_EXPRESSION, rhs, STRAT_SEQ_PREC, gather, MixfixParser::MAKE_CONCATENATION);
     gather[0] = STRAT_UNION_PREC - 1;
     gather[1] = STRAT_UNION_PREC;
     rhs[1] = Token::encode("|");
@@ -240,15 +264,18 @@ MixfixModule::makeStrategyLanguageProductions()
     //
     //	<strategy expression> = <strategy expression> +
     //	<strategy expression> = <strategy expression> *
+    //	<strategy expression> = <strategy expression> !
     //
     Vector<int> gather(1);
     gather[0] = 0;
     Vector<int> rhs(2);
     rhs[0] = STRATEGY_EXPRESSION;
     rhs[1] = Token::encode("+");
-    parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, gather, MixfixParser::MAKE_ITERATION, false);
+    parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, gather, MixfixParser::MAKE_ITERATION, false, false);
     rhs[1] = Token::encode("*");
-    parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, gather, MixfixParser::MAKE_ITERATION, true);
+    parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, gather, MixfixParser::MAKE_ITERATION, true, false);
+    rhs[1] = Token::encode("!");
+    parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, gather, MixfixParser::MAKE_ITERATION, true, true);
   }
   {
     //
