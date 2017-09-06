@@ -192,25 +192,32 @@ MetaLevelOpSymbol::makeSMT_RewriteSequenceSearch(MetaModule* m,
       Term* target;
       if (metaLevel->downTermPair(subject->getArgument(1), subject->getArgument(2), startTerm, target, m))
 	{
-	  Vector<ConditionFragment*> condition;
-	  if (metaLevel->downCondition(subject->getArgument(3), m, condition))
+	  if (m->findSMT_Symbol(target) == 0)  // target shouldn't have SMT operators
 	    {
-	      m->protect();
+	      VariableInfo variableInfo;
+	      if (MixfixModule::findNonlinearVariable(target, variableInfo) == 0)  // target shouldn't have nonlinear variables
+		{
+		  Vector<ConditionFragment*> condition;
+		  if (metaLevel->downCondition(subject->getArgument(3), m, condition))
+		    {
+		      m->protect();
 
-	      const mpz_class& varNumber = metaLevel->getNat(metaVarNumber);
-	      RewritingContext* startContext = term2RewritingContext(startTerm, context);
-	      const SMT_Info& smtInfo = m->getSMT_Info();
-	      VariableGenerator* vg = new VariableGenerator(smtInfo);
-	      DebugAdvisory("   !!! Made cached SMT_RewriteSequenceSearch !!!");
+		      const mpz_class& varNumber = metaLevel->getNat(metaVarNumber);
+		      RewritingContext* startContext = term2RewritingContext(startTerm, context);
+		      const SMT_Info& smtInfo = m->getSMT_Info();
+		      VariableGenerator* vg = new VariableGenerator(smtInfo);
+		      DebugAdvisory("   !!! Made cached SMT_RewriteSequenceSearch !!!");
 
-	      return new SMT_RewriteSequenceSearch(startContext,  // pass responsibility for deletion
-						   searchType,
-						   target,  // pass responsibility for deletion
-						   condition,  // pass responsibility for deletion
-						   smtInfo,
-						   vg,  // pass responsibility for deletion
-						   maxDepth,
-						   varNumber);
+		      return new SMT_RewriteSequenceSearch(startContext,  // pass responsibility for deletion
+							   searchType,
+							   target,  // pass responsibility for deletion
+							   condition,  // pass responsibility for deletion
+							   smtInfo,
+							   vg,  // pass responsibility for deletion
+							   maxDepth,
+							   varNumber);
+		    }
+		}
 	    }
 	}
     }

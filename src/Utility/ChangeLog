@@ -1,3 +1,9 @@
+2017-06-21  Steven Eker  <eker@install.csl.sri.com>
+
+	* macros.cc (doubleToString): use isinf() rather than deprecated finite()
+
+===================================Maude114===========================================
+
 2017-04-04  Steven Eker  <eker@install.csl.sri.com>
 
 	* decBuf.hh (insertDigit): fixed bug where Assert() was printing

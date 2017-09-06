@@ -178,15 +178,13 @@ looksLikeFloat(const char* s)
 const char*
 doubleToString(double d)
 {
-  if (!finite(d))
-    {
-      if (isnan(d))
-	return "NaN";
-      else
-	return (d < 0) ? "-Infinity" : "Infinity";
-    }
+  if (isnan(d))
+    return "NaN";
+  if (isinf(d))
+    return (d < 0) ? "-Infinity" : "Infinity";
   if (d == 0.0)
     return "0.0";
+
   static char buffer[DOUBLE_TEXT_SIZE + 1] = "-";
   int decPt;
   int sign;

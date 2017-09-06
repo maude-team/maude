@@ -244,6 +244,9 @@ public:
   static bool canHaveAsParameter(ModuleType t1, ModuleType t2);
   const SMT_Info& getSMT_Info();
   bool validForSMT_Rewriting();
+  void checkFreshVariableNames();
+  static Term* findNonlinearVariable(Term* term, VariableInfo& variableInfo);
+  Symbol* findSMT_Symbol(Term* term);
 
 protected:
   static int findMatchingParen(const Vector<Token>& tokens, int pos);
@@ -375,6 +378,13 @@ private:
     SORT_LIST_TYPE = 4
   };
 
+  enum SMT_Status
+    {
+      UNCHECKED = -1,
+      BAD = 0,
+      GOOD = 1
+    };
+
   struct SymbolInfo
   {
     void revertGather(Vector<int>& gatherSymbols) const;
@@ -467,8 +477,11 @@ private:
   void makeBubbleProductions();
   void computePrecAndGather(int nrArgs, SymbolInfo& si, Symbol* symbol = 0);
 
+  static Term* findNonlinearVariable(Term* term, NatSet& seenIndices);
+
   void printVariable(ostream& s, int name, Sort* sort) const;
   void graphPrint(ostream& s, DagNode* dagNode);
+
   static void printPrefixName(ostream& s, const char* prefixName, SymbolInfo& si);
   static int printTokens(ostream& s,
 			 const SymbolInfo& si,
@@ -630,6 +643,18 @@ private:
 
   set<pair<int, int> > overloadedVariables;
 
+  //
+  //	We keep track of symbols whose name looks like iterated notation
+  //
+  typedef multimap<mpz_class, Symbol*> NumberToSymbolMap;
+  typedef map<int, NumberToSymbolMap> PseudoIteratedMap;
+  PseudoIteratedMap pseudoIteratedMap;
+  //
+  //	We also keep track of iterated symbols.
+  //
+  typedef multimap<int, Symbol*> IteratedMap;
+  IteratedMap iteratedMap;
+
   static bool hasSameDomain(const Vector<Sort*>& domainAndRange1,
 			    bool assoc1,
 			    const Vector<Sort*>& domainAndRange2,
@@ -639,6 +664,13 @@ private:
 
   bool ambiguous(int iflags);
   static bool rangeOfArgumentsKnown(int iflags, bool rangeKnown, bool rangeDisambiguated);
+  void decideIteratedAmbiguity(bool rangeKnown,
+			       Symbol* symbol,
+			       const mpz_class& number,
+			       bool& needToDisambiguate,
+			       bool& argumentRangeKnown);
+  int checkPseudoIterated(Symbol* symbol, const Vector<Sort*>& domainAndRange);
+  void checkIterated(Symbol* symbol, const Vector<Sort*>& domainAndRange);
   //
   //	Member functions for DagNode* -> ostream& pretty printer.
   //
@@ -748,6 +780,7 @@ private:
   InternalTupleMap tupleSymbols;
 
   SMT_Info smtInfo;
+  SMT_Status smtStatus;
 
   friend ostream& operator<<(ostream& s, const Term* term);
   friend ostream& operator<<(ostream& s, DagNode* dagNode);

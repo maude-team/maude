@@ -390,6 +390,7 @@ MixfixModule::makeStrategyLanguageProductions()
     //	<strategy expression> = xmatch <term>
     //	<strategy expression> = amatch <term>
     //
+#if 1
     Vector<int> gather(3);
     Vector<int> rhs(4);
     gather[0] = STRAT_TEST_PREC;
@@ -412,6 +413,7 @@ MixfixModule::makeStrategyLanguageProductions()
     parser->insertProduction(STRATEGY_EXPRESSION, rhs, STRAT_TEST_PREC, gather, MixfixParser::MAKE_TEST, 0);
     rhs[0] = amatch;
     parser->insertProduction(STRATEGY_EXPRESSION, rhs, STRAT_TEST_PREC, gather, MixfixParser::MAKE_TEST, UNBOUNDED);
+#endif
   }
   {
     //

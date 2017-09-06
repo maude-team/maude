@@ -56,12 +56,12 @@ maude_LDADD = \
 	../IO_Stuff/libIO_Stuff.a \
 	$(FULL_COMPILER_LIB) \
 	../Utility/libutility.a \
-	$(BUDDY_LIB) \
 	$(CVC4_LIB) \
-	$(TECLA_LIBS) \
-	$(LIBSIGSEGV_LIB) \
+	$(YICES2_LIB) \
 	$(GMP_LIBS) \
-	$(DLMALLOC_LIB)
+	$(BUDDY_LIB) \
+	$(TECLA_LIBS) \
+	$(LIBSIGSEGV_LIB)
 
 maude_SOURCES = \
 	main.cc

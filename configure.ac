@@ -3,7 +3,7 @@
 #
 #	Initialize autoconf stuff.
 #
-AC_INIT(Maude, alpha113, [maude-bugs@lists.cs.illinois.edu])
+AC_INIT(Maude, alpha114, [maude-bugs@lists.cs.illinois.edu])
 #
 #	Allow directory names that look like macros.
 #
@@ -73,13 +73,34 @@ if (test -z "$BUDDY_LIB") then
 fi
 AC_SUBST(BUDDY_LIB)
 #
+#	Check to see if we should use Yices2 for SMT solving.
+#
+AC_ARG_WITH(yices2,
+	    AC_HELP_STRING([--with-yices2],
+                           [use Yices2 SMT solver library [default=yes]]),
+			   [WITH_YICES2=$withval],
+			   [WITH_YICES2=yes])
+if (test $WITH_YICES2 = yes) then
+#
+#	Check if user set a particular Yices2 library to use and if
+#	not set default.
+#
+  AC_DEFINE([USE_YICES2], [], [use Yices2 SMT solver library])
+  if (test -z "$YICES2_LIB") then
+    YICES2_LIB="-lyices"
+  fi
+  AC_SUBST(YICES2_LIB)
+else
+  YICES2_LIB=""
+fi
+#
 #	Check to see if we should use CVC4 for SMT solving.
 #
 AC_ARG_WITH(cvc4,
 	    AC_HELP_STRING([--with-cvc4],
-                           [use CVC4 SMT solver library [default=yes]]),
+                           [use CVC4 SMT solver library [default=no]]),
 			   [WITH_CVC4=$withval],
-			   [WITH_CVC4=yes])
+			   [WITH_CVC4=no])
 if (test $WITH_CVC4 = yes) then
 #
 #	Check if user set a particular CVC4 library to use and if
@@ -90,6 +111,7 @@ if (test $WITH_CVC4 = yes) then
     CVC4_LIB="-lcvc4"
   fi
   AC_SUBST(CVC4_LIB)
+
 #
 #	CVC4 needs the clock_gettime() function from the POSIX Realtime Extensions library.
 #

@@ -139,7 +139,9 @@ EXTRA_DIST = \
 	narrowing.cc \
 	variantUnify.cc \
 	getVariants.cc \
-	smtSearch.cc
+	smtSearch.cc \
+	cvc4_Bindings.cc \
+	yices2_Bindings.cc
 
 noinst_HEADERS = \
 	renaming.hh \
@@ -179,4 +181,6 @@ noinst_HEADERS = \
 	syntaxContainer.hh \
 	freshVariableSource.hh \
 	variableGenerator.hh \
-	cacheableRewritingContext.hh
+	cacheableRewritingContext.hh \
+	cvc4_Bindings.hh \
+	yices2_Bindings.hh

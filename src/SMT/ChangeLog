@@ -1,3 +1,13 @@
+2017-06-23  Steven Eker  <eker@install.csl.sri.com>
+
+	* SMT_RewriteSequenceSearch.cc (SMT_RewriteSequenceSearch): don't
+	initialize data member searchType
+
+	* SMT_RewriteSequenceSearch.hh (SimpleRootContainer): deleted data
+	member searchType
+
+===================================Maude114===========================================
+
 2017-04-06  Steven Eker  <eker@install.csl.sri.com>
 
 	* SMT_RewriteSequenceSearch.cc (findNextState): increment rule rewrite
