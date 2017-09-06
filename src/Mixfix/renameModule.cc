@@ -33,7 +33,7 @@ ImportModule::makeRenamedCopy(int name, Renaming* canonical, ModuleCache* module
       t.tokenize(parameterNames[i], FileTable::AUTOMATIC);
       copy->addParameter(t, importedModules[i]);
     }
-  Assert(nrBoundParameters == 0, "renamed module has bound parameters");
+  //Assert(!parametersBound(), "renamed module has bound parameters");
 
   int nrImports = importedModules.size();
   for (int i = nrParameters; i < nrImports; ++i)
@@ -123,7 +123,7 @@ ImportModule::donateSorts2(ImportModule* copy, Renaming* renaming)
 	      //	A theory is getting the same sort from a module and a theory.
 	      //	This is a nasty situation that can cause various inconsistancies
 	      //	down the road since sorts from modules are handled differently
-	      //	from sorts from thoeries; so we handle it harshly.
+	      //	to sorts from thoeries; so we handle it harshly.
 	      //
 	      IssueWarning(*copy << ": sort " << QUOTE(original) <<
 			    " has been imported from both " << *original <<

@@ -68,7 +68,6 @@ ImportModule::ImportModule(int name, ModuleType moduleType, Origin origin, Entit
   if (parent != 0)
     addUser(parent);  // HACK
   importPhase = UNVISITED;
-  nrBoundParameters = 0;
   nrSortsFromParameters = 0;
   nrSymbolsFromParameters = 0;
   nrPolymorphsFromParameters = 0;
@@ -80,6 +79,22 @@ ImportModule::ImportModule(int name, ModuleType moduleType, Origin origin, Entit
 ImportModule::~ImportModule()
 {
   Assert(canonicalRenaming == 0, "undeleted canonicalRenaming in " << this);
+}
+
+bool
+ImportModule::parametersBound() const
+{
+  //
+  //	Should only be called on modules that actually have parameters.
+  //
+  Assert(!parameterNames.empty(), "no parameters!");
+  if (origin == TEXT)
+    return false;
+  if (origin == RENAMING)
+    return baseModule->parametersBound();
+  Assert(origin == INSTANTIATION, "bad origin " << origin);
+  Assert(!viewArgs.empty(), "viewArgs empty");
+  return !paramArgs.empty();  // we init this vector iff our parameters are bound
 }
 
 void

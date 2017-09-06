@@ -77,6 +77,8 @@ View::~View()
     newFromTheory->deepSelfDestruct();
   if (newToModule != 0)
     newToModule->deepSelfDestruct();
+  fromExpr->deepSelfDestruct();
+  toExpr->deepSelfDestruct();
   informUsers();
 }
 
@@ -477,6 +479,7 @@ View::handleOpTermMappings()
   //
   newFromTheory->economize();
   newToModule->economize();
+  return true;
 }
 
 bool
@@ -654,7 +657,7 @@ View::evaluate()
   if (toModule != 0)
     {
       toModule->addUser(this);
-      if (toModule->getNrFreeParameters() > 0)
+      if (toModule->getNrParameters() > 0)
 	{
 	  IssueWarning(*this << ": target of a view cannot have free parameters.");
 	  status = BAD;
@@ -677,6 +680,7 @@ View::evaluate()
       return false;
     }
   status = GOOD;
+  return true;
 }
 
 void

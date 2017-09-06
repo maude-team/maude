@@ -3,7 +3,7 @@
 #
 #	Initialize autoconf stuff.
 #
-AC_INIT(Maude, alpha86b, [maude-bugs@maude.cs.uiuc.edu])
+AC_INIT(Maude, 2.2, [maude-bugs@maude.cs.uiuc.edu])
 #
 #	Allow directory names that look like macros.
 #
@@ -16,7 +16,7 @@ AC_CANONICAL_HOST
 #
 #	Initialize automake stuff.
 #
-AM_INIT_AUTOMAKE(Maude, alpha86b)
+AM_INIT_AUTOMAKE(Maude, 2.2)
 #
 #	Cause defines to be put in a header file rather than passed as
 #	compiler flags.
@@ -110,6 +110,12 @@ AC_CHECK_HEADERS(sys/time.h)
 AC_CHECK_HEADERS(math.h)
 AC_CHECK_HEADERS(ieeefp.h)
 AC_CHECK_HEADERS(sys/termios.h)
+AC_CHECK_HEADERS(stddef.h)
+AC_CHECK_HEADERS(limits.h)
+AC_CHECK_HEADERS(stdlib.h)
+AC_CHECK_HEADERS(stdio.h)
+AC_CHECK_HEADERS(ctype.h)
+AC_CHECK_HEADERS(unistd.h)
 AC_CHECK_HEADERS(ostream)
 AC_CHECK_HEADERS(ostream.h)
 #

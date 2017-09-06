@@ -28,8 +28,7 @@
 //      utility stuff
 #include "macros.hh"
 #include "vector.hh"
-#include "diophantineSystem2.hh"
-#include "diophantineSystem3.hh"
+#include "mpzSystem.hh"
 
 //      forward declarations
 #include "interface.hh"
@@ -37,6 +36,7 @@
 #include "freeTheory.hh"
 #include "ACU_Persistent.hh"
 #include "ACU_Theory.hh"
+#include "NA_Theory.hh"
 #include "builtIn.hh"
 
 //      interface class definitions
@@ -58,6 +58,8 @@
 #include "bindingMacros.hh"
 #include "succSymbol.hh"
 #include "minusSymbol.hh"
+#include "stringSymbol.hh"
+#include "stringDagNode.hh"
 #include "matrixOpSymbol.hh"
 
 MatrixOpSymbol::MatrixOpSymbol(int id, int arity)
@@ -115,46 +117,26 @@ MatrixOpSymbol::getSymbolAttachments(Vector<const char*>& purposes,
 }
 
 bool
-MatrixOpSymbol::downCoeff(DagNode* dagNode, int& value)
-{
-  if (dagNode->symbol() == getMinusSymbol())
-    {
-      dagNode = safeCast(FreeDagNode*, dagNode)->getArgument(0);
-      if (getSuccSymbol()->getSignedInt(dagNode, value))
-	{
-	  value = -value;
-	  return true;
-	}
-      return false;
-    }
-  return getSuccSymbol()->getSignedInt(dagNode, value);
-}
-
-bool
 MatrixOpSymbol::downMatrixEntry(DagNode* dagNode, SparseMatrix& matrix, int& maxRowNr, int& maxColNr)
 {
   if (dagNode->symbol() == matrixEntrySymbol)
     {
       FreeDagNode* d = safeCast(FreeDagNode*, dagNode);
-      int value;
-      if (downCoeff(d->getArgument(1), value))
+      DagNode* arg = d->getArgument(0);
+      if (arg->symbol() == indexPairSymbol)
 	{
-	  DagNode* arg = d->getArgument(0);
-	  if (arg->symbol() == indexPairSymbol)
+	  FreeDagNode* a = safeCast(FreeDagNode*, arg);
+	  int rowNr;
+	  int colNr;
+	  if (getSuccSymbol()->getSignedInt(a->getArgument(0), rowNr) &&
+	      getSuccSymbol()->getSignedInt(a->getArgument(1), colNr) &&
+	      getNumber(d->getArgument(1), matrix[rowNr][colNr]))
 	    {
-	      FreeDagNode* a = safeCast(FreeDagNode*, arg);
-	      int rowNr;
-	      int colNr;
-	      if (getSuccSymbol()->getSignedInt(a->getArgument(0), rowNr) &&
-		  getSuccSymbol()->getSignedInt(a->getArgument(1), colNr))
-		{
-		  if (rowNr > maxRowNr)
-		    maxRowNr = rowNr;
-		  if (colNr > maxColNr)
-		    maxColNr = colNr;
-		  matrix[rowNr][colNr] = value;
-		  return true;
-		}
+	      if (rowNr > maxRowNr)
+		maxRowNr = rowNr;
+	      if (colNr > maxColNr)
+		maxColNr = colNr;
+	      return true;
 	    }
 	}
     }
@@ -164,17 +146,13 @@ MatrixOpSymbol::downMatrixEntry(DagNode* dagNode, SparseMatrix& matrix, int& max
 bool
 MatrixOpSymbol::downMatrix(DagNode* dagNode, SparseMatrix& matrix, int& maxRowNr, int& maxColNr)
 {
-  maxRowNr = 0;
-  maxColNr = 0;
   Symbol* s = dagNode->symbol();
   if (s == matrixSymbol)
     {
       for (DagArgumentIterator i(dagNode); i.valid(); i.next())
 	{
 	  if (!downMatrixEntry(i.argument(), matrix, maxRowNr, maxColNr))
-	    {
-	      return false;
-	    }
+	    return false;
 	}
     }
   else if (s != emptyMatrixSymbol)
@@ -183,32 +161,34 @@ MatrixOpSymbol::downMatrix(DagNode* dagNode, SparseMatrix& matrix, int& maxRowNr
 }
 
 bool
-MatrixOpSymbol::downVectorEntry(DagNode* dagNode, Vector<int>& vec, int& maxRowNr)
+MatrixOpSymbol::downVectorEntry(DagNode* dagNode, IntVec& vec, int& maxRowNr)
 {
   if (dagNode->symbol() == vectorEntrySymbol)
     {
       FreeDagNode* d = safeCast(FreeDagNode*, dagNode);
       int index;
-      int value;
-      if (getSuccSymbol()->getSignedInt(d->getArgument(0), index) &&
-	  downCoeff(d->getArgument(1), value))
+      if (getSuccSymbol()->getSignedInt(d->getArgument(0), index))
 	{
 	  if (index > maxRowNr)
 	    {
+	      vec.resize(index + 1);
+	      for (int i = maxRowNr + 1; i < index; ++i)
+		vec[i] = 0;
 	      maxRowNr = index;
-	      vec.resize(maxRowNr + 1);
 	    }
-	  vec[index] = value;
+	  if (getNumber(d->getArgument(1), vec[index]))
+	    return true;
 	}
-      return true;
     }
   return false;
 }
 
 bool
-MatrixOpSymbol::downVector(DagNode* dagNode, Vector<int>& vec, int& maxRowNr)
+MatrixOpSymbol::downVector(DagNode* dagNode, IntVec& vec, int& maxRowNr)
 {
   vec.resize(maxRowNr + 1);
+  for (int i = 0; i <= maxRowNr; ++i)
+    vec[i] = 0;
   Symbol* s = dagNode->symbol();
   if (s == vectorSymbol)
     {
@@ -223,46 +203,61 @@ MatrixOpSymbol::downVector(DagNode* dagNode, Vector<int>& vec, int& maxRowNr)
   return true;
 }
 
+bool
+MatrixOpSymbol::downAlgorithm(DagNode* dagNode, Algorithm& algorithm)
+{
+ if (dagNode->symbol() == stringSymbol)
+   {
+     const crope& alg = safeCast(StringDagNode*, dagNode)->getValue();
+     if (alg.empty())
+       algorithm = SYSTEMS_CHOICE;
+     else
+       {
+	 const char* algStr = alg.c_str();
+	 if (strcmp(algStr, "cd") == 0)
+	   algorithm = CD;
+	 else if (strcmp(algStr, "gcd") == 0)
+	   algorithm = GCD;
+	 else
+	   return false;
+       }
+     return true;
+   }
+ return false;
+}
+
 DagNode*
 MatrixOpSymbol::upSet(const Vector<DagNode*>& elts)
 {
   int n = elts.size();
   if (n == 0)
     return emptyVectorSetSymbol->makeDagNode();
-  else if (n == 1)
-    return elts[0];
-  else
-    return vectorSetSymbol->makeDagNode(elts);
+  return (n == 1) ? elts[0] : vectorSetSymbol->makeDagNode(elts);
 }
 
 DagNode*
-MatrixOpSymbol::upVector(const Vector<int>& row)
+MatrixOpSymbol::upVector(const IntVec& row)
 {
   Vector<DagNode*> elts;
   Vector<DagNode*> pair(2);
-  int c = 0;
-  int n = row.size();
-  for (int i = 1; i < n; i++)
+  int nrRows = row.size();
+  for (int i = 1; i < nrRows; i++)
     {
-      int v = row[i];
+      const mpz_class& v = row[i];
       Assert(v >= 0, "-ve solution");
       if (v > 0)
 	{
-	  pair[0] = getSuccSymbol()->makeNatDag(c);
+	  pair[0] = getSuccSymbol()->makeNatDag(i - 1);
 	  pair[1] = getSuccSymbol()->makeNatDag(v);
 	  elts.append(vectorEntrySymbol->makeDagNode(pair));
 	}
-      ++c;
     }
-
-  n = elts.size();
+  int n = elts.size();
   if (n == 0)
     return emptyVectorSymbol->makeDagNode();
-  else if (n == 1)
-    return elts[0];
-  else
-    return vectorSymbol->makeDagNode(elts);
+  return (n == 1) ? elts[0] : vectorSymbol->makeDagNode(elts);
 }
+
 
 bool
 MatrixOpSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
@@ -272,28 +267,38 @@ MatrixOpSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
   m->reduce(context);
   DagNode* v = d->getArgument(1);
   v->reduce(context);
+  DagNode* a = d->getArgument(2);
+  a->reduce(context);
 
+  Algorithm algorithm;
   SparseMatrix matrix;
-  Vector<int> vec;
-
-  int maxRowNr;
-  int maxColNr;
-  if (downMatrix(m, matrix, maxRowNr, maxColNr) && downVector(v, vec, maxRowNr))
+  IntVec vec;
+  int maxRowNr = -1;
+  int maxColNr = -1;
+  if (downAlgorithm(a, algorithm) &&
+      downMatrix(m, matrix, maxRowNr, maxColNr) &&
+      maxRowNr >= 0 &&
+      downVector(v, vec, maxRowNr))			      
     {
-      //cerr << "maxRowNr " << maxRowNr << "maxColNr " << maxColNr << endl;
+      Vector<DagNode*> homogenous;
+      Vector<DagNode*> inhomogenous;
       //
       //	Build Diophantine system.
       //
-      DiophantineSystem3 ds;
+      MpzSystem ds;
       int rowSize = maxColNr + 2;
-      DiophantineSystem3::IntVec row(rowSize);
+      IntVec row(rowSize);
       for (int i = 0; i <= maxRowNr; i++)
 	{
 	  for (int j = 1; j < rowSize; j++)
 	    row[j] = 0;
 
-	  int v = vec[i];
-	  SparseVector& r = matrix[i];
+	  const mpz_class& v = vec[i];
+	  const SparseVector& r = matrix[i];
+	  //
+	  //	If we have an equation with all zero coefficients and nonzero
+	  //	constant term we can trivially fail.
+	  //
 	  if (r.empty() && v != 0)
 	    goto fail;
 
@@ -301,47 +306,43 @@ MatrixOpSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
 	  FOR_EACH_CONST(j, SparseVector, r)
 	    row[j->first + 1] = j->second;
 	  ds.insertEqn(row);
-	  //cerr << "inserted ";
-	  //copy(row.begin(), row.end(), ostream_iterator<int>(cerr, " "));
-	  //cerr << endl;
 	}
       for (int j = 1; j < rowSize; j++)
 	row[j] = UNBOUNDED;
       row[0] = 1;
       ds.setUpperBounds(row);
-      //cerr << "bounds ";
-      //copy(row.begin(), row.end(), ostream_iterator<int>(cerr, " "));
-      //cerr << endl;
-     
-      if (ds.findNextMinimalSolution(row))
+      //
+      //	Extract solutions.
+      //
+      if (algorithm == GCD ||
+	  (algorithm == SYSTEMS_CHOICE && maxColNr <= maxRowNr + 1))
 	{
-	  Vector<DagNode*> homogenous;
-	  Vector<DagNode*> inhomogenous;
-	  do
+	  while (ds.findNextMinimalSolutionGcd(row))
 	    {
-	      //cerr << "got ";
-	      //copy(row.begin(), row.end(), ostream_iterator<int>(cerr, " "));
-	      //cerr << endl;
-	      if (row[0] == 0);
-		//homogenous.append(upVector(row));
-	      else;
-		//inhomogenous.append(upVector(row));
-	    }
-	  while (ds.findNextMinimalSolution(row));
-	  if (!inhomogenous.empty())
-	    {
-	      Vector<DagNode*> args(2);
-	      args[0] = upSet(inhomogenous);
-	      args[1] = upSet(homogenous);
-	      //cerr << args[0] << " " << args[1] << endl;
-	      return context.builtInReplace(subject, vectorSetPairSymbol->makeDagNode(args));
+	      if (row[0] == 0)
+		homogenous.append(upVector(row));
+	      else
+		inhomogenous.append(upVector(row));
 	    }
 	}
+      else
+	{
+	  while (ds.findNextMinimalSolution(row))
+	    {
+	      if (row[0] == 0)
+		homogenous.append(upVector(row));
+	      else
+		inhomogenous.append(upVector(row));
+	    }
+	}
+      //
+      //	Build result dag.
+      //
     fail:
-      Vector<DagNode*> args;
-      args.append(emptyVectorSetSymbol->makeDagNode());
-      args.append(emptyVectorSetSymbol->makeDagNode());
-      return context.builtInReplace(subject, vectorSetPairSymbol->makeDagNode(args));
+      Vector<DagNode*> args(2);
+      args[0] = upSet(inhomogenous);
+      args[1] = inhomogenous.empty() ? args[0] : upSet(homogenous);
+      return context.builtInReplace(subject, vectorSetPairSymbol->makeDagNode(args)); 
     }
   //
   //	NumberOpSymbol doesn't know how to deal with this.

@@ -1,3 +1,266 @@
+2005-10-07  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: added view TRIV
+
+	* view.cc (View): fix memory leak: deepSelfDestruct() fromExpr and
+	toExpr
+
+	* auxProperty.cc (splitParameterList): fixed nasty new[]/delete
+	bug
+	(splitParameterizedSort): symmetric bug
+
+	* main.cc (main): add -no-wrap flag
+	(printHelp): mention -no-wrap flag
+
+2005-10-06  Steven Eker  <eker@goo.csl.sri.com>
+
+	* view.cc (handleOpTermMappings): fix nasty bug where we were
+	forgetting to return a value at the end of function
+	(evaluate): same bug!
+
+	* interact.cc (segmentationFaultHandler): write \n\n after error message
+
+2005-10-05  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: added fmod LIST-AND-SET
+
+2005-10-04  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: X$Elt -> Item{X} for several declarations in
+	LIST*
+
+	* modules.yy (expectedIs, expectedDot): fix type mismatch bug only
+	found by older (1.28) version of bison
+
+2005-09-29  Steven Eker  <eker@goo.csl.sri.com>
+
+	* parameterization.cc (instantiateBoundParameters): much
+	simplification
+
+2005-09-28  Steven Eker  <eker@goo.csl.sri.com>
+
+	* importModule.hh (User): updated decl for
+	instantiateBoundParameters()
+
+	* parameterization.cc (instantiateBoundParameters): greatly
+	simplified now that we don't have to deal with nested bound
+	parameter instantiations
+	(instantiateBoundParameters): eagerly rebind escaped parameters
+	(handleRegularImports): deleted recapture code
+
+	* importModule.hh (User): updated decls: extraParameterMap ->
+	extraParameterSet
+
+	* parameterization.cc (handleInstantiationByTheoryView): remove
+	oldParameterName stuff now that parameters cannot clash and change
+	name
+	(handleInstantiationByTheoryView): extraParameterMap ->
+	extraParameterSet
+	(handleParameterizedSorts):  extraParameterMap ->
+	extraParameterSet
+	(makeInstantiation, instantiateBoundParameters) 
+	(instantiateSortName): extraParameterMap -> extraParameterSet
+	(instantiateRenaming): extraParameterMap -> extraParameterSet
+
+	* importModule.hh (User): added typedef ParameterSet
+
+	* parameterization.cc (instantiateBoundParameters): fix bug where
+	we putting the view name in extraParameterMap
+
+2005-09-27  Steven Eker  <eker@goo.csl.sri.com>
+
+	* parameterization.cc (instantiateBoundParameters): compute
+	parameterMap and extraParameterMap
+
+	* renaming.cc (makeTypeName): fix bug by using Token::sortName
+	instead of Token::name
+
+	* parameterization.cc (instantiateSortName): added
+	(instantiateRenaming): use instantiateSortName()
+	(instantiateBoundParameters): use instantiateRenaming()
+
+	* importModule.hh (User): added decl for instantiateRenaming()
+
+	* parameterization.cc (instantiateRenaming): added
+
+	* renaming.hh (class Renaming): added decl for
+	addOpMappingPartialCopy()
+
+	* renaming.cc (makeCanonicalVersion): clear term field of newly
+	created op mapping in specific case for cleanliness
+	(addOpMappingPartialCopy): added
+
+2005-09-21  Steven Eker  <eker@goo.csl.sri.com>
+
+	* importModule.cc (parametersBound): moved here; made recursive to
+	deal with renaming modules having bound parameters
+
+2005-09-20  Steven Eker  <eker@goo.csl.sri.com>
+
+	* import.cc (makeModule): allow bound parameters in a module that
+	is to be renamed
+
+	* renameModule.cc (makeRenamedCopy): allow bound parameters
+
+	* parameterization.cc (instantiateBoundParameters): added back
+	old hacky code to deal with renamings
+
+	* modules.yy (renameExpr): added
+	(instantExpr): added
+	(moduleExpr2): use renameExpr
+	(moduleExpr3): use instantExpr, parenExpr
+	(expectedDot): added
+	(parenExpr): added
+	(moduleExprDot): use tokenBarDot, expectedDot, parenExpr,
+	renameExpr, instantExpr in order to detect and recover from
+	missing period
+	(typeDot): use expectedDot
+	(typeAttr): use expectedDot
+	(expectedIs, expectedDot): improve warnings
+
+2005-09-19  Steven Eker  <eker@goo.csl.sri.com>
+
+	* modules.yy (module): use expectedIs
+	(expectedIs): added
+	(view): use expectedIs
+
+2005-09-16  Steven Eker  <eker@goo.csl.sri.com>
+
+	* import.cc (makeModule): check for having both a theory-view and
+	a PEM
+
+2005-09-15  Steven Eker  <eker@goo.csl.sri.com>
+
+	* importModule.cc (ImportModule): don't clear nrBoundParameters
+
+	* renameModule.cc (makeRenamedCopy): use parametersBound() in
+	place of nrBoundParameters
+
+	* view.cc (evaluate): getNrFreeParameters() -> getNrParameters()
+
+	* visibleModule.cc (showModule): remove "Free" from function calls
+
+	* import.cc (processImports): use parametersBound() rather than
+	getNrFreeParameters()
+	(makeModule): use getNrParameters() rather than
+	getNrFreeParameters()
+	(makeModule): use getParameterTheory() rather than
+	getFreeParameterTheory() (2 places)
+	(makeModule): use parametersBound() rather than
+	getNrBoundParameters()
+
+	* parameterization.cc (handleRegularImports): use
+	getParameterName() in place of getFreeParameterName()
+	(instantiateBoundParameters): use getParameterName() in place of
+	getFreeParameterName()
+	(handleRegularImports): use parametersBound() in place of
+	getNrFreeParameters()
+	(instantiateBoundParameters): use getNrParameters() in place of
+	getNrFreeParameters()
+
+	* importModule.hh (getNrBoundParameters): deleted
+	(getNrFreeParameters): deleted
+	(parametersBound): added
+	(User): deleted data member nrBoundParameters
+	(getFreeParameterTheory): deleted
+	(getFreeParameterName): becomes getParameterName()
+
+	* parameterization.cc (makeInstantiation): don't set
+	nrBoundParameters
+	(handleInstantiationByParameter): don't use nrBoundParameters
+	(handleInstantiationByTheoryView): don't use nrBoundParameters
+	(handleInstantiationByModuleView): don't use nrBoundParameters
+	(handleInstantiationByTheoryView): simplified
+	(handleInstantiationByModuleView): simplified
+	(handleInstantiationByTheoryView): replaced code to resolve
+	parameter clash with an Assert() that the clash does not happen
+	(handleRegularImports): use parametersBound() rather than testing
+	nrBoundParameters
+	(handleRegularImports): simplified now that we know we will have
+	no bound parameters
+	(handleRegularImports): check parametersBound rather than
+	nrBoundParameters
+	(makeInstantiation): check that we don't have bound parameters;
+	use getNrParameters() in place of getNrFreeParameters()
+	(makeInstantiation): don't copy bound parameters - there shouldn't
+	be any
+	(instantiateBoundParameters): check parametersBound rather than
+	nrBoundParameters
+	(instantiateBoundParameters): rearranged Asserts()
+	(makeInstantiation): rearranged Asserts()
+	(instantiateBoundParameters): commented out code for recursive
+	call
+	(instantiateBoundParameters): no need to check index against
+	nrBoundParameters since we only have bound parameters
+
+2005-09-14  Steven Eker  <eker@goo.csl.sri.com>
+
+	* parameterization.cc (handleRegularImports): made escaped
+	parameter Assert() very detail to try an nail obscure bug
+	(instantiateBoundParameters): added DebugAdvisory() for escapees
+
+2005-09-08  Steven Eker  <eker@goo.csl.sri.com>
+
+	* renaming.cc (makeCanonicalVersion): genericsToAdd ->
+	genericsToConsider
+	(makeCanonicalVersion): clean up and fix bug that we weren't
+	generating an advisory when user tried to rename a parameter
+	polymorph
+
+2005-09-07  Steven Eker  <eker@goo.csl.sri.com>
+
+	* main.cc (dioTest): deleted
+
+2005-08-31  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: changed prec for _;_ operator in ARRAY
+
+2005-08-30  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ops.cc (setFlag): watn about duplicate simple attributes
+	(setIdentity): warn about multiple identities
+	(setPrec): warn about multiple precs
+	(setGather): warn about multiple gathers
+	(setMetadata): warn about multiple metadatas
+	(setFormat): warn about multiple formats
+	(setFrozen): warn about multiple frozens
+	(setPoly): want about multiple polys
+	(setLatexMacro): warn about multiple latexs
+	(setStrat): warn about multiple strats
+
+	* symbolType.hh (class SymbolType): added SIMPLE_ATTRIBUTES
+
+2005-08-25  Steven Eker  <eker@goo.csl.sri.com>
+
+	* linear.maude: built in natSystemSolve now takes a String; added
+	op-hook stringSymbol
+
+2005-08-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* linear.maude: fix _,_ renaming
+
+2005-08-17  Steven Eker  <eker@goo.csl.sri.com>
+
+	* modules.yy (mappingList): added error handling to mappingList to
+	ensure we swap back syntax containers
+	(renaming2): place error handling here instead
+	(viewDeclaration): addded error handling
+
+2005-08-16  Steven Eker  <eker@goo.csl.sri.com>
+
+	* linear.maude: created
+
+	* fixUp.cc (defaultFixUp): added DebugAdvisory()s
+
+	* prelude.maude: SPARSE-MAP becomes ARRAY
+
+2005-08-15  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: added fth DEFAULT and associated views; added
+	SPARSE-MAP
+
+===================================Maude86c===========================================
+
 2005-07-29  Steven Eker  <eker@goo.csl.sri.com>
 
 	* renaming.cc (makeCanonicalVersion): change the way generics are

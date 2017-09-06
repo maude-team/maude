@@ -106,14 +106,14 @@ UserLevelRewritingContext::segmentationFaultHandler(int)
 {
   static char message1[] = "Maude internal error:\nPlease submit a bug report to ";
   static char message2[] = PACKAGE_BUGREPORT;
+  static char message3[] = "\n\n";
   //
-  //	Assume mechine state is bad - so use system calls.
+  //	Assume machine state is bad - so use system calls.
   //
   write(STDERR_FILENO, message1, sizeof(message1) - 1);
   write(STDERR_FILENO, message2, sizeof(message2) - 1);
+  write(STDERR_FILENO, message3, sizeof(message3) - 1);
 
-
-  //cerr << "Maude internal error: please submit a bug report to maude-bugs@maude.cs.uiuc.edu";
   /*
   cerr << "caught segv\n";
   struct rlimit rlim;

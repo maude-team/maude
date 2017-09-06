@@ -2,7 +2,9 @@ bin_PROGRAMS = maude
 
 data_DATA = \
 	prelude.maude \
-	model-checker.maude
+	model-checker.maude \
+	socket.maude \
+	linear.maude
 
 if BUILD_COMPILER
   COMPILER_SRC = compiler.cc
@@ -163,7 +165,8 @@ EXTRA_DIST = \
 	ansiEscapeSequences.cc \
 	prelude.maude \
 	model-checker.maude \
-	socket.maude
+	socket.maude \
+	linear.maude
 
 noinst_HEADERS = \
 	renaming.hh \

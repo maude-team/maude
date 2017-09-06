@@ -23,7 +23,17 @@
 /*
  *	Module expressions.
  */
-moduleExprDot	:	moduleExpr2 '.'
+moduleExprDot	:	tokenBarDot expectedDot
+                        {
+                          moduleExpressions.push(new ModuleExpression($1));
+                        }
+		|	endsInDot '.'
+                        {
+                          moduleExpressions.push(new ModuleExpression($1));
+                        }
+		|	parenExpr expectedDot
+		|	renameExpr expectedDot
+		|	instantExpr expectedDot
 		|	moduleExpr '+' moduleExprDot
 			{
 			  ModuleExpression* m1 = moduleExpressions.top();
@@ -54,7 +64,19 @@ moduleExpr	:	moduleExpr2
 		;
 
 moduleExpr2	:	moduleExpr3
-		|	moduleExpr2 '*' renaming
+		|	renameExpr
+		;
+
+moduleExpr3	:	parenExpr
+		|	instantExpr
+		|	token
+		        {
+                          moduleExpressions.push(new ModuleExpression($1));
+                        }
+
+		;
+		
+renameExpr	:	moduleExpr2 '*' renaming
 			{
 			  ModuleExpression* m = moduleExpressions.top();
 			  moduleExpressions.pop();
@@ -63,18 +85,16 @@ moduleExpr2	:	moduleExpr3
 			}
 		;
 
-moduleExpr3	:	'(' moduleExpr ')' {}	
-		|	moduleExpr3 '{'			{ clear(); }
+instantExpr	:	moduleExpr3 '{'			{ clear(); }
 			argList '}'
 			{
 			  ModuleExpression* m = moduleExpressions.top();
 			  moduleExpressions.pop();
 			  moduleExpressions.push(new ModuleExpression(m, bubble));
 			}
-		|	token
-			{
-			  moduleExpressions.push(new ModuleExpression($1));
-			}
+		;
+
+parenExpr	:	'(' moduleExpr ')' {}
 		;
 
 argList		:	argList ',' token		{ store($3); }
@@ -89,10 +109,15 @@ renaming	:	'('
 			  oldSyntaxContainer = currentSyntaxContainer;
 			  currentSyntaxContainer = currentRenaming = new Renaming;
 			}
-			mappingList ')'
+			renaming2  /* must succeed so we can restore currentSyntaxContainer */
 			{
 			  currentSyntaxContainer = oldSyntaxContainer;
 			}
+			')'
+		;
+
+renaming2	:	mappingList
+		|	error
 		;
 
 mappingList	:	mappingList ',' mapping
@@ -138,7 +163,7 @@ toAttributes	:	'[' toAttributeList ']'	{}
 
 toAttributeList	:	toAttributeList toAttribute
 		|	toAttribute
-			;
+		;
 
 toAttribute	:	KW_PREC IDENTIFIER	{ currentRenaming->setPrec($2); }
 		|	KW_GATHER '('		{ clear(); }
@@ -166,7 +191,7 @@ view		:	KW_VIEW			{ lexerIdMode(); }
 			  CV->addTo(moduleExpressions.top());
 			  moduleExpressions.pop();
 			}
-			KW_IS viewDecList KW_ENDV
+			expectedIs viewDecList KW_ENDV
 			{
 			  lexerInitialMode();
 			  fileTable.endModule(lineNumber);
@@ -186,9 +211,10 @@ viewDeclaration	:	KW_SORT sortName KW_TO sortDot
 		|	KW_VAR varNameList ':' typeDot {}
 		|	KW_OP			{ clear(); }
 			tokensBarColonTo viewEndOpMap
+		|	error '.'
 		;
 
-sortDot		:	sortName '.'		{ $$ = $1; }
+sortDot		:	sortName expectedDot		{ $$ = $1; }
 		|	ENDS_IN_DOT
 			{
 			  IssueWarning(LineNumber($1.lineNumber()) <<
@@ -249,7 +275,7 @@ viewEndOpMap	:	':'
 		;
 
 /*
- *	Modules and Theories.
+ *	Modules and theories.
  */
 module		:	startModule		{ lexerIdMode(); }
 			token
@@ -258,7 +284,7 @@ module		:	startModule		{ lexerIdMode(); }
 			  currentSyntaxContainer = CM;
 			  fileTable.beginModule($1, $3);
 			}
-			parameters KW_IS decList KW_ENDM
+			parameters expectedIs decList KW_ENDM
 			{
 			  lexerInitialMode();
 			  fileTable.endModule(lineNumber);
@@ -305,7 +331,7 @@ badType		:	ENDS_IN_DOT
 			}
 		;
 
-typeDot		:	typeName '.'
+typeDot		:	typeName expectedDot
 		|	badType
 		;
 
@@ -448,7 +474,7 @@ domainRangeAttr	:	':' typeList arrow typeAttr
 			}
 		;
 
-typeAttr	:	typeName attributes '.'
+typeAttr	:	typeName attributes expectedDot
 		|	badType
 		;
 
@@ -593,6 +619,24 @@ hook		:	KW_ID_HOOK token
 			tokens ')'
 			{
 			  CM->addHook(PreModule::TERM_HOOK, $2, bubble);
+			}
+		;
+
+/*
+ *	Recovery from missing tokens
+ */
+expectedIs	:	KW_IS {}
+		|
+			{
+			  IssueWarning(LineNumber(lineNumber) << ": missing " <<
+				       QUOTE("is") << " keyword.");
+			}
+		;
+
+expectedDot	:	'.' {}
+		|
+			{
+			  IssueWarning(LineNumber(lineNumber) << ": missing period.");
 			}
 		;
 

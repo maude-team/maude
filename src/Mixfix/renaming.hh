@@ -75,6 +75,7 @@ public:
   crope makeCanonicalName() const;
 
   void addSortAndLabelMappings(const Renaming* original);
+  void addOpMappingPartialCopy(const Renaming* original, int index);
 
   int renameSort(int oldId) const;
   int renameLabel(int oldId) const;

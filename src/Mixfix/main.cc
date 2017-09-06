@@ -77,83 +77,9 @@ IO_Manager ioManager;
 
 string executableDirectory;
 
-
-#include "diophantineSystem2.hh"
-
-void
-dioTest()
-{
-  DiophantineSystem2 ds;
-
-  int s[20][24] =
-{
-{0, 1, 0, 0, 0, 0, 0, 0, 0, 0,  -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-{0, 0, 1, 0, 0, 0, 0, 0, 0, 0,  0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-{0, 0, 0, 1, 0, 0, 0, 0, 0, 0,  0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-{0, 0, 0, 0, 1, 0, 0, 0, 0, 0,  0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-{0, 0, 0, 0, 0, 1, 0, 0, 0, 0,  0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-{0, 0, 0, 0, 0, 0, 1, 0, 0, 0,  0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0},
-{0, 0, 0, 0, 0, 0, 0, 1, 0, 0,  0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0},
-{0, 0, 0, 0, 0, 0, 0, 0, 1, 0,  0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0},
-{0, 0, 0, 0, 0, 0, 0, 0, 0, 1,  0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0},
-{1, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0},
-{0, 1, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0},
-{0, 0, 1, 0, 0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0},
-{0, 0, 0, 1, 0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0},
-{0, 0, 0, 0, 1, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1},
-{0, 0, 0, 0, 0, 1, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0},
-{0, 0, 0, 0, 0, 0, 1, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0},
-{0, 0, 0, 0, 0, 0, 0, 1, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0},
-{0, 0, 0, 0, 0, 0, 0, 0, 1, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0},
-{0, 0, 0, 0, 0, 0, 0, 0, 0, 1,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1}
-};
-for (int r = 0; r < 20; r++)
-{
-  Vector<int> row(24);
-  for (int c = 0; c < 24; c++)
-    row[c] = s[r][c];
-  ds.insertRow(row);
-}
-  
-/*
-  Vector<int> row(4);
-  row[0] = -1;
-  row[1] = 1;
-  row[2] = 2;
-  row[3] = -3;
-  ds.insertRow(row);
-
-  row[0] = -1;
-  row[1] = 3;
-  row[2] = -2;
-  row[3] = -1;
-  ds.insertRow(row);
-*/
-
-  Vector<int> soln;
-
-  while (ds.findNextMinimalSolution(soln))
-    {
-      FOR_EACH_CONST(i, Vector<int>, soln)
-	cout << " " << *i;
-      cout << endl;
-
-      for (int r = 0; r < 20; r++)
-	{
-	  int sum = 0;
-	  for (int c = 0; c < 24; c++)
-	    sum += soln[c] * s[r][c];
-	  if (sum != 0)
-	    cout << " fucked on " << r << endl;
-	}
-    }
-  exit(0);
-}
-
 int
 main(int argc, char* argv[])
 {
-  //  dioTest();
   // extern int yydebug;
   // yydebug = 0;
 
@@ -168,9 +94,7 @@ main(int argc, char* argv[])
   extern Vector<char*> pendingFiles;
   const char* isFlag(const char* arg, const char* flag);
 
-
-  ioManager.setAutoWrap();
-
+  bool lineWrapping = true;
   bool handleCtrlC = true;
   bool readPrelude = true;
   bool forceInteractive = false;
@@ -207,6 +131,8 @@ main(int argc, char* argv[])
 	    outputBanner = false;
 	  else if (strcmp(arg, "-no-advise") == 0)
 	    globalAdvisoryFlag = false;
+	  else if (strcmp(arg, "-no-wrap") == 0)
+	    lineWrapping = false;
 	  else if (strcmp(arg, "-batch") == 0)
 	    handleCtrlC = false;
 	  else if (strcmp(arg, "-interactive") == 0)
@@ -220,6 +146,9 @@ main(int argc, char* argv[])
       else
 	pendingFiles.append(arg);
     }
+
+  if (lineWrapping)
+    ioManager.setAutoWrap();
 
   if (ansiColor == UNDECIDED)
     {
@@ -304,6 +233,7 @@ printHelp(const char* name)
     "  -no-banner\t\tDo not output banner on startup\n" <<
     "  -no-advise\t\tNo advisories on startup\n" <<
     "  -no-mixfix\t\tDo not use mixfix notation for output\n" <<
+    "  -no-wrap\t\tDo not automatic line wrapping for output\n" <<
     "  -ansi-color\t\tUse ANSI control sequences\n" <<
     "  -no-ansi-color\tDo not use ANSI control sequences\n" <<
     "  -tecla\t\tUse tecla command line editing\n" <<

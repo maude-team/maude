@@ -1,3 +1,149 @@
+2005-10-06  Steven Eker  <eker@goo.csl.sri.com>
+
+	* macros.hh: #if before includes; include <unistd.h>
+	(DebugAdvisory): make them blue
+
+	* ropeStuff.hh: fix #if test for g++ major versions > 3
+
+2005-09-07  Steven Eker  <eker@goo.csl.sri.com>
+
+	* diophantineSystem3.hh: deleted
+
+	* diophantineSystem2.cc:  deleted
+
+	* diophantineSystem2.hh:  deleted
+
+	* diophantineSolve.cc:  deleted
+
+	* diophantineSystem3.cc:  deleted
+
+	* mpzGcdInit.cc (integerGaussianElimination, initializeGcd): ifdef
+	out analysis code
+
+	* mpzGcdBasedSolver.cc (solveDiagonal): ifdef out analysis code
+
+2005-09-06  Steven Eker  <eker@goo.csl.sri.com>
+
+	* mpzGcdBasedSolver.cc (nextSolution): handle nrFreeVariables == 0
+	case; simplified
+	(solveDiagonal): check for trivial solution
+	(fillOutLastEntry): handle zero coefficient variables
+
+	* mpzGcdInit.cc (initializeGcd): added DebugAdvisory() for all
+	positive equation; updated comments
+	(initializeGcd): init lastPrediagNeg to NONE in all +ve case
+
+2005-09-01  Steven Eker  <eker@goo.csl.sri.com>
+
+	* mpzGcdBasedSolver.cc (nextSolution): don't use nrEquations
+	(solveDiagonal, fillOutLastEntry): don't use nrEquations
+
+	* mpzGcdInit.cc (integerGaussianElimination): initialize nrFreeVariables
+
+	* mpzGcdBasedSolver.cc (findNextMinimalSolutionGcd): moved a lot
+	of initialization code
+
+	* mpzGcdInit.cc (initializeGcd): to here
+
+	* mpzSystem.hh (class MpzSystem): data member nrEquations replaced
+	by nrFreeVariables
+
+	* mpzGcdInit.cc (initializeGcd): don't init lastPrediagNonzero
+	(initializeGcd): added divid thru by final gcd optimization
+
+	* mpzSystem.hh (class MpzSystem): deleted data members
+	pruneLastPrediag, lastPrediagNonzero
+
+	* mpzGcdBasedSolver.cc (fillOutStackEntry): initialize base, inc
+	and bound to default values
+	(solveDiagonal): added optimization for diagonal variables all
+	zero case
+
+2005-08-31  Steven Eker  <eker@goo.csl.sri.com>
+
+	* mpzSystem.hh (class MpzSystem): deleted zeroSoFar field from
+	struct StackEntry
+
+	* mpzGcdBasedSolver.cc (solveDiagonal): cleaned up
+	(fillOutStackEntry): decide if our current partial solution is all
+	zero by comparing leftOver to sumBound rather than by using
+	zeroSoFar field
+	(fillOutLastEntry): symmetric change
+	(findNextMinimalSolutionGcd): don't init zeroSoFar field
+	(nextSolution): don't clear zeroSoFar field
+	(fillOutStackEntry): don't init zeroSoFar field
+	(fillOutStackEntry): use updateResidues()
+	(fillOutLastEntry): use updateResidues()
+
+	* mpzSystem.hh (class MpzSystem): added decl for updateResidues()
+
+	* mpzGcdBasedSolver.cc (updateResidues): added
+	(nextSolution): simplify using updateResidues()
+	(nextSolution): restructuring
+
+2005-08-24  Steven Eker  <eker@goo.csl.sri.com>
+
+	* mpzGcdBasedSolver.cc (findNextMinimalSolutionGcd): return
+	solutions incrementally; re-permute solutions
+
+	* mpzSystem.hh (class MpzSystem): added decl for computeSumBound()
+
+	* mpzGcdInit.cc (computeSumBound): added
+	(initializeGcd): use computeSumBound(); recompute sumBound after
+	integerGaussianElimination()
+
+	* mpzSystem.hh (class MpzSystem): added decl for dumpEqns()
+	(class MpzSystem): added decls for findConcensus() and
+	solveTwoVariableProblem()
+	(class MpzSystem): added many gcd solver specific data members
+	(class MpzSystem): addded struct StackEntry, decls for
+	nextSolution(), fillOutStackEntry(), fillOutLastEntry(),
+	solveDiagonal()
+
+	* mpzSystem.cc (dumpEqns): added
+
+	* mpzContejeanDevie.cc (initialize): use initializeUpperBounds()
+
+	* mpzSystem.hh (class MpzSystem): added decl for
+	initializeUpperBounds()
+
+	* mpzSystem.cc (initializeUpperBounds): added
+
+2005-08-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* mpzSystem.hh (class MpzSystem): reorganized to split out solver
+	specific stuff
+
+	* mpzContejeanDevie.cc (isZero): moved here
+
+	* mpzSystem.cc (minimal): moved here
+
+	* mpzGcdBasedSolver.cc: created
+
+	* mpzContejeanDevie.cc (findNextMinimalSolution): code cleaning
+	(findNextMinimalSolution): use the invariant that variables that
+	have reached their upper bounds are frozen to simplify test
+
+2005-08-22  Steven Eker  <eker@goo.csl.sri.com>
+
+	* mpzContejeanDevie.cc (initialize): code cleaning
+	(initialize): check for zero upper bound
+
+2005-08-18  Steven Eker  <eker@goo.csl.sri.com>
+
+	* mpzSystem.cc (insertEqn): fixed eqn vs eqns bug
+
+	* mpzSystem.hh: created
+
+	* mpzContejeanDevie.cc: created
+
+	* mpzSystem.cc: created
+
+	* macros.hh (DebugPrint): added
+	(DebugPrintNL): added
+
+===================================Maude86c===========================================
+
 2005-03-10  Steven Eker  <eker@goo.csl.sri.com>
 
 	* macros.hh (enum SpecialConstants): added GARBAGE to enum SpecialConstants

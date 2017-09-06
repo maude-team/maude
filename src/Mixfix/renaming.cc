@@ -57,7 +57,7 @@ Renaming::makeTypeName(const set<int>& type)
   FOR_EACH_CONST(i, set<int>, type)
     {
       name += name.empty() ? "[" : ",";
-      name += Token::name(*i);
+      name += Token::sortName(*i);
     }
   return name + "]";
 }
@@ -235,16 +235,17 @@ Renaming::makeCanonicalVersion(ImportModule* module) const
       }
   }
   {
-    IdSet genericsToAdd;
-    IdSet genericsToAvoid;
+    IdSet genericsToConsider;	// generics that affect an operator
+    IdSet genericsToAvoid;	// subset that affect an operator from a parameter
     {
       //
       //	For each operator in the module that is not from a parameter
       //	and would be remapped by an orginal mapping, we add a mapping
       //	to the canonical renaming unless the mapping is a generic one
-      //	in which case we add the id to genericsToAdd. For operators
+      //	in which case we add the id to genericsToConsider. For operators
       //	from parameter theories, if the mapping is specific we emit an
-      //	advisory otherwise we add it to generics to avoid.
+      //	advisory otherwise we add it to both genericsToConsider and
+      //	genericsToAvoid so as to be able to generate an advisory.
       //
       const Vector<Symbol*> symbols = module->getSymbols();
       int nrUserSymbols = module->getNrUserSymbols();
@@ -260,7 +261,7 @@ Renaming::makeCanonicalVersion(ImportModule* module) const
 		{
 		  if (types.empty())
 		    {
-		      genericsToAdd.insert(id);  // HACK: so that we see it and generate an advisory
+		      genericsToConsider.insert(id);
 		      genericsToAvoid.insert(id);
 		    }
 		  else
@@ -272,7 +273,7 @@ Renaming::makeCanonicalVersion(ImportModule* module) const
 	      else
 		{
 		  if (types.empty())
-		    genericsToAdd.insert(id);
+		    genericsToConsider.insert(id);
 		  else
 		    {
 		      //
@@ -289,6 +290,7 @@ Renaming::makeCanonicalVersion(ImportModule* module) const
 			    setType(n->second.types[i], symbol->domainComponent(i));
 			  setType(n->second.types[nrTypes], symbol->rangeComponent());
 			  n->second.name = j->second.name;
+			  n->second.term = 0;
 			  n->second.prec = j->second.prec;
 			  n->second.gather = j->second.gather;
 			  n->second.format = j->second.format;
@@ -303,25 +305,24 @@ Renaming::makeCanonicalVersion(ImportModule* module) const
     }
     {
       //
-      //	For each polymorph in the module, add its id to genericsToAdd
-      //	genericsToAvoid depending on whether it comes from a parameter.
+      //	For each polymorph in the module, add its id to genericsToConsider.
+      //	If it came from a parameter, also add its id to genericsToAvoid.
       //
       int nrPolymorphs = module->getNrPolymorphs();
       for (int i = 0; i < nrPolymorphs; i++)
 	{
 	  int id = module->getPolymorphName(i).code();
+	  genericsToConsider.insert(id);
 	  if (module->parameterDeclaredPolymorph(i))
 	    genericsToAvoid.insert(id);
-	  else
-	    genericsToAdd.insert(id);
 	}
     }
     {
       //
-      // 	Finally we add the generics whose addition we deferred and
-      //	which we didn't decide to avoid.
+      // 	Finally we add the generics which affect an operator and which
+      //	which we did not decide to avoid.
       //
-      FOR_EACH_CONST(i, IdSet, genericsToAdd)
+      FOR_EACH_CONST(i, IdSet, genericsToConsider)
 	{
 	  int id = *i;
 	  const OpMap::const_iterator e = opMap.upper_bound(id);
@@ -485,6 +486,24 @@ Renaming::addSortAndLabelMappings(const Renaming* original)
 	  labelMapIndex.append(p.first);
       }
   }
+}
+
+void
+Renaming::addOpMappingPartialCopy(const Renaming* original, int index)
+{
+  //
+  //	Add a copy of a given op mapping, leaving out any type info.
+  //
+  OpMap::const_iterator from = original->opMapIndex[index];
+  lastOpMapping = opMap.insert(OpMap::value_type(from->first, OpMapping()));
+  lastOpMapping->second.name = from->second.name;
+  lastOpMapping->second.term = 0;
+  lastOpMapping->second.prec = from->second.prec;
+  lastOpMapping->second.gather = from->second.gather;
+  lastOpMapping->second.format = from->second.format;
+  lastOpMapping->second.latexMacro = from->second.latexMacro;
+  lastOpMapping->second.index = opMapIndex.size();
+  opMapIndex.append(lastOpMapping);
 }
 
 void

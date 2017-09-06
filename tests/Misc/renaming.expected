@@ -279,12 +279,15 @@ fmod RANDOM
 fmod QID
 fth TRIV
 fth TAO-SET
+fth DEFAULT
 fmod LIST
 fmod SORTABLE-LIST
 fmod SET
+fmod LIST-AND-SET
 fmod LIST*
 fmod SET*
 fmod MAP
+fmod ARRAY
 fmod NAT-LIST
 fmod QID-LIST
 fmod META-TERM
@@ -311,7 +314,10 @@ fmod LIST{TAO-SET} * (sort NeList{TAO-SET}{X} to NeList{X}, sort List{TAO-SET}{
     X} to List{X})
 fmod (LIST{TAO-SET} * (sort NeList{TAO-SET}{X} to NeList{X}, sort List{
     TAO-SET}{X} to List{X})){[X]}
+fmod LIST{[X]}
+fmod SET{[X]}
 fth Y :: TRIV
+fth Y :: DEFAULT
 fmod LIST{Nat}
 fmod LIST{Nat} * (sort NeList{Nat} to NeNatList, sort List{Nat} to NatList)
 fmod LIST{Qid}

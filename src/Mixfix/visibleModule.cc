@@ -162,12 +162,12 @@ void
 VisibleModule::showModule(ostream& s, bool all) const
 {
   s << moduleTypeString(getModuleType()) << ' ' << this;
-  int nrParameters = getNrFreeParameters();
+  int nrParameters = getNrParameters();
   if (nrParameters > 0)
     {
-      s << '{' << Token::name(getFreeParameterName(0)) << " :: " << getFreeParameterTheory(0);
+      s << '{' << Token::name(getParameterName(0)) << " :: " << getParameterTheory(0);
       for (int i = 1; i < nrParameters; ++i)
-	s << ", " << Token::name(getFreeParameterName(i)) << " :: " << getFreeParameterTheory(i);
+	s << ", " << Token::name(getParameterName(i)) << " :: " << getParameterTheory(i);
       s << '}';
     }
   s << " is\n";

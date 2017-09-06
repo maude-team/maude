@@ -88,20 +88,19 @@ ImportModule::handleInstantiationByParameter(ImportModule* copy,
   //
   //	First we handle parameters instantiated by parameters from an enclosing module.
   //	These parameters keep their theory but change their name to that of the
-  //	parameter from the enclosing module. They also become bound. Multiple parameters may be instantiated to
-  //	the same parameter from the enclosing module, in which case they collapse
-  //	to a single bound parameter.
+  //	parameter from the enclosing module. They also become bound. Multiple parameters
+  //	may be instantiated to the same parameter from the enclosing module, in which case
+  //	they collapse to a single bound parameter.
   //
   int nrParameters = parameterNames.size();
-  for (int i = nrBoundParameters; i < nrParameters; ++i)
+  for (int i = 0; i < nrParameters; ++i)
     {
-      int argIndex = i - nrBoundParameters;
-      if (arguments[argIndex] == 0)
+     if (arguments[i] == 0)
 	{
 	  //
 	  //	Parameter instantiated by a parameter from an enclosing module.
 	  //
-	  int parameterName = parameterArgs[argIndex];  // name can change
+	  int parameterName = parameterArgs[i];  // name can change
 	  if (copy->findParameterIndex(parameterName) == NONE)
 	    {
 	      //
@@ -140,47 +139,37 @@ void
 ImportModule::handleInstantiationByTheoryView(ImportModule* copy,
 					      Renaming* canonical,
 					      ParameterMap& parameterMap,
-					      ParameterMap& extraParameterMap,
+					      ParameterSet& extraParameterSet,
 					      const Vector<View*>& arguments,
 					      ModuleCache* moduleCache) const
 {
   //
-  //	Second we handle parameters instantiated by views to theories. These parameters keep
-  //	their name (unless we need to resolve a name clash) but change their theory to that
-  //	of the view target. These parameters give rise to an extra parameter list for
-  //	parameterized sorts.
+  //	Second we handle parameters instantiated by theory-views. These parameters keep
+  //	their name but change their theory to that of the view target.
+  //	These parameters give rise to an extra parameter list for parameterized sorts.
   //
   int nrParameters = parameterNames.size();
-  for (int i = nrBoundParameters; i < nrParameters; ++i)
+  for (int i = 0; i < nrParameters; ++i)
     {
-      int argIndex = i - nrBoundParameters;
-      View* argumentView = arguments[argIndex];
+      View* argumentView = arguments[i];
       if (argumentView != 0)
 	{
 	  ImportModule* toModule = argumentView->getToModule();
 	  if (toModule->isTheory())
 	    {
 	      int parameterName = parameterNames[i];
-	      while (copy->findParameterIndex(parameterName) != NONE)  // what if our "free" parameter is actually bound???
-		{
-		  crope newName("$");
-		  newName += Token::name(parameterName);
-		  IssueAdvisory("In making " << copy << " free parameter " << Token::name(parameterName) <<
-				" clashes with a bound parameter of the same name. Resolving by renaming free parameter to " <<
-				newName);
-		  parameterName = Token::encode(newName.c_str());
-		}
+	      Assert(copy->findParameterIndex(parameterName) == NONE, "parameter clash");
+
 	      Token t;
 	      t.tokenize(parameterName, FileTable::AUTOMATIC); 
 	      ImportModule* parameterTheory = moduleCache->makeParameterCopy(parameterName, toModule);
 	      copy->addParameter(t, parameterTheory);
 	      argumentView->addUser(copy);
 
-	      int oldParameterName = parameterNames[i];
-	      int viewName = arguments[argIndex]->id();
-	      if (oldParameterName != viewName)
-		parameterMap[oldParameterName] = viewName;
-	      extraParameterMap[oldParameterName] = parameterName;
+	      int viewName = argumentView->id();
+	      if (parameterName != viewName)
+		parameterMap[parameterName] = viewName;
+	      extraParameterSet.insert(parameterName);
 	      //
 	      //	For each Foo -> X$Foo we mapped in the parameter copy of the parameter theory,
 	      //	we need to have a mapping X$Foo -> X$Bar where Bar is the target of Foo in our view.
@@ -213,10 +202,9 @@ ImportModule::handleInstantiationByModuleView(ImportModule* copy,
   //
   LineNumber lineNumber(FileTable::AUTOMATIC);
   int nrParameters = parameterNames.size();
-  for (int i = nrBoundParameters; i < nrParameters; ++i)
+  for (int i = 0; i < nrParameters; ++i)
     {
-      int argIndex = i - nrBoundParameters;
-      View* argumentView = arguments[argIndex];
+      View* argumentView = arguments[i];
       if (argumentView != 0)
 	{
 	  ImportModule* toModule = argumentView->getToModule();
@@ -239,7 +227,7 @@ ImportModule::handleInstantiationByModuleView(ImportModule* copy,
 		}
 	      addOpMappingsFromView(canonical, parameterCopyOfTheory, argumentView);
 	      int oldParameterName = parameterNames[i];
-	      int newParameterName = arguments[argIndex]->id();
+	      int newParameterName = argumentView->id();
 	      if (oldParameterName != newParameterName)
 		parameterMap[oldParameterName] = newParameterName;
 	    }
@@ -331,7 +319,7 @@ ImportModule::addOpMappingsFromView(Renaming* canonical,
 void
 ImportModule::handleParameterizedSorts(Renaming* canonical,
 				       const ParameterMap& parameterMap,
-				       const ParameterMap& extraParameterMap) const
+				       const ParameterSet& extraParameterSet) const
 {
   //
   //	Check for parameterized sorts declared inside us.
@@ -361,9 +349,8 @@ ImportModule::handleParameterizedSorts(Renaming* canonical,
 		  parameters[j] = m->second;
 		  mapped = true;
 		}
-	      ParameterMap::const_iterator e = extraParameterMap.find(original);
-	      if (e != extraParameterMap.end())
-		extraParameters.append(e->second);
+	      if (extraParameterSet.find(original) != extraParameterSet.end())
+		extraParameters.append(original);
 	    }
 	  int newSortId = mapped ? Token::joinParameterList(header, parameters) : sortId;
 	  if (!extraParameters.empty())
@@ -397,7 +384,7 @@ ImportModule::handleRegularImports(ImportModule* copy,
 	  //	Imported module is itself parameterized; it parameters must all be bound and must be a subset of
 	  //	our own so we can build an instantiation for them.
 	  //
-	  Assert(import->nrBoundParameters == nrImportParameters, "free parameter in imported module " << import);
+	  Assert(import->parametersBound(), "free parameter in imported module " << import);
 	  Vector<View*> views(nrImportParameters);
 	  Vector<int> names(nrImportParameters);
 	  for (int j = 0; j < nrImportParameters; ++j)
@@ -406,53 +393,11 @@ ImportModule::handleRegularImports(ImportModule* copy,
 	      int indexInUs = findParameterIndex(parameterName);
 	      Assert(indexInUs != NONE, "couldn't find bound parameter " << Token::name(parameterName) <<
 		     " for import " << import << " in " << this);
-	      int indexInArgList = indexInUs - nrBoundParameters;
-	      if (indexInArgList >= 0)
-		{
-		  //
-		  //	Our import shared one of our free parameters, so its instantiation
-		  //	will share the appropriate argument.
-		  //
-		  views[j] = arguments[indexInArgList];
-		  names[j] = parameterArgs[indexInArgList];
-		}
-	      else
-		{
-		  //
-		  //	Our import shared one of our bound parameters, so its instantiation
-		  //	will just instantiate the bound parameter to itself.
-		  //
-		  views[j] = 0;
-		  names[j] = parameterName;
-		}
+	      views[j] = arguments[indexInUs];
+	      names[j] = parameterArgs[indexInUs];
 	    }
-	  ParameterMap parametersNeedingRebinding;
-	  ImportModule* instance =
-	    import->instantiateBoundParameters(views, names, moduleCache, parametersNeedingRebinding);
-	  int nrFreeParameters = instance->getNrFreeParameters();
-	  Assert(nrFreeParameters == parametersNeedingRebinding.size(), "escaped parameters mismatch");
-	  if (nrFreeParameters > 0)
-	    {
-	      DebugAdvisory("import " << import << " became " << instance << " with " <<
-			    nrFreeParameters << " free parameters after bound parameters were instantiated");
-	      //
-	      //	Some of our bound parameters were instantiated by theory-views and
-	      //	need to be rebound.
-	      //
-	      Vector<View*> newViewArgs(nrFreeParameters);
-	      Vector<int> newParamArgs(nrFreeParameters);
-	      for (int i = 0; i < nrFreeParameters; ++i)
-		{
-		  newViewArgs[i] = 0;
-		  ParameterMap::const_iterator m =
-		    parametersNeedingRebinding.find(instance->getFreeParameterName(i));
-		  Assert(m != parametersNeedingRebinding.end(), "could find escaped parameter");
-		  newParamArgs[i] = m->second;
-		}
-	      instance = moduleCache->makeInstatiation(instance, newViewArgs, newParamArgs);
-	    }
-	  
-	  Assert(instance->nrBoundParameters == instance->parameterNames.size(),
+	  ImportModule* instance = import->instantiateBoundParameters(views, names, moduleCache);
+	  Assert(instance->getNrParameters() == 0 || instance->parametersBound(),
 		 "free parameter in instance " << instance << " of imported module " << import);
 	  copy->addImport(instance, INCLUDING, lineNumber);  // HACK need to fix including
 	}
@@ -465,8 +410,9 @@ ImportModule::makeInstantiation(int moduleName,
 				const Vector<int>& parameterArgs,
 				ModuleCache* moduleCache)
 {
-  Assert(arguments.size() == parameterArgs.size(), "argument/parameterArgs mismatch");
-  Assert(arguments.size() == getNrFreeParameters(), "argument/free parameter mismatch");
+  Assert(!parametersBound(), "parameters bound");
+  Assert(arguments.size() == getNrParameters(), "arguments size mismatch");
+  Assert(parameterArgs.size() == getNrParameters(), "parameterArgs size mismatch");
   //
   //	An instantiation is a renamed copy of an parameterized module with
   //	different imports.
@@ -490,22 +436,13 @@ ImportModule::makeInstantiation(int moduleName,
     }
   ImportModule* copy = new ImportModule(moduleName, moduleType, INSTANTIATION, moduleCache);
   //
-  //	We copy any bound parameters.
-  //
-  for (int i = 0; i < nrBoundParameters; ++i)
-    {
-      Token t;
-      t.tokenize(parameterNames[i], FileTable::AUTOMATIC);
-      copy->addParameter(t, importedModules[i]);
-    }
-  //
   //	We construct an instantiation renaming which will map sorts and operations
-  //	we got from our parameters to those of our arguments targets. Also we
-  //	directly import targets.
+  //	we got from our parameters to those of our view args' targets. Also we
+  //	directly import the targets.
   //
   Renaming* canonical = new Renaming;
   ParameterMap parameterMap;  // map for parameters in sorts
-  ParameterMap extraParameterMap;  // map for generating extra parameter list for parameterized sorts
+  ParameterSet extraParameterSet;  // set for generating extra parameter list for parameterized sorts
   
   handleInstantiationByParameter(copy, canonical, parameterMap, arguments, parameterArgs, moduleCache);
   //
@@ -514,12 +451,11 @@ ImportModule::makeInstantiation(int moduleName,
   //	our parameter args.
   //
   copy->viewArgs = arguments;  // deep copy
-  copy->nrBoundParameters = copy->parameterNames.size();
-  if (copy->nrBoundParameters > 0)
+  if (copy->parameterNames.size() > 0)
     copy->paramArgs = parameterArgs;  // deep copy
-  handleInstantiationByTheoryView(copy, canonical, parameterMap, extraParameterMap, arguments, moduleCache);
+  handleInstantiationByTheoryView(copy, canonical, parameterMap, extraParameterSet, arguments, moduleCache);
   handleInstantiationByModuleView(copy, canonical, parameterMap, arguments);
-  handleParameterizedSorts(canonical, parameterMap, extraParameterMap);
+  handleParameterizedSorts(canonical, parameterMap, extraParameterSet);
   handleRegularImports(copy, arguments, parameterArgs, moduleCache);
   finishCopy(copy, canonical);
   return copy;
@@ -528,117 +464,196 @@ ImportModule::makeInstantiation(int moduleName,
 ImportModule*
 ImportModule::instantiateBoundParameters(const Vector<View*>& arguments,
 					 const Vector<int>& parameterArgs,
-					 ModuleCache* moduleCache,
-					 ParameterMap& escapedParameters)
+					 ModuleCache* moduleCache)
 {
   DebugAdvisory("instantiating bound parameters of " << this);
   //
   //	We are an instantiated (not renamed) module with parameters that have
   //	been bound by a parameterized module that imported us. Now that these
-  //	parameters have been been instantiated, we need to make a new instanted
+  //	parameters have been been instantiated, we need to make a new instantiated
   //	module that is "like us" except that our bound parameters are
   //	instantiated with the new arguments.
   //
-  Assert(nrBoundParameters > 0, "no bound parameters");
-  Assert(arguments.size() == nrBoundParameters &&
-	 parameterArgs.size() == nrBoundParameters, "bound parameter args bad");
-  Assert(escapedParameters.empty(), "escaped parameters nonempty");
-  Assert(!viewArgs.empty(), "no original args");
-  Assert(viewArgs.size() == paramArgs.size(), "original args bad");
+  Assert(parametersBound(), "parameters not bound");
+  Assert(arguments.size() == getNrParameters(), "arguments size bad");
+  Assert(parameterArgs.size() == getNrParameters(), "parameterArgs size bad");
   Assert(baseModule != 0, "no base module");
-  //
-  //	We are an instantiation of a parameterized module so we
-  //	first check our base module; if it has bound parameters we must
-  //	make a new instantiation of it.
-  //
-  ParameterMap parametersNeedingRebinding;
-  ImportModule* foundation = baseModule;
-  int nrBaseBoundParameters = foundation->nrBoundParameters;
-  if (nrBaseBoundParameters > 0)
+  Assert(viewArgs.size() == paramArgs.size(), "original args are inconsistant");
+
+  if (viewArgs.empty())
     {
-      Vector<View*> baseViewArgs(nrBaseBoundParameters);
-      Vector<int> baseParamArgs(nrBaseBoundParameters);
-      for (int i = 0; i < nrBaseBoundParameters; ++i)
+      Assert(origin == RENAMING, "bad origin");
+      //
+      //        We are a renaming of a module with bound parameters.
+      //        The bound parameters will be identical to our own so
+      //        we first make a new instantiation of our base module and
+      //        then rename it.
+      //
+      ImportModule* newBase = baseModule->
+        instantiateBoundParameters(arguments, parameterArgs, moduleCache);
+
+      ParameterMap parameterMap;
+      ParameterSet extraParameterSet;
+      int nrParameters = parameterNames.size();
+      for (int i = 0; i < nrParameters; ++i)
 	{
-	  int index = findParameterIndex(foundation->parameterNames[i]);
-	  Assert(index != NONE && index < nrBoundParameters, "didn't find bound parameter");
-	  baseViewArgs[i] = arguments[index];
-	  baseParamArgs[i] = parameterArgs[index];
-	}
-      foundation = foundation->instantiateBoundParameters(baseViewArgs,
-							  baseParamArgs,
-							  moduleCache,
-							  parametersNeedingRebinding);
-      DebugAdvisory("when instantiating bound parameters of " << baseModule <<
-		    " to get " << foundation << ", " << parametersNeedingRebinding.size() <<
-		    " bound parameters escaped");
-    }
-  //
-  //	We build a new set of arguments to instantiate our "foundation" on.
-  //
-  int nrFreeParameters = foundation->getNrFreeParameters();
-  Assert(nrFreeParameters == viewArgs.size() + parametersNeedingRebinding.size(),
-	 "disagreement over how many free parameters foundation should take");
-  Vector<View*> newViewArgs(nrFreeParameters);
-  Vector<int> newParamArgs(nrFreeParameters);
-  int j = 0;
-  for (int i = 0; i < nrFreeParameters; ++i)
-    {
-      int freeParameterName = foundation->getFreeParameterName(i);
-      ParameterMap::const_iterator e = parametersNeedingRebinding.find(freeParameterName);
-      if (e == parametersNeedingRebinding.end())
-	{
-	  //
-	  //	The free parameter was an original free parameter so we see what it
-	  //	was originally instantiated by.
-	  //
-	  View* v = viewArgs[j];
-	  if (v == 0)
+	  int name = parameterNames[i];
+	  View* argumentView = arguments[i];
+	  if (argumentView != 0)
 	    {
-	      //
-	      //	The free parameter was originally instantiated by a parameter
-	      //	from an enclosing module, making it bound in us. So we now look
-	      //	up its name in our in our parameters to find the index of its
-	      //	new instantiation in the argument list we were passed.
-	      //
-	      int boundParameterName = paramArgs[j];
-	      int index = findParameterIndex(boundParameterName);
-	      Assert(index != NONE && index < nrBoundParameters, "didn't find bound parameter");
-	      View* v2 = arguments[index];
-	      newViewArgs[i] = v2;
-	      newParamArgs[i] = parameterArgs[index];
-	      if (v2 != 0 && v2->getToModule()->isTheory())
-		{
-		  //
-		  //	Instantiating a bound parameter by a theory-view allows it
-		  //	to escape. This must be recorded so that it can be rebound
-		  //	in a subsequent instantiation. escapedParameters maps
-		  //	from the free name of a parameter to the name of the
-		  //	external parameter is was bound to before it escaped.
-		  //
-		  escapedParameters[freeParameterName] = boundParameterName;
-		}
+	      parameterMap[name] = argumentView->id();
+	      ImportModule* toModule = argumentView->getToModule();
+	      if (toModule->isTheory())
+		extraParameterSet.insert(name);
 	    }
 	  else
+	    parameterMap[name] = parameterArgs[i];
+	}
+
+      Renaming* newRenaming =
+	instantiateRenaming(canonicalRenaming, parameterMap, extraParameterSet);
+      ImportModule* instance = moduleCache->makeRenamedCopy(newBase, newRenaming);
+      delete newRenaming;
+      return instance;
+    }
+  Assert(origin == INSTANTIATION, "bad origin");
+  //
+  //	We are an instantiation of a parameterized module so
+  //	we build a new set of arguments to instantiate our baseModule on.
+  //
+  int nrFreeParameters = baseModule->getNrParameters();
+  Assert(nrFreeParameters == viewArgs.size(), "nrFreeParameters clash");
+  Vector<View*> newViewArgs(nrFreeParameters);
+  Vector<int> newParamArgs(nrFreeParameters);
+  Vector<View*> extraViewArgs;
+  Vector<int> extraParamArgs;
+
+  for (int i = 0; i < nrFreeParameters; ++i)
+    {
+      //
+      //	See what the free parameter was originally instantiated by.
+      //
+      View* v = viewArgs[i];
+      if (v == 0)
+	{
+	  //
+	  //	The free parameter was originally instantiated by a parameter
+	  //	from an enclosing module, making it bound in us. So we now look
+	  //	up its name in our parameters to find the index of its
+	  //	new instantiation in the argument list we were passed.
+	  //
+	  int boundParameterName = paramArgs[i];
+	  int index = findParameterIndex(boundParameterName);
+	  Assert(index != NONE,  "didn't find bound parameter");
+	  View* v2 = arguments[index];
+	  newViewArgs[i] = v2;
+	  newParamArgs[i] = parameterArgs[index];
+	  if (v2 != 0 && v2->getToModule()->isTheory())
 	    {
 	      //
-	      //	The free parameter was originally instantiated by a view
-	      //	so this instantiation does not change.
+	      //	Instantiating a bound parameter by a theory-view allows it
+	      //	to escape. This must be recorded so that it can be rebound
+	      //	in a subsequent instantiation.
 	      //
-	      newViewArgs[i] = v;
-	      newParamArgs[i] = 0;
+	      DebugAdvisory("bound parameter " << Token::name(boundParameterName) <<
+			    " escaped to become free parameter " <<
+			    Token::name(baseModule->getParameterName(i)) <<
+			    " that will need rebinding"); 
+	      extraViewArgs.append(0);
+	      extraParamArgs.append(boundParameterName);
 	    }
-	  ++j;
 	}
       else
 	{
 	  //
-	  //	The free parameter is an escapee that wasn't free in base module
-	  //	so we instantiate it by the parameter it escaped from.
+	  //	The free parameter was originally instantiated by a view
+	  //	so this instantiation does not change.
 	  //
-	  newViewArgs[i] = 0;
-	  newParamArgs[i] = e->second;
+	  Assert(!v->getToModule()->isTheory(), "unexpected theory-view " << v);
+	  newViewArgs[i] = v;
+	  newParamArgs[i] = 0;
 	}
     }
-  return moduleCache->makeInstatiation(foundation, newViewArgs, newParamArgs);
+  ImportModule* instance = moduleCache->makeInstatiation(baseModule, newViewArgs, newParamArgs);
+  if (!extraParamArgs.empty())
+    instance = moduleCache->makeInstatiation(instance, extraViewArgs, extraParamArgs);
+  return instance;
+}
+
+int
+ImportModule::instantiateSortName(int sortId,
+				  const ParameterMap& parameterMap,
+				  const ParameterSet& extraParameterSet)
+{
+  if (Token::auxProperty(sortId) == Token::AUX_STRUCTURED_SORT)
+    {
+      bool mapped = false;
+      int header;
+      Vector<int> parameters;
+      Vector<int> extraParameters;
+      Token::splitParameterList(sortId, header, parameters);
+      int nrSortParameters = parameters.size();
+      for (int i = 0; i < nrSortParameters; ++i)
+	{
+	  int original = parameters[i];
+	  ParameterMap::const_iterator m = parameterMap.find(original);
+	  if (m != parameterMap.end())
+	    {
+	      parameters[i] = m->second;
+	      mapped = true;
+	    }
+	  if (extraParameterSet.find(original) != extraParameterSet.end())
+	    extraParameters.append(original);
+	}
+      if (mapped)
+	sortId = Token::joinParameterList(header, parameters);
+      if (!extraParameters.empty())
+	sortId = Token::joinParameterList(sortId, extraParameters);
+    }
+  return sortId;
+}
+
+Renaming*
+ImportModule::instantiateRenaming(const Renaming* original,
+				  const ParameterMap& parameterMap,
+				  const ParameterSet& extraParameterSet)
+{
+  DebugAdvisory("Original renaming: " << original);
+  Renaming* instance = new Renaming;
+  {
+    int nrSortMappings = original->getNrSortMappings();
+    for (int i = 0; i < nrSortMappings; i++)
+      {
+	int from = instantiateSortName(original->getSortFrom(i), parameterMap, extraParameterSet);
+	int to = instantiateSortName(original->getSortTo(i), parameterMap, extraParameterSet);
+	instance->addSortMapping(from, to);
+      }
+  }
+  {
+    int nrLabelMappings = original->getNrLabelMappings();
+    for (int i = 0; i < nrLabelMappings; i++)
+      instance->addLabelMapping(original->getLabelFrom(i), original->getLabelTo(i));
+  }
+  {
+    Vector<Token> token(1);
+    int nrOpMappings = original->getNrOpMappings();
+    for (int i = 0; i < nrOpMappings; i++)
+      {
+	instance->addOpMappingPartialCopy(original, i);
+	int nrTypes = original->getNrTypes(i);
+	for (int j = 0; j < nrTypes; ++j)
+	  {
+	    //
+	    //	Only map one sort from each type.
+	    //
+	    const set<int>& typeSorts = original->getTypeSorts(i, j);
+	    Assert(!typeSorts.empty(), "no sorts");
+	    int sortName = instantiateSortName(*(typeSorts.begin()), parameterMap, extraParameterSet);
+	    token[0].tokenize(sortName, FileTable::SYSTEM_CREATED);
+	    instance->addType(true, token);
+	  }
+      }
+  }
+  DebugAdvisory("Instantiated renaming: " << instance);
+  return instance;
 }
