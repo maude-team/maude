@@ -38,6 +38,8 @@
 #include "interface.hh"
 #include "core.hh"
 #include "higher.hh"
+#include "freeTheory.hh"
+#include "builtIn.hh"
 #include "mixfix.hh"
  
 //      interface class definitions
@@ -45,6 +47,9 @@
  
 //      core class definitions
 #include "lineNumber.hh"
+
+//      built in stuff
+#include "randomOpSymbol.hh"
 
 //      system class definitions
 #include "IO_Manager.hh"
@@ -106,6 +111,8 @@ main(int argc, char* argv[])
 	{
 	  if (const char* s = isFlag(arg, "-xml-log="))
 	    interpreter.beginXmlLog(s);
+	  else if (const char* s = isFlag(arg, "-random-seed="))
+	    RandomOpSymbol::setGlobalSeed(strtoul(s, 0, 0));
 	  else if (strcmp(arg, "--help") == 0)
 	    printHelp(argv[0]);
 	  else if (strcmp(arg, "--version") == 0)
@@ -226,6 +233,8 @@ printHelp(const char* name)
     "  -no-tecla\t\tDo not use tecla command line editing\n" <<
     "  -batch\t\tRun in batch mode\n" <<
     "  -interactive\t\tRun in interactive mode\n" <<
+    "  -random-seed=<int>\tSet seed for random number generator\n" <<
+    "  -xml-log=<filename>\tSet file in which to produce an xml log\n" <<
     "\n" <<
     "Send bug reports to: " << PACKAGE_BUGREPORT << endl;
   exit(0);

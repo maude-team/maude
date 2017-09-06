@@ -1,3 +1,54 @@
+2004-06-14  Steven Eker  <eker@goo.csl.sri.com>
+
+	* randomOpSymbol.cc (attachData): call
+	NumberOpSymbol::attachData() for consistancy
+	(getDataAttachments): call NumberOpSymbol::getDataAttachments()
+	for consistancy
+
+	* counterSymbol.cc (attachData): call NumberOpSymbol::attachData()
+	for consistancy
+	(getDataAttachments): call NumberOpSymbol::getDataAttachments()
+	for consistancy
+
+	* numberOpSymbol.cc (getDataAttachments): handle NONE case
+	gracefully
+
+2004-06-07  Steven Eker  <eker@goo.csl.sri.com>
+
+	* counterSymbol.cc (resetRules): call NumberOpSymbol::resetRules()
+	(saveHiddenState): added
+	(restoreHiddenState): added
+
+	* counterSymbol.hh (class CounterSymbol): added decl for
+	saveHiddenState() and restoreHiddenState(); added data member
+	currentValueStack
+
+	* counterSymbol.cc (reset): becomes resetRules()
+
+	* counterSymbol.hh (class CounterSymbol): replace reset() decl
+	with resetRules() decl
+
+2004-06-03  Steven Eker  <eker@goo.csl.sri.com>
+
+	* builtIn.hh: added decls for class RandomOpSymbol and class
+	CounterSymbol
+
+	* numberOpSymbol.hh: #include "gmpxx.h"
+
+	* counterSymbol.hh: created
+
+	* counterSymbol.cc: created
+
+2004-06-02  Steven Eker  <eker@goo.csl.sri.com>
+
+	* randomOpSymbol.hh (setGlobalSeed): added
+
+	* randomOpSymbol.cc: created
+
+	* randomOpSymbol.hh: created
+	
+===================================Maude84c===========================================
+
 2004-05-06  Steven Eker  <eker@goo.csl.sri.com>
 
 	* ACU_NumberOpSymbol.cc (getDataAttachments): fixed bug where we

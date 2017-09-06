@@ -545,6 +545,10 @@ MixfixModule::newFancySymbol(Token prefixName,
 	  }
 	return new DivisionSymbol(name);
       }
+    case SymbolType::RANDOM_OP_SYMBOL:
+      return new RandomOpSymbol(name);
+    case SymbolType::COUNTER_SYMBOL:
+      return new CounterSymbol(name);
     }
 
   int lineNr = prefixName.lineNumber();

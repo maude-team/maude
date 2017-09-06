@@ -5,6 +5,8 @@
 	list and therefore ignored that part of the list for sort
 	calculation purposes
 	(fwdComputeBaseSort): fixed symmetric bug
+	
+===================================Maude84c==================================
 
 2003-04-23  Steven Eker  <eker@goo.csl.sri.com>
 

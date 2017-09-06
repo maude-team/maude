@@ -364,14 +364,16 @@ MetaLevelOpSymbol::metaRewrite(FreeDagNode* subject, RewritingContext& context)
               RewritingContext* objectContext =
                 context.makeSubcontext(d, UserLevelRewritingContext::META_EVAL);
 	      //cerr << "after create\n"; RootContainer::dump(cerr);
-              m->resetRules();
               m->protect();
-              objectContext->ruleRewrite(limit);
+              //m->saveHiddenState();
+              m->resetRules();
+	      objectContext->ruleRewrite(limit);
 	      //cerr << "after run\n"; RootContainer::dump(cerr);
               context.addInCount(*objectContext);
               d = metaLevel->upResultPair(objectContext->root(), m);
               delete objectContext;
 	      //cerr << "after delete\n"; RootContainer::dump(cerr);
+	      //m->restoreHiddenState();
               (void) m->unprotect();
               return context.builtInReplace(subject, d);
             }
@@ -401,8 +403,9 @@ MetaLevelOpSymbol::metaFrewrite(FreeDagNode* subject, RewritingContext& context)
 	      safeCast(ObjectSystemRewritingContext*, objectContext)->
 		setObjectMode(ObjectSystemRewritingContext::FAIR);
 	      //cerr << "after create\n"; RootContainer::dump(cerr);
-	      m->resetRules();
 	      m->protect();
+	      //m->saveHiddenState();
+	      m->resetRules();
 	      objectContext->fairRewrite(limit, gas);
 	      //cerr << "after run\n"; RootContainer::dump(cerr);
 	      objectContext->root()->computeTrueSort(*objectContext);
@@ -411,6 +414,7 @@ MetaLevelOpSymbol::metaFrewrite(FreeDagNode* subject, RewritingContext& context)
 	      d = metaLevel->upResultPair(objectContext->root(), m);
 	      delete objectContext;
 	      //cerr << "after delete\n"; RootContainer::dump(cerr);
+	      //m->restoreHiddenState();
 	      (void) m->unprotect();
 	      return context.builtInReplace(subject, d);
 	    }

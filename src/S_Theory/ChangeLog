@@ -1,3 +1,9 @@
+2004-06-02  Steven Eker  <eker@goo.csl.sri.com>
+
+	* S_DagNode.hh: use #include "gmpxx.h"
+	
+===================================Maude84c===========================================
+
 2003-08-29  Steven Eker  <eker@goo.csl.sri.com>
 
 	* S_Symbol.cc (memoStrategy): use applyReplaceNoOwise()
