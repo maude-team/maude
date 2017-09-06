@@ -1,3 +1,26 @@
+2010-03-01  Steven Eker  <eker@rho>
+
+	* natSet.hh (class NatSet): added decl for getShift()
+
+	* natSet.cc (NatSet::arrayContains): changed return type to
+	FastBool; use getShift(); shift word left rather than 1 right
+	(NatSet::getShift): added
+
+	* natSet.hh: changed return type to FastBool; shift word left
+	rather than 1 right
+
+	* macros.hh: added typedef FastBool
+
+2010-02-26  Steven Eker  <eker@rho>
+
+	* macros.hh (setOnLs, setOnGeq): deleted
+
+2010-02-19  Steven Eker  <eker@rho>
+
+	* macros.hh (getSignBit): commented out
+
+===================================Maude92c===========================================
+
 2009-12-02  Steven Eker  <eker@goo.csl.sri.com>
 
 	* pointerSet.cc (findEntry): move call to collision() inside loop

@@ -43,7 +43,7 @@ public:
   void preprocess();
   void compile(bool compileLhs);
   const RhsBuilder& getRhsBuilder() const;
-  int fastNrVariables() const;
+  long fastNrVariables() const;
 
   bool isOwise() const;
 
@@ -61,7 +61,7 @@ private:
   //	In this case we set fast to PreEquation::nrVariables; otherwise
   //	we set fast to DEFAULT.
   //
-  int fast;
+  long fast;  // avoid the need for explicit extension instruction on x86-64
   Term* rhs;
   RhsBuilder builder;
 };
@@ -72,7 +72,7 @@ Equation::isOwise() const
   return getFlag(OWISE);
 }
 
-inline int
+inline long
 Equation::fastNrVariables() const
 {
   return fast;

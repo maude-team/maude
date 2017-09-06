@@ -1,3 +1,9 @@
+Overview of Changes in Maude alpha92c
+=====================================
+* fixed metaPrettyPrint() bug in assoc, with paren case
+* tail recusion elimination for dag node comparison
+* various low level optimizations
+
 Overview of Changes in Maude alpha92b
 =====================================
 * fixed failure to GC in rules only search

@@ -90,6 +90,98 @@ FreeDagNode::getHashValue()
   return hashValue;
 }
 
+
+
+int
+FreeDagNode::compareArguments(const DagNode* other) const
+{
+  Assert(symbol() == other->symbol(), "symbols differ");
+  Symbol* s = symbol();
+  int nrArgs = s->arity();
+  if (nrArgs != 0)
+    {
+      const FreeDagNode* pd = this;  // last use of this pointer
+      const FreeDagNode* qd = static_cast<const FreeDagNode*>(other);
+      for (;;)
+	{
+	  DagNode** p = pd->argArray();
+	  DagNode** q = qd->argArray();
+	  
+	  for (int i = nrArgs - 1; i > 0; --i, ++p, ++q)
+	    {
+	      int r = (*p)->compare(*q);
+	      if (r != 0)
+		return r;
+	    }
+	  //
+	  //	Rightmost argument.
+	  //
+	  DagNode* pd2 = *p;
+	  DagNode* qd2 = *q;
+	  if (pd2 == qd2)
+	    return 0;  // same node
+	  Symbol* ps = pd2->symbol();
+	  Symbol* qs = qd2->symbol();
+	  if (ps != qs)
+	    return ps->compare(qs);  // different symbols
+	  if (ps != s)
+	    return pd2->compareArguments(qd2);  // same symbol, not ours
+	  //
+	  //	Next iteration will compare argument lists using tail recursion elimination.
+	  //
+	  pd = static_cast<const FreeDagNode*>(pd2);
+	  qd = static_cast<const FreeDagNode*>(qd2);
+	}
+    }
+  return 0;
+}
+
+
+/*
+int
+FreeDagNode::compareArguments(const DagNode* other) const
+{
+  Assert(symbol() == other->symbol(), "symbols differ");
+  int nrArgs = symbol()->arity();
+  if (nrArgs != 0)
+    {
+      const FreeDagNode* pd = this;
+      const FreeDagNode* qd = static_cast<const FreeDagNode*>(other);
+      for (;;)
+	{
+	  DagNode** p = pd->argArray();
+	  DagNode** q = qd->argArray();
+	  
+	  for (int i = nrArgs - 1; i > 0; --i, ++p, ++q)
+	    {
+	      int r = (*p)->compare(*q);
+	      if (r != 0)
+		return r;
+	    }
+	  //
+	  //	Rightmost argument.
+	  //
+	  DagNode* pd2 = *p;
+	  DagNode* qd2 = *q;
+	  if (pd2 == qd2)
+	    return 0;  // same node
+	  Symbol* s = pd2->symbol();
+	  if (int r = s->compare(qd2->symbol()))
+	    return r;  // different symbols
+	  if (s != symbol())
+	    return pd2->compareArguments(qd2);  // same symbol, not ours
+	  //
+	  //	Next iteration will compare argument lists using tail recursion elimination.
+	  //
+	  pd = static_cast<const FreeDagNode*>(pd2);
+	  qd = static_cast<const FreeDagNode*>(qd2);
+	}
+    }
+  return 0;
+}
+*/
+/*
+
 int
 FreeDagNode::compareArguments(const DagNode* other) const
 {
@@ -113,6 +205,8 @@ FreeDagNode::compareArguments(const DagNode* other) const
     }
   return 0;
 }
+
+*/
 
 DagNode*
 FreeDagNode::markArguments()

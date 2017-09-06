@@ -1,3 +1,121 @@
+2010-03-05  Steven Eker  <eker@rho>
+
+	* freeNet.cc (FreeNet::buildRemainders): try not zero terminating
+
+	* freeTerm.cc (FreeTerm::compareArguments): (DagNode* version) use
+	iterator to access Term args
+	(FreeTerm::compareArguments): fix bug in optimized version
+	(FreeTerm::compareArguments): try early loop termination
+	optimization
+	(FreeTerm::compareArguments): revert early loop termination
+	(FreeTerm::compareArguments): try getting nrArgs from
+	other->symbol()
+	(FreeTerm::compareArguments): do early loop termination properly
+	this time
+	(FreeTerm::compareArguments): use nrArgs to count down - saves a
+	register copy
+
+	* freeDagNode.cc (FreeDagNode::compareArguments): load symbol
+	into temporary; check symbols for equality before doing a symbol
+	comparison
+
+2010-03-04  Steven Eker  <eker@rho>
+
+	* freeDagNode.cc (FreeDagNode::compareArguments): rewrite using
+	tail recursion
+	(FreeDagNode::compareArguments): fix bug where we were comparing
+	the wrong nodes for equality (they were never equal so we failed
+	safe)
+	(FreeDagNode::compareArguments): fix bug where we were checking
+	the symbols of the wrong nodes
+
+	* freeRhsAutomaton.cc (FreeRhsAutomaton::fillOutArgs): delete
+	nrArgs arg
+	(FreeRhsAutomaton::replace): simplify
+	(FreeRhsAutomaton::construct): simplify
+
+2010-03-02  Steven Eker  <eker@rho>
+
+	* freeNetExec.cc (FreeNet::applyReplaceNoOwise2): fix bug where we
+	were checking p for equality rather than < 0 as it should be
+	de-pointerized code; make i long; load n->slot into long before
+	testing to get free sign extension
+	(FreeNet::applyReplace2): make i long; load n->slot into long
+	before testing to get free sign extension
+
+2010-02-26  Steven Eker  <eker@rho>
+
+	* freeNet.cc (FreeNet::addRemainderList): remove "too cute"
+	calculation of 1's complement in favor of explicit code since is
+	non-time critical
+
+2010-02-10  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeNetExec.cc (applyReplace2, applyReplaceFast2) 
+	(applyReplaceNoOwise2): made p long to avoid extension on 64 bit
+	machines
+	(applyReplace2): use ~i
+	(applyReplaceNoOwise2): use ~i
+	(applyReplaceFast2): use ~i
+	(applyReplace2, applyReplaceFast2, applyReplaceNoOwise2): pull
+	common i = ~i to end of loop - compiler already does this
+	opimization but it makes the code eaiser to read
+
+	* freeNet.hh (class FreeNet): reorganized struct TestNode to avoid
+	32bit->64bit extension for position on 64bit machines, and to put
+	field in likely order of use for cache friendliness
+
+2010-02-09  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeNet.hh (class FreeNet): rework TestNode to avoid pointers
+	into stack data structure
+
+	* freeNetExec.cc (applyReplaceNoOwise2): fix missing symbolIndex
+	update bug
+	(applyReplace2, applyReplaceFast2, applyReplaceNoOwise2):
+	depointerize stack acccess and use stackBase instead
+
+	* freeNet.cc (translateSlots): removed pointerization
+
+	* freeNet.hh (class FreeNet): fix longstanding TestNode
+	optimization bug on 64-bit machines
+
+	* freeNetExec.cc (applyReplaceFast2, applyReplace2) 
+	(applyReplaceNoOwise2): use diff < 0 rather than getSignBit(diff)
+	to let g++ do the logical shift trick
+
+2010-01-28  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeTernarySymbol.hh (class FreeTernarySymbol): added
+	NO_COPYING() in the hope of cutting down the amount of ctor code
+	gcc generates in the assembler file
+
+2010-01-22  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeTernarySymbol.cc (eqRewrite): use applyReplaceFast()
+
+	* freeBinarySymbol.cc (eqRewrite): use applyReplaceFast()
+
+	* freeUnarySymbol.cc (eqRewrite): use applyReplaceFast()
+
+	* freeNet.hh (applyReplaceFast): added
+	(class FreeNet): added decls for applyReplaceFast(),
+	applyReplaceFast2()
+
+	* freeNetExec.cc (applyReplaceFast2): added
+
+2010-01-07  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeNetExec.cc: rewritten using symbolIndex optimization
+
+	* freeNet.cc: rewritten to store symbolIndex rather than symbol
+	within TestNodes; added comments
+
+	* freeNet.hh (class FreeNet): replaced symbol field with
+	symbolIndex field in struct TestNode
+
+===================================Maude92c===========================================
+
 2009-12-01  Steven Eker  <eker@goo.csl.sri.com>
 
 	* freeTerm.cc (normalize): revert hash function

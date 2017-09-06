@@ -67,9 +67,8 @@ ACU_LhsAutomaton::eliminateGroundAliens(ACU_DagNode* subject)
 {
   FOR_EACH_CONST(i, Vector<GroundAlien>, groundAliens)
     {
-      int pos;
-      if (!(subject->binarySearch(i->term , pos)) ||
-	  (currentMultiplicity[pos] -= i->multiplicity) < 0)
+      int pos = subject->binarySearch(i->term);
+      if (pos < 0 || (currentMultiplicity[pos] -= i->multiplicity) < 0)
 	return false;
     }
   return true;

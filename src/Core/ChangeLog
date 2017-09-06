@@ -1,3 +1,52 @@
+2010-03-05  Steven Eker  <eker@rho>
+
+	* memoryCell.hh (MemoryCell::allocateStorage): check if
+	storageInUse > target and set needToCollectGarbage if so
+	(MemoryCell::okToCollectGarbage): don't check storageInUse >
+	target
+
+2010-03-03  Steven Eker  <eker@rho>
+
+	* substitution.hh (Substitution::clear): revert counter hack since
+	it appears to be a lose
+
+2010-03-02  Steven Eker  <eker@rho>
+
+	* substitution.hh (Substitution::clear): try keeping a counter on
+	the assumption that modern processors know how to do count down
+	loops without branch mispredicts
+
+2010-02-26  Steven Eker  <eker@rho>
+
+	* substitution.hh: reverted unroll changes since their effect was
+	questionable
+
+2010-02-25  Steven Eker  <eker@rho>
+
+	* substitution.hh (Substitution::Substitution): round up values
+	length up to even (both versions)
+	(Substitution::clone, Substitution::addNewVariable): round up
+	values length to even
+	(Substitution::clear): manually unroll loop
+
+	* equationTable.cc (EquationTable::applyReplace): make nrVariables
+	a long
+	(EquationTable::applyReplaceNoOwise): make nrVariable a long
+
+	* substitution.hh (Substitution::clear): try making size into a
+	unsigned int to allow zero extension when it is combined with a
+	pointer
+	(Substitution::clear): gcc isn't smart enough and forgets about
+	our "free" zero extension and does another explicit one - make
+	size a long instead
+
+2010-02-24  Steven Eker  <eker@rho>
+
+	* equation.hh (Equation::fastNrVariables): return long in the hope
+	having sign extension for free as part of a register load on x86-64
+	(class Equation): turn fast into a long since we still seem to be
+	getting a discrete cltq instruction
+
 2009-12-02  Steven Eker  <eker@goo.csl.sri.com>
 
 	* hashConsSet.hh (class HashConsSet): added ifdef'd
