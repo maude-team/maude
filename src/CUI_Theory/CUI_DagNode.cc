@@ -489,14 +489,62 @@ CUI_DagNode::indexVariables2(NarrowingVariableInfo& indices, int baseIndex)
 }
 
 DagNode*
-CUI_DagNode::instantiateWithReplacement(const Substitution& substitution, int argIndex, DagNode* replacement)
+CUI_DagNode::instantiateWithReplacement(const Substitution& substitution, const Vector<DagNode*>& eagerCopies, int argIndex, DagNode* replacement)
 {
   CUI_DagNode* d = new CUI_DagNode(symbol());
   int other = 1 - argIndex;
   d->argArray[argIndex] = replacement;
+
   DagNode* n = argArray[other];
-  if (DagNode* c = n->instantiate(substitution))  // changed under substitutition
+  DagNode* c = symbol()->eagerArgument(other) ?
+    n->instantiateWithCopies(substitution, eagerCopies) :
+    n->instantiate(substitution);  // lazy case - ok to use original unifier bindings since we won't evaluate them
+  if (c != 0)  // changed under substitutition
     n = c;
+
   d->argArray[other] = n;
   return d;
+}
+
+DagNode*
+CUI_DagNode::instantiateWithCopies2(const Substitution& substitution, const Vector<DagNode*>& eagerCopies)
+{
+  bool changed = false;
+  DagNode* a0 = argArray[0];
+  {
+    DagNode* n = symbol()->eagerArgument(0) ?
+      a0->instantiateWithCopies(substitution, eagerCopies) :
+      a0->instantiate(substitution);
+    if (n != 0)
+      {
+	a0 = n;
+	changed = true;
+      }
+  }
+ DagNode* a1 = argArray[1];
+  {
+    DagNode* n = symbol()->eagerArgument(1) ?
+      a1->instantiateWithCopies(substitution, eagerCopies) :
+      a1->instantiate(substitution);
+    if (n != 0)
+      {
+	a1 = n;
+	changed = true;
+      }
+  }
+
+  if (changed)
+    {
+      CUI_Symbol* s = symbol();
+      CUI_DagNode* d = new CUI_DagNode(s);
+      d->argArray[0] = a0;
+      d->argArray[1] = a1;
+      if(!(d->normalizeAtTop()) && a0->isGround() && a1->isGround())
+	{
+	  s->computeBaseSort(d);
+	  d->setGround();
+	}
+      return d;
+    }
+  return 0;
 }

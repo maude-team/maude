@@ -105,6 +105,14 @@ private:
 					Int64 solutionNr,
 					NarrowingSequenceSearch*& search,
 					Int64& lastSolutionNr);
+
+  static bool getCachedVariantSearch(MetaModule* m,
+				     FreeDagNode* subject,
+				     RewritingContext& context,
+				     Int64 solutionNr,
+				     VariantSearch*& search,
+				     Int64& lastSolutionNr);
+
   NarrowingSequenceSearch* makeNarrowingSequenceSearch(MetaModule* m,
 						       FreeDagNode* subject,
 						       RewritingContext& context) const;

@@ -316,6 +316,20 @@ FreeSymbol::stackArguments(DagNode* subject,
     }
 }
 
+Term*
+FreeSymbol::termify(DagNode* dagNode)
+{
+  int nrArgs = arity();
+  Vector<Term*> args(nrArgs);
+  DagNode** dagNodeArgs = safeCast(FreeDagNode*, dagNode)->argArray();
+  for (int i = 0; i < nrArgs; i++)
+    {
+      DagNode* d = dagNodeArgs[i];
+      args[i] = d->symbol()->termify(d);
+    }
+  return new FreeTerm(this, args);
+}
+
 //
 //	Unification code.
 //

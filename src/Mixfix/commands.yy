@@ -169,6 +169,18 @@ command		:	KW_SELECT		{ lexBubble(END_COMMAND, 1) }
 			  if (interpreter.setCurrentModule(moduleExpr, 1))
 			    interpreter.unify(lexerBubble, number);
 			}
+		|	genvars
+			{
+			  lexerCmdMode();
+			  moduleExpr.contractTo(0);
+			  number = NONE;
+			}
+			numberModuleTerm
+			{
+			  lexerInitialMode();
+			  if (interpreter.setCurrentModule(moduleExpr, 1))
+			    interpreter.generateVariants(lexerBubble, number);
+			}
 		|	optDebug KW_CONTINUE optNumber '.'
 			{
 			  interpreter.cont($3, $1);
@@ -446,6 +458,10 @@ command		:	KW_SELECT		{ lexBubble(END_COMMAND, 1) }
  */
 		|	error			{ lexerInitialMode(); }
 			'.'
+		;
+
+genvars		:	KW_VARS
+		|	KW_GENERATE KW_VARIANTS
 		;
 
 /*

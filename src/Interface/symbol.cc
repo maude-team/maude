@@ -196,6 +196,21 @@ Symbol::postOpDeclarationPass()
 {
 }
 
+/*
+Term*
+Symbol::termify(DagNode* dagNode)
+{
+  Vector<Term*> args;
+
+  for (DagArgumentIterator a(*dagNode); a.valid(); a.next())
+    {
+      DagNode* d = a.argument();
+      args.append(d->symbol()->termify(d));
+    }
+  return makeTerm(args);
+}
+*/
+
 void
 Symbol::finalizeSortInfo()
 {
@@ -209,6 +224,7 @@ Symbol::finalizeSortInfo()
 void
 Symbol::reset()
 {
+  resetEachEquation();
   resetEachRule();
 }
 

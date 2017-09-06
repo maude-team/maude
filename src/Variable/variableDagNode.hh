@@ -65,6 +65,7 @@ public:
   //	Narrowing member functions.
   //
   bool indexVariables2(NarrowingVariableInfo& indicies, int baseIndex);
+  DagNode* instantiateWithCopies2(const Substitution& substitution, const Vector<DagNode*>& eagerCopies);
   //
   //	Functions specific to VariableDagNode.
   //

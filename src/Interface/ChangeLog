@@ -1,3 +1,26 @@
+2012-04-13  Steven Eker  <eker@ape.csl.sri.com>
+
+	* dagNode.hh (D): added declarations for instantiateWithCopies(),
+	instantiateWithCopies2(); updated declaration for
+	instantiateWithReplacement(); added SAFE_INSTANTIATE macro
+	(instantiateWithCopies): added
+
+2012-04-05  Steven Eker  <eker@ape.csl.sri.com>
+
+	* term.hh (addContextVariables): added
+
+2012-03-29  Steven Eker  <eker@ape.csl.sri.com>
+
+	* symbol.hh (MemoTable): added decl for termify()
+
+	* symbol.cc (termify): added
+
+2012-03-28  Steven Eker  <eker@ape.csl.sri.com>
+
+	* symbol.cc (reset): call resetEachEquation()
+
+===================================Maude96==========================================
+
 2010-10-20  Steven Eker  <eker@rho>
 
 	* dagNode.hh (DagNode::upgradeSortIndex): added

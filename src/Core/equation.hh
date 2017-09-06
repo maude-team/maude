@@ -44,13 +44,17 @@ public:
   void compile(bool compileLhs);
   const RhsBuilder& getRhsBuilder() const;
   long fastNrVariables() const;
+  void print(ostream& s) const;
 
   bool isOwise() const;
+  void setVariant();
+  bool isVariant() const;
 
 private:
   enum Flags
   {
-    OWISE = 0x10
+    OWISE = 0x10,
+    VARIANT = 0x20
   };
 
   int traceBeginTrial(DagNode* subject, RewritingContext& context) const;
@@ -70,6 +74,18 @@ inline bool
 Equation::isOwise() const
 {
   return getFlag(OWISE);
+}
+
+inline bool
+Equation::isVariant() const
+{
+  return getFlag(VARIANT);
+}
+
+inline void
+Equation::setVariant()
+{
+  setFlags(VARIANT);
 }
 
 inline long

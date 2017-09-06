@@ -453,7 +453,9 @@ MixfixModule::makeAttributeProductions()
   rhs[0] = owise;
   parser->insertProduction(ATTRIBUTE, rhs, 0, emptyGather,
 			   MixfixParser::MAKE_OWISE_ATTRIBUTE);
-
+  rhs[0] = variant;
+  parser->insertProduction(ATTRIBUTE, rhs, 0, emptyGather,
+			   MixfixParser::MAKE_VARIANT_ATTRIBUTE);
   //
   //	Print items.
   //

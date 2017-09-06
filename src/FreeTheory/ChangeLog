@@ -1,3 +1,23 @@
+2012-04-13  Steven Eker  <eker@ape.csl.sri.com>
+
+	* freeDagNode.hh (DagNode): updated decl for
+	instantiateWithReplacement(); added decl for instantiateWithCopies2()
+
+	* freeDagNode.cc (instantiateWithCopies2): added
+	(instantiateWithReplacement): rewritten to handle eager positions correctly
+
+2012-03-30  Steven Eker  <eker@ape.csl.sri.com>
+
+	* freeSymbol.cc (termify): code cleaning
+
+2012-03-29  Steven Eker  <eker@ape.csl.sri.com>
+
+	* freeSymbol.hh (Symbol): added decl for termify()
+
+	* freeSymbol.cc (termify): added
+
+===================================Maude96===========================================
+
 2010-10-19  Steven Eker  <eker@rho>
 
 	* freeSymbol.hh (class FreeSymbol):

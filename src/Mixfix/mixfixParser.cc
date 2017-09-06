@@ -825,6 +825,11 @@ MixfixParser::makeAttributePart(int node,
 	    flags.setFlags(OWISE);
 	    break;
 	  }
+	case MAKE_VARIANT_ATTRIBUTE:
+	  {
+	    flags.setFlags(VARIANT);
+	    break;
+	  }
 	case MAKE_PRINT_ATTRIBUTE:
 	  {
 	    flags.setFlags(PRINT);
@@ -935,6 +940,9 @@ MixfixParser::makeStatementPart(int node,
 	WarningCheck(!(flags.getFlag(OWISE)),
 		     LineNumber(lineNumber) <<
 		     ": owise attribute not allowed for membership axioms.");
+	WarningCheck(!(flags.getFlag(VARIANT)),
+		     LineNumber(lineNumber) <<
+		     ": variant attribute not allowed for membership axioms.");
 	Term* lhs = makeTerm(parser.getChild(pairNode, 0));
 	Sort* sort = getSort(parser.getChild(pairNode, 1));
 	SortConstraint* sc = new SortConstraint(label, lhs, sort, condition);
@@ -956,6 +964,13 @@ MixfixParser::makeStatementPart(int node,
 	Equation* eq = new Equation(label, lhs, rhs, flags.getFlag(OWISE), condition);
 	if (flags.getFlag(NONEXEC))
 	  eq->setNonexec();
+	if (flags.getFlag(VARIANT))
+	  {
+	    if (condition.empty())
+	      eq->setVariant();
+	    else
+	      IssueWarning(LineNumber(lineNumber) << ": variant attribute not allowed for conditional equations.");
+	  }
 	eq->setLineNumber(lineNumber);
 	client.insertEquation(eq);
 	if (metadata != NONE)
@@ -970,6 +985,9 @@ MixfixParser::makeStatementPart(int node,
 	WarningCheck(!(flags.getFlag(OWISE)),
 		     LineNumber(lineNumber) <<
 		     ": owise attribute not allowed for rules.");
+	WarningCheck(!(flags.getFlag(VARIANT)),
+		     LineNumber(lineNumber) <<
+		     ": variant attribute not allowed for rules.");
 	Term* lhs = makeTerm(parser.getChild(pairNode, 0));
 	Term* rhs = makeTerm(parser.getChild(pairNode, 1));
 	Rule* rl = new Rule(label, lhs, rhs, condition);

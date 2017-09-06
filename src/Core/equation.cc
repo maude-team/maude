@@ -99,7 +99,26 @@ Equation::compile(bool compileLhs)
   setCompiled();
   TermBag availableTerms;  // terms available for reuse
   compileBuild(availableTerms, true);
-  rhs->compileTopRhs(builder, *this, availableTerms);
+
+  if (isVariant())
+    {
+      //
+      //	If the equation has the variant attribute, we disallow left->right sharing so
+      //	that the rhs can still be instantiated, even if the substitution was made by
+      //	unification.
+      //
+      TermBag dummy;
+      rhs->compileTopRhs(builder, *this, dummy);
+      //
+      //	For an equation with the variant attribute we always compile the lhs, even if the parent symbol
+      //	doesn't make use of the compiled lhs (in the free theory because it uses a discrimination
+      //	net for lhs matching).
+      //
+      compileLhs = true;
+    }
+  else
+    rhs->compileTopRhs(builder, *this, availableTerms);  // normal case
+
   compileMatch(compileLhs, true);
   //builder.dump(cerr, *this);
   builder.remapIndices(*this);
@@ -112,4 +131,10 @@ int
 Equation::traceBeginTrial(DagNode* subject, RewritingContext& context) const
 {
   return context.traceBeginEqTrial(subject, this);
+}
+
+void
+Equation::print(ostream& s) const
+{
+  s << this;
 }

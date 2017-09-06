@@ -165,15 +165,16 @@ NarrowingSearchState::getNarrowedDag(DagNode*& replacement) const
   Rule* r = getRule();
   Substitution& s = unificationProblem->getSolution();
   replacement =  r->getRhsBuilder().construct(s);
+  int nrSlots = r->getModule()->getMinimumSubstitutionSize();
+  /*
   //
   //	Need to clear unused entries in solution that we may have touched to avoid confusing
   //	unification algorithm.
   //
-  int nrSlots = r->getModule()->getMinimumSubstitutionSize();
-  for (int i = r->getNrProtectedVariables(); i < nrSlots; ++i)
+  for (int i = r->getNrRealVariables(); i < nrSlots; ++i)
     s.bind(i,0);
-  
-  return rebuildAndInstantiateDag(replacement, s).first;
+  */
+  return rebuildAndInstantiateDag(replacement, s, nrSlots, nrSlots + variableInfo.getNrVariables() - 1).first;
 }
 
 const Substitution&

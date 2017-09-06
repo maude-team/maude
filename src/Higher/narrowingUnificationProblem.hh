@@ -34,6 +34,8 @@
 //
 //	(4) Unifiers should be expressed in terms of "fresh" variables that reuse the variable name and
 //	substitution slot space.
+//	(5) Narrowing unification does not corrupt previously generated unifiers when making the next unifier, at
+//	the cost of more copying if an unsorted unifier corresponds to multiple order-sorted unifiers.
 //
 #ifndef _narrowingUnificationProblem_hh_
 #define _narrowingUnificationProblem_hh_
@@ -47,10 +49,11 @@ class NarrowingUnificationProblem : private SimpleRootContainer
   NO_COPYING(NarrowingUnificationProblem);
 
 public:
-  NarrowingUnificationProblem(Rule* rule,
+  NarrowingUnificationProblem(PreEquation* preEquation,
 			      DagNode* target,
 			      const NarrowingVariableInfo& variableInfo,
-			      FreshVariableGenerator* freshVariableGenerator);
+			      FreshVariableGenerator* freshVariableGenerator,
+			      bool odd = false);
 
   ~NarrowingUnificationProblem();
 
@@ -64,10 +67,11 @@ private:
   bool extractUnifier();
   bool explore(int index);
 
-  Rule* const rule;
+  PreEquation* const preEquation;
   DagNode* const target;
   const NarrowingVariableInfo& variableInfo;
   FreshVariableGenerator* const freshVariableGenerator;
+  const bool odd;
 
   int firstTargetSlot;
   int substitutionSize;

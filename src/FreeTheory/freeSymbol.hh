@@ -48,6 +48,7 @@ public:
   void stackArguments(DagNode* subject,
 		      Vector<RedexPosition>& stack,
 		      int parentIndex);
+  Term* termify(DagNode* dagNode);
   //
   //	Unification stuff.
   //

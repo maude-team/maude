@@ -333,3 +333,295 @@ Interpreter::showSearchGraph()
   if (xmlBuffer != 0)
     xmlBuffer->generateSearchGraph(savedRewriteSequenceSearch);
 }
+
+#include "narrowingUnificationProblem.hh"
+#include "equation.hh"
+#include "variableDagNode.hh"
+#include "unifierFilter.hh"
+#include "positionState.hh"
+#include "variantNarrowingSearchState.hh"
+
+#include "variantSearch.hh"
+
+void
+Interpreter::generateVariants(const Vector<Token>& subject, Int64 limit)
+{
+  if (DagNode* d = makeDag(subject))
+    {
+      if (getFlag(SHOW_COMMAND))
+	{
+	  UserLevelRewritingContext::beginCommand();
+	  cout << "get variants ";
+	  if (limit != NONE)
+	    cout  << '[' << limit << "] ";
+	  cout << "in " << currentModule << " : " << d << " ." << endl;
+	}
+      VisibleModule* fm = currentModule->getFlatModule();
+      startUsingModule(fm);
+
+      Timer timer(getFlag(SHOW_TIMING));
+
+      FreshVariableGenerator* freshVariableGenerator = new FreshVariableSource(fm);
+      UserLevelRewritingContext* context = new UserLevelRewritingContext(d);
+      //
+      //	Responsibility for deleting context and freshVariableGenerator is passed to ~VariantSearch().
+      //
+      VariantSearch vs(context, freshVariableGenerator);
+
+      const NarrowingVariableInfo& variableInfo = vs.getVariableInfo();
+      int nrVariables = variableInfo.getNrVariables();
+      
+      if (!(context->traceAbort()))
+	{
+	  printStats(timer, *context, getFlag(SHOW_TIMING));
+	  cout << endl;
+
+	  int counter = 0;
+	  const Vector<DagNode*>* variant;
+	  int nrFreeVariables;
+	  while (/*counter < limit &&*/ (variant = vs.getNextVariant(nrFreeVariables)))
+	    {
+	      ++counter;
+	      cout << "Variant #" << counter << endl;
+	      DagNode* d = (*variant)[nrVariables];
+	      cout << d->getSort() << ": " << d << '\n';
+	      for (int i = 0; i < nrVariables; ++i)
+		{
+		  DagNode* v = variableInfo.index2Variable(i);
+		  cout << v << " --> " << (*variant)[i] << endl;
+		}
+	      cout << endl;
+	    }
+	}
+    }
+}
+
+
+
+
+
+
+
+
+
+#if 0
+
+void
+Interpreter::generateVariants(const Vector<Token>& subject, Int64 limit)
+{
+  if (DagNode* d = makeDag(subject))
+    {
+      if (getFlag(SHOW_COMMAND))
+	{
+	  UserLevelRewritingContext::beginCommand();
+	  cout << "generate variants ";
+	  if (limit != NONE)
+	    cout  << '[' << limit << "] ";
+	  cout << "in " << currentModule << " : " << d << " ." << endl;
+	}
+      VisibleModule* fm = currentModule->getFlatModule();
+      startUsingModule(fm);
+
+      Timer timer(getFlag(SHOW_TIMING));
+
+      FreshVariableGenerator* freshVariableGenerator = new FreshVariableSource(fm);
+      int firstTargetSlot = fm->getMinimumSubstitutionSize();
+      
+      NarrowingVariableInfo variableInfo;
+      d->indexVariables(variableInfo, firstTargetSlot);  // this ensures we have no persistent forms
+      
+      int nrSubjectVariables = variableInfo.getNrVariables();
+      Substitution s(firstTargetSlot + nrSubjectVariables);
+      Vector<DagNode*> variantSubstitution(nrSubjectVariables);
+      for (int i = 0; i < nrSubjectVariables; ++i)
+	{
+	  Sort* sort = safeCast(VariableSymbol*, variableInfo.index2Variable(i)->symbol())->getSort();
+	  VariableDagNode* v = new VariableDagNode(freshVariableGenerator->getBaseVariableSymbol(sort),
+						   freshVariableGenerator->getFreshVariableName(i),
+						   firstTargetSlot + i);
+	  s.bind(firstTargetSlot + i, v);
+	  variantSubstitution[i] = v;
+	}
+
+      DagNode* newDag = d->instantiate(s);
+
+      cout << "newDag = " << newDag << endl;
+      for (int i = 0; i < nrSubjectVariables; ++i)
+	{
+	  DagNode* v = variableInfo.index2Variable(i);
+	  cout << v << " |-> " << variantSubstitution[i] << endl;
+	}
+      cout << endl;
+
+
+
+
+      UserLevelRewritingContext context(newDag);
+
+      newDag->computeTrueSort(context);
+
+      VariantNarrowingSearchState vnss(&context, variantSubstitution, freshVariableGenerator);
+
+      DagNode* variantTerm;
+      Vector<DagNode*> newVariantSubstitution;
+
+      int counter = 0;
+      while (vnss.findNextVariant(variantTerm, newVariantSubstitution))
+	{
+	  ++counter;
+	  cout << "Variant #" << counter << endl;
+	  cout << "term = " << variantTerm << endl;
+	  for (int i = 0; i < nrSubjectVariables; ++i)
+	    {
+	      DagNode* v = variableInfo.index2Variable(i);
+	      cout << v << " |-> " << newVariantSubstitution[i] << endl;
+	    }
+	  cout << endl;
+	}
+    }
+}
+
+#endif
+
+#if 0
+void
+Interpreter::generateVariants(const Vector<Token>& subject, Int64 limit)
+{
+  if (DagNode* d = makeDag(subject))
+    {
+      if (getFlag(SHOW_COMMAND))
+	{
+	  UserLevelRewritingContext::beginCommand();
+	  cout << "generate variants ";
+	  if (limit != NONE)
+	    cout  << '[' << limit << "] ";
+	  cout << "in " << currentModule << " : " << d << " ." << endl;
+	}
+      VisibleModule* fm = currentModule->getFlatModule();
+      startUsingModule(fm);
+
+      // Need to make variant generator object
+      Timer timer(getFlag(SHOW_TIMING));
+      cout << "Termified: " << d->symbol()->termify(d) << endl;
+
+      FreshVariableGenerator* freshVariableGenerator = new FreshVariableSource(fm);
+      int firstTargetSlot = fm->getMinimumSubstitutionSize();
+      
+      NarrowingVariableInfo variableInfo;
+      d->indexVariables(variableInfo, firstTargetSlot);  // this ensures we have no persistent forms
+      int nrSubjectVariables = variableInfo.getNrVariables();
+      //
+      //	Quick test - look for unifiers with equations
+      //
+      UnifierFilter unifierFilter(firstTargetSlot, nrSubjectVariables);
+      PositionState positionState(d, 0, 0, UNBOUNDED);
+      while (positionState.findNextPosition())
+	{
+	  DagNode* n = positionState.getDagNode();
+
+	  cout << "looking at subterm: " << n << endl;
+
+	  if (dynamic_cast<VariableDagNode*>(n) != 0)
+	    continue;  // don't unifier at variable positions
+
+	  int positionIndex = positionState.getPositionIndex();
+	  cout << "has position " << positionIndex << endl;
+
+
+	  const Vector<Equation*>& equations = n->symbol()->getEquations();  // should really consider collapses in d
+	  int nrEquations = equations.length();
+	  for (int i = 0; i < nrEquations; ++i)
+	    {
+	      Equation* eq = equations[i];
+	      PreEquation* peq = eq;
+	      NarrowingUnificationProblem* unificationProblem = new NarrowingUnificationProblem(peq,
+												n,
+												variableInfo,
+												freshVariableGenerator);
+	      while (unificationProblem->findNextUnifier())
+		{
+		  const Substitution& solution = unificationProblem->getSolution();
+
+		  UserLevelRewritingContext::printSubstitution(unificationProblem->getSolution(), *eq);
+		  for (int j = 0; j < nrSubjectVariables; ++j)
+		    {
+		      DagNode* v = variableInfo.index2Variable(j);
+		      DagNode* b = solution.value(firstTargetSlot + j);
+		      RewritingContext context(b);
+		      b->computeTrueSort(context);
+		      cout << v << " |-> " << b << endl;
+		    }
+		  cout << endl;
+
+		  unifierFilter.insertUnifier(solution, positionIndex, eq->getIndexWithinModule());
+		}
+	    }
+	}
+
+
+      /*
+      UnifierFilter unifierFilter(firstTargetSlot, nrSubjectVariables);
+
+      const Vector<Equation*>& equations = d->symbol()->getEquations();  // should really consider collapses in d
+      int nrEquations = equations.length();
+      for (int i = 0; i < nrEquations; ++i)
+	{
+	  Equation* eq = equations[i];
+	  PreEquation* peq = eq;
+	  NarrowingUnificationProblem* unificationProblem = new NarrowingUnificationProblem(peq,
+											    d,
+											    variableInfo,
+											    freshVariableGenerator);
+	  while (unificationProblem->findNextUnifier())
+	    {
+	      const Substitution& solution = unificationProblem->getSolution();
+	      UserLevelRewritingContext::printSubstitution(unificationProblem->getSolution(), *eq);
+
+	      for (int i = 0; i < nrSubjectVariables; ++i)
+		{
+		  DagNode* v = variableInfo.index2Variable(i);
+		  DagNode* b = solution.value(firstTargetSlot + i);
+		  RewritingContext context(b);
+		  b->computeTrueSort(context);
+
+		  cout << v << " |-> " << b << endl;
+		}
+	      cout << endl;
+	      //unifierFilter.insertUnifier(solution);
+	      unifierFilter.insertUnifier(solution, 1, i);
+	    }
+	}
+      */
+
+      cout << "dumping surviving unifiers" << endl;
+
+      const Substitution* solution;
+      int positionIndex;
+      int equationIndex;
+      while (unifierFilter.getNextSurvivingUnifier(solution, positionIndex, equationIndex))
+	{
+	  for (int i = 0; i < nrSubjectVariables; ++i)
+	    {
+	      DagNode* v = variableInfo.index2Variable(i);
+	      cout << v << " |-> " << solution->value(firstTargetSlot + i) << endl;
+	    }
+	  cout << endl;
+	}
+
+      /*
+      int nrSurvivors = unifierFilter.nrMostGeneral();
+      for (int i = 0; i < nrSurvivors; ++i)
+	{
+	  const Substitution& solution = unifierFilter.getUnifier(i);
+	  for (int i = 0; i < nrSubjectVariables; ++i)
+	    {
+	      DagNode* v = variableInfo.index2Variable(i);
+	      cout << v << " |-> " << solution.value(firstTargetSlot + i) << endl;
+	    }
+	  cout << endl;
+	}
+      */
+
+    }
+}
+#endif

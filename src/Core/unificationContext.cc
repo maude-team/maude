@@ -84,7 +84,7 @@ UnificationContext::makeFreshVariable(const ConnectedComponent* component)
   int freshVariableNr = index - nrOriginalVariables;
   freshVariableSorts.resize(freshVariableNr + 1);
   freshVariableSorts[freshVariableNr] = s;
-  int name = freshVariableGenerator->getFreshVariableName(freshVariableNr);
+  int name = freshVariableGenerator->getFreshVariableName(index /* freshVariableNr */);
   VariableDagNode* v = new VariableDagNode(vs, name, index);
   DebugAdvisory("created " << safeCast(DagNode*, v) << " with index = " << index);
   //cout << "created " << v << endl;

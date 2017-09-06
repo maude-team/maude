@@ -1,3 +1,20 @@
+2012-04-13  Steven Eker  <eker@ape.csl.sri.com>
+
+	* CUI_DagNode.hh (DagNode): updated decl for
+	instantiateWithReplacement(); added decl for instantiateWithCopies2()
+
+	* CUI_DagNode.cc (instantiateWithReplacement): rewritten to use
+	instantiateWithCopies() on eager positions
+	(instantiateWithCopies2): added
+
+2012-03-29  Steven Eker  <eker@ape.csl.sri.com>
+
+	* CUI_Symbol.hh (BinarySymbol): added declaration for termify
+
+	* CUI_Symbol.cc (termify): added
+
+===================================Maude96===========================================
+
 2011-11-22  Steven Eker  <eker@rho>
 
 	* CUI_UnificationSubproblem.cc (CUI_UnificationSubproblem::solve): use restoreFromClone()

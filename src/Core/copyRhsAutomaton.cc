@@ -59,7 +59,7 @@ DagNode*
 CopyRhsAutomaton::construct(Substitution& matcher)
 {
   DagNode* orig = matcher.value(originalIndex);
-  //cerr << "CopyRhsAutomaton::construct " << orig << endl;
+  DebugAdvisory("CopyRhsAutomaton::construct " << orig);
   DagNode* n = orig->copyEagerUptoReduced();
   orig->clearCopyPointers();
   matcher.bind(copyIndex, n);

@@ -1,3 +1,95 @@
+2012-05-23  Steven Eker  <eker@ape.csl.sri.com>
+
+	* freshVariableSource.cc (variableNameConflict): disable %
+	variables for the moment
+	(getFreshVariableName): disable % variables for the moment
+
+2012-05-22  Steven Eker  <eker@ape.csl.sri.com>
+
+	* search.cc (generateVariants): ignore limit as this seems to be
+	breaking things
+
+2012-05-21  Steven Eker  <eker@ape.csl.sri.com>
+
+	* search.cc (generateVariants): check for traceAbort()
+	(generateVariants): check counter against limit
+	(generateVariants): delete freshVariableGenerator when we are done
+	(generateVariants): pass responsibility for deleting context and
+	freshVariableGenerator to ~VariantSearch() - this cleans interface
+	for metalevel
+
+	* execute.cc (printStats): print number of narrowing and variant
+	narrowing steps
+
+	* userLevelRewritingContext.hh (ObjectSystemRewritingContext):
+	updated decl for traceVariantNarrowingStep()
+
+	* userLevelRewritingContext.cc (traceVariantNarrowingStep): take
+	originalVariables argument and use it when printing out
+	substitution part of old and new variants
+
+	* search.cc (generateVariants): make output of variants consistent
+	with previous conventions
+
+2012-05-18  Steven Eker  <eker@ape.csl.sri.com>
+
+	* userLevelRewritingContext.hh (ObjectSystemRewritingContext):
+	added decl for traceVariantNarrowingStep()
+
+	* userLevelRewritingContext.cc (traceVariantNarrowingStep): added
+
+2012-05-17  Steven Eker  <eker@ape.csl.sri.com>
+
+	* lexer.ll: allow get as a synonym for generate
+
+2012-05-11  Steven Eker  <eker@ape.csl.sri.com>
+
+	* freshVariableSource.cc (getFreshVariableName): support odd field
+	(variableNameConflict): check for names beginning with %
+
+	* freshVariableSource.hh (FreshVariableGenerator): added odd field
+	to getFreshVariableName() decl
+	(FreshVariableGenerator): added data member oddCache
+
+2012-05-03  Steven Eker  <eker@ape.csl.sri.com>
+
+	* prettyPrint.cc (printAttributes): print variant attribute
+
+	* importModule.cc (donateStatements2): copy variant attribute
+
+	* mixfixParser.cc (makeStatementPart): hande VARIANT attribute
+
+	* specialTokens.cc: added variant
+
+	* mixfixParser.hh (M): added MAKE_VARIANT_ATTRIBUTE to enum SemanticActions
+	(M): added VARIANT to enum Flags
+
+	* mixfixParser.cc (makeAttributePart): support VARIANT attribute
+
+	* makeGrammar.cc (makeAttributeProductions): added production for
+	variant attribute
+
+2012-04-19  Steven Eker  <eker@ape.csl.sri.com>
+
+	* search.cc (generateVariants): use new version of UnifierFilter
+	(generateVariants): examine all non-variable positions in dag
+
+2012-03-30  Steven Eker  <eker@ape.csl.sri.com>
+
+	* quotedIdentifierSymbol.cc (termify): added
+
+2012-03-29  Steven Eker  <eker@ape.csl.sri.com>
+
+	* search.cc (generateVariants): added
+
+2012-03-28  Steven Eker  <eker@ape.csl.sri.com>
+
+	* commands.yy (command): added syntax for generate variants command
+
+	* lexer.ll: added initial mode keywords generate and variant
+
+===================================Maude96===========================================
+
 2010-12-09  Steven Eker  <eker@rho>
 
 	* modules.yy (skipStrayArrow): added

@@ -158,6 +158,8 @@ loop					return KW_LOOP;
 cont|continue				return KW_CONTINUE;
 nar|narrow				return KW_NARROW;
 xg-narrow				return KW_XG_NARROW;
+generate|get				return KW_GENERATE;
+variants				return KW_VARIANTS;
 match					return KW_MATCH;
 xmatch					return KW_XMATCH;
 search					return KW_SEARCH;

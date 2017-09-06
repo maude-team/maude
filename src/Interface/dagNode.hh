@@ -119,8 +119,7 @@ public:
     UNIMPLEMENTED
   };
 
-  virtual ReturnResult computeBaseSortForGroundSubterms(
-);
+  virtual ReturnResult computeBaseSortForGroundSubterms();
   bool computeSolvedForm(DagNode* rhs, UnificationContext& solution, PendingUnificationStack& pending);
   virtual bool computeSolvedForm2(DagNode* rhs, UnificationContext& solution, PendingUnificationStack& pending);
 
@@ -131,6 +130,12 @@ public:
   //
   DagNode* instantiate(const Substitution& substitution);
   virtual DagNode* instantiate2(const Substitution& substitution) { CantHappen("Not implemented"); return 0; }
+  //
+  //	instantiateWithCopies() is similar but uses copies in eager positions.
+  //
+  DagNode* instantiateWithCopies(const Substitution& substitution, const Vector<DagNode*>& eagerCopies);
+  virtual DagNode* instantiateWithCopies2(const Substitution& substitution, const Vector<DagNode*>& eagerCopies)
+    { CantHappen("Not implemented"); return 0; }
   void computeGeneralizedSort(const SortBdds& sortBdds,
 			      const Vector<int>& realToBdd,  // first BDD variable for each free real variable
 			      Vector<Bdd>& generalizedSort);
@@ -139,7 +144,8 @@ public:
   //
   bool indexVariables(NarrowingVariableInfo& indices, int baseIndex);
   virtual bool indexVariables2(NarrowingVariableInfo& indices, int baseIndex);
-  virtual DagNode* instantiateWithReplacement(const Substitution& substitution, int argIndex, DagNode* newDag) { CantHappen("Not implemented"); return 0; }
+  virtual DagNode* instantiateWithReplacement(const Substitution& substitution, const Vector<DagNode*>& eagerCopies, int argIndex, DagNode* newDag)
+    { CantHappen("Not implemented"); return 0; }
   //
   //	These member functions must be defined for each derived class in theories
   //	that need extension.
@@ -217,6 +223,12 @@ private:
     DagNode* copyPointer;
   };
 };
+
+#define SAFE_INSTANTIATE(dagNode, eagerFlag, substitution, eagerCopies) \
+if (DagNode* _t = (eagerFlag ?						\
+		   dagNode->instantiateWithCopies(substitution, eagerCopies) : \
+		   dagNode->instantiate(substitution)))			\
+  dagNode = _t
 
 //
 //	Output function for DagNode must be defined by library user.
@@ -558,6 +570,12 @@ inline DagNode*
 DagNode::instantiate(const Substitution& substitution)
 {
   return isGround() ? 0 : instantiate2(substitution);
+}
+
+inline DagNode*
+DagNode::instantiateWithCopies(const Substitution& substitution, const Vector<DagNode*>& eagerCopies)
+{
+  return isGround() ? 0 : instantiateWithCopies2(substitution, eagerCopies);
 }
 
 inline void

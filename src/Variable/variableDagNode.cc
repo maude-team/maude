@@ -216,9 +216,22 @@ VariableDagNode::lastVariableInChain(Substitution& solution)
   return v;
 }
 
+//
+//	Narrowing code.
+//
+
 bool
 VariableDagNode::indexVariables2(NarrowingVariableInfo& indices, int baseIndex)
 {
   index = baseIndex + indices.variable2Index(this);
   return false;
+}
+
+DagNode*
+VariableDagNode::instantiateWithCopies2(const Substitution& /* substitution */, const Vector<DagNode*>& eagerCopies)
+{
+  //
+  //	We must be in an eager position so use the eager copy.
+  //
+  return eagerCopies[index];
 }
