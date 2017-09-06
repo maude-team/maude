@@ -1,3 +1,8 @@
+2017-04-20  Steven Eker  <eker@install.csl.sri.com>
+
+	* freeTerm.cc (partialCompareArguments): use EQUAL rather 0
+	as return value (EQUAL has value 0)
+
 2017-02-23  Steven Eker  <eker@install.csl.sri.com>
 
 	* freeDagNode.cc (instantiateWithCopies2): ifdef'd and commented out

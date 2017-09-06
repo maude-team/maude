@@ -1,3 +1,10 @@
+2017-04-06  Steven Eker  <eker@install.csl.sri.com>
+
+	* SMT_RewriteSequenceSearch.cc (findNextState): increment rule rewrite
+	count after we have a successful rewrite modulo SMT.
+
+===================================Maude112a===========================================
+
 2017-03-16  Steven Eker  <eker@install.csl.sri.com>
 
 	* SMT_RewriteSequenceSearch.hh (SimpleRootContainer): getRootContext() ->
@@ -31,6 +38,8 @@
 
 	* SMT_RewriteSequenceSearch.cc (makeConstraintFromCondition): call normalize()
 	on fragment
+
+===================================Maude110===========================================
 
 2014-10-29  Steven Eker  <eker@ape.csl.sri.com>
 

@@ -30,6 +30,15 @@
 class AssociativeSymbol : public BinarySymbol
 {
 public:
+  //
+  //	The idea here is that we can satisfy the sort on a binding
+  //	f(...) to variable X:s just by satisfying it on each subterm
+  //	if s is LIMIT_SORT for f. This allows making bindings during matching
+  //	without explicitly computing the sort of the binding.
+  //
+  //	If s is PURE_SORT we also know that if a single subterm has too
+  //	larger sort then the binding will definitely fail for X:s.
+  // 
   enum Structure
   {
     UNSTRUCTURED,	// no guarantees

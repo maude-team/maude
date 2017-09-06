@@ -143,9 +143,9 @@ rewrites: 2
 result NarrowingResult?: (failureIncomplete).NarrowingResult?
 ==========================================
 variant unify in BAR : h(X) =? g(f(Y, Z, Z))  .
-
 Warning: Unification modulo the theory of operator f has encountered an
     instance for which it may not be complete.
+
 Unifier #1
 rewrites: 4
 X --> f(#1:Foo, #2:Foo, #2:Foo, #1:Foo, #2:Foo)
@@ -171,9 +171,9 @@ Y --> f(#1:Foo, #1:Foo)
 Z --> #1:Foo
 
 No more unifiers.
+rewrites: 4
 Warning: Some unifiers may have been missed due to incomplete unification
     algorithm(s).
-rewrites: 4
 ==========================================
 reduce in META-LEVEL : metaNarrowingApply(['BAR], 'g['f['Y:Foo,'Z:Foo,'Z:Foo]],
     'nar, empty, '#, 0) .

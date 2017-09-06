@@ -62,5 +62,18 @@ class Entity;
 class SyntaxContainer;
 class FreshVariableSource;
 class PrintAttribute;
+class CacheableRewritingContext;
+
+//
+//	Support for quantifying just active computations (rather than
+//	including waits for input).
+//
+#ifdef QUANTIFY_REWRITING
+#define QUANTIFY_START()	quantify_start_recording_data()
+#define QANTIFY_STOP()		quantify_stop_recording_data()
+#else
+#define QUANTIFY_START()
+#define QUANTIFY_STOP()
+#endif
 
 #endif

@@ -66,7 +66,7 @@
 
 //	front end class definitions
 #include "timer.hh"
-#include "userLevelRewritingContext.hh"
+#include "cacheableRewritingContext.hh"
 #include "maudemlBuffer.hh"
 #include "syntacticPreModule.hh"
 #include "view.hh"
@@ -80,6 +80,8 @@
 #include "execute.cc"
 #include "match.cc"
 #include "unify.cc"
+#include "variantUnify.cc"
+#include "getVariants.cc"
 #include "search.cc"
 #include "loopMode.cc"
 #include "erewrite.cc"
@@ -95,11 +97,7 @@ Interpreter::Interpreter()
   currentModule = 0;
   currentView = 0;
 
-  savedContext = 0;
-  savedMatchSearchState = 0;
-  savedUnificationProblem = 0;
-  savedRewriteSequenceSearch = 0;
-  savedStrategicSearch = 0;
+  savedState = 0;
   savedModule = 0;
   continueFunc = 0;
 }

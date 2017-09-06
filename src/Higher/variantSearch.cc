@@ -67,6 +67,7 @@ VariantSearch::VariantSearch(RewritingContext* context,
     blockerDags(blockerDags),  // shallow copy
     freshVariableGenerator(freshVariableGenerator),
     unificationMode(unificationMode),
+    irredundantMode(irredundantMode),
     deleteFreshVariableGenerator(deleteFreshVariableGenerator),
     firstVariableFamily((disallowedVariableFamily == 0) ? 1 : 0),
     secondVariableFamily((disallowedVariableFamily == 2) ? 1 : 2)

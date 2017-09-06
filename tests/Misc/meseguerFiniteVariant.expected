@@ -247,7 +247,6 @@ rewrites: 10
 i --> %1:Int
 j --> %2:Int
 l --> %2:Int
-
 ==========================================
 variant unify in INT-ACU : j =? l  .
 
@@ -602,7 +601,6 @@ Unifier #23
 rewrites: 248
 M --> %1:NeMSet,%2:NeMSet
 M' --> %1:NeMSet,%1:NeMSet,%1:NeMSet,%2:NeMSet
-
 ==========================================
 get variants in HF-SETS-CONJ : M,M' .
 

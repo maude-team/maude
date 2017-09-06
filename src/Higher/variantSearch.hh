@@ -57,6 +57,7 @@ public:
 		bool checkVariableNames = true);
   ~VariantSearch();
 
+  bool getIrredundantMode() const;
   const NarrowingVariableInfo& getVariableInfo() const;
   const Vector<DagNode*>* getNextVariant(int& nrFreeVariables, int& parentIndex, bool& moreInLayer);
   const Vector<DagNode*>* getNextUnifier(int& nrFreeVariables, int& variableFamily);
@@ -87,6 +88,7 @@ private:
   const Vector<DagNode*> blockerDags;
   FreshVariableGenerator* const freshVariableGenerator;
   const bool unificationMode;
+  const bool irredundantMode;
   const bool deleteFreshVariableGenerator;
   const int firstVariableFamily;
   const int secondVariableFamily;
@@ -107,6 +109,12 @@ private:
 
   Vector<DagNode*> protectedVariant;
 };
+
+inline bool
+VariantSearch::getIrredundantMode() const
+{
+  return irredundantMode;
+}
 
 inline const NarrowingVariableInfo&
 VariantSearch::getVariableInfo() const

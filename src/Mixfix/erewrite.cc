@@ -38,7 +38,7 @@ Interpreter::eRewrite(const Vector<Token>& subject, Int64 limit, Int64 gas, bool
 	  if (xmlBuffer != 0)
 	    xmlBuffer->generateErewrite(d, limit, gas);
 	}
-      UserLevelRewritingContext* context = new UserLevelRewritingContext(d);
+      CacheableRewritingContext* context = new CacheableRewritingContext(d);
       context->setObjectMode(ObjectSystemRewritingContext::EXTERNAL);
       VisibleModule* fm = currentModule->getFlatModule();
 
@@ -94,9 +94,9 @@ Interpreter::doExternalRewriting(UserLevelRewritingContext* context, Int64 limit
 void
 Interpreter::eRewriteCont(Int64 limit, bool debug)
 {
-  UserLevelRewritingContext* context = savedContext;
+  CacheableRewritingContext* context = safeCast(CacheableRewritingContext*, savedState);
   VisibleModule* fm = savedModule;
-  savedContext = 0;
+  savedState = 0;
   savedModule = 0;
   continueFunc = 0;
   if (xmlBuffer != 0 && getFlag(SHOW_COMMAND))

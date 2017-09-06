@@ -135,7 +135,11 @@ EXTRA_DIST = \
 	bottom.yy \
 	lexer.ll \
 	graphPrint.cc \
-	ansiEscapeSequences.cc
+	ansiEscapeSequences.cc \
+	narrowing.cc \
+	variantUnify.cc \
+	getVariants.cc \
+	smtSearch.cc
 
 noinst_HEADERS = \
 	renaming.hh \
@@ -174,4 +178,5 @@ noinst_HEADERS = \
 	xmlBuffer.hh \
 	syntaxContainer.hh \
 	freshVariableSource.hh \
-	variableGenerator.hh
+	variableGenerator.hh \
+	cacheableRewritingContext.hh

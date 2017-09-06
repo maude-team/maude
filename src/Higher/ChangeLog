@@ -1,3 +1,13 @@
+2017-03-30  Steven Eker  <eker@install.csl.sri.com>
+
+	* variantSearch.hh (SimpleRootContainer): added data member
+	irredundantMode
+	(getIrredundantMode): added
+
+	* variantSearch.cc (VariantSearch): initialize irredundantMode
+
+===================================Maude112a===========================================
+
 2017-03-10  Steven Eker  <eker@install.csl.sri.com>
 
 	* narrowingSequenceSearch.hh (getContext): don't Assert() that

@@ -25,12 +25,17 @@
 //
 #ifndef _stategicSearch_hh_
 #define _stategicSearch_hh_
-#include<list>
+#include <list>
+#include "cacheableState.hh"
 #include "hashConsSet.hh"
 #include "strategicTask.hh"
 #include "strategyStackManager.hh"
 
-class StrategicSearch : public HashConsSet, public StrategyStackManager, private StrategicTask
+class StrategicSearch
+ : public CacheableState,
+   public HashConsSet,
+   public StrategyStackManager,
+   private StrategicTask
 {
   NO_COPYING(StrategicSearch);
 

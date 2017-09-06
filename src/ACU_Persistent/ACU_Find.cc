@@ -64,6 +64,13 @@ ACU_RedBlackNode::findFirstPotentialMatch(ACU_RedBlackNode* root,
 					  const Substitution& partial,
 					  ACU_Stack& path)
 {
+  //
+  //	Return true if the red-black tree contains a potential
+  //	match for key, given a partial substitution for key's
+  //	variables, or false otherwise.
+  //	In the true case, path holds the path to the left most
+  //	potential match.
+  //
   int explore = 0;
   do
     {

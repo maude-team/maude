@@ -214,7 +214,7 @@ FreeTerm::partialCompareArguments(const Substitution& partialSubstitution,
 	  ++da;
 	}
     }
-  return 0;
+  return EQUAL;
 }
 
 void

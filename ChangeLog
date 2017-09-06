@@ -1,3 +1,9 @@
+2017-04-13  Steven Eker  <eker@install.csl.sri.com>
+
+	* tests/Misc/continue.maude: created
+
+===================================Maude112a===========================================
+
 2017-03-10  Steven Eker  <eker@install.csl.sri.com>
 
 	* tests/Meta/metaNarrow.maude: added metaNarrowingSearch() examples

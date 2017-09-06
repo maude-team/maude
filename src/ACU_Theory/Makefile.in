@@ -118,7 +118,8 @@ am_libACU_Theory_a_OBJECTS = libACU_Theory_a-ACU_Symbol.$(OBJEXT) \
 	libACU_Theory_a-ACU_DagArgumentIterator.$(OBJEXT) \
 	libACU_Theory_a-ACU_TreeDagArgumentIterator.$(OBJEXT) \
 	libACU_Theory_a-ACU_LazySubproblem.$(OBJEXT) \
-	libACU_Theory_a-ACU_UnificationSubproblem2.$(OBJEXT)
+	libACU_Theory_a-ACU_UnificationSubproblem2.$(OBJEXT) \
+	libACU_Theory_a-ACU_BndVarLhsAutomaton.$(OBJEXT)
 libACU_Theory_a_OBJECTS = $(am_libACU_Theory_a_OBJECTS)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -317,7 +318,8 @@ libACU_Theory_a_SOURCES = \
 	ACU_DagArgumentIterator.cc \
 	ACU_TreeDagArgumentIterator.cc \
 	ACU_LazySubproblem.cc \
-	ACU_UnificationSubproblem2.cc
+	ACU_UnificationSubproblem2.cc \
+	ACU_BndVarLhsAutomaton.cc
 
 EXTRA_DIST = \
 	ACU_LhsCompiler0.cc \
@@ -354,7 +356,8 @@ noinst_HEADERS = \
 	ACU_TreeDagArgumentIterator.hh \
 	ACU_TreeDagNode.hh \
 	ACU_VarLhsAutomaton.hh \
-	ACU_UnificationSubproblem2.hh
+	ACU_UnificationSubproblem2.hh \
+	ACU_BndVarLhsAutomaton.hh
 
 all: all-am
 
@@ -407,6 +410,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libACU_Theory_a-ACU_ArgumentIterator.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libACU_Theory_a-ACU_BaseDagNode.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libACU_Theory_a-ACU_BndVarLhsAutomaton.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libACU_Theory_a-ACU_CollectorLhsAutomaton.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libACU_Theory_a-ACU_DagArgumentIterator.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libACU_Theory_a-ACU_DagNode.Po@am__quote@
@@ -704,6 +708,20 @@ libACU_Theory_a-ACU_UnificationSubproblem2.obj: ACU_UnificationSubproblem2.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='ACU_UnificationSubproblem2.cc' object='libACU_Theory_a-ACU_UnificationSubproblem2.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libACU_Theory_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libACU_Theory_a-ACU_UnificationSubproblem2.obj `if test -f 'ACU_UnificationSubproblem2.cc'; then $(CYGPATH_W) 'ACU_UnificationSubproblem2.cc'; else $(CYGPATH_W) '$(srcdir)/ACU_UnificationSubproblem2.cc'; fi`
+
+libACU_Theory_a-ACU_BndVarLhsAutomaton.o: ACU_BndVarLhsAutomaton.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libACU_Theory_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libACU_Theory_a-ACU_BndVarLhsAutomaton.o -MD -MP -MF $(DEPDIR)/libACU_Theory_a-ACU_BndVarLhsAutomaton.Tpo -c -o libACU_Theory_a-ACU_BndVarLhsAutomaton.o `test -f 'ACU_BndVarLhsAutomaton.cc' || echo '$(srcdir)/'`ACU_BndVarLhsAutomaton.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libACU_Theory_a-ACU_BndVarLhsAutomaton.Tpo $(DEPDIR)/libACU_Theory_a-ACU_BndVarLhsAutomaton.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='ACU_BndVarLhsAutomaton.cc' object='libACU_Theory_a-ACU_BndVarLhsAutomaton.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libACU_Theory_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libACU_Theory_a-ACU_BndVarLhsAutomaton.o `test -f 'ACU_BndVarLhsAutomaton.cc' || echo '$(srcdir)/'`ACU_BndVarLhsAutomaton.cc
+
+libACU_Theory_a-ACU_BndVarLhsAutomaton.obj: ACU_BndVarLhsAutomaton.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libACU_Theory_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libACU_Theory_a-ACU_BndVarLhsAutomaton.obj -MD -MP -MF $(DEPDIR)/libACU_Theory_a-ACU_BndVarLhsAutomaton.Tpo -c -o libACU_Theory_a-ACU_BndVarLhsAutomaton.obj `if test -f 'ACU_BndVarLhsAutomaton.cc'; then $(CYGPATH_W) 'ACU_BndVarLhsAutomaton.cc'; else $(CYGPATH_W) '$(srcdir)/ACU_BndVarLhsAutomaton.cc'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libACU_Theory_a-ACU_BndVarLhsAutomaton.Tpo $(DEPDIR)/libACU_Theory_a-ACU_BndVarLhsAutomaton.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='ACU_BndVarLhsAutomaton.cc' object='libACU_Theory_a-ACU_BndVarLhsAutomaton.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libACU_Theory_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libACU_Theory_a-ACU_BndVarLhsAutomaton.obj `if test -f 'ACU_BndVarLhsAutomaton.cc'; then $(CYGPATH_W) 'ACU_BndVarLhsAutomaton.cc'; else $(CYGPATH_W) '$(srcdir)/ACU_BndVarLhsAutomaton.cc'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique

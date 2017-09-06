@@ -365,13 +365,7 @@ UserLevelRewritingContext::traceVariantNarrowingStep(Equation* equation,
   if (interpreter.getFlag(Interpreter::TRACE_WHOLE))
     {
       cout << "\nOld variant: " << root() << '\n';
-      int nrBindings = oldVariantSubstitution.size();
-      for (int i = 0; i < nrBindings; ++i)
-	{
-	  DagNode* v = originalVariables.index2Variable(i);
-	  DagNode* d = oldVariantSubstitution[i];
-	  cout << v << " --> " << d << '\n';
-	}
+      printSubstitution(oldVariantSubstitution, originalVariables);
       cout << '\n';
     }
   if (interpreter.getFlag(Interpreter::TRACE_REWRITE))
@@ -379,13 +373,7 @@ UserLevelRewritingContext::traceVariantNarrowingStep(Equation* equation,
   if (interpreter.getFlag(Interpreter::TRACE_WHOLE))
     {
       cout << "\nNew variant: " << newState << '\n';
-      int nrBindings = newVariantSubstitution.size();
-      for (int i = 0; i < nrBindings; ++i)
-	{
-	  DagNode* v = originalVariables.index2Variable(i);
-	  DagNode* d = newVariantSubstitution[i];
-	  cout << v << " --> " << d << '\n';
-	}
+      printSubstitution(newVariantSubstitution, originalVariables);
       cout << '\n';
     }
 }
@@ -434,6 +422,19 @@ UserLevelRewritingContext::tracePreScApplication(DagNode* subject, const SortCon
   //
   if (interpreter.getFlag(Interpreter::TRACE_REWRITE))
     cout << subject->getSort() << ": " << subject << " becomes " << sc->getSort() << '\n';  // BUG
+}
+
+void
+UserLevelRewritingContext::printSubstitution(const Vector<DagNode*>& substitution,
+					     const NarrowingVariableInfo& variableInfo)
+{
+  int nrVariables = substitution.size();
+  for (int i = 0; i < nrVariables; ++i)
+    {
+      DagNode* v = variableInfo.index2Variable(i);
+      DagNode* b = substitution[i];
+      cout << v << " --> " << b << '\n';
+    }
 }
 
 void

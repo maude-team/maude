@@ -440,7 +440,8 @@ TESTS = \
 	assocUnification \
 	sreduce \
 	smtTest \
-	narrow
+	narrow \
+	continue
 
 MAUDE_FILES = \
 	dekker.maude \
@@ -461,7 +462,8 @@ MAUDE_FILES = \
 	assocUnification.maude \
 	sreduce.maude \
 	smtTest.maude \
-	narrow.maude
+	narrow.maude \
+	continue.maude
 
 RESULT_FILES = \
 	dekker.expected \
@@ -482,7 +484,8 @@ RESULT_FILES = \
 	assocUnification.expected \
 	sreduce.expected \
 	smtTest.expected \
-	narrow.expected
+	narrow.expected \
+	continue.expected
 
 EXTRA_DIST = $(TESTS) $(MAUDE_FILES) $(RESULT_FILES)
 all: all-am
@@ -796,6 +799,13 @@ smtTest.log: smtTest
 narrow.log: narrow
 	@p='narrow'; \
 	b='narrow'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+continue.log: continue
+	@p='continue'; \
+	b='continue'; \
 	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \

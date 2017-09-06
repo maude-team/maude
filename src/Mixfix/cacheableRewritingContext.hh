@@ -2,7 +2,7 @@
 
     This file is part of the Maude 2 interpreter.
 
-    Copyright 1997-2003 SRI International, Menlo Park, CA 94025, USA.
+    Copyright 2017 SRI International, Menlo Park, CA 94025, USA.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,46 +21,24 @@
 */
 
 //
-//	Class for integer Bin->Dec conversion by multiply and add.
+//      Class for user level rewriting contexts that can be saved for
+//	continuation.
 //
-#ifndef _decBuf_hh_
-#define _decBuf_hh_
-#include <deque>
+#ifndef _cacheableRewritingContext_hh_
+#define _cacheableRewritingContext_hh_
+#include "userLevelRewritingContext.hh"
+#include "cacheableState.hh"
 
-class DecBuf
+class CacheableRewritingContext : public UserLevelRewritingContext, public CacheableState
 {
 public:
-  void zero();
-  void insertDigit(int d);
-  int nrDigits();
-  int nrTrailingZeros();
-  void shiftAndAdd(int shift, Uint64 c);
-  void ascii(char* s, int length);
-  void round(int roundTo, bool fracGtZero, int fracCmpHalf);
-
-private:
-  void increment(int startDigit);
-
-  deque<char> buf;
+  CacheableRewritingContext(DagNode* root);
 };
 
-inline void
-DecBuf::zero()
+inline
+CacheableRewritingContext::CacheableRewritingContext(DagNode* root)
+  : UserLevelRewritingContext(root)
 {
-  buf.clear();
-}
-
-inline void
-DecBuf::insertDigit(int d)
-{
-  Assert(d >= 0 && d <= 9, "bad digit");
-  buf.push_front(d);
-}
-
-inline int
-DecBuf::nrDigits()
-{
-  return buf.size();
 }
 
 #endif

@@ -38,6 +38,8 @@ Interpreter::sRewrite(const Vector<Token>& subjectAndStrategy, Int64 limit, bool
   if (getFlag(SHOW_COMMAND))
     {
       UserLevelRewritingContext::beginCommand();
+      if (debug)
+	cout << "debug ";
       cout << "srewrite ";
       if (limit != NONE)
 	cout << '[' << limit << "] ";
@@ -47,6 +49,9 @@ Interpreter::sRewrite(const Vector<Token>& subjectAndStrategy, Int64 limit, bool
     }
 
   startUsingModule(fm);
+  if (debug)
+    UserLevelRewritingContext::setDebug();
+
   Timer timer(getFlag(SHOW_TIMING));
   UserLevelRewritingContext* context = new UserLevelRewritingContext(subjectDag);
   context->reduce();
@@ -60,7 +65,7 @@ Interpreter::sRewrite(const Vector<Token>& subjectAndStrategy, Int64 limit, bool
     }
 
   Assert(context->root() != 0, "null root");
-  StrategicSearch* state = new StrategicSearch(context, strategy);  // pass ownership of context and  strategy
+  StrategicSearch* state = new StrategicSearch(context, strategy);  // pass ownership of context and strategy
   doStrategicSearch(timer, fm, state, 0, limit);
 }
 
@@ -68,11 +73,11 @@ void
 Interpreter::doStrategicSearch(Timer& timer,
 			       VisibleModule* module,
 			       StrategicSearch* state,
-			       int solutionCount,
-			       int limit)
+			       Int64 solutionCount,
+			       Int64 limit)
 {
   RewritingContext* context = state->getContext();
-  int i = 0;
+  Int64 i = 0;
   for (; i != limit; ++i)  // limit could be -1 for "no limit"
     {
       DagNode* d = state->findNextSolution();
@@ -85,6 +90,7 @@ Interpreter::doStrategicSearch(Timer& timer,
 	    printStats(timer, *context, getFlag(SHOW_TIMING));
 	  break;
 	}
+
       ++solutionCount;
       cout << "\nSolution " << solutionCount<< '\n';
       if (getFlag(SHOW_STATS))
@@ -92,23 +98,42 @@ Interpreter::doStrategicSearch(Timer& timer,
       cout << "result " << d->getSort() << ": " << d << '\n';
     }
   clearContinueInfo();  // just in case debugger left info
-  context->clearCount();
-  savedStrategicSearch = state;
-  savedSolutionCount = solutionCount;
-  savedModule = module;
-  if (i == limit)  // possible to continue
-    continueFunc = &Interpreter::sRewriteCont;
+  if (i == limit)
+    {
+      //
+      //	The loop terminated because we hit user's limit so 
+      //	continuation is still possible. We save the state,
+      //	solutionCount and module, and set a continutation function.
+      //
+      context->clearCount();
+      savedState = state;
+      savedSolutionCount = solutionCount;
+      savedModule = module;
+      continueFunc = &Interpreter::sRewriteCont;
+    }
+  else
+    {
+      //
+      //	Either user aborted or we ran out of solutions; either
+      //	way we need to tidy up.
+      //
+      delete state;
+      module->unprotect();
+    }
   UserLevelRewritingContext::clearDebug();
 }
 
 void
-Interpreter::sRewriteCont(Int64 limit, bool /* debug */)
+Interpreter::sRewriteCont(Int64 limit, bool debug)
 {
-  StrategicSearch* state = savedStrategicSearch;
+  StrategicSearch* state = safeCast(StrategicSearch*, savedState);
   VisibleModule* fm = savedModule;
-  savedStrategicSearch = 0;
+  savedState = 0;
   savedModule = 0;
   continueFunc = 0;
+
+  if (debug)
+    UserLevelRewritingContext::setDebug();
 
   Timer timer(getFlag(SHOW_TIMING));
   doStrategicSearch(timer, fm, state, savedSolutionCount, limit);
