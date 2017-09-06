@@ -1,3 +1,9 @@
+Overview of Changes in alpha112
+===============================
+* fixed a longstanding bug in the comparison of NatSets that
+  amongst other things broke the LTL -> VWAA conversion in the
+  model checker
+
 Overview of Changes in alpha111b
 ================================
 * optimized handling of stacks of states in conditions

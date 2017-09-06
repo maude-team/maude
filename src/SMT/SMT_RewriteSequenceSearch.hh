@@ -66,7 +66,7 @@ public:
   const mpz_class& getMaxVariableNumber() const;  // largest fresh variable appearing in substitution or constraint
 
   const NatSet& getSMT_VarIndices() const;
-  RewritingContext* getRootContext() const;
+  RewritingContext* getContext() const;
 
   int findNextState();  // returns NONE or state number
 
@@ -148,7 +148,7 @@ SMT_RewriteSequenceSearch::getSMT_VarIndices() const
 }
 
 inline RewritingContext*
-SMT_RewriteSequenceSearch::getRootContext() const
+SMT_RewriteSequenceSearch::getContext() const
 {
   return states[0]->context;
 }

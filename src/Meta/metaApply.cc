@@ -24,33 +24,6 @@
 //	Code for metaApply and metaXapply descent functions.
 //
 
-local_inline bool
-MetaLevelOpSymbol::getCachedRewriteSearchState(MetaModule* m,
-					       FreeDagNode* subject,
-					       RewritingContext& context,
-					       Int64 solutionNr,
-					       RewriteSearchState*& state,
-					       Int64& lastSolutionNr)
-{
-  CacheableState* cachedState;
-  if (m->remove(subject, cachedState, lastSolutionNr))
-    {
-      if (lastSolutionNr <= solutionNr)
-	{
-	  state = safeCast(RewriteSearchState*, cachedState);
-	  //
-	  //	The parent context pointer of the root context in the
-	  //	RewriteSearchState object is possibly stale.
-	  //
-	  safeCast(UserLevelRewritingContext*, state->getContext())->
-	    beAdoptedBy(safeCast(UserLevelRewritingContext*, &context));
-	  return true;
-	}
-      delete cachedState;
-    }
-  return false;
-}
-
 bool
 MetaLevelOpSymbol::metaApply(FreeDagNode* subject, RewritingContext& context)
 {
@@ -65,7 +38,7 @@ MetaLevelOpSymbol::metaApply(FreeDagNode* subject, RewritingContext& context)
 	{
 	  RewriteSearchState* state;
 	  Int64 lastSolutionNr;
-	  if (getCachedRewriteSearchState(m, subject, context, solutionNr, state, lastSolutionNr))
+	  if (getCachedStateObject(m, subject, context, solutionNr, state, lastSolutionNr))
 	    m->protect();  // Use cached state
 	  else
 	    {
@@ -178,7 +151,7 @@ MetaLevelOpSymbol::metaXapply(FreeDagNode* subject, RewritingContext& context)
 	{
 	  RewriteSearchState* state;
 	  Int64 lastSolutionNr;
-	  if (getCachedRewriteSearchState(m, subject, context, solutionNr, state, lastSolutionNr))
+	  if (getCachedStateObject(m, subject, context, solutionNr, state, lastSolutionNr))
 	    m->protect();  // Use cached state
 	  else
 	    {

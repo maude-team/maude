@@ -65,36 +65,10 @@ private:
   static DagNode* term2Dag(Term* t);
   static RewritingContext* term2RewritingContext(Term* term, RewritingContext& context);
 
-  static bool getCachedRewriteSearchState(MetaModule* m,
-					  FreeDagNode* subject,
-					  RewritingContext& context,
-					  Int64 solutionNr,
-					  RewriteSearchState*& state,
-					  Int64& lastSolutionNr);
-  static bool getCachedMatchSearchState(MetaModule* m,
-					FreeDagNode* subject,
-					RewritingContext& context,
-					Int64 solutionNr,
-					MatchSearchState*& state,
-					Int64& lastSolutionNr);
-  static bool getCachedRewriteSequenceSearch(MetaModule* m,
-					     FreeDagNode* subject,
-					     RewritingContext& context,
-					     Int64 solutionNr,
-					     RewriteSequenceSearch*& search,
-					     Int64& lastSolutionNr);
-  static bool getCachedUnificationProblem(MetaModule* m,
-					  FreeDagNode* subject,
-					  Int64 solutionNr,
-					  UnificationProblem*& unification,
-					  Int64& lastSolutionNr);
-  static bool getCachedSMT_RewriteSequenceSearch(MetaModule* m,
-						 FreeDagNode* subject,
-						 RewritingContext& context,
-						 Int64 solutionNr,
-						 SMT_RewriteSequenceSearch*& search,
-						 Int64& lastSolutionNr);
-
+  //
+  //	Try to pull a suitable object from the meta-modules cache to
+  //	continue a computation.
+  //
   template<class T>
   static bool getCachedStateObject(MetaModule* m,
 				   FreeDagNode* subject,
@@ -102,6 +76,17 @@ private:
 				   Int64 solutionNr,
 				   T*& state,
 				   Int64& lastSolutionNr);
+  //
+  //	Unification is unique in that it doesn't require rewriting or
+  //	a RewritingContext. Even metaMatch() requires rewriting to
+  //	to evaluate membership axioms, but unification doesn't support
+  //	membership axioms.
+  //
+  static bool getCachedUnificationProblem(MetaModule* m,
+					  FreeDagNode* subject,
+					  Int64 solutionNr,
+					  UnificationProblem*& unification,
+					  Int64& lastSolutionNr);
 
   MatchSearchState* makeMatchSearchState(MetaModule* m,
 					 FreeDagNode* subject,
@@ -127,20 +112,6 @@ private:
   bool metaVariantUnify2(FreeDagNode* subject, RewritingContext& context, bool disjoint);
   bool okToBind();
   bool downSearchType(DagNode* arg, SequenceSearch::SearchType& searchType) const;
-
-  bool getCachedNarrowingSequenceSearch(MetaModule* m,
-					FreeDagNode* subject,
-					RewritingContext& context,
-					Int64 solutionNr,
-					NarrowingSequenceSearch*& search,
-					Int64& lastSolutionNr);
-
-  static bool getCachedVariantSearch(MetaModule* m,
-				     FreeDagNode* subject,
-				     RewritingContext& context,
-				     Int64 solutionNr,
-				     VariantSearch*& search,
-				     Int64& lastSolutionNr);
 
   NarrowingSequenceSearch* makeNarrowingSequenceSearch(MetaModule* m,
 						       FreeDagNode* subject,
@@ -193,6 +164,7 @@ MetaLevelOpSymbol::getCachedStateObject(MetaModule* m,
   CacheableState* cachedState;
   if (m->remove(subject, cachedState, lastSolutionNr))
     {
+      DebugAdvisory("looking for solution #" << solutionNr << " and found cached solution #" << lastSolutionNr);
       if (lastSolutionNr <= solutionNr)
 	{
 	  state = safeCast(T*, cachedState);
