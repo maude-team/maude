@@ -160,6 +160,7 @@ stats					return KW_STATS;
 timing					return KW_TIMING;
 cmd|command				return KW_CMD;
 all					return KW_ALL;
+modules					return KW_MODULES;
 module					return KW_MODULE;
 sort|sorts				return KW_SORTS;
 op|ops					return KW_OPS;

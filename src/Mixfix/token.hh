@@ -69,6 +69,7 @@ public:
   int lineNumber() const;
   int specialProperty() const;
   int auxProperty() const;
+  bool getInt(int& value) const;
 
   static const char* name(int code);
   static int specialProperty(int code);
@@ -99,6 +100,9 @@ public:
   static int ropeToPrefixNameCode(const crope& r);
   static int bubbleToPrefixNameCode(const Vector<Token>& opBubble);
   void getRational(mpz_class& numerator, mpz_class& denominator);
+  static void printTokens(ostream& s,
+			  const Vector<Token>& tokens,
+			  const char* seperator);
 
 private:
   static void bufferExpandTo(int size);

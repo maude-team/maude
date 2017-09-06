@@ -67,6 +67,8 @@
 #include "visibleModule.hh"
 #include "preModule.hh"
 
+#include "moduleCache.hh"
+
 #include "interpreter.hh"
 #include "maudemlBuffer.hh"
 #include "main.hh"  // HACK shouldn't be accessing global variables
@@ -97,9 +99,8 @@ PreModule::~PreModule()
 {
   if (flatModule != 0)
     flatModule->deepSelfDestruct();
-  int nrImports = imports.length();
-  for (int i = 0; i < nrImports; i++)
-    delete imports[i].expr;  // HACK
+  FOR_EACH_CONST(i, Vector<Import>, imports)
+    i->expr->deepSelfDestruct();
 }
 
 void

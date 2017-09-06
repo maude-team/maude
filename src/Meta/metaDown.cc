@@ -148,6 +148,15 @@ MetaLevel::downModule(DagNode* metaModule)
 				  m->closeTheory();
 				  m->resetImports();
 				  cache.insert(metaModule, m);
+				  //
+				  //	We may have displace a module from the 
+				  //	metamodule cache generating garbage in
+				  //	the expression. Also there may be an
+				  //	accumulation of garbage anyway from meta-meta
+				  //	processing so we should tidy the (expression)
+				  //	module cache regularly.
+				  //
+				  moduleCache.destructUnusedModules();
 				  return m;
 				}
 			    }
@@ -155,8 +164,23 @@ MetaLevel::downModule(DagNode* metaModule)
 		    }
 		}
 	    }
+	  //
+	  //	Put the import status flags of any modules that the
+	  //	metamodule (transitively) depended on in a good state.
+	  //
 	  m->resetImports();
-	  delete m;
+	  //
+	  //	Deep self destruction ensures that pointers to the doomed
+	  //	metamodule are removed from modules it depends on.
+	  //
+	  m->deepSelfDestruct();
+	  //
+	  //	Pulling down module expressions may have resulted in
+	  //	the creation of cached modules that no longer have
+	  //	dependents now that we failed to build the metamodule.
+	  //	Thus we now need to tidy the module cache.
+	  //	
+	  moduleCache.destructUnusedModules();
 	}
     }
   return 0;
@@ -185,6 +209,14 @@ MetaLevel::downImport(DagNode* metaImport, MetaModule* m)
   Symbol* mi = metaImport->symbol();
   if (mi == protectingSymbol || mi == extendingSymbol || mi == includingSymbol)
     {
+      FreeDagNode* f = safeCast(FreeDagNode*, metaImport);
+      ImportModule* im;
+      if (downModuleExpression(f->getArgument(0), im))
+	{
+	  m->addImport(im);
+	  return true;
+	}
+      /*
       int moduleName;
       FreeDagNode* f = static_cast<FreeDagNode*>(metaImport);
       if (downQid(f->getArgument(0), moduleName))
@@ -196,6 +228,7 @@ MetaLevel::downImport(DagNode* metaImport, MetaModule* m)
 	      return true;
 	    }
 	}
+      */
     }
   return false;
 }

@@ -140,7 +140,13 @@ MetaModuleCache::regretToInform(ImportModule* doomedModule)
 	  for (int j = nrPairs - 1; j > i; j--)
 	    cache[j] = cache[j - 1];
 	  cache.contractTo(nrPairs - 1);
-	  break;
+	  return;
 	}
     }
+  //
+  //	This can occur because the metamodule was not successfully
+  //	completed and was destructed rather than added to the cache,
+  //	or becasue we zeroed the cache entry in clear().
+  //
+  DebugAdvisory("doomed module " << doomedModule << " not in cache");
 }

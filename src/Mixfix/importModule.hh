@@ -25,6 +25,7 @@
 //
 #ifndef _importModule_hh_
 #define _importModule_hh_
+#include <set>
 #include "mixfixModule.hh"
 
 class ImportModule : public MixfixModule
@@ -39,6 +40,7 @@ public:
   };
 
   ImportModule(int name, ModuleType moduleType, Parent* parent = 0);
+  ~ImportModule();
 
   void addImport(ImportModule* importedModule);
   void closeSortSet();
@@ -65,6 +67,10 @@ public:
   int getNrOriginalMembershipAxioms() const;
   int getNrOriginalEquations() const;
   int getNrOriginalRules() const;
+  const set<int>& getLabels() const;
+  ImportModule* makeRenamedCopy(int name, Renaming* canonical, ModuleCache* moduleCache);
+
+  bool hasDependents() const;
 
 private:
   enum Phase
@@ -77,15 +83,21 @@ private:
     DOOMED
   };
 
+  static Sort* localSort(ImportModule* copy, Renaming* renaming, const Sort* sort);
+  static Sort* localSort2(ImportModule* copy, Renaming* renaming, const Sort* sort);
   static void deepCopyCondition(ImportTranslation* importTranslation,
 				const Vector<ConditionFragment*>& original,
 				Vector<ConditionFragment*>& copy);
 
   void removeDependent(ImportModule* dependent);
   void donateSorts(ImportModule* importer);
+  void donateSorts2(ImportModule* copy, Renaming* renaming = 0);
   void donateOps(ImportModule* importer);
+  void donateOps2(ImportModule* copy, Renaming* renaming = 0);
   void fixUpDonatedOps(ImportModule* importer);
+  void fixUpDonatedOps2(ImportModule* copy, Renaming* renaming = 0);
   void donateStatements(ImportModule* importer);
+  void donateStatements2(ImportModule* importer, ImportTranslation& importTranslation);
   void resetImportPhase();
 
   Parent* const parent;
@@ -99,6 +111,11 @@ private:
   //
   Vector<ImportModule*> importedModules;
   Phase importPhase;
+  //
+  //	If we are a renaming of another module we need to store this info.
+  //
+  Renaming* canonicalRenaming;
+  ImportModule* baseModule;
   //
   //	Need to keep track of what parts of MixfixModule actually belong
   //	to us (and need to be donated to our importers) and what parts
@@ -126,15 +143,12 @@ private:
   Vector<int> nrUserDecls;		// total number of user declarations
   Vector<int> nrImportedDecls;		// total number of imported user declarations
 
-  NatSet responsibleForFixUp;
-  
   int nrImportedPolymorphs;		// number of polymorphs that were imported
-  int firstPolymorphCopy;		// temporary value, between passes
-
   int nrOriginalMembershipAxioms;
   int nrOriginalEquations;
   int nrOriginalRules;
 
+  set<int> labels;
   int protectCount;
 };
 
@@ -241,6 +255,18 @@ ImportModule::getNrOriginalRules() const
   //	 Rules with index >= this value were imported.
   //
   return nrOriginalRules;
+}
+
+inline const set<int>&
+ImportModule::getLabels() const
+{
+  return labels;
+}
+
+inline bool
+ImportModule::hasDependents() const
+{
+  return !dependentModules.empty();
 }
 
 #endif

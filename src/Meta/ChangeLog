@@ -1,3 +1,87 @@
+2004-02-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaDownFixUps.cc (handleIdentity): (polymorph version) handle
+	the case that the idnetity has already been set
+
+	* metaDown.cc (downModule): added call to destructUnusedModules()
+	in the success case as well to handle garbage from displaced meta
+	modules and meta-meta processing
+
+	* metaLevel.cc: added hack to be able to acces module cache
+
+	* metaModuleCache.cc (regretToInform): added DebugAvisory() to
+	check for the case that the doomed module is not in the cache
+
+	* metaDown.cc (downModule): call destructUnusedModules() if we
+	fail to complete the metamodule
+
+2004-02-20  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaDown.cc (downModule): deepSelfDestruct() rather than delete
+	partially built module on failure to ensure dependent pointer in
+	modules we depend on don't become stale; this fixes a nasty long
+	standing bug
+
+	* metaDownRenamings.cc (downRenaming): fixed bad arg #
+
+	* metaDown.cc (downImport): use downModuleExpression()
+
+	* metaLevel.hh (class MetaLevel): added decl for
+	downModuleExpression()
+
+	* metaDownRenamings.cc (downModuleExpression): added
+
+2004-02-19  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaLevel.hh (class MetaLevel): added decls for
+	convertToTokens(), downRenamings(), downRenaming(),
+	downRenamingTypes(), downRenamingType(), downRenamingAttributes(),
+	downRenamingAttribute()
+
+	* metaDownRenamings.cc: created
+
+2004-02-18  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaLevelSignature.cc (MACRO): changed owiseSymbol and
+	nonexecSymbol from FreeSymbol to Symbol
+
+	* metaLevel.hh (class MetaLevel): deleted decl for
+	upAttributeSet2()
+
+	* metaUpModule.cc (upImports): simplified using upGroup()
+	(upSubsortDecls): simplified using upGroup()
+	(upOpDecls): simplified using upGroup()
+	(upAttributeSet): use upGroup() in place of upAttributeSet2()
+	(upMbs): simplified using upGroup()
+	(upEqs): simplified using upGroup()
+	(upRls): simplified using upGroup()
+	(upStatementAttributes): simplified using upGroup()
+	(upStatementAttributes): don't use dummy Vector in owise and
+	nonexec cases
+	(upRenamingAttributeSet): use upGroup() in place of
+	upAttributeSet2()
+	(upAttributeSet2): deleted
+
+	* metaLevel.hh (upGroup): added
+	(class MetaLevel): added decls for upModuleExpression(),
+	upRenaming(), upTypeSorts(), upRenamingAttributeSet(),
+	upAttributeSet2()
+
+	* metaUpModule.cc (upModuleExpression): added
+	(upRenaming): added
+	(upTypeSorts): added
+	(upAttributeSet2): added
+	(upAttributeSet): use upAttributeSet2()
+	(upRenamingAttributeSet): added
+	(upImports): use upModuleExpression()
+
+2004-02-17  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaLevelSignature.cc (MACRO): added renaming and module
+	expression constructors
+
+	* metaUpModule.cc (upImports): use new getModuleName() semantics
+
 2003-11-10  Steven Eker  <eker@goo.csl.sri.com>
 
 	* metaDownFixUps.cc (downFixUps): don't try attaching hooks to

@@ -626,7 +626,8 @@ MixfixModule::makeBoolProductions()
       parser->insertProduction(CONDITION_FRAGMENT, rhs, 0, gatherAny, MixfixParser::MAKE_TRUE);
       parser->insertProduction(RULE_CONDITION_FRAGMENT, rhs, 0, gatherAny, MixfixParser::MAKE_TRUE);
 
-      if (falseSymbol != 0)
+      if (falseSymbol != 0 &&
+	  falseSymbol->rangeComponent() == trueSymbol->rangeComponent())
 	{
 	  //
 	  //	Add syntax for sort test operators

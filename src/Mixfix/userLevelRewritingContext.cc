@@ -258,9 +258,12 @@ UserLevelRewritingContext::printSubstitution(const Substitution& substitution,
       for (int i = 0; i < nrVars; i++)
 	{
 	  Term* v = varInfo.index2Variable(i);
+	  DagNode* d = substitution.value(i);
+	  //DebugAdvisory(static_cast<void*>(v) << " --> " <<
+	  //	static_cast<void*>(d) << " / " <<
+	  //	static_cast<void*>(d->symbol()));
 	  Assert(v != 0, "null variable");
 	  cout << v << " --> ";
-	  DagNode* d = substitution.value(i);
 	  if (d == 0)
 	    cout << "(unbound)\n";
 	  else

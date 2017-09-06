@@ -78,6 +78,7 @@ MetaLevel::handleIdentity(DagNode* metaIdentity,
 {
   if (Term* id = downTerm(metaIdentity, m))
     {
+      bool result = false;
       const ConnectedComponent* c = id->symbol()->rangeComponent();
       SymbolType symbolType = m->getPolymorphType(index);
 
@@ -86,10 +87,17 @@ MetaLevel::handleIdentity(DagNode* metaIdentity,
 	  (!symbolType.hasFlag(SymbolType::RIGHT_ID) ||
 	   (domainAndRange[1] != 0 && domainAndRange[1]->component() == c)))
 	{
-	  m->addIdentityToPolymorph(index, id);
-	  return true;
+	  Term* oldId = m->getPolymorphIdentity(index);
+	  if (oldId == 0)
+	    {
+	      m->addIdentityToPolymorph(index, id);
+	      return true;
+	    }
+	  else
+	    result = id->equal(oldId);
 	}
       id->deepSelfDestruct();
+      return result;
     }
   return false;
 }

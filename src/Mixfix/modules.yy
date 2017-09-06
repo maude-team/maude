@@ -25,33 +25,97 @@
  */
 moduleExpr	:	token
 			{
-			  $$ = new ModuleExpression($1.code());
+			  moduleExpressions.push(new ModuleExpression($1));
 			}
 		|	moduleExpr '+' moduleExpr
 			{
-			  $$ = new ModuleExpression($1, $3);
+			  ModuleExpression* m1 = moduleExpressions.top();
+			  moduleExpressions.pop();
+			  ModuleExpression* m2 = moduleExpressions.top();
+			  moduleExpressions.pop();
+			  moduleExpressions.push(new ModuleExpression(m1, m2));
 			}
 		|	moduleExpr '*' renaming
 			{
-			  $$ = new ModuleExpression($1, $3);
+			  ModuleExpression* m = moduleExpressions.top();
+			  moduleExpressions.pop();
+			  moduleExpressions.push(new ModuleExpression(m, currentRenaming));
+			  currentRenaming = 0;
 			}
-		|	'(' moduleExpr ')'
+		|	'(' moduleExpr ')' {}
+		;
+
+renaming	:	'('
 			{
-			  $$ = $2;
+			  currentRenaming = new Renaming;
+			}
+			mappingList ')'
+		;
+
+mappingList	:	mappingList ',' mapping
+		|	mapping
+		;
+
+mapping		:	KW_SORT token KW_TO token
+			{
+			  currentRenaming->addSortMapping($2, $4);
+			}
+		|	KW_LABEL identifier KW_TO identifier
+			{
+			  currentRenaming->addLabelMapping($2, $4);
+			}
+		|	KW_OP fromOpName fromSpec KW_TO toOpName toAttributes {}
+		;
+
+fromOpName	:	token			{ clear(); store($1); }
+			tokensBarColonTo	{ currentRenaming->addOpMapping(bubble); }
+		|	'(' 			{ clear(); }
+			tokens ')'		{ currentRenaming->addOpMapping(bubble); }
+		;
+
+fromSpec	:	':' fromTypeList arrow fromType {}
+		|
+		;
+
+fromTypeList	:	fromTypeList fromType
+		|
+		;
+
+fromType	:	sortToken
+			{
+			  clear();
+			  bubble.append($1);
+			  currentRenaming->addType(bubble);
+			}
+		|	'['			{ clear(); }
+			sortTokens ']'
+			{
+			  currentRenaming->addType(bubble);
 			}
 		;
 
-renaming	:	'(' mapList ')' { return 0; }
+toOpName	:	token			{ clear(); store($1); }
+			tokensBarCommaLeft	{ currentRenaming->addOpTarget(bubble); }
+		|	'(' 			{ clear(); }
+			tokens ')'		{ currentRenaming->addOpTarget(bubble); }
 		;
 
-mapList		:	mapList ',' map
-		|	map
-		;
+toAttributes	:	'[' toAttributeList ']'	{}
+			|
+			;
 
-map		:	KW_SORT token KW_TO token {}
-		|	KW_LABEL identifier KW_TO identifier {}
-		|	KW_OP identifier KW_TO identifier {}
-		;	
+toAttributeList	:	toAttributeList toAttribute
+		|	toAttribute
+			;
+
+toAttribute	:	KW_PREC IDENTIFIER	{ currentRenaming->setPrec($2); }
+		|	KW_GATHER '('		{ clear(); }
+			idList ')'		{ currentRenaming->setGather(bubble); }
+		|	KW_FORMAT '('		{ clear(); }
+			idList ')'		{ currentRenaming->setFormat(bubble); }
+		|	KW_LATEX '('		{ lexerLatexMode(); }
+			LATEX_STRING ')'	{ currentRenaming->setLatexMacro($4); }
+		;
 
 /*
  *	Modules.
@@ -142,8 +206,7 @@ oDecList	:	oDecList oDeclaration
 		|
 		;
 
-fDeclaration	:	KW_IMPORT		{ clear(); store($1); }
-			moduleExpr '.'		{ CM->addImport(bubble[0], $3); }
+fDeclaration	:	KW_IMPORT moduleExpr '.'	{ CM->addImport($1, moduleExpressions.top()); }
 
 		|	KW_SORT			{ clear(); }
 			listBarDot '.'		{ CM->addSortDecl(bubble); }
@@ -176,7 +239,15 @@ fDeclaration	:	KW_IMPORT		{ clear(); store($1); }
 			tokensBarIf KW_IF		{ store($7); }
 			endTokens '.'		{ CM->addStatement(bubble); }
 
-		|	error '.' 		{ CM->makeOpDeclsConsistent(); }
+		|	error '.'
+		        {
+			  //
+			  //	Fix things that might be in a bad state due
+			  //	to a partially processed declaration.
+			  //
+			  cleanUpModuleExpression();
+			  CM->makeOpDeclsConsistent();
+			}
 		;
 
 declaration	:	fDeclaration
@@ -420,6 +491,18 @@ tokensBarColon	:	tokensBarColon '('	{ store($2); }
 		|
 		;
 
+tokensBarColonTo	:	tokensBarColonTo '('	{ store($2); }
+				tokens ')'		{ store($5); }
+			|	tokensBarColonTo tokenBarColonTo	{ store($2); }
+			|
+			;
+
+tokensBarCommaLeft	:	tokensBarCommaLeft '('	{ store($2); }
+				tokens ')'		{ store($5); }
+			|	tokensBarCommaLeft tokenBarCommaLeft	{ store($2); }
+			|
+			;
+
 tokensBarEqual	:	tokensBarEqual '('	{ store($2); }
 			tokens ')'		{ store($5); }
 		|	tokensBarEqual tokenBarEqual	{ store($2); }
@@ -491,6 +574,13 @@ tokenBarColon	:	identifier | startKeyword | attrKeyword | '.'
 tokenBarLt	:	identifier | startKeyword | attrKeyword | '.'
 		|	':' | KW_ARROW | KW_PARTIAL | '=' | KW_ARROW2 | KW_IF | KW_IS
 		;
+tokenBarColonTo	:	IDENTIFIER | ',' | '|' | KW_LABEL | '+' | '*'
+		|	startKeyword | attrKeyword | '.'
+		|	'<' | KW_ARROW | KW_PARTIAL | '=' | KW_ARROW2 | KW_IF | KW_IS
+		;
+tokenBarCommaLeft	:	IDENTIFIER | '|' | KW_LABEL | KW_TO | '+' | '*'
+			|	startKeyword | attrKeyword2 | '.' | ']' | midKeyword
+			;
 
 sortToken	:	identifier | startKeyword | attrKeyword2 | '='
 		|	KW_ARROW2 | KW_IF | KW_IS

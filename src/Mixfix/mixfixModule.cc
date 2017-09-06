@@ -383,7 +383,10 @@ MixfixModule::findSymbol(int name,
   //
   //	See if we can make a suitable symbol by instantiating a sort test.
   //
-  if (trueSymbol != 0 && falseSymbol != 0 && nrArgs == 1)
+  if (trueSymbol != 0 &&
+      falseSymbol != 0 &&
+      trueSymbol->rangeComponent() == falseSymbol->rangeComponent() &&
+      nrArgs == 1)
     {
       const char* nameText = Token::name(name);
       if (*nameText++ == '_' && *nameText++ == ':' && *nameText++ == ':')
@@ -486,6 +489,48 @@ MixfixModule::instantiateSortTest(Sort* sort, bool eager)
       sortTests[sortIndex] = symbol;
     }
   return symbol;
+}
+
+bool
+MixfixModule::domainAndRangeMatch(const Vector<Sort*>& domainAndRange1,
+				  const Vector<Sort*>& domainAndRange2)
+{
+  int nrSorts = domainAndRange1.length();
+  if (nrSorts != domainAndRange2.length())
+    return false;
+  for (int i = 0; i < nrSorts; i++)
+    {
+      Sort* s1 = domainAndRange1[i];
+      Sort* s2 = domainAndRange2[i];
+      if (s1 == 0)
+	{
+	  if (s2 != 0)
+	    return false;
+	}
+      else
+	{
+	  if (s2 == 0 || s2->component() != s1->component())
+	    return false;
+	}
+    }
+  return true;
+}
+
+int
+MixfixModule::findPolymorphIndex(int polymorphName, const Vector<Sort*>& domainAndRange) const
+{
+  //
+  //	This is inefficient - but we don't expect to have many
+  //	polymorphs in a given module.
+  //
+  int nrPolymorphs = polymorphs.size();
+  for (int i = 0; i < nrPolymorphs; i++)
+    {
+      if (polymorphs[i].name.code() == polymorphName &&
+	  domainAndRangeMatch(polymorphs[i].domainAndRange, domainAndRange))
+	return i;
+    }
+  return NONE;
 }
 
 Term*
@@ -786,6 +831,7 @@ MixfixModule::copyFixUpPolymorph(int polymorphIndex,
   }
 }
 
+/*
 int
 MixfixModule::copyPolymorph(const MixfixModule* originalModule,
 			    int originalPolymorphIndex)
@@ -819,6 +865,7 @@ MixfixModule::copyPolymorph(const MixfixModule* originalModule,
   p.symbolInfo.next = NONE;
   return nrPolymorphs;
 }
+*/
 
 int
 MixfixModule::findBubbleSpecIndex(Symbol* topSymbol) const
@@ -834,24 +881,36 @@ MixfixModule::findBubbleSpecIndex(Symbol* topSymbol) const
 }
 
 void
-MixfixModule::copyFixUpBubbleSpec(Symbol* newSymbol, SymbolMap* map)
+MixfixModule::copyFixUpBubbleSpec(Symbol* originalSymbol, SymbolMap* map)
 {
-  BubbleSpec& b = bubbleSpecs[findBubbleSpecIndex(newSymbol)];
-  b.qidSymbol = dynamic_cast<QuotedIdentifierSymbol*>(b.qidSymbol ?
-						      map->translate(b.qidSymbol) : 0);
-  b.nilQidListSymbol = b.nilQidListSymbol ? map->translate(b.nilQidListSymbol) : 0;
-  b.qidListSymbol = b.qidListSymbol ? map->translate(b.qidListSymbol) : 0;
+  MixfixModule* originalModule = safeCast(MixfixModule*, originalSymbol->getModule());
+  BubbleSpec& ob = originalModule->
+    bubbleSpecs[originalModule->findBubbleSpecIndex(originalSymbol)];
+  Symbol* newSymbol = map->translate(originalSymbol);
+  BubbleSpec& b = bubbleSpecs[findBubbleSpecIndex(map->translate(originalSymbol))];
+
+  if (b.qidSymbol == 0 && ob.qidSymbol != 0)
+    b.qidSymbol = safeCast(QuotedIdentifierSymbol*, map->translate(ob.qidSymbol));
+  if (b.nilQidListSymbol == 0 && ob.nilQidListSymbol != 0)
+    b.nilQidListSymbol = map->translate(ob.nilQidListSymbol);
+  if (b.qidListSymbol == 0 && ob.qidListSymbol != 0)
+    b.qidListSymbol = map->translate(ob.qidListSymbol);
 }
 
 void
-MixfixModule::copyBubbleSpec(MixfixModule* originalModule,
-			     Symbol* originalSymbol,
-			     Symbol* newSymbol)
+MixfixModule::copyBubbleSpec(Symbol* originalSymbol, Symbol* newSymbol)
 {
+  MixfixModule* originalModule = safeCast(MixfixModule*, originalSymbol->getModule());
+  BubbleSpec& ob = originalModule->
+    bubbleSpecs[originalModule->findBubbleSpecIndex(originalSymbol)];
+
   int nrBubbleSpecs = bubbleSpecs.length();
-  bubbleSpecs.append(bubbleSpecs[originalModule->findBubbleSpecIndex(originalSymbol)]);  // deep copy
+  bubbleSpecs.append(ob);  // deep copy
   BubbleSpec& b = bubbleSpecs[nrBubbleSpecs];
   b.topSymbol = newSymbol;
+  b.qidSymbol = 0;
+  b.nilQidListSymbol = 0;
+  b.qidListSymbol = 0;
   const Vector<Sort*>& domainAndRange =
     newSymbol->getOpDeclarations()[0].getDomainAndRange();
   b.componentIndex =

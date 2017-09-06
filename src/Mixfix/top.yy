@@ -26,6 +26,7 @@
 
 %{
 #include <string>
+#include <stack>
 
 //      utility stuff
 #include "macros.hh"
@@ -42,6 +43,7 @@
 
 //	front end class definitions
 #include "token.hh"
+#include "renaming.hh"
 #include "moduleExpression.hh"
 #include "fileTable.hh"
 #include "directoryManager.hh"
@@ -70,12 +72,15 @@ void eatComment(bool firstNonWhite);
 
 Vector<Token> bubble;
 Vector<Token> moduleExpr;
+stack<ModuleExpression*> moduleExpressions;
+Renaming* currentRenaming = 0;
 
-//PreModule* currentModule = 0;
 Int64 number;
 Int64 number2;
 
 static void yyerror(char *s);
+
+void cleanUpModuleExpression();
 void cleanUpParser();
 %}
 %pure_parser
@@ -86,8 +91,6 @@ void cleanUpParser();
   Int64 yyInt64;
   const char* yyString;
   Token yyToken;
-  ModuleExpression* yyModuleExpression;
-  Renaming* yyRenaming;
 }
 
 %{
@@ -108,7 +111,7 @@ int yylex(YYSTYPE* lvalp);
 %token KW_PRINT KW_GRAPH KW_MIXFIX KW_FLAT
 %token KW_WITH KW_PARENS KW_ALIASES KW_GC KW_TIME KW_STATS KW_TIMING
 %token KW_CMD KW_BREAKDOWN KW_BREAK KW_PATH
-%token KW_MODULE KW_ALL KW_SORTS KW_OPS KW_VARS
+%token KW_MODULE KW_MODULES KW_ALL KW_SORTS KW_OPS KW_VARS
 %token KW_MBS KW_EQS KW_RLS KW_SUMMARY KW_KINDS KW_ADVISE KW_VERBOSE
 %token KW_DO KW_CLEAR
 %token KW_INCLUDE KW_EXCLUDE KW_CONCEAL KW_REVEAL KW_COMPILE KW_COUNT
@@ -135,7 +138,8 @@ int yylex(YYSTYPE* lvalp);
  *	Module expression keywords.
  */
 %token <yyToken> KW_LABEL KW_TO
-%left <yyToken> '+' '*'
+%left <yyToken> '+'
+%left <yyToken> '*'
 
 /*
  *	Attribute keywords need to be recognized when parsing attributes.
@@ -162,6 +166,7 @@ int yylex(YYSTYPE* lvalp);
 %type <yyToken> identifier startKeyword startKeyword2 midKeyword attrKeyword attrKeyword2
 %type <yyToken> token endToken
 %type <yyToken> tokenBarLt tokenBarColon tokenBarEqual tokenBarIf tokenBarArrow2
+%type <yyToken> tokenBarColonTo tokenBarCommaLeft
 %type <yyToken> identityChunk tokenBarDot
 %type <yyToken> cToken cTokenBarDot cTokenBarDotColon cTokenBarIn
 %type <yyToken> cTokenBarLeftIn cTokenBarDotNumber cTokenBarDotRight
@@ -178,11 +183,6 @@ int yylex(YYSTYPE* lvalp);
  *	Nonterminals that return int.
  */
 %type <yyInt64> optNumber
-/*
- *	Nonterminals that return ModuleExpression*.
- */
-%type <yyModuleExpression> moduleExpr
-%type <yyRenaming> renaming
 
 %start top
 

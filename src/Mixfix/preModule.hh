@@ -76,6 +76,7 @@ public:
   VisibleModule* getFlatSignature();
   VisibleModule* getFlatModule();
 
+  MixfixModule::ModuleType getModuleType() const;
   int getNrAutoImports() const;
   int getNrImports() const;
   int getAutoImport(int index) const;
@@ -87,6 +88,13 @@ public:
   void dump();
   void showModule(ostream& s = cout);
 
+  static ImportModule* makeModule(const ModuleExpression* expr);
+
+  //
+  //	Utility functions - maybe they should go elsewhere?
+  //
+  static void printGather(ostream& s, const Vector<int>& gather);
+  static void printFormat(ostream& s, const Vector<int>& format);
   static bool checkFormatString(const char* string);
 
 private:
@@ -144,6 +152,7 @@ private:
   };
 
   static void printAttributes(ostream& s, const OpDef& opDef);
+  static ImportModule*  getModule(int name, const LineNumber& lineNumber);
 
   void regretToInform(ImportModule* doomedModule);
   int findHook(const Vector<Hook>& hookList, HookType type, int name);
@@ -158,7 +167,6 @@ private:
 			   Vector<Term*>& terms);
   Symbol* extractSpecialSymbol(const Vector<Token>& bubble, int& pos);
   void processImports();
-  void importModule(int name, const LineNumber& linenumber);
   void processSorts();
   Sort* getSort(Token token);
   void checkOpTypes();
@@ -191,6 +199,12 @@ inline bool
 PreModule::isComplete()
 {
   return isCompleteFlag;
+}
+
+inline MixfixModule::ModuleType
+PreModule::getModuleType() const
+{
+  return moduleType;
 }
 
 inline void

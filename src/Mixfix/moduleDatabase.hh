@@ -44,6 +44,7 @@ public:
   void setOmodInclude(Token name, bool polarity);
   const IntSet& getIncludes() const;
   const IntSet& getOmodIncludes() const;
+  void showNamedModules() const;
 
 private:
   typedef map<int, PreModule*> ModuleMap;

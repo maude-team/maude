@@ -170,7 +170,8 @@ public:
   QuotedIdentifierSymbol* findQuotedIdentifierSymbol(const ConnectedComponent* component) const;
   StringSymbol* findStringSymbol(const ConnectedComponent* component) const;
   FloatSymbol* findFloatSymbol(const ConnectedComponent* component) const;
-  int findIterSymbolIndex(int opName);
+  int findIterSymbolIndex(int opName) const;
+  int findPolymorphIndex(int polymorphName, const Vector<Sort*>& domainAndRange) const;
   //
   //	Polymorph functions.
   //
@@ -178,8 +179,8 @@ public:
 			  const MixfixModule* originalModule,
 			  int originalPolymorphIndex,
 			  SymbolMap* map);
-  int copyPolymorph(const MixfixModule* originalModule,
-		    int originalPolymorphIndex);
+  //int copyPolymorph(const MixfixModule* originalModule,
+  //		    int originalPolymorphIndex);
   int getNrPolymorphs() const;
   Token getPolymorphName(int index) const;
   SymbolType getPolymorphType(int index) const;
@@ -202,10 +203,8 @@ public:
 		    int leftParenToken,
 		    int rightParenToken,
 		    const Vector<int>& excludedTokens);
-  void copyBubbleSpec(MixfixModule* originalModule,
-		      Symbol* originalSymbol,
-		      Symbol* newSymbol);
-  void copyFixUpBubbleSpec(Symbol* newSymbol, SymbolMap* map);
+  void copyBubbleSpec(Symbol* originalSymbol, Symbol* newSymbol);
+  void copyFixUpBubbleSpec(Symbol* originalSymbol, SymbolMap* map);
   void fixUpBubbleSpec(int bubbleSpecIndex,
 		       QuotedIdentifierSymbol* qidSymbol,
 		       Symbol* nilQidListSymbol,
@@ -219,6 +218,7 @@ public:
   //	Misc.
   //
   static Sort* hookSort(Sort* sort);
+  static ModuleType join(ModuleType t1, ModuleType t2);
 
 protected:
   static int findMatchingParen(const Vector<Token>& tokens, int pos);
@@ -568,6 +568,9 @@ private:
 			    bool assoc1,
 			    const Vector<Sort*>& domainAndRange2,
 			    bool assoc2);
+  static bool domainAndRangeMatch(const Vector<Sort*>& domainAndRange1,
+				  const Vector<Sort*>& domainAndRange2);
+
   bool ambiguous(int iflags);
   //
   //	Member functions for DagNode* -> ostream& pretty printer.
@@ -808,7 +811,7 @@ MixfixModule::getNrPolymorphs() const
 }
 
 inline int
-MixfixModule::findIterSymbolIndex(int opName)
+MixfixModule::findIterSymbolIndex(int opName) const
 {
   return iterSymbols.int2Index(opName);
 }
@@ -817,6 +820,12 @@ inline Sort*
 MixfixModule::hookSort(Sort* sort)
 {
   return (sort->index() == Sort::KIND) ? sort->component()->sort(1) : sort;
+}
+
+inline MixfixModule::ModuleType
+MixfixModule::join(ModuleType t1, ModuleType t2)
+{
+  return static_cast<ModuleType>(t1 | t2);
 }
 
 #endif

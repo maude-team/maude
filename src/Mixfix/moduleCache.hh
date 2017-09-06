@@ -20,43 +20,33 @@
 
 */
 
-%%
+//
+//      Class to hold cache of modules that are created for module expressions.
+//
+#ifndef _moduleCache_hh_
+#define _moduleCache_hh_
+#include <map>
+#include "importModule.hh"
 
-static void
-yyerror(char *s)
+class ModuleCache : public ImportModule::Parent
 {
-  if (!(UserLevelRewritingContext::interrupted()))
-    IssueWarning(LineNumber(lineNumber) << ": " << s);
-}
+  NO_COPYING(ModuleCache);
 
-void
-cleanUpModuleExpression()
-{
-  //
-  //	Delete pieces of a partly built module expression.
-  //
-  delete currentRenaming;
-  currentRenaming = 0;
-  while (!moduleExpressions.empty())
-    {
-      moduleExpressions.top()->deepSelfDestruct();
-      moduleExpressions.pop();
-    }
-}
+public:
+  ModuleCache();
+  ImportModule* makeRenamedCopy(ImportModule* module, Renaming* renaming);
+  ImportModule* makeSummation(const Vector<ImportModule*>& modules);
+  void destructUnusedModules();
+  void showModules() const;
 
-void
-cleanUpParser()
-{
-  //bubble.contractTo(0);
-  //moduleExpr.contractTo(0);
-  //pattern.contractTo(0);
-  interpreter.makeClean(lineNumber);
-  /*
-  if (currentModule != 0 && !(currentModule->isComplete()))
-    {
-      IssueAdvisory(cerr << LineNumber(lineNumber) << ": discarding incomplete module.");
-      delete currentModule;
-      currentModule = 0;
-    }
-  */
-}
+private:
+  typedef map<int, ImportModule*> ModuleMap;
+
+  static bool moduleCompare(const ImportModule* m1, const ImportModule* m2);
+
+  void regretToInform(ImportModule* doomedModule);
+
+  ModuleMap moduleMap;
+};
+
+#endif

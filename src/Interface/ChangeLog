@@ -1,3 +1,14 @@
+2004-02-05  Steven Eker  <eker@goo.csl.sri.com>
+
+	* dagNode.hh (copyEagerUptoReduced): set the copy flag after
+	rather than before calling copyEagerUptoReduced2(); this fixes a
+	subtle but nasty bug where copyEagerUptoReduced2() does an in
+	place transformation on the dag node (say ACU tree -> array rep)
+	that loses the copy pointer an prevents us from replacing the
+	symbol
+	
+===================================Maude83a==========================================
+
 2003-11-03  Steven Eker  <eker@goo.csl.sri.com>
 
 	* symbol.cc (getDataAttachments): added

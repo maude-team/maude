@@ -50,9 +50,14 @@
 #include "rewriteConditionFragment.hh"
 
 //	front end class definitions
+#include "renaming.hh"
 #include "importModule.hh"
+#include "moduleCache.hh"
 #include "importTranslation.hh"
 #include "quotedIdentifierSymbol.hh"
+
+//	our stuff
+#include "renameModule.cc"
 
 ImportModule::ImportModule(int name, ModuleType moduleType, Parent* parent)
   : MixfixModule(name, moduleType),
@@ -60,6 +65,13 @@ ImportModule::ImportModule(int name, ModuleType moduleType, Parent* parent)
 {
   importPhase = UNVISITED;
   protectCount = 0;
+  canonicalRenaming = 0;
+  baseModule = 0;
+}
+
+ImportModule::~ImportModule()
+{
+  delete canonicalRenaming;
 }
 
 void
@@ -90,17 +102,32 @@ ImportModule::closeSignature()
 void
 ImportModule::deepSelfDestruct()
 {
+  //
+  //	First remove ourself from the dependent modules of our imports and
+  //	base modules. This is so we will not receive deepSelfDestruct() after
+  //	we delete ourself.
+  //
   int nrImportedModules = importedModules.length();
   for (int i = 0; i < nrImportedModules; i++)
     {
       ImportModule* import = importedModules[i];
       import->removeDependent(this);
     }
+  if (baseModule != 0)
+      baseModule->removeDependent(this);
+  //
+  //	Now tell all modules that depend on us to self destruct.
+  //
   while (dependentModules.length() > 0)
     dependentModules[0]->deepSelfDestruct();
-
+  //
+  //	Inform our parent of our impending demise.
+  //
   if(parent != 0)
     parent->regretToInform(this);
+  //
+  //	And then delete ourself or mark ourself for deletion.
+  //
   DebugAdvisory("module " << this << " invalidated");
   if (protectCount > 0)
     importPhase = DOOMED;
@@ -170,40 +197,7 @@ ImportModule::donateSorts(ImportModule* importer)
   //
   //	Now handle our sorts.
   //
-  const Vector<Sort*>& sorts = getSorts();
-  for (int i = nrImportedSorts; i < nrUserSorts; i++)
-    {
-      Sort* original = sorts[i];
-      int id = original->id();
-      Sort* sort = importer->findSort(id);
-      if (sort == 0)
-	{
-	  sort = importer->addSort(id);
-	  sort->setLineNumber(original->getLineNumber());
-	}
-      else
-	{
-	  IssueWarning(*importer << ": sort " << QUOTE(original) <<
-		       " has been imported from both " << *original <<
-		       " and " << *sort << '.');
-	}
-    }
-  //
-  //	Now handle our subsort relations.
-  //
-  for (int i = 0; i < nrUserSorts; i++)
-    {
-      int nrImports = getNrImportedSubsorts(i);
-      const Sort* s = sorts[i];
-      const Vector<Sort*>& subsorts = s->getSubsorts();
-      int nrSubsorts = subsorts.length();
-      if (nrSubsorts > nrImports)
-	{
-	  Sort* ts = importer->findSort(s->id());
-	  for (int j = nrImports; j < nrSubsorts; j++)
-	    ts->insertSubsort(importer->findSort(subsorts[j]->id()));
-	}
-    }
+  donateSorts2(importer);
 }
 
 //
@@ -240,85 +234,7 @@ ImportModule::donateOps(ImportModule* importer)
   //
   //	Now handle our operators.
   //
-  responsibleForFixUp.makeEmpty();
-  const Vector<Symbol*> symbols = getSymbols();
-  ImportTranslation importTranslation(importer);
-  for (int i = 0; i < nrUserSymbols; i++)
-    {
-      int nrImportedDeclarations = getNrImportedDeclarations(i);
-      int nrUserDeclarations = nrUserDecls[i];
-      if (nrUserDeclarations > nrImportedDeclarations)
-	{
-	  //
-	  //	Need to donate some declarations for this symbol.
-	  //
-	  Symbol* symbol = symbols[i];
-	  SymbolType symbolType = getSymbolType(symbol);
-	  Assert(!(symbolType.isCreatedOnTheFly()),
-		 "unexpected variable/sort test/polymorph instance " << symbol);
-	  Token name;
-	  name.tokenize(symbol->id(), symbol->getLineNumber());
-	  const Vector<OpDeclaration>& opDecls = symbol->getOpDeclarations();
-	  int domainAndRangeLength = opDecls[0].getDomainAndRange().length();
-	  static Vector<Sort*> domainAndRange;
-	  domainAndRange.resize(domainAndRangeLength);
-	  static Vector<int> dummy;
-	  const Vector<int>& strategy = symbolType.hasFlag(SymbolType::STRAT) ?
-	    symbol->getStrategy() : dummy;
-	  const NatSet& frozen = symbol->getFrozen();
-	  int prec = symbolType.hasFlag(SymbolType::PREC) ? getPrec(symbol) : DEFAULT;
-	  static Vector<int> gather;
-	  if (symbolType.hasFlag(SymbolType::GATHER))
-	    getGather(symbol, gather);
-	  else
-	    gather.contractTo(0);
-	  const Vector<int>& format = getFormat(symbol);
-	  bool originator;
-	  for (int j = nrImportedDeclarations; j < nrUserDeclarations; j++)
-	    {
-	      const Vector<Sort*>& oldDomainAndRange = opDecls[j].getDomainAndRange();
-	      for (int k = 0; k < domainAndRangeLength; k++)
-		domainAndRange[k] = importTranslation.translate(oldDomainAndRange[k]);
-	      if (opDecls[j].isConstructor())
-		symbolType.setFlags(SymbolType::CTOR);
-	      else
-		symbolType.clearFlags(SymbolType::CTOR);
-	      Symbol* newSymbol = importer->addOpDeclaration(name,
-							     domainAndRange,
-							     symbolType,
-							     strategy,
-							     frozen,
-							     prec,
-							     gather,
-							     format,
-							     originator);
-	      if (j == 0)
-		{
-		  if (originator)
-		    {
-		      responsibleForFixUp.insert(i);
-		      if (symbolType.getBasicType() == SymbolType::BUBBLE)
-			importer->copyBubbleSpec(this, symbol, newSymbol);
-		    }
-		  else
-		    {
-		      IssueWarning(*importer << ": operator " << QUOTE(symbol) <<
-				   " has been imported from both " << *newSymbol <<
-				   " and " << *symbol << " with no common ancestor.");
-		    }
-		}
-	      else
-		Assert(!originator, "bad origination of " << symbol);
-	    }
-	}
-    }
-  //
-  //	Now handle our polymorphic operators.
-  //
-  firstPolymorphCopy = importer->getNrPolymorphs();
-  int nrPolymorphs = getNrPolymorphs();
-  for (int i = nrImportedPolymorphs; i < nrPolymorphs; i++)
-    importer->copyPolymorph(this, i);
+  donateOps2(importer);
 }
 
 //
@@ -345,73 +261,9 @@ ImportModule::fixUpDonatedOps(ImportModule* importer)
   for (int i = 0; i < nrImportedModules; i++)
     importedModules[i]->fixUpDonatedOps(importer);
   //
-  //	The map from imported module's symbols to importing module's symbols
-  //	is built dynamically.
+  //	Handle our operators.
   //
-  ImportTranslation importTranslation(importer);
-  //
-  //	Now handle our operators.
-  //
-  const Vector<Symbol*> symbols = getSymbols();
-  for (int i = nrImportedSymbols; i < nrUserSymbols; i++)
-    {
-      if (responsibleForFixUp.contains(i))
-	{
-	  Symbol* symbol = symbols[i];
-	  SymbolType symbolType = getSymbolType(symbol);
-	  if (symbolType.hasFlag(SymbolType::LEFT_ID | SymbolType::RIGHT_ID))
-	    {
-	      //
-	      //	Handle identity.
-	      //
-	      BinarySymbol* s = static_cast<BinarySymbol*>(symbol);
-	      Term* id = s->getIdentity();
-	      Assert(id != 0, "missing identity");
-	      BinarySymbol* s2 = static_cast<BinarySymbol*>(importTranslation.translate(symbol));
-	      Assert(s2->getIdentity() == 0, "identity already exists");
-	      s2->setIdentity(id->deepCopy(&importTranslation));
-	    }
-	  if (symbolType.getBasicType() == SymbolType::BUBBLE)
-	    {
-	      importer->copyFixUpBubbleSpec(importTranslation.translate(symbol),
-					    &importTranslation);
-	    }
-	}
-    }
-  //
-  //	Now handle our polymorphic operators.
-  //
-  int nrPolymorphs = getNrPolymorphs();
-  for (int i = nrImportedPolymorphs; i < nrPolymorphs; i++)
-    {
-      importer->copyFixUpPolymorph(firstPolymorphCopy + i - nrImportedPolymorphs,
-				   this, i, &importTranslation);
-    }
-  //
-  //	Now handle incremental fixups.
-  //
-  for (int i = 0; i < nrUserSymbols; i++)
-    {
-      int nrImportedDeclarations = getNrImportedDeclarations(i);
-      if (nrUserDecls[i] > nrImportedDeclarations)
-	{
-	  //
-	  //	We donated some declarations for this symbol so do
-	  //	an incremental fixup if needed.
-	  //
-	  Symbol* symbol = symbols[i];
-	  if (getSymbolType(symbol).hasAttachments())
-	    importTranslation.translate(symbol)->copyAttachments(symbol, &importTranslation);
-	}
-    }
-}
-
-void
-ImportModule::localStatementsComplete()  // NASTY HACK
-{
-  nrOriginalMembershipAxioms = getSortConstraints().length();
-  nrOriginalEquations = getEquations().length();
-  nrOriginalRules = getRules().length();
+  fixUpDonatedOps2(importer);
 }
 
 //
@@ -479,7 +331,19 @@ ImportModule::donateStatements(ImportModule* importer)
   //	The map from imported module's symbols to importing module's symbols
   //	is built dynamically.
   //
-  ImportTranslation importTranslation(importer);
+  ImportTranslation importTranslation(importer);    
+  donateStatements2(importer, importTranslation);
+}
+
+void
+ImportModule::donateStatements2(ImportModule* importer, ImportTranslation& importTranslation)
+{
+  if (canonicalRenaming != 0)
+    {
+      importTranslation.push(canonicalRenaming, this);
+      baseModule->donateStatements2(importer, importTranslation);
+      return;
+    }
   //
   //	Handle our membership axioms.
   //
@@ -489,11 +353,12 @@ ImportModule::donateStatements(ImportModule* importer)
       SortConstraint* ma = membershipAxioms[i];
       if (!(ma->isBad()))
 	{
+	  int label = importTranslation.translateLabel(ma->getLabel().id());
 	  Term* lhs = ma->getLhs()->deepCopy(&importTranslation);
 	  Sort* sort = importTranslation.translate(ma->getSort());
 	  Vector<ConditionFragment*> condition;
 	  deepCopyCondition(&importTranslation, ma->getCondition(), condition);
-	  SortConstraint* copy = new SortConstraint(ma->getLabel().id(), lhs, sort, condition);
+	  SortConstraint* copy = new SortConstraint(label, lhs, sort, condition);
 	  if (ma->isNonexec())
 	    copy->setNonexec();
 	  copy->setLineNumber(ma->getLineNumber());
@@ -510,11 +375,12 @@ ImportModule::donateStatements(ImportModule* importer)
       Equation* e = equations[i];
       if (!(e->isBad()))
 	{
+	  int label = importTranslation.translateLabel(e->getLabel().id());
 	  Term* lhs = e->getLhs()->deepCopy(&importTranslation);
 	  Term* rhs = e->getRhs()->deepCopy(&importTranslation);
 	  Vector<ConditionFragment*> condition;
 	  deepCopyCondition(&importTranslation, e->getCondition(), condition);
-	  Equation* copy = new Equation(e->getLabel().id(), lhs, rhs, e->isOwise(), condition);
+	  Equation* copy = new Equation(label, lhs, rhs, e->isOwise(), condition);
 	  if (e->isNonexec())
 	    copy->setNonexec();
 	  copy->setLineNumber(e->getLineNumber());
@@ -531,11 +397,12 @@ ImportModule::donateStatements(ImportModule* importer)
       Rule* r = rules[i];
       if (!(r->isBad()))
 	{
+	  int label = importTranslation.translateLabel(r->getLabel().id());
 	  Term* lhs = r->getLhs()->deepCopy(&importTranslation);
 	  Term* rhs = r->getRhs()->deepCopy(&importTranslation);
 	  Vector<ConditionFragment*> condition;
 	  deepCopyCondition(&importTranslation, r->getCondition(), condition);
-	  Rule* copy = new Rule(r->getLabel().id(), lhs, rhs, condition);
+	  Rule* copy = new Rule(label, lhs, rhs, condition);
 	  if (r->isNonexec())
 	    copy->setNonexec();
 	  copy->setLineNumber(r->getLineNumber());

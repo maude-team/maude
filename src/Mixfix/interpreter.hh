@@ -151,6 +151,7 @@ public:
   void showSummary() const;
   void showSortsAndSubsorts() const;
   void showModule(bool all = true) const;
+  void showModules(bool all) const;
   void showVars() const;
   void showOps(bool all = true) const;
   void showMbs(bool all = true) const;

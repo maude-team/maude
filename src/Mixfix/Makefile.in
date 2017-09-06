@@ -193,6 +193,8 @@ maude_LDADD = \
 
 
 maude_SOURCES = \
+	renaming.cc \
+	moduleCache.cc \
 	moduleExpression.cc \
 	importModule.cc \
 	importTranslation.cc \
@@ -231,6 +233,7 @@ BUILT_SOURCES = surface.yy surface.cc surface.h lexer.cc
 CLEANFILES = surface.yy surface.cc surface.h lexer.cc
 
 EXTRA_DIST = \
+	renameModule.cc \
 	lexerAux.cc \
 	import.cc \
 	process.cc \
@@ -264,6 +267,8 @@ EXTRA_DIST = \
 
 
 noinst_HEADERS = \
+	renaming.hh \
+	moduleCache.hh \
 	moduleExpression.hh \
 	commonTokens.hh \
 	compiler.hh \
@@ -300,9 +305,10 @@ bin_PROGRAMS = maude$(EXEEXT)
 PROGRAMS = $(bin_PROGRAMS)
 
 @BUILD_COMPILER_TRUE@am__objects_1 = maude-compiler.$(OBJEXT)
-am_maude_OBJECTS = maude-moduleExpression.$(OBJEXT) \
-	maude-importModule.$(OBJEXT) maude-importTranslation.$(OBJEXT) \
-	maude-fileTable.$(OBJEXT) maude-loopSymbol.$(OBJEXT) \
+am_maude_OBJECTS = maude-renaming.$(OBJEXT) maude-moduleCache.$(OBJEXT) \
+	maude-moduleExpression.$(OBJEXT) maude-importModule.$(OBJEXT) \
+	maude-importTranslation.$(OBJEXT) maude-fileTable.$(OBJEXT) \
+	maude-loopSymbol.$(OBJEXT) \
 	maude-quotedIdentifierSymbol.$(OBJEXT) \
 	maude-quotedIdentifierDagNode.$(OBJEXT) \
 	maude-quotedIdentifierTerm.$(OBJEXT) \
@@ -420,6 +426,7 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/maude-metadataStore.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/maude-mixfixModule.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/maude-mixfixParser.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/maude-moduleCache.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/maude-moduleDatabase.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/maude-moduleExpression.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/maude-preModule.Po \
@@ -428,6 +435,7 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/maude-quotedIdentifierOpSymbol.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/maude-quotedIdentifierSymbol.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/maude-quotedIdentifierTerm.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/maude-renaming.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/maude-surface.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/maude-symbolType.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/maude-token.Po \
@@ -481,6 +489,8 @@ uninstall-binPROGRAMS:
 
 clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
+maude-renaming.$(OBJEXT): renaming.cc
+maude-moduleCache.$(OBJEXT): moduleCache.cc
 maude-moduleExpression.$(OBJEXT): moduleExpression.cc
 maude-importModule.$(OBJEXT): importModule.cc
 maude-importTranslation.$(OBJEXT): importTranslation.cc
@@ -533,6 +543,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-metadataStore.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-mixfixModule.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-mixfixParser.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-moduleCache.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-moduleDatabase.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-moduleExpression.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-preModule.Po@am__quote@
@@ -541,6 +552,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-quotedIdentifierOpSymbol.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-quotedIdentifierSymbol.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-quotedIdentifierTerm.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-renaming.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-surface.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-symbolType.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-token.Po@am__quote@
@@ -572,6 +584,50 @@ distclean-depend:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXXCOMPILE) -c -o $@ `if test -f '$<'; then $(CYGPATH_W) '$<'; else $(CYGPATH_W) '$(srcdir)/$<'`
+
+maude-renaming.o: renaming.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-renaming.o -MD -MP -MF "$(DEPDIR)/maude-renaming.Tpo" \
+@am__fastdepCXX_TRUE@	  -c -o maude-renaming.o `test -f 'renaming.cc' || echo '$(srcdir)/'`renaming.cc; \
+@am__fastdepCXX_TRUE@	then mv "$(DEPDIR)/maude-renaming.Tpo" "$(DEPDIR)/maude-renaming.Po"; \
+@am__fastdepCXX_TRUE@	else rm -f "$(DEPDIR)/maude-renaming.Tpo"; exit 1; \
+@am__fastdepCXX_TRUE@	fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='renaming.cc' object='maude-renaming.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/maude-renaming.Po' tmpdepfile='$(DEPDIR)/maude-renaming.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-renaming.o `test -f 'renaming.cc' || echo '$(srcdir)/'`renaming.cc
+
+maude-renaming.obj: renaming.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-renaming.obj -MD -MP -MF "$(DEPDIR)/maude-renaming.Tpo" \
+@am__fastdepCXX_TRUE@	  -c -o maude-renaming.obj `if test -f 'renaming.cc'; then $(CYGPATH_W) 'renaming.cc'; else $(CYGPATH_W) '$(srcdir)/renaming.cc'`; \
+@am__fastdepCXX_TRUE@	then mv "$(DEPDIR)/maude-renaming.Tpo" "$(DEPDIR)/maude-renaming.Po"; \
+@am__fastdepCXX_TRUE@	else rm -f "$(DEPDIR)/maude-renaming.Tpo"; exit 1; \
+@am__fastdepCXX_TRUE@	fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='renaming.cc' object='maude-renaming.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/maude-renaming.Po' tmpdepfile='$(DEPDIR)/maude-renaming.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-renaming.obj `if test -f 'renaming.cc'; then $(CYGPATH_W) 'renaming.cc'; else $(CYGPATH_W) '$(srcdir)/renaming.cc'`
+
+maude-moduleCache.o: moduleCache.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-moduleCache.o -MD -MP -MF "$(DEPDIR)/maude-moduleCache.Tpo" \
+@am__fastdepCXX_TRUE@	  -c -o maude-moduleCache.o `test -f 'moduleCache.cc' || echo '$(srcdir)/'`moduleCache.cc; \
+@am__fastdepCXX_TRUE@	then mv "$(DEPDIR)/maude-moduleCache.Tpo" "$(DEPDIR)/maude-moduleCache.Po"; \
+@am__fastdepCXX_TRUE@	else rm -f "$(DEPDIR)/maude-moduleCache.Tpo"; exit 1; \
+@am__fastdepCXX_TRUE@	fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='moduleCache.cc' object='maude-moduleCache.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/maude-moduleCache.Po' tmpdepfile='$(DEPDIR)/maude-moduleCache.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-moduleCache.o `test -f 'moduleCache.cc' || echo '$(srcdir)/'`moduleCache.cc
+
+maude-moduleCache.obj: moduleCache.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-moduleCache.obj -MD -MP -MF "$(DEPDIR)/maude-moduleCache.Tpo" \
+@am__fastdepCXX_TRUE@	  -c -o maude-moduleCache.obj `if test -f 'moduleCache.cc'; then $(CYGPATH_W) 'moduleCache.cc'; else $(CYGPATH_W) '$(srcdir)/moduleCache.cc'`; \
+@am__fastdepCXX_TRUE@	then mv "$(DEPDIR)/maude-moduleCache.Tpo" "$(DEPDIR)/maude-moduleCache.Po"; \
+@am__fastdepCXX_TRUE@	else rm -f "$(DEPDIR)/maude-moduleCache.Tpo"; exit 1; \
+@am__fastdepCXX_TRUE@	fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='moduleCache.cc' object='maude-moduleCache.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/maude-moduleCache.Po' tmpdepfile='$(DEPDIR)/maude-moduleCache.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-moduleCache.obj `if test -f 'moduleCache.cc'; then $(CYGPATH_W) 'moduleCache.cc'; else $(CYGPATH_W) '$(srcdir)/moduleCache.cc'`
 
 maude-moduleExpression.o: moduleExpression.cc
 @am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-moduleExpression.o -MD -MP -MF "$(DEPDIR)/maude-moduleExpression.Tpo" \
@@ -1403,7 +1459,7 @@ surface.cc surface.h: surface.yy
 #	seem to work so...
 lexer.cc: \
 	$(srcdir)/lexer.ll surface.h
-	$(FLEX) -t -pp $(srcdir)/lexer.ll > lexer.cc
+	$(FLEX) -t -p -p $(srcdir)/lexer.ll > lexer.cc
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

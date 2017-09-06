@@ -435,8 +435,8 @@ DagNode::copyEagerUptoReduced()
     return this;
   if (!isCopied())
     {
-      setCopied();
       copyPointer = copyEagerUptoReduced2();  // this destroys our top symbol
+      setCopied();
     }
   return copyPointer;
 }

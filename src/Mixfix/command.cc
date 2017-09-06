@@ -269,28 +269,15 @@ PreModule::printAttributes(ostream& s, const OpDef& opDef)
     }
   if (st.hasFlag(SymbolType::GATHER))
     {
-      static char gatherSymbols[] = {'e', 'E', '&'};
-      s << space << "gather (";
+      s << space;
       space = " ";
-      int gatherLen = opDef.gather.length();
-      for (int i = 0; i < gatherLen; i++)
-	{
-	  s << gatherSymbols[opDef.gather[i] - MixfixModule::GATHER_e] <<
-	    ((i == gatherLen - 1) ? ')' : ' ');
-	}
+      printGather(s, opDef.gather);
     }
   if (st.hasFlag(SymbolType::FORMAT))
     {
-      s << space << "format (";
+      s << space;
       space = " ";
-      int formatLength = opDef.format.length();
-      for (int i = 0; i < formatLength; i++)
-	{
-	  if (i != 0)
-	    s << ' ';
-	  s << Token::name(opDef.format[i]);
-	}
-      s << ')';
+      printFormat(s, opDef.format);
     }
   if (!(opDef.special.empty()))
     {
@@ -316,4 +303,26 @@ PreModule::printAttributes(ostream& s, const OpDef& opDef)
     }
 
   s << "] ";
+}
+
+void
+PreModule::printGather(ostream& s, const Vector<int>& gather)
+{
+  static char gatherSymbols[] = {'e', 'E', '&'};
+  s << "gather (";
+  int gatherLen = gather.length();
+  for (int i = 0; i < gatherLen; i++)
+    {
+      s << gatherSymbols[gather[i] - MixfixModule::GATHER_e] <<
+	((i == gatherLen - 1) ? ')' : ' ');
+    }
+}
+
+void
+PreModule::printFormat(ostream& s, const Vector<int>& format)
+{
+  s << "format (";
+  int formatLen = format.length();
+  for (int i = 0; i < formatLen; i++)
+    s << Token::name(format[i]) << ((i == formatLen - 1) ? ')' : ' ');
 }

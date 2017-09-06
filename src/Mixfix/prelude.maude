@@ -22,7 +22,7 @@
 
 ***
 ***	Maude interpreter standard prelude.
-***	Version Alpha 83
+***	Version Alpha 83a
 ***
 ***	Some of the overall structure is taken from the OBJ3
 ***	interpreter standard prelude.
@@ -836,9 +836,35 @@ fmod META-MODULE is
   protecting META-TERM .
   protecting QID-LIST .
 
-*** importations
-  sorts ModuleExpression Import ImportList .
+*** attribute sets
+  sorts Attr AttrSet .
+  subsort Attr < AttrSet .
+  op none : -> AttrSet [ctor] .
+  op __ : AttrSet AttrSet -> AttrSet [ctor assoc comm id: none] .
+  eq A:Attr A:Attr = A:Attr .
+
+*** renamings
+  sorts Renaming RenamingSet .
+  subsort Renaming < RenamingSet .
+  op sort_to_ : Qid Qid -> Renaming [ctor] .
+  op op_to_[_] : Qid Qid AttrSet -> Renaming
+    [ctor format (d d d d s d d d)] .
+  op op_:_->_to_[_] : Qid TypeList Type Qid AttrSet -> Renaming
+    [ctor format (d d d d d d d d s d d d)] .
+  op label_to_ : Qid Qid -> Renaming [ctor] .
+  op _,_ : RenamingSet RenamingSet -> RenamingSet
+    [ctor assoc comm prec 43 format (d d ni d)] .
+
+*** module expressions
+  sort ModuleExpression .
   subsort Qid < ModuleExpression .
+  op _+_ : ModuleExpression ModuleExpression -> ModuleExpression
+    [ctor assoc comm] .
+  op _*(_) : ModuleExpression RenamingSet -> ModuleExpression
+    [ctor prec 39 format (d d s n++i n--i d)] .
+
+*** importations
+  sorts Import ImportList .
   subsort Import < ImportList .
   op protecting_. : ModuleExpression -> Import [ctor] .
   op extending_. : ModuleExpression -> Import [ctor] .
@@ -881,13 +907,6 @@ fmod META-MODULE is
   op op-hook : Qid Qid QidList Qid -> Hook [ctor format (nssss d)] .
   op term-hook : Qid Term -> Hook [ctor format (nssss d)] .
   op __ : HookList HookList -> HookList [ctor assoc] .
-
-*** attribute sets
-  sorts Attr AttrSet .
-  subsort Attr < AttrSet .
-  op none : -> AttrSet [ctor] .
-  op __ : AttrSet AttrSet -> AttrSet [ctor assoc comm id: none] .
-  eq A:Attr A:Attr = A:Attr .
 
 *** operator attributes
   op assoc : -> Attr [ctor] .
@@ -1114,6 +1133,21 @@ fmod META-LEVEL is
 	op-hook emptySubstitutionSymbol	(none : ~> Substitution)
 	op-hook holeSymbol		([] : ~> Context)
 
+	op-hook emptyAttrSetSymbol	(none : ~> AttrSet)
+	op-hook attrSetSymbol		(__ : AttrSet AttrSet ~> AttrSet)
+
+	op-hook sortRenamingSymbol	(sort_to_ : Qid Qid ~> Renaming)
+	op-hook opRenamingSymbol	(op_to_[_] : Qid Qid AttrSet ~> Renaming)
+	op-hook opRenamingSymbol2
+		(op_:_->_to_[_] : Qid TypeList Type Qid AttrSet ~> Renaming)
+	op-hook labelRenamingSymbol	(label_to_ : Qid Qid ~> Renaming)
+	op-hook renamingSetSymbol	(_,_ : RenamingSet RenamingSet ~> RenamingSet)
+
+	op-hook sumSymbol
+		(_+_ : ModuleExpression ModuleExpression ~> ModuleExpression)
+	op-hook renamingSymbol
+		(_*(_) : ModuleExpression RenamingSet ~> ModuleExpression)
+
 	op-hook protectingSymbol	(protecting_. : ModuleExpression ~> Import)
 	op-hook extendingSymbol		(extending_. : ModuleExpression ~> Import)
 	op-hook includingSymbol		(including_. : ModuleExpression ~> Import)
@@ -1165,9 +1199,6 @@ fmod META-LEVEL is
 	op-hook metadataSymbol		(metadata : String ~> Attr)
 	op-hook owiseSymbol		(owise : ~> Attr)
 	op-hook nonexecSymbol		(nonexec : ~> Attr)
-
-	op-hook emptyAttrSetSymbol	(none : ~> AttrSet)
-	op-hook attrSetSymbol		(__ : AttrSet AttrSet ~> AttrSet)
 
 	op-hook opDeclSymbol
 		(op_:_->_[_]. : Qid TypeList Type AttrSet ~> OpDecl)

@@ -64,9 +64,7 @@ MetaLevel::upImports(PreModule* pm, PointerMap& qidMap)
     int nrImports = pm->getNrImports();
     for (int i = 0; i < nrImports; i++)
       {
-	const ModuleExpression* e = pm->getImport(i);
-	Assert(e->getType() == ModuleExpression::MODULE, "module expression not handled");
-	args2[0] = upQid(e->getModuleName(), qidMap);
+	args2[0] = upModuleExpression(pm->getImport(i), qidMap);
 	int mode = pm->getImportMode(i);
 	Symbol* s = includingSymbol;
 	if ((mode == Token::encode("pr")) || (mode == Token::encode("protecting")))
@@ -76,13 +74,155 @@ MetaLevel::upImports(PreModule* pm, PointerMap& qidMap)
 	args.append(s->makeDagNode(args2));
       }
   }
-  
-  int nrImports = args.length();
-  if (nrImports == 0)
-    return nilImportListSymbol->makeDagNode();
-  else if (nrImports == 1)
-    return args[0];
-  return importListSymbol->makeDagNode(args);
+  return upGroup(args, nilImportListSymbol, importListSymbol);
+}
+
+DagNode*
+MetaLevel::upModuleExpression(const ModuleExpression* e, PointerMap& qidMap)
+{
+  switch (e->getType())
+    {
+    case ModuleExpression::MODULE:
+      {
+	return upQid(e->getModuleName().code(), qidMap);
+      }
+    case ModuleExpression::SUMMATION:
+      {
+	const list<ModuleExpression*>& modules = e->getModules();
+	Vector<DagNode*> args(modules.size());
+	Vector<DagNode*>::iterator j = args.begin();
+	FOR_EACH_CONST(i, list<ModuleExpression*>, modules)
+	  {
+	    *j = upModuleExpression(*i, qidMap);
+	    ++j;
+	  }
+	return sumSymbol->makeDagNode(args);
+      }
+    case ModuleExpression::RENAMING:
+      {
+	Vector<DagNode*> args(2);
+	args[0] = upModuleExpression(e->getModule(), qidMap);
+	args[1] = upRenaming(e->getRenaming(), qidMap);
+	return renamingSymbol->makeDagNode(args);
+      }
+    default:
+      CantHappen("bad module expression");
+    }
+  return 0;
+}
+
+DagNode*
+MetaLevel::upRenaming(const Renaming* r, PointerMap& qidMap)
+{
+  Vector<DagNode*> args;
+  Vector<DagNode*> args2(2);
+  Vector<DagNode*> args3;
+  {
+    int nrSortMapings = r->getNrSortMappings();
+    for (int i = 0; i < nrSortMapings; i++)
+      {
+	args2[0] = upQid(r->getSortFrom(i), qidMap);
+	args2[1] = upQid(r->getSortTo(i), qidMap);
+	args.append(sortRenamingSymbol->makeDagNode(args2));
+      }
+  }
+  {
+    int nrLabelMapings = r->getNrLabelMappings();
+    for (int i = 0; i < nrLabelMapings; i++)
+      {
+	args2[0] = upQid(r->getLabelFrom(i), qidMap);
+	args2[1] = upQid(r->getLabelTo(i), qidMap);
+	args.append(labelRenamingSymbol->makeDagNode(args2));
+      }
+  }
+  {
+    int nrOpMappings = r->getNrOpMappings();
+    for (int i = 0; i < nrOpMappings; i++)
+      {
+	int nrTypes = r->getNrTypes(i);
+	if (nrTypes == 0)
+	  {
+	    args2.resize(3);
+	    args2[0] = upQid(r->getOpFrom(i), qidMap);
+	    args2[1] = upQid(r->getOpTo(i), qidMap);
+	    args2[2] = upRenamingAttributeSet(r, i, qidMap);
+	    args.append(opRenamingSymbol->makeDagNode(args2));
+	  }
+	else
+	  {
+	    args2.resize(5);
+	    args2[0] = upQid(r->getOpFrom(i), qidMap);
+	    --nrTypes;
+	    if (nrTypes == 0)
+	      args2[1] = nilQidListSymbol->makeDagNode();
+	    else
+	      {
+		args3.resize(nrTypes);
+		for (int j = 0; j < nrTypes; j++)
+		  args3[j] = upTypeSorts(r->getTypeSorts(i, j), qidMap);
+		args2[1] = (nrTypes == 1) ? args3[0] : qidListSymbol->makeDagNode(args3);
+	      }
+	    args2[2] = upTypeSorts(r->getTypeSorts(i, nrTypes), qidMap);
+	    args2[3] = upQid(r->getOpTo(i), qidMap);
+	    args2[4] = upRenamingAttributeSet(r, i, qidMap);
+	    args.append(opRenamingSymbol2->makeDagNode(args2));
+	  }
+      }
+  }
+  return renamingSetSymbol->makeDagNode(args);
+}
+
+DagNode*
+MetaLevel::upTypeSorts(const set<int>& sorts, PointerMap& qidMap)
+{
+  Assert(!sorts.empty(), "empty sort set");
+  int id;
+  if (sorts.size() == 1)
+    id = *(sorts.begin());
+  else
+    {
+      string fullName;
+      const char* sep = "`[";
+      FOR_EACH_CONST(i, set<int>, sorts)
+	{
+	  fullName += sep;
+	  sep = "`,";
+	  fullName += Token::name(*i);
+	}
+      fullName += "`]";
+      id = Token::encode(fullName.c_str());
+    }
+  return upQid(id, qidMap);
+}
+
+DagNode*
+MetaLevel::upRenamingAttributeSet(const Renaming* r, int index, PointerMap& qidMap)
+{
+  Vector<DagNode*> args;
+  {
+    int prec = r->getPrec(index);
+    if (prec >= MixfixModule::MIN_PREC)
+      {
+	Vector<DagNode*> args2(1);
+	args2[0] = succSymbol->makeNatDag(prec);
+	args.append(precSymbol->makeDagNode(args2));
+      }
+  }
+  {
+    const Vector<int>& gather = r->getGather(index);
+    if (!gather.empty())
+      args.append(upGather(gather, qidMap));
+  }
+  {
+    const Vector<int>& format = r->getFormat(index);
+    if (!format.empty())
+      {
+	Vector<DagNode*> args2(1);
+	args2[0] = upQidList(format, qidMap);
+	args.append(formatSymbol->makeDagNode(args2));
+      }
+  }
+  return upGroup(args, emptyAttrSetSymbol, attrSetSymbol);
 }
 
 DagNode*
@@ -117,13 +257,7 @@ MetaLevel::upSubsortDecls(bool flat, ImportModule* m, PointerMap& qidMap)
 	    }
 	}
     }
-  
-  int nrSubsortDecls = args.length();
-  if (nrSubsortDecls == 0)
-    return emptySubsortDeclSetSymbol->makeDagNode();
-  else if (nrSubsortDecls == 1)
-    return args[0];
-  return subsortDeclSetSymbol->makeDagNode(args);
+  return upGroup(args, emptySubsortDeclSetSymbol, subsortDeclSetSymbol);
 }
 
 DagNode*
@@ -152,13 +286,7 @@ MetaLevel::upOpDecls(bool flat, ImportModule* m, PointerMap& qidMap)
 	  args.append(upOpDecl(m, i, j, qidMap));
       }
   }
-
-  int nrOpDecls = args.length();
-  if (nrOpDecls == 0)
-    return emptyOpDeclSetSymbol->makeDagNode();
-  else if (nrOpDecls == 1)
-    return args[0];
-  return opDeclSetSymbol->makeDagNode(args);
+  return upGroup(args, emptyOpDeclSetSymbol, opDeclSetSymbol);
 }
 
 DagNode*
@@ -526,13 +654,7 @@ MetaLevel::upAttributeSet(SymbolType st, Vector<DagNode*>& args)
     args.append(msgSymbol->makeDagNode());
   if (st.hasFlag(SymbolType::MEMO))
     args.append(memoSymbol->makeDagNode());
-
-  int nrAttributes = args.length();
-  if (nrAttributes == 0)
-    return emptyAttrSetSymbol->makeDagNode();
-  else if (nrAttributes == 1)
-    return args[0];
-  return attrSetSymbol->makeDagNode(args);
+  return upGroup(args, emptyAttrSetSymbol, attrSetSymbol);
 }
 
 DagNode*
@@ -549,13 +671,7 @@ MetaLevel::upMbs(bool flat, ImportModule* m, PointerMap& qidMap)
       if (!(mb->isBad()))
 	args.append(upMb(mb, m, qidMap));
     }
-
-  int nrMetaMbs = args.length();
-  if (nrMetaMbs == 0)
-    return emptyMembAxSetSymbol->makeDagNode();
-  else if (nrMetaMbs == 1)
-    return args[0];
-  return membAxSetSymbol->makeDagNode(args);
+  return upGroup(args, emptyMembAxSetSymbol, membAxSetSymbol);
 }
 
 DagNode*
@@ -592,13 +708,7 @@ MetaLevel::upEqs(bool flat, ImportModule* m, PointerMap& qidMap)
       if (!(eq->isBad()))
 	args.append(upEq(eq, m, qidMap));
     }
-
-  int nrMetaEquations = args.length();
-  if (nrMetaEquations == 0)
-    return emptyEquationSetSymbol->makeDagNode();
-  else if (nrMetaEquations == 1)
-    return args[0];
-  return equationSetSymbol->makeDagNode(args);
+  return upGroup(args, emptyEquationSetSymbol, equationSetSymbol);
 }
 
 DagNode*
@@ -635,13 +745,7 @@ MetaLevel::upRls(bool flat, ImportModule* m, PointerMap& qidMap)
       if (!(rl->isBad()))
 	args.append(upRl(rl, m, qidMap));
     }
-
-  int nrMetaRules = args.length();
-  if (nrMetaRules == 0)
-    return emptyRuleSetSymbol->makeDagNode();
-  else if (nrMetaRules == 1)
-    return args[0];
-  return ruleSetSymbol->makeDagNode(args);
+  return upGroup(args, emptyRuleSetSymbol, ruleSetSymbol);
 }
 
 DagNode*
@@ -687,24 +791,11 @@ MetaLevel::upStatementAttributes(MixfixModule* m,
       args.append(metadataSymbol->makeDagNode(args2));
     }
   if (pe->isNonexec())
-    {
-      Vector<DagNode*> args2;
-      args.append(nonexecSymbol->makeDagNode(args2));
-    }
+    args.append(nonexecSymbol->makeDagNode());
   const Equation* eq = dynamic_cast<const Equation*>(pe);
   if (eq != 0 && eq->isOwise())
-    {
-      Vector<DagNode*> args2;
-      args.append(owiseSymbol->makeDagNode(args2));
-    }
-  switch (args.length())
-    {
-    case 0:
-      return emptyAttrSetSymbol->makeDagNode(args);
-    case 1:
-      return args[0];
-    }
-  return attrSetSymbol->makeDagNode(args);
+    args.append(owiseSymbol->makeDagNode());
+  return upGroup(args, emptyAttrSetSymbol, attrSetSymbol);
 }
 
 DagNode*

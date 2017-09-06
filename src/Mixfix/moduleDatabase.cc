@@ -101,3 +101,14 @@ ModuleDatabase::setOmodInclude(Token name, bool polarity)
   else
     defaultOmodIncludes.subtract(code);
 }
+
+void
+ModuleDatabase::showNamedModules() const
+{
+  FOR_EACH_CONST(i, ModuleMap, moduleMap)
+    {
+      PreModule* m = i->second;
+      cout << ((m->getModuleType() == MixfixModule::SYSTEM_MODULE) ? "mod " : "fmod ") <<
+	m << '\n';
+    }
+}

@@ -1,3 +1,609 @@
+2004-02-25  Steven Eker  <eker@goo.csl.sri.com>
+
+	* commands.yy (command): remove show all modules . as it conflicts
+	with show all <mod name> .
+
+	* interpreter.cc (showModules): use showNamedModules()
+
+	* moduleDatabase.cc (showModules): renamed to showNamedModules()
+
+	* moduleDatabase.hh (class ModuleDatabase): showModules() ->
+	showNamedModules()
+
+	* commands.yy (command): added commands show modules . and show
+	all modules .
+
+	* top.yy: added KW_MODULES
+
+	* lexer.ll: added keyword modules
+
+	* moduleDatabase.hh (class ModuleDatabase): added decl for showModules()
+
+	* moduleDatabase.cc (showModules): added
+
+	* preModule.hh (getModuleType): added
+
+	* moduleCache.hh (Parent): adde decl for showModules
+
+	* moduleCache.cc (showModules): added
+
+	* interpreter.hh (endif): added decl for showModules()
+
+	* interpreter.cc (showModules): added
+
+2004-02-24  Steven Eker  <eker@goo.csl.sri.com>
+
+	* modules.yy (fDeclaration): added call to
+	cleanUpModuleExpression()
+
+	* top.yy: added forward decl for cleanUpModuleExpression()
+
+	* bottom.yy (cleanUpModuleExpression): added
+
+	* moduleCache.cc (makeRenamedCopy): fixed bug where we were
+	forgetting to delete the canonical renaming that we made if the
+	module we wanted was in cache
+
+	* top.yy: use explicit stack to hold module expressions; updated
+	%union; fixed + vs * prec bug
+
+	* modules.yy (moduleExpr): rewritten so that module expression
+	pointers are stored on an explicit stack rather than the bison
+	stack; this allows us to free memory after an error
+	(renaming): same trick as above
+	(fDeclaration): new module expression conventions
+
+	* mixfixModule.cc (findSymbol): check that true and false are in
+	the same connected component before trying to make a sort test
+
+	* makeGrammar.cc (makeBoolProductions): check that true and false
+	are in the same connected component before adding syntax for sort
+	tests
+
+	* entry.cc (addOpDeclaration): check for duplicate SystemTrue and
+	SystemFalse symbols
+
+2004-02-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* fixUp.cc (fixUpSymbols): check for identity clash between
+	dupicate polymorphic operators
+
+	* entry.cc (addPolymorph): check for dups
+
+	* mixfixModule.hh (CommonTokens): added decl for domainAndRangeMatch()
+	(CommonTokens): updated decl for findPolymorphIndex()
+
+	* mixfixModule.cc (findPolymorphIndex): handle domain and range argument
+	(domainAndRangeMatch): added
+
+	* renameModule.cc (fixUpDonatedOps2): rewrote polymorph fixup code
+	to handle distinct polymorphs with the same name
+
+2004-02-20  Steven Eker  <eker@goo.csl.sri.com>
+
+	* import.cc (processImports): call destructUnusedModules()
+
+	* moduleCache.cc: (destructUnusedModules): added
+
+	* importModule.hh (hasDependents): added
+
+	* moduleCache.hh (Parent): added decl for destructUnusedModules()
+
+2004-02-17  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: added metasyntax and hooks for summation and
+	renaming
+
+	* moduleExpression.cc (deepSelfDestruct): can't assume module
+	member is valid unless we are a renaming
+
+	* preModule.hh (Parent): deleted decl for importModule()
+
+	* import.cc (processImports): use getModule()
+	(makeModule): rewritten using getModule()
+	(importModule): deleted
+
+	* moduleExpression.cc (ModuleExpression): store module name as a
+	token
+	(operator<<): new getModuleName() semantics
+
+	* moduleExpression.hh (class ModuleExpression): moduleName becomes
+	a token in order to have line number
+	(getModuleName): updated return type
+
+	* import.cc (getModule): added
+
+	* moduleCache.cc (makeSummation): compute correct module type
+	using join()
+
+	* mixfixModule.hh (join): added
+
+2004-02-13  Steven Eker  <eker@goo.csl.sri.com>
+
+	* importModule.hh (class ImportModule): added decl for dtor
+
+	* importModule.cc (~ImportModule): added
+
+	* preModule.cc (PreModule): use deepSelfDestruct()
+
+	* moduleExpression.cc (deepSelfDestruct): added
+
+	* moduleExpression.hh (class ModuleExpression): added decl for
+	deepSelfDestruct()
+
+	* import.cc (makeModule): handle list<> for summations
+
+	* moduleExpression.cc (ModuleExpression): handle flattening of
+	nested summations
+	(operator<<): handle list<> for summations
+
+	* moduleExpression.hh (class ModuleExpression): store summations
+	as a list<>
+
+2004-02-11  Steven Eker  <eker@goo.csl.sri.com>
+
+	* import.cc (makeModule): use ModuleCache version of
+	makeRenamedCopy()
+
+	* importModule.hh (class ImportModule): deleted decls for
+	makeSummation() and moduleCompare()
+
+	* renameModule.cc (makeSummation): deleted
+	(moduleCompare): deleted
+
+	* importModule.hh (class ImportModule): updated decl for
+	makeRenamedCopy()
+
+	* renameModule.cc (makeRenamedCopy): rewritten using new conventions
+
+	* mixfix.hh: added class ModuleCache
+
+	* import.cc (makeModule): use ModuleCache version of makeSummation()
+
+	* moduleCache.hh: created
+
+	* moduleCache.cc: created
+
+	* renameModule.cc (makeRenamedCopy): copy becomes one of our
+	dependent modules
+
+	* importModule.cc (deepSelfDestruct): remove self from dependent
+	modules of baseModule
+
+2004-02-09  Steven Eker  <eker@goo.csl.sri.com>
+
+	* import.cc (makeModule): check for recursive imports
+
+	* preModule.hh (Parent): added decl for makeModule()
+
+	* import.cc (processImports): rewritten to use makeModule()
+	(makeModule): added
+
+2004-02-06  Steven Eker  <eker@goo.csl.sri.com>
+
+	* importModule.hh (class ImportModule): added decls for
+	makeSummation() and moduleCompare()
+
+	* renameModule.cc (makeSummation): added
+	(moduleCompare): added
+
+2004-02-05  Steven Eker  <eker@goo.csl.sri.com>
+
+	* renameModule.cc (makeRenamedCopy): crude first attempt at
+	caching
+
+	* userLevelRewritingContext.cc (printSubstitution): added
+	DebugAdvisory()
+
+	* renaming.cc (makeCanonicalName): handle attributes
+
+	* renaming.hh (class Renaming): added decl for makeTypeName()
+
+	* renaming.cc (makeTypeName): added
+
+	* renameModule.cc (makeRenamedCopy): new makeCanonicalName()
+	convention
+
+	* renaming.cc (makeCanonicalVersion): fix same bug in polymorph
+	case
+	(makeCanonicalName): handle labels and op mappings
+
+	* renameModule.cc (makeRenamedCopy): use makeCanonicalName()
+
+	* renaming.cc (makeCanonicalName): added
+
+	* renaming.hh (class Renaming): added decl for makeCanonicalName()
+
+	* renaming.cc (makeCanonicalVersion): fix bug where we could
+	potentially miss an operator renaming by using upper_bound() and
+	lower_bound() instead of end() and find()
+
+2004-02-04  Steven Eker  <eker@goo.csl.sri.com>
+
+	* importModule.cc (donateStatements2): use translateLabel()
+
+	* importTranslation.hh (class ImportTranslation): added decl for
+	translateLabel()
+
+	* importTranslation.cc (translateLabel): added
+
+	* importModule.hh (getLabels): added
+
+	* renaming.cc: handle labels
+
+	* renameModule.cc (localStatementsComplete): moved here
+
+	* importModule.cc (localStatementsComplete): handle labels and
+	label renaming
+
+	* importModule.hh (class ImportModule): added data member labels
+
+2004-02-03  Steven Eker  <eker@goo.csl.sri.com>
+
+	* importModule.cc (fixUpDonatedOps): use fixUpDonatedOps2()
+
+	* importModule.hh (class ImportModule): fixUpRenamedOps() decl ->
+	fixUpDonatedOps2()
+
+	* renameModule.cc (localSort2): renamed from localSort()
+	(localSort): added version that handles kinds
+	(donateSorts2): use localSort2()
+	(fixUpDonatedOps2): renamed from fixUpRenamedOps()
+	(fixUpDonatedOps2): fix Vector<Symbol*> copy bug
+	(fixUpDonatedOps2): handle polymorphs in fully general way
+	(makeRenamedCopy): use fixUpDonatedOps2()
+
+2004-02-02  Steven Eker  <eker@goo.csl.sri.com>
+
+	* importModule.cc (donateOps): use donateOps2()
+
+	* importModule.hh (class ImportModule): decl for
+	donateRenamedOps() becomes donateOps2()
+
+	* renameModule.cc (donateRenamedOps): deleted renameTranslation
+	local variable
+	(donateRenamedOps): use localSort() (2 places)
+	(donateRenamedOps): Warning for imports from multiple places
+	without a common ancestor downgraded to an advisory
+	(donateRenamedOps): fix nasty bug where we were accidentally
+	copying Vector of symbol pointers
+	(donateRenamedOps): renamed to donateOps2()
+	(makeRenamedCopy): donateRenamedOps() -> donateOps2()
+
+	* importModule.hh (class ImportModule): findSort() -> localSort()
+
+	* renameModule.cc (donateRenamedStatements): deleted
+	(findSort): renamed to localSort()
+	(donateSorts2): findSort() -> localSort()
+
+	* importModule.hh (class ImportModule): repaced decl for
+	findSort()
+	donateRenamedSorts() with donateSorts2(); added decl for 
+	(class ImportModule): deleted decl for donateRenamedStatements()
+
+	* renameModule.cc (makeRenamedCopy): use donateSorts2()
+
+	* importModule.cc (donateSorts): use donateSorts2()
+
+	* renameModule.cc (makeRenamedCopy): don't call
+	donateRenamedStatements()
+	(donateRenamedSorts): becomes donateSorts2(); handle null renaming
+	correctly; issue advisory rather than warning for dup sort
+	(findSort): added
+
+	* importTranslation.cc (ImportTranslation): use push(), take
+	renaming argument
+	(translate): rewrote all 3 versions so that we can handle imports
+	of symbols into renamed modules for fixups
+
+	* importTranslation.hh (class ImportTranslation): deleted data
+	member importer; updated decl for ctor
+
+2004-01-30  Steven Eker  <eker@goo.csl.sri.com>
+
+	* importTranslation.hh (class ImportTranslation): added decl for
+	static version of translate()
+
+	* importTranslation.cc (translate): added static version
+
+	* importModule.cc (donateStatements2): use
+	ImportTranslation::push()
+
+	* importTranslation.cc (ImportTranslation): no intialization for
+	renamings
+	(translate): use new definition for renamings
+
+	* importTranslation.hh (push): added
+	(class ImportTranslation): updated data member renamings; added
+	data member targets; upated decl for ImportTranslation()
+
+2004-01-29  Steven Eker  <eker@goo.csl.sri.com>
+
+	* renameModule.cc (makeRenamedCopy): set canonicalRenaming and
+	baseModule
+
+	* importModule.cc (donateStatements): use donateStatements2()
+	(ImportModule): initialize canonicalRenaming and baseModule
+
+	* importModule.hh (class ImportModule): added decl for
+	donateStatements2(); added data members canonicalRenaming and
+	baseModule
+
+	* importModule.cc (donateStatements2): added
+
+	* renameModule.cc (fixUpRenamedOps): don't use firstPolymorphCopy
+	(donateRenamedOps): don't set firstPolymorphCopy
+
+	* importModule.hh (class ImportModule): deleted data member
+	firstPolymorphCopy
+
+	* importModule.cc (donateOps): don't set firstPolymorphCopy
+	(fixUpDonatedOps): use findPolymorphIndex() rather than
+	firstPolymorphCopy
+
+	* mixfixModule.hh (CommonTokens): added decl for
+	findPolymorphIndex()
+
+	* mixfixModule.cc (findPolymorphIndex): added
+
+	* mixfixModule.hh (findIterSymbolIndex): made const
+
+2004-01-28  Steven Eker  <eker@goo.csl.sri.com>
+
+	* importModule.hh (class ImportModule): deleted data member
+	responsibleForFixUp
+
+	* renameModule.cc (donateRenamedOps): don't initialize or fill out
+	the responsibleForFixUp set
+	(fixUpRenamedOps): rewritten to avoid needing the
+	responsibleForFixUp set
+
+	* importModule.cc (fixUpDonatedOps): rewritten to avoid needing
+	the responsibleForFixUp set
+	(donateOps): don't initialize or fill out the responsibleForFixUp
+	set
+
+2004-01-27  Steven Eker  <eker@goo.csl.sri.com>
+
+	* renameModule.cc (donateRenamedOps): handle bubbles
+	(fixUpRenamedOps): new copyFixUpBubbleSpec() convention
+
+	* importModule.cc (donateOps): new copyBubbleSpec() convention
+	(fixUpDonatedOps): new copyFixUpBubbleSpec() convention
+
+	* mixfixModule.hh (CommonTokens): updated decls for
+	copyBubbleSpec() and copyFixUpBubbleSpec()
+
+	* mixfixModule.cc (copyFixUpBubbleSpec): rewritten with new
+	semantics to allow incremental/multiple fixups
+	(copyBubbleSpec): rewritten with new semantics; also fix a nasty
+	bug where we were copying the bubble spec from the wrong module
+
+2004-01-26  Steven Eker  <eker@goo.csl.sri.com>
+
+	* renameModule.cc (donateRenamedOps): removed static stuff for
+	cleanliness
+	(fixUpRenamedOps): implemented
+
+	* renaming.cc (makeCanonicalVersion): fixed bug where we had to
+	test for whether we had already added a generic op renaming the
+	wrong way around.
+
+	* renameModule.cc (donateRenamedOps): handle polymorphs
+
+	* renaming.hh (class Renaming): added decl for renamePolymorph()
+
+	* renaming.cc (makeCanonicalVersion): handle polymorphs
+	(renamePolymorph): added
+
+2004-01-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* renameModule.cc (donateRenamedOps): use assignFlags() (4 places)
+	(donateRenamedOps): use gather.clear()
+
+	* symbolType.hh (assignFlags): added
+
+2003-12-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* renameModule.cc (makeRenamedCopy): use makeCanonicalVersion()
+
+	* renaming.hh (class Renaming): added decl for setType()
+
+	* renaming.cc (setType): added
+
+	* renaming.hh (class Renaming): added decl for
+	makeCanonicalVersion()
+
+	* renaming.cc (typeMatch): updated args (both versions)
+	(addType): don't take kind arg
+	(convertSortsToKinds): deleted
+	(printRenamingType): don't check isKind()
+	(makeCanonicalVersion): added
+
+	* renaming.hh (class Renaming): updated decl for addType();
+	deleted decl for convertSortsToKinds(); delete struct Type
+	(isKind): deleted
+	(getTypeSorts): updated
+
+	* modules.yy (fromType): use new addType() convention; don't use
+	convertSortsToKinds()
+
+	* renaming.hh (class Renaming): typeConflict() decls become
+	typeMatch()
+
+	* renaming.cc (addType): use new Type
+	(typeConflict): becomes typeMatch() (both versions)
+	(renameOp): use typeMatch()
+	(printRenamingType): added
+	(operator<<): use printRenamingType()
+
+	* renaming.hh (class Renaming): updated struct Type; replaced decl
+	for getTypeTokens() with getTypeSorts()
+	(getTypeTokens): becomes getTypeSorts()
+
+2003-12-19  Steven Eker  <eker@goo.csl.sri.com>
+
+	* importTranslation.cc (ImportTranslation): handle renamings argument
+	(translate): (sort version) handle renamings
+
+	* importTranslation.hh (class ImportTranslation): updated decl for
+	ctor, added data member renamings
+
+2003-12-09  Steven Eker  <eker@goo.csl.sri.com>
+
+	* importModule.hh (class ImportModule): added decls for
+	donateRenamedSorts(), donateRenamedOps(), fixupRenamedOps(),
+	donateRenamedStatements()
+
+	* renameModule.cc (donateRenamedOps): added
+	(fixupRenamedOps): added stub
+	(donateRenamedStatements): added stub
+	(makeRenamedCopy): call donateRenamedOps(), fixupRenamedOps() and
+	donateRenamedStatements()
+
+	* renaming.cc (renameLabel): added
+
+	* renaming.hh (class Renaming): adeed decls for renameLabel(),
+	renameOp() and both versions of typeConflict()
+
+	* renaming.cc (addOpMapping): set index field
+	(renameOp): added
+	(typeConflict): added two versions
+
+	* renaming.hh (class Renaming): added index field to struct OpMapping
+
+2003-12-08  Steven Eker  <eker@goo.csl.sri.com>
+
+	* renameModule.cc (donateRenamedSorts): added
+
+	* importModule.hh (class ImportModule): added decl for
+	donateRenamedSorts()
+
+	* import.cc (processImports): quick hack to handle simple renaming
+
+	* renaming.hh (class Renaming): added decl for renameSort()
+
+	* renaming.cc (renameSort): added
+
+	* importModule.hh (class ImportModule): added decl for
+	makeRenamedCopy()
+
+	* renameModule.cc: created
+
+2003-12-01  Steven Eker  <eker@goo.csl.sri.com>
+
+	* command.cc (printAttributes): use printGather() and
+	printFormat()
+
+	* renaming.cc (operator<<): handle attributes
+
+	* preModule.hh (Parent): added decls for printGather() and
+	printFormat()
+
+	* command.cc (printGather): added
+	(printFormat): added
+
+	* renaming.cc (setPrec): don't set symbolType member
+	(setGather): don't set symbolType member
+	(setFormat): don't set symbolType member
+	(setLatexMacro): don't set symbolType member
+	(addOpMapping): initialize prec member to invalid value
+
+	* renaming.hh (getPrec): added
+	(getGather): added
+	(getFormat): added
+	(class Renaming): deleted symbolType member from struct OpMapping
+
+	* renaming.cc (setPrec): implemented
+	(setFormat): implemented
+	(setLatexMacro): implemented
+	(addSortMapping): handle line number
+	(addLabelMapping): handle line number
+
+	* ops.cc (setPrec): use getInt()
+
+	* token.cc (getInt): added
+
+	* token.hh (class Token): added decl for getInt()
+
+	* renaming.cc (setGather): implemented
+
+2003-11-24  Steven Eker  <eker@goo.csl.sri.com>
+
+	* renaming.cc (convertSortsToKinds): added
+
+	* renaming.hh (class Renaming): added decl forconvertSortsToKinds()
+
+	* modules.yy (fromSpec): handle ~> semantics
+
+	* token.hh (class Token): added decl for printTokens();
+
+	* token.cc (printTokens): added
+
+	* renaming.hh (isKind): added
+	(getTypeTokens): added
+	(getNrTypes): added
+
+	* renaming.cc (addType): added
+
+	* renaming.hh (class Renaming): added data member lastOpMapping;
+	added symbolType member to struct OpMapping
+	(getOpFrom): added
+	(getOpTo): added
+	(class Renaming): added struct Type; added data member types to
+	struct OpMapping
+
+	* renaming.cc (operator<<): handle sort and label mappings
+
+	* renaming.hh (getSortFrom): added
+	(getSortTo): added
+	(getLabelFrom): added
+	(getLabelTo): aded
+
+	* modules.yy (moduleExpr): use new ModuleExpression convention
+
+	* renaming.cc (addSortMapping): rewritten
+	(addLabelMapping): rewritten
+
+	* renaming.hh (class Renaming): added data members sortMapIndex,
+	labelMapIndex, opMapIndex
+	(getNrSortMappings): added
+	(getNrLabelMappings): added
+	(getNrOpMappings): added
+
+	* moduleExpression.hh (class ModuleExpression): updated decl for
+	ModuleExpression()
+
+	* moduleExpression.cc (ModuleExpression): take Token rather than
+	int
+
+	* modules.yy (fDeclaration): fix the bug that bubble gets reused
+	for parsing identifiers in renamings
+
+	* renaming.cc (operator<<): added
+
+	* moduleExpression.cc (operator<<): handle summation and renaming
+
+2003-11-20  Steven Eker  <eker@goo.csl.sri.com>
+
+	* top.yy: added decls for tokenBarColonTo, tokenBarCommaLeft
+
+	* modules.yy (mapping): added semantics for sort and label
+	mappings
+	(tokenBarColonTo): added
+	(tokensBarColonTo): added
+	(tokenBarCommaLeft): added
+	(tokensBarCommaLeft): added
+	(mapping): added semantics for op mappings
+
+	* top.yy: added global variable current renaming
+
+	* renaming.cc: created
+
+	* renaming.hh: created
+	
+===================================Maude83a===========================================
+
 2003-11-12  Steven Eker  <eker@goo.csl.sri.com>
 
 	* preModule.cc (PreModule): delete module expressions in imports

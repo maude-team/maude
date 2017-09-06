@@ -104,10 +104,15 @@
 #include "interpreter.hh"
 #include "visibleModule.hh"
 #include "moduleExpression.hh"
+#include "renaming.hh"
 #include "main.hh"  // HACK to access global module database
+
+#include "moduleCache.hh"
+extern ModuleCache moduleCache;  // HACK
 
 //	our stuff
 #include "metaDown.cc"
+#include "metaDownRenamings.cc"
 #include "metaDownOps.cc"
 #include "metaDownFixUps.cc"
 #include "metaUp.cc"

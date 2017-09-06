@@ -82,6 +82,19 @@
      //
      MACRO(stringSymbol, StringSymbol, SymbolType::STRING, 0)
      //
+     //	Renaming constructors.
+     //
+     MACRO(sortRenamingSymbol, FreeSymbol, 0, 2)
+     MACRO(opRenamingSymbol, FreeSymbol, 0, 3)
+     MACRO(opRenamingSymbol2, FreeSymbol, 0, 5)
+     MACRO(labelRenamingSymbol, FreeSymbol, 0, 2)
+     MACRO(renamingSetSymbol, Symbol, SymbolType::ASSOC | SymbolType::COMM, 2)
+     //
+     //	Module expression constructors.
+     //
+     MACRO(sumSymbol, Symbol, SymbolType::ASSOC | SymbolType::COMM, 2)
+     MACRO(renamingSymbol, FreeSymbol, 0, 2)
+     //
      //	Hook constructors.
      //
      MACRO(termHookSymbol, FreeSymbol, 0, 2)
@@ -113,8 +126,8 @@
 
      MACRO(labelSymbol, FreeSymbol, 0, 1)
      MACRO(metadataSymbol, FreeSymbol, 0, 1)
-     MACRO(owiseSymbol, FreeSymbol, 0, 0)
-     MACRO(nonexecSymbol, FreeSymbol, 0, 0)
+     MACRO(owiseSymbol, Symbol, 0, 0)
+     MACRO(nonexecSymbol, Symbol, 0, 0)
 
      MACRO(emptyAttrSetSymbol, Symbol, 0, 0)
      MACRO(attrSetSymbol, Symbol, SymbolType::ASSOC | SymbolType::COMM, 2)

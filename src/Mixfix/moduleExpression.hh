@@ -25,6 +25,8 @@
 //
 #ifndef _moduleExpression_hh_
 #define _moduleExpression_hh_
+#include <list>
+#include "token.hh"
 
 class ModuleExpression
 {
@@ -36,26 +38,27 @@ public:
     RENAMING
   };
 
-  ModuleExpression(int moduleName);
+  ModuleExpression(Token moduleName);
   ModuleExpression(ModuleExpression* left, ModuleExpression* right);
   ModuleExpression(ModuleExpression* module, Renaming* renaming);
 
   Type getType() const;
-  int getModuleName() const;
-  const Vector<ModuleExpression*>& getModules() const;
+  Token getModuleName() const;
+  const list<ModuleExpression*>& getModules() const;
   ModuleExpression* getModule() const;
   Renaming* getRenaming() const;
+  void deepSelfDestruct();
 
 private:
   const Type type;
   //
   //	For named module.
   //
-  int moduleName;
+  Token moduleName;
   //
   //	For summation.
   //
-  Vector<ModuleExpression*> modules;
+  list<ModuleExpression*> modules;
   //
   //	For renaming.
   //
@@ -71,14 +74,14 @@ ModuleExpression::getType() const
   return type;
 }
 
-inline int
+inline Token
 ModuleExpression::getModuleName() const
 {
   Assert(type == MODULE, "not a named module");
   return moduleName;
 }
 
-inline const Vector<ModuleExpression*>&
+inline const list<ModuleExpression*>&
 ModuleExpression::getModules() const
 {
   Assert(type == SUMMATION, "not a summation");

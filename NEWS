@@ -1,3 +1,14 @@
+Overview of Changes in Maude alpha83a
+=====================================
+* fixed crash that occurred when bubbles are imported
+* fixed memory corruption when copying persistent representations
+* fixed crash on imported module overwrite following a descent
+  function failure
+* simple module expressions are now supported at both the object and
+  metalevel 
+* bashing together unrelated sorts and ops is now legal
+* added show modules command
+
 Overview of Changes in Maude alpha83
 ====================================
 * made polymorphs explicit with poly attribute
