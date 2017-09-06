@@ -427,13 +427,14 @@ DagNode::setTheoryByte(Byte value)
 inline void
 DagNode::reduce(RewritingContext& context)
 {
-  if (!isReduced())
+  while (!isReduced())
     {
-      while (topSymbol->eqRewrite(this, context))
-	;
-      setReduced();
-      //      if (sortIndex == Sort::SORT_UNKNOWN)
-      topSymbol->fastComputeTrueSort(this, context);
+      if (!(topSymbol->eqRewrite(this, context)))
+	{
+	  setReduced();
+	  topSymbol->fastComputeTrueSort(this, context);
+	  break;
+	}
     }
 }
 

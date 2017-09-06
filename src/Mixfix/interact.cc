@@ -140,7 +140,8 @@ UserLevelRewritingContext::internalErrorHandler(int /* signalNr */)
   static char message2[] = PACKAGE_BUGREPORT;
   static char message3[] = "\nPlease include the platform details, Maude version, and a file\n\
 `crash.maude' that can be loaded to reproduce the crash (it may load\n\
-other files).\n\n";
+other files). Do not bother trying to simplify your example unless the\n\
+runtime to the bug being visible is greater than 10 seconds.\n\n";
   write(STDERR_FILENO, message1, sizeof(message1) - 1);
   write(STDERR_FILENO, message2, sizeof(message2) - 1);
   write(STDERR_FILENO, message3, sizeof(message3) - 1);

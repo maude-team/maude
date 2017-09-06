@@ -80,5 +80,6 @@ class FreshVariableGenerator;
 class NarrowingVariableInfo;
 class ProtectedDagNodeSet;
 class PendingUnificationStack;
+class Environment;
 
 #endif

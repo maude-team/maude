@@ -390,7 +390,7 @@ ACU_Symbol::computeGeneralizedSort(const SortBdds& sortBdds,
 	 " " <<  static_cast<void*>(dynamic_cast<ACU_DagNode*>(subject)) <<
 	 " " <<  static_cast<void*>(dynamic_cast<ACU_TreeDagNode*>(subject)));
 
-  const Vector<Bdd>& sortFunction = sortBdds.getSortFunction(getIndexWithinModule());
+  const Vector<Bdd>& sortFunction = sortBdds.getSortFunction(this);
   int nrBdds = sortFunction.size();
 
   ArgVec<ACU_Pair>& args = safeCast(ACU_DagNode*, subject)->argArray;

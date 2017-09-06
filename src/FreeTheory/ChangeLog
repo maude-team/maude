@@ -1,3 +1,10 @@
+2008-12-22  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeSymbol.cc (computeGeneralizedSort): new getSortFunction()
+	convention
+
+===================================Maude92===========================================
+
 2008-09-11  Steven Eker  <eker@goo.csl.sri.com>
 
 	* freeDagNode.cc (computeBaseSortForGroundSubterms): added default

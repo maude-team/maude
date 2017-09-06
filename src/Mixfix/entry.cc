@@ -550,6 +550,8 @@ MixfixModule::newFancySymbol(Token prefixName,
       return new CounterSymbol(name);
     case SymbolType::SOCKET_MANAGER_SYMBOL:
       return new SocketManagerSymbol(name);
+    case SymbolType::INTERPRETER_MANAGER_SYMBOL:
+      return new InterpreterManagerSymbol(name);
     }
 
   int lineNr = prefixName.lineNumber();

@@ -2678,7 +2678,7 @@ char *yytext;
 #include "token.hh"
 #include "fileTable.hh"
 #include "directoryManager.hh"
-#include "preModule.hh"
+//#include "preModule.hh"
 #include "lexerAux.hh"
 #include "global.hh"
 #include "userLevelRewritingContext.hh"
@@ -2707,9 +2707,9 @@ char *yytext;
   { lvalp->yyToken = savedToken; return (token); }
 
 #define STORE \
-  { Token t; t.tokenize(yytext, lineNumber); lexerBubble.append(t); DebugAdvisory("Stored " << t); }
+  { Token t; t.tokenize(yytext, lineNumber); lexerBubble.append(t); /*DebugAdvisory("Stored " << t);*/ }
 #define STORE_FIX_UP \
-  { Token t; t.fixUp(yytext, lineNumber); lexerBubble.append(t); DebugAdvisory("Stored fixUp " << t); }
+  { Token t; t.fixUp(yytext, lineNumber); lexerBubble.append(t); /*DebugAdvisory("Stored fixUp " << t);*/ }
 
 #define EXIT(token) \
   { yy_pop_state(); RETURN(token) }

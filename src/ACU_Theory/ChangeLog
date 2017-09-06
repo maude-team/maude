@@ -1,3 +1,14 @@
+2008-12-22  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_Symbol.cc (computeGeneralizedSort): new getSortFunction()
+	convention
+
+2008-12-19  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_Subproblem.hh: derive from DelayedSubproblem
+
+===================================Maude92===========================================
+
 2008-09-24  Steven Eker  <eker@goo.csl.sri.com>
 
 	* ACU_Matcher.cc (fullMatch): fix bug where we weren't setting up

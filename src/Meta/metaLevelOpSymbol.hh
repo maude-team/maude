@@ -26,6 +26,7 @@
 #ifndef _metaLevelOpSymbol_hh_
 #define _metaLevelOpSymbol_hh_
 #include "freeSymbol.hh"
+#include "sequenceSearch.hh"
 
 class MetaLevelOpSymbol : public FreeSymbol
 {
@@ -52,6 +53,8 @@ public:
   void postInterSymbolPass();
   void reset();
   bool eqRewrite(DagNode* subject, RewritingContext& context);
+
+  MetaLevel* getMetaLevel() const;
 
 private:
   typedef bool (MetaLevelOpSymbol::*DescentFunctionPtr)
@@ -131,5 +134,12 @@ private:
   MetaLevel* metaLevel;
   MetaLevelOpSymbol* shareWith;
 };
+
+inline MetaLevel*
+MetaLevelOpSymbol::getMetaLevel() const
+{
+  Assert(metaLevel != 0, "null metaLevel");
+  return metaLevel;
+}
 
 #endif

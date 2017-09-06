@@ -104,12 +104,41 @@ SortBdds::SortBdds(Module* module)
   //	For each operator, we compute the vector of BDDs that encodes its sort
   //	function.
   //
+  /*
   const Vector<Symbol*>& symbols = module->getSymbols();
   int nrSymbols = symbols.size();
   sortFunctions.resize(nrSymbols);
+  //
+  //	We now do this on demand.
+  //
   for (int i = 0; i < nrSymbols; ++i)
     symbols[i]->computeSortFunctionBdds(*this, sortFunctions[i]);
   DebugAdvisory("After sort function computation: BDD nodes in use: " << bdd_getnodenum());
+  */
+}
+
+const Vector<Bdd>&
+SortBdds::getSortFunction(Symbol* symbol) const
+{
+  //
+  //	We construct the sort function on demand. This is partly to save time and space
+  //	on symbols that don't occur in unification problems, but mostly to handle
+  //	late symbols.
+  //
+  int symbolIndex = symbol->getIndexWithinModule();
+  int currentSize = sortFunctions.size();
+  if (currentSize <= symbolIndex)
+    {
+      //
+      //	Resizing a vector of vectors of BDDs is very expensive so make it as large
+      //	as we currently expect.
+      //
+      sortFunctions.resize(symbol->getModule()->getSymbols().size());
+    }
+  Vector<Bdd>& f = sortFunctions[symbolIndex];
+  if (f.isNull())
+    symbol->computeSortFunctionBdds(*this, f);
+  return f;
 }
 
 void

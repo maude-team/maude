@@ -150,7 +150,8 @@ MetaLevel::downParameterDecl(DagNode* metaParameterDecl, ImportModule* m)
 	{
 	  Token t;
 	  t.tokenize(name, FileTable::META_LEVEL_CREATED);
-	  m->addParameter(t, interpreter.makeParameterCopy(name, theory));
+	  Interpreter* owner = safeCast(MetaModule*, m)->getOwner();  // HACK - probably all modules should have owners
+	  m->addParameter(t, owner->makeParameterCopy(name, theory));
 	  return true;
 	}
     }
@@ -158,9 +159,12 @@ MetaLevel::downParameterDecl(DagNode* metaParameterDecl, ImportModule* m)
 }
 
 MetaModule*
-MetaLevel::downModule(DagNode* metaModule)
+MetaLevel::downModule(DagNode* metaModule, bool cacheMetaModule, Interpreter* owner)
 {
-  MetaModule* cm = cache.find(metaModule);
+  if (owner == 0)
+    owner = &interpreter;  // NASTY HACK - should get default owner from metaModule rather than global variable
+
+  MetaModule* cm = cache.find(metaModule);  // BUG - could be in another interpreter
   if (cm != 0)
     return cm;
   Symbol* ms = metaModule->symbol();
@@ -182,7 +186,7 @@ MetaLevel::downModule(DagNode* metaModule)
   DagNode* metaParameterDeclList;
   if (downHeader(f->getArgument(0), id, metaParameterDeclList))
     {
-      MetaModule* m = new MetaModule(id, mt, &cache);
+      MetaModule* m = new MetaModule(id, mt, cacheMetaModule ? &cache : 0, owner);
       if (downParameterDeclList(metaParameterDeclList, m) &&
 	  downImports(f->getArgument(1), m))
 	{
@@ -211,7 +215,8 @@ MetaLevel::downModule(DagNode* metaModule)
 			      m->importStatements();
 			      m->closeTheory();
 			      m->resetImports();
-			      cache.insert(metaModule, m);
+			      if (cacheMetaModule)  // HACK: this should probably be done elsewhere
+				cache.insert(metaModule, m);
 			      //
 			      //	We may have displace a module from the 
 			      //	metamodule cache generating garbage in
