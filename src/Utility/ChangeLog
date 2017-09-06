@@ -1,3 +1,11 @@
+2004-03-16  Steven Eker  <eker@goo.csl.sri.com>
+
+	* macros.hh (DebugAdvisoryCheck): allow to be switched off with
+	globalAdvisoryFlag
+	(DebugAdvisory): allow to be switched off with globalAdvisoryFlag
+
+===================================Maude84===========================================
+
 2003-10-01  Steven Eker  <eker@goo.csl.sri.com>
 
 	* macros.cc (stringToDouble): work around for versions of atof()

@@ -179,8 +179,6 @@ public:
 			  const MixfixModule* originalModule,
 			  int originalPolymorphIndex,
 			  SymbolMap* map);
-  //int copyPolymorph(const MixfixModule* originalModule,
-  //		    int originalPolymorphIndex);
   int getNrPolymorphs() const;
   Token getPolymorphName(int index) const;
   SymbolType getPolymorphType(int index) const;

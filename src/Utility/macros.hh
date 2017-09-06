@@ -202,12 +202,13 @@ __FILE__ << ':' << __LINE__ << '\n' << message << endl), \
 abort())
 
 #define \
-DebugAdvisoryCheck(condition, message)\
-if (!(condition)) \
+DebugAdvisoryCheck(condition, message) \
+if (!(condition) && globalAdvisoryFlag) \
 ((cerr << "DEBUG ADVISORY: " << message << endl))
 
 #define \
 DebugAdvisory(message) \
+if (globalAdvisoryFlag) \
 (cerr << "DEBUG ADVISORY: " << message << endl)
 
 #else
@@ -227,12 +228,12 @@ DebugAdvisory(message) \
 #define QUOTE(s)	BEGIN_QUOTE << s << END_QUOTE
 
 #define \
-WarningCheck(condition, message)\
+WarningCheck(condition, message) \
 if (!(condition)) \
 (cerr << WARNING_HEADER << message << endl)
 
 #define \
-AdvisoryCheck(condition, message)\
+AdvisoryCheck(condition, message) \
 if (!(condition) && globalAdvisoryFlag) \
 (cerr << ADVISORY_HEADER << message << endl)
 
@@ -241,7 +242,7 @@ IssueWarning(message) \
 (cerr << WARNING_HEADER << message << endl)
 
 #define \
-IssueAdvisory(message)\
+IssueAdvisory(message) \
 if (globalAdvisoryFlag) \
 (cerr << ADVISORY_HEADER << message << endl)
 

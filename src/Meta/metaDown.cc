@@ -156,7 +156,7 @@ MetaLevel::downModule(DagNode* metaModule)
 				  //	processing so we should tidy the (expression)
 				  //	module cache regularly.
 				  //
-				  moduleCache.destructUnusedModules();
+				  interpreter.destructUnusedModules();
 				  return m;
 				}
 			    }
@@ -180,7 +180,7 @@ MetaLevel::downModule(DagNode* metaModule)
 	  //	dependents now that we failed to build the metamodule.
 	  //	Thus we now need to tidy the module cache.
 	  //	
-	  moduleCache.destructUnusedModules();
+	  interpreter.destructUnusedModules();
 	}
     }
   return 0;
@@ -216,19 +216,6 @@ MetaLevel::downImport(DagNode* metaImport, MetaModule* m)
 	  m->addImport(im);
 	  return true;
 	}
-      /*
-      int moduleName;
-      FreeDagNode* f = static_cast<FreeDagNode*>(metaImport);
-      if (downQid(f->getArgument(0), moduleName))
-	{
-	  PreModule* pm = interpreter.getModule(moduleName);
-	  if (pm != 0 && !(pm->getFlatSignature()->isBad()))
-	    {
-	      m->addImport(pm->getFlatSignature());
-	      return true;
-	    }
-	}
-      */
     }
   return false;
 }

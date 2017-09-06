@@ -206,7 +206,12 @@ oDecList	:	oDecList oDeclaration
 		|
 		;
 
-fDeclaration	:	KW_IMPORT moduleExpr '.'	{ CM->addImport($1, moduleExpressions.top()); }
+fDeclaration	:	KW_IMPORT moduleExpr '.'
+			{
+			  ModuleExpression* me = moduleExpressions.top();
+			  moduleExpressions.pop();
+			  CM->addImport($1, me);
+			}
 
 		|	KW_SORT			{ clear(); }
 			listBarDot '.'		{ CM->addSortDecl(bubble); }

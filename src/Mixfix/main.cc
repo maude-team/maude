@@ -77,20 +77,25 @@ main(int argc, char* argv[])
 {
   // extern int yydebug;
   // yydebug = 0;
+
+  //
+  //	Global function declatations
+  //
   void printBanner(ostream& s);
   void printHelp(const char* name);
   void printVersion();
-
   void createRootBuffer(FILE* fp, bool forceInteractive);
   bool includeFile(const string& directory, const string& fileName, bool silent, int lineNr);
   extern Vector<char*> pendingFiles;
   const char* isFlag(const char* arg, const char* flag);
+
 
   ioManager.setAutoWrap();
 
   bool handleCtrlC = true;
   bool readPrelude = true;
   bool forceInteractive = false;
+  bool outputBanner = true;
   int ansiColor = UNDECIDED;
   int useTecla = UNDECIDED;
 
@@ -117,6 +122,8 @@ main(int argc, char* argv[])
 	    useTecla = false;
 	  else if (strcmp(arg, "-no-prelude") == 0)
 	    readPrelude = false;
+	  else if (strcmp(arg, "-no-banner") == 0)
+	    outputBanner = false;
 	  else if (strcmp(arg, "-batch") == 0)
 	    handleCtrlC = false;
 	  else if (strcmp(arg, "-interactive") == 0)
@@ -161,7 +168,8 @@ main(int argc, char* argv[])
 	useTecla = false;
     }
 
-  printBanner(cout);
+  if (outputBanner)
+    printBanner(cout);
   createRootBuffer(stdin, forceInteractive);
   UserLevelRewritingContext::setHandlers(handleCtrlC);
   if (useTecla)
@@ -204,11 +212,13 @@ void
 printHelp(const char* name)
 {
   cout <<
+    "Maude interpreter\n" <<
     "Usage: " << name << " [options] [files]\n" <<
     "Options:\n" <<
     "  --help\t\tDisplay this information\n" <<
     "  --version\t\tDisplay version number\n" <<
     "  -no-prelude\t\tDo not read in the standard prelude\n" <<
+    "  -no-banner\t\tDo not output banner on startup\n" <<
     "  -no-mixfix\t\tDo not use mixfix notation for output\n" <<
     "  -ansi-color\t\tUse ANSI control sequences\n" <<
     "  -no-ansi-color\tDo not use ANSI control sequences\n" <<

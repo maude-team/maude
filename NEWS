@@ -1,3 +1,9 @@
+Overview of Changes in Maude 2.1
+================================
+* added -no-banner flag
+* fixed bug where syntax errors corrupted memory
+* added rudimentary test suite
+
 Overview of Changes in Maude alpha83a
 =====================================
 * fixed crash that occurred when bubbles are imported

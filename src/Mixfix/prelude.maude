@@ -2,7 +2,7 @@
 
     This file is part of the Maude 2 interpreter.
 
-    Copyright 1997-2003 SRI International, Menlo Park, CA 94025, USA.
+    Copyright 1997-2004 SRI International, Menlo Park, CA 94025, USA.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 
 ***
 ***	Maude interpreter standard prelude.
-***	Version Alpha 83a
+***	Version 2.1
 ***
 ***	Some of the overall structure is taken from the OBJ3
 ***	interpreter standard prelude.
@@ -79,8 +79,8 @@ endfm
 set include BOOL on .
 
 fmod EXT-BOOL is
-  op _and-then_ : Bool Bool -> Bool [strat (1 0 2 0) gather (e E) prec 55] .
-  op _or-else_ : Bool Bool -> Bool [strat (1 0 2 0) gather (e E) prec 59] .
+  op _and-then_ : Bool Bool -> Bool [strat (1 0) gather (e E) prec 55] .
+  op _or-else_ : Bool Bool -> Bool [strat (1 0) gather (e E) prec 59] .
   var B : [Bool] .
   eq true and-then B = B .
   eq false and-then B = false .
