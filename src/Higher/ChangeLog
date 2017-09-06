@@ -1,3 +1,28 @@
+2009-11-06  Steven Eker  <eker@goo.csl.sri.com>
+
+	* narrowingUnificationProblem.cc (findOrderSortedUnifiers):
+	constrain free fresh variables to have sort indices in valid range
+
+	* unificationProblem.cc (findOrderSortedUnifiers): move
+	constraints on free fresh variables to after the BDD variables
+	have been allocate, using a separate loop
+
+2009-10-29  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unificationProblem.cc (findOrderSortedUnifiers): fix a critical
+	bug in the algorithm - notion of a sort index being valid cannot
+	be carried through generalized sort computations, and therefore
+	for free variables that are also fresh variables, and won't
+	otherwise be constrained, additional constraints must be added to
+	ensure they only range over valid sort indices
+
+2009-09-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unificationProblem.cc (findOrderSortedUnifiers): added
+	DebugAdvisory() to investigate the BDD variable bug
+
+===================================Maude92a===========================================
+
 2008-09-11  Steven Eker  <eker@goo.csl.sri.com>
 
 	* narrowingUnificationProblem.cc (findOrderSortedUnifiers): use &

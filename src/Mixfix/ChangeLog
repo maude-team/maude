@@ -1,3 +1,13 @@
+2009-11-06  Steven Eker  <eker@goo.csl.sri.com>
+
+	* entry.cc (newFancySymbol): pass strategy to MetaLevelOpSymbol()
+
+2009-09-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* interact.cc (setHandlers): call BddUser::setErrorHandler()
+
+===================================Maude92a===========================================
+
 2009-08-19  Steven Eker  <eker@goo.csl.sri.com>
 
 	* parameterization.cc (handleInstantiationByTheoryView): reorg

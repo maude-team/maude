@@ -1,0 +1,25 @@
+***(
+Bug reported by Marc Boyer <Marc.Boyer@onera.fr>
+Received 3/17/09.
+
+Crash caused during the construction of a module corresponding to a
+complex module expression, the reparsing of a module that has another
+module change below it can cause the module under construction to be
+garbage collected (because it doesn't yet have users) cause massive
+memory corruption.
+
+Resolved in alpha92.
+)
+
+load LubMin.maude
+load Pair.maude
+
+mod WFCS is
+ protecting (LIST * (op __ : List{X} List{X} -> List{X} to _:_ )){Rat} .
+ protecting LUB-MIN .
+endm
+
+show modules .
+show all .
+
+q

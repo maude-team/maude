@@ -1,0 +1,10 @@
+#!/bin/sh
+
+MAUDE_LIB=$srcdir/../../src/Main
+export MAUDE_LIB
+
+../../src/Main/maude \
+  < $srcdir/adrian8-13-09.maude -no-banner -no-advise \
+  > adrian8-13-09.out 2>&1
+
+diff $srcdir/adrian8-13-09.expected adrian8-13-09.out > /dev/null 2>&1

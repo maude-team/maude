@@ -1,0 +1,11 @@
+
+fmod PAIR{ X :: TRIV , Y :: TRIV} is
+  sort Pair{X , Y} .
+  op pair< _ , _ > : X$Elt Y$Elt -> Pair{X,Y} [ctor] .
+  op left  _ : Pair{X,Y} -> X$Elt .
+  op right _ : Pair{X,Y} -> Y$Elt .
+  var le : X$Elt .
+  var re : Y$Elt .
+  eq left  pair< le , re > = le .
+  eq right pair< le , re > = re .
+endfm

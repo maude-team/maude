@@ -1,3 +1,21 @@
+2009-11-06  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaLevelOpSymbol.hh (class MetaLevelOpSymbol): updated ctor
+
+	* metaLevelOpSymbol.cc (complexStrategy): added
+	(eqRewrite): use complexStrategy()
+	(MetaLevelOpSymbol): take and pass strategy
+
+	* metaLevelOpSymbol.hh (class MetaLevelOpSymbol): added decl for
+	complexStrategy()
+
+2009-11-02  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaMatch.cc (makeMatchSearchState): added DebugAdvisory() to
+	investigate performance problem
+
+===================================Maude92a===========================================
+
 2009-08-24  Steven Eker  <eker@goo.csl.sri.com>
 
 	* meta.hh: added class InterpreterManagerSymbol

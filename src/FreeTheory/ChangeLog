@@ -1,3 +1,48 @@
+2009-11-06  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeTerm.hh (class FreeTerm): made both
+	findConstraintPropagationSequence() const
+
+	* freeLhsCompiler.cc (findConstraintPropagationSequence): made
+	const (both versions)
+
+	* freeTerm.hh (class FreeTerm): deleted decl for
+	insertGroundOutAliens(); made both
+	findConstraintPropagationSequence() decls non-static
+	(class FreeTerm): currentSequence no longer const in
+	findConstraintPropagationSequence() decl
+
+	* freeLhsCompiler.cc (analyseConstraintPropagation): code cleaning
+	(compileRemainder): code cleaning
+	(findConstraintPropagationSequence): (top level version) don't
+	call insertGroundOutAliens()
+	(findConstraintPropagationSequence): (lower level version)
+	rewritten to do insertGroundOutAliens() stuff internally; avoid
+	making copies of currentSequence where possible
+	(insertGroundOutAliens): deleted
+	(scanFreeSkeleton): code cleaing
+
+2009-11-04  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeLhsCompiler.cc (findConstraintPropagationSequence): added
+	early terminate once we find a branch that binds uniquely all
+	variables occuring below us.
+
+2009-11-02  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeLhsCompiler.cc (analyseConstraintPropagation): added
+	DebugAdvisory() to investigate performance problem
+
+2009-09-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeSymbol.cc (computeGeneralizedSort): fix nasty bug that we
+	were getting the sort function until after we've generated the
+	argMap we want to compose it with - but the generation of the sort
+	function may increase the number of bdd variables, and we need
+	those to make the argMap
+
+===================================Maude92a===========================================
+
 2008-12-22  Steven Eker  <eker@goo.csl.sri.com>
 
 	* freeSymbol.cc (computeGeneralizedSort): new getSortFunction()

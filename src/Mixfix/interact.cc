@@ -68,9 +68,11 @@ UserLevelRewritingContext::setHandlers(bool handleCtrlC)
       sigaction(SIGINT, &ctrlC_Handler, 0);
     }
 #ifdef NO_ASSERT
+
   //
   //	If we're not debugging we handle internal errors and stack overflows.
   //
+  BddUser::setErrorHandler(internalErrorHandler);  // BuDDy detects misuse of BDDs
   signal(SIGBUS, internalErrorHandler);  // misaligned memory access or nonexistent real memeory
   signal(SIGILL, internalErrorHandler);  // illegal instruction
 

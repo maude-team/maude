@@ -1,0 +1,359 @@
+***(
+Bug reported by Traian Florin Serbanuta <tserban2@illinois.edu>
+Received 8/12/09
+
+Crash caused by failed CUI matching leaving root pointers that point
+to stuff containing stale pointers when metamodule is evicted from
+cache. Same bug as paco7-18-09.
+
+Resolved in alpha92.
+)
+
+set show timing off .
+
+mod MATHEMATICAL-OBJECT is
+--- ?M stands for bound symbolic mathematical objects
+--- !M stands for unbound symbolic mathematical objects
+--- M stands for ground, non-symbolic mathematical objects
+--- M++ stands for all the above
+  sort ?MathObj !MathObj MathObj MathObj++ List{?MathObj} List{MathObj++} .
+  subsorts ?MathObj !MathObj MathObj < MathObj++ .
+  subsort ?MathObj < List{?MathObj} MathObj++ < List{MathObj++} .
+  op .empty : -> List{?MathObj} .
+  op _,_ : List{?MathObj} List{?MathObj} -> List{?MathObj} [assoc id: .empty] .
+  op _,_ : List{MathObj++} List{MathObj++} -> List{MathObj++} [ditto] .
+
+  op skolem : ?MathObj -> !MathObj [strat(0)] .
+  op skolemize : List{?MathObj} -> List{MathObj++} .
+  eq skolemize(.empty) = .empty .
+  eq skolemize(?Obj,?ObjList) = skolem(?Obj),skolemize(?ObjList) .
+
+  var ?Obj : ?MathObj .  var ?ObjList : List{?MathObj} .
+endm
+
+mod FORMULA is including MATHEMATICAL-OBJECT .
+  sort Formula .
+  subsort Bool <  Formula .
+  ops TrueFormula FalseFormula : -> Formula .
+  op _/\_ : Formula Formula -> Formula [prec 55 assoc comm id: TrueFormula] .
+  op _===_ : MathObj++ MathObj++ -> Bool [comm] .
+  op _===_ : List{MathObj++} List{MathObj++} -> Formula [ditto] .
+  vars Obj Obj1 Obj1' Obj2 Obj2' : MathObj++ .  vars ObjList1 ObjList2 : List{MathObj++} .
+  eq (Obj1,Obj1',ObjList1) === (Obj2,Obj2',ObjList2) = (Obj1 === Obj2) /\ (Obj1' === Obj2') /\ (ObjList1 === ObjList2) .
+  eq Obj === Obj = true .
+  eq .empty === .empty = TrueFormula .
+  op ~ : Formula -> Formula .
+  op ~ : Bool -> Bool .
+  op _\/_ : Formula Formula -> Formula [prec 59 assoc comm id: FalseFormula] .
+  op _===>_ : Formula Formula -> Formula [prec 61] .
+
+  var Phi Phi1 Phi2 : Formula .  var B : Bool .
+  eq Phi1 /\ Phi2 ===> Phi1 = true .
+  eq ~(~(Phi)) = Phi .
+  eq Phi ===> true = true .
+  eq true ===> Phi = Phi .
+ ceq (Phi ===> (Phi1 \/ Phi2)) = (Phi ===> Phi1) \/ (Phi ===> Phi2) if (Phi1 =/= FalseFormula) and (Phi2 =/= FalseFormula) .
+  eq ~(true) = false .
+  eq ~(false) = true .
+endm
+
+mod MATHEMATICAL-INT is inc MATHEMATICAL-OBJECT + FORMULA + INT .
+--- define sorts, subsorts and skolem as below for each new mathematical object
+  sorts ?Int !Int Int++ .   --- sort Int already defined
+  subsorts ?Int !Int Int < Int++ < MathObj++ .
+  subsort ?Int < ?MathObj .
+  subsort !Int < !MathObj .
+  subsort Int < MathObj .
+  op ?Int : Nat -> ?Int .
+  op skolem : ?Int -> !Int [ditto] .
+--- define operations to be used symbolically, as well as desired properties
+  ops _+_ _-_ _*_ _quo_ : Int++ Int++ -> Int++ [ditto] .
+  ops _>=_ _>_ : Int++ Int++ -> Bool [ditto] .
+  op -_ : Int++ -> Int++ [ditto] .
+  vars I J I1 I2 N : Int++ .  var B : Bool .
+  eq I:Int === J:Int = I:Int == J:Int .
+endm
+
+mod MATHEMATICAL-INT-SEQUENCE is inc MATHEMATICAL-INT .
+--- define sorts, subsorts and skolem as below for each new mathematical object
+  sorts ?IntSeq !IntSeq IntSeq IntSeq++ .  subsort ?Int < ?IntSeq . subsort Int < IntSeq .  subsort !Int < !IntSeq .  subsort Int++ < IntSeq++ .
+  subsorts ?IntSeq !IntSeq IntSeq < IntSeq++ < MathObj++ .
+  subsort ?IntSeq < ?MathObj .
+  subsort !IntSeq < !MathObj .
+  subsort IntSeq < MathObj .
+  op ?IntSeq : Nat -> ?IntSeq .
+  op skolem : ?IntSeq -> !IntSeq [ditto] .
+--- define operations to be used symbolically, as well as desired properties
+  op epsilon : -> IntSeq .
+  op _::_ : IntSeq++ IntSeq++ -> IntSeq++ [assoc] .
+endm
+
+mod MATHEMATICAL-GRAPH is inc MATHEMATICAL-INT .
+--- define sorts, subsorts and skolem as below for each new mathematical object
+  sorts ?Graph !Graph Graph Graph++ .
+  subsorts ?Graph !Graph Graph < Graph++ < MathObj++ .
+  subsort ?Graph < ?MathObj .
+  subsort !Graph < !MathObj .
+  subsort  Graph <  MathObj .
+  op ?Graph : Nat -> ?Graph .
+  op skolem : ?Graph -> !Graph [ditto] .
+--- define operations to be used symbolically, as well as desired properties
+  op empty : -> Graph .
+  op _[_,_] : Int++ Int++ Int++ -> Graph++ [prec 0] .
+  op _#_ : Graph++ Graph++ -> Graph++ [assoc comm id: empty] .
+  var G G' : Graph++ .  var P P' L L' R R' : Int++ .
+  eq ((G # P[L,R]) === (G' # P[L',R'])) = (G === G') /\ (L === L') /\ (R === R') .
+endm
+
+mod HEAP is inc INT .
+--- concrete heaps
+  sorts Heap LocType TypedObj .
+  op _:_ : Int LocType -> TypedObj [prec 0] .
+  op _|->_ : Int TypedObj -> Heap [prec 10] .
+  op .Heap : -> Heap .
+  op _**_ : Heap Heap -> Heap [assoc comm id: .Heap format(d nic! o d)] .
+endm
+
+mod MATHEMATICAL-HEAP is inc MATHEMATICAL-INT + HEAP .
+  sorts ?Heap !Heap Heap++ .   --- sort Heap already declared
+  subsorts ?Heap !Heap Heap < Heap++ < MathObj++ .
+  subsort ?Heap < ?MathObj .
+  subsort !Heap < !MathObj .
+  subsort Heap < MathObj .
+  op ?Heap : Nat -> ?Heap .
+  op skolem : ?Heap -> !Heap [ditto] .
+--- define operations to be used symbolically, as well as desired properties
+  op _:_ : Int++ LocType -> TypedObj [ditto] .
+  op _|->_ : Int++ TypedObj -> Heap++ [ditto] .
+  op _**_ : Heap++ Heap++ -> Heap++ [ditto] .
+endm
+
+mod MATHEMATICAL-DOMAIN is
+  inc MATHEMATICAL-INT + MATHEMATICAL-INT-SEQUENCE + MATHEMATICAL-GRAPH + MATHEMATICAL-HEAP . 
+endm
+
+mod K is
+  sorts K KProper KResult .
+  subsorts KProper KResult < K .
+  op .K : -> K .
+  op _~>_ : K K -> K [assoc id: .K format (d ni+b! o -) prec 100] .
+endm
+
+mod ENV is inc INT .
+  sorts PVar Env .
+  op _|->_ : PVar Int -> Env [prec 10] .
+  op .Env : -> Env .
+  op _;_ : Env Env -> Env [assoc comm id: .Env format(d sg! so d)] .
+  op _[_<-_] : Env PVar Int -> Env .
+endm
+
+mod MATHEMATICAL-ENV is inc MATHEMATICAL-INT + ENV .
+  sorts ?Env !Env Env++ .   --- sort Env already declared
+  subsorts ?Env !Env Env < Env++ < MathObj++ .
+  subsort ?Env < ?MathObj .
+  subsort !Env < !MathObj .
+  subsort Env < MathObj .
+  op ?Env : Nat -> ?Env .
+  op skolem : ?Env -> !Env [ditto] .
+--- define operations to be used symbolically, as well as desired properties
+  op _|->_ : PVar Int++ -> Env [ditto] .
+  op _;_ : Env++ Env++ -> Env++ [ditto] .
+  op _[_<-_] : Env++ PVar Int++ -> Env .
+endm
+
+mod CONFIG is inc K + MATHEMATICAL-ENV + MATHEMATICAL-HEAP .
+  sorts ConfigItem Set{ConfigItem} .  subsort ConfigItem < Set{ConfigItem} Formula .
+  op .empty : -> Set{ConfigItem} .
+  op error : -> [Set{ConfigItem}] .
+  op __ : Set{ConfigItem} Set{ConfigItem} -> Set{ConfigItem} [assoc comm id: .empty] .
+  op <k>_</k> : K -> ConfigItem [format (nib! oni nib! o)] .
+  op <env>_</env> : Env++ -> ConfigItem [format (nig! o g! o)] .
+  op <heap>_</heap> : Heap++ -> ConfigItem [format (nci++! n+++i---o n--ic! o)] .
+
+  op <config>_</config> : Set{ConfigItem} -> ConfigItem [format(niy! o nyi! o)] .
+  op <bnd>_</bnd> : List{?MathObj} -> ConfigItem [format(nic o c o)] .
+  op <form>_</form> : Formula -> ConfigItem [format(nim o m o)] .
+  op <newSym>_</newSym> : Nat -> ConfigItem [format (ni d d d)] .
+endm
+
+mod SUBST is inc CONFIG + META-LEVEL .
+  sort Subst .
+  op .Subst : -> Subst .
+  op _,_ : Subst Subst -> Subst [assoc comm id: .Subst] .
+  op _<-_ : MathObj++ MathObj++ -> Subst .
+  op _<-_ : List{MathObj++} List{MathObj++} -> Subst .
+  eq (Obj1,Obj2,ObjList) <- (Obj1',Obj2',ObjList') = (Obj1 <- Obj1'), (Obj2 <- Obj2'), (ObjList <- ObjList') .
+  eq .empty <- .empty = .Subst .
+  op _[_] : Formula Subst -> Formula [ prec 0] .
+
+  op mkEQS : Subst -> EquationSet .
+  eq mkEQS((Obj <- Obj'), Subst) = (eq upTerm(Obj) = upTerm(Obj') [none] .) mkEQS(Subst) .
+  eq mkEQS(.Subst) = none .
+
+  op TEST-MODULE : -> Module   .
+  op substitute : Formula Subst -> Formula  .
+  eq Phi[Subst] = substitute(Phi, Subst) [print "red (" Phi ") [" Subst "] ."].
+  eq substitute(Phi, Subst) = downTerm(getTerm(metaReduce(addEQS(upModule('TEST, false),mkEQS(Subst)),upTerm(Phi))),false) .  
+  var H : Header .  var IL : ImportList .  var SS : SortSet .  var SSDS : SubsortDeclSet .  var OPDS : OpDeclSet .
+  var MAS : MembAxSet .  var EQS EQS' : EquationSet .  var RLS : RuleSet .
+  op addEQS : Module EquationSet -> Module .
+  eq addEQS((mod H is IL sorts SS . SSDS OPDS MAS EQS RLS endm),EQS') = (mod H is IL sorts SS . SSDS OPDS MAS (EQS EQS') RLS endm) .
+
+  var Subst : Subst .  vars Obj Obj' Obj1 Obj1' Obj2 Obj2' : MathObj++ .  var ObjList ObjList' : List{MathObj++} .
+  var Cfg : Set{ConfigItem} .  var Phi : Formula .
+endm
+
+mod FOL= is inc SUBST + MATHEMATICAL-DOMAIN .
+--- FOL= is the proving heart of matching logic.  Provided that one had a "FOL= oracle" that can
+--- prove any implications of the form "Pattern ===> Pattern1 Pattern2 ... PatternN" (the conclusion is a disjunction of patterns),
+--- then one basically has a matching logic verifier.  Since we do not have such a magic oracle, we are going to mimic one.
+--- We do it in a few steps.
+
+ops (_=env=>_)  (_=form=>_) (_=debug=>_) : Formula Formula -> Formula [format(ni nr! o nini) strat(1 2 0)] .
+
+  var CFG CFG1 CFG2 : ConfigItem .  var CFGs Cfg Cfg1 Cfg2 : Set{ConfigItem} .  var ?ObjList1 ?ObjList2 : List{?MathObj} .
+  var Env1 Env2 : Env++ .  var H H1 H2 : Heap++ .  var Phi Phi1 Phi2 : Formula .  var P P' I1 I2 : Int++ .  var X : PVar .
+  var ?Obj : ?MathObj .  var !Obj : !MathObj .  var Obj Obj1 Obj2 : MathObj++ .  vars ObjList ObjList1 ObjList2 : List{MathObj++} .
+
+--- Step 1: Skolemize the bound variables in the hypothesis and discard those in the conclusion
+--- (recall that the bound variables are known to be bound from their sorts, so no need to keep them in the pattern)
+--- discard also all the useless configuration bookeeping infrastructure, at this moment just the counter for new symbols in the hypothesis 
+  eq [FOL] : <config> <bnd> ?ObjList1 </bnd> <newSym> N:Nat </newSym> Cfg1 </config> ===> <config> <bnd> ?ObjList2 </bnd> Cfg2 </config>
+   = <config> Cfg1 </config> [?ObjList1 <- skolemize(?ObjList1)] =env=> <config> Cfg2 </config> .
+
+--- Step 2: Eliminate the environments
+  eq [FOL] : <config> <env> Env1 </env> Cfg1 </config> =env=> <config> <env> Env2 </env> <form> Phi2 </form> Cfg2 </config>
+   = <config> Cfg1 </config> ===> <config> <form> Phi2 /\ Env1 === Env2 </form> Cfg2 </config> .
+--- deconstruct the resulting configuration equalities
+  eq [FOL] : (X |-> I1 ; Env1) === (X |-> I2 ; Env2) = (I1 === I2) /\ (Env1 === Env2) .
+
+--- Step 3: Stepwise, eliminate the heap, if any
+ ceq <config> <heap> HPN(P,ObjList1) ** H1 </heap> <form> Phi1 </form> </config> ===> <config> <heap> HPN(P,ObjList2) ** H2 </heap> <form> Phi2 </form> </config>
+   = <config> <heap> H1 </heap> <form> Phi1 </form> </config> ===> <config> <heap> H2 </heap> <form> Phi2 /\ ObjList1 === ObjList2 </form> </config> 
+    if not(P :: ?Int) .
+
+--- Step 3: Get rid of variable equalities and propagate them via substitution
+  op get?Subst : Formula -> Subst .  var ?Subst : Subst .  eq get?Subst(?Obj === Obj /\ Phi) = (?Obj <- Obj), get?Subst(Phi) .  eq get?Subst(Phi) = .Subst [owise] .
+  op get!Subst : Formula -> Subst .  var !Subst : Subst .  eq get!Subst(!Obj === Obj /\ Phi) = (!Obj <- Obj), get!Subst(Phi) .  eq get!Subst(Phi) = .Subst [owise] .
+--- Step 3.1 : Get rid of proof tasks for bound variable equalities in the conclusion
+ ceq [FOL] : CFG ===> <config> <form> Phi2 </form> Cfg2 </config>
+   = CFG ===> <config> <form> Phi2 </form> Cfg2 </config>[?Subst] if ?Subst := get?Subst(Phi2) /\ ?Subst =/= .Subst .
+--- Step 3.2 : Get rid of unbound variable equalities in the hypothesis
+ ceq [FOL] : <config> <form> Phi1 </form> Cfg1 </config> ===> CFG
+   = <config> <form> Phi1 </form> Cfg1 </config>[!Subst] ===> CFG[!Subst] if !Subst := get!Subst(Phi1) /\ !Subst =/= .Subst .
+
+  sort HeapPatternName .
+  op __ : HeapPatternName List{MathObj++} -> Heap++ [prec 0 format(d ++ --)] .
+  var HPN : HeapPatternName .
+
+endm
+
+mod IMP is inc FOL= .
+  var Phi : Formula .
+  ops invariant_ assume_ assert_ : Formula -> K [prec 99 strat(0) format(r! +++i i---)] .
+
+crl <config> <k> assert Phi ~> Rest </k> Cfg </config>
+  => <config> <k> assume Phi ~> Rest </k> Cfg </config> if <config> Cfg </config> ===> Phi => true .
+
+
+  vars Rest : K .
+  var Cfg : Set{ConfigItem} . 
+endm
+
+
+mod TEST is inc IMP .
+  ops a b c d e f g h i j k l m n o p q r s t u v x y z w : -> PVar .
+  op n0 : -> !Int .
+  op ?n : -> ?Int .
+
+
+  ops ?p ?x ?y : -> ?Int .
+  ops ?B ?C : -> ?IntSeq .
+  op A : -> !IntSeq .
+
+---  op list : Int IntSeq -> Heap .
+
+  op list : -> HeapPatternName .
+  ops node next : -> LocType .
+
+  ops ?q ?t ?p' ?l ?r : -> ?Int .
+  op root : -> !Int .
+  ops in out : -> !Graph .
+  ops ?in-t ?in-p : -> ?Graph .
+
+  op graph[_] : Nat -> HeapPatternName .
+  op stackInGraph : -> HeapPatternName .
+  ops clean neighbor left right : -> LocType .
+
+op path : -> PVar .
+op ?path : -> ?Int .
+endm
+
+rew ( 
+<config> ((
+<k>
+(assert   ((
+   <config> ((
+   <env> ((p |-> ?p) ; ((q |-> ?q) ; ((t |-> ?t) ; (path |-> ?path)))) </env>)
+    ((
+   <heap>
+        ((stackInGraph (?p,((?in-p # (?p[?t,?r])),?in-t)))
+     ** ((graph[0]) (?t,(?in-t,(?in-p # (?p[?t,?r]))))))
+   </heap>) ((
+   <bnd> (?t,(?p,(?q,(?in-t,(?in-p,?r))))) </bnd>) (
+   <form> (~((0 === ?p)) /\ (in === (?in-t # (?in-p # (?p[?t,?r])))))
+    </form>))))
+   </config>) \/ ((
+   <config> ((
+   <env> ((p |-> ?p) ; ((q |-> ?q) ; ((t |-> ?t) ; (path |-> ?path)))) </env>)
+    ((
+   <heap>
+        ((stackInGraph (?p,((?in-p # (?p[?t,?r])),?in-t)))
+     ** ((graph[1]) (?t,(?in-t,(?in-p # (?p[?t,?r]))))))
+   </heap>) ((
+   <bnd> (?t,(?p,(?q,(?in-t,(?in-p,?r))))) </bnd>) (
+   <form> (~((0 === ?p)) /\ (in === (?in-t # (?in-p # (?p[?t,?r])))))
+    </form>))))
+   </config>) \/ ((
+   <config> ((
+   <env> ((p |-> ?p) ; ((q |-> ?q) ; ((t |-> ?t) ; (path |-> ?path)))) </env>)
+    ((
+   <heap>
+        ((stackInGraph (?p,((?in-p # (?p[?l,?t])),?in-t)))
+     ** ((graph[0]) (?t,(?in-t,(?in-p # (?p[?l,?t]))))))
+   </heap>) ((
+   <bnd> (?t,(?p,(?q,(?in-t,(?in-p,?l))))) </bnd>) (
+   <form> (~((0 === ?p)) /\ (in === (?in-t # (?in-p # (?p[?l,?t])))))
+    </form>))))
+   </config>) \/ (
+   <config> ((
+   <env> ((p |-> ?p) ; ((q |-> ?q) ; ((t |-> ?t) ; (path |-> ?path)))) </env>)
+    ((
+   <heap>
+        ((stackInGraph (?p,((?in-p # (?p[?l,?t])),?in-t)))
+     ** ((graph[1]) (?t,(?in-t,(?in-p # (?p[?l,?t]))))))
+   </heap>) ((
+   <bnd> (?t,(?p,(?q,(?in-t,(?in-p,?l))))) </bnd>) (
+   <form> (~((0 === ?p)) /\ (in === (?in-t # (?in-p # (?p[?l,?t])))))
+    </form>))))
+   </config>))))   )
+</k>) ((
+<env> ((p |-> ?t) ; ((q |-> ?p) ; ((t |-> ?Int(0)) ; (path |-> 3)))) </env>) ((
+<heap>
+     ((?t |-> (1 : clean))
+  ** (((?t + 1) |-> (0 : neighbor))
+  ** (((?t + 2) |-> (?p : left))
+  ** (((?t + 3) |-> (?Int(1) : right))
+  ** ((stackInGraph (?p,((?in-p # (?p[?l,?t])),?in-t)))
+  ** (((graph[0]) (?Int(0),(?Graph(2),(?in-p # (?Graph(3) # ((?p[?l,?t]) # (?t[
+    ?Int(0),?Int(1)])))))))
+  ** ((graph[0]) (?Int(1),(?Graph(3),(?in-p # (?Graph(2) # ((?p[?l,?t]) # (?t[
+    ?Int(0),?Int(1)])))))))))))))
+</heap>) ((
+<bnd> (?t,(?p,(?q,(?in-t,(?in-p,(?l,(?Int(0),(?Int(1),(?Graph(2),?Graph(
+    3)))))))))) </bnd>) ((
+<form> (~((0 === ?p)) /\ ((in === (?in-t # (?in-p # (?p[?l,?t])))) /\ (?in-t
+    === (?Graph(2) # (?Graph(3) # (?t[?Int(0),?Int(1)])))))) </form>) (
+<newSym> 4 </newSym>))))))
+</config>)  .
+q

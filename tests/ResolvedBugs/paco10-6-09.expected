@@ -1,0 +1,51 @@
+Maude> ==========================================
+reduce in META-LEVEL : metaUnify(mod 'MINT-3-CLEARFROZEN-EQS2RLS-ADDEDRLS-REMOVED-ID-SYMBOLS-CLEARFROZEN-EQS2RLS-REMOVED-ID-SYMBOLS is
+  nil
+  sorts '#EqCondition ; 'Bool ; 'Int ; 'Nat ; 'NzInt ; 'NzNat ; 'Zero .
+  subsort 'Nat < 'Int .
+  subsort 'NzInt < 'Int .
+  subsort 'NzNat < 'Nat .
+  subsort 'NzNat < 'NzInt .
+  subsort 'Zero < 'Nat .
+  ((((((((((((((((((((((((((op 's_ : 'Nat -> 'NzNat [none] .
+  op 'true : nil -> 'Bool [ctor special(
+    id-hook('SystemTrue, nil))] .)
+  op 'quot : 'Nat 'NzNat -> 'Nat [none] .)
+  op 'quot : 'Int 'NzInt -> 'Int [none] .)
+  op 'p_ : 'NzNat -> 'Nat [none] .)
+  op 'not_ : 'Bool -> 'Bool [prec(53)] .)
+  op 'nil : nil -> '#EqCondition [none] .)
+  op 'gcd : 'NzNat 'NzNat -> 'NzNat [comm] .)
+  op 'gcd : 'NzInt 'NzInt -> 'NzNat [comm] .)
+  op 'false : nil -> 'Bool [ctor special(
+    id-hook('SystemFalse, nil))] .)
+  op 'd : 'Nat 'Nat -> 'Nat [comm] .)
+  op '_or_ : 'Bool 'Bool -> 'Bool [assoc comm prec(59)] .)
+  op '_and_ : 'Bool 'Bool -> 'Bool [assoc comm prec(55)] .)
+  op '_>_ : 'Nat 'Nat -> 'Bool [none] .)
+  op '_=_ : '`[Bool`] '`[Bool`] -> '#EqCondition [none] .)
+  op '_=E1=_ : 'Int 'Int -> 'Bool [none] .)
+  op '_/\_ : '#EqCondition '#EqCondition -> '#EqCondition [none] .)
+  op '_+_ : 'Nat 'Nat -> 'Nat [assoc comm] .)
+  op '_+_ : 'Int 'Int -> 'Int [assoc comm] .)
+  op '_*_ : 'NzNat 'NzNat -> 'NzNat [assoc comm] .)
+  op '_*_ : 'NzInt 'NzInt -> 'NzInt [assoc comm] .)
+  op '_*_ : 'Nat 'Nat -> 'Nat [assoc comm] .)
+  op '_*_ : 'Int 'Int -> 'Int [assoc comm] .)
+  op '0 : nil -> 'Zero [none] .)
+  op '-_ : 'NzInt -> 'NzInt [none] .)
+  op '-_ : 'Int -> 'Int [none] .)
+  op '#_#_#_# : '`[Int`] '`[Int`] '#EqCondition -> '`[Int`] [none] .)
+  op '#_#_# : 'Int '#EqCondition -> 'Int [none] .
+  none
+  none
+  none
+endm, '_+_['M':NzNat,'_+_['-_['N':NzNat],'X@@@:`[Int`]]] =? '_+_['0.Zero,
+    '#4:`[Int`]], 5, 1) .
+rewrites: 1
+result UnificationPair: {
+	'#4:`[Int`] <- '_+_['#7:NzNat,'-_['#6:NzNat]] ; 
+	'M':NzNat <- '#7:NzNat ; 
+	'N':NzNat <- '#6:NzNat ; 
+	'X@@@:`[Int`] <- '0.Zero,7}
+Maude> Bye.

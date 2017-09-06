@@ -1,0 +1,175 @@
+Maude> Maude> ==========================================
+reduce in META-LEVEL : metaUnify(mod 'STRAND-EXAMPLE-RULES-GENERATED-FLIPPEDRLS-ADDEDOPS-ADDEDOPS-ADDEDOPS-ADDEDOPS-ADDEDOPS-ADDEDOPS-CLEARFROZEN-EQS2RLS-REMOVED-ID-SYMBOLS is
+  nil
+  sorts 'Bool ; 'Fresh ; 'FreshSet ; 'Ghost ; 'GhostList ; 'IntruderKnowledge ;
+    'IntruderKnowledge-!= ; 'IntruderKnowledge-!inI ; 'IntruderKnowledge-CPSA ;
+    'IntruderKnowledge-empty ; 'IntruderKnowledge-inI ; 'IntruderKnowledge-inst
+    ; 'IntruderKnowledge-irr ; 'IntruderKnowledgeElem ; 'Knowledge ;
+    'Knowledge-!= ; 'Knowledge-!inI ; 'Knowledge-CPSA ; 'Knowledge-inI ;
+    'Knowledge-inst ; 'Knowledge-irr ; 'Msg ; 'MsgInStrand ; 'MsgSet ; 'Name ;
+    'PosNat ; 'Public ; 'SMsg ; 'SMsgList ; 'SMsgList-L ; 'SMsgList-R ; 'Strand
+    ; 'StrandSet ; 'System ; 'Universal .
+  subsort 'Fresh < 'FreshSet .
+  subsort 'Ghost < 'GhostList .
+  subsort 'IntruderKnowledge-!= < 'IntruderKnowledge .
+  subsort 'IntruderKnowledge-!inI < 'IntruderKnowledge .
+  subsort 'IntruderKnowledge-CPSA < 'IntruderKnowledge .
+  subsort 'IntruderKnowledge-empty < 'IntruderKnowledge .
+  subsort 'IntruderKnowledge-empty < 'IntruderKnowledge-!= .
+  subsort 'IntruderKnowledge-empty < 'IntruderKnowledge-!inI .
+  subsort 'IntruderKnowledge-empty < 'IntruderKnowledge-CPSA .
+  subsort 'IntruderKnowledge-empty < 'IntruderKnowledge-inI .
+  subsort 'IntruderKnowledge-empty < 'IntruderKnowledge-inst .
+  subsort 'IntruderKnowledge-empty < 'IntruderKnowledge-irr .
+  subsort 'IntruderKnowledge-inI < 'IntruderKnowledge .
+  subsort 'IntruderKnowledge-inst < 'IntruderKnowledge .
+  subsort 'IntruderKnowledge-irr < 'IntruderKnowledge .
+  subsort 'IntruderKnowledgeElem < 'IntruderKnowledge .
+  subsort 'Knowledge < 'IntruderKnowledgeElem .
+  subsort 'Knowledge-!= < 'IntruderKnowledge-!= .
+  subsort 'Knowledge-!= < 'Knowledge .
+  subsort 'Knowledge-!inI < 'IntruderKnowledge-!inI .
+  subsort 'Knowledge-!inI < 'Knowledge .
+  subsort 'Knowledge-CPSA < 'IntruderKnowledge-CPSA .
+  subsort 'Knowledge-CPSA < 'Knowledge .
+  subsort 'Knowledge-inI < 'IntruderKnowledge-inI .
+  subsort 'Knowledge-inI < 'Knowledge .
+  subsort 'Knowledge-inst < 'IntruderKnowledge-inst .
+  subsort 'Knowledge-inst < 'Knowledge .
+  subsort 'Knowledge-irr < 'IntruderKnowledge-irr .
+  subsort 'Knowledge-irr < 'Knowledge .
+  subsort 'Msg < 'MsgSet .
+  subsort 'Name < 'Msg .
+  subsort 'Name < 'Public .
+  subsort 'Public < 'Msg .
+  subsort 'SMsg < 'SMsgList .
+  subsort 'Strand < 'StrandSet .
+  (((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((
+    (op 'true : nil -> 'Bool [ctor special(
+    id-hook('SystemTrue, nil))] .
+  op 'z : nil -> 'PosNat [none] .)
+  op 'secret`(_`) : 'Msg -> 'Knowledge-CPSA [format('m 'd 'd 'd 'o)] .)
+  op 's : 'PosNat -> 'PosNat [iter] .)
+  op 'rigid@6@rigid#B2 : nil -> 'Name [none] .)
+  op 'rigid@6@rigid#B1 : nil -> 'Name [none] .)
+  op 'resuscitated`(_`) : 'Msg -> 'SMsgList [ctor format('c 'd 'd 'd 'o)] .)
+  op 'null : nil -> 'Msg [none] .)
+  op 'not_ : 'Bool -> 'Bool [prec(53)] .)
+  op 'noMsg : nil -> 'Msg [none] .)
+  op 'nil : nil -> 'SMsgList-R [ctor] .)
+  op 'nil : nil -> 'SMsgList-L [ctor] .)
+  op 'nil : nil -> 'SMsgList [ctor] .)
+  op 'nil : nil -> 'GhostList [ctor] .)
+  op 'nil : nil -> 'FreshSet [ctor] .)
+  op 'irr`(_`) : 'Msg -> 'Knowledge-irr [format('m 'd 'd 'd 'o)] .)
+  op 'inst`(_`) : 'Msg -> 'Knowledge-inst [format('m 'd 'd 'd 'o)] .)
+  op 'if_then_else_fi : 'Bool 'Universal 'Universal -> 'Universal [poly(2 3 0)
+    special(
+    id-hook('BranchSymbol, nil) 
+    term-hook('1, 'true.Bool) 
+    term-hook('2, 'false.Bool))] .)
+  op 'i : nil -> 'Name [none] .)
+  op 'ghost`(_`,_`,_`,_`) : 'Msg 'StrandSet 'IntruderKnowledge 'SMsgList ->
+    'Ghost [format('d 'd '++ 'd 'i 'd 'ni 'd 'ni '-- 'd)] .)
+  op 'false : nil -> 'Bool [ctor special(
+    id-hook('SystemFalse, nil))] .)
+  op 'emptyPublic : nil -> 'Public [none] .)
+  op 'emptyMsgSet : nil -> 'MsgSet [ctor] .)
+  op 'empty : nil -> 'StrandSet [ctor] .)
+  op 'empty : nil -> 'IntruderKnowledge-empty [ctor] .)
+  op 'b : nil -> 'Name [none] .)
+  op 'a : nil -> 'Name [none] .)
+  op '`(_InStrand_`) : 'PosNat 'Fresh -> 'MsgInStrand [none] .)
+  op '_||_||_||_ : 'StrandSet 'IntruderKnowledge 'SMsgList 'GhostList ->
+    'System [format('d 'n 'n 'n 'n 'n 'n 'n)] .)
+  op '_xor_ : 'Bool 'Bool -> 'Bool [assoc comm prec(57)] .)
+  op '_or_ : 'Knowledge-!= 'Knowledge-!= -> 'Knowledge-!= [assoc comm format('g
+    'd 'd 'o)] .)
+  op '_or_ : 'Bool 'Bool -> 'Bool [assoc comm prec(59)] .)
+  op '_inI : 'Msg -> 'Knowledge-inI [format('u 'd 'o)] .)
+  op '_implies_ : 'Bool 'Bool -> 'Bool [prec(61) gather('e 'E)] .)
+  op '_before_ : 'MsgInStrand 'MsgInStrand -> 'Knowledge-CPSA [format('m 'd 'd
+    'o)] .)
+  op '_and_ : 'Knowledge-!= 'Knowledge-!= -> 'Knowledge-!= [assoc comm format(
+    'g 'd 'd 'o)] .)
+  op '_and_ : 'Bool 'Bool -> 'Bool [assoc comm prec(55)] .)
+  op '_`,_ : 'SMsgList-L 'SMsg -> 'SMsgList-L [ctor gather('E 'e) format('d 'd
+    's 'd)] .)
+  op '_`,_ : 'SMsgList 'SMsgList -> 'SMsgList [ctor format('d 'd 's 'd)] .)
+  op '_`,_ : 'SMsg 'SMsgList-R -> 'SMsgList-R [ctor gather('e 'E) format('d 'd
+    's 'd)] .)
+  op '_`,_ : 'MsgSet 'MsgSet -> 'MsgSet [assoc comm ctor] .)
+  op '_`,_ : 'IntruderKnowledge-irr 'IntruderKnowledge-irr ->
+    'IntruderKnowledge-irr [assoc comm format('d 'd 's 'd)] .)
+  op '_`,_ : 'IntruderKnowledge-inst 'IntruderKnowledge-inst ->
+    'IntruderKnowledge-inst [assoc comm format('d 'd 's 'd)] .)
+  op '_`,_ : 'IntruderKnowledge-inI 'IntruderKnowledge-inI ->
+    'IntruderKnowledge-inI [assoc comm format('d 'd 's 'd)] .)
+  op '_`,_ : 'IntruderKnowledge-empty 'IntruderKnowledge-empty ->
+    'IntruderKnowledge-empty [assoc comm format('d 'd 's 'd)] .)
+  op '_`,_ : 'IntruderKnowledge-CPSA 'IntruderKnowledge-CPSA ->
+    'IntruderKnowledge-CPSA [assoc comm format('d 'd 's 'd)] .)
+  op '_`,_ : 'IntruderKnowledge-!inI 'IntruderKnowledge-!inI ->
+    'IntruderKnowledge-!inI [assoc comm format('d 'd 's 'd)] .)
+  op '_`,_ : 'IntruderKnowledge-!= 'IntruderKnowledge-!= ->
+    'IntruderKnowledge-!= [assoc comm format('d 'd 's 'd)] .)
+  op '_`,_ : 'IntruderKnowledge 'IntruderKnowledge -> 'IntruderKnowledge [assoc
+    comm ctor format('d 'd 's 'd)] .)
+  op '_`,_ : 'GhostList 'GhostList -> 'GhostList [ctor format('d 'd 'n 'd)] .)
+  op '_`,_ : 'FreshSet 'FreshSet -> 'FreshSet [assoc comm ctor] .)
+  op '_==_ : 'Universal 'Universal -> 'Bool [prec(51) poly(1 2) special(
+    id-hook('EqualitySymbol, nil) 
+    term-hook('equalTerm, 'true.Bool) 
+    term-hook('notEqualTerm, 'false.Bool))] .)
+  op '_=/=_ : 'Universal 'Universal -> 'Bool [prec(51) poly(1 2) special(
+    id-hook('EqualitySymbol, nil) 
+    term-hook('equalTerm, 'false.Bool) 
+    term-hook('notEqualTerm, 'true.Bool))] .)
+  op '_*_ : 'Msg 'Msg -> 'Msg [assoc comm] .)
+  op '_&_ : 'StrandSet 'StrandSet -> 'StrandSet [assoc comm ctor format('d 'd
+    'd 'd)] .)
+  op '_!inI : 'Msg -> 'Knowledge-!inI [format('d 'd 'o)] .)
+  op '_!=_ : 'Msg 'Msg -> 'Knowledge-!= [comm format('g 'd 'd 'o)] .)
+  op '::_::`[_|_`] : 'FreshSet 'SMsgList-L 'SMsgList-R -> 'Strand [format('ni
+    'd 'd 's 'd 'd 'd 'd 'd)] .)
+  op '9th : nil -> 'PosNat [none] .)
+  op '8th : nil -> 'PosNat [none] .)
+  op '7th : nil -> 'PosNat [none] .)
+  op '6th : nil -> 'PosNat [none] .)
+  op '5th : nil -> 'PosNat [none] .)
+  op '4th : nil -> 'PosNat [none] .)
+  op '3rd : nil -> 'PosNat [none] .)
+  op '2nd : nil -> 'PosNat [none] .)
+  op '20th : nil -> 'PosNat [none] .)
+  op '1st : nil -> 'PosNat [none] .)
+  op '19th : nil -> 'PosNat [none] .)
+  op '18th : nil -> 'PosNat [none] .)
+  op '17th : nil -> 'PosNat [none] .)
+  op '16th : nil -> 'PosNat [none] .)
+  op '15th : nil -> 'PosNat [none] .)
+  op '14th : nil -> 'PosNat [none] .)
+  op '13th : nil -> 'PosNat [none] .)
+  op '12th : nil -> 'PosNat [none] .)
+  op '11th : nil -> 'PosNat [none] .)
+  op '10th : nil -> 'PosNat [none] .)
+  op '-`(_`) : 'Msg -> 'SMsg [format('b 'd 'd 'd 'o)] .)
+  op '+`(_`) : 'Msg -> 'SMsg [format('r 'd 'd 'd 'o)] .
+  none
+  none
+  none
+endm, '_||_||_||_['::_::`[_|_`]['nil.FreshSet,'_`,_['_`,_['_`,_[
+    'nil.SMsgList-L,'+`(_`)['A:Name]],'-`(_`)['rigid@6@rigid#B1.Name]],'+`(_`)[
+    'A:Name]],'_`,_['-`(_`)['rigid@6@rigid#B2.Name],'_`,_['-`(_`)['_*_[
+    'rigid@6@rigid#B1.Name,'rigid@6@rigid#B2.Name]],'nil.SMsgList-R]]],'_inI[
+    '_*_['rigid@6@rigid#B1.Name,'rigid@6@rigid#B2.Name]],'nil.SMsgList,
+    'nil.GhostList] =? '#7:System, 8, 0) .
+rewrites: 1
+result UnificationPair: {
+	'#7:System <- '_||_||_||_['::_::`[_|_`]['nil.FreshSet,'_`,_['_`,_[
+    '_`,_['nil.SMsgList-L,'+`(_`)['#9:Name]],'-`(_`)['rigid@6@rigid#B1.Name]],
+    '+`(_`)['#9:Name]],'_`,_['-`(_`)['rigid@6@rigid#B2.Name],'_`,_['-`(_`)[
+    '_*_['rigid@6@rigid#B1.Name,'rigid@6@rigid#B2.Name]],'nil.SMsgList-R]]],
+    '_inI['_*_['rigid@6@rigid#B1.Name,'rigid@6@rigid#B2.Name]],'nil.SMsgList,
+    'nil.GhostList] ; 
+	'A:Name <- '#9:Name,9}
+Maude> Bye.

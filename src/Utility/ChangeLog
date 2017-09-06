@@ -1,3 +1,19 @@
+2009-09-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* bddUser.cc (err_handler): check and call errorHandler if set
+
+	* bddUser.hh (setErrorHandler): added
+	(class BddUser): added typedef ErrorHandler; static variable
+	errorHandler
+
+2009-09-22  Steven Eker  <eker@goo.csl.sri.com>
+
+	* bddUser.hh (class BddUser): added decl for err_handler()
+
+	* bddUser.cc (err_handler): added
+
+===================================Maude92a===========================================
+
 2008-09-11  Steven Eker  <eker@goo.csl.sri.com>
 
 	* intContejeanDevie.cc (findNextMinimalSolution): init lastNfnz to

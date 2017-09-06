@@ -1,3 +1,15 @@
+2009-11-04  Steven Eker  <eker@goo.csl.sri.com>
+
+	* AU_LhsCompiler.cc (findConstraintPropagationSequence): added
+	DebugAdvisory()'s to both versions to try and locate serious
+	performance bug
+	(findConstraintPropagationSequence): added an optimization where
+	we don't bother looking at the right alien if we forced all or all
+	but one arguments using the left alien
+	(unitVariable): added comment
+
+===================================Maude92a===========================================
+
 2008-11-06  Steven Eker  <eker@goo.csl.sri.com>
 
 	* AU_Term.cc (normalize): fix a nasty bug where we were collapsing

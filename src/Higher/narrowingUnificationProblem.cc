@@ -258,10 +258,36 @@ NarrowingUnificationProblem::findOrderSortedUnifiers()
   //
   BddUser::setNrVariables(nextBddVariable);
   //
+  //	Constrains free fresh variables to have indices in valid range.
+  //
+  Bdd unifier = bddtrue;
+  {
+    FOR_EACH_CONST(i, NatSet, freeVariables)
+      {
+	int fv = *i;
+	if (fv >= substitutionSize)
+	  {
+	    Sort* sort = unsortedSolution->getFreshVariableSort(fv);
+	    int nrBddVariables = sortBdds->getNrVariables(sort->component()->getIndexWithinModule());
+	    int firstVar = realToBdd[fv];
+	    
+	    bddPair* bitMap = bdd_newpair();
+	    for (int j = 0; j < nrBddVariables; ++j)
+	      bdd_setbddpair(bitMap, j, bdd_ithvar(firstVar + j));
+	    
+	    Bdd leqRelation = sortBdds->getLeqRelation(sort->getIndexWithinModule());
+	    leqRelation = bdd_veccompose(leqRelation, bitMap);
+	    unifier = bdd_and(unifier, leqRelation);
+	    DebugAdvisory("NarrowingUnificationProblem::findOrderSortedUnifiers() : Adding constraint for free, non-original variable: "
+			  << leqRelation << " unifier becomes " << unifier);
+	    bdd_freepair(bitMap);
+	  }
+      }
+  }
+  //
   //	Now compute a BDD which tells us if a given assignment of sorts to free
   //	variables yields an order-sorted unifier.
   //
-  Bdd unifier = bddtrue;
   for (int i = 0; i < substitutionSize; ++i)
     {
       //

@@ -103,8 +103,8 @@
 #include "metaUnify.cc"
 #include "metaNarrow.cc"
 
-MetaLevelOpSymbol::MetaLevelOpSymbol(int id, int nrArgs)
-  : FreeSymbol(id, nrArgs)
+MetaLevelOpSymbol::MetaLevelOpSymbol(int id, int nrArgs, const Vector<int>& strategy)
+  : FreeSymbol(id, nrArgs, strategy)
 {
   shareWith = 0;
   metaLevel = 0;
@@ -261,7 +261,41 @@ MetaLevelOpSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
   //  metaLevel = shareWith->metaLevel;
   FreeDagNode* d = safeCast(FreeDagNode*, subject);
   int nrArgs = arity();
-  for (int i = 0; i < nrArgs; i++)
-    d->getArgument(i)->reduce(context);
+  if (standardStrategy())
+    {
+      for (int i = 0; i < nrArgs; i++)
+	d->getArgument(i)->reduce(context);
+      return (this->*descentFunction)(d, context) || FreeSymbol::eqRewrite(subject, context);
+    }
+  return complexStrategy(subject, context);
+}
+
+bool
+MetaLevelOpSymbol::complexStrategy(DagNode* subject, RewritingContext& context)
+{
+  FreeDagNode* d = safeCast(FreeDagNode*, subject);
+  //
+  //	Execute user supplied strategy.
+  //
+  //	We can't deal with multiple zeros in strategy, both because
+  //	(1) we have no way to apply user equations at an non-final zero; and
+  //	(2) we have no way to replace semi-eager arguments so that they can be evaluated.
+  //
+  const Vector<int>& userStrategy = getStrategy();
+  int stratLen = userStrategy.length();
+  for (int i = 0; i < stratLen - 1; i++)
+    {
+      int a = userStrategy[i];
+      if(a == 0)
+	{
+	  //
+	  //	Zero must be the end of the strategy and is treated as such.
+	  //
+	  IssueWarning("multiple zeros in strategy for MetaLevelOpSymbol " << QUOTE(this) << " not supported.");
+	  break;
+	}
+      else
+	d->getArgument(a - 1)->reduce(context);
+    }
   return (this->*descentFunction)(d, context) || FreeSymbol::eqRewrite(subject, context);
 }

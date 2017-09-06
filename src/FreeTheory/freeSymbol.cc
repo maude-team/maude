@@ -319,8 +319,16 @@ FreeSymbol::computeGeneralizedSort(const SortBdds& sortBdds,
 				   DagNode* subject,
 				   Vector<Bdd>& generalizedSort)
 {
+  DebugAdvisory("computeGeneralizedSort() called on symbol " << this << " for dag " << subject);
   int nrArgs = arity();
   Assert(nrArgs > 0, "we shouldn't be called on constants: " << subject);
+  //
+  //	We need to do this early since it may increase the number of bdd variables and we
+  //	will need those variables for our argMap.
+  //
+  DebugAdvisory("getting sort function for " << this << " " << subject);
+  const Vector<Bdd>& sortFunction = sortBdds.getSortFunction(this);
+
   DagNode** args = safeCast(FreeDagNode*, subject)->argArray();
   int varCounter = 0;
   bddPair* argMap = bdd_newpair();
@@ -332,8 +340,6 @@ FreeSymbol::computeGeneralizedSort(const SortBdds& sortBdds,
       for (int j = 0; j < nrBdds; ++j, ++varCounter)
 	bdd_setbddpair(argMap, varCounter, argGenSort[j]);
     }
-  DebugAdvisory("getting sort function for " << this << " " << subject);
-  const Vector<Bdd>& sortFunction = sortBdds.getSortFunction(this);
   int nrBdds = sortFunction.size();
   generalizedSort.resize(nrBdds);
   for (int i = 0; i < nrBdds; ++i)

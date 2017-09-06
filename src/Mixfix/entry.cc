@@ -503,7 +503,7 @@ MixfixModule::newFancySymbol(Token prefixName,
     case SymbolType::QUOTED_IDENTIFIER_OP:
       return new QuotedIdentifierOpSymbol(name, nrArgs);
     case SymbolType::META_LEVEL_OP_SYMBOL:
-      return new MetaLevelOpSymbol(name, nrArgs);
+      return new MetaLevelOpSymbol(name, nrArgs, strategy);
     case SymbolType::MODEL_CHECKER_SYMBOL:
       return new ModelCheckerSymbol(name);
     case SymbolType::SAT_SOLVER_SYMBOL:
