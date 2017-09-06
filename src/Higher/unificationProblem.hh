@@ -37,7 +37,7 @@ public:
   UnificationProblem(Vector<Term*>& lhs, Vector<Term*>& rhs, FreshVariableGenerator* freshVariableGenerator, bool withExtension = false);
   ~UnificationProblem();
 
-  bool variablesOK() const;
+  bool problemOK() const;
   bool findNextUnifier();
   const Substitution& getSolution() const;
   int getNrFreeVariables() const;
@@ -62,7 +62,7 @@ private:
   ExtensionInfo* extensionInfo;
   UnificationContext* unsortedSolution;
   Subproblem* subproblem;
-  bool varsOK;
+  bool problemOkay;
   bool viable;
   Vector<int> freeVariables;
   AllSat* orderSortedUnifiers;
@@ -76,9 +76,9 @@ private:
 };
 
 inline bool
-UnificationProblem::variablesOK() const
+UnificationProblem::problemOK() const
 {
-  return varsOK;
+  return problemOkay;
 }
 
 inline const Substitution&

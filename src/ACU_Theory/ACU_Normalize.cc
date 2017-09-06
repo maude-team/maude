@@ -125,6 +125,9 @@ ACU_DagNode::insertAlien(ACU_BaseDagNode* normalForm,
 bool
 ACU_DagNode::normalizeAtTop()
 {
+#if 0
+  cout << "normalizeAtTop() " << this << endl;
+#endif
   //
   //	We return true if we have an identity and collapsed out of theory or
   //	to something that was already in normal form.
@@ -336,6 +339,7 @@ ACU_DagNode::normalizeAtTop()
 bool
 ACU_DagNode::dumbNormalizeAtTop()
 {
+  //cout << this << " norm to ";
   //
   //	Don't try any fancy optimizations and in particular never convert to
   //	tree form - thus we can safely be called during unification.
@@ -358,5 +362,6 @@ ACU_DagNode::dumbNormalizeAtTop()
     flattenSortAndUniquize(expansion);
   else
     sortAndUniquize();
+  //cout << this << endl;
   return identity != 0 && eliminateArgument(identity);
 }

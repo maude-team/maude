@@ -116,11 +116,11 @@ MetaLevelOpSymbol::metaMatch(FreeDagNode* subject, RewritingContext& context)
 	    Substitution* substitution = state->getContext();
 	    PointerMap qidMap;
 	    PointerMap dagNodeMap;
-	    result = metaLevel->upSubstition(*substitution,
-					     *variableInfo,
-					     m,
-					     qidMap,
-					     dagNodeMap);
+	    result = metaLevel->upSubstitution(*substitution,
+					       *variableInfo,
+					       m,
+					       qidMap,
+					       dagNodeMap);
 	  }
 	fail:
 	  (void) m->unprotect();

@@ -92,19 +92,19 @@ ACU_UnificationSubproblem::markReachableNodes()
 }
 
 void
-ACU_UnificationSubproblem::addBasisElement(MpzSystem::IntVec element)
+ACU_UnificationSubproblem::addBasisElement(MpzSystem::IntVec& element)
 {
   Assert(element.size() == subterms.size(), "bad element size");
   
   basis.push_front(Entry());
   Entry& e = basis.front();
-  e.remainder = accumulator;
+  e.remainder = accumulator;  // deep copy
   int nrSubterms = subterms.size();
   e.element.resize(nrSubterms);
   for (int i = 0; i < nrSubterms; ++i)
     {
-      if ((e.element[i] = element[i].get_si()))
-	accumulator.insert(i);
+      if ((e.element[i] = element[i].get_si()) != 0)
+	accumulator.insert(i);  // subterm i is covered
     }
 }
 
@@ -124,10 +124,12 @@ bool
 ACU_UnificationSubproblem::unificationSolve(bool findFirst, UnificationContext& solution)
 {
   int nrSubterms = subterms.size();
-  //for (int i = 0; i < nrSubterms; ++i)
-  //  cout << subterms[i] << '\t';
-  //cout << endl;
-
+#if 0
+  cout << "ACU_UnificationSubproblem::unificationSolve() findFirst = " << findFirst << endl;
+  for (int i = 0; i < nrSubterms; ++i)
+    cout << subterms[i] << '\n';
+  cout << endl;
+#endif
   if (findFirst)
     {
       savedSubstitution.clone(solution);
@@ -153,26 +155,38 @@ ACU_UnificationSubproblem::unificationSolve(bool findFirst, UnificationContext& 
 	return true;
       delete generatedSubproblem;
       generatedSubproblem = 0;
+      //
+      //	Restore substitution to pre-solve state, implicitly deallocating
+      //	any fresh variables we introduced.
+      //
       solution.clone(savedSubstitution);
     }
 
-  //int counter = 1;
+#if 0
+  int counter = 1;
+#endif
   while (nextSelection(findFirst))
     {
       findFirst = false;
-      //cout << "selection " << counter++ << endl;
+#if 0
+      cout << "selection " << counter++ << endl;
       int selectionSize = selection.size();
-      //for (int i = 0; i < selectionSize; ++i)
-      //	{
-      //	  for (int j = 0; j < nrSubterms; ++j)
-      //	    cout << selection[i]->element[j] << '\t';
-      //	  cout << endl;
-      //	}
+      for (int i = 0; i < selectionSize; ++i)
+      	{
+      	  for (int j = 0; j < nrSubterms; ++j)
+     	    cout << selection[i]->element[j] << '\t';
+      	  cout << endl;
+      	}
+#endif
       if (buildSolution(solution) &&
 	  (generatedSubproblem == 0 || generatedSubproblem->unificationSolve(true, solution)))
 	return true;
       delete generatedSubproblem;
       generatedSubproblem = 0;
+      //
+      //	Restore substitution to pre-solve state, implicitly deallocating
+      //	any fresh variables we introduced.
+      //
       solution.clone(savedSubstitution);
     }
   return false;
@@ -225,7 +239,14 @@ ACU_UnificationSubproblem::buildSolution(UnificationContext& solution)
 		  ++pos;
 		}
 	    }
-	  a->dumbNormalizeAtTop();  // UGLY!
+	  //
+	  //	There is no guarentee that the fresh variables that we generate are
+	  //	is the same order as needed for AC normal form - so we call this
+	  //	private member function to fix this without to much overhead.
+	  //
+	  //cout << a;
+	  a->sortAndUniquize();	  
+	  //cout << " normalized to " << a << endl;
 	  Assert(a->isTree() == false, "Oops we got a tree! " << a);
 	  d = a;
 	}
@@ -318,6 +339,9 @@ ACU_UnificationSubproblem::includable(Basis::const_iterator potential)
 void
 ACU_UnificationSubproblem::initialize(UnificationContext& solution)
 {
+#if 0
+  cout << "initialize() selection.size() = " << selection.size() << endl;
+#endif
   int nrSubterms = subterms.size();
   totals.resize(nrSubterms);
   upperBounds.resize(nrSubterms);
@@ -325,14 +349,21 @@ ACU_UnificationSubproblem::initialize(UnificationContext& solution)
     {
       uncovered.insert(i);
       totals[i] = 0;
+      int upperBound = 1;  // for aliens and variables bound to aliens
       DagNode* d = subterms[i];
       if (VariableDagNode* v = dynamic_cast<VariableDagNode*>(d))
 	{
 	  DagNode* b = solution.value(v->lastVariableInChain(solution)->getIndex());
-	  upperBounds[i] = (b != 0 && b->symbol() != topSymbol) ? 1 :  // bound to alien
-	    topSymbol->sortBound(static_cast<VariableSymbol*>(v->symbol())->getSort());
+	  //
+	  //	b cannot be a variable since we have chased the variable chain. It can be
+	  //	(a) null - our variable is unbound; OR
+	  //	(b) have our top symbol; OR
+	  //	(c) be alien
+	  //
+	  if (b == 0 || b->symbol() == topSymbol)
+	    upperBound = topSymbol->sortBound(safeCast(VariableSymbol*, v->symbol())->getSort());
 	}
-      else
-	upperBounds[i] = 1;  // non-variable alien
+      upperBounds[i] = upperBound;
     }
+  selection.clear();  // remove any selections left over from a previous failure
 }

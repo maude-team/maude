@@ -199,43 +199,24 @@ S_DagNode::matchVariableWithExtension(int index,
   return true;
 }
 
-bool
+//
+//	Unification code.
+//
+
+DagNode::ReturnResult
 S_DagNode::computeBaseSortForGroundSubterms()
 {
-  if (arg->computeBaseSortForGroundSubterms())
-    {
-      symbol()->computeBaseSort(this);
-      return true;
-    }
-  return false;
-}
-
-DagNode*
-S_DagNode::instantiate2(Substitution& substitution)
-{
-  if (DagNode* n = arg->instantiate(substitution))
-    {
-      mpz_class num = *number;
-      S_Symbol* s = symbol();
-      if (s == n->symbol())
-	{
-	  S_DagNode* t = safeCast(S_DagNode*, n);
-	  num += *(t->number);
-	  n = t->arg;
-	}
-      DagNode* d =  new S_DagNode(s, num, n);
-      if (n->getSortIndex() != Sort::SORT_UNKNOWN)
-	s->computeBaseSort(d);
-      return d;
-    }
-  return 0;
+  ReturnResult r = arg->computeBaseSortForGroundSubterms();
+  if (r == GROUND)
+    symbol()->computeBaseSort(this);
+  return r;
 }
 
 bool
-S_DagNode::computeSolvedForm(DagNode* rhs,
-			     Substitution& solution,
-			     Subproblem*& returnedSubproblem,
-			     ExtensionInfo* extensionInfo)
+S_DagNode::computeSolvedForm2(DagNode* rhs,
+			      Substitution& solution,
+			      Subproblem*& returnedSubproblem,
+			      ExtensionInfo* extensionInfo)
 {
   if (extensionInfo != 0)
     {
@@ -286,4 +267,25 @@ void
 S_DagNode::insertVariables2(NatSet& occurs)
 {
   arg->insertVariables(occurs);
+}
+
+DagNode*
+S_DagNode::instantiate2(Substitution& substitution)
+{
+  if (DagNode* n = arg->instantiate(substitution))
+    {
+      mpz_class num = *number;
+      S_Symbol* s = symbol();
+      if (s == n->symbol())
+	{
+	  S_DagNode* t = safeCast(S_DagNode*, n);
+	  num += *(t->number);
+	  n = t->arg;
+	}
+      DagNode* d =  new S_DagNode(s, num, n);
+      if (n->getSortIndex() != Sort::SORT_UNKNOWN)
+	s->computeBaseSort(d);
+      return d;
+    }
+  return 0;
 }

@@ -47,15 +47,15 @@ public:
 		      bool respectFrozen);
 
   //
-  //	Stuff for unification.
+  //	Unification member functions.
   //
-  bool computeSolvedForm(DagNode* rhs,
-			 Substitution& solution,
-			 Subproblem*& returnedSubproblem,
-			 ExtensionInfo* extensionInfo);
+  ReturnResult computeBaseSortForGroundSubterms();
+  bool computeSolvedForm2(DagNode* rhs,
+			  Substitution& solution,
+			  Subproblem*& returnedSubproblem,
+			  ExtensionInfo* extensionInfo);
   mpz_class nonVariableSize();
   void insertVariables2(NatSet& occurs);
-  bool computeBaseSortForGroundSubterms();
   DagNode* instantiate2(Substitution& substitution);
   //
   //	Fast theory specific access to argument list

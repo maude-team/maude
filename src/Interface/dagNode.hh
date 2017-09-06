@@ -108,14 +108,25 @@ public:
   //
   //	Interface for unification.
   //
-  virtual bool computeSolvedForm(DagNode* rhs,
-				 Substitution& solution,
-				 Subproblem*& returnedSubproblem,
-				 ExtensionInfo* extensionInfo = 0) { CantHappen("Not implemented"); return false; }
-  virtual mpz_class nonVariableSize() { return 0; }
+  enum ReturnResult
+  {
+    GROUND,
+    NONGROUND,
+    UNIMPLEMENTED
+  };
+
+  virtual ReturnResult computeBaseSortForGroundSubterms();
+  bool computeSolvedForm(DagNode* rhs,
+			 Substitution& solution,
+			 Subproblem*& returnedSubproblem,
+			 ExtensionInfo* extensionInfo = 0);
+  virtual bool computeSolvedForm2(DagNode* rhs,
+				  Substitution& solution,
+				  Subproblem*& returnedSubproblem,
+				  ExtensionInfo* extensionInfo);
+  virtual mpz_class nonVariableSize();
   void insertVariables(NatSet& occurs);
   virtual void insertVariables2(NatSet& occurs) {}
-  virtual bool computeBaseSortForGroundSubterms() { CantHappen("Not implemented"); return false; }
   //
   //	instantiate() returns 0 if instantiation does not change term.
   //

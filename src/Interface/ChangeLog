@@ -1,3 +1,24 @@
+2007-08-24  Steven Eker  <eker@goo.csl.sri.com>
+
+	* dagNode.cc (computeSolvedForm): use equal() rather than compare()
+
+	* dagNode.hh (class DagNode): added enum ReturnResult; updated
+	decl for computeBaseSortForGroundSubterms()
+
+	* dagNode.cc (computeBaseSortForGroundSubterms): added
+
+2007-08-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* dagNode.cc (nonVariableSize): added
+
+	* dagNode.hh (class DagNode): de-virtualized computeSolvedForm();
+	added computeSolvedForm2()
+
+	* dagNode.cc (computeSolvedForm): added
+	(computeSolvedForm2): added
+
+===================================Maude89g==========================================
+	
 2007-06-28  Steven Eker  <eker@goo.csl.sri.com>
 
 	* dagNode.hh (class DagNode): added extensionInfo arg to decl for

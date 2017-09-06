@@ -259,7 +259,7 @@ FreeDagNode::stackArguments(Vector<RedexPosition>& stack,
     }
 }
 
-bool
+DagNode::ReturnResult
 FreeDagNode::computeBaseSortForGroundSubterms()
 {
   bool ground = true;
@@ -268,12 +268,74 @@ FreeDagNode::computeBaseSortForGroundSubterms()
   DagNode** args = argArray();
   for (int i = 0; i < nrArgs; ++i)
     {
-      if (!(args[i]->computeBaseSortForGroundSubterms()))
-	ground = false;
+      switch (args[i]->computeBaseSortForGroundSubterms())
+	{
+	case NONGROUND:
+	  {
+	    ground = false;
+	    break;
+	  }
+	case UNIMPLEMENTED:
+	  return UNIMPLEMENTED;
+	}
     }
   if (ground)
-    s->computeBaseSort(this);
-  return ground;
+    {
+      s->computeBaseSort(this);
+      return GROUND;
+    }
+  return NONGROUND;
+}
+
+bool
+FreeDagNode::computeSolvedForm2(DagNode* rhs,
+				Substitution& solution,
+				Subproblem*& returnedSubproblem,
+				ExtensionInfo* /* extensionInfo */)
+{
+  if (symbol() == rhs->symbol())
+    {
+      int nrArgs = symbol()->arity();
+      Assert(nrArgs > 0, "we shouldn't be called on constants " << this);
+      SubproblemAccumulator subproblems;
+      DagNode** args = argArray();
+      DagNode** rhsArgs = safeCast(FreeDagNode*, rhs)->argArray();
+      for (int i = 0; i < nrArgs; ++i)
+	{
+	  if (!(args[i]->computeSolvedForm(rhsArgs[i], solution, returnedSubproblem)))
+	    return false;
+	  subproblems.add(returnedSubproblem);
+	}
+      returnedSubproblem = subproblems.extractSubproblem();
+      return true;
+    }
+  if (dynamic_cast<VariableDagNode*>(rhs))
+    return rhs->computeSolvedForm2(this, solution, returnedSubproblem, 0);
+  return false;
+}
+
+mpz_class
+FreeDagNode::nonVariableSize()
+{
+  mpz_class s = 1;
+  int i = symbol()->arity();
+  if (i > 0)
+    {
+      for (DagNode** p = argArray(); i > 0; i--, p++)
+	s += (*p)->nonVariableSize();
+    }
+  return s;
+}
+
+void
+FreeDagNode::insertVariables2(NatSet& occurs)
+{
+  int i = symbol()->arity();
+  if (i > 0)
+    {
+      for (DagNode** p = argArray(); i > 0; i--, p++)
+	(*p)->insertVariables(occurs);
+    }
 }
 
 DagNode*
@@ -335,59 +397,4 @@ FreeDagNode::instantiate2(Substitution& substitution)
     }
   //  cout << "FreeDagNode::instantiate2 exit null" << endl;
   return 0;  // unchanged
-}
-
-bool
-FreeDagNode::computeSolvedForm(DagNode* rhs,
-			       Substitution& solution,
-			       Subproblem*& returnedSubproblem,
-			       ExtensionInfo* /* extensionInfo */)
-{
-  if (symbol() == rhs->symbol())
-    {
-      int nrArgs = symbol()->arity();
-      if (nrArgs != 0)
-	{
-	  SubproblemAccumulator subproblems;
-	  DagNode** args = argArray();
-	  DagNode** rhsArgs = safeCast(FreeDagNode*, rhs)->argArray();
-	  for (int i = 0; i < nrArgs; ++i)
-	    {
-	      if (!(args[i]->computeSolvedForm(rhsArgs[i], solution, returnedSubproblem)))
-		return false;
-	      subproblems.add(returnedSubproblem);
-	    }
-	  returnedSubproblem = subproblems.extractSubproblem();
-	}
-      else
-	returnedSubproblem = 0;
-      return true;
-    }
-  if (dynamic_cast<VariableDagNode*>(rhs))
-    return rhs->computeSolvedForm(this, solution, returnedSubproblem);
-  return false;
-}
-
-mpz_class
-FreeDagNode::nonVariableSize()
-{
-  mpz_class s = 1;
-  int i = symbol()->arity();
-  if (i > 0)
-    {
-      for (DagNode** p = argArray(); i > 0; i--, p++)
-	s += (*p)->nonVariableSize();
-    }
-  return s;
-}
-
-void
-FreeDagNode::insertVariables2(NatSet& occurs)
-{
-  int i = symbol()->arity();
-  if (i > 0)
-    {
-      for (DagNode** p = argArray(); i > 0; i--, p++)
-	(*p)->insertVariables(occurs);
-    }
 }

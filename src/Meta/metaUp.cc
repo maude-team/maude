@@ -355,7 +355,7 @@ MetaLevel::upResultTriple(DagNode* dagNode,
   PointerMap dagNodeMap;
   args[0] = upDagNode(dagNode, m, qidMap, dagNodeMap);
   args[1] = upType(dagNode->getSort(), qidMap);
-  args[2] = upSubstition(substitution, variableInfo, m, qidMap, dagNodeMap);
+  args[2] = upSubstitution(substitution, variableInfo, m, qidMap, dagNodeMap);
   return resultTripleSymbol->makeDagNode(args);
 }
 
@@ -372,7 +372,7 @@ MetaLevel::upResult4Tuple(DagNode* dagNode,
   PointerMap dagNodeMap;
   args[0] = upDagNode(dagNode, m, qidMap, dagNodeMap);
   args[1] = upType(dagNode->getSort(), qidMap);
-  args[2] = upSubstition(substitution, variableInfo, m, qidMap, dagNodeMap);
+  args[2] = upSubstitution(substitution, variableInfo, m, qidMap, dagNodeMap);
   args[3] = metaContext;
   return result4TupleSymbol->makeDagNode(args);
 }
@@ -386,7 +386,7 @@ MetaLevel::upUnificationPair(const Substitution& substitution,
   PointerMap qidMap;
   PointerMap dagNodeMap;
   Vector<DagNode*> args(2);
-  args[0] = upSubstition(substitution, variableInfo, m, qidMap, dagNodeMap);
+  args[0] = upSubstitution(substitution, variableInfo, m, qidMap, dagNodeMap);
   args[1] = succSymbol->makeNatDag(variableIndex);
   return unificationPairSymbol->makeDagNode(args);
 }
@@ -422,7 +422,7 @@ MetaLevel::upUnificationContextTriple(const Substitution& substitution,
   PointerMap qidMap;
   PointerMap dagNodeMap;
   Vector<DagNode*> args(3);
-  args[0] = upSubstition(substitution, variableInfo, m, qidMap, dagNodeMap);
+  args[0] = upSubstitution(substitution, variableInfo, m, qidMap, dagNodeMap);
   args[1] = upContext(dagNode, m, hole, qidMap, dagNodeMap);
   args[2] = succSymbol->makeNatDag(variableIndex);
   return unificationContextTripleSymbol->makeDagNode(args);
@@ -493,11 +493,11 @@ MetaLevel::upDisjointSubstitutions(const Substitution& substitution,
 }
 
 DagNode*
-MetaLevel::upSubstition(const Substitution& substitution,
-			const VariableInfo& variableInfo,
-			MixfixModule* m,
-			PointerMap& qidMap,
-			PointerMap& dagNodeMap)
+MetaLevel::upSubstitution(const Substitution& substitution,
+			  const VariableInfo& variableInfo,
+			  MixfixModule* m,
+			  PointerMap& qidMap,
+			  PointerMap& dagNodeMap)
 {
   int nrVariables = variableInfo.getNrRealVariables();
   if (nrVariables == 0)
@@ -587,7 +587,7 @@ MetaLevel::upMatchPair(const Substitution& substitution,
   PointerMap qidMap;
   PointerMap dagNodeMap;
   static Vector<DagNode*> args(2);
-  args[0] = upSubstition(substitution, variableInfo, m, qidMap, dagNodeMap);
+  args[0] = upSubstitution(substitution, variableInfo, m, qidMap, dagNodeMap);
   args[1] = upContext(dagNode, m, hole, qidMap, dagNodeMap);
   return matchPairSymbol->makeDagNode(args);
 }

@@ -119,24 +119,21 @@ VariableDagNode::stackArguments(Vector<RedexPosition>& /* stack */,
 {
 }
 
-bool
+//
+//	Unification code.
+//
+
+DagNode::ReturnResult
 VariableDagNode::computeBaseSortForGroundSubterms()
 {
-  return false;
+  return NONGROUND;
 }
-
-DagNode*
-VariableDagNode::instantiate2(Substitution& substitution)
-{
-  return substitution.value(index);
-}
-
 
 bool
-VariableDagNode::computeSolvedForm(DagNode* rhs,
-				   Substitution& solution,
-				   Subproblem*& returnedSubproblem,
-				   ExtensionInfo* extensionInfo)
+VariableDagNode::computeSolvedForm2(DagNode* rhs,
+				    Substitution& solution,
+				    Subproblem*& returnedSubproblem,
+				    ExtensionInfo* extensionInfo)
 {
   if (extensionInfo != 0)
     {
@@ -212,17 +209,29 @@ VariableDagNode::computeSolvedForm(DagNode* rhs,
   return lt->computeSolvedForm(rhs, solution, returnedSubproblem);
 }
 
+mpz_class
+VariableDagNode::nonVariableSize()
+{
+  return 0;
+}
+
 void
 VariableDagNode::insertVariables2(NatSet& occurs)
 {
   occurs.insert(index);
 }
 
+DagNode*
+VariableDagNode::instantiate2(Substitution& substitution)
+{
+  return substitution.value(index);
+}
+
 VariableDagNode*
 VariableDagNode::lastVariableInChain(Substitution& solution)
 {
   //
-  //	If a variable has been bound to anther variable, it is notionalled
+  //	If a variable has been bound to anther variable, it is notionally
   //	replaced by that variable thoughout the problem, and in particular
   //	we need chase the replacement chain and find out what variable is
   //	notionally in its place.

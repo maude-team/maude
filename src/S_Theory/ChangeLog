@@ -1,3 +1,19 @@
+2007-08-24  Steven Eker  <eker@goo.csl.sri.com>
+
+	* S_DagNode.cc (computeBaseSortForGroundSubterms): updated
+
+	* S_DagNode.hh (class S_DagNode): updated decl for
+	computeBaseSortForGroundSubterms()
+
+2007-08-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* S_DagNode.cc (computeSolvedForm): becomes computeSolvedForm2()
+
+	* S_DagNode.hh (class S_DagNode): computeSolvedForm() ->
+	computeSolvedForm2()
+
+===================================Maude89g===========================================
+
 2007-07-09  Steven Eker  <eker@goo.csl.sri.com>
 
 	* S_DagNode.cc (computeSolvedForm): give a warning that we don't

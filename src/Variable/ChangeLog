@@ -1,3 +1,25 @@
+2007-08-24  Steven Eker  <eker@goo.csl.sri.com>
+
+	* variableDagNode.cc (computeBaseSortForGroundSubterms): updated
+
+	* variableDagNode.hh (class VariableDagNode): updated decl for
+	computeBaseSortForGroundSubterms()
+
+2007-08-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* variableDagNode.cc (computeSolvedForm): becomes
+	computeSolvedForm2()
+
+	* variableDagNode.hh (class VariableDagNode): added decl for
+	nonVariableSize()
+	(class VariableDagNode): computeSolvedForm() ->
+	computeSolvedForm2()
+
+	* variableDagNode.cc (nonVariableSize): added, now that default
+	returns 1
+
+===================================Maude89g===========================================
+
 2007-07-09  Steven Eker  <eker@goo.csl.sri.com>
 
 	* variableDagNode.cc (computeSolvedForm): detect and warn about

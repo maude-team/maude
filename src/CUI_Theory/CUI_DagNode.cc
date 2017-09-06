@@ -221,65 +221,43 @@ CUI_DagNode::normalizeAtTop()
   return false;
 }
 
-bool
+//
+//	Unification code.
+//
+
+DagNode::ReturnResult
 CUI_DagNode::computeBaseSortForGroundSubterms()
 {
-  //
-  //	We need a recursive call on both subterms regardless of result.
-  //
-  bool ground = argArray[0]->computeBaseSortForGroundSubterms();
-  if (argArray[1]->computeBaseSortForGroundSubterms() && ground)
+  CUI_Symbol* s = symbol();
+  if (s->leftId() || s->rightId() || s->idem())
     {
-      symbol()->computeBaseSort(this);
-      return true;
+      //
+      //	We only support unification for commutativity at the moment
+      //	so let the backstop version handle it.
+      //
+      return DagNode::computeBaseSortForGroundSubterms();
     }
-  return false;
-}
-
-DagNode*
-CUI_DagNode::instantiate2(Substitution& substitution)
-{
-  bool changed = false;
-  DagNode* a0 = argArray[0];
-  if (DagNode* n = a0->instantiate(substitution))
+  ReturnResult r0 = argArray[0]->computeBaseSortForGroundSubterms();
+  if (r0 == UNIMPLEMENTED)
+    return UNIMPLEMENTED;
+  ReturnResult r1 = argArray[1]->computeBaseSortForGroundSubterms();
+  if (r1 == UNIMPLEMENTED)
+    return UNIMPLEMENTED;
+  if (r0 == GROUND && r1 == GROUND)
     {
-      a0 = n;
-      changed = true;
+      s->computeBaseSort(this);
+      return GROUND;
     }
-  DagNode* a1 = argArray[1];
-  if (DagNode* n = a1->instantiate(substitution))
-    {
-      a1 = n;
-      changed = true;
-    }
-  if (changed)
-    {
-      CUI_Symbol* s = symbol();
-      CUI_DagNode* d = new CUI_DagNode(s);
-      if (a0->compare(a1) <= 0)
-	{
-	  d->argArray[0] = a0;
-	  d->argArray[1] = a1;
-	}
-      else
-	{
-	  d->argArray[0] = a1;
-	  d->argArray[1] = a0;
-	}
-      if (a0->getSortIndex() != Sort::SORT_UNKNOWN &&
-	  a1->getSortIndex() != Sort::SORT_UNKNOWN)
-	s->computeBaseSort(d);
-      return d;
-    }
-  return 0;
+  return NONGROUND;
 }
 
 bool
-CUI_DagNode::computeSolvedForm(DagNode* rhs,
-			       Substitution& solution,
-			       Subproblem*& returnedSubproblem,
-			       ExtensionInfo* /* extensionInfo */)
+CUI_DagNode::computeSolvedForm2(DagNode* rhs,
+				Substitution& solution,
+				Subproblem*& returnedSubproblem,
+				ExtensionInfo* /* extensionInfo */)
 {
+  DebugAdvisory("CUI_DagNode::computeSolvedForm2() " << this << " vs " << rhs);
   if (symbol() == rhs->symbol())
     {
       int nrBindings = solution.nrFragileBindings();
@@ -372,4 +350,42 @@ CUI_DagNode::insertVariables2(NatSet& occurs)
 {
   argArray[0]->insertVariables(occurs);
   argArray[1]->insertVariables(occurs);
+}
+
+DagNode*
+CUI_DagNode::instantiate2(Substitution& substitution)
+{
+  bool changed = false;
+  DagNode* a0 = argArray[0];
+  if (DagNode* n = a0->instantiate(substitution))
+    {
+      a0 = n;
+      changed = true;
+    }
+  DagNode* a1 = argArray[1];
+  if (DagNode* n = a1->instantiate(substitution))
+    {
+      a1 = n;
+      changed = true;
+    }
+  if (changed)
+    {
+      CUI_Symbol* s = symbol();
+      CUI_DagNode* d = new CUI_DagNode(s);
+      if (a0->compare(a1) <= 0)
+	{
+	  d->argArray[0] = a0;
+	  d->argArray[1] = a1;
+	}
+      else
+	{
+	  d->argArray[0] = a1;
+	  d->argArray[1] = a0;
+	}
+      if (a0->getSortIndex() != Sort::SORT_UNKNOWN &&
+	  a1->getSortIndex() != Sort::SORT_UNKNOWN)
+	s->computeBaseSort(d);
+      return d;
+    }
+  return 0;
 }

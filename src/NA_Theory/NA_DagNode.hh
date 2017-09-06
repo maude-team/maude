@@ -48,15 +48,6 @@ public:
   void stackArguments(Vector<RedexPosition>& stack,
 		      int parentIndex,
 		      bool respectFrozen);
-  //
-  //	Stuff for unification.
-  //
-  virtual bool computeSolvedForm(DagNode* rhs,
-				 Substitution& solution,
-				 Subproblem*& returnedSubproblem,
-				 ExtensionInfo* extensionInfo);
-  virtual mpz_class nonVariableSize();
-  bool computeBaseSortForGroundSubterms();
 
 private:
   DagNode* markArguments();
