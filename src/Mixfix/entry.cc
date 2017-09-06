@@ -141,6 +141,10 @@ MixfixModule::addOpDeclaration(Token prefixName,
 					   ": declaration for " << QUOTE(s) <<
 					   " has different attributes from declaration on " <<
 					   *s << '.');
+			      DebugAdvisory("orginal symbol type: " << getSymbolType(s) <<
+					    "\tnew symbol type: " << symbolType <<
+					    "\tflag difference: " <<
+					    (getSymbolType(s).getFlags() ^ symbolType.getFlags()));
 			      markAsBad();
 			    }
 			  if (metadata != NONE)

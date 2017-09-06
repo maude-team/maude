@@ -1,3 +1,12 @@
+Overview of Changes in Maude alpha86e
+=====================================
+* fixed longstanding metalevel prec bug
+
+Overview of Changes in Maude alpha86d2
+======================================
+* reorganized metalevel list sorts to fix sufficient completeness
+  problem 
+
 Overview of Changes in Maude alpha86d
 =====================================
 * fixed stale pointer bug in view reevaluation

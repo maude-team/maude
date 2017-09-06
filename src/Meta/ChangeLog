@@ -1,3 +1,10 @@
+2005-11-28  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaDownOps.cc (downAttr): fix long standing bug where we were
+	not setting PREC flag
+
+===================================Maude86e===========================================
+
 2005-11-16  Steven Eker  <eker@goo.csl.sri.com>
 
 	* descentFunctions.cc (metaLesserSorts): use downType() rather

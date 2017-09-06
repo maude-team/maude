@@ -1,3 +1,14 @@
+2005-11-28  Steven Eker  <eker@goo.csl.sri.com>
+
+	* symbolType.hh: added decl for operator<<()
+
+	* symbolType.cc (operator<<): added
+
+	* entry.cc (addOpDeclaration): added DebugAdvisory for when
+	attributes differ
+
+===================================Maude86e===========================================
+
 2005-11-17  Steven Eker  <eker@goo.csl.sri.com>
 
 	* prelude.maude: op nil : -> HookList  is now a ctor; EmptyQidList
