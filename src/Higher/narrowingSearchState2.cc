@@ -68,7 +68,6 @@ NarrowingSearchState2::NarrowingSearchState2(RewritingContext* context,
 					     const Vector<DagNode*>& blockerDagsArg,
 					     FreshVariableGenerator* freshVariableGenerator,
 					     int incomingVariableFamily,
-					     int label,
 					     int flags,
 					     int minDepth,
 					     int maxDepth)
@@ -76,7 +75,6 @@ NarrowingSearchState2::NarrowingSearchState2(RewritingContext* context,
     blockerDags(blockerDagsArg),  // shallow copy
     freshVariableGenerator(freshVariableGenerator),
     incomingVariableFamily(incomingVariableFamily),
-    label(label),
     module(context->root()->symbol()->getModule())
 {
   ruleIndex = -1;  // not yet started
@@ -155,14 +153,18 @@ NarrowingSearchState2::NarrowingSearchState2(RewritingContext* context,
       //	Make a copy of the dag we want to narrow, with variable replacements.
       //
       DebugAdvisory("old dagToNarrow = " << dagToNarrow);
-      dagToNarrow = dagToNarrow->instantiate(s);
+      if (DagNode* renamedDagToNarrow = dagToNarrow->instantiate(s))  // just in case dagToNarrow was ground
+	dagToNarrow = renamedDagToNarrow;
       DebugAdvisory("new dagToNarrow = " << dagToNarrow);
       newContext = context->makeSubcontext(dagToNarrow);
       //
       //	Likewise renaming variables in blockerDags.
       //
       for (int i = 0; i < nrBlockerDags; ++i)
-	blockerDags[i] = blockerDags[i]->instantiate(s);
+	{
+	  if (DagNode* b = blockerDags[i]->instantiate(s))
+	    blockerDags[i] = b;
+	}
     }
   //
   //	Forget any variables that only occur in blocker dags.
@@ -187,7 +189,6 @@ NarrowingSearchState2::NarrowingSearchState2(RewritingContext* context,
   : context(context),
     freshVariableGenerator(freshVariableGenerator),
     incomingVariableFamily(incomingVariableFamily),
-    label(label),
     module(context->root()->symbol()->getModule())
 {
   ruleIndex = -1;  // not yet started
@@ -299,7 +300,7 @@ NarrowingSearchState2::findNextNarrowing()
 	      Rule* rl = rules[ruleIndex];
 	      if (!(rl->hasCondition())  &&  // we don't attempt narrowing with conditional rules
 		  (allowNonexec || !(rl->isNonexec())) &&  // check executability
-		  (label == UNDEFINED || rl->getLabel().id() == label)  && // check label
+		  rl->isNarrowing() &&  // check narrowing attribute
 		  rl->getLhs()->symbol()->rangeComponent() == kind)  // check kind
 		{
 		  DebugAdvisory("trying rule " << ruleIndex << " " << rl << " at " << d);

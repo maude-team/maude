@@ -26,7 +26,7 @@
 
 #include "equalityConditionFragment.hh"
 #include "SMT_RewriteSequenceSearch.hh"
-#include "narrowingSequenceSearch2.hh"
+#include "narrowingSequenceSearch3.hh"
 #include "narrowing.cc"
 #include "smtSearch.cc"
 
@@ -52,7 +52,8 @@ Interpreter::checkSearchRestrictions(SearchKind searchKind,
     case NARROW:
     case XG_NARROW:
     case VU_NARROW:
-      {
+    case FVU_NARROW:
+     {
 	//
 	//	Narrowing does not support conditions.
 	//
@@ -109,7 +110,7 @@ Interpreter::search(const Vector<Token>& bubble, Int64 limit, Int64 depth, Searc
 	delete *i;
       return;
     }
-  Pattern* pattern = (searchKind == VU_NARROW) ? 0 : new Pattern(target, false, condition);
+  Pattern* pattern = (searchKind == VU_NARROW || searchKind == FVU_NARROW) ? 0 : new Pattern(target, false, condition);
   //
   //	Regular seach cannot have unbound variables.
   //
@@ -127,7 +128,7 @@ Interpreter::search(const Vector<Token>& bubble, Int64 limit, Int64 depth, Searc
   static const char* searchTypeSymbol[] = { "=>1", "=>+", "=>*", "=>!" };
   if (getFlag(SHOW_COMMAND))
     {
-      static const char* searchKindName[] = { "search", "narrow", "xg-narrow", "smt-search", "vu-narrow" };
+      static const char* searchKindName[] = { "search", "narrow", "xg-narrow", "smt-search", "vu-narrow",  "fvu-narrow"};
 
       UserLevelRewritingContext::beginCommand();
       if (debug)
@@ -182,21 +183,20 @@ Interpreter::search(const Vector<Token>& bubble, Int64 limit, Int64 depth, Searc
        Timer timer(getFlag(SHOW_TIMING));
        doSmtSearch(timer, fm, smtSearch, 0, limit);
     }
-  else if (searchKind == VU_NARROW)
+  else if (searchKind == VU_NARROW || searchKind == FVU_NARROW)
     {
       target = target->normalize(true);  // we don't really need to normalize but we do need to set hash values
       DagNode* goal = target->term2Dag();
       target->deepSelfDestruct();
 
-      NarrowingSequenceSearch2* state =
-	new NarrowingSequenceSearch2(new UserLevelRewritingContext(subjectDag),
+      NarrowingSequenceSearch3* state =
+	new NarrowingSequenceSearch3(new UserLevelRewritingContext(subjectDag),
 				     static_cast<NarrowingSequenceSearch::SearchType>(searchType),  // HACK
 				     goal,
-				     UNDEFINED,
 				     depth,
-				     NarrowingSearchState2::ALLOW_NONEXEC,
-				     new FreshVariableSource(fm),
-				     0);
+				     searchKind == FVU_NARROW,
+				     false,
+				     new FreshVariableSource(fm));
       Timer timer(getFlag(SHOW_TIMING));
       doVuNarrowing(timer, fm, state, 0, limit);
     }

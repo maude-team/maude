@@ -46,6 +46,8 @@ public:
   //
   void forgetAllBut(int nrFirstVariables);
 
+  void copy(const NarrowingVariableInfo& other);
+
 private:
   //
   //	Should probably use a hash table for scalability.
@@ -69,6 +71,12 @@ inline void
 NarrowingVariableInfo::forgetAllBut(int nrFirstVariables)
 {
   variables.resize(nrFirstVariables);
+}
+
+inline void
+NarrowingVariableInfo::copy(const NarrowingVariableInfo& other)
+{
+  variables = other.variables;
 }
 
 #endif

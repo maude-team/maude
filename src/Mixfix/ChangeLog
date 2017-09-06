@@ -1,3 +1,70 @@
+2017-05-26  Steven Eker  <eker@install.csl.sri.com>
+
+	* execute.cc (clearContinueInfo): deleted commented out code
+
+2017-05-19  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowing.cc (doVuNarrowing): reorganize printing
+	(doVuNarrowing): fix double delete bug
+
+	* search.cc (search): combine vu-narrow and fvu-narrow code
+
+	* interpreter.hh (ViewDatabase): deleted decl for doFvuNarrowing();
+	updated decl for doVuNarrowing()
+
+	* narrowing.cc (doFvuNarrowing): support continuation
+	(doVuNarrowing): deleted
+	(doFvuNarrowing): becomes doVuNarrow()
+	(vuNarrowingCont): use NarrowingSequenceSearch3
+
+2017-05-12  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowing.cc (doFvuNarrowing): print accumulated substitution
+
+	* userLevelRewritingContext.hh (ObjectSystemRewritingContext): added
+	decl for new printSubstitution()
+
+	* userLevelRewritingContext.cc (printSubstitution): added
+	Substitution&/VariableInfo& version
+
+	* lexer.ll: added fvu-narrow
+
+	* top.yy: added KW_FVU_NARROW
+
+	* commands.yy (search): added fvu-narrow support
+
+	* interpreter.hh (ViewDatabase): added decl for doFvuNarrowing()
+
+	* narrowing.cc (doFvuNarrowing): added
+
+	* search.cc (checkSearchRestrictions): support fvu-narrow
+	(search): fvu-narrow
+
+	* interpreter.hh (ViewDatabase): added FVU_NARROW to SearchKind
+
+2017-04-26  Steven Eker  <eker@install.csl.sri.com>
+
+	* specialTokens.cc: added narrowing
+
+	* makeGrammar.cc (makeAttributeProductions): added narrowing
+	attribute
+
+	* mixfixParser.hh (M): added MAKE_NARROWING_ATTRIBUTE to
+	enum SemanticActions
+
+	* mixfixParser.cc (makeAttributePart): added case for
+	MAKE_NARROWING_ATTRIBUTE
+
+	* mixfixParser.hh (M): added NARROWING to enum Flags
+
+	* prettyPrint.cc (printAttributes): support narrowing attribute
+
+	* mixfixParser.cc (makeStatementPart): handle narrowing flag
+
+	* importModule.cc (donateStatements2): copy narrowing flag
+
+===================================Maude113===========================================
+
 2017-04-13  Steven Eker  <eker@install.csl.sri.com>
 
 	* interpreter.cc (Interpreter): don't initialize savedContext

@@ -52,6 +52,7 @@ public:
       XG_NARROW,
       SMT_SEARCH,
       VU_NARROW,
+      FVU_NARROW,
     };
 
   enum Flags
@@ -262,10 +263,17 @@ private:
   void narrowingCont(Int64 limit, bool debug);
   void doVuNarrowing(Timer& timer,
 		     VisibleModule* module,
-		     NarrowingSequenceSearch2* state,
+		     NarrowingSequenceSearch3* state,
 		     Int64 solutionCount,
 		     Int64 limit);
   void vuNarrowingCont(Int64 limit, bool debug);
+  /*
+  void doFvuNarrowing(Timer& timer,
+		      VisibleModule* module,
+		      NarrowingSequenceSearch3* state,
+		      Int64 solutionCount,
+		      Int64 limit);
+  */
   void doGetVariants(Timer& timer,
 		     VisibleModule* module,
 		     VariantSearch* state,

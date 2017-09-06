@@ -25,7 +25,7 @@
 //	a subdag of a dag being narrowed. This is essentially a wrapper around
 //	VariantSearch that translates variant unifiers that are expressed by
 //	vector of dags and a NarrowingVariableInfo object into a substitution
-//	for a potentially larger class of variable described by the given
+//	for a potentially larger class of variables described by the given
 //	NarrowingVariableInfo object, and which may include variables that
 //	only appear the larger dag.
 //

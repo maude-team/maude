@@ -439,6 +439,19 @@ UserLevelRewritingContext::printSubstitution(const Vector<DagNode*>& substitutio
 
 void
 UserLevelRewritingContext::printSubstitution(const Substitution& substitution,
+					     const NarrowingVariableInfo& variableInfo)
+{
+  int nrVariables = substitution.nrFragileBindings();
+  for (int i = 0; i < nrVariables; ++i)
+    {
+      DagNode* v = variableInfo.index2Variable(i);
+      DagNode* b = substitution.value(i);
+      cout << v << " --> " << b << '\n';
+    }
+}
+
+void
+UserLevelRewritingContext::printSubstitution(const Substitution& substitution,
 					     const VariableInfo& varInfo,
 					     const NatSet& ignoredIndices)
 {

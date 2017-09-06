@@ -1,3 +1,130 @@
+2017-05-25  Steven Eker  <eker@install.csl.sri.com>
+
+	* metaNewNarrow.cc (metaNarrowingApply): use
+	upNarrowingApplyResult() and upNarrowingApplyFailure()
+
+	* metaLevel.hh (M): upNarrowingFailure() ->
+	upNarrowingApplyFailure(); upNarrowingResult() ->
+	upNarrowingApplyResult()
+
+	* metaLevelSignature.cc: narrowingResultSymbol ->
+	narrowingApplyResultSymbol; narrowingFailureSymbol ->
+	narrowingApplyFailureSymbol; narrowingFailureIncompleteSymbol ->
+	narrowingApplyFailureIncompleteSymbol
+
+	* metaUp.cc (upNarrowingResult): becomes
+	upNarrowingApplyResult()
+	(upNarrowingFailure): becomes upNarrowingFailure()
+	(upNarrowingApplyResult): new scheme for returning values
+
+2017-05-24  Steven Eker  <eker@install.csl.sri.com>
+
+	* metaNewNarrow2.cc (makeNarrowingSearchPathResult): get
+	unifierVariableInfo for each step from getHistory() and
+	passing it to upNarrowingStep()
+
+	* metaUp.cc (upNarrowingStep): use upCompoundSubstitution()
+
+	* metaLevel.hh (M): added decl for upCompoundSubstitution()
+
+	* metaUp.cc (upCompoundSubstitution): added
+
+	* metaNewNarrow2.cc (makeNarrowingSearchPathResult): pass rule
+	rather than label for upNarrowingStep()
+
+	* metaLevel.hh (M): updated decl for upNarrowingStep()
+
+	* metaUp.cc (upNarrowingStep): take rule rather than label;
+	generate rule part of substitution
+
+2017-05-23  Steven Eker  <eker@install.csl.sri.com>
+
+	* metaUp.cc (upNarrowingSearchPathResult): handle singleton trace
+
+	* metaLevelOpSymbol.hh (FreeSymbol): added deld for
+	makeNarrowingSearchPathResult()
+
+	* metaNewNarrow2.cc (makeNarrowingSearchPathResult): added
+	(metaNarrowingSearchPath): use makeNarrowingSearchPathResult()
+
+	* metaUp.cc (upNarrowingStep): handle label == NONE
+
+2017-05-22  Steven Eker  <eker@install.csl.sri.com>
+
+	* metaLevel.hh (M): added decl for upNarrowingStep()
+
+	* metaUp.cc (upNarrowingStep): added
+
+	* metaLevel.hh (M): added decl for upNarrowingSearchPathResult()
+
+	* metaUp.cc (upNarrowingSearchPathResult): added
+
+	* metaLevel.hh (M): added delc for upNarrowingSearchFailure()
+
+	* metaUp.cc (upNarrowingSearchPathFailure): added
+
+	* descentSignature.cc: added metaNarrowingSearchPath
+
+	* metaNewNarrow2.cc (metaNarrowingSearchPath): added stub
+
+	* metaLevelSignature.cc: added narrowingSearchPathFailureSymbol,
+	narrowingSearchPathFailureIncompleteSymbol, narrowingStepSymbol,
+	nilNarrowingTraceSymbol, narrowingTraceSymbol,
+	narrowingSearchPathResultSymbol
+
+2017-05-19  Steven Eker  <eker@install.csl.sri.com>
+
+	* metaLevelOpSymbol.hh (FreeSymbol): delete decl for
+	makeNarrowingSequenceSearch2()
+
+	* metaNewNarrow.cc (makeNarrowingSequenceSearch2): deleted
+	(metaNarrowingSearch): deleted old version
+
+	* metaLevel.hh (M): added decl for upPartialSubstitution()
+
+	* metaUp.cc (upPartialSubstitution): renamed from upSubstitution()
+	(upNarrowingResult): use upPartialSubstitution()
+	(upSubstitution): added new version
+
+	* metaLevelSignature.cc: narrowingSearchResultSymbol now
+	has 6 arguments
+
+	* metaLevel.hh (M): updated decl for upNarrowingSearchResult()
+
+	* metaUp.cc (upNarrowingSearchResult): reimplemented
+
+	* descentSignature.cc: metaNarrowingSearch() now has 7 arguments
+
+	* metaLevelOpSymbol.hh (FreeSymbol): added decls for downFoldType()
+	and makeNarrowingSequenceSearch3()
+
+	* metaNewNarrow2.cc (metaNarrowingSearch): reimplemented here
+	(makeNarrowingSequenceSearch3): added
+	(downFoldType): added
+
+2017-05-02  Steven Eker  <eker@install.csl.sri.com>
+
+	* metaNewNarrow.cc (makeNarrowingSearchState2)
+	(metaNarrowingApply): 1st Qid argument deleted
+
+	* descentSignature.cc: metaNarrowingApply now takes 5 arguments
+
+	* metaNewNarrow.cc (makeNarrowingSearchState2): don't pass label arg
+	to NarrowingSearchState2
+
+2017-04-26  Steven Eker  <eker@install.csl.sri.com>
+
+	* metaUpModule.cc (upStatementAttributes): support narrowing
+
+	* metaLevel.hh (M): added NARROWING to enum Flags
+
+	* metaDown.cc (downRule): support narrowing
+	(downStatementAttr): support narrowing
+
+	* metaLevelSignature.cc: added narrowingSymbol
+
+===================================Maude113===========================================
+
 2017-03-16  Steven Eker  <eker@install.csl.sri.com>
 
 	* metaLevelOpSymbol.hh (FreeSymbol): delete decl for

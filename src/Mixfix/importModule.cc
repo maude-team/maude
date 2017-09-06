@@ -555,6 +555,8 @@ ImportModule::donateStatements2(ImportModule* importer, ImportTranslation& impor
 	  Rule* copy = new Rule(label, lhs, rhs, condition);
 	  if (r->isNonexec())
 	    copy->setNonexec();
+	  if (r->isNarrowing())
+	    copy->setNarrowing();
 	  copy->setLineNumber(r->getLineNumber());
 	  importer->insertRule(copy);
 	  copyMetadata(importer, importTranslation, RULE, r, copy);

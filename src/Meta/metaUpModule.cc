@@ -897,6 +897,12 @@ MetaLevel::upStatementAttributes(MixfixModule* m,
       if (eq->isVariant())
 	args.append(variantAttrSymbol->makeDagNode());
     }
+  const Rule* rl = dynamic_cast<const Rule*>(pe);
+  if (rl != 0)
+    {
+      if (rl->isNarrowing())
+	args.append(narrowingSymbol->makeDagNode());
+    }
   return upGroup(args, emptyAttrSetSymbol, attrSetSymbol);
 }
 

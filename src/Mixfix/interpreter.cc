@@ -211,7 +211,7 @@ Interpreter::setCurrentModule(SyntacticPreModule* module)
 	  clearContinueInfo();
 	  currentModule->loseFocus();
 	}
-      currentModule  = module;
+      currentModule = module;
     }
 }
 

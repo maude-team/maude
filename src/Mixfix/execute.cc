@@ -2,7 +2,7 @@
 
     This file is part of the Maude 2 interpreter.
 
-    Copyright 1997-2003 SRI International, Menlo Park, CA 94025, USA.
+    Copyright 1997-2017 SRI International, Menlo Park, CA 94025, USA.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -31,9 +31,7 @@ void
 Interpreter::clearContinueInfo()
 {
   delete savedState;
-  //delete savedContext;
   savedState = 0;
-  //savedContext = 0;
   continueFunc = 0;
   if (savedModule != 0)
     {

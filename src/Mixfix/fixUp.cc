@@ -51,11 +51,11 @@ SyntacticPreModule::findHookSymbol(const Vector<Token>& fullName)
 	  for (pos++; pos < len; pos++)
 	    {
 	      int code = fullName[pos].code();
-	      if (code == partial)
+	      if (code == partial)  // ~> token
 		{
-		  if (++pos < len)
+		  if (++pos < len)  // range sort given
 		    {
-		      if (Sort* s = flatModule->findSort(fullName[pos].code()))
+		      if (Sort* s = flatModule->findSort(fullName[pos].code()))  // range sort found
 			return flatModule->findSymbol(prefixName, domain, s->component());
 		    }
 		  break;

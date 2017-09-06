@@ -666,6 +666,10 @@ debug vu-narrow [2] in BAZ : g(j(A, B)) =>* C .
 Solution 1
 rewrites: 1
 state: g(j(#1:Foo, #2:Foo))
+accumulated substitution:
+A --> #1:Foo
+B --> #2:Foo
+variant unifier:
 C --> g(j(@1:Foo, @2:Foo))
 #1:Foo --> @1:Foo
 #2:Foo --> @2:Foo
@@ -673,6 +677,10 @@ C --> g(j(@1:Foo, @2:Foo))
 Solution 2
 rewrites: 1
 state: g(j(#1:Foo, #2:Foo))
+accumulated substitution:
+A --> #1:Foo
+B --> #2:Foo
+variant unifier:
 C --> g(i(f(%1:Foo), %2:Foo))
 #1:Foo --> f(%2:Foo)
 #2:Foo --> %1:Foo
@@ -694,6 +702,10 @@ i(f(@5:Foo), @1:Foo)
 Solution 3
 rewrites: 2
 state: f(k(%2:Foo, f(%3:Foo)))
+accumulated substitution:
+A --> f(k(%1:Foo, %2:Foo))
+B --> %3:Foo
+variant unifier:
 C --> f(k(@1:Foo, f(@2:Foo)))
 %2:Foo --> @1:Foo
 %3:Foo --> @2:Foo
@@ -701,12 +713,20 @@ C --> f(k(@1:Foo, f(@2:Foo)))
 Solution 4
 rewrites: 4
 state: h(f(@1:Foo))
+accumulated substitution:
+A --> f(k(@2:Foo, f(@1:Foo)))
+B --> @1:Foo
+variant unifier:
 C --> h(f(%1:Foo))
 @1:Foo --> %1:Foo
 
 Solution 5
 rewrites: 5
 state: f(k(@2:Foo, h(@1:Foo)))
+accumulated substitution:
+A --> f(k(@3:Foo, @2:Foo))
+B --> k(@1:Foo, @1:Foo)
+variant unifier:
 C --> f(k(%1:Foo, h(%2:Foo)))
 @2:Foo --> %1:Foo
 @1:Foo --> %2:Foo
@@ -714,12 +734,20 @@ C --> f(k(%1:Foo, h(%2:Foo)))
 Solution 6
 rewrites: 1
 state: h(h(%1:Foo))
+accumulated substitution:
+A --> f(k(%2:Foo, f(k(%1:Foo, %1:Foo))))
+B --> k(%1:Foo, %1:Foo)
+variant unifier:
 C --> h(h(@1:Foo))
 %1:Foo --> @1:Foo
 
 Solution 7
 rewrites: 2
 state: h(h(%1:Foo))
+accumulated substitution:
+A --> f(k(%2:Foo, h(%1:Foo)))
+B --> k(%1:Foo, %1:Foo)
+variant unifier:
 C --> h(h(@1:Foo))
 %1:Foo --> @1:Foo
 

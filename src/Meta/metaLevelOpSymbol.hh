@@ -103,9 +103,6 @@ private:
   NarrowingSearchState2* makeNarrowingSearchState2(MetaModule* m,
 						   FreeDagNode* subject,
 						   RewritingContext& context) const;
-  NarrowingSequenceSearch2* makeNarrowingSequenceSearch2(MetaModule* m,
-							 FreeDagNode* subject,
-							 RewritingContext& context) const;
 
   bool metaUnify2(FreeDagNode* subject, RewritingContext& context, bool disjoint);
   bool metaGetVariant2(FreeDagNode* subject, RewritingContext& context, bool irredundant);
@@ -119,6 +116,13 @@ private:
   NarrowingSequenceSearch* makeNarrowingSequenceSearchAlt(MetaModule* m,
 							  FreeDagNode* subject,
 							  RewritingContext& context) const;
+
+  bool downFoldType(DagNode* arg, bool& foldType) const;
+  NarrowingSequenceSearch3* makeNarrowingSequenceSearch3(MetaModule* m,
+							 FreeDagNode* subject,
+							 RewritingContext& context,
+							 bool keepHistory) const;
+  DagNode* makeNarrowingSearchPathResult(MetaModule* m, NarrowingSequenceSearch3* state) const;
 
   bool complexStrategy(DagNode* subject, RewritingContext& context);
 

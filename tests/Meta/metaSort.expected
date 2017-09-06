@@ -238,10 +238,10 @@ endfm) .
 rewrites: 1
 result NeKindSet: '`[AttrSet`] ; '`[Bool`] ; '`[Condition`] ; '`[EquationSet`]
     ; '`[FindResult`,NatList`,Bound`,Parent`] ; '`[HookList`] ; '`[ImportList`]
-    ; '`[MatchPair?`] ; '`[MembAxSet`] ; '`[Module`] ; '`[NarrowingResult?`] ;
-    '`[NarrowingSearchResult?`] ; '`[OpDeclSet`] ; '`[OpMappingSet`] ;
-    '`[ParameterDeclList`] ; '`[PrintOptionSet`] ; '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`] ;
-    '`[RenamingSet`] ; '`[Result4Tuple?`] ; '`[ResultPair?`] ;
+    ; '`[MatchPair?`] ; '`[MembAxSet`] ; '`[Module`] ;
+    '`[NarrowingApplyResult?`] ; '`[NarrowingSearchPathResult?`] ;
+    '`[NarrowingSearchResult?`] ; '`[NarrowingTrace`] ; '`[OpDeclSet`] ;
+    '`[OpMappingSet`] ; '`[ParameterDeclList`] ; '`[PrintOptionSet`] ; '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`] ; '`[RenamingSet`] ; '`[Result4Tuple?`] ; '`[ResultPair?`] ;
     '`[ResultTriple?`] ; '`[RuleSet`] ; '`[SmtResult?`] ; '`[SortMappingSet`] ;
     '`[String`] ; '`[SubsortDeclSet`] ; '`[Substitution?`] ; '`[Trace?`] ;
     '`[UnificationPair?`] ; '`[UnificationProblem`] ; '`[UnificationTriple?`] ;

@@ -101,9 +101,26 @@ Interpreter::narrowingCont(Int64 limit, bool debug)
 }
 
 void
+Interpreter::vuNarrowingCont(Int64 limit, bool debug)
+{
+  NarrowingSequenceSearch3* state = safeCast(NarrowingSequenceSearch3*, savedState);
+  VisibleModule* fm = savedModule;
+  savedState = 0;
+  savedModule = 0;
+  continueFunc = 0;
+
+  if (debug)
+    UserLevelRewritingContext::setDebug();
+  QUANTIFY_START();
+  Timer timer(getFlag(SHOW_TIMING));
+  doVuNarrowing(timer, fm, state, savedSolutionCount, limit);
+}
+
+
+void
 Interpreter::doVuNarrowing(Timer& timer,
 			   VisibleModule* module,
-			   NarrowingSequenceSearch2* state,
+			   NarrowingSequenceSearch3* state,
 			   Int64 solutionCount,
 			   Int64 limit)
 {
@@ -127,10 +144,17 @@ Interpreter::doVuNarrowing(Timer& timer,
       cout << "\nSolution " << solutionCount << "\n";
       printStats(timer, *context, getFlag(SHOW_TIMING));
 
-      DagNode* d = state->getStateDag();
-      cout << "state: " << d << endl;
-      UserLevelRewritingContext::printSubstitution(*(state->getUnifier()), state->getVariableInfo());
-    }
+      DagNode* stateDag;
+      int variableFamily;
+      Substitution* accumulatedSubstitution;
+      state->getStateInfo(stateDag, variableFamily, accumulatedSubstitution);
+
+      cout << "state: " << stateDag << endl;
+      cout << "accumulated substitution:" << endl;
+      UserLevelRewritingContext::printSubstitution(*accumulatedSubstitution, state->getInitialVariableInfo());
+      cout << "variant unifier:" << endl;
+      UserLevelRewritingContext::printSubstitution(*(state->getUnifier()), state->getUnifierVariableInfo());
+     }
   QUANTIFY_STOP();
 
   clearContinueInfo();  // just in case debugger left info
@@ -157,20 +181,4 @@ Interpreter::doVuNarrowing(Timer& timer,
       module->unprotect();
     }
   UserLevelRewritingContext::clearDebug();
-}
-
-void
-Interpreter::vuNarrowingCont(Int64 limit, bool debug)
-{
-  NarrowingSequenceSearch2* state = safeCast(NarrowingSequenceSearch2*, savedState);
-  VisibleModule* fm = savedModule;
-  savedState = 0;
-  savedModule = 0;
-  continueFunc = 0;
-
-  if (debug)
-    UserLevelRewritingContext::setDebug();
-  QUANTIFY_START();
-  Timer timer(getFlag(SHOW_TIMING));
-  doVuNarrowing(timer, fm, state, savedSolutionCount, limit);
 }
