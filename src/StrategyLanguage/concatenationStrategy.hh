@@ -33,18 +33,10 @@ public:
   ConcatenationStrategy(const Vector<StrategyExpression*> strategies);
   ~ConcatenationStrategy();
 
-  const Vector<StrategyExpression*>& getStrategies() const;
-
-  StrategicExecution::Survival decompose(StrategicSearch& searchObject, DecompositionProcess* remainder);
+  SetGenerator* execute(DagNode* subject, RewritingContext& context);
 
 private:
   const Vector<StrategyExpression*> strategies;
 };
-
-inline const Vector<StrategyExpression*>&
-ConcatenationStrategy::getStrategies() const
-{
-  return strategies;
-}
 
 #endif

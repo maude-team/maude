@@ -100,13 +100,13 @@ public:
     MAKE_TRIVIAL,
     MAKE_ALL,
     MAKE_APPLICATION,
+    MAKE_APPLICATION_WITH_SUBSTITUTION,
     MAKE_TOP,
     MAKE_CONCATENATION,
     MAKE_UNION,
     MAKE_ITERATION,
     MAKE_BRANCH,
-    MAKE_TEST,
-    MAKE_STRATEGY_LIST,
+    MAKE_UNARY,
 
     MAKE_SUBSTITUTION
   };
@@ -186,7 +186,6 @@ private:
   void makeStatement(int node);
   void makeAttributePart(int node, int& label, int& metadata, FlagSet& flags);
   void makeStatementPart(int node, int label, int metadata, FlagSet& flags);
-  void makeStrategyList(int node, Vector<StrategyExpression*>& strategies);
 
   int translateSpecialToken(int code);
 

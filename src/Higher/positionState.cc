@@ -105,29 +105,18 @@ PositionState::findNextPosition()
   return true;
 }
 
-PositionState::DagPair
-PositionState::rebuildDag(DagNode* replacement, ExtensionInfo* extInfo, PositionIndex index) const
+DagNode*
+PositionState::rebuildDag(DagNode* replacement) const
 {
-  //
-  //	Extend the replacement term if needed.
-  //
-  if (extInfo != 0 && !(extInfo->matchedWhole()))
-    replacement = positionQueue[index].node()->partialConstruct(replacement, extInfo);
-  //
-  //	Walk up the stack rebuilding.
-  //
-  DagNode* newDag = replacement;
-  int argIndex = positionQueue[index].argIndex();
-  for (PositionIndex i = positionQueue[index].parentIndex(); i != UNDEFINED;)
+  if (extensionInfo != 0 && !(extensionInfo->matchedWhole()))
+    replacement = getDagNode()->partialConstruct(replacement, extensionInfo);
+  int argIndex = positionQueue[nextToReturn].argIndex();
+  for (int i = positionQueue[nextToReturn].parentIndex(); i != UNDEFINED;)
     {
       const RedexPosition& rp = positionQueue[i];
-      newDag = rp.node()->copyWithReplacement(argIndex, newDag);
+      replacement = rp.node()->copyWithReplacement(argIndex, replacement);
       argIndex = rp.argIndex();
       i = rp.parentIndex();
     }
-  //
-  //	We return the rebuilt dag, and the extended replacement term since the caller may
-  //	need the later for tracing purposes.
-  //
-  return DagPair(newDag, replacement);
+  return replacement;
 }

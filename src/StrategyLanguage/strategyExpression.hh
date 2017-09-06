@@ -25,15 +25,13 @@
 //
 #ifndef _strategyExpression_hh_
 #define _strategyExpression_hh_
-#include "strategicExecution.hh"
 
 class StrategyExpression
 {
 public:
-  virtual ~StrategyExpression() {}
-  virtual StrategicExecution::Survival decompose(StrategicSearch& searchObject, DecompositionProcess* remainder) = 0;
-};
+  virtual ~StrategyExpression() {};
 
-ostream& operator<<(ostream& s, StrategyExpression* strategy);
+  virtual SetGenerator* execute(DagNode* subject, RewritingContext& context) = 0;
+};
 
 #endif

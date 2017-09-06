@@ -33,9 +33,8 @@ AU_LhsAutomaton::uniqueCollapseMatch(DagNode* subject,
   //
   //	Because one subterm cannot take the identity element we can only
   //	collapse to that subterm.
-  //	Every other subterm will be a variable that can take identity. For a
-  //	matchto be possible it either must be already bound to identity oris
-  //	now bound to identity.
+  //	Every other subterm must be a variable that can take identity and
+  //	it either must be already bound to identity or is now bound to identity.
   //
   Term* identity = topSymbol->getIdentity();
   int rigidLength = rigidPart.length();
@@ -44,28 +43,12 @@ AU_LhsAutomaton::uniqueCollapseMatch(DagNode* subject,
       Subterm& r = rigidPart[i];
       if (r.type == VARIABLE && r.variable.takeIdentity)
 	{
-	  int index = r.variable.index;
-	  DagNode* d = solution.value(index);
-	  if (d == 0)
-	    {
-	      //
-	      //	The only way an unbound variable that can take
-	      //	identity can be in the rigid part is if it is
-	      //	supposed to be bound by the unique subterm we will
-	      //	collapse to. We need to bind it to identity to ensure
-	      //	we don't produce a false match by binding it to
-	      //	something else.
-	      //
-	      solution.bind(index, topSymbol->getIdentityDag());
-	    }
-	  else
-	    {
-	      if(!(identity->equal(d)))
-		return false;
-	    }
-	  Assert(!r.variable.abstracted, "abstraction varible in rigid part");
+	  DagNode* d = solution.value(r.variable.index);
+	  Assert(d != 0, "unbound variable that can take identity in rigid part");
+	  if (!(identity->equal(d)))
+	    return false;
 	}
-    }
+    }      
   SubproblemAccumulator subproblems;
   int flexLength = flexPart.length();
   for (int i = 0; i < flexLength; i++)

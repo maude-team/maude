@@ -62,7 +62,7 @@
 #include "autoWrapBuffer.hh"
 
 #include "interpreter.hh"  // HACK
-#include "global.hh"  // HACK shouldn't be accessing global variables
+#include "main.hh"  // HACK shouldn't be accessing global variables
 
 //	our stuff
 #include "interact.cc"
@@ -95,7 +95,7 @@ UserLevelRewritingContext::makeSubcontext(DagNode* root, int purpose)
 {
   return new UserLevelRewritingContext(root, this, purpose,
 				       localTraceFlag &&
-				       (purpose != CONDITION_EVAL || interpreter.getFlag(Interpreter::TRACE_CONDITION)));
+				       (purpose != CONDITION_EVAL || interpreter.getFlag(Interpreter::TRACE_EQ)));
 }
 
 bool

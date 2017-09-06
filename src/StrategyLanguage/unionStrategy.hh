@@ -33,18 +33,10 @@ public:
   UnionStrategy(const Vector<StrategyExpression*>& strategies);
   ~UnionStrategy();
 
-  const Vector<StrategyExpression*>& getStrategies() const;
-
-  StrategicExecution::Survival decompose(StrategicSearch& searchObject, DecompositionProcess* remainder);
+  SetGenerator* execute(DagNode* subject, RewritingContext& context);
 
 private:
   const Vector<StrategyExpression*> strategies;
 };
-
-inline const Vector<StrategyExpression*>&
-UnionStrategy::getStrategies() const
-{
-  return strategies;
-}
 
 #endif

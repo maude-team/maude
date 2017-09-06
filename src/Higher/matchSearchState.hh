@@ -34,7 +34,7 @@ class MatchSearchState : public SearchState
 public:
   enum Flags
   {
-    GC_PATTERN = 16
+    GC_PATTERN = 8
   };
 
   MatchSearchState(RewritingContext* context,

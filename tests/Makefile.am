@@ -1,1 +1,1 @@
-SUBDIRS = BuiltIn Misc Meta
+SUBDIRS = BuiltIn Meta Misc

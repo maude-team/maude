@@ -35,45 +35,26 @@
 
 //	strategy language class definitions
 #include "branchStrategy.hh"
-#include "branchTask.hh"
-#include "decompositionProcess.hh"
+#include "branchSetGenerator.hh"
 
-BranchStrategy::BranchStrategy(StrategyExpression* initialStrategy,
-			       Action successAction,
-			       StrategyExpression* successStrategy,
-			       Action failureAction,
-			       StrategyExpression* failureStrategy)
-  : initialStrategy(initialStrategy),
-    successStrategy(successStrategy),
-    failureStrategy(failureStrategy),
-    successAction(successAction),
-    failureAction(failureAction)
+BranchStrategy::BranchStrategy(StrategyExpression* test,
+			       StrategyExpression* success,
+			       StrategyExpression* failure)
+  : test(test),
+    success(success),
+    failure(failure)
 {
-  Assert(successAction >= FAIL && successAction <= ITERATE, "bad success action");
-  Assert((successAction == NEW_STRATEGY) == (successStrategy != 0), "success inconsistancy");
-  Assert(failureAction == FAIL || failureAction == IDLE || failureAction == NEW_STRATEGY,
-	 "bad failure action");
-  Assert((failureAction == NEW_STRATEGY) == (failureStrategy != 0), "failure inconsistancy");
 }
 
 BranchStrategy::~BranchStrategy()
 {
-  delete initialStrategy;
-  delete successStrategy;
-  delete failureStrategy;
+  delete test;
+  delete success;
+  delete failure;
 }
 
-StrategicExecution::Survival
-BranchStrategy::decompose(StrategicSearch& searchObject, DecompositionProcess* remainder)
+SetGenerator*
+BranchStrategy::execute(DagNode* subject, RewritingContext& context)
 {
-  (void) new BranchTask(remainder,
-			remainder->getDag(),
-			initialStrategy,
-			successAction,
-			successStrategy,
-			failureAction,
-			failureStrategy,
-			remainder->getPending(),
-			remainder);
-  return StrategicExecution::DIE;  //  request deletion of DecompositionProcess
+  return new BranchSetGenerator(subject, context, test, success, failure);
 }

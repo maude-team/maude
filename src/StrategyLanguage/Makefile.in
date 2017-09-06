@@ -56,22 +56,20 @@ libstrategyLanguage_a_AR = $(AR) $(ARFLAGS)
 libstrategyLanguage_a_LIBADD =
 am_libstrategyLanguage_a_OBJECTS =  \
 	libstrategyLanguage_a-trivialStrategy.$(OBJEXT) \
+	libstrategyLanguage_a-trivialSetGenerator.$(OBJEXT) \
 	libstrategyLanguage_a-applicationStrategy.$(OBJEXT) \
+	libstrategyLanguage_a-applicationSetGenerator.$(OBJEXT) \
 	libstrategyLanguage_a-concatenationStrategy.$(OBJEXT) \
+	libstrategyLanguage_a-concatenationSetGenerator.$(OBJEXT) \
 	libstrategyLanguage_a-iterationStrategy.$(OBJEXT) \
+	libstrategyLanguage_a-iterationSetGenerator.$(OBJEXT) \
 	libstrategyLanguage_a-branchStrategy.$(OBJEXT) \
+	libstrategyLanguage_a-branchSetGenerator.$(OBJEXT) \
 	libstrategyLanguage_a-unionStrategy.$(OBJEXT) \
-	libstrategyLanguage_a-testStrategy.$(OBJEXT) \
-	libstrategyLanguage_a-strategicExecution.$(OBJEXT) \
-	libstrategyLanguage_a-strategicTask.$(OBJEXT) \
-	libstrategyLanguage_a-branchTask.$(OBJEXT) \
-	libstrategyLanguage_a-strategicProcess.$(OBJEXT) \
-	libstrategyLanguage_a-decompositionProcess.$(OBJEXT) \
-	libstrategyLanguage_a-applicationProcess.$(OBJEXT) \
-	libstrategyLanguage_a-strategicSearch.$(OBJEXT) \
-	libstrategyLanguage_a-sharedRewriteSearchState.$(OBJEXT) \
-	libstrategyLanguage_a-matchProcess.$(OBJEXT) \
-	libstrategyLanguage_a-rewriteTask.$(OBJEXT)
+	libstrategyLanguage_a-unionSetGenerator.$(OBJEXT) \
+	libstrategyLanguage_a-unaryStrategy.$(OBJEXT) \
+	libstrategyLanguage_a-unarySetGenerator.$(OBJEXT) \
+	libstrategyLanguage_a-stateCache.$(OBJEXT)
 libstrategyLanguage_a_OBJECTS = $(am_libstrategyLanguage_a_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
@@ -194,43 +192,40 @@ libstrategyLanguage_a_CPPFLAGS = \
 
 libstrategyLanguage_a_SOURCES = \
 	trivialStrategy.cc \
+	trivialSetGenerator.cc \
 	applicationStrategy.cc \
+	applicationSetGenerator.cc \
 	concatenationStrategy.cc \
+	concatenationSetGenerator.cc \
 	iterationStrategy.cc \
+	iterationSetGenerator.cc \
 	branchStrategy.cc \
+	branchSetGenerator.cc \
 	unionStrategy.cc \
-	testStrategy.cc \
-	strategicExecution.cc \
-	strategicTask.cc \
-	branchTask.cc \
-	strategicProcess.cc \
-	decompositionProcess.cc \
-	applicationProcess.cc \
-	strategicSearch.cc \
-	sharedRewriteSearchState.cc \
-	matchProcess.cc \
-	rewriteTask.cc
+	unionSetGenerator.cc \
+	unaryStrategy.cc \
+	unarySetGenerator.cc \
+	stateCache.cc
 
 noinst_HEADERS = \
 	strategyLanguage.hh \
 	strategyExpression.hh \
+	setGenerator.hh \
 	trivialStrategy.hh \
+	trivialSetGenerator.hh \
 	applicationStrategy.hh \
+	applicationSetGenerator.hh \
 	concatenationStrategy.hh \
+	concatenationSetGenerator.hh \
 	iterationStrategy.hh \
+	iterationSetGenerator.hh \
 	branchStrategy.hh \
+	branchSetGenerator.hh \
 	unionStrategy.hh \
-	testStrategy.hh \
-	strategicExecution.hh \
-	strategicTask.hh \
-	branchTask.hh \
-	strategicProcess.hh \
-	decompositionProcess.hh \
-	applicationProcess.hh \
-	strategicSearch.hh \
-	sharedRewriteSearchState.hh \
-	matchProcess.hh \
-	rewriteTask.hh
+	unionSetGenerator.hh \
+	unaryStrategy.hh \
+	unarySetGenerator.hh \
+	stateCache.hh
 
 all: all-am
 
@@ -279,22 +274,20 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstrategyLanguage_a-applicationProcess.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstrategyLanguage_a-applicationSetGenerator.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstrategyLanguage_a-applicationStrategy.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstrategyLanguage_a-branchSetGenerator.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstrategyLanguage_a-branchStrategy.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstrategyLanguage_a-branchTask.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstrategyLanguage_a-concatenationSetGenerator.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstrategyLanguage_a-concatenationStrategy.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstrategyLanguage_a-decompositionProcess.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstrategyLanguage_a-iterationSetGenerator.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstrategyLanguage_a-iterationStrategy.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstrategyLanguage_a-matchProcess.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstrategyLanguage_a-rewriteTask.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstrategyLanguage_a-sharedRewriteSearchState.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstrategyLanguage_a-strategicExecution.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstrategyLanguage_a-strategicProcess.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstrategyLanguage_a-strategicSearch.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstrategyLanguage_a-strategicTask.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstrategyLanguage_a-testStrategy.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstrategyLanguage_a-stateCache.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstrategyLanguage_a-trivialSetGenerator.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstrategyLanguage_a-trivialStrategy.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstrategyLanguage_a-unarySetGenerator.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstrategyLanguage_a-unaryStrategy.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstrategyLanguage_a-unionSetGenerator.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstrategyLanguage_a-unionStrategy.Po@am__quote@
 
 .cc.o:
@@ -325,6 +318,20 @@ libstrategyLanguage_a-trivialStrategy.obj: trivialStrategy.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-trivialStrategy.obj `if test -f 'trivialStrategy.cc'; then $(CYGPATH_W) 'trivialStrategy.cc'; else $(CYGPATH_W) '$(srcdir)/trivialStrategy.cc'; fi`
 
+libstrategyLanguage_a-trivialSetGenerator.o: trivialSetGenerator.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-trivialSetGenerator.o -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-trivialSetGenerator.Tpo" -c -o libstrategyLanguage_a-trivialSetGenerator.o `test -f 'trivialSetGenerator.cc' || echo '$(srcdir)/'`trivialSetGenerator.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-trivialSetGenerator.Tpo" "$(DEPDIR)/libstrategyLanguage_a-trivialSetGenerator.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-trivialSetGenerator.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='trivialSetGenerator.cc' object='libstrategyLanguage_a-trivialSetGenerator.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-trivialSetGenerator.o `test -f 'trivialSetGenerator.cc' || echo '$(srcdir)/'`trivialSetGenerator.cc
+
+libstrategyLanguage_a-trivialSetGenerator.obj: trivialSetGenerator.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-trivialSetGenerator.obj -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-trivialSetGenerator.Tpo" -c -o libstrategyLanguage_a-trivialSetGenerator.obj `if test -f 'trivialSetGenerator.cc'; then $(CYGPATH_W) 'trivialSetGenerator.cc'; else $(CYGPATH_W) '$(srcdir)/trivialSetGenerator.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-trivialSetGenerator.Tpo" "$(DEPDIR)/libstrategyLanguage_a-trivialSetGenerator.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-trivialSetGenerator.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='trivialSetGenerator.cc' object='libstrategyLanguage_a-trivialSetGenerator.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-trivialSetGenerator.obj `if test -f 'trivialSetGenerator.cc'; then $(CYGPATH_W) 'trivialSetGenerator.cc'; else $(CYGPATH_W) '$(srcdir)/trivialSetGenerator.cc'; fi`
+
 libstrategyLanguage_a-applicationStrategy.o: applicationStrategy.cc
 @am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-applicationStrategy.o -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-applicationStrategy.Tpo" -c -o libstrategyLanguage_a-applicationStrategy.o `test -f 'applicationStrategy.cc' || echo '$(srcdir)/'`applicationStrategy.cc; \
 @am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-applicationStrategy.Tpo" "$(DEPDIR)/libstrategyLanguage_a-applicationStrategy.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-applicationStrategy.Tpo"; exit 1; fi
@@ -338,6 +345,20 @@ libstrategyLanguage_a-applicationStrategy.obj: applicationStrategy.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='applicationStrategy.cc' object='libstrategyLanguage_a-applicationStrategy.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-applicationStrategy.obj `if test -f 'applicationStrategy.cc'; then $(CYGPATH_W) 'applicationStrategy.cc'; else $(CYGPATH_W) '$(srcdir)/applicationStrategy.cc'; fi`
+
+libstrategyLanguage_a-applicationSetGenerator.o: applicationSetGenerator.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-applicationSetGenerator.o -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-applicationSetGenerator.Tpo" -c -o libstrategyLanguage_a-applicationSetGenerator.o `test -f 'applicationSetGenerator.cc' || echo '$(srcdir)/'`applicationSetGenerator.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-applicationSetGenerator.Tpo" "$(DEPDIR)/libstrategyLanguage_a-applicationSetGenerator.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-applicationSetGenerator.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='applicationSetGenerator.cc' object='libstrategyLanguage_a-applicationSetGenerator.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-applicationSetGenerator.o `test -f 'applicationSetGenerator.cc' || echo '$(srcdir)/'`applicationSetGenerator.cc
+
+libstrategyLanguage_a-applicationSetGenerator.obj: applicationSetGenerator.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-applicationSetGenerator.obj -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-applicationSetGenerator.Tpo" -c -o libstrategyLanguage_a-applicationSetGenerator.obj `if test -f 'applicationSetGenerator.cc'; then $(CYGPATH_W) 'applicationSetGenerator.cc'; else $(CYGPATH_W) '$(srcdir)/applicationSetGenerator.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-applicationSetGenerator.Tpo" "$(DEPDIR)/libstrategyLanguage_a-applicationSetGenerator.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-applicationSetGenerator.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='applicationSetGenerator.cc' object='libstrategyLanguage_a-applicationSetGenerator.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-applicationSetGenerator.obj `if test -f 'applicationSetGenerator.cc'; then $(CYGPATH_W) 'applicationSetGenerator.cc'; else $(CYGPATH_W) '$(srcdir)/applicationSetGenerator.cc'; fi`
 
 libstrategyLanguage_a-concatenationStrategy.o: concatenationStrategy.cc
 @am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-concatenationStrategy.o -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-concatenationStrategy.Tpo" -c -o libstrategyLanguage_a-concatenationStrategy.o `test -f 'concatenationStrategy.cc' || echo '$(srcdir)/'`concatenationStrategy.cc; \
@@ -353,6 +374,20 @@ libstrategyLanguage_a-concatenationStrategy.obj: concatenationStrategy.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-concatenationStrategy.obj `if test -f 'concatenationStrategy.cc'; then $(CYGPATH_W) 'concatenationStrategy.cc'; else $(CYGPATH_W) '$(srcdir)/concatenationStrategy.cc'; fi`
 
+libstrategyLanguage_a-concatenationSetGenerator.o: concatenationSetGenerator.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-concatenationSetGenerator.o -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-concatenationSetGenerator.Tpo" -c -o libstrategyLanguage_a-concatenationSetGenerator.o `test -f 'concatenationSetGenerator.cc' || echo '$(srcdir)/'`concatenationSetGenerator.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-concatenationSetGenerator.Tpo" "$(DEPDIR)/libstrategyLanguage_a-concatenationSetGenerator.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-concatenationSetGenerator.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='concatenationSetGenerator.cc' object='libstrategyLanguage_a-concatenationSetGenerator.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-concatenationSetGenerator.o `test -f 'concatenationSetGenerator.cc' || echo '$(srcdir)/'`concatenationSetGenerator.cc
+
+libstrategyLanguage_a-concatenationSetGenerator.obj: concatenationSetGenerator.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-concatenationSetGenerator.obj -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-concatenationSetGenerator.Tpo" -c -o libstrategyLanguage_a-concatenationSetGenerator.obj `if test -f 'concatenationSetGenerator.cc'; then $(CYGPATH_W) 'concatenationSetGenerator.cc'; else $(CYGPATH_W) '$(srcdir)/concatenationSetGenerator.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-concatenationSetGenerator.Tpo" "$(DEPDIR)/libstrategyLanguage_a-concatenationSetGenerator.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-concatenationSetGenerator.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='concatenationSetGenerator.cc' object='libstrategyLanguage_a-concatenationSetGenerator.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-concatenationSetGenerator.obj `if test -f 'concatenationSetGenerator.cc'; then $(CYGPATH_W) 'concatenationSetGenerator.cc'; else $(CYGPATH_W) '$(srcdir)/concatenationSetGenerator.cc'; fi`
+
 libstrategyLanguage_a-iterationStrategy.o: iterationStrategy.cc
 @am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-iterationStrategy.o -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-iterationStrategy.Tpo" -c -o libstrategyLanguage_a-iterationStrategy.o `test -f 'iterationStrategy.cc' || echo '$(srcdir)/'`iterationStrategy.cc; \
 @am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-iterationStrategy.Tpo" "$(DEPDIR)/libstrategyLanguage_a-iterationStrategy.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-iterationStrategy.Tpo"; exit 1; fi
@@ -366,6 +401,20 @@ libstrategyLanguage_a-iterationStrategy.obj: iterationStrategy.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='iterationStrategy.cc' object='libstrategyLanguage_a-iterationStrategy.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-iterationStrategy.obj `if test -f 'iterationStrategy.cc'; then $(CYGPATH_W) 'iterationStrategy.cc'; else $(CYGPATH_W) '$(srcdir)/iterationStrategy.cc'; fi`
+
+libstrategyLanguage_a-iterationSetGenerator.o: iterationSetGenerator.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-iterationSetGenerator.o -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-iterationSetGenerator.Tpo" -c -o libstrategyLanguage_a-iterationSetGenerator.o `test -f 'iterationSetGenerator.cc' || echo '$(srcdir)/'`iterationSetGenerator.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-iterationSetGenerator.Tpo" "$(DEPDIR)/libstrategyLanguage_a-iterationSetGenerator.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-iterationSetGenerator.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='iterationSetGenerator.cc' object='libstrategyLanguage_a-iterationSetGenerator.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-iterationSetGenerator.o `test -f 'iterationSetGenerator.cc' || echo '$(srcdir)/'`iterationSetGenerator.cc
+
+libstrategyLanguage_a-iterationSetGenerator.obj: iterationSetGenerator.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-iterationSetGenerator.obj -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-iterationSetGenerator.Tpo" -c -o libstrategyLanguage_a-iterationSetGenerator.obj `if test -f 'iterationSetGenerator.cc'; then $(CYGPATH_W) 'iterationSetGenerator.cc'; else $(CYGPATH_W) '$(srcdir)/iterationSetGenerator.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-iterationSetGenerator.Tpo" "$(DEPDIR)/libstrategyLanguage_a-iterationSetGenerator.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-iterationSetGenerator.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='iterationSetGenerator.cc' object='libstrategyLanguage_a-iterationSetGenerator.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-iterationSetGenerator.obj `if test -f 'iterationSetGenerator.cc'; then $(CYGPATH_W) 'iterationSetGenerator.cc'; else $(CYGPATH_W) '$(srcdir)/iterationSetGenerator.cc'; fi`
 
 libstrategyLanguage_a-branchStrategy.o: branchStrategy.cc
 @am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-branchStrategy.o -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-branchStrategy.Tpo" -c -o libstrategyLanguage_a-branchStrategy.o `test -f 'branchStrategy.cc' || echo '$(srcdir)/'`branchStrategy.cc; \
@@ -381,6 +430,20 @@ libstrategyLanguage_a-branchStrategy.obj: branchStrategy.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-branchStrategy.obj `if test -f 'branchStrategy.cc'; then $(CYGPATH_W) 'branchStrategy.cc'; else $(CYGPATH_W) '$(srcdir)/branchStrategy.cc'; fi`
 
+libstrategyLanguage_a-branchSetGenerator.o: branchSetGenerator.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-branchSetGenerator.o -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-branchSetGenerator.Tpo" -c -o libstrategyLanguage_a-branchSetGenerator.o `test -f 'branchSetGenerator.cc' || echo '$(srcdir)/'`branchSetGenerator.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-branchSetGenerator.Tpo" "$(DEPDIR)/libstrategyLanguage_a-branchSetGenerator.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-branchSetGenerator.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='branchSetGenerator.cc' object='libstrategyLanguage_a-branchSetGenerator.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-branchSetGenerator.o `test -f 'branchSetGenerator.cc' || echo '$(srcdir)/'`branchSetGenerator.cc
+
+libstrategyLanguage_a-branchSetGenerator.obj: branchSetGenerator.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-branchSetGenerator.obj -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-branchSetGenerator.Tpo" -c -o libstrategyLanguage_a-branchSetGenerator.obj `if test -f 'branchSetGenerator.cc'; then $(CYGPATH_W) 'branchSetGenerator.cc'; else $(CYGPATH_W) '$(srcdir)/branchSetGenerator.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-branchSetGenerator.Tpo" "$(DEPDIR)/libstrategyLanguage_a-branchSetGenerator.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-branchSetGenerator.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='branchSetGenerator.cc' object='libstrategyLanguage_a-branchSetGenerator.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-branchSetGenerator.obj `if test -f 'branchSetGenerator.cc'; then $(CYGPATH_W) 'branchSetGenerator.cc'; else $(CYGPATH_W) '$(srcdir)/branchSetGenerator.cc'; fi`
+
 libstrategyLanguage_a-unionStrategy.o: unionStrategy.cc
 @am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-unionStrategy.o -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-unionStrategy.Tpo" -c -o libstrategyLanguage_a-unionStrategy.o `test -f 'unionStrategy.cc' || echo '$(srcdir)/'`unionStrategy.cc; \
 @am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-unionStrategy.Tpo" "$(DEPDIR)/libstrategyLanguage_a-unionStrategy.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-unionStrategy.Tpo"; exit 1; fi
@@ -395,159 +458,61 @@ libstrategyLanguage_a-unionStrategy.obj: unionStrategy.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-unionStrategy.obj `if test -f 'unionStrategy.cc'; then $(CYGPATH_W) 'unionStrategy.cc'; else $(CYGPATH_W) '$(srcdir)/unionStrategy.cc'; fi`
 
-libstrategyLanguage_a-testStrategy.o: testStrategy.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-testStrategy.o -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-testStrategy.Tpo" -c -o libstrategyLanguage_a-testStrategy.o `test -f 'testStrategy.cc' || echo '$(srcdir)/'`testStrategy.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-testStrategy.Tpo" "$(DEPDIR)/libstrategyLanguage_a-testStrategy.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-testStrategy.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='testStrategy.cc' object='libstrategyLanguage_a-testStrategy.o' libtool=no @AMDEPBACKSLASH@
+libstrategyLanguage_a-unionSetGenerator.o: unionSetGenerator.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-unionSetGenerator.o -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-unionSetGenerator.Tpo" -c -o libstrategyLanguage_a-unionSetGenerator.o `test -f 'unionSetGenerator.cc' || echo '$(srcdir)/'`unionSetGenerator.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-unionSetGenerator.Tpo" "$(DEPDIR)/libstrategyLanguage_a-unionSetGenerator.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-unionSetGenerator.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='unionSetGenerator.cc' object='libstrategyLanguage_a-unionSetGenerator.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-testStrategy.o `test -f 'testStrategy.cc' || echo '$(srcdir)/'`testStrategy.cc
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-unionSetGenerator.o `test -f 'unionSetGenerator.cc' || echo '$(srcdir)/'`unionSetGenerator.cc
 
-libstrategyLanguage_a-testStrategy.obj: testStrategy.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-testStrategy.obj -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-testStrategy.Tpo" -c -o libstrategyLanguage_a-testStrategy.obj `if test -f 'testStrategy.cc'; then $(CYGPATH_W) 'testStrategy.cc'; else $(CYGPATH_W) '$(srcdir)/testStrategy.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-testStrategy.Tpo" "$(DEPDIR)/libstrategyLanguage_a-testStrategy.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-testStrategy.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='testStrategy.cc' object='libstrategyLanguage_a-testStrategy.obj' libtool=no @AMDEPBACKSLASH@
+libstrategyLanguage_a-unionSetGenerator.obj: unionSetGenerator.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-unionSetGenerator.obj -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-unionSetGenerator.Tpo" -c -o libstrategyLanguage_a-unionSetGenerator.obj `if test -f 'unionSetGenerator.cc'; then $(CYGPATH_W) 'unionSetGenerator.cc'; else $(CYGPATH_W) '$(srcdir)/unionSetGenerator.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-unionSetGenerator.Tpo" "$(DEPDIR)/libstrategyLanguage_a-unionSetGenerator.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-unionSetGenerator.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='unionSetGenerator.cc' object='libstrategyLanguage_a-unionSetGenerator.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-testStrategy.obj `if test -f 'testStrategy.cc'; then $(CYGPATH_W) 'testStrategy.cc'; else $(CYGPATH_W) '$(srcdir)/testStrategy.cc'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-unionSetGenerator.obj `if test -f 'unionSetGenerator.cc'; then $(CYGPATH_W) 'unionSetGenerator.cc'; else $(CYGPATH_W) '$(srcdir)/unionSetGenerator.cc'; fi`
 
-libstrategyLanguage_a-strategicExecution.o: strategicExecution.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-strategicExecution.o -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-strategicExecution.Tpo" -c -o libstrategyLanguage_a-strategicExecution.o `test -f 'strategicExecution.cc' || echo '$(srcdir)/'`strategicExecution.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-strategicExecution.Tpo" "$(DEPDIR)/libstrategyLanguage_a-strategicExecution.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-strategicExecution.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='strategicExecution.cc' object='libstrategyLanguage_a-strategicExecution.o' libtool=no @AMDEPBACKSLASH@
+libstrategyLanguage_a-unaryStrategy.o: unaryStrategy.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-unaryStrategy.o -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-unaryStrategy.Tpo" -c -o libstrategyLanguage_a-unaryStrategy.o `test -f 'unaryStrategy.cc' || echo '$(srcdir)/'`unaryStrategy.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-unaryStrategy.Tpo" "$(DEPDIR)/libstrategyLanguage_a-unaryStrategy.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-unaryStrategy.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='unaryStrategy.cc' object='libstrategyLanguage_a-unaryStrategy.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-strategicExecution.o `test -f 'strategicExecution.cc' || echo '$(srcdir)/'`strategicExecution.cc
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-unaryStrategy.o `test -f 'unaryStrategy.cc' || echo '$(srcdir)/'`unaryStrategy.cc
 
-libstrategyLanguage_a-strategicExecution.obj: strategicExecution.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-strategicExecution.obj -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-strategicExecution.Tpo" -c -o libstrategyLanguage_a-strategicExecution.obj `if test -f 'strategicExecution.cc'; then $(CYGPATH_W) 'strategicExecution.cc'; else $(CYGPATH_W) '$(srcdir)/strategicExecution.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-strategicExecution.Tpo" "$(DEPDIR)/libstrategyLanguage_a-strategicExecution.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-strategicExecution.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='strategicExecution.cc' object='libstrategyLanguage_a-strategicExecution.obj' libtool=no @AMDEPBACKSLASH@
+libstrategyLanguage_a-unaryStrategy.obj: unaryStrategy.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-unaryStrategy.obj -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-unaryStrategy.Tpo" -c -o libstrategyLanguage_a-unaryStrategy.obj `if test -f 'unaryStrategy.cc'; then $(CYGPATH_W) 'unaryStrategy.cc'; else $(CYGPATH_W) '$(srcdir)/unaryStrategy.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-unaryStrategy.Tpo" "$(DEPDIR)/libstrategyLanguage_a-unaryStrategy.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-unaryStrategy.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='unaryStrategy.cc' object='libstrategyLanguage_a-unaryStrategy.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-strategicExecution.obj `if test -f 'strategicExecution.cc'; then $(CYGPATH_W) 'strategicExecution.cc'; else $(CYGPATH_W) '$(srcdir)/strategicExecution.cc'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-unaryStrategy.obj `if test -f 'unaryStrategy.cc'; then $(CYGPATH_W) 'unaryStrategy.cc'; else $(CYGPATH_W) '$(srcdir)/unaryStrategy.cc'; fi`
 
-libstrategyLanguage_a-strategicTask.o: strategicTask.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-strategicTask.o -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-strategicTask.Tpo" -c -o libstrategyLanguage_a-strategicTask.o `test -f 'strategicTask.cc' || echo '$(srcdir)/'`strategicTask.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-strategicTask.Tpo" "$(DEPDIR)/libstrategyLanguage_a-strategicTask.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-strategicTask.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='strategicTask.cc' object='libstrategyLanguage_a-strategicTask.o' libtool=no @AMDEPBACKSLASH@
+libstrategyLanguage_a-unarySetGenerator.o: unarySetGenerator.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-unarySetGenerator.o -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-unarySetGenerator.Tpo" -c -o libstrategyLanguage_a-unarySetGenerator.o `test -f 'unarySetGenerator.cc' || echo '$(srcdir)/'`unarySetGenerator.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-unarySetGenerator.Tpo" "$(DEPDIR)/libstrategyLanguage_a-unarySetGenerator.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-unarySetGenerator.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='unarySetGenerator.cc' object='libstrategyLanguage_a-unarySetGenerator.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-strategicTask.o `test -f 'strategicTask.cc' || echo '$(srcdir)/'`strategicTask.cc
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-unarySetGenerator.o `test -f 'unarySetGenerator.cc' || echo '$(srcdir)/'`unarySetGenerator.cc
 
-libstrategyLanguage_a-strategicTask.obj: strategicTask.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-strategicTask.obj -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-strategicTask.Tpo" -c -o libstrategyLanguage_a-strategicTask.obj `if test -f 'strategicTask.cc'; then $(CYGPATH_W) 'strategicTask.cc'; else $(CYGPATH_W) '$(srcdir)/strategicTask.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-strategicTask.Tpo" "$(DEPDIR)/libstrategyLanguage_a-strategicTask.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-strategicTask.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='strategicTask.cc' object='libstrategyLanguage_a-strategicTask.obj' libtool=no @AMDEPBACKSLASH@
+libstrategyLanguage_a-unarySetGenerator.obj: unarySetGenerator.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-unarySetGenerator.obj -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-unarySetGenerator.Tpo" -c -o libstrategyLanguage_a-unarySetGenerator.obj `if test -f 'unarySetGenerator.cc'; then $(CYGPATH_W) 'unarySetGenerator.cc'; else $(CYGPATH_W) '$(srcdir)/unarySetGenerator.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-unarySetGenerator.Tpo" "$(DEPDIR)/libstrategyLanguage_a-unarySetGenerator.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-unarySetGenerator.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='unarySetGenerator.cc' object='libstrategyLanguage_a-unarySetGenerator.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-strategicTask.obj `if test -f 'strategicTask.cc'; then $(CYGPATH_W) 'strategicTask.cc'; else $(CYGPATH_W) '$(srcdir)/strategicTask.cc'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-unarySetGenerator.obj `if test -f 'unarySetGenerator.cc'; then $(CYGPATH_W) 'unarySetGenerator.cc'; else $(CYGPATH_W) '$(srcdir)/unarySetGenerator.cc'; fi`
 
-libstrategyLanguage_a-branchTask.o: branchTask.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-branchTask.o -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-branchTask.Tpo" -c -o libstrategyLanguage_a-branchTask.o `test -f 'branchTask.cc' || echo '$(srcdir)/'`branchTask.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-branchTask.Tpo" "$(DEPDIR)/libstrategyLanguage_a-branchTask.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-branchTask.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='branchTask.cc' object='libstrategyLanguage_a-branchTask.o' libtool=no @AMDEPBACKSLASH@
+libstrategyLanguage_a-stateCache.o: stateCache.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-stateCache.o -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-stateCache.Tpo" -c -o libstrategyLanguage_a-stateCache.o `test -f 'stateCache.cc' || echo '$(srcdir)/'`stateCache.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-stateCache.Tpo" "$(DEPDIR)/libstrategyLanguage_a-stateCache.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-stateCache.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='stateCache.cc' object='libstrategyLanguage_a-stateCache.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-branchTask.o `test -f 'branchTask.cc' || echo '$(srcdir)/'`branchTask.cc
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-stateCache.o `test -f 'stateCache.cc' || echo '$(srcdir)/'`stateCache.cc
 
-libstrategyLanguage_a-branchTask.obj: branchTask.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-branchTask.obj -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-branchTask.Tpo" -c -o libstrategyLanguage_a-branchTask.obj `if test -f 'branchTask.cc'; then $(CYGPATH_W) 'branchTask.cc'; else $(CYGPATH_W) '$(srcdir)/branchTask.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-branchTask.Tpo" "$(DEPDIR)/libstrategyLanguage_a-branchTask.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-branchTask.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='branchTask.cc' object='libstrategyLanguage_a-branchTask.obj' libtool=no @AMDEPBACKSLASH@
+libstrategyLanguage_a-stateCache.obj: stateCache.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-stateCache.obj -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-stateCache.Tpo" -c -o libstrategyLanguage_a-stateCache.obj `if test -f 'stateCache.cc'; then $(CYGPATH_W) 'stateCache.cc'; else $(CYGPATH_W) '$(srcdir)/stateCache.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-stateCache.Tpo" "$(DEPDIR)/libstrategyLanguage_a-stateCache.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-stateCache.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='stateCache.cc' object='libstrategyLanguage_a-stateCache.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-branchTask.obj `if test -f 'branchTask.cc'; then $(CYGPATH_W) 'branchTask.cc'; else $(CYGPATH_W) '$(srcdir)/branchTask.cc'; fi`
-
-libstrategyLanguage_a-strategicProcess.o: strategicProcess.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-strategicProcess.o -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-strategicProcess.Tpo" -c -o libstrategyLanguage_a-strategicProcess.o `test -f 'strategicProcess.cc' || echo '$(srcdir)/'`strategicProcess.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-strategicProcess.Tpo" "$(DEPDIR)/libstrategyLanguage_a-strategicProcess.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-strategicProcess.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='strategicProcess.cc' object='libstrategyLanguage_a-strategicProcess.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-strategicProcess.o `test -f 'strategicProcess.cc' || echo '$(srcdir)/'`strategicProcess.cc
-
-libstrategyLanguage_a-strategicProcess.obj: strategicProcess.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-strategicProcess.obj -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-strategicProcess.Tpo" -c -o libstrategyLanguage_a-strategicProcess.obj `if test -f 'strategicProcess.cc'; then $(CYGPATH_W) 'strategicProcess.cc'; else $(CYGPATH_W) '$(srcdir)/strategicProcess.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-strategicProcess.Tpo" "$(DEPDIR)/libstrategyLanguage_a-strategicProcess.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-strategicProcess.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='strategicProcess.cc' object='libstrategyLanguage_a-strategicProcess.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-strategicProcess.obj `if test -f 'strategicProcess.cc'; then $(CYGPATH_W) 'strategicProcess.cc'; else $(CYGPATH_W) '$(srcdir)/strategicProcess.cc'; fi`
-
-libstrategyLanguage_a-decompositionProcess.o: decompositionProcess.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-decompositionProcess.o -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-decompositionProcess.Tpo" -c -o libstrategyLanguage_a-decompositionProcess.o `test -f 'decompositionProcess.cc' || echo '$(srcdir)/'`decompositionProcess.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-decompositionProcess.Tpo" "$(DEPDIR)/libstrategyLanguage_a-decompositionProcess.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-decompositionProcess.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='decompositionProcess.cc' object='libstrategyLanguage_a-decompositionProcess.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-decompositionProcess.o `test -f 'decompositionProcess.cc' || echo '$(srcdir)/'`decompositionProcess.cc
-
-libstrategyLanguage_a-decompositionProcess.obj: decompositionProcess.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-decompositionProcess.obj -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-decompositionProcess.Tpo" -c -o libstrategyLanguage_a-decompositionProcess.obj `if test -f 'decompositionProcess.cc'; then $(CYGPATH_W) 'decompositionProcess.cc'; else $(CYGPATH_W) '$(srcdir)/decompositionProcess.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-decompositionProcess.Tpo" "$(DEPDIR)/libstrategyLanguage_a-decompositionProcess.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-decompositionProcess.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='decompositionProcess.cc' object='libstrategyLanguage_a-decompositionProcess.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-decompositionProcess.obj `if test -f 'decompositionProcess.cc'; then $(CYGPATH_W) 'decompositionProcess.cc'; else $(CYGPATH_W) '$(srcdir)/decompositionProcess.cc'; fi`
-
-libstrategyLanguage_a-applicationProcess.o: applicationProcess.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-applicationProcess.o -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-applicationProcess.Tpo" -c -o libstrategyLanguage_a-applicationProcess.o `test -f 'applicationProcess.cc' || echo '$(srcdir)/'`applicationProcess.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-applicationProcess.Tpo" "$(DEPDIR)/libstrategyLanguage_a-applicationProcess.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-applicationProcess.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='applicationProcess.cc' object='libstrategyLanguage_a-applicationProcess.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-applicationProcess.o `test -f 'applicationProcess.cc' || echo '$(srcdir)/'`applicationProcess.cc
-
-libstrategyLanguage_a-applicationProcess.obj: applicationProcess.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-applicationProcess.obj -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-applicationProcess.Tpo" -c -o libstrategyLanguage_a-applicationProcess.obj `if test -f 'applicationProcess.cc'; then $(CYGPATH_W) 'applicationProcess.cc'; else $(CYGPATH_W) '$(srcdir)/applicationProcess.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-applicationProcess.Tpo" "$(DEPDIR)/libstrategyLanguage_a-applicationProcess.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-applicationProcess.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='applicationProcess.cc' object='libstrategyLanguage_a-applicationProcess.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-applicationProcess.obj `if test -f 'applicationProcess.cc'; then $(CYGPATH_W) 'applicationProcess.cc'; else $(CYGPATH_W) '$(srcdir)/applicationProcess.cc'; fi`
-
-libstrategyLanguage_a-strategicSearch.o: strategicSearch.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-strategicSearch.o -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-strategicSearch.Tpo" -c -o libstrategyLanguage_a-strategicSearch.o `test -f 'strategicSearch.cc' || echo '$(srcdir)/'`strategicSearch.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-strategicSearch.Tpo" "$(DEPDIR)/libstrategyLanguage_a-strategicSearch.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-strategicSearch.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='strategicSearch.cc' object='libstrategyLanguage_a-strategicSearch.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-strategicSearch.o `test -f 'strategicSearch.cc' || echo '$(srcdir)/'`strategicSearch.cc
-
-libstrategyLanguage_a-strategicSearch.obj: strategicSearch.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-strategicSearch.obj -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-strategicSearch.Tpo" -c -o libstrategyLanguage_a-strategicSearch.obj `if test -f 'strategicSearch.cc'; then $(CYGPATH_W) 'strategicSearch.cc'; else $(CYGPATH_W) '$(srcdir)/strategicSearch.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-strategicSearch.Tpo" "$(DEPDIR)/libstrategyLanguage_a-strategicSearch.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-strategicSearch.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='strategicSearch.cc' object='libstrategyLanguage_a-strategicSearch.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-strategicSearch.obj `if test -f 'strategicSearch.cc'; then $(CYGPATH_W) 'strategicSearch.cc'; else $(CYGPATH_W) '$(srcdir)/strategicSearch.cc'; fi`
-
-libstrategyLanguage_a-sharedRewriteSearchState.o: sharedRewriteSearchState.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-sharedRewriteSearchState.o -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-sharedRewriteSearchState.Tpo" -c -o libstrategyLanguage_a-sharedRewriteSearchState.o `test -f 'sharedRewriteSearchState.cc' || echo '$(srcdir)/'`sharedRewriteSearchState.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-sharedRewriteSearchState.Tpo" "$(DEPDIR)/libstrategyLanguage_a-sharedRewriteSearchState.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-sharedRewriteSearchState.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='sharedRewriteSearchState.cc' object='libstrategyLanguage_a-sharedRewriteSearchState.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-sharedRewriteSearchState.o `test -f 'sharedRewriteSearchState.cc' || echo '$(srcdir)/'`sharedRewriteSearchState.cc
-
-libstrategyLanguage_a-sharedRewriteSearchState.obj: sharedRewriteSearchState.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-sharedRewriteSearchState.obj -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-sharedRewriteSearchState.Tpo" -c -o libstrategyLanguage_a-sharedRewriteSearchState.obj `if test -f 'sharedRewriteSearchState.cc'; then $(CYGPATH_W) 'sharedRewriteSearchState.cc'; else $(CYGPATH_W) '$(srcdir)/sharedRewriteSearchState.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-sharedRewriteSearchState.Tpo" "$(DEPDIR)/libstrategyLanguage_a-sharedRewriteSearchState.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-sharedRewriteSearchState.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='sharedRewriteSearchState.cc' object='libstrategyLanguage_a-sharedRewriteSearchState.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-sharedRewriteSearchState.obj `if test -f 'sharedRewriteSearchState.cc'; then $(CYGPATH_W) 'sharedRewriteSearchState.cc'; else $(CYGPATH_W) '$(srcdir)/sharedRewriteSearchState.cc'; fi`
-
-libstrategyLanguage_a-matchProcess.o: matchProcess.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-matchProcess.o -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-matchProcess.Tpo" -c -o libstrategyLanguage_a-matchProcess.o `test -f 'matchProcess.cc' || echo '$(srcdir)/'`matchProcess.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-matchProcess.Tpo" "$(DEPDIR)/libstrategyLanguage_a-matchProcess.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-matchProcess.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='matchProcess.cc' object='libstrategyLanguage_a-matchProcess.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-matchProcess.o `test -f 'matchProcess.cc' || echo '$(srcdir)/'`matchProcess.cc
-
-libstrategyLanguage_a-matchProcess.obj: matchProcess.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-matchProcess.obj -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-matchProcess.Tpo" -c -o libstrategyLanguage_a-matchProcess.obj `if test -f 'matchProcess.cc'; then $(CYGPATH_W) 'matchProcess.cc'; else $(CYGPATH_W) '$(srcdir)/matchProcess.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-matchProcess.Tpo" "$(DEPDIR)/libstrategyLanguage_a-matchProcess.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-matchProcess.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='matchProcess.cc' object='libstrategyLanguage_a-matchProcess.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-matchProcess.obj `if test -f 'matchProcess.cc'; then $(CYGPATH_W) 'matchProcess.cc'; else $(CYGPATH_W) '$(srcdir)/matchProcess.cc'; fi`
-
-libstrategyLanguage_a-rewriteTask.o: rewriteTask.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-rewriteTask.o -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-rewriteTask.Tpo" -c -o libstrategyLanguage_a-rewriteTask.o `test -f 'rewriteTask.cc' || echo '$(srcdir)/'`rewriteTask.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-rewriteTask.Tpo" "$(DEPDIR)/libstrategyLanguage_a-rewriteTask.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-rewriteTask.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='rewriteTask.cc' object='libstrategyLanguage_a-rewriteTask.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-rewriteTask.o `test -f 'rewriteTask.cc' || echo '$(srcdir)/'`rewriteTask.cc
-
-libstrategyLanguage_a-rewriteTask.obj: rewriteTask.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstrategyLanguage_a-rewriteTask.obj -MD -MP -MF "$(DEPDIR)/libstrategyLanguage_a-rewriteTask.Tpo" -c -o libstrategyLanguage_a-rewriteTask.obj `if test -f 'rewriteTask.cc'; then $(CYGPATH_W) 'rewriteTask.cc'; else $(CYGPATH_W) '$(srcdir)/rewriteTask.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libstrategyLanguage_a-rewriteTask.Tpo" "$(DEPDIR)/libstrategyLanguage_a-rewriteTask.Po"; else rm -f "$(DEPDIR)/libstrategyLanguage_a-rewriteTask.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='rewriteTask.cc' object='libstrategyLanguage_a-rewriteTask.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-rewriteTask.obj `if test -f 'rewriteTask.cc'; then $(CYGPATH_W) 'rewriteTask.cc'; else $(CYGPATH_W) '$(srcdir)/rewriteTask.cc'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstrategyLanguage_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstrategyLanguage_a-stateCache.obj `if test -f 'stateCache.cc'; then $(CYGPATH_W) 'stateCache.cc'; else $(CYGPATH_W) '$(srcdir)/stateCache.cc'; fi`
 uninstall-info-am:
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)

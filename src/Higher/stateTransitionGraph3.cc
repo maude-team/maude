@@ -115,12 +115,12 @@ StateTransitionGraph3::getNextState(int stateNr, int index)
 		return NONE;
 	    }
 	  DagNode* replacement = rewriteState->getReplacement();
-	  RewriteSearchState::DagPair r = rewriteState->rebuildDag(replacement);
-          RewritingContext* c = context->makeSubcontext(r.first);
+	  DagNode* r = rewriteState->rebuildDag(replacement);
+          RewritingContext* c = context->makeSubcontext(r);
 	  initial->incrementRlCount();
 	  if (trace)
 	    {
-	      c->tracePostRuleRewrite(r.second);
+	      c->tracePostRuleRewrite(replacement);
 	      if (c->traceAbort())
 		{
 		  delete c;
@@ -135,12 +135,12 @@ StateTransitionGraph3::getNextState(int stateNr, int index)
             }
 	  initial->addInCount(*c);
 	  delete c;
-	  int nextState = seenSet.dagNode2Index(r.first);
+	  int nextState = seenSet.dagNode2Index(r);
 	  if (nextState == NONE)
 	    {
 	      nextState = seen.length();
 	      insertNewState(stateNr);
-	      seenSet.insert(r.first);
+	      seenSet.insert(r);
 	    }
 	  n->nextStates.append(nextState);
 	  n->fwdArcs[nextState].insert(rule);

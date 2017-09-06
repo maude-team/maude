@@ -15,7 +15,8 @@
 @SET_MAKE@
 
 
-SOURCES = $(libmixfix_a_SOURCES) $(EXTRA_libmixfix_a_SOURCES)
+
+SOURCES = $(maude_SOURCES) $(EXTRA_maude_SOURCES)
 
 srcdir = @srcdir@
 top_srcdir = @top_srcdir@
@@ -39,6 +40,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
+bin_PROGRAMS = maude$(EXEEXT)
 subdir = src/Mixfix
 DIST_COMMON = $(noinst_HEADERS) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in ChangeLog
@@ -49,53 +51,61 @@ am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
-LIBRARIES = $(noinst_LIBRARIES)
-AR = ar
-ARFLAGS = cru
-libmixfix_a_AR = $(AR) $(ARFLAGS)
-libmixfix_a_LIBADD =
-am__libmixfix_a_SOURCES_DIST = syntaxContainer.cc renaming.cc view.cc \
+am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(datadir)"
+binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
+PROGRAMS = $(bin_PROGRAMS)
+am__maude_SOURCES_DIST = syntaxContainer.cc renaming.cc view.cc \
 	entity.cc moduleCache.cc moduleExpression.cc importModule.cc \
 	importTranslation.cc fileTable.cc loopSymbol.cc \
 	quotedIdentifierSymbol.cc quotedIdentifierDagNode.cc \
 	quotedIdentifierTerm.cc quotedIdentifierOpSymbol.cc \
-	mixfixModule.cc token.cc global.cc \
-	userLevelRewritingContext.cc preModule.cc symbolType.cc \
-	xmlBuffer.cc maudemlBuffer.cc interpreter.cc moduleDatabase.cc \
-	viewDatabase.cc profileModule.cc mixfixParser.cc \
-	visibleModule.cc sharedTokens.cc metadataStore.cc banner.cc \
-	lexer.cc surface.cc compiler.cc
-@BUILD_COMPILER_TRUE@am__objects_1 = libmixfix_a-compiler.$(OBJEXT)
-am_libmixfix_a_OBJECTS = libmixfix_a-syntaxContainer.$(OBJEXT) \
-	libmixfix_a-renaming.$(OBJEXT) libmixfix_a-view.$(OBJEXT) \
-	libmixfix_a-entity.$(OBJEXT) libmixfix_a-moduleCache.$(OBJEXT) \
-	libmixfix_a-moduleExpression.$(OBJEXT) \
-	libmixfix_a-importModule.$(OBJEXT) \
-	libmixfix_a-importTranslation.$(OBJEXT) \
-	libmixfix_a-fileTable.$(OBJEXT) \
-	libmixfix_a-loopSymbol.$(OBJEXT) \
-	libmixfix_a-quotedIdentifierSymbol.$(OBJEXT) \
-	libmixfix_a-quotedIdentifierDagNode.$(OBJEXT) \
-	libmixfix_a-quotedIdentifierTerm.$(OBJEXT) \
-	libmixfix_a-quotedIdentifierOpSymbol.$(OBJEXT) \
-	libmixfix_a-mixfixModule.$(OBJEXT) libmixfix_a-token.$(OBJEXT) \
-	libmixfix_a-global.$(OBJEXT) \
-	libmixfix_a-userLevelRewritingContext.$(OBJEXT) \
-	libmixfix_a-preModule.$(OBJEXT) \
-	libmixfix_a-symbolType.$(OBJEXT) \
-	libmixfix_a-xmlBuffer.$(OBJEXT) \
-	libmixfix_a-maudemlBuffer.$(OBJEXT) \
-	libmixfix_a-interpreter.$(OBJEXT) \
-	libmixfix_a-moduleDatabase.$(OBJEXT) \
-	libmixfix_a-viewDatabase.$(OBJEXT) \
-	libmixfix_a-profileModule.$(OBJEXT) \
-	libmixfix_a-mixfixParser.$(OBJEXT) \
-	libmixfix_a-visibleModule.$(OBJEXT) \
-	libmixfix_a-sharedTokens.$(OBJEXT) \
-	libmixfix_a-metadataStore.$(OBJEXT) \
-	libmixfix_a-banner.$(OBJEXT) libmixfix_a-lexer.$(OBJEXT) \
-	libmixfix_a-surface.$(OBJEXT) $(am__objects_1)
-libmixfix_a_OBJECTS = $(am_libmixfix_a_OBJECTS)
+	mixfixModule.cc token.cc main.cc userLevelRewritingContext.cc \
+	preModule.cc symbolType.cc xmlBuffer.cc maudemlBuffer.cc \
+	interpreter.cc moduleDatabase.cc viewDatabase.cc \
+	profileModule.cc mixfixParser.cc visibleModule.cc \
+	sharedTokens.cc metadataStore.cc banner.cc lexer.cc surface.cc \
+	compiler.cc
+@BUILD_COMPILER_TRUE@am__objects_1 = maude-compiler.$(OBJEXT)
+am_maude_OBJECTS = maude-syntaxContainer.$(OBJEXT) \
+	maude-renaming.$(OBJEXT) maude-view.$(OBJEXT) \
+	maude-entity.$(OBJEXT) maude-moduleCache.$(OBJEXT) \
+	maude-moduleExpression.$(OBJEXT) maude-importModule.$(OBJEXT) \
+	maude-importTranslation.$(OBJEXT) maude-fileTable.$(OBJEXT) \
+	maude-loopSymbol.$(OBJEXT) \
+	maude-quotedIdentifierSymbol.$(OBJEXT) \
+	maude-quotedIdentifierDagNode.$(OBJEXT) \
+	maude-quotedIdentifierTerm.$(OBJEXT) \
+	maude-quotedIdentifierOpSymbol.$(OBJEXT) \
+	maude-mixfixModule.$(OBJEXT) maude-token.$(OBJEXT) \
+	maude-main.$(OBJEXT) maude-userLevelRewritingContext.$(OBJEXT) \
+	maude-preModule.$(OBJEXT) maude-symbolType.$(OBJEXT) \
+	maude-xmlBuffer.$(OBJEXT) maude-maudemlBuffer.$(OBJEXT) \
+	maude-interpreter.$(OBJEXT) maude-moduleDatabase.$(OBJEXT) \
+	maude-viewDatabase.$(OBJEXT) maude-profileModule.$(OBJEXT) \
+	maude-mixfixParser.$(OBJEXT) maude-visibleModule.$(OBJEXT) \
+	maude-sharedTokens.$(OBJEXT) maude-metadataStore.$(OBJEXT) \
+	maude-banner.$(OBJEXT) maude-lexer.$(OBJEXT) \
+	maude-surface.$(OBJEXT) $(am__objects_1)
+maude_OBJECTS = $(am_maude_OBJECTS)
+@BUILD_COMPILER_TRUE@am__DEPENDENCIES_1 =  \
+@BUILD_COMPILER_TRUE@	../FullCompiler/libfullCompiler.a
+am__DEPENDENCIES_2 =
+@USE_DLMALLOC_TRUE@am__DEPENDENCIES_3 = ../3rdParty/libdlmalloc.a
+maude_DEPENDENCIES = ../StrategyLanguage/libstrategyLanguage.a \
+	../Meta/libmeta.a ../ObjectSystem/libobjectSystem.a \
+	../BuiltIn/libbuiltIn.a ../Higher/libhigher.a \
+	../FreeTheory/libfreeTheory.a ../AU_Theory/libAU_Theory.a \
+	../AU_Persistent/libAU_Persistent.a \
+	../ACU_Theory/libACU_Theory.a \
+	../ACU_Persistent/libACU_Persistent.a \
+	../CUI_Theory/libCUI_Theory.a ../S_Theory/libS_Theory.a \
+	../NA_Theory/libNA_Theory.a ../Variable/libvariable.a \
+	../Interface/libinterface.a ../Core/libcore.a \
+	../MSCP10/libmscp10.a ../Temporal/libtemporal.a \
+	../IO_Stuff/libIO_Stuff.a $(am__DEPENDENCIES_1) \
+	../Utility/libutility.a $(am__DEPENDENCIES_2) \
+	$(am__DEPENDENCIES_2) $(am__DEPENDENCIES_2) \
+	$(am__DEPENDENCIES_3)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -104,9 +114,16 @@ CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 CXXLD = $(CXX)
 CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
 	-o $@
-SOURCES = $(libmixfix_a_SOURCES) $(EXTRA_libmixfix_a_SOURCES)
-DIST_SOURCES = $(am__libmixfix_a_SOURCES_DIST) \
-	$(EXTRA_libmixfix_a_SOURCES)
+SOURCES = $(maude_SOURCES) $(EXTRA_maude_SOURCES)
+DIST_SOURCES = $(am__maude_SOURCES_DIST) $(EXTRA_maude_SOURCES)
+am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
+am__vpath_adj = case $$p in \
+    $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
+    *) f=$$p;; \
+  esac;
+am__strip_dir = `echo $$p | sed -e 's|^.*/||'`;
+dataDATA_INSTALL = $(INSTALL_DATA)
+DATA = $(data_DATA)
 HEADERS = $(noinst_HEADERS)
 ETAGS = etags
 CTAGS = ctags
@@ -207,9 +224,16 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-noinst_LIBRARIES = libmixfix.a
+data_DATA = \
+	prelude.maude \
+	model-checker.maude \
+	socket.maude \
+	linear.maude
+
 @BUILD_COMPILER_TRUE@COMPILER_SRC = compiler.cc
-libmixfix_a_CPPFLAGS = \
+@BUILD_COMPILER_TRUE@FULL_COMPILER_LIB = ../FullCompiler/libfullCompiler.a
+@USE_DLMALLOC_TRUE@DLMALLOC_LIB = ../3rdParty/libdlmalloc.a
+maude_CPPFLAGS = \
 	-I$(top_srcdir)/src/Utility \
 	-I$(top_srcdir)/src/Temporal \
 	-I$(top_srcdir)/src/Interface \
@@ -235,7 +259,34 @@ libmixfix_a_CPPFLAGS = \
 	-I$(top_srcdir)/src/FullCompiler \
 	-I$(top_srcdir)/src/StrategyLanguage
 
-libmixfix_a_SOURCES = \
+maude_LDADD = \
+	../StrategyLanguage/libstrategyLanguage.a \
+	../Meta/libmeta.a \
+	../ObjectSystem/libobjectSystem.a \
+	../BuiltIn/libbuiltIn.a \
+	../Higher/libhigher.a \
+	../FreeTheory/libfreeTheory.a \
+	../AU_Theory/libAU_Theory.a \
+	../AU_Persistent/libAU_Persistent.a \
+	../ACU_Theory/libACU_Theory.a \
+	../ACU_Persistent/libACU_Persistent.a \
+	../CUI_Theory/libCUI_Theory.a \
+	../S_Theory/libS_Theory.a \
+	../NA_Theory/libNA_Theory.a \
+	../Variable/libvariable.a \
+	../Interface/libinterface.a \
+	../Core/libcore.a \
+	../MSCP10/libmscp10.a \
+	../Temporal/libtemporal.a \
+	../IO_Stuff/libIO_Stuff.a \
+	$(FULL_COMPILER_LIB) \
+	../Utility/libutility.a \
+	$(BUDDY_LIB) \
+	$(TECLA_LIBS) \
+	$(GMP_LIBS) \
+	$(DLMALLOC_LIB)
+
+maude_SOURCES = \
 	syntaxContainer.cc \
 	renaming.cc \
 	view.cc \
@@ -252,7 +303,7 @@ libmixfix_a_SOURCES = \
 	quotedIdentifierOpSymbol.cc \
 	mixfixModule.cc \
 	token.cc \
-	global.cc \
+	main.cc \
 	userLevelRewritingContext.cc \
 	preModule.cc \
 	symbolType.cc \
@@ -271,7 +322,7 @@ libmixfix_a_SOURCES = \
 	surface.cc \
 	$(COMPILER_SRC)
 
-EXTRA_libmixfix_a_SOURCES = \
+EXTRA_maude_SOURCES = \
 	compiler.cc
 
 BUILT_SOURCES = surface.yy surface.cc surface.h lexer.cc
@@ -296,13 +347,11 @@ EXTRA_DIST = \
 	termPrint.cc \
 	dagNodePrint.cc \
 	sharedPrint.cc \
-	strategyPrint.cc \
 	interact.cc \
 	trial.cc \
 	execute.cc \
 	loopMode.cc \
 	search.cc \
-	srewrite.cc \
 	match.cc \
 	top.yy \
 	modules.yy \
@@ -310,7 +359,12 @@ EXTRA_DIST = \
 	bottom.yy \
 	lexer.ll \
 	graphPrint.cc \
-	ansiEscapeSequences.cc
+	ansiEscapeSequences.cc \
+	prelude.maude \
+	model-checker.maude \
+	socket.maude \
+	linear.maude \
+	machine-int.maude
 
 noinst_HEADERS = \
 	renaming.hh \
@@ -326,7 +380,7 @@ noinst_HEADERS = \
 	interpreter.hh \
 	lexerAux.hh \
 	loopSymbol.hh \
-	global.hh \
+	main.hh \
 	maudemlBuffer.hh \
 	metadataStore.hh \
 	mixfix.hh \
@@ -381,13 +435,32 @@ $(top_srcdir)/configure:  $(am__configure_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(ACLOCAL_M4):  $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
+install-binPROGRAMS: $(bin_PROGRAMS)
+	@$(NORMAL_INSTALL)
+	test -z "$(bindir)" || $(mkdir_p) "$(DESTDIR)$(bindir)"
+	@list='$(bin_PROGRAMS)'; for p in $$list; do \
+	  p1=`echo $$p|sed 's/$(EXEEXT)$$//'`; \
+	  if test -f $$p \
+	  ; then \
+	    f=`echo "$$p1" | sed 's,^.*/,,;$(transform);s/$$/$(EXEEXT)/'`; \
+	   echo " $(INSTALL_PROGRAM_ENV) $(binPROGRAMS_INSTALL) '$$p' '$(DESTDIR)$(bindir)/$$f'"; \
+	   $(INSTALL_PROGRAM_ENV) $(binPROGRAMS_INSTALL) "$$p" "$(DESTDIR)$(bindir)/$$f" || exit 1; \
+	  else :; fi; \
+	done
 
-clean-noinstLIBRARIES:
-	-test -z "$(noinst_LIBRARIES)" || rm -f $(noinst_LIBRARIES)
-libmixfix.a: $(libmixfix_a_OBJECTS) $(libmixfix_a_DEPENDENCIES) 
-	-rm -f libmixfix.a
-	$(libmixfix_a_AR) libmixfix.a $(libmixfix_a_OBJECTS) $(libmixfix_a_LIBADD)
-	$(RANLIB) libmixfix.a
+uninstall-binPROGRAMS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(bin_PROGRAMS)'; for p in $$list; do \
+	  f=`echo "$$p" | sed 's,^.*/,,;s/$(EXEEXT)$$//;$(transform);s/$$/$(EXEEXT)/'`; \
+	  echo " rm -f '$(DESTDIR)$(bindir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(bindir)/$$f"; \
+	done
+
+clean-binPROGRAMS:
+	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
+maude$(EXEEXT): $(maude_OBJECTS) $(maude_DEPENDENCIES) 
+	@rm -f maude$(EXEEXT)
+	$(CXXLINK) $(maude_LDFLAGS) $(maude_OBJECTS) $(maude_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -395,40 +468,40 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-banner.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-compiler.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-entity.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-fileTable.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-global.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-importModule.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-importTranslation.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-interpreter.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-lexer.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-loopSymbol.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-maudemlBuffer.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-metadataStore.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-mixfixModule.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-mixfixParser.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-moduleCache.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-moduleDatabase.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-moduleExpression.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-preModule.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-profileModule.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-quotedIdentifierDagNode.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-quotedIdentifierOpSymbol.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-quotedIdentifierSymbol.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-quotedIdentifierTerm.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-renaming.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-sharedTokens.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-surface.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-symbolType.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-syntaxContainer.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-token.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-userLevelRewritingContext.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-view.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-viewDatabase.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-visibleModule.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-xmlBuffer.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-banner.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-compiler.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-entity.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-fileTable.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-importModule.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-importTranslation.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-interpreter.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-lexer.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-loopSymbol.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-maudemlBuffer.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-metadataStore.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-mixfixModule.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-mixfixParser.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-moduleCache.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-moduleDatabase.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-moduleExpression.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-preModule.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-profileModule.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-quotedIdentifierDagNode.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-quotedIdentifierOpSymbol.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-quotedIdentifierSymbol.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-quotedIdentifierTerm.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-renaming.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-sharedTokens.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-surface.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-symbolType.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-syntaxContainer.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-token.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-userLevelRewritingContext.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-view.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-viewDatabase.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-visibleModule.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-xmlBuffer.Po@am__quote@
 
 .cc.o:
 @am__fastdepCXX_TRUE@	if $(CXXCOMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -c -o $@ $<; \
@@ -444,482 +517,499 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXXCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
 
-libmixfix_a-syntaxContainer.o: syntaxContainer.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-syntaxContainer.o -MD -MP -MF "$(DEPDIR)/libmixfix_a-syntaxContainer.Tpo" -c -o libmixfix_a-syntaxContainer.o `test -f 'syntaxContainer.cc' || echo '$(srcdir)/'`syntaxContainer.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-syntaxContainer.Tpo" "$(DEPDIR)/libmixfix_a-syntaxContainer.Po"; else rm -f "$(DEPDIR)/libmixfix_a-syntaxContainer.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='syntaxContainer.cc' object='libmixfix_a-syntaxContainer.o' libtool=no @AMDEPBACKSLASH@
+maude-syntaxContainer.o: syntaxContainer.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-syntaxContainer.o -MD -MP -MF "$(DEPDIR)/maude-syntaxContainer.Tpo" -c -o maude-syntaxContainer.o `test -f 'syntaxContainer.cc' || echo '$(srcdir)/'`syntaxContainer.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-syntaxContainer.Tpo" "$(DEPDIR)/maude-syntaxContainer.Po"; else rm -f "$(DEPDIR)/maude-syntaxContainer.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='syntaxContainer.cc' object='maude-syntaxContainer.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-syntaxContainer.o `test -f 'syntaxContainer.cc' || echo '$(srcdir)/'`syntaxContainer.cc
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-syntaxContainer.o `test -f 'syntaxContainer.cc' || echo '$(srcdir)/'`syntaxContainer.cc
 
-libmixfix_a-syntaxContainer.obj: syntaxContainer.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-syntaxContainer.obj -MD -MP -MF "$(DEPDIR)/libmixfix_a-syntaxContainer.Tpo" -c -o libmixfix_a-syntaxContainer.obj `if test -f 'syntaxContainer.cc'; then $(CYGPATH_W) 'syntaxContainer.cc'; else $(CYGPATH_W) '$(srcdir)/syntaxContainer.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-syntaxContainer.Tpo" "$(DEPDIR)/libmixfix_a-syntaxContainer.Po"; else rm -f "$(DEPDIR)/libmixfix_a-syntaxContainer.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='syntaxContainer.cc' object='libmixfix_a-syntaxContainer.obj' libtool=no @AMDEPBACKSLASH@
+maude-syntaxContainer.obj: syntaxContainer.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-syntaxContainer.obj -MD -MP -MF "$(DEPDIR)/maude-syntaxContainer.Tpo" -c -o maude-syntaxContainer.obj `if test -f 'syntaxContainer.cc'; then $(CYGPATH_W) 'syntaxContainer.cc'; else $(CYGPATH_W) '$(srcdir)/syntaxContainer.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-syntaxContainer.Tpo" "$(DEPDIR)/maude-syntaxContainer.Po"; else rm -f "$(DEPDIR)/maude-syntaxContainer.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='syntaxContainer.cc' object='maude-syntaxContainer.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-syntaxContainer.obj `if test -f 'syntaxContainer.cc'; then $(CYGPATH_W) 'syntaxContainer.cc'; else $(CYGPATH_W) '$(srcdir)/syntaxContainer.cc'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-syntaxContainer.obj `if test -f 'syntaxContainer.cc'; then $(CYGPATH_W) 'syntaxContainer.cc'; else $(CYGPATH_W) '$(srcdir)/syntaxContainer.cc'; fi`
 
-libmixfix_a-renaming.o: renaming.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-renaming.o -MD -MP -MF "$(DEPDIR)/libmixfix_a-renaming.Tpo" -c -o libmixfix_a-renaming.o `test -f 'renaming.cc' || echo '$(srcdir)/'`renaming.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-renaming.Tpo" "$(DEPDIR)/libmixfix_a-renaming.Po"; else rm -f "$(DEPDIR)/libmixfix_a-renaming.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='renaming.cc' object='libmixfix_a-renaming.o' libtool=no @AMDEPBACKSLASH@
+maude-renaming.o: renaming.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-renaming.o -MD -MP -MF "$(DEPDIR)/maude-renaming.Tpo" -c -o maude-renaming.o `test -f 'renaming.cc' || echo '$(srcdir)/'`renaming.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-renaming.Tpo" "$(DEPDIR)/maude-renaming.Po"; else rm -f "$(DEPDIR)/maude-renaming.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='renaming.cc' object='maude-renaming.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-renaming.o `test -f 'renaming.cc' || echo '$(srcdir)/'`renaming.cc
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-renaming.o `test -f 'renaming.cc' || echo '$(srcdir)/'`renaming.cc
 
-libmixfix_a-renaming.obj: renaming.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-renaming.obj -MD -MP -MF "$(DEPDIR)/libmixfix_a-renaming.Tpo" -c -o libmixfix_a-renaming.obj `if test -f 'renaming.cc'; then $(CYGPATH_W) 'renaming.cc'; else $(CYGPATH_W) '$(srcdir)/renaming.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-renaming.Tpo" "$(DEPDIR)/libmixfix_a-renaming.Po"; else rm -f "$(DEPDIR)/libmixfix_a-renaming.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='renaming.cc' object='libmixfix_a-renaming.obj' libtool=no @AMDEPBACKSLASH@
+maude-renaming.obj: renaming.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-renaming.obj -MD -MP -MF "$(DEPDIR)/maude-renaming.Tpo" -c -o maude-renaming.obj `if test -f 'renaming.cc'; then $(CYGPATH_W) 'renaming.cc'; else $(CYGPATH_W) '$(srcdir)/renaming.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-renaming.Tpo" "$(DEPDIR)/maude-renaming.Po"; else rm -f "$(DEPDIR)/maude-renaming.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='renaming.cc' object='maude-renaming.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-renaming.obj `if test -f 'renaming.cc'; then $(CYGPATH_W) 'renaming.cc'; else $(CYGPATH_W) '$(srcdir)/renaming.cc'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-renaming.obj `if test -f 'renaming.cc'; then $(CYGPATH_W) 'renaming.cc'; else $(CYGPATH_W) '$(srcdir)/renaming.cc'; fi`
 
-libmixfix_a-view.o: view.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-view.o -MD -MP -MF "$(DEPDIR)/libmixfix_a-view.Tpo" -c -o libmixfix_a-view.o `test -f 'view.cc' || echo '$(srcdir)/'`view.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-view.Tpo" "$(DEPDIR)/libmixfix_a-view.Po"; else rm -f "$(DEPDIR)/libmixfix_a-view.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='view.cc' object='libmixfix_a-view.o' libtool=no @AMDEPBACKSLASH@
+maude-view.o: view.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-view.o -MD -MP -MF "$(DEPDIR)/maude-view.Tpo" -c -o maude-view.o `test -f 'view.cc' || echo '$(srcdir)/'`view.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-view.Tpo" "$(DEPDIR)/maude-view.Po"; else rm -f "$(DEPDIR)/maude-view.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='view.cc' object='maude-view.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-view.o `test -f 'view.cc' || echo '$(srcdir)/'`view.cc
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-view.o `test -f 'view.cc' || echo '$(srcdir)/'`view.cc
 
-libmixfix_a-view.obj: view.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-view.obj -MD -MP -MF "$(DEPDIR)/libmixfix_a-view.Tpo" -c -o libmixfix_a-view.obj `if test -f 'view.cc'; then $(CYGPATH_W) 'view.cc'; else $(CYGPATH_W) '$(srcdir)/view.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-view.Tpo" "$(DEPDIR)/libmixfix_a-view.Po"; else rm -f "$(DEPDIR)/libmixfix_a-view.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='view.cc' object='libmixfix_a-view.obj' libtool=no @AMDEPBACKSLASH@
+maude-view.obj: view.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-view.obj -MD -MP -MF "$(DEPDIR)/maude-view.Tpo" -c -o maude-view.obj `if test -f 'view.cc'; then $(CYGPATH_W) 'view.cc'; else $(CYGPATH_W) '$(srcdir)/view.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-view.Tpo" "$(DEPDIR)/maude-view.Po"; else rm -f "$(DEPDIR)/maude-view.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='view.cc' object='maude-view.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-view.obj `if test -f 'view.cc'; then $(CYGPATH_W) 'view.cc'; else $(CYGPATH_W) '$(srcdir)/view.cc'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-view.obj `if test -f 'view.cc'; then $(CYGPATH_W) 'view.cc'; else $(CYGPATH_W) '$(srcdir)/view.cc'; fi`
 
-libmixfix_a-entity.o: entity.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-entity.o -MD -MP -MF "$(DEPDIR)/libmixfix_a-entity.Tpo" -c -o libmixfix_a-entity.o `test -f 'entity.cc' || echo '$(srcdir)/'`entity.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-entity.Tpo" "$(DEPDIR)/libmixfix_a-entity.Po"; else rm -f "$(DEPDIR)/libmixfix_a-entity.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='entity.cc' object='libmixfix_a-entity.o' libtool=no @AMDEPBACKSLASH@
+maude-entity.o: entity.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-entity.o -MD -MP -MF "$(DEPDIR)/maude-entity.Tpo" -c -o maude-entity.o `test -f 'entity.cc' || echo '$(srcdir)/'`entity.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-entity.Tpo" "$(DEPDIR)/maude-entity.Po"; else rm -f "$(DEPDIR)/maude-entity.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='entity.cc' object='maude-entity.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-entity.o `test -f 'entity.cc' || echo '$(srcdir)/'`entity.cc
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-entity.o `test -f 'entity.cc' || echo '$(srcdir)/'`entity.cc
 
-libmixfix_a-entity.obj: entity.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-entity.obj -MD -MP -MF "$(DEPDIR)/libmixfix_a-entity.Tpo" -c -o libmixfix_a-entity.obj `if test -f 'entity.cc'; then $(CYGPATH_W) 'entity.cc'; else $(CYGPATH_W) '$(srcdir)/entity.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-entity.Tpo" "$(DEPDIR)/libmixfix_a-entity.Po"; else rm -f "$(DEPDIR)/libmixfix_a-entity.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='entity.cc' object='libmixfix_a-entity.obj' libtool=no @AMDEPBACKSLASH@
+maude-entity.obj: entity.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-entity.obj -MD -MP -MF "$(DEPDIR)/maude-entity.Tpo" -c -o maude-entity.obj `if test -f 'entity.cc'; then $(CYGPATH_W) 'entity.cc'; else $(CYGPATH_W) '$(srcdir)/entity.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-entity.Tpo" "$(DEPDIR)/maude-entity.Po"; else rm -f "$(DEPDIR)/maude-entity.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='entity.cc' object='maude-entity.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-entity.obj `if test -f 'entity.cc'; then $(CYGPATH_W) 'entity.cc'; else $(CYGPATH_W) '$(srcdir)/entity.cc'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-entity.obj `if test -f 'entity.cc'; then $(CYGPATH_W) 'entity.cc'; else $(CYGPATH_W) '$(srcdir)/entity.cc'; fi`
 
-libmixfix_a-moduleCache.o: moduleCache.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-moduleCache.o -MD -MP -MF "$(DEPDIR)/libmixfix_a-moduleCache.Tpo" -c -o libmixfix_a-moduleCache.o `test -f 'moduleCache.cc' || echo '$(srcdir)/'`moduleCache.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-moduleCache.Tpo" "$(DEPDIR)/libmixfix_a-moduleCache.Po"; else rm -f "$(DEPDIR)/libmixfix_a-moduleCache.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='moduleCache.cc' object='libmixfix_a-moduleCache.o' libtool=no @AMDEPBACKSLASH@
+maude-moduleCache.o: moduleCache.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-moduleCache.o -MD -MP -MF "$(DEPDIR)/maude-moduleCache.Tpo" -c -o maude-moduleCache.o `test -f 'moduleCache.cc' || echo '$(srcdir)/'`moduleCache.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-moduleCache.Tpo" "$(DEPDIR)/maude-moduleCache.Po"; else rm -f "$(DEPDIR)/maude-moduleCache.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='moduleCache.cc' object='maude-moduleCache.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-moduleCache.o `test -f 'moduleCache.cc' || echo '$(srcdir)/'`moduleCache.cc
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-moduleCache.o `test -f 'moduleCache.cc' || echo '$(srcdir)/'`moduleCache.cc
 
-libmixfix_a-moduleCache.obj: moduleCache.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-moduleCache.obj -MD -MP -MF "$(DEPDIR)/libmixfix_a-moduleCache.Tpo" -c -o libmixfix_a-moduleCache.obj `if test -f 'moduleCache.cc'; then $(CYGPATH_W) 'moduleCache.cc'; else $(CYGPATH_W) '$(srcdir)/moduleCache.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-moduleCache.Tpo" "$(DEPDIR)/libmixfix_a-moduleCache.Po"; else rm -f "$(DEPDIR)/libmixfix_a-moduleCache.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='moduleCache.cc' object='libmixfix_a-moduleCache.obj' libtool=no @AMDEPBACKSLASH@
+maude-moduleCache.obj: moduleCache.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-moduleCache.obj -MD -MP -MF "$(DEPDIR)/maude-moduleCache.Tpo" -c -o maude-moduleCache.obj `if test -f 'moduleCache.cc'; then $(CYGPATH_W) 'moduleCache.cc'; else $(CYGPATH_W) '$(srcdir)/moduleCache.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-moduleCache.Tpo" "$(DEPDIR)/maude-moduleCache.Po"; else rm -f "$(DEPDIR)/maude-moduleCache.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='moduleCache.cc' object='maude-moduleCache.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-moduleCache.obj `if test -f 'moduleCache.cc'; then $(CYGPATH_W) 'moduleCache.cc'; else $(CYGPATH_W) '$(srcdir)/moduleCache.cc'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-moduleCache.obj `if test -f 'moduleCache.cc'; then $(CYGPATH_W) 'moduleCache.cc'; else $(CYGPATH_W) '$(srcdir)/moduleCache.cc'; fi`
 
-libmixfix_a-moduleExpression.o: moduleExpression.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-moduleExpression.o -MD -MP -MF "$(DEPDIR)/libmixfix_a-moduleExpression.Tpo" -c -o libmixfix_a-moduleExpression.o `test -f 'moduleExpression.cc' || echo '$(srcdir)/'`moduleExpression.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-moduleExpression.Tpo" "$(DEPDIR)/libmixfix_a-moduleExpression.Po"; else rm -f "$(DEPDIR)/libmixfix_a-moduleExpression.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='moduleExpression.cc' object='libmixfix_a-moduleExpression.o' libtool=no @AMDEPBACKSLASH@
+maude-moduleExpression.o: moduleExpression.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-moduleExpression.o -MD -MP -MF "$(DEPDIR)/maude-moduleExpression.Tpo" -c -o maude-moduleExpression.o `test -f 'moduleExpression.cc' || echo '$(srcdir)/'`moduleExpression.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-moduleExpression.Tpo" "$(DEPDIR)/maude-moduleExpression.Po"; else rm -f "$(DEPDIR)/maude-moduleExpression.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='moduleExpression.cc' object='maude-moduleExpression.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-moduleExpression.o `test -f 'moduleExpression.cc' || echo '$(srcdir)/'`moduleExpression.cc
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-moduleExpression.o `test -f 'moduleExpression.cc' || echo '$(srcdir)/'`moduleExpression.cc
 
-libmixfix_a-moduleExpression.obj: moduleExpression.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-moduleExpression.obj -MD -MP -MF "$(DEPDIR)/libmixfix_a-moduleExpression.Tpo" -c -o libmixfix_a-moduleExpression.obj `if test -f 'moduleExpression.cc'; then $(CYGPATH_W) 'moduleExpression.cc'; else $(CYGPATH_W) '$(srcdir)/moduleExpression.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-moduleExpression.Tpo" "$(DEPDIR)/libmixfix_a-moduleExpression.Po"; else rm -f "$(DEPDIR)/libmixfix_a-moduleExpression.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='moduleExpression.cc' object='libmixfix_a-moduleExpression.obj' libtool=no @AMDEPBACKSLASH@
+maude-moduleExpression.obj: moduleExpression.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-moduleExpression.obj -MD -MP -MF "$(DEPDIR)/maude-moduleExpression.Tpo" -c -o maude-moduleExpression.obj `if test -f 'moduleExpression.cc'; then $(CYGPATH_W) 'moduleExpression.cc'; else $(CYGPATH_W) '$(srcdir)/moduleExpression.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-moduleExpression.Tpo" "$(DEPDIR)/maude-moduleExpression.Po"; else rm -f "$(DEPDIR)/maude-moduleExpression.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='moduleExpression.cc' object='maude-moduleExpression.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-moduleExpression.obj `if test -f 'moduleExpression.cc'; then $(CYGPATH_W) 'moduleExpression.cc'; else $(CYGPATH_W) '$(srcdir)/moduleExpression.cc'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-moduleExpression.obj `if test -f 'moduleExpression.cc'; then $(CYGPATH_W) 'moduleExpression.cc'; else $(CYGPATH_W) '$(srcdir)/moduleExpression.cc'; fi`
 
-libmixfix_a-importModule.o: importModule.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-importModule.o -MD -MP -MF "$(DEPDIR)/libmixfix_a-importModule.Tpo" -c -o libmixfix_a-importModule.o `test -f 'importModule.cc' || echo '$(srcdir)/'`importModule.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-importModule.Tpo" "$(DEPDIR)/libmixfix_a-importModule.Po"; else rm -f "$(DEPDIR)/libmixfix_a-importModule.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='importModule.cc' object='libmixfix_a-importModule.o' libtool=no @AMDEPBACKSLASH@
+maude-importModule.o: importModule.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-importModule.o -MD -MP -MF "$(DEPDIR)/maude-importModule.Tpo" -c -o maude-importModule.o `test -f 'importModule.cc' || echo '$(srcdir)/'`importModule.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-importModule.Tpo" "$(DEPDIR)/maude-importModule.Po"; else rm -f "$(DEPDIR)/maude-importModule.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='importModule.cc' object='maude-importModule.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-importModule.o `test -f 'importModule.cc' || echo '$(srcdir)/'`importModule.cc
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-importModule.o `test -f 'importModule.cc' || echo '$(srcdir)/'`importModule.cc
 
-libmixfix_a-importModule.obj: importModule.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-importModule.obj -MD -MP -MF "$(DEPDIR)/libmixfix_a-importModule.Tpo" -c -o libmixfix_a-importModule.obj `if test -f 'importModule.cc'; then $(CYGPATH_W) 'importModule.cc'; else $(CYGPATH_W) '$(srcdir)/importModule.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-importModule.Tpo" "$(DEPDIR)/libmixfix_a-importModule.Po"; else rm -f "$(DEPDIR)/libmixfix_a-importModule.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='importModule.cc' object='libmixfix_a-importModule.obj' libtool=no @AMDEPBACKSLASH@
+maude-importModule.obj: importModule.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-importModule.obj -MD -MP -MF "$(DEPDIR)/maude-importModule.Tpo" -c -o maude-importModule.obj `if test -f 'importModule.cc'; then $(CYGPATH_W) 'importModule.cc'; else $(CYGPATH_W) '$(srcdir)/importModule.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-importModule.Tpo" "$(DEPDIR)/maude-importModule.Po"; else rm -f "$(DEPDIR)/maude-importModule.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='importModule.cc' object='maude-importModule.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-importModule.obj `if test -f 'importModule.cc'; then $(CYGPATH_W) 'importModule.cc'; else $(CYGPATH_W) '$(srcdir)/importModule.cc'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-importModule.obj `if test -f 'importModule.cc'; then $(CYGPATH_W) 'importModule.cc'; else $(CYGPATH_W) '$(srcdir)/importModule.cc'; fi`
 
-libmixfix_a-importTranslation.o: importTranslation.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-importTranslation.o -MD -MP -MF "$(DEPDIR)/libmixfix_a-importTranslation.Tpo" -c -o libmixfix_a-importTranslation.o `test -f 'importTranslation.cc' || echo '$(srcdir)/'`importTranslation.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-importTranslation.Tpo" "$(DEPDIR)/libmixfix_a-importTranslation.Po"; else rm -f "$(DEPDIR)/libmixfix_a-importTranslation.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='importTranslation.cc' object='libmixfix_a-importTranslation.o' libtool=no @AMDEPBACKSLASH@
+maude-importTranslation.o: importTranslation.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-importTranslation.o -MD -MP -MF "$(DEPDIR)/maude-importTranslation.Tpo" -c -o maude-importTranslation.o `test -f 'importTranslation.cc' || echo '$(srcdir)/'`importTranslation.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-importTranslation.Tpo" "$(DEPDIR)/maude-importTranslation.Po"; else rm -f "$(DEPDIR)/maude-importTranslation.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='importTranslation.cc' object='maude-importTranslation.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-importTranslation.o `test -f 'importTranslation.cc' || echo '$(srcdir)/'`importTranslation.cc
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-importTranslation.o `test -f 'importTranslation.cc' || echo '$(srcdir)/'`importTranslation.cc
 
-libmixfix_a-importTranslation.obj: importTranslation.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-importTranslation.obj -MD -MP -MF "$(DEPDIR)/libmixfix_a-importTranslation.Tpo" -c -o libmixfix_a-importTranslation.obj `if test -f 'importTranslation.cc'; then $(CYGPATH_W) 'importTranslation.cc'; else $(CYGPATH_W) '$(srcdir)/importTranslation.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-importTranslation.Tpo" "$(DEPDIR)/libmixfix_a-importTranslation.Po"; else rm -f "$(DEPDIR)/libmixfix_a-importTranslation.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='importTranslation.cc' object='libmixfix_a-importTranslation.obj' libtool=no @AMDEPBACKSLASH@
+maude-importTranslation.obj: importTranslation.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-importTranslation.obj -MD -MP -MF "$(DEPDIR)/maude-importTranslation.Tpo" -c -o maude-importTranslation.obj `if test -f 'importTranslation.cc'; then $(CYGPATH_W) 'importTranslation.cc'; else $(CYGPATH_W) '$(srcdir)/importTranslation.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-importTranslation.Tpo" "$(DEPDIR)/maude-importTranslation.Po"; else rm -f "$(DEPDIR)/maude-importTranslation.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='importTranslation.cc' object='maude-importTranslation.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-importTranslation.obj `if test -f 'importTranslation.cc'; then $(CYGPATH_W) 'importTranslation.cc'; else $(CYGPATH_W) '$(srcdir)/importTranslation.cc'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-importTranslation.obj `if test -f 'importTranslation.cc'; then $(CYGPATH_W) 'importTranslation.cc'; else $(CYGPATH_W) '$(srcdir)/importTranslation.cc'; fi`
 
-libmixfix_a-fileTable.o: fileTable.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-fileTable.o -MD -MP -MF "$(DEPDIR)/libmixfix_a-fileTable.Tpo" -c -o libmixfix_a-fileTable.o `test -f 'fileTable.cc' || echo '$(srcdir)/'`fileTable.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-fileTable.Tpo" "$(DEPDIR)/libmixfix_a-fileTable.Po"; else rm -f "$(DEPDIR)/libmixfix_a-fileTable.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='fileTable.cc' object='libmixfix_a-fileTable.o' libtool=no @AMDEPBACKSLASH@
+maude-fileTable.o: fileTable.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-fileTable.o -MD -MP -MF "$(DEPDIR)/maude-fileTable.Tpo" -c -o maude-fileTable.o `test -f 'fileTable.cc' || echo '$(srcdir)/'`fileTable.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-fileTable.Tpo" "$(DEPDIR)/maude-fileTable.Po"; else rm -f "$(DEPDIR)/maude-fileTable.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='fileTable.cc' object='maude-fileTable.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-fileTable.o `test -f 'fileTable.cc' || echo '$(srcdir)/'`fileTable.cc
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-fileTable.o `test -f 'fileTable.cc' || echo '$(srcdir)/'`fileTable.cc
 
-libmixfix_a-fileTable.obj: fileTable.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-fileTable.obj -MD -MP -MF "$(DEPDIR)/libmixfix_a-fileTable.Tpo" -c -o libmixfix_a-fileTable.obj `if test -f 'fileTable.cc'; then $(CYGPATH_W) 'fileTable.cc'; else $(CYGPATH_W) '$(srcdir)/fileTable.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-fileTable.Tpo" "$(DEPDIR)/libmixfix_a-fileTable.Po"; else rm -f "$(DEPDIR)/libmixfix_a-fileTable.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='fileTable.cc' object='libmixfix_a-fileTable.obj' libtool=no @AMDEPBACKSLASH@
+maude-fileTable.obj: fileTable.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-fileTable.obj -MD -MP -MF "$(DEPDIR)/maude-fileTable.Tpo" -c -o maude-fileTable.obj `if test -f 'fileTable.cc'; then $(CYGPATH_W) 'fileTable.cc'; else $(CYGPATH_W) '$(srcdir)/fileTable.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-fileTable.Tpo" "$(DEPDIR)/maude-fileTable.Po"; else rm -f "$(DEPDIR)/maude-fileTable.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='fileTable.cc' object='maude-fileTable.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-fileTable.obj `if test -f 'fileTable.cc'; then $(CYGPATH_W) 'fileTable.cc'; else $(CYGPATH_W) '$(srcdir)/fileTable.cc'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-fileTable.obj `if test -f 'fileTable.cc'; then $(CYGPATH_W) 'fileTable.cc'; else $(CYGPATH_W) '$(srcdir)/fileTable.cc'; fi`
 
-libmixfix_a-loopSymbol.o: loopSymbol.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-loopSymbol.o -MD -MP -MF "$(DEPDIR)/libmixfix_a-loopSymbol.Tpo" -c -o libmixfix_a-loopSymbol.o `test -f 'loopSymbol.cc' || echo '$(srcdir)/'`loopSymbol.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-loopSymbol.Tpo" "$(DEPDIR)/libmixfix_a-loopSymbol.Po"; else rm -f "$(DEPDIR)/libmixfix_a-loopSymbol.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='loopSymbol.cc' object='libmixfix_a-loopSymbol.o' libtool=no @AMDEPBACKSLASH@
+maude-loopSymbol.o: loopSymbol.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-loopSymbol.o -MD -MP -MF "$(DEPDIR)/maude-loopSymbol.Tpo" -c -o maude-loopSymbol.o `test -f 'loopSymbol.cc' || echo '$(srcdir)/'`loopSymbol.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-loopSymbol.Tpo" "$(DEPDIR)/maude-loopSymbol.Po"; else rm -f "$(DEPDIR)/maude-loopSymbol.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='loopSymbol.cc' object='maude-loopSymbol.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-loopSymbol.o `test -f 'loopSymbol.cc' || echo '$(srcdir)/'`loopSymbol.cc
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-loopSymbol.o `test -f 'loopSymbol.cc' || echo '$(srcdir)/'`loopSymbol.cc
 
-libmixfix_a-loopSymbol.obj: loopSymbol.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-loopSymbol.obj -MD -MP -MF "$(DEPDIR)/libmixfix_a-loopSymbol.Tpo" -c -o libmixfix_a-loopSymbol.obj `if test -f 'loopSymbol.cc'; then $(CYGPATH_W) 'loopSymbol.cc'; else $(CYGPATH_W) '$(srcdir)/loopSymbol.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-loopSymbol.Tpo" "$(DEPDIR)/libmixfix_a-loopSymbol.Po"; else rm -f "$(DEPDIR)/libmixfix_a-loopSymbol.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='loopSymbol.cc' object='libmixfix_a-loopSymbol.obj' libtool=no @AMDEPBACKSLASH@
+maude-loopSymbol.obj: loopSymbol.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-loopSymbol.obj -MD -MP -MF "$(DEPDIR)/maude-loopSymbol.Tpo" -c -o maude-loopSymbol.obj `if test -f 'loopSymbol.cc'; then $(CYGPATH_W) 'loopSymbol.cc'; else $(CYGPATH_W) '$(srcdir)/loopSymbol.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-loopSymbol.Tpo" "$(DEPDIR)/maude-loopSymbol.Po"; else rm -f "$(DEPDIR)/maude-loopSymbol.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='loopSymbol.cc' object='maude-loopSymbol.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-loopSymbol.obj `if test -f 'loopSymbol.cc'; then $(CYGPATH_W) 'loopSymbol.cc'; else $(CYGPATH_W) '$(srcdir)/loopSymbol.cc'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-loopSymbol.obj `if test -f 'loopSymbol.cc'; then $(CYGPATH_W) 'loopSymbol.cc'; else $(CYGPATH_W) '$(srcdir)/loopSymbol.cc'; fi`
 
-libmixfix_a-quotedIdentifierSymbol.o: quotedIdentifierSymbol.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-quotedIdentifierSymbol.o -MD -MP -MF "$(DEPDIR)/libmixfix_a-quotedIdentifierSymbol.Tpo" -c -o libmixfix_a-quotedIdentifierSymbol.o `test -f 'quotedIdentifierSymbol.cc' || echo '$(srcdir)/'`quotedIdentifierSymbol.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-quotedIdentifierSymbol.Tpo" "$(DEPDIR)/libmixfix_a-quotedIdentifierSymbol.Po"; else rm -f "$(DEPDIR)/libmixfix_a-quotedIdentifierSymbol.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='quotedIdentifierSymbol.cc' object='libmixfix_a-quotedIdentifierSymbol.o' libtool=no @AMDEPBACKSLASH@
+maude-quotedIdentifierSymbol.o: quotedIdentifierSymbol.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-quotedIdentifierSymbol.o -MD -MP -MF "$(DEPDIR)/maude-quotedIdentifierSymbol.Tpo" -c -o maude-quotedIdentifierSymbol.o `test -f 'quotedIdentifierSymbol.cc' || echo '$(srcdir)/'`quotedIdentifierSymbol.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-quotedIdentifierSymbol.Tpo" "$(DEPDIR)/maude-quotedIdentifierSymbol.Po"; else rm -f "$(DEPDIR)/maude-quotedIdentifierSymbol.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='quotedIdentifierSymbol.cc' object='maude-quotedIdentifierSymbol.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-quotedIdentifierSymbol.o `test -f 'quotedIdentifierSymbol.cc' || echo '$(srcdir)/'`quotedIdentifierSymbol.cc
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-quotedIdentifierSymbol.o `test -f 'quotedIdentifierSymbol.cc' || echo '$(srcdir)/'`quotedIdentifierSymbol.cc
 
-libmixfix_a-quotedIdentifierSymbol.obj: quotedIdentifierSymbol.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-quotedIdentifierSymbol.obj -MD -MP -MF "$(DEPDIR)/libmixfix_a-quotedIdentifierSymbol.Tpo" -c -o libmixfix_a-quotedIdentifierSymbol.obj `if test -f 'quotedIdentifierSymbol.cc'; then $(CYGPATH_W) 'quotedIdentifierSymbol.cc'; else $(CYGPATH_W) '$(srcdir)/quotedIdentifierSymbol.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-quotedIdentifierSymbol.Tpo" "$(DEPDIR)/libmixfix_a-quotedIdentifierSymbol.Po"; else rm -f "$(DEPDIR)/libmixfix_a-quotedIdentifierSymbol.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='quotedIdentifierSymbol.cc' object='libmixfix_a-quotedIdentifierSymbol.obj' libtool=no @AMDEPBACKSLASH@
+maude-quotedIdentifierSymbol.obj: quotedIdentifierSymbol.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-quotedIdentifierSymbol.obj -MD -MP -MF "$(DEPDIR)/maude-quotedIdentifierSymbol.Tpo" -c -o maude-quotedIdentifierSymbol.obj `if test -f 'quotedIdentifierSymbol.cc'; then $(CYGPATH_W) 'quotedIdentifierSymbol.cc'; else $(CYGPATH_W) '$(srcdir)/quotedIdentifierSymbol.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-quotedIdentifierSymbol.Tpo" "$(DEPDIR)/maude-quotedIdentifierSymbol.Po"; else rm -f "$(DEPDIR)/maude-quotedIdentifierSymbol.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='quotedIdentifierSymbol.cc' object='maude-quotedIdentifierSymbol.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-quotedIdentifierSymbol.obj `if test -f 'quotedIdentifierSymbol.cc'; then $(CYGPATH_W) 'quotedIdentifierSymbol.cc'; else $(CYGPATH_W) '$(srcdir)/quotedIdentifierSymbol.cc'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-quotedIdentifierSymbol.obj `if test -f 'quotedIdentifierSymbol.cc'; then $(CYGPATH_W) 'quotedIdentifierSymbol.cc'; else $(CYGPATH_W) '$(srcdir)/quotedIdentifierSymbol.cc'; fi`
 
-libmixfix_a-quotedIdentifierDagNode.o: quotedIdentifierDagNode.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-quotedIdentifierDagNode.o -MD -MP -MF "$(DEPDIR)/libmixfix_a-quotedIdentifierDagNode.Tpo" -c -o libmixfix_a-quotedIdentifierDagNode.o `test -f 'quotedIdentifierDagNode.cc' || echo '$(srcdir)/'`quotedIdentifierDagNode.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-quotedIdentifierDagNode.Tpo" "$(DEPDIR)/libmixfix_a-quotedIdentifierDagNode.Po"; else rm -f "$(DEPDIR)/libmixfix_a-quotedIdentifierDagNode.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='quotedIdentifierDagNode.cc' object='libmixfix_a-quotedIdentifierDagNode.o' libtool=no @AMDEPBACKSLASH@
+maude-quotedIdentifierDagNode.o: quotedIdentifierDagNode.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-quotedIdentifierDagNode.o -MD -MP -MF "$(DEPDIR)/maude-quotedIdentifierDagNode.Tpo" -c -o maude-quotedIdentifierDagNode.o `test -f 'quotedIdentifierDagNode.cc' || echo '$(srcdir)/'`quotedIdentifierDagNode.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-quotedIdentifierDagNode.Tpo" "$(DEPDIR)/maude-quotedIdentifierDagNode.Po"; else rm -f "$(DEPDIR)/maude-quotedIdentifierDagNode.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='quotedIdentifierDagNode.cc' object='maude-quotedIdentifierDagNode.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-quotedIdentifierDagNode.o `test -f 'quotedIdentifierDagNode.cc' || echo '$(srcdir)/'`quotedIdentifierDagNode.cc
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-quotedIdentifierDagNode.o `test -f 'quotedIdentifierDagNode.cc' || echo '$(srcdir)/'`quotedIdentifierDagNode.cc
 
-libmixfix_a-quotedIdentifierDagNode.obj: quotedIdentifierDagNode.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-quotedIdentifierDagNode.obj -MD -MP -MF "$(DEPDIR)/libmixfix_a-quotedIdentifierDagNode.Tpo" -c -o libmixfix_a-quotedIdentifierDagNode.obj `if test -f 'quotedIdentifierDagNode.cc'; then $(CYGPATH_W) 'quotedIdentifierDagNode.cc'; else $(CYGPATH_W) '$(srcdir)/quotedIdentifierDagNode.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-quotedIdentifierDagNode.Tpo" "$(DEPDIR)/libmixfix_a-quotedIdentifierDagNode.Po"; else rm -f "$(DEPDIR)/libmixfix_a-quotedIdentifierDagNode.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='quotedIdentifierDagNode.cc' object='libmixfix_a-quotedIdentifierDagNode.obj' libtool=no @AMDEPBACKSLASH@
+maude-quotedIdentifierDagNode.obj: quotedIdentifierDagNode.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-quotedIdentifierDagNode.obj -MD -MP -MF "$(DEPDIR)/maude-quotedIdentifierDagNode.Tpo" -c -o maude-quotedIdentifierDagNode.obj `if test -f 'quotedIdentifierDagNode.cc'; then $(CYGPATH_W) 'quotedIdentifierDagNode.cc'; else $(CYGPATH_W) '$(srcdir)/quotedIdentifierDagNode.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-quotedIdentifierDagNode.Tpo" "$(DEPDIR)/maude-quotedIdentifierDagNode.Po"; else rm -f "$(DEPDIR)/maude-quotedIdentifierDagNode.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='quotedIdentifierDagNode.cc' object='maude-quotedIdentifierDagNode.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-quotedIdentifierDagNode.obj `if test -f 'quotedIdentifierDagNode.cc'; then $(CYGPATH_W) 'quotedIdentifierDagNode.cc'; else $(CYGPATH_W) '$(srcdir)/quotedIdentifierDagNode.cc'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-quotedIdentifierDagNode.obj `if test -f 'quotedIdentifierDagNode.cc'; then $(CYGPATH_W) 'quotedIdentifierDagNode.cc'; else $(CYGPATH_W) '$(srcdir)/quotedIdentifierDagNode.cc'; fi`
 
-libmixfix_a-quotedIdentifierTerm.o: quotedIdentifierTerm.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-quotedIdentifierTerm.o -MD -MP -MF "$(DEPDIR)/libmixfix_a-quotedIdentifierTerm.Tpo" -c -o libmixfix_a-quotedIdentifierTerm.o `test -f 'quotedIdentifierTerm.cc' || echo '$(srcdir)/'`quotedIdentifierTerm.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-quotedIdentifierTerm.Tpo" "$(DEPDIR)/libmixfix_a-quotedIdentifierTerm.Po"; else rm -f "$(DEPDIR)/libmixfix_a-quotedIdentifierTerm.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='quotedIdentifierTerm.cc' object='libmixfix_a-quotedIdentifierTerm.o' libtool=no @AMDEPBACKSLASH@
+maude-quotedIdentifierTerm.o: quotedIdentifierTerm.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-quotedIdentifierTerm.o -MD -MP -MF "$(DEPDIR)/maude-quotedIdentifierTerm.Tpo" -c -o maude-quotedIdentifierTerm.o `test -f 'quotedIdentifierTerm.cc' || echo '$(srcdir)/'`quotedIdentifierTerm.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-quotedIdentifierTerm.Tpo" "$(DEPDIR)/maude-quotedIdentifierTerm.Po"; else rm -f "$(DEPDIR)/maude-quotedIdentifierTerm.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='quotedIdentifierTerm.cc' object='maude-quotedIdentifierTerm.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-quotedIdentifierTerm.o `test -f 'quotedIdentifierTerm.cc' || echo '$(srcdir)/'`quotedIdentifierTerm.cc
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-quotedIdentifierTerm.o `test -f 'quotedIdentifierTerm.cc' || echo '$(srcdir)/'`quotedIdentifierTerm.cc
 
-libmixfix_a-quotedIdentifierTerm.obj: quotedIdentifierTerm.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-quotedIdentifierTerm.obj -MD -MP -MF "$(DEPDIR)/libmixfix_a-quotedIdentifierTerm.Tpo" -c -o libmixfix_a-quotedIdentifierTerm.obj `if test -f 'quotedIdentifierTerm.cc'; then $(CYGPATH_W) 'quotedIdentifierTerm.cc'; else $(CYGPATH_W) '$(srcdir)/quotedIdentifierTerm.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-quotedIdentifierTerm.Tpo" "$(DEPDIR)/libmixfix_a-quotedIdentifierTerm.Po"; else rm -f "$(DEPDIR)/libmixfix_a-quotedIdentifierTerm.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='quotedIdentifierTerm.cc' object='libmixfix_a-quotedIdentifierTerm.obj' libtool=no @AMDEPBACKSLASH@
+maude-quotedIdentifierTerm.obj: quotedIdentifierTerm.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-quotedIdentifierTerm.obj -MD -MP -MF "$(DEPDIR)/maude-quotedIdentifierTerm.Tpo" -c -o maude-quotedIdentifierTerm.obj `if test -f 'quotedIdentifierTerm.cc'; then $(CYGPATH_W) 'quotedIdentifierTerm.cc'; else $(CYGPATH_W) '$(srcdir)/quotedIdentifierTerm.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-quotedIdentifierTerm.Tpo" "$(DEPDIR)/maude-quotedIdentifierTerm.Po"; else rm -f "$(DEPDIR)/maude-quotedIdentifierTerm.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='quotedIdentifierTerm.cc' object='maude-quotedIdentifierTerm.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-quotedIdentifierTerm.obj `if test -f 'quotedIdentifierTerm.cc'; then $(CYGPATH_W) 'quotedIdentifierTerm.cc'; else $(CYGPATH_W) '$(srcdir)/quotedIdentifierTerm.cc'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-quotedIdentifierTerm.obj `if test -f 'quotedIdentifierTerm.cc'; then $(CYGPATH_W) 'quotedIdentifierTerm.cc'; else $(CYGPATH_W) '$(srcdir)/quotedIdentifierTerm.cc'; fi`
 
-libmixfix_a-quotedIdentifierOpSymbol.o: quotedIdentifierOpSymbol.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-quotedIdentifierOpSymbol.o -MD -MP -MF "$(DEPDIR)/libmixfix_a-quotedIdentifierOpSymbol.Tpo" -c -o libmixfix_a-quotedIdentifierOpSymbol.o `test -f 'quotedIdentifierOpSymbol.cc' || echo '$(srcdir)/'`quotedIdentifierOpSymbol.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-quotedIdentifierOpSymbol.Tpo" "$(DEPDIR)/libmixfix_a-quotedIdentifierOpSymbol.Po"; else rm -f "$(DEPDIR)/libmixfix_a-quotedIdentifierOpSymbol.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='quotedIdentifierOpSymbol.cc' object='libmixfix_a-quotedIdentifierOpSymbol.o' libtool=no @AMDEPBACKSLASH@
+maude-quotedIdentifierOpSymbol.o: quotedIdentifierOpSymbol.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-quotedIdentifierOpSymbol.o -MD -MP -MF "$(DEPDIR)/maude-quotedIdentifierOpSymbol.Tpo" -c -o maude-quotedIdentifierOpSymbol.o `test -f 'quotedIdentifierOpSymbol.cc' || echo '$(srcdir)/'`quotedIdentifierOpSymbol.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-quotedIdentifierOpSymbol.Tpo" "$(DEPDIR)/maude-quotedIdentifierOpSymbol.Po"; else rm -f "$(DEPDIR)/maude-quotedIdentifierOpSymbol.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='quotedIdentifierOpSymbol.cc' object='maude-quotedIdentifierOpSymbol.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-quotedIdentifierOpSymbol.o `test -f 'quotedIdentifierOpSymbol.cc' || echo '$(srcdir)/'`quotedIdentifierOpSymbol.cc
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-quotedIdentifierOpSymbol.o `test -f 'quotedIdentifierOpSymbol.cc' || echo '$(srcdir)/'`quotedIdentifierOpSymbol.cc
 
-libmixfix_a-quotedIdentifierOpSymbol.obj: quotedIdentifierOpSymbol.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-quotedIdentifierOpSymbol.obj -MD -MP -MF "$(DEPDIR)/libmixfix_a-quotedIdentifierOpSymbol.Tpo" -c -o libmixfix_a-quotedIdentifierOpSymbol.obj `if test -f 'quotedIdentifierOpSymbol.cc'; then $(CYGPATH_W) 'quotedIdentifierOpSymbol.cc'; else $(CYGPATH_W) '$(srcdir)/quotedIdentifierOpSymbol.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-quotedIdentifierOpSymbol.Tpo" "$(DEPDIR)/libmixfix_a-quotedIdentifierOpSymbol.Po"; else rm -f "$(DEPDIR)/libmixfix_a-quotedIdentifierOpSymbol.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='quotedIdentifierOpSymbol.cc' object='libmixfix_a-quotedIdentifierOpSymbol.obj' libtool=no @AMDEPBACKSLASH@
+maude-quotedIdentifierOpSymbol.obj: quotedIdentifierOpSymbol.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-quotedIdentifierOpSymbol.obj -MD -MP -MF "$(DEPDIR)/maude-quotedIdentifierOpSymbol.Tpo" -c -o maude-quotedIdentifierOpSymbol.obj `if test -f 'quotedIdentifierOpSymbol.cc'; then $(CYGPATH_W) 'quotedIdentifierOpSymbol.cc'; else $(CYGPATH_W) '$(srcdir)/quotedIdentifierOpSymbol.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-quotedIdentifierOpSymbol.Tpo" "$(DEPDIR)/maude-quotedIdentifierOpSymbol.Po"; else rm -f "$(DEPDIR)/maude-quotedIdentifierOpSymbol.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='quotedIdentifierOpSymbol.cc' object='maude-quotedIdentifierOpSymbol.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-quotedIdentifierOpSymbol.obj `if test -f 'quotedIdentifierOpSymbol.cc'; then $(CYGPATH_W) 'quotedIdentifierOpSymbol.cc'; else $(CYGPATH_W) '$(srcdir)/quotedIdentifierOpSymbol.cc'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-quotedIdentifierOpSymbol.obj `if test -f 'quotedIdentifierOpSymbol.cc'; then $(CYGPATH_W) 'quotedIdentifierOpSymbol.cc'; else $(CYGPATH_W) '$(srcdir)/quotedIdentifierOpSymbol.cc'; fi`
 
-libmixfix_a-mixfixModule.o: mixfixModule.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-mixfixModule.o -MD -MP -MF "$(DEPDIR)/libmixfix_a-mixfixModule.Tpo" -c -o libmixfix_a-mixfixModule.o `test -f 'mixfixModule.cc' || echo '$(srcdir)/'`mixfixModule.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-mixfixModule.Tpo" "$(DEPDIR)/libmixfix_a-mixfixModule.Po"; else rm -f "$(DEPDIR)/libmixfix_a-mixfixModule.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='mixfixModule.cc' object='libmixfix_a-mixfixModule.o' libtool=no @AMDEPBACKSLASH@
+maude-mixfixModule.o: mixfixModule.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-mixfixModule.o -MD -MP -MF "$(DEPDIR)/maude-mixfixModule.Tpo" -c -o maude-mixfixModule.o `test -f 'mixfixModule.cc' || echo '$(srcdir)/'`mixfixModule.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-mixfixModule.Tpo" "$(DEPDIR)/maude-mixfixModule.Po"; else rm -f "$(DEPDIR)/maude-mixfixModule.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='mixfixModule.cc' object='maude-mixfixModule.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-mixfixModule.o `test -f 'mixfixModule.cc' || echo '$(srcdir)/'`mixfixModule.cc
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-mixfixModule.o `test -f 'mixfixModule.cc' || echo '$(srcdir)/'`mixfixModule.cc
 
-libmixfix_a-mixfixModule.obj: mixfixModule.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-mixfixModule.obj -MD -MP -MF "$(DEPDIR)/libmixfix_a-mixfixModule.Tpo" -c -o libmixfix_a-mixfixModule.obj `if test -f 'mixfixModule.cc'; then $(CYGPATH_W) 'mixfixModule.cc'; else $(CYGPATH_W) '$(srcdir)/mixfixModule.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-mixfixModule.Tpo" "$(DEPDIR)/libmixfix_a-mixfixModule.Po"; else rm -f "$(DEPDIR)/libmixfix_a-mixfixModule.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='mixfixModule.cc' object='libmixfix_a-mixfixModule.obj' libtool=no @AMDEPBACKSLASH@
+maude-mixfixModule.obj: mixfixModule.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-mixfixModule.obj -MD -MP -MF "$(DEPDIR)/maude-mixfixModule.Tpo" -c -o maude-mixfixModule.obj `if test -f 'mixfixModule.cc'; then $(CYGPATH_W) 'mixfixModule.cc'; else $(CYGPATH_W) '$(srcdir)/mixfixModule.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-mixfixModule.Tpo" "$(DEPDIR)/maude-mixfixModule.Po"; else rm -f "$(DEPDIR)/maude-mixfixModule.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='mixfixModule.cc' object='maude-mixfixModule.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-mixfixModule.obj `if test -f 'mixfixModule.cc'; then $(CYGPATH_W) 'mixfixModule.cc'; else $(CYGPATH_W) '$(srcdir)/mixfixModule.cc'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-mixfixModule.obj `if test -f 'mixfixModule.cc'; then $(CYGPATH_W) 'mixfixModule.cc'; else $(CYGPATH_W) '$(srcdir)/mixfixModule.cc'; fi`
 
-libmixfix_a-token.o: token.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-token.o -MD -MP -MF "$(DEPDIR)/libmixfix_a-token.Tpo" -c -o libmixfix_a-token.o `test -f 'token.cc' || echo '$(srcdir)/'`token.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-token.Tpo" "$(DEPDIR)/libmixfix_a-token.Po"; else rm -f "$(DEPDIR)/libmixfix_a-token.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='token.cc' object='libmixfix_a-token.o' libtool=no @AMDEPBACKSLASH@
+maude-token.o: token.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-token.o -MD -MP -MF "$(DEPDIR)/maude-token.Tpo" -c -o maude-token.o `test -f 'token.cc' || echo '$(srcdir)/'`token.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-token.Tpo" "$(DEPDIR)/maude-token.Po"; else rm -f "$(DEPDIR)/maude-token.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='token.cc' object='maude-token.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-token.o `test -f 'token.cc' || echo '$(srcdir)/'`token.cc
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-token.o `test -f 'token.cc' || echo '$(srcdir)/'`token.cc
 
-libmixfix_a-token.obj: token.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-token.obj -MD -MP -MF "$(DEPDIR)/libmixfix_a-token.Tpo" -c -o libmixfix_a-token.obj `if test -f 'token.cc'; then $(CYGPATH_W) 'token.cc'; else $(CYGPATH_W) '$(srcdir)/token.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-token.Tpo" "$(DEPDIR)/libmixfix_a-token.Po"; else rm -f "$(DEPDIR)/libmixfix_a-token.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='token.cc' object='libmixfix_a-token.obj' libtool=no @AMDEPBACKSLASH@
+maude-token.obj: token.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-token.obj -MD -MP -MF "$(DEPDIR)/maude-token.Tpo" -c -o maude-token.obj `if test -f 'token.cc'; then $(CYGPATH_W) 'token.cc'; else $(CYGPATH_W) '$(srcdir)/token.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-token.Tpo" "$(DEPDIR)/maude-token.Po"; else rm -f "$(DEPDIR)/maude-token.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='token.cc' object='maude-token.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-token.obj `if test -f 'token.cc'; then $(CYGPATH_W) 'token.cc'; else $(CYGPATH_W) '$(srcdir)/token.cc'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-token.obj `if test -f 'token.cc'; then $(CYGPATH_W) 'token.cc'; else $(CYGPATH_W) '$(srcdir)/token.cc'; fi`
 
-libmixfix_a-global.o: global.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-global.o -MD -MP -MF "$(DEPDIR)/libmixfix_a-global.Tpo" -c -o libmixfix_a-global.o `test -f 'global.cc' || echo '$(srcdir)/'`global.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-global.Tpo" "$(DEPDIR)/libmixfix_a-global.Po"; else rm -f "$(DEPDIR)/libmixfix_a-global.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='global.cc' object='libmixfix_a-global.o' libtool=no @AMDEPBACKSLASH@
+maude-main.o: main.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-main.o -MD -MP -MF "$(DEPDIR)/maude-main.Tpo" -c -o maude-main.o `test -f 'main.cc' || echo '$(srcdir)/'`main.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-main.Tpo" "$(DEPDIR)/maude-main.Po"; else rm -f "$(DEPDIR)/maude-main.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='main.cc' object='maude-main.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-global.o `test -f 'global.cc' || echo '$(srcdir)/'`global.cc
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-main.o `test -f 'main.cc' || echo '$(srcdir)/'`main.cc
 
-libmixfix_a-global.obj: global.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-global.obj -MD -MP -MF "$(DEPDIR)/libmixfix_a-global.Tpo" -c -o libmixfix_a-global.obj `if test -f 'global.cc'; then $(CYGPATH_W) 'global.cc'; else $(CYGPATH_W) '$(srcdir)/global.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-global.Tpo" "$(DEPDIR)/libmixfix_a-global.Po"; else rm -f "$(DEPDIR)/libmixfix_a-global.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='global.cc' object='libmixfix_a-global.obj' libtool=no @AMDEPBACKSLASH@
+maude-main.obj: main.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-main.obj -MD -MP -MF "$(DEPDIR)/maude-main.Tpo" -c -o maude-main.obj `if test -f 'main.cc'; then $(CYGPATH_W) 'main.cc'; else $(CYGPATH_W) '$(srcdir)/main.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-main.Tpo" "$(DEPDIR)/maude-main.Po"; else rm -f "$(DEPDIR)/maude-main.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='main.cc' object='maude-main.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-global.obj `if test -f 'global.cc'; then $(CYGPATH_W) 'global.cc'; else $(CYGPATH_W) '$(srcdir)/global.cc'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-main.obj `if test -f 'main.cc'; then $(CYGPATH_W) 'main.cc'; else $(CYGPATH_W) '$(srcdir)/main.cc'; fi`
 
-libmixfix_a-userLevelRewritingContext.o: userLevelRewritingContext.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-userLevelRewritingContext.o -MD -MP -MF "$(DEPDIR)/libmixfix_a-userLevelRewritingContext.Tpo" -c -o libmixfix_a-userLevelRewritingContext.o `test -f 'userLevelRewritingContext.cc' || echo '$(srcdir)/'`userLevelRewritingContext.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-userLevelRewritingContext.Tpo" "$(DEPDIR)/libmixfix_a-userLevelRewritingContext.Po"; else rm -f "$(DEPDIR)/libmixfix_a-userLevelRewritingContext.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='userLevelRewritingContext.cc' object='libmixfix_a-userLevelRewritingContext.o' libtool=no @AMDEPBACKSLASH@
+maude-userLevelRewritingContext.o: userLevelRewritingContext.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-userLevelRewritingContext.o -MD -MP -MF "$(DEPDIR)/maude-userLevelRewritingContext.Tpo" -c -o maude-userLevelRewritingContext.o `test -f 'userLevelRewritingContext.cc' || echo '$(srcdir)/'`userLevelRewritingContext.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-userLevelRewritingContext.Tpo" "$(DEPDIR)/maude-userLevelRewritingContext.Po"; else rm -f "$(DEPDIR)/maude-userLevelRewritingContext.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='userLevelRewritingContext.cc' object='maude-userLevelRewritingContext.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-userLevelRewritingContext.o `test -f 'userLevelRewritingContext.cc' || echo '$(srcdir)/'`userLevelRewritingContext.cc
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-userLevelRewritingContext.o `test -f 'userLevelRewritingContext.cc' || echo '$(srcdir)/'`userLevelRewritingContext.cc
 
-libmixfix_a-userLevelRewritingContext.obj: userLevelRewritingContext.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-userLevelRewritingContext.obj -MD -MP -MF "$(DEPDIR)/libmixfix_a-userLevelRewritingContext.Tpo" -c -o libmixfix_a-userLevelRewritingContext.obj `if test -f 'userLevelRewritingContext.cc'; then $(CYGPATH_W) 'userLevelRewritingContext.cc'; else $(CYGPATH_W) '$(srcdir)/userLevelRewritingContext.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-userLevelRewritingContext.Tpo" "$(DEPDIR)/libmixfix_a-userLevelRewritingContext.Po"; else rm -f "$(DEPDIR)/libmixfix_a-userLevelRewritingContext.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='userLevelRewritingContext.cc' object='libmixfix_a-userLevelRewritingContext.obj' libtool=no @AMDEPBACKSLASH@
+maude-userLevelRewritingContext.obj: userLevelRewritingContext.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-userLevelRewritingContext.obj -MD -MP -MF "$(DEPDIR)/maude-userLevelRewritingContext.Tpo" -c -o maude-userLevelRewritingContext.obj `if test -f 'userLevelRewritingContext.cc'; then $(CYGPATH_W) 'userLevelRewritingContext.cc'; else $(CYGPATH_W) '$(srcdir)/userLevelRewritingContext.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-userLevelRewritingContext.Tpo" "$(DEPDIR)/maude-userLevelRewritingContext.Po"; else rm -f "$(DEPDIR)/maude-userLevelRewritingContext.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='userLevelRewritingContext.cc' object='maude-userLevelRewritingContext.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-userLevelRewritingContext.obj `if test -f 'userLevelRewritingContext.cc'; then $(CYGPATH_W) 'userLevelRewritingContext.cc'; else $(CYGPATH_W) '$(srcdir)/userLevelRewritingContext.cc'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-userLevelRewritingContext.obj `if test -f 'userLevelRewritingContext.cc'; then $(CYGPATH_W) 'userLevelRewritingContext.cc'; else $(CYGPATH_W) '$(srcdir)/userLevelRewritingContext.cc'; fi`
 
-libmixfix_a-preModule.o: preModule.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-preModule.o -MD -MP -MF "$(DEPDIR)/libmixfix_a-preModule.Tpo" -c -o libmixfix_a-preModule.o `test -f 'preModule.cc' || echo '$(srcdir)/'`preModule.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-preModule.Tpo" "$(DEPDIR)/libmixfix_a-preModule.Po"; else rm -f "$(DEPDIR)/libmixfix_a-preModule.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='preModule.cc' object='libmixfix_a-preModule.o' libtool=no @AMDEPBACKSLASH@
+maude-preModule.o: preModule.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-preModule.o -MD -MP -MF "$(DEPDIR)/maude-preModule.Tpo" -c -o maude-preModule.o `test -f 'preModule.cc' || echo '$(srcdir)/'`preModule.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-preModule.Tpo" "$(DEPDIR)/maude-preModule.Po"; else rm -f "$(DEPDIR)/maude-preModule.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='preModule.cc' object='maude-preModule.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-preModule.o `test -f 'preModule.cc' || echo '$(srcdir)/'`preModule.cc
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-preModule.o `test -f 'preModule.cc' || echo '$(srcdir)/'`preModule.cc
 
-libmixfix_a-preModule.obj: preModule.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-preModule.obj -MD -MP -MF "$(DEPDIR)/libmixfix_a-preModule.Tpo" -c -o libmixfix_a-preModule.obj `if test -f 'preModule.cc'; then $(CYGPATH_W) 'preModule.cc'; else $(CYGPATH_W) '$(srcdir)/preModule.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-preModule.Tpo" "$(DEPDIR)/libmixfix_a-preModule.Po"; else rm -f "$(DEPDIR)/libmixfix_a-preModule.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='preModule.cc' object='libmixfix_a-preModule.obj' libtool=no @AMDEPBACKSLASH@
+maude-preModule.obj: preModule.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-preModule.obj -MD -MP -MF "$(DEPDIR)/maude-preModule.Tpo" -c -o maude-preModule.obj `if test -f 'preModule.cc'; then $(CYGPATH_W) 'preModule.cc'; else $(CYGPATH_W) '$(srcdir)/preModule.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-preModule.Tpo" "$(DEPDIR)/maude-preModule.Po"; else rm -f "$(DEPDIR)/maude-preModule.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='preModule.cc' object='maude-preModule.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-preModule.obj `if test -f 'preModule.cc'; then $(CYGPATH_W) 'preModule.cc'; else $(CYGPATH_W) '$(srcdir)/preModule.cc'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-preModule.obj `if test -f 'preModule.cc'; then $(CYGPATH_W) 'preModule.cc'; else $(CYGPATH_W) '$(srcdir)/preModule.cc'; fi`
 
-libmixfix_a-symbolType.o: symbolType.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-symbolType.o -MD -MP -MF "$(DEPDIR)/libmixfix_a-symbolType.Tpo" -c -o libmixfix_a-symbolType.o `test -f 'symbolType.cc' || echo '$(srcdir)/'`symbolType.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-symbolType.Tpo" "$(DEPDIR)/libmixfix_a-symbolType.Po"; else rm -f "$(DEPDIR)/libmixfix_a-symbolType.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='symbolType.cc' object='libmixfix_a-symbolType.o' libtool=no @AMDEPBACKSLASH@
+maude-symbolType.o: symbolType.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-symbolType.o -MD -MP -MF "$(DEPDIR)/maude-symbolType.Tpo" -c -o maude-symbolType.o `test -f 'symbolType.cc' || echo '$(srcdir)/'`symbolType.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-symbolType.Tpo" "$(DEPDIR)/maude-symbolType.Po"; else rm -f "$(DEPDIR)/maude-symbolType.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='symbolType.cc' object='maude-symbolType.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-symbolType.o `test -f 'symbolType.cc' || echo '$(srcdir)/'`symbolType.cc
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-symbolType.o `test -f 'symbolType.cc' || echo '$(srcdir)/'`symbolType.cc
 
-libmixfix_a-symbolType.obj: symbolType.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-symbolType.obj -MD -MP -MF "$(DEPDIR)/libmixfix_a-symbolType.Tpo" -c -o libmixfix_a-symbolType.obj `if test -f 'symbolType.cc'; then $(CYGPATH_W) 'symbolType.cc'; else $(CYGPATH_W) '$(srcdir)/symbolType.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-symbolType.Tpo" "$(DEPDIR)/libmixfix_a-symbolType.Po"; else rm -f "$(DEPDIR)/libmixfix_a-symbolType.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='symbolType.cc' object='libmixfix_a-symbolType.obj' libtool=no @AMDEPBACKSLASH@
+maude-symbolType.obj: symbolType.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-symbolType.obj -MD -MP -MF "$(DEPDIR)/maude-symbolType.Tpo" -c -o maude-symbolType.obj `if test -f 'symbolType.cc'; then $(CYGPATH_W) 'symbolType.cc'; else $(CYGPATH_W) '$(srcdir)/symbolType.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-symbolType.Tpo" "$(DEPDIR)/maude-symbolType.Po"; else rm -f "$(DEPDIR)/maude-symbolType.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='symbolType.cc' object='maude-symbolType.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-symbolType.obj `if test -f 'symbolType.cc'; then $(CYGPATH_W) 'symbolType.cc'; else $(CYGPATH_W) '$(srcdir)/symbolType.cc'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-symbolType.obj `if test -f 'symbolType.cc'; then $(CYGPATH_W) 'symbolType.cc'; else $(CYGPATH_W) '$(srcdir)/symbolType.cc'; fi`
 
-libmixfix_a-xmlBuffer.o: xmlBuffer.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-xmlBuffer.o -MD -MP -MF "$(DEPDIR)/libmixfix_a-xmlBuffer.Tpo" -c -o libmixfix_a-xmlBuffer.o `test -f 'xmlBuffer.cc' || echo '$(srcdir)/'`xmlBuffer.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-xmlBuffer.Tpo" "$(DEPDIR)/libmixfix_a-xmlBuffer.Po"; else rm -f "$(DEPDIR)/libmixfix_a-xmlBuffer.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='xmlBuffer.cc' object='libmixfix_a-xmlBuffer.o' libtool=no @AMDEPBACKSLASH@
+maude-xmlBuffer.o: xmlBuffer.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-xmlBuffer.o -MD -MP -MF "$(DEPDIR)/maude-xmlBuffer.Tpo" -c -o maude-xmlBuffer.o `test -f 'xmlBuffer.cc' || echo '$(srcdir)/'`xmlBuffer.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-xmlBuffer.Tpo" "$(DEPDIR)/maude-xmlBuffer.Po"; else rm -f "$(DEPDIR)/maude-xmlBuffer.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='xmlBuffer.cc' object='maude-xmlBuffer.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-xmlBuffer.o `test -f 'xmlBuffer.cc' || echo '$(srcdir)/'`xmlBuffer.cc
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-xmlBuffer.o `test -f 'xmlBuffer.cc' || echo '$(srcdir)/'`xmlBuffer.cc
 
-libmixfix_a-xmlBuffer.obj: xmlBuffer.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-xmlBuffer.obj -MD -MP -MF "$(DEPDIR)/libmixfix_a-xmlBuffer.Tpo" -c -o libmixfix_a-xmlBuffer.obj `if test -f 'xmlBuffer.cc'; then $(CYGPATH_W) 'xmlBuffer.cc'; else $(CYGPATH_W) '$(srcdir)/xmlBuffer.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-xmlBuffer.Tpo" "$(DEPDIR)/libmixfix_a-xmlBuffer.Po"; else rm -f "$(DEPDIR)/libmixfix_a-xmlBuffer.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='xmlBuffer.cc' object='libmixfix_a-xmlBuffer.obj' libtool=no @AMDEPBACKSLASH@
+maude-xmlBuffer.obj: xmlBuffer.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-xmlBuffer.obj -MD -MP -MF "$(DEPDIR)/maude-xmlBuffer.Tpo" -c -o maude-xmlBuffer.obj `if test -f 'xmlBuffer.cc'; then $(CYGPATH_W) 'xmlBuffer.cc'; else $(CYGPATH_W) '$(srcdir)/xmlBuffer.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-xmlBuffer.Tpo" "$(DEPDIR)/maude-xmlBuffer.Po"; else rm -f "$(DEPDIR)/maude-xmlBuffer.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='xmlBuffer.cc' object='maude-xmlBuffer.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-xmlBuffer.obj `if test -f 'xmlBuffer.cc'; then $(CYGPATH_W) 'xmlBuffer.cc'; else $(CYGPATH_W) '$(srcdir)/xmlBuffer.cc'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-xmlBuffer.obj `if test -f 'xmlBuffer.cc'; then $(CYGPATH_W) 'xmlBuffer.cc'; else $(CYGPATH_W) '$(srcdir)/xmlBuffer.cc'; fi`
 
-libmixfix_a-maudemlBuffer.o: maudemlBuffer.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-maudemlBuffer.o -MD -MP -MF "$(DEPDIR)/libmixfix_a-maudemlBuffer.Tpo" -c -o libmixfix_a-maudemlBuffer.o `test -f 'maudemlBuffer.cc' || echo '$(srcdir)/'`maudemlBuffer.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-maudemlBuffer.Tpo" "$(DEPDIR)/libmixfix_a-maudemlBuffer.Po"; else rm -f "$(DEPDIR)/libmixfix_a-maudemlBuffer.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='maudemlBuffer.cc' object='libmixfix_a-maudemlBuffer.o' libtool=no @AMDEPBACKSLASH@
+maude-maudemlBuffer.o: maudemlBuffer.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-maudemlBuffer.o -MD -MP -MF "$(DEPDIR)/maude-maudemlBuffer.Tpo" -c -o maude-maudemlBuffer.o `test -f 'maudemlBuffer.cc' || echo '$(srcdir)/'`maudemlBuffer.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-maudemlBuffer.Tpo" "$(DEPDIR)/maude-maudemlBuffer.Po"; else rm -f "$(DEPDIR)/maude-maudemlBuffer.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='maudemlBuffer.cc' object='maude-maudemlBuffer.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-maudemlBuffer.o `test -f 'maudemlBuffer.cc' || echo '$(srcdir)/'`maudemlBuffer.cc
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-maudemlBuffer.o `test -f 'maudemlBuffer.cc' || echo '$(srcdir)/'`maudemlBuffer.cc
 
-libmixfix_a-maudemlBuffer.obj: maudemlBuffer.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-maudemlBuffer.obj -MD -MP -MF "$(DEPDIR)/libmixfix_a-maudemlBuffer.Tpo" -c -o libmixfix_a-maudemlBuffer.obj `if test -f 'maudemlBuffer.cc'; then $(CYGPATH_W) 'maudemlBuffer.cc'; else $(CYGPATH_W) '$(srcdir)/maudemlBuffer.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-maudemlBuffer.Tpo" "$(DEPDIR)/libmixfix_a-maudemlBuffer.Po"; else rm -f "$(DEPDIR)/libmixfix_a-maudemlBuffer.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='maudemlBuffer.cc' object='libmixfix_a-maudemlBuffer.obj' libtool=no @AMDEPBACKSLASH@
+maude-maudemlBuffer.obj: maudemlBuffer.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-maudemlBuffer.obj -MD -MP -MF "$(DEPDIR)/maude-maudemlBuffer.Tpo" -c -o maude-maudemlBuffer.obj `if test -f 'maudemlBuffer.cc'; then $(CYGPATH_W) 'maudemlBuffer.cc'; else $(CYGPATH_W) '$(srcdir)/maudemlBuffer.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-maudemlBuffer.Tpo" "$(DEPDIR)/maude-maudemlBuffer.Po"; else rm -f "$(DEPDIR)/maude-maudemlBuffer.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='maudemlBuffer.cc' object='maude-maudemlBuffer.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-maudemlBuffer.obj `if test -f 'maudemlBuffer.cc'; then $(CYGPATH_W) 'maudemlBuffer.cc'; else $(CYGPATH_W) '$(srcdir)/maudemlBuffer.cc'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-maudemlBuffer.obj `if test -f 'maudemlBuffer.cc'; then $(CYGPATH_W) 'maudemlBuffer.cc'; else $(CYGPATH_W) '$(srcdir)/maudemlBuffer.cc'; fi`
 
-libmixfix_a-interpreter.o: interpreter.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-interpreter.o -MD -MP -MF "$(DEPDIR)/libmixfix_a-interpreter.Tpo" -c -o libmixfix_a-interpreter.o `test -f 'interpreter.cc' || echo '$(srcdir)/'`interpreter.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-interpreter.Tpo" "$(DEPDIR)/libmixfix_a-interpreter.Po"; else rm -f "$(DEPDIR)/libmixfix_a-interpreter.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='interpreter.cc' object='libmixfix_a-interpreter.o' libtool=no @AMDEPBACKSLASH@
+maude-interpreter.o: interpreter.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-interpreter.o -MD -MP -MF "$(DEPDIR)/maude-interpreter.Tpo" -c -o maude-interpreter.o `test -f 'interpreter.cc' || echo '$(srcdir)/'`interpreter.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-interpreter.Tpo" "$(DEPDIR)/maude-interpreter.Po"; else rm -f "$(DEPDIR)/maude-interpreter.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='interpreter.cc' object='maude-interpreter.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-interpreter.o `test -f 'interpreter.cc' || echo '$(srcdir)/'`interpreter.cc
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-interpreter.o `test -f 'interpreter.cc' || echo '$(srcdir)/'`interpreter.cc
 
-libmixfix_a-interpreter.obj: interpreter.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-interpreter.obj -MD -MP -MF "$(DEPDIR)/libmixfix_a-interpreter.Tpo" -c -o libmixfix_a-interpreter.obj `if test -f 'interpreter.cc'; then $(CYGPATH_W) 'interpreter.cc'; else $(CYGPATH_W) '$(srcdir)/interpreter.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-interpreter.Tpo" "$(DEPDIR)/libmixfix_a-interpreter.Po"; else rm -f "$(DEPDIR)/libmixfix_a-interpreter.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='interpreter.cc' object='libmixfix_a-interpreter.obj' libtool=no @AMDEPBACKSLASH@
+maude-interpreter.obj: interpreter.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-interpreter.obj -MD -MP -MF "$(DEPDIR)/maude-interpreter.Tpo" -c -o maude-interpreter.obj `if test -f 'interpreter.cc'; then $(CYGPATH_W) 'interpreter.cc'; else $(CYGPATH_W) '$(srcdir)/interpreter.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-interpreter.Tpo" "$(DEPDIR)/maude-interpreter.Po"; else rm -f "$(DEPDIR)/maude-interpreter.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='interpreter.cc' object='maude-interpreter.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-interpreter.obj `if test -f 'interpreter.cc'; then $(CYGPATH_W) 'interpreter.cc'; else $(CYGPATH_W) '$(srcdir)/interpreter.cc'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-interpreter.obj `if test -f 'interpreter.cc'; then $(CYGPATH_W) 'interpreter.cc'; else $(CYGPATH_W) '$(srcdir)/interpreter.cc'; fi`
 
-libmixfix_a-moduleDatabase.o: moduleDatabase.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-moduleDatabase.o -MD -MP -MF "$(DEPDIR)/libmixfix_a-moduleDatabase.Tpo" -c -o libmixfix_a-moduleDatabase.o `test -f 'moduleDatabase.cc' || echo '$(srcdir)/'`moduleDatabase.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-moduleDatabase.Tpo" "$(DEPDIR)/libmixfix_a-moduleDatabase.Po"; else rm -f "$(DEPDIR)/libmixfix_a-moduleDatabase.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='moduleDatabase.cc' object='libmixfix_a-moduleDatabase.o' libtool=no @AMDEPBACKSLASH@
+maude-moduleDatabase.o: moduleDatabase.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-moduleDatabase.o -MD -MP -MF "$(DEPDIR)/maude-moduleDatabase.Tpo" -c -o maude-moduleDatabase.o `test -f 'moduleDatabase.cc' || echo '$(srcdir)/'`moduleDatabase.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-moduleDatabase.Tpo" "$(DEPDIR)/maude-moduleDatabase.Po"; else rm -f "$(DEPDIR)/maude-moduleDatabase.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='moduleDatabase.cc' object='maude-moduleDatabase.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-moduleDatabase.o `test -f 'moduleDatabase.cc' || echo '$(srcdir)/'`moduleDatabase.cc
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-moduleDatabase.o `test -f 'moduleDatabase.cc' || echo '$(srcdir)/'`moduleDatabase.cc
 
-libmixfix_a-moduleDatabase.obj: moduleDatabase.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-moduleDatabase.obj -MD -MP -MF "$(DEPDIR)/libmixfix_a-moduleDatabase.Tpo" -c -o libmixfix_a-moduleDatabase.obj `if test -f 'moduleDatabase.cc'; then $(CYGPATH_W) 'moduleDatabase.cc'; else $(CYGPATH_W) '$(srcdir)/moduleDatabase.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-moduleDatabase.Tpo" "$(DEPDIR)/libmixfix_a-moduleDatabase.Po"; else rm -f "$(DEPDIR)/libmixfix_a-moduleDatabase.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='moduleDatabase.cc' object='libmixfix_a-moduleDatabase.obj' libtool=no @AMDEPBACKSLASH@
+maude-moduleDatabase.obj: moduleDatabase.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-moduleDatabase.obj -MD -MP -MF "$(DEPDIR)/maude-moduleDatabase.Tpo" -c -o maude-moduleDatabase.obj `if test -f 'moduleDatabase.cc'; then $(CYGPATH_W) 'moduleDatabase.cc'; else $(CYGPATH_W) '$(srcdir)/moduleDatabase.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-moduleDatabase.Tpo" "$(DEPDIR)/maude-moduleDatabase.Po"; else rm -f "$(DEPDIR)/maude-moduleDatabase.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='moduleDatabase.cc' object='maude-moduleDatabase.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-moduleDatabase.obj `if test -f 'moduleDatabase.cc'; then $(CYGPATH_W) 'moduleDatabase.cc'; else $(CYGPATH_W) '$(srcdir)/moduleDatabase.cc'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-moduleDatabase.obj `if test -f 'moduleDatabase.cc'; then $(CYGPATH_W) 'moduleDatabase.cc'; else $(CYGPATH_W) '$(srcdir)/moduleDatabase.cc'; fi`
 
-libmixfix_a-viewDatabase.o: viewDatabase.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-viewDatabase.o -MD -MP -MF "$(DEPDIR)/libmixfix_a-viewDatabase.Tpo" -c -o libmixfix_a-viewDatabase.o `test -f 'viewDatabase.cc' || echo '$(srcdir)/'`viewDatabase.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-viewDatabase.Tpo" "$(DEPDIR)/libmixfix_a-viewDatabase.Po"; else rm -f "$(DEPDIR)/libmixfix_a-viewDatabase.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='viewDatabase.cc' object='libmixfix_a-viewDatabase.o' libtool=no @AMDEPBACKSLASH@
+maude-viewDatabase.o: viewDatabase.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-viewDatabase.o -MD -MP -MF "$(DEPDIR)/maude-viewDatabase.Tpo" -c -o maude-viewDatabase.o `test -f 'viewDatabase.cc' || echo '$(srcdir)/'`viewDatabase.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-viewDatabase.Tpo" "$(DEPDIR)/maude-viewDatabase.Po"; else rm -f "$(DEPDIR)/maude-viewDatabase.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='viewDatabase.cc' object='maude-viewDatabase.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-viewDatabase.o `test -f 'viewDatabase.cc' || echo '$(srcdir)/'`viewDatabase.cc
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-viewDatabase.o `test -f 'viewDatabase.cc' || echo '$(srcdir)/'`viewDatabase.cc
 
-libmixfix_a-viewDatabase.obj: viewDatabase.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-viewDatabase.obj -MD -MP -MF "$(DEPDIR)/libmixfix_a-viewDatabase.Tpo" -c -o libmixfix_a-viewDatabase.obj `if test -f 'viewDatabase.cc'; then $(CYGPATH_W) 'viewDatabase.cc'; else $(CYGPATH_W) '$(srcdir)/viewDatabase.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-viewDatabase.Tpo" "$(DEPDIR)/libmixfix_a-viewDatabase.Po"; else rm -f "$(DEPDIR)/libmixfix_a-viewDatabase.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='viewDatabase.cc' object='libmixfix_a-viewDatabase.obj' libtool=no @AMDEPBACKSLASH@
+maude-viewDatabase.obj: viewDatabase.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-viewDatabase.obj -MD -MP -MF "$(DEPDIR)/maude-viewDatabase.Tpo" -c -o maude-viewDatabase.obj `if test -f 'viewDatabase.cc'; then $(CYGPATH_W) 'viewDatabase.cc'; else $(CYGPATH_W) '$(srcdir)/viewDatabase.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-viewDatabase.Tpo" "$(DEPDIR)/maude-viewDatabase.Po"; else rm -f "$(DEPDIR)/maude-viewDatabase.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='viewDatabase.cc' object='maude-viewDatabase.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-viewDatabase.obj `if test -f 'viewDatabase.cc'; then $(CYGPATH_W) 'viewDatabase.cc'; else $(CYGPATH_W) '$(srcdir)/viewDatabase.cc'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-viewDatabase.obj `if test -f 'viewDatabase.cc'; then $(CYGPATH_W) 'viewDatabase.cc'; else $(CYGPATH_W) '$(srcdir)/viewDatabase.cc'; fi`
 
-libmixfix_a-profileModule.o: profileModule.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-profileModule.o -MD -MP -MF "$(DEPDIR)/libmixfix_a-profileModule.Tpo" -c -o libmixfix_a-profileModule.o `test -f 'profileModule.cc' || echo '$(srcdir)/'`profileModule.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-profileModule.Tpo" "$(DEPDIR)/libmixfix_a-profileModule.Po"; else rm -f "$(DEPDIR)/libmixfix_a-profileModule.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='profileModule.cc' object='libmixfix_a-profileModule.o' libtool=no @AMDEPBACKSLASH@
+maude-profileModule.o: profileModule.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-profileModule.o -MD -MP -MF "$(DEPDIR)/maude-profileModule.Tpo" -c -o maude-profileModule.o `test -f 'profileModule.cc' || echo '$(srcdir)/'`profileModule.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-profileModule.Tpo" "$(DEPDIR)/maude-profileModule.Po"; else rm -f "$(DEPDIR)/maude-profileModule.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='profileModule.cc' object='maude-profileModule.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-profileModule.o `test -f 'profileModule.cc' || echo '$(srcdir)/'`profileModule.cc
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-profileModule.o `test -f 'profileModule.cc' || echo '$(srcdir)/'`profileModule.cc
 
-libmixfix_a-profileModule.obj: profileModule.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-profileModule.obj -MD -MP -MF "$(DEPDIR)/libmixfix_a-profileModule.Tpo" -c -o libmixfix_a-profileModule.obj `if test -f 'profileModule.cc'; then $(CYGPATH_W) 'profileModule.cc'; else $(CYGPATH_W) '$(srcdir)/profileModule.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-profileModule.Tpo" "$(DEPDIR)/libmixfix_a-profileModule.Po"; else rm -f "$(DEPDIR)/libmixfix_a-profileModule.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='profileModule.cc' object='libmixfix_a-profileModule.obj' libtool=no @AMDEPBACKSLASH@
+maude-profileModule.obj: profileModule.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-profileModule.obj -MD -MP -MF "$(DEPDIR)/maude-profileModule.Tpo" -c -o maude-profileModule.obj `if test -f 'profileModule.cc'; then $(CYGPATH_W) 'profileModule.cc'; else $(CYGPATH_W) '$(srcdir)/profileModule.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-profileModule.Tpo" "$(DEPDIR)/maude-profileModule.Po"; else rm -f "$(DEPDIR)/maude-profileModule.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='profileModule.cc' object='maude-profileModule.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-profileModule.obj `if test -f 'profileModule.cc'; then $(CYGPATH_W) 'profileModule.cc'; else $(CYGPATH_W) '$(srcdir)/profileModule.cc'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-profileModule.obj `if test -f 'profileModule.cc'; then $(CYGPATH_W) 'profileModule.cc'; else $(CYGPATH_W) '$(srcdir)/profileModule.cc'; fi`
 
-libmixfix_a-mixfixParser.o: mixfixParser.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-mixfixParser.o -MD -MP -MF "$(DEPDIR)/libmixfix_a-mixfixParser.Tpo" -c -o libmixfix_a-mixfixParser.o `test -f 'mixfixParser.cc' || echo '$(srcdir)/'`mixfixParser.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-mixfixParser.Tpo" "$(DEPDIR)/libmixfix_a-mixfixParser.Po"; else rm -f "$(DEPDIR)/libmixfix_a-mixfixParser.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='mixfixParser.cc' object='libmixfix_a-mixfixParser.o' libtool=no @AMDEPBACKSLASH@
+maude-mixfixParser.o: mixfixParser.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-mixfixParser.o -MD -MP -MF "$(DEPDIR)/maude-mixfixParser.Tpo" -c -o maude-mixfixParser.o `test -f 'mixfixParser.cc' || echo '$(srcdir)/'`mixfixParser.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-mixfixParser.Tpo" "$(DEPDIR)/maude-mixfixParser.Po"; else rm -f "$(DEPDIR)/maude-mixfixParser.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='mixfixParser.cc' object='maude-mixfixParser.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-mixfixParser.o `test -f 'mixfixParser.cc' || echo '$(srcdir)/'`mixfixParser.cc
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-mixfixParser.o `test -f 'mixfixParser.cc' || echo '$(srcdir)/'`mixfixParser.cc
 
-libmixfix_a-mixfixParser.obj: mixfixParser.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-mixfixParser.obj -MD -MP -MF "$(DEPDIR)/libmixfix_a-mixfixParser.Tpo" -c -o libmixfix_a-mixfixParser.obj `if test -f 'mixfixParser.cc'; then $(CYGPATH_W) 'mixfixParser.cc'; else $(CYGPATH_W) '$(srcdir)/mixfixParser.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-mixfixParser.Tpo" "$(DEPDIR)/libmixfix_a-mixfixParser.Po"; else rm -f "$(DEPDIR)/libmixfix_a-mixfixParser.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='mixfixParser.cc' object='libmixfix_a-mixfixParser.obj' libtool=no @AMDEPBACKSLASH@
+maude-mixfixParser.obj: mixfixParser.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-mixfixParser.obj -MD -MP -MF "$(DEPDIR)/maude-mixfixParser.Tpo" -c -o maude-mixfixParser.obj `if test -f 'mixfixParser.cc'; then $(CYGPATH_W) 'mixfixParser.cc'; else $(CYGPATH_W) '$(srcdir)/mixfixParser.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-mixfixParser.Tpo" "$(DEPDIR)/maude-mixfixParser.Po"; else rm -f "$(DEPDIR)/maude-mixfixParser.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='mixfixParser.cc' object='maude-mixfixParser.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-mixfixParser.obj `if test -f 'mixfixParser.cc'; then $(CYGPATH_W) 'mixfixParser.cc'; else $(CYGPATH_W) '$(srcdir)/mixfixParser.cc'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-mixfixParser.obj `if test -f 'mixfixParser.cc'; then $(CYGPATH_W) 'mixfixParser.cc'; else $(CYGPATH_W) '$(srcdir)/mixfixParser.cc'; fi`
 
-libmixfix_a-visibleModule.o: visibleModule.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-visibleModule.o -MD -MP -MF "$(DEPDIR)/libmixfix_a-visibleModule.Tpo" -c -o libmixfix_a-visibleModule.o `test -f 'visibleModule.cc' || echo '$(srcdir)/'`visibleModule.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-visibleModule.Tpo" "$(DEPDIR)/libmixfix_a-visibleModule.Po"; else rm -f "$(DEPDIR)/libmixfix_a-visibleModule.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='visibleModule.cc' object='libmixfix_a-visibleModule.o' libtool=no @AMDEPBACKSLASH@
+maude-visibleModule.o: visibleModule.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-visibleModule.o -MD -MP -MF "$(DEPDIR)/maude-visibleModule.Tpo" -c -o maude-visibleModule.o `test -f 'visibleModule.cc' || echo '$(srcdir)/'`visibleModule.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-visibleModule.Tpo" "$(DEPDIR)/maude-visibleModule.Po"; else rm -f "$(DEPDIR)/maude-visibleModule.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='visibleModule.cc' object='maude-visibleModule.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-visibleModule.o `test -f 'visibleModule.cc' || echo '$(srcdir)/'`visibleModule.cc
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-visibleModule.o `test -f 'visibleModule.cc' || echo '$(srcdir)/'`visibleModule.cc
 
-libmixfix_a-visibleModule.obj: visibleModule.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-visibleModule.obj -MD -MP -MF "$(DEPDIR)/libmixfix_a-visibleModule.Tpo" -c -o libmixfix_a-visibleModule.obj `if test -f 'visibleModule.cc'; then $(CYGPATH_W) 'visibleModule.cc'; else $(CYGPATH_W) '$(srcdir)/visibleModule.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-visibleModule.Tpo" "$(DEPDIR)/libmixfix_a-visibleModule.Po"; else rm -f "$(DEPDIR)/libmixfix_a-visibleModule.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='visibleModule.cc' object='libmixfix_a-visibleModule.obj' libtool=no @AMDEPBACKSLASH@
+maude-visibleModule.obj: visibleModule.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-visibleModule.obj -MD -MP -MF "$(DEPDIR)/maude-visibleModule.Tpo" -c -o maude-visibleModule.obj `if test -f 'visibleModule.cc'; then $(CYGPATH_W) 'visibleModule.cc'; else $(CYGPATH_W) '$(srcdir)/visibleModule.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-visibleModule.Tpo" "$(DEPDIR)/maude-visibleModule.Po"; else rm -f "$(DEPDIR)/maude-visibleModule.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='visibleModule.cc' object='maude-visibleModule.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-visibleModule.obj `if test -f 'visibleModule.cc'; then $(CYGPATH_W) 'visibleModule.cc'; else $(CYGPATH_W) '$(srcdir)/visibleModule.cc'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-visibleModule.obj `if test -f 'visibleModule.cc'; then $(CYGPATH_W) 'visibleModule.cc'; else $(CYGPATH_W) '$(srcdir)/visibleModule.cc'; fi`
 
-libmixfix_a-sharedTokens.o: sharedTokens.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-sharedTokens.o -MD -MP -MF "$(DEPDIR)/libmixfix_a-sharedTokens.Tpo" -c -o libmixfix_a-sharedTokens.o `test -f 'sharedTokens.cc' || echo '$(srcdir)/'`sharedTokens.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-sharedTokens.Tpo" "$(DEPDIR)/libmixfix_a-sharedTokens.Po"; else rm -f "$(DEPDIR)/libmixfix_a-sharedTokens.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='sharedTokens.cc' object='libmixfix_a-sharedTokens.o' libtool=no @AMDEPBACKSLASH@
+maude-sharedTokens.o: sharedTokens.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-sharedTokens.o -MD -MP -MF "$(DEPDIR)/maude-sharedTokens.Tpo" -c -o maude-sharedTokens.o `test -f 'sharedTokens.cc' || echo '$(srcdir)/'`sharedTokens.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-sharedTokens.Tpo" "$(DEPDIR)/maude-sharedTokens.Po"; else rm -f "$(DEPDIR)/maude-sharedTokens.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='sharedTokens.cc' object='maude-sharedTokens.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-sharedTokens.o `test -f 'sharedTokens.cc' || echo '$(srcdir)/'`sharedTokens.cc
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-sharedTokens.o `test -f 'sharedTokens.cc' || echo '$(srcdir)/'`sharedTokens.cc
 
-libmixfix_a-sharedTokens.obj: sharedTokens.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-sharedTokens.obj -MD -MP -MF "$(DEPDIR)/libmixfix_a-sharedTokens.Tpo" -c -o libmixfix_a-sharedTokens.obj `if test -f 'sharedTokens.cc'; then $(CYGPATH_W) 'sharedTokens.cc'; else $(CYGPATH_W) '$(srcdir)/sharedTokens.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-sharedTokens.Tpo" "$(DEPDIR)/libmixfix_a-sharedTokens.Po"; else rm -f "$(DEPDIR)/libmixfix_a-sharedTokens.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='sharedTokens.cc' object='libmixfix_a-sharedTokens.obj' libtool=no @AMDEPBACKSLASH@
+maude-sharedTokens.obj: sharedTokens.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-sharedTokens.obj -MD -MP -MF "$(DEPDIR)/maude-sharedTokens.Tpo" -c -o maude-sharedTokens.obj `if test -f 'sharedTokens.cc'; then $(CYGPATH_W) 'sharedTokens.cc'; else $(CYGPATH_W) '$(srcdir)/sharedTokens.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-sharedTokens.Tpo" "$(DEPDIR)/maude-sharedTokens.Po"; else rm -f "$(DEPDIR)/maude-sharedTokens.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='sharedTokens.cc' object='maude-sharedTokens.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-sharedTokens.obj `if test -f 'sharedTokens.cc'; then $(CYGPATH_W) 'sharedTokens.cc'; else $(CYGPATH_W) '$(srcdir)/sharedTokens.cc'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-sharedTokens.obj `if test -f 'sharedTokens.cc'; then $(CYGPATH_W) 'sharedTokens.cc'; else $(CYGPATH_W) '$(srcdir)/sharedTokens.cc'; fi`
 
-libmixfix_a-metadataStore.o: metadataStore.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-metadataStore.o -MD -MP -MF "$(DEPDIR)/libmixfix_a-metadataStore.Tpo" -c -o libmixfix_a-metadataStore.o `test -f 'metadataStore.cc' || echo '$(srcdir)/'`metadataStore.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-metadataStore.Tpo" "$(DEPDIR)/libmixfix_a-metadataStore.Po"; else rm -f "$(DEPDIR)/libmixfix_a-metadataStore.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='metadataStore.cc' object='libmixfix_a-metadataStore.o' libtool=no @AMDEPBACKSLASH@
+maude-metadataStore.o: metadataStore.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-metadataStore.o -MD -MP -MF "$(DEPDIR)/maude-metadataStore.Tpo" -c -o maude-metadataStore.o `test -f 'metadataStore.cc' || echo '$(srcdir)/'`metadataStore.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-metadataStore.Tpo" "$(DEPDIR)/maude-metadataStore.Po"; else rm -f "$(DEPDIR)/maude-metadataStore.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='metadataStore.cc' object='maude-metadataStore.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-metadataStore.o `test -f 'metadataStore.cc' || echo '$(srcdir)/'`metadataStore.cc
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-metadataStore.o `test -f 'metadataStore.cc' || echo '$(srcdir)/'`metadataStore.cc
 
-libmixfix_a-metadataStore.obj: metadataStore.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-metadataStore.obj -MD -MP -MF "$(DEPDIR)/libmixfix_a-metadataStore.Tpo" -c -o libmixfix_a-metadataStore.obj `if test -f 'metadataStore.cc'; then $(CYGPATH_W) 'metadataStore.cc'; else $(CYGPATH_W) '$(srcdir)/metadataStore.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-metadataStore.Tpo" "$(DEPDIR)/libmixfix_a-metadataStore.Po"; else rm -f "$(DEPDIR)/libmixfix_a-metadataStore.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='metadataStore.cc' object='libmixfix_a-metadataStore.obj' libtool=no @AMDEPBACKSLASH@
+maude-metadataStore.obj: metadataStore.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-metadataStore.obj -MD -MP -MF "$(DEPDIR)/maude-metadataStore.Tpo" -c -o maude-metadataStore.obj `if test -f 'metadataStore.cc'; then $(CYGPATH_W) 'metadataStore.cc'; else $(CYGPATH_W) '$(srcdir)/metadataStore.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-metadataStore.Tpo" "$(DEPDIR)/maude-metadataStore.Po"; else rm -f "$(DEPDIR)/maude-metadataStore.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='metadataStore.cc' object='maude-metadataStore.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-metadataStore.obj `if test -f 'metadataStore.cc'; then $(CYGPATH_W) 'metadataStore.cc'; else $(CYGPATH_W) '$(srcdir)/metadataStore.cc'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-metadataStore.obj `if test -f 'metadataStore.cc'; then $(CYGPATH_W) 'metadataStore.cc'; else $(CYGPATH_W) '$(srcdir)/metadataStore.cc'; fi`
 
-libmixfix_a-banner.o: banner.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-banner.o -MD -MP -MF "$(DEPDIR)/libmixfix_a-banner.Tpo" -c -o libmixfix_a-banner.o `test -f 'banner.cc' || echo '$(srcdir)/'`banner.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-banner.Tpo" "$(DEPDIR)/libmixfix_a-banner.Po"; else rm -f "$(DEPDIR)/libmixfix_a-banner.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='banner.cc' object='libmixfix_a-banner.o' libtool=no @AMDEPBACKSLASH@
+maude-banner.o: banner.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-banner.o -MD -MP -MF "$(DEPDIR)/maude-banner.Tpo" -c -o maude-banner.o `test -f 'banner.cc' || echo '$(srcdir)/'`banner.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-banner.Tpo" "$(DEPDIR)/maude-banner.Po"; else rm -f "$(DEPDIR)/maude-banner.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='banner.cc' object='maude-banner.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-banner.o `test -f 'banner.cc' || echo '$(srcdir)/'`banner.cc
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-banner.o `test -f 'banner.cc' || echo '$(srcdir)/'`banner.cc
 
-libmixfix_a-banner.obj: banner.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-banner.obj -MD -MP -MF "$(DEPDIR)/libmixfix_a-banner.Tpo" -c -o libmixfix_a-banner.obj `if test -f 'banner.cc'; then $(CYGPATH_W) 'banner.cc'; else $(CYGPATH_W) '$(srcdir)/banner.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-banner.Tpo" "$(DEPDIR)/libmixfix_a-banner.Po"; else rm -f "$(DEPDIR)/libmixfix_a-banner.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='banner.cc' object='libmixfix_a-banner.obj' libtool=no @AMDEPBACKSLASH@
+maude-banner.obj: banner.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-banner.obj -MD -MP -MF "$(DEPDIR)/maude-banner.Tpo" -c -o maude-banner.obj `if test -f 'banner.cc'; then $(CYGPATH_W) 'banner.cc'; else $(CYGPATH_W) '$(srcdir)/banner.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-banner.Tpo" "$(DEPDIR)/maude-banner.Po"; else rm -f "$(DEPDIR)/maude-banner.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='banner.cc' object='maude-banner.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-banner.obj `if test -f 'banner.cc'; then $(CYGPATH_W) 'banner.cc'; else $(CYGPATH_W) '$(srcdir)/banner.cc'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-banner.obj `if test -f 'banner.cc'; then $(CYGPATH_W) 'banner.cc'; else $(CYGPATH_W) '$(srcdir)/banner.cc'; fi`
 
-libmixfix_a-lexer.o: lexer.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-lexer.o -MD -MP -MF "$(DEPDIR)/libmixfix_a-lexer.Tpo" -c -o libmixfix_a-lexer.o `test -f 'lexer.cc' || echo '$(srcdir)/'`lexer.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-lexer.Tpo" "$(DEPDIR)/libmixfix_a-lexer.Po"; else rm -f "$(DEPDIR)/libmixfix_a-lexer.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='lexer.cc' object='libmixfix_a-lexer.o' libtool=no @AMDEPBACKSLASH@
+maude-lexer.o: lexer.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-lexer.o -MD -MP -MF "$(DEPDIR)/maude-lexer.Tpo" -c -o maude-lexer.o `test -f 'lexer.cc' || echo '$(srcdir)/'`lexer.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-lexer.Tpo" "$(DEPDIR)/maude-lexer.Po"; else rm -f "$(DEPDIR)/maude-lexer.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='lexer.cc' object='maude-lexer.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-lexer.o `test -f 'lexer.cc' || echo '$(srcdir)/'`lexer.cc
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-lexer.o `test -f 'lexer.cc' || echo '$(srcdir)/'`lexer.cc
 
-libmixfix_a-lexer.obj: lexer.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-lexer.obj -MD -MP -MF "$(DEPDIR)/libmixfix_a-lexer.Tpo" -c -o libmixfix_a-lexer.obj `if test -f 'lexer.cc'; then $(CYGPATH_W) 'lexer.cc'; else $(CYGPATH_W) '$(srcdir)/lexer.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-lexer.Tpo" "$(DEPDIR)/libmixfix_a-lexer.Po"; else rm -f "$(DEPDIR)/libmixfix_a-lexer.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='lexer.cc' object='libmixfix_a-lexer.obj' libtool=no @AMDEPBACKSLASH@
+maude-lexer.obj: lexer.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-lexer.obj -MD -MP -MF "$(DEPDIR)/maude-lexer.Tpo" -c -o maude-lexer.obj `if test -f 'lexer.cc'; then $(CYGPATH_W) 'lexer.cc'; else $(CYGPATH_W) '$(srcdir)/lexer.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-lexer.Tpo" "$(DEPDIR)/maude-lexer.Po"; else rm -f "$(DEPDIR)/maude-lexer.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='lexer.cc' object='maude-lexer.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-lexer.obj `if test -f 'lexer.cc'; then $(CYGPATH_W) 'lexer.cc'; else $(CYGPATH_W) '$(srcdir)/lexer.cc'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-lexer.obj `if test -f 'lexer.cc'; then $(CYGPATH_W) 'lexer.cc'; else $(CYGPATH_W) '$(srcdir)/lexer.cc'; fi`
 
-libmixfix_a-surface.o: surface.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-surface.o -MD -MP -MF "$(DEPDIR)/libmixfix_a-surface.Tpo" -c -o libmixfix_a-surface.o `test -f 'surface.cc' || echo '$(srcdir)/'`surface.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-surface.Tpo" "$(DEPDIR)/libmixfix_a-surface.Po"; else rm -f "$(DEPDIR)/libmixfix_a-surface.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='surface.cc' object='libmixfix_a-surface.o' libtool=no @AMDEPBACKSLASH@
+maude-surface.o: surface.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-surface.o -MD -MP -MF "$(DEPDIR)/maude-surface.Tpo" -c -o maude-surface.o `test -f 'surface.cc' || echo '$(srcdir)/'`surface.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-surface.Tpo" "$(DEPDIR)/maude-surface.Po"; else rm -f "$(DEPDIR)/maude-surface.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='surface.cc' object='maude-surface.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-surface.o `test -f 'surface.cc' || echo '$(srcdir)/'`surface.cc
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-surface.o `test -f 'surface.cc' || echo '$(srcdir)/'`surface.cc
 
-libmixfix_a-surface.obj: surface.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-surface.obj -MD -MP -MF "$(DEPDIR)/libmixfix_a-surface.Tpo" -c -o libmixfix_a-surface.obj `if test -f 'surface.cc'; then $(CYGPATH_W) 'surface.cc'; else $(CYGPATH_W) '$(srcdir)/surface.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-surface.Tpo" "$(DEPDIR)/libmixfix_a-surface.Po"; else rm -f "$(DEPDIR)/libmixfix_a-surface.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='surface.cc' object='libmixfix_a-surface.obj' libtool=no @AMDEPBACKSLASH@
+maude-surface.obj: surface.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-surface.obj -MD -MP -MF "$(DEPDIR)/maude-surface.Tpo" -c -o maude-surface.obj `if test -f 'surface.cc'; then $(CYGPATH_W) 'surface.cc'; else $(CYGPATH_W) '$(srcdir)/surface.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-surface.Tpo" "$(DEPDIR)/maude-surface.Po"; else rm -f "$(DEPDIR)/maude-surface.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='surface.cc' object='maude-surface.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-surface.obj `if test -f 'surface.cc'; then $(CYGPATH_W) 'surface.cc'; else $(CYGPATH_W) '$(srcdir)/surface.cc'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-surface.obj `if test -f 'surface.cc'; then $(CYGPATH_W) 'surface.cc'; else $(CYGPATH_W) '$(srcdir)/surface.cc'; fi`
 
-libmixfix_a-compiler.o: compiler.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-compiler.o -MD -MP -MF "$(DEPDIR)/libmixfix_a-compiler.Tpo" -c -o libmixfix_a-compiler.o `test -f 'compiler.cc' || echo '$(srcdir)/'`compiler.cc; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-compiler.Tpo" "$(DEPDIR)/libmixfix_a-compiler.Po"; else rm -f "$(DEPDIR)/libmixfix_a-compiler.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='compiler.cc' object='libmixfix_a-compiler.o' libtool=no @AMDEPBACKSLASH@
+maude-compiler.o: compiler.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-compiler.o -MD -MP -MF "$(DEPDIR)/maude-compiler.Tpo" -c -o maude-compiler.o `test -f 'compiler.cc' || echo '$(srcdir)/'`compiler.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-compiler.Tpo" "$(DEPDIR)/maude-compiler.Po"; else rm -f "$(DEPDIR)/maude-compiler.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='compiler.cc' object='maude-compiler.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-compiler.o `test -f 'compiler.cc' || echo '$(srcdir)/'`compiler.cc
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-compiler.o `test -f 'compiler.cc' || echo '$(srcdir)/'`compiler.cc
 
-libmixfix_a-compiler.obj: compiler.cc
-@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-compiler.obj -MD -MP -MF "$(DEPDIR)/libmixfix_a-compiler.Tpo" -c -o libmixfix_a-compiler.obj `if test -f 'compiler.cc'; then $(CYGPATH_W) 'compiler.cc'; else $(CYGPATH_W) '$(srcdir)/compiler.cc'; fi`; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-compiler.Tpo" "$(DEPDIR)/libmixfix_a-compiler.Po"; else rm -f "$(DEPDIR)/libmixfix_a-compiler.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='compiler.cc' object='libmixfix_a-compiler.obj' libtool=no @AMDEPBACKSLASH@
+maude-compiler.obj: compiler.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-compiler.obj -MD -MP -MF "$(DEPDIR)/maude-compiler.Tpo" -c -o maude-compiler.obj `if test -f 'compiler.cc'; then $(CYGPATH_W) 'compiler.cc'; else $(CYGPATH_W) '$(srcdir)/compiler.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-compiler.Tpo" "$(DEPDIR)/maude-compiler.Po"; else rm -f "$(DEPDIR)/maude-compiler.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='compiler.cc' object='maude-compiler.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-compiler.obj `if test -f 'compiler.cc'; then $(CYGPATH_W) 'compiler.cc'; else $(CYGPATH_W) '$(srcdir)/compiler.cc'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-compiler.obj `if test -f 'compiler.cc'; then $(CYGPATH_W) 'compiler.cc'; else $(CYGPATH_W) '$(srcdir)/compiler.cc'; fi`
 uninstall-info-am:
+install-dataDATA: $(data_DATA)
+	@$(NORMAL_INSTALL)
+	test -z "$(datadir)" || $(mkdir_p) "$(DESTDIR)$(datadir)"
+	@list='$(data_DATA)'; for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  f=$(am__strip_dir) \
+	  echo " $(dataDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(datadir)/$$f'"; \
+	  $(dataDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(datadir)/$$f"; \
+	done
+
+uninstall-dataDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(data_DATA)'; for p in $$list; do \
+	  f=$(am__strip_dir) \
+	  echo " rm -f '$(DESTDIR)$(datadir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(datadir)/$$f"; \
+	done
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
@@ -999,8 +1089,11 @@ distdir: $(DISTFILES)
 check-am: all-am
 check: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) check-am
-all-am: Makefile $(LIBRARIES) $(HEADERS)
+all-am: Makefile $(PROGRAMS) $(DATA) $(HEADERS)
 installdirs:
+	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(datadir)"; do \
+	  test -z "$$dir" || $(mkdir_p) "$$dir"; \
+	done
 install: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) install-am
 install-exec: install-exec-am
@@ -1030,7 +1123,7 @@ maintainer-clean-generic:
 	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 clean: clean-am
 
-clean-am: clean-generic clean-noinstLIBRARIES mostlyclean-am
+clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
 
 distclean: distclean-am
 	-rm -rf ./$(DEPDIR)
@@ -1048,9 +1141,9 @@ info: info-am
 
 info-am:
 
-install-data-am:
+install-data-am: install-dataDATA
 
-install-exec-am:
+install-exec-am: install-binPROGRAMS
 
 install-info: install-info-am
 
@@ -1075,18 +1168,20 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-info-am
+uninstall-am: uninstall-binPROGRAMS uninstall-dataDATA \
+	uninstall-info-am
 
-.PHONY: CTAGS GTAGS all all-am check check-am clean clean-generic \
-	clean-noinstLIBRARIES ctags distclean distclean-compile \
+.PHONY: CTAGS GTAGS all all-am check check-am clean clean-binPROGRAMS \
+	clean-generic ctags distclean distclean-compile \
 	distclean-generic distclean-tags distdir dvi dvi-am html \
-	html-am info info-am install install-am install-data \
-	install-data-am install-exec install-exec-am install-info \
-	install-info-am install-man install-strip installcheck \
-	installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-compile \
-	mostlyclean-generic pdf pdf-am ps ps-am tags uninstall \
-	uninstall-am uninstall-info-am
+	html-am info info-am install install-am install-binPROGRAMS \
+	install-data install-data-am install-dataDATA install-exec \
+	install-exec-am install-info install-info-am install-man \
+	install-strip installcheck installcheck-am installdirs \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-compile mostlyclean-generic pdf pdf-am ps ps-am \
+	tags uninstall uninstall-am uninstall-binPROGRAMS \
+	uninstall-dataDATA uninstall-info-am
 
 
 surface.yy: \

@@ -54,7 +54,7 @@
 #include "userLevelRewritingContext.hh"
 #include "interpreter.hh"
 
-#include "global.hh"
+#include "main.hh"
 #define clear()			bubble.contractTo(0);
 #define store(token)		bubble.append(token)
 #define fragClear()		fragments.contractTo(0);

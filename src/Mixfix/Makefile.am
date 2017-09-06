@@ -1,10 +1,21 @@
-noinst_LIBRARIES = libmixfix.a
+bin_PROGRAMS = maude
+
+data_DATA = \
+	prelude.maude \
+	model-checker.maude \
+	socket.maude \
+	linear.maude
 
 if BUILD_COMPILER
   COMPILER_SRC = compiler.cc
+  FULL_COMPILER_LIB = ../FullCompiler/libfullCompiler.a
 endif
 
-libmixfix_a_CPPFLAGS = \
+if USE_DLMALLOC
+  DLMALLOC_LIB = ../3rdParty/libdlmalloc.a
+endif
+
+maude_CPPFLAGS = \
 	-I$(top_srcdir)/src/Utility \
 	-I$(top_srcdir)/src/Temporal \
 	-I$(top_srcdir)/src/Interface \
@@ -30,7 +41,34 @@ libmixfix_a_CPPFLAGS = \
 	-I$(top_srcdir)/src/FullCompiler \
 	-I$(top_srcdir)/src/StrategyLanguage
 
-libmixfix_a_SOURCES = \
+maude_LDADD = \
+	../StrategyLanguage/libstrategyLanguage.a \
+	../Meta/libmeta.a \
+	../ObjectSystem/libobjectSystem.a \
+	../BuiltIn/libbuiltIn.a \
+	../Higher/libhigher.a \
+	../FreeTheory/libfreeTheory.a \
+	../AU_Theory/libAU_Theory.a \
+	../AU_Persistent/libAU_Persistent.a \
+	../ACU_Theory/libACU_Theory.a \
+	../ACU_Persistent/libACU_Persistent.a \
+	../CUI_Theory/libCUI_Theory.a \
+	../S_Theory/libS_Theory.a \
+	../NA_Theory/libNA_Theory.a \
+	../Variable/libvariable.a \
+	../Interface/libinterface.a \
+	../Core/libcore.a \
+	../MSCP10/libmscp10.a \
+	../Temporal/libtemporal.a \
+	../IO_Stuff/libIO_Stuff.a \
+	$(FULL_COMPILER_LIB) \
+	../Utility/libutility.a \
+	$(BUDDY_LIB) \
+	$(TECLA_LIBS) \
+	$(GMP_LIBS) \
+	$(DLMALLOC_LIB)
+
+maude_SOURCES = \
 	syntaxContainer.cc \
 	renaming.cc \
 	view.cc \
@@ -47,7 +85,7 @@ libmixfix_a_SOURCES = \
 	quotedIdentifierOpSymbol.cc \
 	mixfixModule.cc \
 	token.cc \
-	global.cc \
+	main.cc \
 	userLevelRewritingContext.cc \
 	preModule.cc \
 	symbolType.cc \
@@ -66,7 +104,7 @@ libmixfix_a_SOURCES = \
 	surface.cc \
 	$(COMPILER_SRC)
 
-EXTRA_libmixfix_a_SOURCES = \
+EXTRA_maude_SOURCES = \
 	compiler.cc
 
 BUILT_SOURCES = surface.yy surface.cc surface.h lexer.cc
@@ -115,13 +153,11 @@ EXTRA_DIST = \
 	termPrint.cc \
 	dagNodePrint.cc \
 	sharedPrint.cc \
-	strategyPrint.cc \
 	interact.cc \
 	trial.cc \
 	execute.cc \
 	loopMode.cc \
 	search.cc \
-	srewrite.cc \
 	match.cc \
 	top.yy \
 	modules.yy \
@@ -129,7 +165,12 @@ EXTRA_DIST = \
 	bottom.yy \
 	lexer.ll \
 	graphPrint.cc \
-	ansiEscapeSequences.cc
+	ansiEscapeSequences.cc \
+	prelude.maude \
+	model-checker.maude \
+	socket.maude \
+	linear.maude \
+	machine-int.maude
 
 noinst_HEADERS = \
 	renaming.hh \
@@ -145,7 +186,7 @@ noinst_HEADERS = \
 	interpreter.hh \
 	lexerAux.hh \
 	loopSymbol.hh \
-	global.hh \
+	main.hh \
 	maudemlBuffer.hh \
 	metadataStore.hh \
 	mixfix.hh \

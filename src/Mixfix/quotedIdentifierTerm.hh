@@ -38,10 +38,6 @@ public:
   int compareArguments(const DagNode* other) const;
   void overwriteWithDagNode(DagNode* old) const;
   NA_DagNode* makeDagNode() const;
-  //
-  //	Needed because we have hidden data.
-  //
-  Term* instantiate2(const Vector<Term*>& varBindings, SymbolMap* translator);
 
   int getIdIndex() const;
 

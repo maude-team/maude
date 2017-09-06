@@ -27,7 +27,6 @@
 //	utility stuff
 #include "macros.hh"
 #include "vector.hh"
-#include "indent.hh"
 
 //	forward declarations
 #include "interface.hh"
@@ -112,7 +111,7 @@ EqualityConditionFragment::compileMatch(VariableInfo& variableInfo, NatSet& boun
 bool
 EqualityConditionFragment::solve(bool findFirst,
 				 RewritingContext& solution,
-				 stack<ConditionState*>& /* state */)
+				 stack<ConditionState*>& state)
 {
   if (!findFirst)
     return false;
@@ -133,17 +132,3 @@ EqualityConditionFragment::solve(bool findFirst,
   delete rhsContext;
   return success;
 }
-
-#ifdef DUMP
-void
-EqualityConditionFragment::dump(ostream& s, const VariableInfo& variableInfo, int indentLevel)
-{
-  s << Indent(indentLevel) << "Begin{EqualityConditionFragment}\n";
-  ++indentLevel;
-  s << Indent(indentLevel) << "lhs = " << lhs << '\n';
-  s << Indent(indentLevel) << "rhs = " << rhs << '\n';
-  s << Indent(indentLevel) << "lhsIndex = " << lhsIndex << '\n';
-  s << Indent(indentLevel) << "rhsIndex = " << rhsIndex << '\n';
-  s << Indent(indentLevel - 1) << "End{EqualityConditionFragment}\n";
-}
-#endif

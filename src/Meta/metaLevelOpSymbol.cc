@@ -89,7 +89,7 @@
 #include "preModule.hh"
 #include "interpreter.hh"
 #include "visibleModule.hh"
-#include "global.hh"  // HACK shouldn't access global variables
+#include "main.hh"  // HACK shouldn't access global variables
 
 //	our stuff
 #include "descentFunctions.cc"

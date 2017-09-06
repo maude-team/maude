@@ -51,7 +51,7 @@
 
 //	strategy languages definitions
 #include "strategyExpression.hh"
-#include "strategicSearch.hh"
+#include "setGenerator.hh"
 
 //	front end class definitions
 #include "timer.hh"
@@ -68,7 +68,6 @@
 #include "match.cc"
 #include "search.cc"
 #include "loopMode.cc"
-#include "srewrite.cc"
 
 Interpreter::Interpreter()
 {
