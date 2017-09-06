@@ -45,7 +45,8 @@ public:
   VariantSearch(RewritingContext* context,
 		const Vector<DagNode*>& blockerDags,
 		FreshVariableGenerator* freshVariableGenerator,
-		bool unificationMode = false);
+		bool unificationMode = false,
+		bool irredundantMode = false);
   ~VariantSearch();
 
   const NarrowingVariableInfo& getVariableInfo() const;
@@ -57,7 +58,8 @@ private:
   typedef Vector<int> VariantIndexVec;
 
   void markReachableNodes();
-  void expand(const Vector<DagNode*>& variant, int index, bool odd);
+  void expandLayer();
+  void expandVariant(const Vector<DagNode*>& variant, int index);
 
 #ifdef DUMP
   void dumpVariant(const Vector<DagNode*>& variant, int index,  int parentIndex);
@@ -69,13 +71,13 @@ private:
   const bool unificationMode;
 
   NarrowingVariableInfo variableInfo;
+  int nrVariantVariables;
   VariantFolder variantCollection;
-  VariantFolder unifierCollection;  // for storing variants corresponding to unifiers if unificationMode == true
 
   VariantIndexVec frontier;
   VariantIndexVec newFrontier;
   int currentIndex;
-  int unifierIndex;  // HACK
+  bool odd;
 
   Vector<DagNode*> protectedVariant;
 };
@@ -84,18 +86,6 @@ inline const NarrowingVariableInfo&
 VariantSearch::getVariableInfo() const
 {
   return variableInfo;
-}
-
-inline const Vector<DagNode*>*
-VariantSearch::getNextVariant(int& nrFreeVariables)
-{
-  return context->traceAbort() ? 0 : variantCollection.getNextSurvivingVariant(nrFreeVariables);
-}
-
-inline const Vector<DagNode*>*
-VariantSearch::getNextUnifier(int& nrFreeVariables)
-{
-  return context->traceAbort() ? 0 : unifierCollection.getNextSurvivingVariant(nrFreeVariables);
 }
 
 inline RewritingContext*

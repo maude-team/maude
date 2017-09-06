@@ -59,7 +59,7 @@ TrivialRhsAutomaton::recordInfo(StackMachineRhsCompiler& compiler)
 {
   Vector<int> sources(1);
   sources[0] = index;
-  compiler.recordFunctionEval(0, -1, sources, false);
+  compiler.recordFunctionEval(0, -1, sources);
   return true;
 }
 

@@ -50,7 +50,7 @@
 
 VariantFolder::VariantFolder()
 {
-  startedExtractingVariants = false;
+  currentVariantIndex = -1;
 }
 
 VariantFolder::~VariantFolder()
@@ -166,18 +166,15 @@ VariantFolder::insertVariant(const Vector<DagNode*>& variant, int index, int par
 const Vector<DagNode*>* 
 VariantFolder::getNextSurvivingVariant(int& nrFreeVariables)
 {
-  if (startedExtractingVariants)
-    ++nextVariant;
-  else
-    {
-      startedExtractingVariants = true;
-      nextVariant = mostGeneralSoFar.begin();
-    }
-
+  //
+  //	We allow variants to be extracted, even though we may not be finished inserting new variants.
+  //	This means that some of the variant we return may later be evicted by a subsequent insert().
+  //
+  RetainedVariantMap::const_iterator nextVariant = mostGeneralSoFar.upper_bound(currentVariantIndex);
   if (nextVariant == mostGeneralSoFar.end())
-    return 0;
+    return 0;  // no variants available so change nothing
 
-  //cout << "Internal variant number = " << nextVariant->first << " parent = " << nextVariant->second->parentIndex << endl;
+  currentVariantIndex = nextVariant->first;
   nrFreeVariables = nextVariant->second->nrFreeVariables;
   return &(nextVariant->second->variant);
 }
@@ -185,6 +182,11 @@ VariantFolder::getNextSurvivingVariant(int& nrFreeVariables)
 bool
 VariantFolder::subsumes(const RetainedVariant* retainedVariant, const Vector<DagNode*>& variant)
 {
+  int nrDagsToCheck = variant.size();
+  int nrDagsInRetainedVariant = retainedVariant->matchingAutomata.size();
+  if (nrDagsToCheck != nrDagsInRetainedVariant)
+    return false;  // different sized variants are trivially incomparable
+
   MemoryCell::okToCollectGarbage();  // otherwise we have huge accumulation of junk from matching
   //
   //	We check if retained variant is at least as general as a new variant.
@@ -193,11 +195,9 @@ VariantFolder::subsumes(const RetainedVariant* retainedVariant, const Vector<Dag
   if (nrVariablesToUse == 0)
     nrVariablesToUse = 1;  // substitutions always expect to have at least one variable
   RewritingContext matcher(nrVariablesToUse);
+  matcher.clear(nrVariablesToUse);
   SubproblemAccumulator subproblems;
 
-  matcher.clear(nrVariablesToUse);
-
-  int nrDagsToCheck = variant.size();
   for (int i = nrDagsToCheck - 1; i >= 0; --i)
     {
       Subproblem* subproblem;
@@ -250,10 +250,16 @@ VariantFolder::RetainedVariant::RetainedVariant(const Vector<DagNode*> original)
 
   NatSet boundUniquely;
   bool subproblemLikely;
-
+  //
+  //	Variant dags are compiled and matched in reverse order because the term part of the variant
+  //	will be at the end, and it is most likely to cause early match failure.
+  //
   for (int i = nrDags - 1; i >= 0; --i)
     {
       Term* t = terms[i];
+      //
+      //	Accumuate the context variables for this term.
+      //
       for (int j = 0; j < nrDags; ++j)
 	{
 	  if (j != i)
@@ -263,7 +269,6 @@ VariantFolder::RetainedVariant::RetainedVariant(const Vector<DagNode*> original)
       t->insertAbstractionVariables(variableInfo);
       
       DebugAdvisory("Compiling " << t);
-
       matchingAutomata[i] = t->compileLhs(false, variableInfo, boundUniquely, subproblemLikely);
       //matchingAutomata[i]->dump(cerr, variableInfo);
     }

@@ -64,7 +64,7 @@ bool
 FreeRhsAutomaton::recordInfo(StackMachineRhsCompiler& compiler)
 {
   FOR_EACH_CONST(i, Vector<Instruction>, instructions)
-    compiler.recordFunctionEval(i->symbol, i->destination, i->sources, true);
+    compiler.recordFunctionEval(i->symbol, i->destination, i->sources);
   return true;
 }
 

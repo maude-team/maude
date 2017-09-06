@@ -1,5 +1,12 @@
-Overview of Changes in Maude 2.7 (alpha100a)
-============================================
+Overview of Changes in Maude 2.7 (alpha101)
+===========================================
+* fixed bug with debug text being output during rewriting
+* MVM now supports _==_ and _=/=_
+* incementalized (up to layer level) variant narrowing and unification
+* --always-advise flag
+
+Overview of Changes in alpha100a
+================================
 * dlmalloc removed (already disabled on most platforms)
 * MVM now supports non-linear variables
 * fixed bug with debug text being output during variant narrowing

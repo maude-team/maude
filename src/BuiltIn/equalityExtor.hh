@@ -2,7 +2,7 @@
 
     This file is part of the Maude 2 interpreter.
 
-    Copyright 1997-2003 SRI International, Menlo Park, CA 94025, USA.
+    Copyright 2014 SRI International, Menlo Park, CA 94025, USA.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,23 +21,29 @@
 */
 
 //
-//      Class for set of pointers to terms.
+//      Stack machine non-final extor for equality symbols.
 //
-#ifndef _termSet_hh_
-#define _termSet_hh_
-#include "pointerSet.hh"
+#ifndef _equalityExtor_hh_
+#define _equalityExtor_hh_
+#include "nonFinalExtor.hh"
 
-class TermSet : private PointerSet
+class EqualityExtor : public NonFinalExtor
 {
+  NO_COPYING(EqualityExtor);
+
 public:
-  int insert(Term* t);
-  int term2Index(Term* t) const;  // returns NULL if t not in set or index otherwise
-  using PointerSet::cardinality;
-  using PointerSet::makeEmpty;
+  EqualityExtor(EqualitySymbol* symbol,  int argIndex0, int argIndex1, int destinationIndex, Instruction* nextInstruction);
+
+  void execute(StackMachine* machine) const;
+
+#ifdef DUMP
+  //void dump(ostream& s, int indentLevel);
+#endif
 
 private:
-  unsigned int hash(void* pointer) const;
-  bool isEqual(void* pointer1, void* pointer2) const;
+  EqualitySymbol* const symbol;
+  const SlotIndex argIndex0;
+  const SlotIndex argIndex1;
 };
 
 #endif

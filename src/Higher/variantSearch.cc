@@ -58,7 +58,8 @@
 VariantSearch::VariantSearch(RewritingContext* context,
 			     const Vector<DagNode*>& blockerDags,
 			     FreshVariableGenerator* freshVariableGenerator,
-			     bool unificationMode)
+			     bool unificationMode,
+			     bool irredundantMode)
   : context(context),
     blockerDags(blockerDags),  // shallow copy
     freshVariableGenerator(freshVariableGenerator),
@@ -73,7 +74,7 @@ VariantSearch::VariantSearch(RewritingContext* context,
   //
   //	Check that variable names don't clash with the range we're going to use for fresh variables.
   //
-  int nrVariantVariables = variableInfo.getNrVariables();
+  nrVariantVariables = variableInfo.getNrVariables();
   for (int i = 0; i < nrVariantVariables; ++i)
     {
       VariableDagNode* v = variableInfo.index2Variable(i);
@@ -125,7 +126,8 @@ VariantSearch::VariantSearch(RewritingContext* context,
   if (newDag == 0)
     newDag = context->root();
   //
-  //	Now we can safely reduce newDag - we have replace all the variables are we no longer care about in place rewriting on ground terms.
+  //	Now we can safely reduce newDag - we have replaced all the variables and
+  //	we no longer care about in place rewriting on ground terms.
   //
   RewritingContext* redContext = context->makeSubcontext(newDag);
   redContext->reduce();
@@ -133,6 +135,9 @@ VariantSearch::VariantSearch(RewritingContext* context,
   DagNode* r = redContext->root();
   if (unificationMode)
     {
+      //
+      //	Check for the identity unification problem, t =? t
+      //
       DagArgumentIterator a(r);
       Assert(a.valid(), "bad 1st argument in unification mode");
       DagNode* lhs = a.argument();
@@ -140,7 +145,7 @@ VariantSearch::VariantSearch(RewritingContext* context,
       Assert(a.valid(), "bad 2nd argument in unification mode");
       if (lhs->equal(a.argument()))
 	{
-	  unifierCollection.insertVariant(protectedVariant, 0, NONE);
+	  variantCollection.insertVariant(protectedVariant, 0, NONE);
 	  protectedVariant.clear();  // remove GC protection
 	  context->addInCount(*redContext);
 	  //context->incrementEqCount();  // notional equational rewrite to true
@@ -158,37 +163,22 @@ VariantSearch::VariantSearch(RewritingContext* context,
   protectedVariant.clear();  // remove GC protection
   frontier.append(0);
   currentIndex = 1;
-  unifierIndex = 0;  // HACK - need a unique index for each unifier
   //
   //	Breadthfirst search for new variants. Variants indexed by the frontier can disappear if they become covered by
   //	later variants, or were descendents of variants that became covered.
   //
-  bool odd = true;
-  for (;;)
+  odd = true;
+  if (irredundantMode)
     {
-      FOR_EACH_CONST(i, VariantIndexVec, frontier)
-	{
-	  int index = *i;
-	  const Vector<DagNode*>* variant = variantCollection.getVariant(index);
-	  if (variant != 0)
-	    {
-	      expand(*variant, index, odd);
-	      if (context->traceAbort())
-		return;
-	    }
-	  //
-	  // HACK to get some unifiers
-	  //
-	  //if (unifierIndex >= 3)
-	  //  return;
-	  
-	}
-      if (newFrontier.empty())
-	return;
-
-      frontier.swap(newFrontier);
-      newFrontier.clear();
-      odd = !odd;
+      //
+      //	Since later variants can cover earlier variants on different branches (not ancestors)
+      //	if we want to avoid returning redundant variants, we have to generate them all up front.
+      //	This is less useful for variant unification, because even without redundant variants
+      //	we still expect redundant unifiers.
+      //
+      do
+	expandLayer();
+      while (!(frontier.empty()));
     }
 }
 
@@ -212,10 +202,83 @@ VariantSearch::markReachableNodes()
     (*i)->mark();
 }
 
-void
-VariantSearch::expand(const Vector<DagNode*>& variant, int index, bool odd)
+const Vector<DagNode*>*
+VariantSearch::getNextVariant(int& nrFreeVariables)
 {
-  //cout << "expanding internal " << index << endl;
+  if (context->traceAbort())
+    return 0;
+
+  const Vector<DagNode*>* v = variantCollection.getNextSurvivingVariant(nrFreeVariables);
+  if (v == 0 && !(frontier.empty()))
+    {
+      //
+      //	Must be in incremental mode - try expanding current frontier.
+      //
+      expandLayer();
+      v = variantCollection.getNextSurvivingVariant(nrFreeVariables);
+    }
+  return v;
+}
+
+const Vector<DagNode*>*
+VariantSearch::getNextUnifier(int& nrFreeVariables)
+{
+  while (!(context->traceAbort()))
+    {
+      const Vector<DagNode*>* v = variantCollection.getNextSurvivingVariant(nrFreeVariables);
+      if (v == 0)
+	{
+	  if (frontier.empty())
+	    break;
+	  //
+	  //	Must be in incremental mode - try exanding current frontier.
+	  //
+	  expandLayer();
+	  v = variantCollection.getNextSurvivingVariant(nrFreeVariables);
+	  if (v == 0)
+	    break;  // no new variants immediately following a expandLayer() means we're done
+	}
+      int variantSize = v->size();
+      if (variantSize == nrVariantVariables)
+	return v;
+      Assert(variantSize == nrVariantVariables + 1, "non unifier variant should have an extra dag");
+    }
+  return 0;
+}
+
+void
+VariantSearch::expandLayer()
+{
+  //
+  //	Look at each variant in the current frontier, and if it
+  //	still exists, expand it by one step variant narrowing.
+  //
+  FOR_EACH_CONST(i, VariantIndexVec, frontier)
+    {
+      int index = *i;
+      const Vector<DagNode*>* variant = variantCollection.getVariant(index);
+      if (variant != 0)
+	{
+	  expandVariant(*variant, index);
+	  if (context->traceAbort())
+	    {
+	      frontier.clear();
+	      newFrontier.clear();
+	      return;
+	    }
+	}
+    }
+  frontier.swap(newFrontier);
+  newFrontier.clear();
+  odd = !odd;
+}
+
+void
+VariantSearch::expandVariant(const Vector<DagNode*>& variant, int index)
+{
+  //
+  //	The last member of variant is the variant term and not part of the variant substitution.
+  //
   int substSize = variant.size() - 1;
   RewritingContext* newContext = context->makeSubcontext(variant[substSize]);
   //
@@ -237,59 +300,49 @@ VariantSearch::expand(const Vector<DagNode*>& variant, int index, bool odd)
   Vector<DagNode*> newVariantSubstitution;
   while (vnss.findNextVariant(variantTerm, newVariantSubstitution))
     {
-      protectedVariant = newVariantSubstitution;  // deep copy to protect bindings from GC
+      //
+      //	Deep copy to protect variant substitution from GC during the folding and reduction.
+      //
+      protectedVariant = newVariantSubstitution;
+      //
+      //	Allocate a unique index for the new variant.
+      //
+      int newIndex = currentIndex;
+      ++currentIndex;
       //
       //	Check to see if we generated a unifier.
       //
       if (variantTerm == 0)
 	{
-	  //cout << "this is new-unifier " << unifierIndex << " by expanding old-variant " << index << endl;  // HACK
 	  Assert(unificationMode, "null variant term and we're not in unification mode");
-	  unifierCollection.insertVariant(protectedVariant, unifierIndex, NONE);
-	  ++unifierIndex; // HACK
-	  protectedVariant.clear();  // remove GC protection
-	  continue;
+	  variantCollection.insertVariant(protectedVariant, newIndex, index);
 	}
-      //
-      //	Reduce dag part of new variant.
-      //
-      RewritingContext* redContext = context->makeSubcontext(variantTerm);
-      redContext->reduce();
-      protectedVariant.append(redContext->root());
-      //
-      //	Give new variant a unique index.
-      //
-      int newIndex = currentIndex;
-      ++currentIndex;
-      //cout << "this is new-variant " << newIndex << " by expanding old-variant " << index << endl;  // HACK
-      //
-      //	Insert new variant in to collection and if it sticks, insert its index into the new frontier.
-      //
-      //cout << "inserting internal " << newIndex << endl;
-      if (variantCollection.insertVariant(protectedVariant, newIndex, index))
+      else
 	{
-#if 0
-	  cout << "added variant\n";
-	  DagNode* d = protectedVariant[substSize];
-	  cout << d->getSort() << ": " << d << '\n';
-	  for (int i = 0; i < substSize; ++i)
-	    {
-	      DagNode* v = variableInfo.index2Variable(i);
-	      cout << v << " --> " << protectedVariant[i] << endl;
-	    }
-	  cout << endl;
-#endif
-	  newFrontier.append(newIndex);
+	  //
+	  //	Reduce dag part of new variant, and append it the the substitution.
+	  //
+	  RewritingContext* redContext = context->makeSubcontext(variantTerm);
+	  redContext->reduce();
+	  protectedVariant.append(redContext->root());
+	  //
+	  //	Insert new variant in to collection and if it sticks, insert its index into the new frontier.
+	  //
+	  if (variantCollection.insertVariant(protectedVariant, newIndex, index))
+	    newFrontier.append(newIndex);
+	  //
+	  //	Move rewrite count from reduction context to original context.
+	  //
+	  context->addInCount(*redContext);
+	  delete redContext;
 	}
-      protectedVariant.clear();  // remove GC protection
       //
-      //	Move rewrite count from reduction to original context.
+      //	Removed protection from variant substitution.
       //
-      context->addInCount(*redContext);
-      delete redContext;
+      protectedVariant.clear();
     }
   //
-  //	Move rewrite count from narrowing to original context.
+  //	Move rewrite count from narrowing context to original context.
   //
   context->addInCount(*newContext);
   delete newContext;

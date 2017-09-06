@@ -1,3 +1,21 @@
+2014-02-18  Steven Eker  <eker@ape.csl.sri.com>
+
+	* symbol.hh (MemoTable): deleted inline stubs for
+	generateFinalInstruction() and generateInstruction()
+
+	* symbol.cc (generateFinalInstruction, generateInstruction)
+	(stackMachinePostProcess): added stubs
+
+	* symbol.hh (MemoTable): added decl for stackMachinePostProcess()
+
+2014-02-14  Steven Eker  <eker@ape.csl.sri.com>
+
+	* term.hh (recordSubterms): added
+	(LineNumber): added decls for term2InstructionSequence(),
+	recordSubterms2()
+
+===================================Maude101===========================================
+
 2014-02-06  Steven Eker  <eker@ape.csl.sri.com>
 
 	* nonFinalExtor.cc (setActiveSlots): fix signed vs unsigned

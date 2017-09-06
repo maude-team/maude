@@ -31,7 +31,7 @@
 class StackMachineRhsCompiler
 {
 public:
-  void recordFunctionEval(Symbol* symbol, int destination, const Vector<int>& argumentSlots, bool needContiguous);
+  void recordFunctionEval(Symbol* symbol, int destination, const Vector<int>& argumentSlots);
   Instruction* compileInstructionSequence();
 
   void dump(ostream& s, const VariableInfo& variableInfo, int indentLevel = 0);
@@ -39,8 +39,6 @@ public:
 private:
   struct FunctionEval
   {
-    void addCopy(int source, int destination);
-
     Symbol* symbol;
     int destination;
     Vector<int> argumentSlots;

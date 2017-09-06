@@ -135,7 +135,7 @@ int yylex(YYSTYPE* lvalp);
 %token KW_DO KW_CLEAR
 %token KW_PROTECT KW_EXTEND KW_INCLUDE KW_EXCLUDE
 %token KW_CONCEAL KW_REVEAL KW_COMPILE KW_COUNT
-%token KW_DEBUG KW_RESUME KW_ABORT KW_STEP KW_WHERE KW_CREDUCE KW_SREDUCE KW_DUMP KW_PROFILE
+%token KW_DEBUG KW_IRREDUNDANT KW_RESUME KW_ABORT KW_STEP KW_WHERE KW_CREDUCE KW_SREDUCE KW_DUMP KW_PROFILE
 %token KW_NUMBER KW_RAT KW_COLOR
 %token <yyInt64> SIMPLE_NUMBER
 %token KW_PWD KW_CD KW_PUSHD KW_POPD KW_LS KW_LOAD KW_QUIT KW_EOF
@@ -208,7 +208,7 @@ int yylex(YYSTYPE* lvalp);
 /*
  *	Nonterminals that return bool.
  */
-%type <yyBool> polarity select match optDebug conceal exclude arrow
+%type <yyBool> polarity select match optDebug optIrredundant conceal exclude arrow
 /*
  *	Nonterminals that return int.
  */
