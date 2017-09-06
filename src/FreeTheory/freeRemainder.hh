@@ -27,6 +27,8 @@
 #ifndef _freeRemainder_hh_
 #define _freeRemainder_hh_
 #include "freeLhsStructs.hh"
+#include "rewritingContext.hh"
+#include "equation.hh"
 
 class FreeRemainder : private FreeLhsStructs
 {
@@ -53,7 +55,12 @@ public:
 			Vector<DagNode**>& stack) const;
 
   bool isOwise() const;
-
+  //
+  //	Stuff for stack machine execution
+  //
+  bool fastCheckAndBind(DagNode** binding, Vector<DagNode**>& stack) const;
+  Instruction* getFirstInstruction() const;
+  
 #ifdef DUMP
   void dump(ostream& s, int indentLevel = 0);
 #endif
@@ -81,6 +88,8 @@ private:
   Vector<BoundVariable> boundVariables;
   Vector<GroundAlien> groundAliens;
   Vector<NonGroundAlien> nonGroundAliens;
+
+  Instruction* firstInstruction;
 };
 
 inline bool 
@@ -130,4 +139,26 @@ FreeRemainder::isOwise() const
   return equation->isOwise();
 }
 
+inline bool
+FreeRemainder::fastCheckAndBind(DagNode** binding, Vector<DagNode**>& stack) const
+{
+  Vector<DagNode**>::const_iterator stackBase = stack.begin();
+  FOR_EACH_CONST(i, Vector<FreeVariable>, freeVariables)
+    {
+      DagNode* d = stackBase[i->position][i->argIndex];
+      Assert(d->getSortIndex() != Sort::SORT_UNKNOWN, "missing sort information");
+      if (d->leq(i->sort))
+	binding[i->varIndex] = d;
+      else
+	return false;
+    }
+  return true;
+}
+
+inline Instruction*
+FreeRemainder::getFirstInstruction() const
+{
+  return firstInstruction;
+}
+ 
 #endif

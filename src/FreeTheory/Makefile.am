@@ -21,7 +21,10 @@ libfreeTheory_a_SOURCES = \
 	freeNet.cc \
 	freePreNet.cc \
 	freeRemainder.cc \
-	freePositionTable.cc
+	freePositionTable.cc \
+	freeBinaryCtor.cc \
+	freeBinaryCtorFinal.cc \
+	freeBinaryFastExtor.cc
 
 EXTRA_DIST = \
 	freeNetExec.cc \
@@ -49,4 +52,8 @@ noinst_HEADERS = \
 	freeTerm.hh \
 	freeTernarySymbol.hh \
 	freeTheory.hh \
-	freeUnarySymbol.hh
+	freeUnarySymbol.hh \
+	freeBinaryCtor.hh \
+	freeBinaryCtorFinal.hh \
+	freeBinaryFastExtor.hh \
+	freeNetExec.hh

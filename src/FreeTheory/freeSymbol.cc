@@ -105,8 +105,14 @@ FreeSymbol::compileEquations()
       Term* p = e->getLhs();
       if (FreeTerm* f = dynamic_cast<FreeTerm*>(p))
 	{
-	  f->setSlotIndex(0);
 	  e->compile(false);
+	  //
+	  //	Even though we pass compileLhs as false, if the equation has the variant property it will
+	  //	get compiled anyway and we need to reset the slot indices to make it safe to use them
+	  //	in constructing a discrimination net.
+	  //
+	  f->resetSlotIndices();
+	  f->setSlotIndex(0);
 	}
       else
 	e->compile(true);  // foreign equation so compile lhs

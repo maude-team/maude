@@ -1,3 +1,17 @@
+Overview of Changes in Maude alpha96c
+=====================================
+* added unification support for CU, U, Ul and Ur theories
+* fixed two related bugs where unifying a variable against a variable
+  generating an implicit renaming caused an in-theory occurs check issue
+  leading to non-termination
+* fixed a bug in the AC/ACU unification code where binding a variable to an alien
+  subterm caused a variety effects including missing unifiers and nontermination
+* performance fixes for AC/ACU unification where subterms cancel
+* fixed a GC bug in AC/ACU unification
+* fixed a bug where printing the empty QID in loop mode caused an out-of-bounds
+  memory read
+* fixed a bug in the free theory semi-compilation of variant equation left hand sides
+
 Overview of Changes in Maude alpha96b
 =====================================
 * fixed bug in variant narrowing of ground terms
@@ -55,6 +69,8 @@ patterns
 * fixed a bug in the module system where errors in modules constructed
 for module expressions could cause a crash
 * memo attribute reimplemented using hash consing
+* a memory corruption bug in the compilation of variant equations whose
+left hand side is headed by a free function symbol
 
 Overview of Changes in Maude alpha94a
 =====================================

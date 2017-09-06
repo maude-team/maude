@@ -1,3 +1,15 @@
+2013-03-12  Steven Eker  <eker@ape.csl.sri.com>
+
+	* tests/Misc/unification (MAUDE_LIB): created
+
+	* tests/Misc/CU_Unification.maude: created
+
+2013-03-11  Steven Eker  <eker@ape.csl.sri.com>
+
+	* tests/ResolvedBugs/unificationMar2013 (MAUDE_LIB): created
+
+	* tests/ResolvedBugs/unificationMar2013.maude: created
+
 2012-08-06  Steven Eker  <eker@ape.csl.sri.com>
 
 	* src/3rdParty/ropeimpl_UGLY_HACK.h: hacked up verison of Mac ropeimpl.h

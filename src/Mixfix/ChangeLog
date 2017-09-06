@@ -1,3 +1,8 @@
+2013-03-06  Steven Eker  <eker@ape.csl.sri.com>
+
+	* loopMode.cc (printBubble): fixed a bug where printing the empty
+	token caused an out-of-bounds memory reference
+
 2012-11-01  Steven Eker  <eker@ape.csl.sri.com>
 
 	* userLevelRewritingContext.cc (tracePreEqRewrite): added call to flush()

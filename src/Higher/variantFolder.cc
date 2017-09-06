@@ -73,6 +73,7 @@ VariantFolder::markReachableNodes()
 bool
 VariantFolder::insertVariant(const Vector<DagNode*>& variant, int index, int parentIndex)
 {
+  //cerr << " i" << index << "p" << parentIndex;
   //
   //	First we check if it is subsumed by one of the existing variants.
   //
@@ -120,7 +121,14 @@ VariantFolder::insertVariant(const Vector<DagNode*>& variant, int index, int par
 	      //	Our parent was subsumed so we are also subsumed.
 	      //
 	      DebugAdvisory("new variant evicted descendent of an older variant " << i->first);
-	      //cout << "!!!!!!!" << index << " evicted " << i->first << " via parent " << potentialVictim->parentIndex << endl;
+	      /*
+	      cerr << "!!!!!!! new variant " << index << endl;
+	      FOR_EACH_CONST(k, Vector<DagNode*>, variant)
+		cerr << *k << endl;
+	      cerr << " evicted " << i->first << endl;
+	      potentialVictim->dump();
+	      cerr << " via parent " << potentialVictim->parentIndex << endl;
+	      */
 	      existingVariantsSubsumed.insert(i->first);
 	      delete potentialVictim;
 	      mostGeneralSoFar.erase(i);
@@ -131,7 +139,13 @@ VariantFolder::insertVariant(const Vector<DagNode*>& variant, int index, int par
 	      //	Direct subsumption by new variant.
 	      //
 	      DebugAdvisory("new variant evicted an older variant " << i->first);
-	      //cout << "!!!!!!!" << index << " evicted " << i->first << endl;
+	      /*
+	      cerr << "!!!!!!! new variant " << index << endl;
+	      FOR_EACH_CONST(k, Vector<DagNode*>, variant)
+		cerr << *k << endl;
+	      cerr << " evicted " << i->first << endl;
+	      potentialVictim->dump();
+	      */
 	      existingVariantsSubsumed.insert(i->first);
 	      delete potentialVictim;
 	      mostGeneralSoFar.erase(i);
@@ -143,6 +157,7 @@ VariantFolder::insertVariant(const Vector<DagNode*>& variant, int index, int par
   //
   //	Add to the mostGeneralSoFar collection of variants.
   //
+  //cerr << "*";
   newVariant->parentIndex = parentIndex;
   mostGeneralSoFar.insert(RetainedVariantMap::value_type(index, newVariant));
   return true;
@@ -263,5 +278,15 @@ VariantFolder::RetainedVariant::~RetainedVariant()
     {
       delete matchingAutomata[i];
       terms[i]->deepSelfDestruct();
+    }
+}
+
+void
+VariantFolder::RetainedVariant::dump()
+{
+  int nrTerms = terms.size();
+  for (int i = 0; i < nrTerms; ++i)
+    {
+      cerr << terms[i] << endl;
     }
 }

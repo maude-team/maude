@@ -176,9 +176,16 @@ VariantSearch::VariantSearch(RewritingContext* context,
 	      if (context->traceAbort())
 		return;
 	    }
+	  //
+	  // HACK to get some unifiers
+	  //
+	  //if (unifierIndex >= 3)
+	  //  return;
+	  
 	}
       if (newFrontier.empty())
 	return;
+
       frontier.swap(newFrontier);
       newFrontier.clear();
       odd = !odd;
@@ -236,6 +243,7 @@ VariantSearch::expand(const Vector<DagNode*>& variant, int index, bool odd)
       //
       if (variantTerm == 0)
 	{
+	  //cout << "this is new-unifier " << unifierIndex << " by expanding old-variant " << index << endl;  // HACK
 	  Assert(unificationMode, "null variant term and we're not in unification mode");
 	  unifierCollection.insertVariant(protectedVariant, unifierIndex, NONE);
 	  ++unifierIndex; // HACK
@@ -253,6 +261,7 @@ VariantSearch::expand(const Vector<DagNode*>& variant, int index, bool odd)
       //
       int newIndex = currentIndex;
       ++currentIndex;
+      //cout << "this is new-variant " << newIndex << " by expanding old-variant " << index << endl;  // HACK
       //
       //	Insert new variant in to collection and if it sticks, insert its index into the new frontier.
       //

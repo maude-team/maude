@@ -526,7 +526,7 @@ ACU_DagNode::computeSolvedForm2(DagNode* rhs, UnificationContext& solution, Pend
       //
       //	We now treat unification problems f(...) =? X where X's representative
       //	variable is unbound as full ACU unification problems now that the variable
-      //	theory no longerresolves such problems and we require
+      //	theory no longer resolves such problems and we require
       //	purification.
       //
       pending.push(symbol(), this, rhs);

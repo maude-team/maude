@@ -256,8 +256,8 @@ UnificationProblem::findNextUnifier()
 	  }
 #endif
 
-	  if (!extractUnifier())
-	    goto nextUnsorted;
+	  //if (!extractUnifier())
+	  //   goto nextUnsorted;
 	  //freshVariableGenerator->reset();
 	  findOrderSortedUnifiers();
 	  if (orderSortedUnifiers == 0)
@@ -297,7 +297,7 @@ UnificationProblem::findNextUnifier()
       //	Replace each variable symbol in a free variable with the
       //	variable symbol corresponding to its newly calculated sort.
       //
-      /* BREAKING HERE - index is too big */
+      Assert(index < component->nrSorts(), "bad sort index " << index << " computed for free variable" << variable);
       variable->replaceSymbol(freshVariableGenerator->getBaseVariableSymbol(component->sort(index)));
     }
   return true;
@@ -322,6 +322,7 @@ UnificationProblem::findOrderSortedUnifiers()
   int nrOriginalVariables = variableInfo.getNrRealVariables();
   for (int i = 0; i < nrActualVariables; ++i)
     {
+      //cout << "variable with index " << i << endl;
       if (sortedSolution->value(i) == 0)
 	{
 	  DebugAdvisory("allocated BDD variables starting at " << nextBddVariable << " for variable with slot " << i);
@@ -332,10 +333,12 @@ UnificationProblem::findOrderSortedUnifiers()
 	    unsortedSolution->getFreshVariableSort(i);
 	  int nrBddVariables = sortBdds->getNrVariables(sort->component()->getIndexWithinModule());
 	  nextBddVariable += nrBddVariables;
+	  //cout << "allocated bdds" << endl;
 	}
       else
 	DebugAdvisory("variable with index " << i << " bound to " << sortedSolution->value(i));
     }
+  //cout << "allocated " << nextBddVariable << " BDD variables" << endl;
   //
   //	Make sure BDD package has enough variables allocated.
   //
@@ -465,6 +468,7 @@ UnificationProblem::findOrderSortedUnifiers()
     }
 }
 
+/*
 bool
 UnificationProblem::extractUnifier()
 {
@@ -525,3 +529,5 @@ UnificationProblem::explore(int index)
   done.insert(index);
   return true; 
 }
+*/
+

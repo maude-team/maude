@@ -77,13 +77,12 @@ public:
   void setVisitedFlag(bool state);
   void findActiveSlots(NatSet& slots);
   FreeRemainder* compileRemainder(Equation* equation, const Vector<int>& slotTranslation);
-  //#ifdef COMPILER
   bool  scanFreeSkeleton(const NatSet& usedVariables,
 			 Vector<int>& path,
 			 FreePositionTable& positions,
 			 NatSet& boundVariables,
 			 Vector<FreeSubterm>& subterms);
-  //#endif
+  void resetSlotIndices();
 
 private:
   FreeTerm(const FreeTerm& original, FreeSymbol* symbol, SymbolMap* translator);

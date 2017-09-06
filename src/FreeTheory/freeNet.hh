@@ -52,11 +52,15 @@ public:
 		       const PatternSet& patternsUsed,
 		       const Vector<int>& slotTranslation);
   //
-  //	Function to use a FreeNet.
+  //	Functions to use a FreeNet.
   //
   bool applyReplace(DagNode* subject, RewritingContext& context);
   bool applyReplaceFast(DagNode* subject, RewritingContext& context);
   bool applyReplaceNoOwise(DagNode* subject, RewritingContext& context);
+  //
+  //	For stack machine execution.
+  //
+  long findRemainderListIndex(DagNode** argumentList);
 
 #ifdef DUMP
   void dump(ostream& s, int indentLevel = 0);
@@ -110,6 +114,8 @@ private:
   Vector<Vector<FreeRemainder*> > fastApplicable;
   Vector<FreeRemainder*> remainders;
   Vector<PatternSet> applicable;
+
+  friend class FreeBinaryFastExtor;
 };
 
 inline bool

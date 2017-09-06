@@ -480,3 +480,15 @@ FreeTerm::compileRhs3(FreeRhsAutomaton* automaton,
   automaton->addFree(s, destination, sources);
   return destination;
 }
+
+void
+FreeTerm::resetSlotIndices()
+{
+  slotIndex = -1;
+  int nrArgs = argArray.length();
+  for (int i = 0; i < nrArgs; i++)
+    {
+      if (FreeTerm* f = dynamic_cast<FreeTerm*>(argArray[i]))
+	f->resetSlotIndices();
+    }
+}
