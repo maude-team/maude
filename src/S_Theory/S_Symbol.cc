@@ -392,6 +392,12 @@ S_Symbol::computeGeneralizedSort(const SortBdds& sortBdds,
     }
 }
 
+bool
+S_Symbol::isStable() const
+{
+  return true;
+}
+
 //
 //	Hash cons code.
 //

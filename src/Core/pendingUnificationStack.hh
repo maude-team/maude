@@ -32,7 +32,7 @@
 #define _pendingUnificationStack_hh_
 #include "substitution.hh"
 
-class PendingUnificationStack
+class PendingUnificationStack : private SimpleRootContainer
 {
   NO_COPYING(PendingUnificationStack);
 
@@ -43,6 +43,8 @@ public:
   ~PendingUnificationStack();
 
   void push(Symbol* controllingSymbol, DagNode* lhs, DagNode* rhs);
+  bool resolveTheoryClash(DagNode* lhs, DagNode* rhs);
+
   Marker checkPoint() const;
   void restore(Marker mark);
 
@@ -72,6 +74,7 @@ private:
     UnificationSubproblem* subproblem;
   };
 
+  void markReachableNodes();
   bool makeNewSubproblem();
   void killTopSubproblem();
 

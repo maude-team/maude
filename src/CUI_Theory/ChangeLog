@@ -1,3 +1,8 @@
+2010-06-30  Steven Eker  <eker@rho>
+
+	* CUI_DagNode.cc (CUI_DagNode::computeSolvedForm2): use
+	resolveTheoryClash()
+
 2009-12-22  Steven Eker  <eker@goo.csl.sri.com>
 
 	* CUI_DagNode.cc (stackArguments): fixed nasty bug where we were

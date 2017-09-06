@@ -104,6 +104,12 @@ VariableSymbol::computeGeneralizedSort(const SortBdds& sortBdds,
   sortBdds.makeVariableVector(firstVariable, nrVariables, generalizedSort);
 }
 
+bool
+VariableSymbol::isStable() const
+{
+  return false;
+}
+
 //
 //	Hash cons code.
 //

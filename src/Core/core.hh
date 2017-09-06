@@ -82,5 +82,6 @@ class ProtectedDagNodeSet;
 class PendingUnificationStack;
 class Environment;
 class HashConsSet;
+class UnificationSubproblemDisjunction;
 
 #endif

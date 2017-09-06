@@ -1,3 +1,18 @@
+2010-06-30  Steven Eker  <eker@rho>
+
+	* S_DagNode.cc (S_DagNode::computeSolvedForm2): use
+	resolveTheoryClash() 
+	(S_DagNode::computeSolvedForm2): don't insist that smaller
+	iteration side has a variable argument before peeling
+
+2010-06-04  Steven Eker  <eker@rho>
+
+	* S_Symbol.hh (class S_Symbol): added decl for isStable()
+
+	* S_Symbol.cc (S_Symbol::isStable): added
+
+===================================Maude94===========================================
+
 2009-12-22  Steven Eker  <eker@goo.csl.sri.com>
 
 	* S_Symbol.cc (makeCanonical): fix bug where we were not copying

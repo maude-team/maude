@@ -1,3 +1,27 @@
+2010-05-21  Steven Eker  <eker@rho>
+
+	* rewriteConditionState.hh (class RewriteConditionState): use
+	StateTransitionGraph in place of StateTransitionGraph3
+
+	* stateTransitionGraph3.cc: deleted
+
+	* stateTransitionGraph3.hh: deleted
+
+	* rewriteSequenceSearch.cc
+	(RewriteSequenceSearch::RewriteSequenceSearch): removed mention of
+	StateTransitionGraph3
+
+	* rewriteSequenceSearch.hh (class RewriteSequenceSearch): removed
+	mention of StateTransitionGraph3
+
+	* modelCheckerSymbol.cc: use StateTransitionGraph in place of
+	StateTransistionGraph3 throughout
+
+	* modelCheckerSymbol.hh (class ModelCheckerSymbol): use
+	StateTransitionGraph in place of StateTransistionGraph3
+
+===================================Maude94===========================================
+
 2010-04-01  Steven Eker  <eker@rho>
 
 	* unificationProblem.cc (UnificationProblem::markReachableNodes):

@@ -172,7 +172,7 @@ ModelCheckerSymbol::reset()
 }
 
 void
-ModelCheckerSymbol::dump(const StateTransitionGraph3& states, const list<int>& path)
+ModelCheckerSymbol::dump(const StateTransitionGraph& states, const list<int>& path)
 {
   cout << "begin{StateList}\n";
   for (list<int>::const_iterator i = path.begin(); i != path.end(); i++)
@@ -183,13 +183,13 @@ ModelCheckerSymbol::dump(const StateTransitionGraph3& states, const list<int>& p
 }
 
 DagNode*
-ModelCheckerSymbol::makeTransition(const StateTransitionGraph3& states, int stateNr, int targetNr)
+ModelCheckerSymbol::makeTransition(const StateTransitionGraph& states, int stateNr, int targetNr)
 {
   static Vector<DagNode*> args(2);
 
   args[0] = states.getStateDag(stateNr);
-  const StateTransitionGraph3::ArcMap& fwdArcs = states.getStateFwdArcs(stateNr);
-  StateTransitionGraph3::ArcMap::const_iterator i = fwdArcs.find(targetNr);
+  const StateTransitionGraph::ArcMap& fwdArcs = states.getStateFwdArcs(stateNr);
+  StateTransitionGraph::ArcMap::const_iterator i = fwdArcs.find(targetNr);
   if (i == fwdArcs.end())
     args[1] = deadlockSymbol->makeDagNode();
   else
@@ -202,7 +202,7 @@ ModelCheckerSymbol::makeTransition(const StateTransitionGraph3& states, int stat
 }
 
 DagNode*
-ModelCheckerSymbol::makeTransitionList(const StateTransitionGraph3& states,
+ModelCheckerSymbol::makeTransitionList(const StateTransitionGraph& states,
 				       const list<int>& path,
 				       int lastTarget)
 {
@@ -225,7 +225,7 @@ ModelCheckerSymbol::makeTransitionList(const StateTransitionGraph3& states,
 }
 
 DagNode*
-ModelCheckerSymbol::makeCounterexample(const StateTransitionGraph3& states,
+ModelCheckerSymbol::makeCounterexample(const StateTransitionGraph& states,
 				       const ModelChecker2& mc)
 {
   Vector<DagNode*> args(2);
@@ -272,7 +272,7 @@ ModelCheckerSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
   system.parentContext = &context;
   system.trueTerm = trueTerm.getDag();
   RewritingContext* sysContext = context.makeSubcontext(d->getArgument(0));
-  system.systemStates = new StateTransitionGraph3(sysContext);
+  system.systemStates = new StateTransitionGraph(sysContext);
   ModelChecker2 mc(system, formula, top);
   bool result = mc.findCounterexample();
   int nrSystemStates = system.systemStates->getNrStates();
@@ -289,7 +289,7 @@ ModelCheckerSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
   DagNode* resultDag = result ? makeCounterexample(*(system.systemStates), mc)
     : trueTerm.getDag();
   context.addInCount(*sysContext);
-  delete system.systemStates;  // deletes sysContext via ~StateTransitionGraph3()
+  delete system.systemStates;  // deletes sysContext via ~StateTransitionGraph()
   return context.builtInReplace(subject, resultDag);
 }
 

@@ -48,7 +48,8 @@ libcore_a_SOURCES = \
 	sortBdds.cc \
 	unificationContext.cc \
 	protectedDagNodeSet.cc \
-	pendingUnificationStack.cc
+	pendingUnificationStack.cc \
+	unificationSubproblemDisjunction.cc
 
 EXTRA_DIST = \
 	run.cc \
@@ -118,4 +119,5 @@ noinst_HEADERS = \
 	freshVariableGenerator.hh \
 	protectedDagNodeSet.hh \
 	pendingUnificationStack.hh \
-	environment.hh
+	environment.hh \
+	unificationSubproblemDisjunction.hh

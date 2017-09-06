@@ -1,3 +1,16 @@
+2010-06-30  Steven Eker  <eker@rho>
+
+	* freeDagNode.cc (FreeDagNode::computeSolvedForm2): use
+	resolveTheoryClash()
+
+2010-06-04  Steven Eker  <eker@rho>
+
+	* freeSymbol.cc (FreeSymbol::isStable): added
+
+	* freeSymbol.hh (class FreeSymbol): added decl for isStable()
+
+===================================Maude94===========================================
+
 2010-04-16  Steven Eker  <eker@rho>
 
 	* freeLhsCompiler.cc

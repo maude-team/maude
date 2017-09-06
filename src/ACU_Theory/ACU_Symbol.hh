@@ -61,6 +61,7 @@ public:
 			      Vector<Bdd>& generalizedSort);
   UnificationSubproblem* makeUnificationSubproblem();
   int unificationPriority() const;
+  bool canResolveTheoryClash();
   //
   //	Hash cons stuff.
   //

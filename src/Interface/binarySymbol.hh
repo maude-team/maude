@@ -61,7 +61,11 @@ public:
   void reset();
   int computeSortIndex(int index1, int index2);
   int computeMultSortIndex(int index1, int index2, int multiplicity);
-
+  //
+  //	Default definition returns true iff we don't have an identity. This must
+  //	be overridden for any symbol with other behavior.
+  //
+  bool isStable() const;
 
 protected:
   void commutativeSortCompletion();

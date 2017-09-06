@@ -348,6 +348,12 @@ FreeSymbol::computeGeneralizedSort(const SortBdds& sortBdds,
   bdd_freepair(argMap);
 }
 
+bool
+FreeSymbol::isStable() const
+{
+  return true;
+}
+
 //
 //	Hash cons code.
 //

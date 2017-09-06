@@ -149,6 +149,7 @@ parse					return KW_PARSE;
 norm|normalize				return KW_NORMALIZE;
 red|reduce				return KW_REDUCE;
 cred|creduce				return KW_CREDUCE;
+sred|sreduce				return KW_SREDUCE;
 rew|rewrite				return KW_REWRITE;
 erew|erewrite				return KW_EREWRITE;
 frew|frewrite				return KW_FREWRITE;

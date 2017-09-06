@@ -360,7 +360,7 @@ CUI_DagNode::computeSolvedForm2(DagNode* rhs, UnificationContext& solution, Pend
     }
   if (dynamic_cast<VariableDagNode*>(rhs))
     return rhs->computeSolvedForm(this, solution, pending);
-  return false;
+  return pending.resolveTheoryClash(this, rhs);
 }
 
 mpz_class
