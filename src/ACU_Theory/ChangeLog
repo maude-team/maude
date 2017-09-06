@@ -1,3 +1,13 @@
+2016-05-18  Steven Eker  <eker@install.csl.sri.com>
+
+	* ACU_UnificationSubproblem2.cc (addUnification): check for subtermIndex
+	!= NONE
+	(setMultiplicity): check for variable bound to identity; this fixes
+	a bug introduced in Maude108 where classify assumes such things
+	have already canceled
+
+===================================Maude110===========================================
+
 2016-05-17  Steven Eker  <eker@install.csl.sri.com>
 
 	* ACU_Symbol.cc (computeGeneralizedSort2): fixed nasty FMR bug
