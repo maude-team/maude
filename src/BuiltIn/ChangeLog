@@ -1,3 +1,65 @@
+2005-09-08  Steven Eker  <eker@goo.csl.sri.com>
+
+	* matrixOpSymbol.cc (eqRewrite): use GCD where algorithm ==
+	SYSTEMS_CHOICE and number of variables is <= number of equations +
+	1
+
+2005-09-07  Steven Eker  <eker@goo.csl.sri.com>
+
+	* matrixOpSymbol.cc (eqRewrite): init maxRowNr and maxColNr to -1
+	here; check that maxRowNr is >= 0 after downing stuff
+	(downMatrix): don't init matrix, maxRowNr and maxColNr here
+	(eqRewrite): revert to returning empty homogenous set if
+	inhomogenous set is empty
+
+2005-08-25  Steven Eker  <eker@goo.csl.sri.com>
+
+	* matrixOpSignature.cc (MACRO): added stringSymbol
+
+	* matrixOpSymbol.hh (class MatrixOpSymbol): added enum Algorithm
+	and decl for downAlgorithm()
+
+	* matrixOpSymbol.cc (downAlgorithm): addded
+	(eqRewrite): use downAlgorithm()
+
+2005-08-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* matrixOpSymbol.cc (eqRewrite): code cleaning
+	(upSet): code cleaning
+	(upVector): code cleaning
+	(downVector): clear vec
+	(downVectorEntry): clear new vec entries after resize()
+	(downMatrix): clear matrix
+	(downMatrixEntry): optimize
+
+2005-08-18  Steven Eker  <eker@goo.csl.sri.com>
+
+	* matrixOpSymbol.hh (class MatrixOpSymbol): updated dec for
+	upVector()
+
+	* matrixOpSymbol.cc (upVector): work with IntVec
+	(eqRewrite): use class MpzSystem
+
+	* matrixOpSymbol.hh (class MatrixOpSymbol): added typedef IntVec
+
+2005-08-17  Steven Eker  <eker@goo.csl.sri.com>
+
+	* matrixOpSymbol.hh (class MatrixOpSymbol): updated decls for
+	typedef SparseVector; deleted decl for downMatrixEntry(); updated
+	decls for downVectorEntry() and downVector()
+
+	* matrixOpSymbol.cc (downCoeff): deleted
+	(downMatrixEntry): use getNumber()
+	(downVectorEntry): rewritten
+	(downVector): updated
+
+	* numberOpSymbol.cc (getNumber): added
+
+	* numberOpSymbol.hh (class NumberOpSymbol): added decl for
+	getNumber()
+
+===================================Maude86c===========================================
+
 2004-10-28  Steven Eker  <eker@goo.csl.sri.com>
 
 	* matrixOpSymbol.cc (eqRewrite): quick hack to test DiophantineSystem3 

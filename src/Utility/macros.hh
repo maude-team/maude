@@ -35,15 +35,28 @@
 //
 //	C stuff.
 //
+#if HAVE_STDDEF_H
 #include <stddef.h>
+#endif
+#if HAVE_LIMITS_H
 #include <limits.h>
+#endif
+#if HAVE_STDLIB_H
 #include <stdlib.h>
+#endif
+#if HAVE_STDIO_H
 #include <stdio.h>
+#endif
+#if HAVE_CTYPE_H
 #include <ctype.h>
+#endif
 #if HAVE_STRINGS_H
 #include <strings.h>
 #elif HAVE_STRING_H
 #include <string.h>
+#endif
+#if HAVE_UNISTD_H
+#include <unistd.h>  // needed by solaris
 #endif
 //
 //	C++ stuff.
@@ -216,12 +229,22 @@ abort())
 #define \
 DebugAdvisoryCheck(condition, message) \
 if (!(condition) && globalAdvisoryFlag) \
-((cerr << Tty(Tty::RED) << "DEBUG ADVISORY: " << Tty(Tty::RESET) << message << endl))
+((cerr << Tty(Tty::BLUE) << "DEBUG ADVISORY: " << Tty(Tty::RESET) << message << endl))
 
 #define \
 DebugAdvisory(message) \
 if (globalAdvisoryFlag) \
-(cerr << Tty(Tty::RED) << "DEBUG ADVISORY: " << Tty(Tty::RESET) << message << endl)
+(cerr << Tty(Tty::BLUE) << "DEBUG ADVISORY: " << Tty(Tty::RESET) << message << endl)
+
+#define \
+DebugPrint(v) \
+if (globalAdvisoryFlag) \
+(cerr << #v << " = " << v << '\t')
+
+#define \
+DebugPrintNL(v) \
+if (globalAdvisoryFlag) \
+(cerr << #v << " = " << v << '\n')
 
 #else
 
@@ -229,6 +252,8 @@ if (globalAdvisoryFlag) \
 #define CantHappen(message)
 #define DebugAdvisoryCheck(condition, message)
 #define DebugAdvisory(message)
+#define DebugPrint(v)
+#define DebugPrintNL(v)
 
 #endif
 

@@ -205,7 +205,7 @@ Token::splitParameterizedSort(int code, Vector<int>& codes)
 	case '\0':
 	  {
 	    Assert(p == i, "surplus characters " << p);
-	    delete t;
+	    delete [] t;
 	    return;
 	  }
 	case '`':
@@ -301,7 +301,7 @@ Token::splitParameterList(int code, int& header, Vector<int>& parameters)
       parameters.append(encode(s));
     }
   while (*p != '}');
-  delete t;
+  delete [] t;
 }
 
 int

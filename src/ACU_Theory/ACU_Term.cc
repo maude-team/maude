@@ -121,7 +121,7 @@ ACU_Term::deepCopy2(SymbolMap* translator) const
   if (translator != 0)
     {
       Symbol* s2 = translator->translate(s);
-      if (s == 0)
+      if (s2 == 0)
 	{
 	  int nrArgs = argArray.length();
 	  if ((nrArgs == 1 && argArray[0].multiplicity == 2) ||

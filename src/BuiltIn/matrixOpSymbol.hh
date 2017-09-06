@@ -21,7 +21,7 @@
 */
 
 //
-//      Class for symbols for built in operations on numbers.
+//      Class for symbols for built in operations on matrices of numbers.
 //
 #ifndef _matrixOpSymbol_hh_
 #define _matrixOpSymbol_hh_
@@ -47,16 +47,24 @@ public:
   bool eqRewrite(DagNode* subject, RewritingContext& context);
 
 private:
-  typedef map<int, int> SparseVector;
+  enum Algorithm
+    {
+      SYSTEMS_CHOICE,
+      CD,
+      GCD
+    };
+
+  typedef map<int, mpz_class> SparseVector;
   typedef map<int, SparseVector> SparseMatrix;
+  typedef Vector<mpz_class> IntVec;
 
   bool downMatrixEntry(DagNode* dagNode, SparseMatrix& matrix, int& maxRowNr, int& maxColNr);
   bool downMatrix(DagNode* dagNode, SparseMatrix& matrix, int& maxRowNr, int& maxColNr);
-  bool downCoeff(DagNode* dagNode, int& value);
-  bool downVectorEntry(DagNode* dagNode, Vector<int>& vec, int& maxRowNr);
-  bool downVector(DagNode* dagNode, Vector<int>& vec, int& maxRowNr);
+  bool downVectorEntry(DagNode* dagNode, IntVec& vec, int& maxRowNr);
+  bool downVector(DagNode* dagNode, IntVec& vec, int& maxRowNr);
+  bool downAlgorithm(DagNode* dagNode, Algorithm& algorithm);
   DagNode* upSet(const Vector<DagNode*>& elts);
-  DagNode* upVector(const Vector<int>& row);
+  DagNode* upVector(const IntVec& row);
 
 #define MACRO(SymbolName, SymbolClass, RequiredFlags, NrArgs) \
   SymbolClass* SymbolName;

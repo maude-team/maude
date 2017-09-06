@@ -79,11 +79,9 @@ public:
 
   Origin getOrigin() const;
   int getNrParameters() const;
-  int getNrFreeParameters() const;
-  int getNrBoundParameters() const;
+  bool parametersBound() const;
   ImportModule* getParameterTheory(int index) const;
-  ImportModule* getFreeParameterTheory(int index) const;
-  int getFreeParameterName(int index) const;
+  int getParameterName(int index) const;
   int getNrImportedSorts() const;
   int getNrUserSorts() const;
   int getNrImportedSubsorts(int sortIndex) const;
@@ -122,17 +120,26 @@ private:
   };
 
   typedef map<int,int> ParameterMap;
+  typedef set<int> ParameterSet;
 
   static Sort* localSort(ImportModule* copy, Renaming* renaming, const Sort* sort);
   static Sort* localSort2(ImportModule* copy, Renaming* renaming, const Sort* sort);
+
   static void deepCopyCondition(ImportTranslation* importTranslation,
 				const Vector<ConditionFragment*>& original,
 				Vector<ConditionFragment*>& copy);
 
+  static int instantiateSortName(int sortId,
+				 const ParameterMap& parameterMap,
+				 const ParameterSet& extraParameterSet);
+
+  static Renaming* instantiateRenaming(const Renaming* original,
+				       const ParameterMap& parameterMap,
+				       const ParameterSet& extraParameterSet);
+  
   ImportModule* instantiateBoundParameters(const Vector<View*>& arguments,
 					   const Vector<int>& parameterArgs,
-					   ModuleCache* moduleCache,
-					   ParameterMap& escapedParameters);
+					   ModuleCache* moduleCache);
  
   void regretToInform(Entity* doomedEntity);
   void donateSorts(ImportModule* importer);
@@ -163,7 +170,7 @@ private:
   void handleInstantiationByTheoryView(ImportModule* copy,
 				       Renaming* canonical,
 				       ParameterMap& parameterMap,
-				       ParameterMap& extraParameterMap,
+				       ParameterSet& extraParameterSet,
 				       const Vector<View*>& arguments,
 				       ModuleCache* moduleCache) const;
 
@@ -174,7 +181,7 @@ private:
 
   void handleParameterizedSorts(Renaming* canonical, 
 				const ParameterMap& parameterMap,
-				const ParameterMap& extraParameterMap) const;
+				const ParameterSet& extraParameterSet) const;
 
   void handleRegularImports(ImportModule* copy,
 			    const Vector<View*>& arguments,
@@ -188,11 +195,9 @@ private:
   //
   //	These are the theories and modules we directly import.
   //
-  //	0,...,nrBoundParameters - 1				bound parameters
-  //	nrBoundParameters,..., parameterNames.size() - 1	free parameters
+  //	0,..., parameterNames.size() - 1			parameters
   //	parameterNames.size(),..., importedModules.size() - 1	regular imports
   //
-  int nrBoundParameters;
   Vector<int> parameterNames;
   Vector<ImportModule*> importedModules;
   //
@@ -291,18 +296,6 @@ ImportModule::getNrParameters() const
   return parameterNames.size();
 }
 
-inline int
-ImportModule::getNrFreeParameters() const
-{
-  return parameterNames.size() - nrBoundParameters;
-}
-
-inline int
-ImportModule::getNrBoundParameters() const
-{
-  return nrBoundParameters;
-}
-
 inline ImportModule*
 ImportModule::getParameterTheory(int index) const
 {
@@ -310,17 +303,10 @@ ImportModule::getParameterTheory(int index) const
   return importedModules[index]->baseModule;
 }
 
-inline ImportModule*
-ImportModule::getFreeParameterTheory(int index) const
-{
-  Assert(nrBoundParameters + index < getNrParameters(), "bad parameter index " << index);
-  return importedModules[nrBoundParameters + index]->baseModule;
-}
-
 inline int
-ImportModule::getFreeParameterName(int index) const
+ImportModule::getParameterName(int index) const
 {
-  return parameterNames[nrBoundParameters + index];
+  return parameterNames[index];
 }
 
 inline int

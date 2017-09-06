@@ -1,3 +1,10 @@
+2005-10-06  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_Term.cc (deepCopy2): fix bug where we were testing s rather
+	than s2 for 0
+
+===================================Maude86c===========================================
+
 2005-07-28  Steven Eker  <eker@goo.csl.sri.com>
 
 	* ACU_Term.hh (class ACU_Term): updated decl for SymbolMap*

@@ -73,7 +73,7 @@ PreModule::processImports()
 			     QUOTE("including") << '.');
 		mode = ImportModule::INCLUDING;
 	      }
-	    if (fm->getNrFreeParameters() != 0)
+	    if (fm->getNrParameters() != 0 && !(fm->parametersBound()))
 	      {
 		IssueWarning(lineNumber << ": cannot import module " << fm <<
 			     " because it has free parameters.");
@@ -144,11 +144,13 @@ PreModule::makeModule(const ModuleExpression* expr, ImportModule* enclosingModul
       {
 	if (ImportModule* fm = makeModule(expr->getModule(), enclosingModule))
 	  {
-	    if (fm->getNrBoundParameters() > 0)
+	    /*
+	    if (fm->parametersBound())  // NEED TO FIX
 	      {
 		IssueWarning("renamed module " << fm << " has bound parameters.");
 		return 0;
 	      }
+	    */
 	    ImportModule* m = interpreter.makeRenamedCopy(fm, expr->getRenaming());
 	    if (!(m->isBad()))
 	      return m;
@@ -183,7 +185,7 @@ PreModule::makeModule(const ModuleExpression* expr, ImportModule* enclosingModul
       {
 	if (ImportModule* fm = makeModule(expr->getModule(), enclosingModule))
 	  {
-	    int nrParameters = fm->getNrFreeParameters();
+	    int nrParameters = fm->getNrParameters();
 	    const Vector<Token>& arguments = expr->getArguments();
 	    if (arguments.size() != nrParameters)
 	      {
@@ -191,9 +193,10 @@ PreModule::makeModule(const ModuleExpression* expr, ImportModule* enclosingModul
 			     nrParameters << " expected.");
 		break;
 	      }
-
 	    Vector<View*> views(nrParameters);
 	    Vector<int> names(nrParameters);
+	    bool hasTheoryView = false;
+	    bool hasPEM = false;
 	    for (int i = 0; i < nrParameters; ++i)
 	      {
 		Token name = arguments[i];
@@ -207,7 +210,7 @@ PreModule::makeModule(const ModuleExpression* expr, ImportModule* enclosingModul
 			//	Parameters from an enclosing module occlude views.
 			//
 			ImportModule* enclosingModuleParameterTheory = enclosingModule->getParameterTheory(index);
-			ImportModule* requiredParameterTheory = fm->getFreeParameterTheory(i);
+			ImportModule* requiredParameterTheory = fm->getParameterTheory(i);
 			if (enclosingModuleParameterTheory != requiredParameterTheory)
 			  {
 			    IssueWarning("In argument " << i + 1 << " of module instantiation " << QUOTE(expr) <<
@@ -219,6 +222,7 @@ PreModule::makeModule(const ModuleExpression* expr, ImportModule* enclosingModul
 			  }
 			views[i] = 0;
 			names[i] = code;
+			hasPEM = true;
 			continue;
 		      }
 		  }
@@ -234,7 +238,7 @@ PreModule::makeModule(const ModuleExpression* expr, ImportModule* enclosingModul
 			return 0;
 		      }
 		    ImportModule* fromTheory = v->getFromTheory();
-		    ImportModule* requiredParameterTheory = fm->getFreeParameterTheory(i);
+		    ImportModule* requiredParameterTheory = fm->getParameterTheory(i);
 		    if (fromTheory != requiredParameterTheory)
 		      {
 			IssueWarning("In argument " << i + 1 << " of module instantiation " << QUOTE(expr) <<
@@ -245,6 +249,8 @@ PreModule::makeModule(const ModuleExpression* expr, ImportModule* enclosingModul
 		      }
 		    views[i] = v;
 		    names[i] = 0;
+		    if (v->getToModule()->isTheory())
+		      hasTheoryView = true;
 		  }
 		else
 		  {
@@ -252,6 +258,13 @@ PreModule::makeModule(const ModuleExpression* expr, ImportModule* enclosingModul
 				 " could not find a parameter or view " << QUOTE(name) << ".");
 		    return 0;
 		  }
+	      }
+	    if (hasTheoryView && hasPEM)
+	      {
+		IssueWarning("Instantiation " << QUOTE(expr) <<
+			     " uses both a theory-view and a parameter from enclosing module " <<
+			     QUOTE(enclosingModule) << '.');
+		return 0;
 	      }
 	    ImportModule* m = interpreter.makeInstatiation(fm, views, names);
 	    if (!(m->isBad()))

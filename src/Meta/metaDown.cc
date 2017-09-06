@@ -282,7 +282,8 @@ MetaLevel::downImport(DagNode* metaImport, MetaModule* m)
   
   FreeDagNode* f = safeCast(FreeDagNode*, metaImport);
   ImportModule* im;
-  if (downModuleExpression(f->getArgument(0), m, im) && im->getNrFreeParameters() == 0)
+  if (downModuleExpression(f->getArgument(0), m, im) &&
+      (im->getNrParameters() == 0 || im->parametersBound()))
     {
       m->addImport(im, mode, LineNumber(FileTable::META_LEVEL_CREATED));
       return true;

@@ -28,6 +28,8 @@
 //	The format is:
 //		MACRO(symbols name, symbols C++ class, required type flags, number of args)
 //
+  MACRO(stringSymbol, StringSymbol, SymbolType::STRING, 0)
+
   MACRO(emptyVectorSymbol, Symbol, 0, 0)
   MACRO(vectorEntrySymbol, FreeSymbol, 0, 2)
   MACRO(vectorSymbol, ACU_Symbol, SymbolType::ASSOC | SymbolType::COMM, 2)

@@ -445,3 +445,25 @@ NumberOpSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
  fail:
   return FreeSymbol::eqRewrite(subject, context);
 }
+
+bool
+NumberOpSymbol::getNumber(DagNode* dagNode, mpz_class& value) const
+{
+  if (dagNode->symbol() == minusSymbol)
+    {
+      if (minusSymbol->isNeg(dagNode))
+	{
+	  (void) minusSymbol->getNeg(dagNode, value);
+	  return true;
+	}
+    }
+  else
+    {
+      if (succSymbol->isNat(dagNode))
+	{
+	  value = succSymbol->getNat(dagNode);
+	  return true;
+	}
+    }
+  return false;
+}

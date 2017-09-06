@@ -70,8 +70,7 @@ MetaLevel::downModuleExpression(DagNode* metaExpr, ImportModule* enclosingModule
 	  FreeDagNode* f = safeCast(FreeDagNode*, metaExpr);
 	  Renaming renaming;  // object level renaming is ephemeral
 	  if (downRenamings(f->getArgument(1), &renaming) &&
-	      downModuleExpression(f->getArgument(0), enclosingModule, m) &&
-	      m->getNrBoundParameters() == 0)
+	      downModuleExpression(f->getArgument(0), enclosingModule, m))
 	    {
 	      m = interpreter.makeRenamedCopy(m, &renaming);
 	      if (m->isBad())
@@ -86,11 +85,13 @@ MetaLevel::downModuleExpression(DagNode* metaExpr, ImportModule* enclosingModule
 	  if (downInstantiationArguments(f->getArgument(1), names) &&
 	      downModuleExpression(f->getArgument(0), enclosingModule, m))
 	    {
-	      int nrParameters = m->getNrFreeParameters();
+	      int nrParameters = m->getNrParameters();
 	      if (nrParameters != names.size())
 		return false;  // wrong number of arguments
 
 	      Vector<View*> views(nrParameters);
+	      bool hasTheoryView = false;
+	      bool hasPEM = false;
 	      for (int i = 0; i < nrParameters; ++i)
 		{
 		  int code  = names[i];
@@ -103,10 +104,11 @@ MetaLevel::downModuleExpression(DagNode* metaExpr, ImportModule* enclosingModule
 			  //	Parameters from an enclosing module occlude views.
 			  //
 			  ImportModule* enclosingModuleParameterTheory = enclosingModule->getParameterTheory(index);
-			  ImportModule* requiredParameterTheory = m->getFreeParameterTheory(i);
+			  ImportModule* requiredParameterTheory = m->getParameterTheory(i);
 			  if (enclosingModuleParameterTheory != requiredParameterTheory)
 			    return false;  // theory mismatch
 			  views[i] = 0;
+			  hasPEM = true;
 			  continue;
 			}
 		    }
@@ -118,14 +120,18 @@ MetaLevel::downModuleExpression(DagNode* metaExpr, ImportModule* enclosingModule
 		      if (!(v->evaluate()))
 			return false;  // bad view
 		      ImportModule* fromTheory = v->getFromTheory();
-		      ImportModule* requiredParameterTheory = m->getFreeParameterTheory(i);
+		      ImportModule* requiredParameterTheory = m->getParameterTheory(i);
 		      if (fromTheory != requiredParameterTheory)
 			return false;  // theory mismatch
 		      views[i] = v;
+		      if (v->getToModule()->isTheory())
+			hasTheoryView = true;
 		    }
 		  else
 		    return false;  // nonexistent view
 		}
+	      if (hasTheoryView && hasPEM)
+		return false;
 	      m = interpreter.makeInstatiation(m, views, names);
 	      if (m->isBad())
 		return false;

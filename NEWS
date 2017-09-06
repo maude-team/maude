@@ -1,3 +1,16 @@
+Overview of Changes in Maude alpha86c
+=====================================
+* improved recovery from surface syntax errors
+* added DEFAULT fth, various views and ARRAY fmod
+* added LIST-AND-SET fmod
+* added linear Diophantine solver
+* warn about object level duplicate attributes
+* fixed backquote in created module name bug
+* fixed view ACU op->term mapping bug
+* added -no-wrap command line option
+* disallow parameter passing in nonfinal instantiations
+* allow renaming of modules with bound parameters
+
 Overview of Changes in Maude alpha86b
 =====================================
 * module garbage collection bug fixed

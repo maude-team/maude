@@ -141,8 +141,6 @@ libutility_a_SOURCES = \
 	digraph.cc \
 	unionFind.cc \
 	diophantineSystem.cc \
-	diophantineSystem2.cc \
-	diophantineSystem3.cc \
 	natSet.cc \
 	pointerMap.cc \
 	sequencePartition.cc \
@@ -152,7 +150,8 @@ libutility_a_SOURCES = \
 	bddUser.cc \
 	tty.cc \
 	bdd.cc \
-	timer.cc
+	timer.cc \
+	mpzSystem.cc
 
 
 noinst_HEADERS = \
@@ -164,8 +163,6 @@ noinst_HEADERS = \
 	decBuf.hh \
 	digraph.hh \
 	diophantineSystem.hh \
-	diophantineSystem2.hh \
-	diophantineSystem3.hh \
 	flagSet.hh \
 	graph.hh \
 	indent.hh \
@@ -185,11 +182,15 @@ noinst_HEADERS = \
 	vector.hh \
 	timeStuff.hh \
 	mathStuff.hh \
-	ropeStuff.hh
+	ropeStuff.hh \
+	mpzSystem.hh
 
 
 EXTRA_DIST = \
-	diophantineSolve.cc
+	mpzContejeanDevie.cc \
+	mpzGcdInit.cc \
+	mpzGcdTrivial.cc \
+	mpzGcdBasedSolver.cc
 
 subdir = src/Utility
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -203,11 +204,11 @@ libutility_a_LIBADD =
 am_libutility_a_OBJECTS = macros.$(OBJEXT) preVector.$(OBJEXT) \
 	intSet.$(OBJEXT) pointerSet.$(OBJEXT) stringTable.$(OBJEXT) \
 	graph.$(OBJEXT) digraph.$(OBJEXT) unionFind.$(OBJEXT) \
-	diophantineSystem.$(OBJEXT) diophantineSystem2.$(OBJEXT) \
-	diophantineSystem3.$(OBJEXT) natSet.$(OBJEXT) \
+	diophantineSystem.$(OBJEXT) natSet.$(OBJEXT) \
 	pointerMap.$(OBJEXT) sequencePartition.$(OBJEXT) \
 	indent.$(OBJEXT) binBuf.$(OBJEXT) decBuf.$(OBJEXT) \
-	bddUser.$(OBJEXT) tty.$(OBJEXT) bdd.$(OBJEXT) timer.$(OBJEXT)
+	bddUser.$(OBJEXT) tty.$(OBJEXT) bdd.$(OBJEXT) timer.$(OBJEXT) \
+	mpzSystem.$(OBJEXT)
 libutility_a_OBJECTS = $(am_libutility_a_OBJECTS)
 
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
@@ -217,12 +218,11 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/binBuf.Po ./$(DEPDIR)/decBuf.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/digraph.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/diophantineSystem.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/diophantineSystem2.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/diophantineSystem3.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/graph.Po ./$(DEPDIR)/indent.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/intSet.Po ./$(DEPDIR)/macros.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/natSet.Po ./$(DEPDIR)/pointerMap.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/pointerSet.Po ./$(DEPDIR)/preVector.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/mpzSystem.Po ./$(DEPDIR)/natSet.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/pointerMap.Po ./$(DEPDIR)/pointerSet.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/preVector.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/sequencePartition.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/stringTable.Po ./$(DEPDIR)/timer.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/tty.Po ./$(DEPDIR)/unionFind.Po
@@ -269,12 +269,11 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/decBuf.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/digraph.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/diophantineSystem.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/diophantineSystem2.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/diophantineSystem3.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/graph.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/indent.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/intSet.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/macros.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mpzSystem.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/natSet.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pointerMap.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pointerSet.Po@am__quote@

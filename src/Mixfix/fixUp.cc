@@ -94,21 +94,30 @@ PreModule::defaultFixUp(OpDef& opDef, Symbol* symbol)
 	    for (int j = 0; j < nrDetails; j++)
 	      hd[j] = h.details[j].name();
 	    if (!(symbol->attachData(opDef.domainAndRange, name, hd)))
-	      return false;
+	      {
+		DebugAdvisory("ID_HOOK " << name << " failed");
+		return false;
+	      }
 	    break;
 	  }
 	case OP_HOOK:
 	  {
 	    Symbol* hs = findHookSymbol(h.details);
 	    if (hs == 0 || !(symbol->attachSymbol(name, hs)))
-	      return false;
+	      {
+		DebugAdvisory("OP_HOOK " << name << " failed");
+		return false;
+	      }
 	    break;
 	  }
 	case TERM_HOOK:
 	  {
 	    Term* ht = flatModule->parseTerm(h.details); // potential component problem
 	    if (ht == 0 || !(symbol->attachTerm(name, ht)))
-	      return false;
+	      {
+		DebugAdvisory("TERM_HOOK " << name << " failed");
+		return false;
+	      }
 	    break;
 	  }
 	}

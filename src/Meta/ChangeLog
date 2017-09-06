@@ -1,3 +1,25 @@
+2005-09-20  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaDownRenamings.cc (downModuleExpression): allow bound
+	parameters in modules that are to be renamed
+
+2005-09-16  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaDownRenamings.cc (downModuleExpression): check for
+	instantiation having both a PEM and a theory-view
+
+2005-09-15  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaDownRenamings.cc: use parametersBound() rather than
+	getNrBoundParameters()
+	(downModuleExpression): use getNrParameters() rather than
+	getNrFreeParameters()
+	(downModuleExpression): use getParameterTheory() rather than
+	getFreeParameterTheory() (2 places)
+
+	* metaDown.cc (downImport): use parametersBound() and
+	getNrParameters() rather than getNrFreeParameters()
+
 2005-07-27  Steven Eker  <eker@goo.csl.sri.com>
 
 	* metaDownRenamings.cc (downModuleExpression): check bad flag in

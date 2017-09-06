@@ -63,6 +63,7 @@ public:
 protected:
   SuccSymbol* getSuccSymbol() const;
   MinusSymbol* getMinusSymbol() const;
+  bool getNumber(DagNode* dagNode, mpz_class& value) const;
 
 private:
   enum ImplementationConstants

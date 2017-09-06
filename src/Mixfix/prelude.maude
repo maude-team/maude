@@ -22,7 +22,7 @@
 
 ***
 ***	Maude interpreter standard prelude.
-***	Version Alpha 86b
+***	Version Alpha 86c
 ***
 ***	Some of the overall structure is taken from the OBJ3
 ***	interpreter standard prelude.
@@ -891,6 +891,40 @@ view String< from TAO-SET to STRING is
   sort Elt to String .
 endv
 
+fth DEFAULT is
+  including TRIV .
+  op 0 : -> Elt .
+endfth
+
+view DEFAULT from TRIV to DEFAULT is endv
+
+view Nat0 from DEFAULT to NAT is
+  sort Elt to Nat .
+endv
+
+view Int0 from DEFAULT to INT is
+  sort Elt to Int .
+endv
+
+view Rat0 from DEFAULT to RAT is
+  sort Elt to Rat .
+endv
+
+view Float0 from DEFAULT to FLOAT is
+  sort Elt to Float .
+  op 0 to term 0.0 .
+endv
+
+view String0 from DEFAULT to STRING is
+  sort Elt to String .
+  op 0 to term "" .
+endv
+
+view Qid0 from DEFAULT to QID is
+  sort Elt to Qid .
+  op 0 to term ' .
+endv
+
 ***
 ***	Container data types defined in Maude.
 ***
@@ -1042,6 +1076,33 @@ fmod SET{X :: TRIV} is
   eq $diff((E, S), S', A) = $diff(S, S', if E in S' then A else E, A fi) .
 endfm
 
+fmod LIST-AND-SET{X :: TRIV} is
+  inc LIST{X} .
+  inc SET{X} .
+
+  var E : X$Elt .
+  var L : List{X} .
+  var S : Set{X} .
+
+  op makeSet : List{X} -> Set{X} .
+  op makeSet : NeList{X} -> NeSet{X} .
+  eq makeSet(nil) = empty .
+  eq makeSet(E L) = E, makeSet(L) .
+
+  op makeList : Set{X} -> List{X} .
+  op makeList : NeSet{X} -> NeList{X} .
+  eq makeList(empty) = nil .
+  eq makeList((E, S)) = E makeList(S) .
+
+  op filter : List{X} Set{X} -> List{X} .
+  eq filter(nil, S) = nil .
+  eq filter(E L, S) = if E in S then E filter(L, S) else filter(L, S) fi .
+
+  op filterOut : List{X} Set{X} -> List{X} .
+  eq filterOut(nil, S) = nil .
+  eq filterOut(E L, S) = if E in S then filterOut(L, S) else E filterOut(L, S) fi .
+endfm
+
 fmod LIST*{X :: TRIV} is
   protecting NAT .
   sorts Item{X} PreList{X} NeList{X} List{X} .
@@ -1064,7 +1125,7 @@ fmod LIST*{X :: TRIV} is
   eq append(L, []) = L .
   eq append([P], [A]) = [P A] .
 
-  op head : NeList{X} -> X$Elt .
+  op head : NeList{X} -> Item{X} .
   eq head([E]) = E .
   eq head([E P]) = E .
 
@@ -1072,7 +1133,7 @@ fmod LIST*{X :: TRIV} is
   eq tail([E]) = [] .
   eq tail([E P]) = [P] .
 
-  op last : NeList{X} -> X$Elt .
+  op last : NeList{X} -> Item{X} .
   eq last([E]) = E .
   eq last([P E]) = E .
 
@@ -1080,7 +1141,7 @@ fmod LIST*{X :: TRIV} is
   eq front([E]) = [] .
   eq front([P E]) = [P] .
 
-  op occurs : X$Elt List{X} -> Bool .
+  op occurs : Item{X} List{X} -> Bool .
   eq occurs(E, []) = false .
   eq occurs(E, [E']) = (E == E') .
   eq occurs(E, [E' P]) = if E == E' then true else occurs(E, [P]) fi .
@@ -1198,11 +1259,32 @@ fmod MAP{X :: TRIV, Y :: TRIV} is
 
   op insert : X$Elt Y$Elt Map{X,Y} -> Map{X,Y} .
   eq insert(D, R, (M, D |-> R')) = (M, D |-> R) .
-  eq insert(D, R, M) = (M, D |-> R) [owise].
+  eq insert(D, R, M) = (M, D |-> R) [owise] .
 
   op _[_] : Map{X,Y} X$Elt -> [Y$Elt] .
   eq (M, D |-> R)[D] = R .
   eq M[D] = undefined [owise] .
+endfm
+
+fmod ARRAY{X :: TRIV, Y :: DEFAULT} is
+  sorts Entry{X,Y} Array{X,Y} .
+  subsort Entry{X,Y} < Array{X,Y} .
+
+  op _|->_ : X$Elt Y$Elt -> Entry{X,Y} [ctor] .
+  op empty : -> Array{X,Y} [ctor] .
+  op _;_ : Array{X,Y} Array{X,Y} -> Array{X,Y} [ctor assoc comm id: empty prec 71 format (d r os d)] .
+
+  var D : X$Elt .
+  vars R R' : Y$Elt .
+  var A : Array{X,Y} .
+
+  op insert : X$Elt Y$Elt Array{X,Y} -> Array{X,Y} .
+  eq insert(D, R, (A ; D |-> R')) = if R == 0 then A else (A ; D |-> R) fi .
+  eq insert(D, R, A) = if R == 0 then A else (A ; D |-> R) fi [owise] .
+
+  op _[_] : Array{X,Y} X$Elt -> [Y$Elt] .
+  eq (A ; D |-> R)[D] = R .
+  eq A[D] = 0 [owise] .
 endfm
 
 ***
