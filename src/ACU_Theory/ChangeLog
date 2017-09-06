@@ -1,3 +1,10 @@
+2010-12-09  Steven Eker  <eker@rho>
+
+	* ACU_Symbol.cc (ACU_Symbol::postOpDeclarationPass): don't call
+	rightIdentitySortCheck() since we are commutative
+
+===================================Maude95b===========================================
+
 2010-10-19  Steven Eker  <eker@rho>
 
 	* ACU_Symbol.cc (ACU_Symbol::makeCanonicalCopyEagerUptoReduced):

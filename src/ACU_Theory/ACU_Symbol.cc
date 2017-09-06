@@ -70,8 +70,12 @@ ACU_Symbol::postOpDeclarationPass()
   processIdentity();
   if(getIdentity() != 0)
     {
+      //
+      //	No need to call rightIdentitySortCheck() - since we are commutative
+      //	if there is a problem it will show up with leftIdentitySortCheck() and
+      //	the latter is somewhat faster.
+      //
       leftIdentitySortCheck();
-      rightIdentitySortCheck();
     }
 }
 
