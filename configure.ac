@@ -3,7 +3,7 @@
 #
 #	Initialize autoconf stuff.
 #
-AC_INIT(Maude, alpha88, [maude-bugs@maude.cs.uiuc.edu])
+AC_INIT(Maude, alpha88a, [maude-bugs@maude.cs.uiuc.edu])
 #
 #	Allow directory names that look like macros.
 #
@@ -16,7 +16,7 @@ AC_CANONICAL_HOST
 #
 #	Initialize automake stuff.
 #
-AM_INIT_AUTOMAKE(Maude, alpha88)
+AM_INIT_AUTOMAKE(Maude, alpha88a)
 #
 #	Cause defines to be put in a header file rather than passed as
 #	compiler flags.
@@ -339,6 +339,7 @@ AC_CONFIG_FILES([Makefile
 		 src/MSCP10/Makefile
 		 src/StrategyLanguage/Makefile
 		 src/Mixfix/Makefile
+		 src/Main/Makefile
 		 tests/Makefile
 		 tests/BuiltIn/Makefile
 		 tests/Meta/Makefile

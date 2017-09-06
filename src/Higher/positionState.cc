@@ -106,12 +106,13 @@ PositionState::findNextPosition()
 }
 
 DagNode*
-PositionState::rebuildDag(DagNode* replacement) const
+PositionState::rebuildDag(DagNode* replacement, ExtensionInfo* extInfo, PositionIndex index) const
 {
-  if (extensionInfo != 0 && !(extensionInfo->matchedWhole()))
-    replacement = getDagNode()->partialConstruct(replacement, extensionInfo);
-  int argIndex = positionQueue[nextToReturn].argIndex();
-  for (int i = positionQueue[nextToReturn].parentIndex(); i != UNDEFINED;)
+  if (extInfo != 0 && !(extInfo->matchedWhole()))
+    replacement = positionQueue[index].node()->partialConstruct(replacement, extInfo);
+
+  int argIndex = positionQueue[index].argIndex();
+  for (PositionIndex i = positionQueue[index].parentIndex(); i != UNDEFINED;)
     {
       const RedexPosition& rp = positionQueue[i];
       replacement = rp.node()->copyWithReplacement(argIndex, replacement);

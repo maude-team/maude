@@ -32,7 +32,7 @@ class TrivialStrategy : public StrategyExpression
 public:
   TrivialStrategy(bool result);
 
-  SetGenerator* execute(DagNode* subject, RewritingContext& context);
+  StrategicExecution::Survival decompose(StrategicSearch& searchObject, DecompositionProcess* remainder);
 
 private:
   const bool result;

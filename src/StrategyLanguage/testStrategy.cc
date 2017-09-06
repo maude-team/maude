@@ -47,9 +47,9 @@
 #include "testStrategy.hh"
 
 
-TestStrategy::TestStrategy(Term* patternTerm, int depth, const Vector<ConditionFragment*>& condition)
-  : pattern(patternTerm, depth >= 0, condition),
-    depth(depth)
+TestStrategy::TestStrategy(Term* patternTerm, bool anywhere, const Vector<ConditionFragment*>& condition)
+  : pattern(patternTerm, anywhere, condition),
+    anywhere(anywhere)
 {
   WarningCheck(pattern.getUnboundVariables().empty(),
 	       *patternTerm << ": variable " <<
@@ -61,11 +61,9 @@ TestStrategy::TestStrategy(Term* patternTerm, int depth, const Vector<ConditionF
 StrategicExecution::Survival
 TestStrategy::decompose(StrategicSearch& searchObject, DecompositionProcess* remainder)
 {
-  if (!pattern.getUnboundVariables().empty())
-    return StrategicExecution::DIE;  // bad condition always fails
   RewritingContext* context = searchObject.getContext();
   RewritingContext* newContext = context->makeSubcontext(remainder->getDag());
-  MatchSearchState* state = new MatchSearchState(newContext, &pattern, MatchSearchState::GC_CONTEXT, 0, depth);
+  MatchSearchState* state = new MatchSearchState(newContext, &pattern, MatchSearchState::GC_CONTEXT, 0, anywhere ? UNBOUNDED : -1);
   bool result = state->findNextMatch();
   state->transferCount(*context);
   delete state;

@@ -230,22 +230,25 @@ MixfixModule::makeStrategyLanguageProductions()
     rhs[1] = leftParen;
     rhs[2] = STRATEGY_EXPRESSION;
     rhs[3] = rightParen;
-    parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, gatherAny,
-			     MixfixParser::MAKE_TOP);
+    parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, gatherAny, MixfixParser::MAKE_TOP);
+
     rhs[0] = notToken;
     parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, gatherAny,
-			     MixfixParser::MAKE_UNARY, UnaryStrategy::NOT);
+			     MixfixParser::MAKE_BRANCH, BranchStrategy::FAIL, BranchStrategy::IDLE);
     rhs[0] = test;
     parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, gatherAny,
-			     MixfixParser::MAKE_UNARY, UnaryStrategy::TEST);
+			     MixfixParser::MAKE_BRANCH, BranchStrategy::IDLE, BranchStrategy::FAIL);
     rhs[0] = tryToken;
     parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, gatherAny,
-			     MixfixParser::MAKE_UNARY, UnaryStrategy::TRY);
+			     MixfixParser::MAKE_BRANCH, BranchStrategy::PASS_THRU, BranchStrategy::IDLE);
   }
   {
     //
     //	<strategy expression> = <strategy expression> ; <strategy expression>
     //	<strategy expression> = <strategy expression> | <strategy expression>
+    //	<strategy expression> = <strategy expression> orelse <strategy expression>
+    //
+    //	We force these to right associate by manipulating the gathers.
     //
     Vector<int> gather(2);
     gather[0] = STRAT_SEQ_PREC - 1;
@@ -259,6 +262,11 @@ MixfixModule::makeStrategyLanguageProductions()
     gather[1] = STRAT_UNION_PREC;
     rhs[1] = pipe;
     parser->insertProduction(STRATEGY_EXPRESSION, rhs, STRAT_UNION_PREC, gather, MixfixParser::MAKE_UNION);
+    gather[0] = STRAT_ORELSE_PREC - 1;
+    gather[1] = STRAT_ORELSE_PREC;
+     rhs[1] = orelse;
+    parser->insertProduction(STRATEGY_EXPRESSION, rhs, STRAT_ORELSE_PREC, gather,
+			     MixfixParser::MAKE_BRANCH, BranchStrategy::PASS_THRU, BranchStrategy::NEW_STRATEGY);
   }
   {
     //
@@ -271,11 +279,12 @@ MixfixModule::makeStrategyLanguageProductions()
     Vector<int> rhs(2);
     rhs[0] = STRATEGY_EXPRESSION;
     rhs[1] = plus;
-    parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, gather, MixfixParser::MAKE_ITERATION, false, false);
+    parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, gather, MixfixParser::MAKE_ITERATION, false);
     rhs[1] = star;
-    parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, gather, MixfixParser::MAKE_ITERATION, true, false);
+    parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, gather, MixfixParser::MAKE_ITERATION, true);
     rhs[1] = bang;
-    parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, gather, MixfixParser::MAKE_ITERATION, true, true);
+    parser->insertProduction(STRATEGY_EXPRESSION, rhs, 0, gather,
+			     MixfixParser::MAKE_BRANCH, BranchStrategy::ITERATE, BranchStrategy::IDLE);
   }
   {
     //
@@ -284,14 +293,40 @@ MixfixModule::makeStrategyLanguageProductions()
     Vector<int> gather(3);
     Vector<int> rhs(5);
     gather[0] = STRAT_BRANCH_PREC;
-    gather[0] = ANY;
+    gather[1] = ANY;
     gather[2] = STRAT_BRANCH_PREC;
     rhs[0] = STRATEGY_EXPRESSION;
     rhs[1] = query;
     rhs[2] = STRATEGY_EXPRESSION;
     rhs[3] = colon;
     rhs[4] = STRATEGY_EXPRESSION;
-    parser->insertProduction(STRATEGY_EXPRESSION, rhs, STRAT_BRANCH_PREC, gather, MixfixParser::MAKE_BRANCH);
+    parser->insertProduction(STRATEGY_EXPRESSION, rhs, STRAT_BRANCH_PREC, gather, MixfixParser::MAKE_BRANCH,
+			     BranchStrategy::NEW_STRATEGY, BranchStrategy::NEW_STRATEGY);
+  }
+  {
+    //
+    //	<strategy expression> = match <term> such that <condition>
+    //	<strategy expression> = xmatch <term> such that <condition>
+    //	<strategy expression> = xmatch <term>
+    //	<strategy expression> = match <term>
+    //
+    Vector<int> gather(3);
+    Vector<int> rhs(4);
+    gather[0] = STRAT_TEST_PREC;
+    gather[1] = ANY;
+    gather[2] = STRAT_TEST_PREC;
+    rhs[0] = match;
+    rhs[1] = TERM;
+    rhs[2] = SUCH_THAT;
+    rhs[3] = CONDITION;
+    parser->insertProduction(STRATEGY_EXPRESSION, rhs, STRAT_TEST_PREC, gather, MixfixParser::MAKE_TEST, false);
+    rhs[0] = xmatch;
+    parser->insertProduction(STRATEGY_EXPRESSION, rhs, STRAT_TEST_PREC, gather, MixfixParser::MAKE_TEST, true);
+    gather.resize(1);
+    rhs.resize(2);
+    parser->insertProduction(STRATEGY_EXPRESSION, rhs, STRAT_TEST_PREC, gather, MixfixParser::MAKE_TEST, true);
+    rhs[0] = match;
+    parser->insertProduction(STRATEGY_EXPRESSION, rhs, STRAT_TEST_PREC, gather, MixfixParser::MAKE_TEST, false);
   }
   {
     //
@@ -459,15 +494,14 @@ MixfixModule::makeConditionProductions()
   rhs.resize(1);
   rhs[0] = EQUALITY_PAIR;
   parser->insertProduction(CONDITION_FRAGMENT, rhs, 0, gatherAny, MixfixParser::MAKE_EQUALITY);
-  parser->insertProduction(RULE_CONDITION_FRAGMENT, rhs, 0, gatherAny, MixfixParser::MAKE_EQUALITY);
   rhs[0] = COLON_PAIR;
   parser->insertProduction(CONDITION_FRAGMENT, rhs, 0, gatherAny, MixfixParser::MAKE_SORT_TEST);
-  parser->insertProduction(RULE_CONDITION_FRAGMENT, rhs, 0, gatherAny, MixfixParser::MAKE_SORT_TEST);
   rhs[0] = ASSIGN_PAIR;
   parser->insertProduction(CONDITION_FRAGMENT, rhs, 0, gatherAny, MixfixParser::MAKE_ASSIGNMENT);
-  parser->insertProduction(RULE_CONDITION_FRAGMENT, rhs, 0, gatherAny, MixfixParser::MAKE_ASSIGNMENT);
   rhs[0] = ARROW_PAIR;
   parser->insertProduction(RULE_CONDITION_FRAGMENT, rhs, 0, gatherAny, MixfixParser::MAKE_REWRITE);
+  rhs[0] = CONDITION_FRAGMENT;
+  parser->insertProduction(RULE_CONDITION_FRAGMENT, rhs, 0, gatherAny, MixfixParser::PASS_THRU);
   //
   //	Simple conditions.
   //
@@ -641,15 +675,12 @@ MixfixModule::makeComponentProductions()
       //	Syntax for colon pairs:
       //	<COLON_PAIR> ::= <FooTerm> : <FooSort>
       //	<COLON2_PAIR> ::= <FooTerm> :: <FooSort>
-      //	<COLON3_PAIR> ::= <FooTerm> :: <FooSort>
       //
       rhsPair[2] = sortNt;
       rhsPair[1] = colon;
       parser->insertProduction(COLON_PAIR, rhsPair, 0, gatherAny0);
       rhsPair[1] = colon2;
       parser->insertProduction(COLON2_PAIR, rhsPair, 0, gatherAny0);
-      rhsPair[1] = colon3;
-      parser->insertProduction(COLON3_PAIR, rhsPair, 0, gatherAny0);
       //
       //	Syntax for parentheses:
       //	<FooTerm> ::= ( <FooTerm> )
@@ -877,7 +908,6 @@ MixfixModule::makeBoolProductions()
       //
       rhs[0] = rangeNt;
       parser->insertProduction(CONDITION_FRAGMENT, rhs, 0, gatherAny, MixfixParser::MAKE_TRUE);
-      parser->insertProduction(RULE_CONDITION_FRAGMENT, rhs, 0, gatherAny, MixfixParser::MAKE_TRUE);
 
       if (falseSymbol != 0 &&
 	  falseSymbol->rangeComponent() == trueSymbol->rangeComponent())
@@ -887,8 +917,6 @@ MixfixModule::makeBoolProductions()
 	  //
 	  rhs[0] = COLON2_PAIR;
 	  parser->insertProduction(rangeNt, rhs, 0, gatherAny, MixfixParser::MAKE_SORT_TEST, 1);
-	  rhs[0] = COLON3_PAIR;
-	  parser->insertProduction(rangeNt, rhs, 0, gatherAny, MixfixParser::MAKE_SORT_TEST, 0);
 	}
     }
 }

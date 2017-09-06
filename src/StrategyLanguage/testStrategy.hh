@@ -31,41 +31,13 @@
 class TestStrategy : public StrategyExpression
 {
 public:
-  //
-  //	depth = -1		means at top, no extension
-  //	depth = 0		means at top, with extension
-  //	depth = UNBOUNDED	means all the way down to the leaf nodes, with extension
-  //
-  TestStrategy(Term* patternTerm, int depth, const Vector<ConditionFragment*>& condition);
-
-  Term* getPatternTerm() const;
-  int getDepth() const;
-  const Vector<ConditionFragment*>& getCondition();
+  TestStrategy(Term* patternTerm, bool anywhere, const Vector<ConditionFragment*>& condition);
 
   StrategicExecution::Survival decompose(StrategicSearch& searchObject, DecompositionProcess* remainder);
 
-
 private:
   Pattern pattern;
-  const int depth;
+  const bool anywhere;
 };
-
-inline Term*
-TestStrategy::getPatternTerm() const
-{
-  return pattern.getLhs();
-}
-
-inline int
-TestStrategy::getDepth() const
-{
-  return depth;
-}
-
-inline const Vector<ConditionFragment*>&
-TestStrategy::getCondition()
-{
-  return pattern.getCondition();
-}
 
 #endif

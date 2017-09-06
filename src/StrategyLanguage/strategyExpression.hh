@@ -25,13 +25,13 @@
 //
 #ifndef _strategyExpression_hh_
 #define _strategyExpression_hh_
+#include "strategicExecution.hh"
 
 class StrategyExpression
 {
 public:
   virtual ~StrategyExpression() {};
-
-  virtual SetGenerator* execute(DagNode* subject, RewritingContext& context) = 0;
+  virtual StrategicExecution::Survival decompose(StrategicSearch& searchObject, DecompositionProcess* remainder) = 0;
 };
 
 #endif

@@ -1,3 +1,43 @@
+2006-10-05  Steven Eker  <eker@goo.csl.sri.com>
+
+	* searchState.cc (findFirstSolution): check that pattern and
+	subject are in the same component
+
+2006-09-29  Steven Eker  <eker@goo.csl.sri.com>
+
+	* positionState.hh (rebuildDag): added simplified version
+	(getPositionIndex): added
+	(class PositionState): added typedef for PositionIndex
+
+	* positionState.cc (rebuildDag): rewritten to take external
+	extension info and position index
+
+2006-09-25  Steven Eker  <eker@goo.csl.sri.com>
+
+	* searchState.cc (hasCondition): added
+	(findNextSolution): use local version of hasCondition()
+	(findFirstSolution): use local version of hasCondition()
+	(hasCondition): use getFlags()
+
+	* searchState.hh (class SearchState): added decl for
+	hasCondition()
+
+	* rewriteSearchState.hh (class RewriteSearchState): renumbered
+	ALLOW_NONEXEC in enum Flags
+
+	* matchSearchState.hh (class MatchSearchState): renumbered
+	GC_PATTERN in enum Flags
+
+	* searchState.hh (class SearchState): added IGNORE_CONDITION to
+	enum Flags
+
+2006-09-14  Steven Eker  <eker@goo.csl.sri.com>
+
+	* positionState.hh (class PositionState): added explanation of
+	maxDepth edge cases
+
+===================================Maude88a===========================================
+
 2006-04-05  Steven Eker  <eker@goo.csl.sri.com>
 
 	* rewriteSearchState.hh (class RewriteSearchState): add default

@@ -1,3 +1,29 @@
+2006-09-29  Steven Eker  <eker@goo.csl.sri.com>
+
+	* substitution.hh: added comment to document how substitutions
+	work; removed commented out code
+
+2006-09-28  Steven Eker  <eker@goo.csl.sri.com>
+
+	* rule.cc (compile): changed eagerness flag passed to
+	compileBuild() from false to !hasCondition(), because if we
+	rewrite in a lazy context, the lazy context will protect the
+	replacement term from evaluation
+
+2006-08-07  Steven Eker  <eker@goo.csl.sri.com>
+
+	* dagNodeCache.cc (DagNodeCache): added
+
+	* dagNodeCache.hh (class DagNodeCache): NO_COPYING(); declare ctor
+
+	* core.hh: add class DagNodeCache
+
+	* dagNodeCache.cc: created
+
+	* dagNodeCache.hh: created
+
+===================================Maude88a===========================================
+
 2006-03-07  Steven Eker  <eker@goo.csl.sri.com>
 
 	* cachedDag.hh (getDagRoot): added
@@ -1027,7 +1053,7 @@
 
 	* preEquation.cc (compileBuild): fixed nasty bug where we were not
 	passing atTop = true to findAvailableTerms(); among other things
-	this causes evaluated subterms undert top symbol to be treated as
+	this causes evaluated subterms under top symbol to be treated as
 	eager rather than lazy as they should be. It also allows whole lhs
 	to be reused in rhs via l->r sharing - something that is
 	unsupportable by free theory discrimination nets since there is

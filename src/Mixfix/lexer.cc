@@ -1852,7 +1852,7 @@ char *yytext;
 #include "directoryManager.hh"
 #include "preModule.hh"
 #include "lexerAux.hh"
-#include "main.hh"
+#include "global.hh"
 #include "userLevelRewritingContext.hh"
 #include "interpreter.hh"
 

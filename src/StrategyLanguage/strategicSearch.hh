@@ -35,11 +35,7 @@ class StrategicSearch : public DagNodeCache, private StrategicTask
   NO_COPYING(StrategicSearch);
 
 public:
-  //
-  //	We take ownership of initial and strategy and delete them in our dtor.
-  //
   StrategicSearch(RewritingContext* initial, StrategyExpression* strategy);
-  ~StrategicSearch();
 
   DagNode* findNextSolution();
   RewritingContext* getContext();
@@ -52,7 +48,6 @@ private:
   Survival executionsExhausted(StrategicProcess* insertionPoint);
 
   RewritingContext* initial;
-  StrategyExpression* strategy;
   bool exhausted;
   DagNode* solution;
   StrategicProcess* nextToRun;

@@ -27,22 +27,20 @@
 #define _strategyLanguage_hh_
 
 class StrategyExpression;
-class SetGenerator;
-
 class TrivialStrategy;
-class TrivialSetGenerator;
 class ApplicationStrategy;
-class ApplicationSetGenerator;
 class ConcatenationStrategy;
-class ConcatenationSetGenerator;
 class IterationStrategy;
-class IterationSetGenerator;
 class BranchStrategy;
-class BranchSetGenerator;
 class UnionStrategy;
-class UnionSetGenerator;
-class UnaryStrategy;
-class UnarySetGenerator;
-class StateCache;
+class TestStrategy;
+
+class StrategicExecution;
+class StrategicProcess;
+class DecompositionProcess;
+class ApplicationProcess;
+class StrategicTask;
+class StrategicSearch;
+class BranchTask;
 
 #endif

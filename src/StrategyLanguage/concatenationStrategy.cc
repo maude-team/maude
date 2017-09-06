@@ -35,7 +35,7 @@
 
 //	strategy language class definitions
 #include "concatenationStrategy.hh"
-#include "concatenationSetGenerator.hh"
+#include "decompositionProcess.hh"
 
 ConcatenationStrategy::ConcatenationStrategy(const Vector<StrategyExpression*> strategies)
   : strategies(strategies)
@@ -50,8 +50,10 @@ ConcatenationStrategy::~ConcatenationStrategy()
     delete strategies[i];
 }
 
-SetGenerator*
-ConcatenationStrategy::execute(DagNode* subject, RewritingContext& context)
+StrategicExecution::Survival
+ConcatenationStrategy::decompose(StrategicSearch& /* searchObject */, DecompositionProcess* remainder)
 {
-  return new ConcatenationSetGenerator(subject, context, strategies);
+  for (int i = strategies.size() - 1; i >= 0; --i)
+    remainder->pushStrategy(strategies[i]);
+  return StrategicExecution::SURVIVE;  // remainder should not request deletion
 }

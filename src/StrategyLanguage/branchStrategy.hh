@@ -30,17 +30,30 @@
 class BranchStrategy : public StrategyExpression
 {
 public:
-  BranchStrategy(StrategyExpression* test,
-		 StrategyExpression* success,
-		 StrategyExpression* failure);
+  enum Action
+    {
+      FAIL,		// no results
+      IDLE,		// original term
+      PASS_THRU,	// results from test (success case only)
+      NEW_STRATEGY,	// apply new strategy
+      ITERATE		// apply the same branch strategy to any result
+    };
+
+  BranchStrategy(StrategyExpression* initialStrategy,
+		 Action successAction,
+		 StrategyExpression* successStrategy,
+		 Action failureAction,
+		 StrategyExpression* failureStrategy);
   ~BranchStrategy();
 
-  SetGenerator* execute(DagNode* subject, RewritingContext& context);
+  StrategicExecution::Survival decompose(StrategicSearch& searchObject, DecompositionProcess* remainder);
 
 private:
-  StrategyExpression* const test;
-  StrategyExpression* const success;
-  StrategyExpression* const failure;
+  StrategyExpression* const initialStrategy;
+  const Action successAction;
+  StrategyExpression* const successStrategy;
+  const Action failureAction;
+  StrategyExpression* const failureStrategy;
 };
 
 #endif

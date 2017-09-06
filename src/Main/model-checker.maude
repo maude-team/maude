@@ -22,12 +22,12 @@
 
 ***
 ***	Maude LTL satisfiability solver and model checker.
-***	Version alpha88b.
+***	Version alpha88.
 ***
 
 fmod LTL is
-  protecting BOOL .
-  sort Formula .
+  sorts Prop Formula .
+  subsort Prop < Formula .
 
   *** primitive LTL operators
   ops True False : -> Formula [ctor format (g o)] .
@@ -71,7 +71,7 @@ fmod LTL is
 endfm
 
 fmod LTL-SIMPLIFIER is
-  including LTL .
+  inc LTL .
 
   *** The simplifier is based on:
   ***   Kousha Etessami and Gerard J. Holzman,
@@ -173,7 +173,7 @@ fmod LTL-SIMPLIFIER is
 endfm
 
 fmod SAT-SOLVER is
-  protecting LTL .
+  inc LTL .
 
   *** formula lists and results
   sorts FormulaList SatSolveResult TautCheckResult .
@@ -214,15 +214,14 @@ fmod SAT-SOLVER is
 endfm
 
 fmod SATISFACTION is
-  sorts State Prop .
-  op _|=_ : State Prop -> Bool [frozen] .
+  pr LTL .
+  sort State .
+  op _|=_ : State Formula ~> Bool .
 endfm
 
 fmod MODEL-CHECKER is
-  protecting QID .
-  protecting SATISFACTION .
-  protecting LTL .
-  subsort Prop < Formula .
+  pr QID .
+  inc SATISFACTION .
 
   *** transitions and results
   sorts RuleName Transition TransitionList ModelCheckResult .

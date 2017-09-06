@@ -23,6 +23,9 @@
 //
 //	Class for storing position and extension information during a search.
 //
+//	Note that position indicies are persistent and can be saved, along with
+//	a copy of extension info for a rebuildDag() after more searching.
+//
 #ifndef _positionState_hh_
 #define _positionState_hh_
 #include <stack>
@@ -38,13 +41,23 @@ public:
     RESPECT_FROZEN = 1
   };
 
+  typedef int PositionIndex;
+
+  //
+  //	maxDepth = -1		means at top, no extension
+  //	maxDepth = 0		means at top, with extension
+  //	maxDepth = UNBOUNDED	means all the way down to the leaf nodes, with extension
+  //
   PositionState(DagNode* top, int flags = 0, int minDepth = 0, int maxDepth = -1);
   ~PositionState();
 
   bool findNextPosition();  // should this be protected?
   DagNode* getDagNode() const;
   ExtensionInfo* getExtensionInfo();
+  PositionIndex getPositionIndex() const;
   DagNode* rebuildDag(DagNode* replacement) const;
+  DagNode* rebuildDag(DagNode* replacement, ExtensionInfo* extInfo, PositionIndex index) const;
+
   int getFlags() const;
 
 private:
@@ -54,14 +67,14 @@ private:
   const int minDepth;
   const int maxDepth;
   ExtensionInfo* extensionInfo;
-  bool extensionInfoValid;
+  bool extensionInfoValid;	// need separate flag because 0 is a valid extensionInfo value
   //
   //	For breathfirst traversal over positions.
   //
   Vector<RedexPosition> positionQueue;
   Vector<int> depth;
-  int nextToExplore;
-  int nextToReturn;
+  PositionIndex nextToExplore;
+  PositionIndex nextToReturn;
 };
 
 inline int
@@ -88,5 +101,20 @@ PositionState::getExtensionInfo()
     }
   return extensionInfo;
 }
+
+inline PositionState::PositionIndex
+PositionState::getPositionIndex() const
+{
+  Assert(nextToReturn >= 0, "findNextPosition() not called");
+  return nextToReturn;
+}
+
+inline DagNode*
+PositionState::rebuildDag(DagNode* replacement) const
+{
+  Assert(nextToReturn >= 0, "findNextPosition() not called");
+  return rebuildDag(replacement, extensionInfo, nextToReturn);
+}
+
 
 #endif

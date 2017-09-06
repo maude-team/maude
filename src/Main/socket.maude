@@ -22,12 +22,11 @@
 
 ***
 ***	Maude internet socket external objects.
-***	Version alpha88b.
 ***
 
 mod SOCKET is
-  protecting STRING .
-  including CONFIGURATION .
+  pr STRING .
+  inc CONFIGURATION .
 
   op socket : Nat -> Oid [ctor] .
 
