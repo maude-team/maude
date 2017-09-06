@@ -66,6 +66,8 @@ maude_LDADD = \
 
 maude_SOURCES = \
 	renaming.cc \
+	view.cc \
+	entity.cc \
 	moduleCache.cc \
 	moduleExpression.cc \
 	importModule.cc \
@@ -86,6 +88,7 @@ maude_SOURCES = \
 	maudemlBuffer.cc \
 	interpreter.cc \
 	moduleDatabase.cc \
+	viewDatabase.cc \
 	profileModule.cc \
 	mixfixParser.cc \
 	visibleModule.cc \
@@ -139,6 +142,7 @@ EXTRA_DIST = \
 	specialSymbolTypes.cc \
 	doParse.cc \
 	makeGrammar.cc \
+	auxProperty.cc \
 	termPrint.cc \
 	dagNodePrint.cc \
 	sharedPrint.cc \
@@ -161,6 +165,8 @@ EXTRA_DIST = \
 
 noinst_HEADERS = \
 	renaming.hh \
+	view.hh \
+	entity.hh \
 	moduleCache.hh \
 	moduleExpression.hh \
 	commonTokens.hh \
@@ -178,6 +184,7 @@ noinst_HEADERS = \
 	mixfixModule.hh \
 	mixfixParser.hh \
 	moduleDatabase.hh \
+	viewDatabase.hh \
 	preModule.hh \
 	profileModule.hh \
 	quotedIdentifierDagNode.hh \

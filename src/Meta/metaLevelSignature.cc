@@ -202,3 +202,14 @@
      MACRO(noMatchSubstSymbol, Symbol, 0, 0)
      MACRO(noMatchPairSymbol, Symbol, 0, 0)
      MACRO(failureTraceSymbol, Symbol, 0, 0)
+     //
+     //	Print option constructors.
+     //
+     MACRO(mixfixSymbol, Symbol, 0, 0)
+     MACRO(withParensSymbol, Symbol, 0, 0)
+     MACRO(flatSymbol, Symbol, 0, 0)
+     MACRO(formatPrintOptionSymbol, Symbol, 0, 0)
+     MACRO(numberSymbol, Symbol, 0, 0)
+     MACRO(ratSymbol, Symbol, 0, 0)
+     MACRO(emptyPrintOptionSetSymbol, Symbol, 0, 0)
+     MACRO(printOptionSetSymbol, Symbol, SymbolType::ASSOC | SymbolType::COMM, 2)

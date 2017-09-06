@@ -29,11 +29,10 @@ MixfixModule::getParserStats(int& nrNonterminals, int& nrTerminals, int& nrProdu
 {
   makeGrammar();
   int nrKinds = getConnectedComponents().length();
-  nrNonterminals = - nonTerminal(nrKinds, TERM_TYPE) - 1;
+  nrNonterminals = - nextNonTerminal;
   nrTerminals = parser->getTokenSet().cardinality();
   nrProductions = parser->getNrProductions();
 }
-
 
 Term*
 MixfixModule::parseTerm(const Vector<Token>& bubble,

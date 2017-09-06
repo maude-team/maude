@@ -499,14 +499,18 @@ MetaLevelOpSymbol::metaParse(FreeDagNode* subject, RewritingContext& context)
 bool
 MetaLevelOpSymbol::metaPrettyPrint(FreeDagNode* subject, RewritingContext& context)
 {
-  if (MixfixModule* m = metaLevel->downModule(subject->getArgument(0)))
+  int printFlags;
+  if (metaLevel->downPrintOptionSet(subject->getArgument(2), printFlags))
     {
-      if (Term* t = metaLevel->downTerm(subject->getArgument(1), m))
+      if (MixfixModule* m = metaLevel->downModule(subject->getArgument(0)))
 	{
-	  Vector<int> buffer;
-	  m->bufferPrint(buffer, t);
-	  t->deepSelfDestruct();
-	  return context.builtInReplace(subject, metaLevel->upQidList(buffer));
+	  if (Term* t = metaLevel->downTerm(subject->getArgument(1), m))
+	    {
+	      Vector<int> buffer;
+	      m->bufferPrint(buffer, t, printFlags);
+	      t->deepSelfDestruct();
+	      return context.builtInReplace(subject, metaLevel->upQidList(buffer));
+	    }
 	}
     }
   return false;

@@ -25,6 +25,7 @@
 //
 #ifndef _preModule_hh_
 #define _preModule_hh_
+#include <set>
 #include "namedEntity.hh"
 #include "lineNumber.hh"
 #include "commonTokens.hh"
@@ -35,7 +36,7 @@ class PreModule
   : public NamedEntity,
     public LineNumber,
     private CommonTokens,
-    private ImportModule::Parent
+    private Entity::User
 {
   NO_COPYING(PreModule);
 
@@ -54,6 +55,7 @@ public:
   void finishModule(Token endToken);
   bool isComplete();
 
+  void addParameter(Token name, ModuleExpression*  theory);
   void addImport(Token mode, ModuleExpression* expr);
   void addSortDecl(const Vector<Token>& sortDecl);
   void addSubsortDecl(const Vector<Token>& subsortDecl);
@@ -89,7 +91,7 @@ public:
   void dump();
   void showModule(ostream& s = cout);
 
-  static ImportModule* makeModule(const ModuleExpression* expr);
+  static ImportModule* makeModule(const ModuleExpression* expr, ImportModule* enclosingModule = 0);
 
   //
   //	Utility functions - maybe they should go elsewhere?
@@ -147,6 +149,12 @@ private:
     Vector<Sort*> domainAndRange;
   };
 
+  struct Parameter
+  {
+    Token name;
+    ModuleExpression* theory;
+  };
+
   struct Import
   {
     Token mode;
@@ -156,7 +164,7 @@ private:
   static void printAttributes(ostream& s, const OpDef& opDef);
   static ImportModule*  getModule(int name, const LineNumber& lineNumber);
 
-  void regretToInform(ImportModule* doomedModule);
+  void regretToInform(Entity* doomedEntity);
   int findHook(const Vector<Hook>& hookList, HookType type, int name);
 
   Symbol* findHookSymbol(const Vector<Token>& fullName);
@@ -186,13 +194,14 @@ private:
   int startTokenCode;
   Bool lastSawOpDecl;
   Bool isCompleteFlag;
+  Vector<Parameter> parameters;
   Vector<Import> imports;
   Vector<Vector<Token> > sortDecls;
   Vector<Vector<Token> > subsortDecls;
   Vector<OpDecl> opDecls;
   Vector<OpDef> opDefs;
   Vector<Vector<Token> > statements;
-  IntSet labels;
+  set<int> potentialLabels;
   ModuleDatabase::ImportMap autoImports;
   VisibleModule* flatModule;
 

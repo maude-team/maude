@@ -1,3 +1,7 @@
+2005-01-07  Steven Eker  <eker@goo.csl.sri.com>
+
+	* tests/Meta/metaPrettyPrint.maude: updated test for print option argument
+
 2004-12-08  Steven Eker  <eker@goo.csl.sri.com>
 
 	* tests/Meta/Makefile.am: added metaMetadata

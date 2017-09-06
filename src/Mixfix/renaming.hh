@@ -61,15 +61,18 @@ public:
   Renaming* makeCanonicalVersion(ImportModule* module) const;
   crope makeCanonicalName() const;
 
+  void addSortAndLabelMappings(const Renaming* original);
+
   int renameSort(int oldId) const;
   int renameLabel(int oldId) const;
   int renameOp(Symbol* oldSymbol) const;
   int renamePolymorph(int oldId) const;
+  void printRenaming(ostream& s, const char* sep, const char* sep2) const;
 
 private:
   struct OpMapping
   {
-    Vector<set<int> > types;	// rename operator with sepcific arity only
+    Vector<set<int> > types;	// rename operator with specific arity only
     int name;			// new name
     //
     //	Can change syntactic attributes only.
@@ -88,6 +91,8 @@ private:
   static bool typeMatch(const Vector<set<int> >& types, Symbol* oldSymbol);
   static void setType(set<int>& type, const ConnectedComponent* component);
   static crope makeTypeName(const set<int>& type);
+
+  void printRenamingType(ostream& s, int opMappingNr, int typeNr) const;
 
   IdMap sortMap;
   Vector<IdMap::const_iterator> sortMapIndex;

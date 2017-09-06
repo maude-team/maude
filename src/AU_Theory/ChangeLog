@@ -1,3 +1,10 @@
+2005-02-18  Steven Eker  <eker@goo.csl.sri.com>
+
+	* AU_GreedyMatcher.cc (greedyMatchVariableBlock): commented out 4
+	DebugAdvisory()s
+
+===================================Maude86===========================================
+
 2003-08-29  Steven Eker  <eker@goo.csl.sri.com>
 
 	* AU_Symbol.hh (class AU_Symbol): added decl for

@@ -350,6 +350,7 @@ MetaLevel::downType2(int id, MixfixModule* m, Sort*& type)
   switch (Token::auxProperty(id))
     {
     case Token::AUX_SORT:
+    case Token::AUX_PARAMETERIZED_SORT:
       {
 	Sort* s = m->findSort(id);
 	if (s != 0)
@@ -845,7 +846,6 @@ MetaLevel::downTermPair(DagNode* metaTerm1,
   return false;
 }
 
-
 Term*
 MetaLevel::downTerm(DagNode* metaTerm, MixfixModule* m)
 {
@@ -1048,4 +1048,43 @@ MetaLevel::downAssignment(DagNode* metaAssignment,
 	}
     }
   return false;
+}
+
+bool
+MetaLevel::downPrintOptionSet(DagNode* metaPrintOptionSet, int& printFlags) const
+{
+  printFlags = 0;
+  Symbol* mp = metaPrintOptionSet->symbol();
+  if (mp == printOptionSetSymbol)
+    {
+      for (DagArgumentIterator i(metaPrintOptionSet); i.valid(); i.next())
+	{
+	  if (!downPrintOption(i.argument(), printFlags))
+	    return false;
+	}
+    }
+  else if (mp != emptyPrintOptionSetSymbol)
+    return downPrintOption(metaPrintOptionSet, printFlags);
+  return true;
+}
+
+bool
+MetaLevel::downPrintOption(DagNode* metaPrintOption, int& printFlags) const
+{
+  Symbol* mp = metaPrintOption->symbol();
+  if (mp == mixfixSymbol)
+    printFlags |= Interpreter::PRINT_MIXFIX;
+  else if (mp == withParensSymbol)
+    printFlags |= Interpreter::PRINT_WITH_PARENS;
+  else if (mp == flatSymbol)
+    printFlags |= Interpreter::PRINT_FLAT;
+  else if (mp == formatPrintOptionSymbol)
+    printFlags |= Interpreter::PRINT_FORMAT;
+  else if (mp == numberSymbol)
+    printFlags |= Interpreter::PRINT_NUMBER;
+  else if (mp == ratSymbol)
+    printFlags |= Interpreter::PRINT_RAT;
+  else
+    return false;
+  return true;
 }

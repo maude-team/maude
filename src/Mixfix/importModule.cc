@@ -51,6 +51,7 @@
 
 //	front end class definitions
 #include "renaming.hh"
+#include "view.hh"
 #include "importModule.hh"
 #include "moduleCache.hh"
 #include "importTranslation.hh"
@@ -59,11 +60,13 @@
 //	our stuff
 #include "renameModule.cc"
 
-ImportModule::ImportModule(int name, ModuleType moduleType, Parent* parent)
-  : MixfixModule(name, moduleType),
-    parent(parent)
+ImportModule::ImportModule(int name, ModuleType moduleType, Entity::User* parent)
+  : MixfixModule(name, moduleType)
 {
+  if (parent != 0)
+    addUser(parent);  // HACK
   importPhase = UNVISITED;
+  nrBoundParameters = 0;
   protectCount = 0;
   canonicalRenaming = 0;
   baseModule = 0;
@@ -80,16 +83,52 @@ ImportModule::addImport(ImportModule* importedModule,
 			LineNumber lineNumber)
 {
   ModuleType t = importedModule->getModuleType();
-  WarningCheck(!(isTheory(t) && mode != INCLUDING),
+  WarningCheck(!isTheory(t) || mode == INCLUDING,
 	       lineNumber << ": theories may only be imported using the " <<
 	       QUOTE("including") << " importation mode.");
   WarningCheck(canImport(getModuleType(), t),
-	       lineNumber <<": importation of " <<
+	       lineNumber << ": importation of " <<
 	       QUOTE(moduleTypeString(t)) << " by " <<
 	       QUOTE(moduleTypeString(getModuleType())) <<
 	       " not allowed."); 
   importedModules.append(importedModule);
-  importedModule->dependentModules.append(this);
+  importedModule->addUser(this);
+}
+
+void
+ImportModule::addParameter(const Token parameterName,
+			   ImportModule* parameterTheory)
+{
+  if (findParameterIndex(parameterName.code()) != NONE)
+    {
+      IssueWarning(LineNumber(parameterName.lineNumber()) <<
+		   ": there is already a parameter called " << QUOTE(parameterName) <<
+		   ". Recovering by ignoring parameter.");
+      return;
+    }
+
+  ModuleType t = parameterTheory->getModuleType();
+  WarningCheck(canHaveAsParameter(getModuleType(), t),
+	       LineNumber(parameterName.lineNumber()) << ": parameterization of " <<
+	       QUOTE(moduleTypeString(getModuleType())) << " by " <<
+	       QUOTE(moduleTypeString(t)) << " not allowed."); 
+	     
+  parameterNames.append(parameterName.code());
+  importedModules.append(parameterTheory);
+  //parameterTheories.append(parameterTheory);
+  parameterTheory->addUser(this);
+}
+
+int
+ImportModule::findParameterIndex(int name) const
+{
+  int nrParameters = parameterNames.size();
+  for (int i = 0; i < nrParameters; ++i)
+    {
+      if (parameterNames[i] == name)
+	return i;
+    }
+  return NONE;
 }
 
 void
@@ -111,31 +150,38 @@ ImportModule::closeSignature()
 }
 
 void
+ImportModule::regretToInform(Entity* /* doomedEntity */)
+{
+  //
+  //	Something that we depend on is about to disappear - so we must self destruct.
+  //
+  deepSelfDestruct();
+}
+
+void
 ImportModule::deepSelfDestruct()
 {
   //
-  //	First remove ourself from the dependent modules of our imports and
-  //	base modules. This is so we will not receive deepSelfDestruct() after
+  //	First remove ourself from the list of users of each of our imports, parameters
+  //	and base module. This is so we will not receive a regretToInform() message after
   //	we delete ourself.
   //
-  int nrImportedModules = importedModules.length();
-  for (int i = 0; i < nrImportedModules; i++)
-    {
-      ImportModule* import = importedModules[i];
-      import->removeDependent(this);
-    }
+  /*
+  {
+    FOR_EACH_CONST(i, Vector<ImportModule*>, parameterTheories)
+      (*i)->removeUser(this);
+  }
+  */
+  {
+    FOR_EACH_CONST(i, Vector<ImportModule*>, importedModules)
+      (*i)->removeUser(this);
+  }
   if (baseModule != 0)
-      baseModule->removeDependent(this);
+    baseModule->removeUser(this);
   //
-  //	Now tell all modules that depend on us to self destruct.
+  //	Now we inform all our users of our impending demise.
   //
-  while (dependentModules.length() > 0)
-    dependentModules[0]->deepSelfDestruct();
-  //
-  //	Inform our parent of our impending demise.
-  //
-  if(parent != 0)
-    parent->regretToInform(this);
+  informUsers();
   //
   //	And then delete ourself or mark ourself for deletion.
   //
@@ -157,23 +203,6 @@ ImportModule::unprotect()
       return true;
     }
   return false;
-}
-
-void
-ImportModule::removeDependent(ImportModule* dependent)
-{
-  DebugAdvisory("removed " << dependent << " from modules depending on " << this);
-  int nrDependentModules = dependentModules.length();
-  for (int i = 0; i < nrDependentModules; i++)
-    {
-      if (dependentModules[i] == dependent)
-	{
-	  dependentModules[i] = dependentModules[nrDependentModules - 1];
-	  dependentModules.contractTo(nrDependentModules - 1);
-	  return;
-	}
-    }
-  CantHappen("non-existent dependent" << this);
 }
 
 //

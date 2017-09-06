@@ -44,7 +44,7 @@
   MACRO(metaLeastSort, 2)
   MACRO(metaCompleteName, 2)
   MACRO(metaParse, 3)
-  MACRO(metaPrettyPrint, 2)
+  MACRO(metaPrettyPrint, 3)
   MACRO(metaWellFormedModule, 1)
   MACRO(metaWellFormedTerm, 2)
   MACRO(metaGetKind, 2)

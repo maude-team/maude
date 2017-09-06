@@ -239,6 +239,7 @@ rewrites: 1
 result KindSet: '`[AttrSet`] ; '`[Bool`] ; '`[Condition`] ; '`[EquationSet`] ;
     '`[FindResult`,NatList`,Bound`] ; '`[HookList`] ; '`[ImportList`] ;
     '`[MatchPair?`] ; '`[MembAxSet`] ; '`[Module`] ; '`[OpDeclSet`] ;
+    '`[PrintOptionSet`] ;
     '`[QidList`,TypeListSet`,Type?`,GTermList`,ModuleExpression`] ;
     '`[RenamingSet`] ; '`[Result4Tuple?`] ; '`[ResultPair?`] ;
     '`[ResultTriple?`] ; '`[RuleSet`] ; '`[String`] ; '`[SubsortDeclSet`] ;

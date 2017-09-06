@@ -45,6 +45,7 @@
 
 ObjectSystemRewritingContext::~ObjectSystemRewritingContext()
 {
+  //DebugAdvisory("~ObjectSystemRewritingContext() called; " << externalObjects.size() << " external objects");
   if (!(externalObjects.empty()))
     {
       FOR_EACH_CONST(i, ObjectMap, externalObjects)

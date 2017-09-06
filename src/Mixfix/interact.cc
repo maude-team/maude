@@ -30,20 +30,10 @@ bool UserLevelRewritingContext::ctrlC_Flag = false;
 bool UserLevelRewritingContext::stepFlag = false;
 bool UserLevelRewritingContext::abortFlag = false;
 int UserLevelRewritingContext::debugLevel = 0;
-IntSet UserLevelRewritingContext::breakSymbols;
 
 int yyparse(void*);
 void cleanUpParser();
 void cleanUpLexer();
-
-void
-UserLevelRewritingContext::selectBreakSymbols(const IntSet& symbols, bool add)
-{
-  if (add)
-    breakSymbols.insert(symbols);
-  else
-    breakSymbols.subtract(symbols);
-}
 
 void
 UserLevelRewritingContext::clearDebug()
@@ -233,14 +223,14 @@ UserLevelRewritingContext::handleDebug(const DagNode* subject, const PreEquation
   if (interpreter.getFlag(Interpreter::BREAK))
     {
       Symbol* s = subject->symbol();
-      if (breakSymbols.contains(s->id()))
+      if (interpreter.breakId(s->id()))
 	{
 	  broken = true;
 	  brokenSymbol = s;
 	}
       else
 	{
-	  if (pe != 0 && breakSymbols.contains(pe->getLabel().id()))
+	  if (pe != 0 && interpreter.breakId(pe->getLabel().id()))
 	    broken = true;
 	}
     }

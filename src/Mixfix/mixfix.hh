@@ -54,5 +54,9 @@ class MetadataStore;
 class ModuleExpression;
 class Renaming;
 class ModuleCache;
+class View;
+class ModuleDatabase;
+class ViewDatabase;
+class Entity;
 
 #endif

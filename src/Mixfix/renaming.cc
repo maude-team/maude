@@ -21,7 +21,7 @@
 */
 
 //
-//      Implementation for class ModuleExpression.
+//      Implementation for class Renaming.
 //
 
 //      utility stuff
@@ -32,9 +32,6 @@
 #include "core.hh"
 #include "interface.hh"
 #include "mixfix.hh"
-
-//	core class definitions
-//#include "symbol.hh"
 
 //	front end class definitions
 #include "token.hh"
@@ -72,9 +69,9 @@ Renaming::makeCanonicalName() const
 	if (!name.empty())
 	  name += ", ";
 	name += "sort ";
-	name += Token::name(i->first);
+	name += Token::sortName(i->first);
 	name += " to ";
-	name += Token::name(i->second);
+	name += Token::sortName(i->second);
       }
   }
   {
@@ -395,6 +392,27 @@ Renaming::renamePolymorph(int oldId) const
 }
 
 void
+Renaming::addSortAndLabelMappings(const Renaming* original)
+{
+  {
+    FOR_EACH_CONST(i, IdMap, original->sortMap)
+      {
+	pair<IdMap::iterator, bool> p = sortMap.insert(*i);
+	if (p.second)
+	  sortMapIndex.append(p.first);
+      }
+  }
+  {
+    FOR_EACH_CONST(i, IdMap, original->labelMap)
+      {
+	pair<IdMap::iterator, bool> p = labelMap.insert(*i);
+	if (p.second)
+	  labelMapIndex.append(p.first);
+      }
+  }
+}
+
+void
 Renaming::addSortMapping(Token from, Token to)
 {
   pair<IdMap::iterator, bool> p = sortMap.insert(IdMap::value_type(from.code(), to.code()));
@@ -522,11 +540,11 @@ Renaming::setLatexMacro(const string& latexMacro)
   lastOpMapping->second.latexMacro = latexMacro;
 }
 
-static void
-printRenamingType(ostream& s, const Renaming* renaming, int opMappingNr, int typeNr)
+void
+Renaming::printRenamingType(ostream& s, int opMappingNr, int typeNr) const
 {
   char sep = '[';
-  const set<int>& sorts = renaming->getTypeSorts(opMappingNr, typeNr);
+  const set<int>& sorts = getTypeSorts(opMappingNr, typeNr);
   FOR_EACH_CONST(i, set<int>, sorts)
     {
       s << sep << Token::name(*i);
@@ -535,26 +553,24 @@ printRenamingType(ostream& s, const Renaming* renaming, int opMappingNr, int typ
   s << ']';
 }
 
-ostream&
-operator<<(ostream& s, const Renaming* renaming)
+void
+Renaming::printRenaming(ostream& s, const char* sep, const char* sep2) const
 {
-  s << '(';
-  const char* sep = "";
   {
-    int nrSortMappings = renaming->getNrSortMappings();
+    int nrSortMappings = getNrSortMappings();
     for (int i = 0; i < nrSortMappings; i++)
       {
-	s << sep << "sort " << Token::name(renaming->getSortFrom(i)) <<
-	  " to " << Token::name(renaming->getSortTo(i));
-	sep = ", ";
+	s << sep << "sort " << Token::name(getSortFrom(i)) <<
+	  " to " << Token::name(getSortTo(i));
+	sep = sep2;
       }
   }
   {
-    int nrOpMappings = renaming->getNrOpMappings();
+    int nrOpMappings = getNrOpMappings();
     for (int i = 0; i < nrOpMappings; i++)
       {
-	s << sep << "op " << Token::name(renaming->getOpFrom(i));
-	int nrTypes = renaming->getNrTypes(i);
+	s << sep << "op " << Token::name(getOpFrom(i));
+	int nrTypes = getNrTypes(i);
 	if (nrTypes > 0)
 	  {
 	    s << " :";
@@ -562,15 +578,15 @@ operator<<(ostream& s, const Renaming* renaming)
 	    for (int j = 0; j < nrTypes; j++)
 	      {
 		s << ' ';
-		printRenamingType(s, renaming, i, j);
+		printRenamingType(s, i, j);
 	      }
 	    s << " -> ";
-	    printRenamingType(s, renaming, i, nrTypes);
+	    printRenamingType(s, i, nrTypes);
 	  }
-	s << " to " << Token::name(renaming->getOpTo(i));
-	int prec = renaming->getPrec(i);
-	const Vector<int>& gather = renaming->getGather(i);
-	const Vector<int>& format = renaming->getFormat(i);
+	s << " to " << Token::name(getOpTo(i));
+	int prec = getPrec(i);
+	const Vector<int>& gather = getGather(i);
+	const Vector<int>& format = getFormat(i);
 	if (prec >= MixfixModule::MIN_PREC || !(gather.empty()) || !(format.empty()))
 	  {
 	    sep = " [";
@@ -593,18 +609,24 @@ operator<<(ostream& s, const Renaming* renaming)
 	      }
 	    s << ']';
 	  }
-	sep = ", ";
+	sep = sep2;
       }
   }
   {
-    int nrLabelMappings = renaming->getNrLabelMappings();
+    int nrLabelMappings = getNrLabelMappings();
     for (int i = 0; i < nrLabelMappings; i++)
       {
-	s << sep << "label " << Token::name(renaming->getLabelFrom(i)) <<
-	  " to " << Token::name(renaming->getLabelTo(i));
-	sep = ", ";
+	s << sep << "label " << Token::name(getLabelFrom(i)) <<
+	  " to " << Token::name(getLabelTo(i));
+	sep = sep2;
       }
   }
-  s << ')';
-  return s;
+}
+
+ostream&
+operator<<(ostream& s, const Renaming* renaming)
+{
+  s << '(';
+  renaming->printRenaming(s, "", ", ");
+  return s << ')';
 }

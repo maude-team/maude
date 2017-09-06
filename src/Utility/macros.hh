@@ -166,7 +166,19 @@ enum SpecialConstants
   //
   BITS_PER_BYTE = 8,
   BITS_PER_INT = BITS_PER_BYTE * sizeof(int),
-  BITS_PER_UINT = BITS_PER_BYTE * sizeof(unsigned int)
+  BITS_PER_UINT = BITS_PER_BYTE * sizeof(unsigned int),
+  //
+  //	GARBAGE is used where we want a value to store or pass as an argument and we don't
+  //	care about which value. For most CPUs, 0 is the easiest value to generate but
+  //	when debugging we want a value that sticks out like a raw thumb in case we mistakenly
+  //	try to use it for something. Note that GARBAGE should not be used as an out-of-band
+  //	value that we test against since in this case we _do_ care what value is used.
+  //
+#ifdef NO_ASSERT
+  GARBAGE = 0
+#else
+  GARBAGE = -333333333
+#endif
 };
 
 #ifdef NO_IMPLEMENT_INLINES
@@ -240,6 +252,10 @@ if (!(condition) && globalAdvisoryFlag) \
 #define \
 IssueWarning(message) \
 (cerr << WARNING_HEADER << message << endl)
+
+#define \
+ComplexWarning(message) \
+(cerr << WARNING_HEADER << message)
 
 #define \
 IssueAdvisory(message) \
