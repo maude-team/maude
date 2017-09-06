@@ -49,7 +49,7 @@ PseudoThread::processCallBacks(int& returnValue)
       CallBackRequest c = callBackQueue.top();  // deep copy
       long wait = c.notBefore - now;
       if (wait > 0)
-	return wait;
+	return wait;  // because call-backs are on in a priority queue, the first one with a positive wait determines the wait period
       //
       //	Need to pop current request before dispatching call back because call back may request a new one.
       //
@@ -205,7 +205,7 @@ PseudoThread::eventLoop()
       //
       long wait = NONE;
       if (!callBackQueue.empty())
-	long wait = processCallBacks(returnValue);
+	wait = processCallBacks(returnValue);
       //
       //	If we have fd call backs pending, process them.
       //

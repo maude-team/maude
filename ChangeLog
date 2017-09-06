@@ -1,3 +1,20 @@
+2014-02-06  Steven Eker  <eker@ape.csl.sri.com>
+
+	* configure.ac: removed rope_UGLY_HACK option
+
+	* src/3rdParty/Makefile.am (noinst_HEADERS): removed
+	rope_UGLY_HACK stuff
+
+2014-01-31  Steven Eker  <eker@ape.csl.sri.com>
+
+	* configure.ac: no longer offer dlmalloc option
+
+	* src/3rdParty/malloc.c: deleted
+
+	* src/3rdParty/Makefile.am: remove all mention of dlmalloc
+
+===================================Maude100a===========================================
+
 2013-03-12  Steven Eker  <eker@ape.csl.sri.com>
 
 	* tests/Misc/unification (MAUDE_LIB): created

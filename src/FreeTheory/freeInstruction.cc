@@ -117,8 +117,10 @@ FreeInstruction::FreeInstruction(FreeSymbol* symbol, int destinationIndex, Instr
     JUMP();						\
   }
 
-#define TRY_REMAINDERS()						\
+#define TRY_REMAINDERS(argAddress)					\
   {									\
+    FREE_NET& net = i->symbol->GET_NET();				\
+    long index = net.findRemainderListIndex(argAddress);		\
     if (index >= 0)							\
       {									\
 	Frame* nextFrame = i->fastPushFrame(frame);			\
@@ -151,15 +153,6 @@ FreeInstruction::FreeInstruction(FreeSymbol* symbol, int destinationIndex, Instr
     JUMP();					\
   }
 
-#define NULLARY_CTOR()							\
-  {									\
-    if (d == 0)								\
-      {									\
-	d = new(NONE) FreeDagNode(s, NONE /* HACK */);			\
-	s->setNode(d);							\
-      }									\
-  }
-
 #define TRY_REMAINDERS_FINAL()						\
   {									\
     FREE_NET& net = i->symbol->GET_NET();				\
@@ -184,6 +177,36 @@ FreeInstruction::FreeInstruction(FreeSymbol* symbol, int destinationIndex, Instr
 
 #define JUMP() \
   goto *(jumpTable[n->getOpCode()]);
+
+#define NULLARY_CTOR()							\
+  const FreeInstruction* i = static_cast<const FreeInstruction*>(n);	\
+  FreeNullarySymbol* s = static_cast<FreeNullarySymbol*>(i->symbol);	\
+  DagNode* d = s->getNode();						\
+  if (d == 0)								\
+    {									\
+      d = new(NONE) FreeDagNode(s, NONE /* HACK */);			\
+      s->setNode(d);							\
+    }
+
+#define UNARY_CTOR()							\
+  const FreeFastInstruction* i = static_cast<const FreeFastInstruction*>(n); \
+  FreeSymbol* s = i->symbol;						\
+  DagNode* d = new(NONE) FreeDagNode(s,					\
+				     frame->getSlot(i->argIndex0));
+
+#define BINARY_CTOR()							\
+  const FreeFastInstruction* i = static_cast<const FreeFastInstruction*>(n); \
+  FreeSymbol* s = i->symbol;						\
+  DagNode* d = new(NONE) FreeDagNode(s,					\
+				     frame->getSlot(i->argIndex0),	\
+				     frame->getSlot(i->argIndex1));
+#define TERNARY_CTOR()							\
+  const FreeFastInstruction* i = static_cast<const FreeFastInstruction*>(n); \
+  FreeSymbol* s = i->symbol;						\
+  DagNode* d = new(NONE) FreeDagNode(s,					\
+				     frame->getSlot(i->argIndex0),	\
+				     frame->getSlot(i->argIndex1),	\
+				     frame->getSlot(i->argIndex2));
 
 void
 FreeInstruction::execute(StackMachine* machine) const
@@ -221,37 +244,25 @@ FreeInstruction::execute(StackMachine* machine) const
 
  nullaryCtor:
   {
-    const FreeInstruction* i = static_cast<const FreeInstruction*>(n);
-    FreeNullarySymbol* s = static_cast<FreeNullarySymbol*>(i->symbol);
-    DagNode* d = s->getNode();
     NULLARY_CTOR();
     NEXT_NO_GC();
   }
 
  unaryCtor:
   {
-    const FreeFastInstruction* i = static_cast<const FreeFastInstruction*>(n);
-    DagNode* d = new(NONE) FreeDagNode(i->symbol,
-				       frame->getSlot(i->argIndex0));
+    UNARY_CTOR();
     NEXT();
   }
 
  binaryCtor:
   {
-    const FreeFastInstruction* i = static_cast<const FreeFastInstruction*>(n);
-    DagNode* d = new(NONE) FreeDagNode(i->symbol,
-				       frame->getSlot(i->argIndex0),
-				       frame->getSlot(i->argIndex1));
+    BINARY_CTOR();
     NEXT();
   }
 
  ternaryCtor:
   {
-    const FreeFastInstruction* i = static_cast<const FreeFastInstruction*>(n);
-    DagNode* d = new(NONE) FreeDagNode(i->symbol,
-				       frame->getSlot(i->argIndex0),
-				       frame->getSlot(i->argIndex1),
-				       frame->getSlot(i->argIndex2));
+    TERNARY_CTOR();
     NEXT();
   }
 
@@ -267,12 +278,8 @@ FreeInstruction::execute(StackMachine* machine) const
  unaryExtor:
   {
     const FreeFastInstruction* i = static_cast<const FreeFastInstruction*>(n);
-    FREE_NET& net = i->symbol->GET_NET();
-    long index = net.findRemainderListIndex(frame->getArgumentListPtr() + i->argIndex0);
-    TRY_REMAINDERS();
-
-    DagNode* d = new(NONE) FreeDagNode(i->symbol,
-				       frame->getSlot(i->argIndex0));
+    TRY_REMAINDERS(frame->getArgumentListPtr() + i->argIndex0);
+    DagNode* d = new(NONE) FreeDagNode(i->symbol, frame->getSlot(i->argIndex0));
     NEXT();
   }
 
@@ -281,10 +288,7 @@ FreeInstruction::execute(StackMachine* machine) const
     const FreeFastInstruction* i = static_cast<const FreeFastInstruction*>(n);
     localArgList[0] = frame->getSlot(i->argIndex0);
     localArgList[1] = frame->getSlot(i->argIndex1);
-
-    FREE_NET& net = i->symbol->GET_NET();
-    long index = net.findRemainderListIndex(localArgList);
-    TRY_REMAINDERS();
+    TRY_REMAINDERS(localArgList);
     DagNode* d = new(NONE) FreeDagNode(i->symbol, localArgList[0], localArgList[1]);
     NEXT();
   }
@@ -295,50 +299,32 @@ FreeInstruction::execute(StackMachine* machine) const
     localArgList[0] = frame->getSlot(i->argIndex0);
     localArgList[1] = frame->getSlot(i->argIndex1);
     localArgList[2] = frame->getSlot(i->argIndex2);
-
-    FREE_NET& net = i->symbol->GET_NET();
-    long index = net.findRemainderListIndex(localArgList);
-    TRY_REMAINDERS();
+    TRY_REMAINDERS(localArgList);
     DagNode* d = new(NONE) FreeDagNode(i->symbol, localArgList[0], localArgList[1], localArgList[2]);
     NEXT();
   }
 
  nullaryCtorFinal:
   {
-    const FreeInstruction* i = static_cast<const FreeInstruction*>(n);
-    FreeNullarySymbol* s = static_cast<FreeNullarySymbol*>(i->symbol);
-    DagNode* d = s->getNode();
     NULLARY_CTOR();
     END_FRAME_NO_GC();
   }
 
  unaryCtorFinal:
   {
-    const FreeFastInstruction* i = static_cast<const FreeFastInstruction*>(n);
-    FreeSymbol* s = i->symbol;
-    DagNode* d = new(NONE) FreeDagNode(s,
-				       frame->getSlot(i->argIndex0));
+    UNARY_CTOR();
     END_FRAME();
   }
 
  binaryCtorFinal:
   {
-    const FreeFastInstruction* i = static_cast<const FreeFastInstruction*>(n);
-    FreeSymbol* s = i->symbol;
-    DagNode* d = new(NONE) FreeDagNode(s,
-				       frame->getSlot(i->argIndex0),
-				       frame->getSlot(i->argIndex1));
+    BINARY_CTOR();
     END_FRAME();
   }
 
  ternaryCtorFinal:
   {
-    const FreeFastInstruction* i = static_cast<const FreeFastInstruction*>(n);
-    FreeSymbol* s = i->symbol;
-    DagNode* d = new(NONE) FreeDagNode(s,
-				       frame->getSlot(i->argIndex0),
-				       frame->getSlot(i->argIndex1),
-				       frame->getSlot(i->argIndex2));
+    TERNARY_CTOR();
     END_FRAME();
   }
 
@@ -391,7 +377,6 @@ FreeInstruction::execute(StackMachine* machine) const
 
  other:
   {
-    //cout << "other " << endl;
     //
     //	Save next instruction in current frame.
     //

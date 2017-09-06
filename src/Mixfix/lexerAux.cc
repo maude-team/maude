@@ -269,6 +269,10 @@ eatComment(bool firstNonWhite)
       int c = yyinput();
       switch(c)
 	{
+	case 0:
+	  {
+	    IssueAdvisory(LineNumber(lineNumber) << "Saw null character in comment.");
+	  }
 	case ' ':
 	case '\t':
 	case '\r':
@@ -311,9 +315,13 @@ eatComment(bool firstNonWhite)
 	    break;
 	  }
 	case EOF:
-	  return;
+	  {
+	    return;
+	  }
 	default:
-	  firstNonWhite = false;
+	  {
+	    firstNonWhite = false;
+	  }
 	}
       backquoteSeen = (c == '`');
       if (passThrough)

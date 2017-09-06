@@ -1,3 +1,14 @@
+2014-02-06  Steven Eker  <eker@ape.csl.sri.com>
+
+	* nonFinalExtor.cc (setActiveSlots): fix signed vs unsigned
+	comparison warning
+
+2013-11-21  Steven Eker  <eker@ape.csl.sri.com>
+
+	* dagNode.hh (fastLeq): added
+
+===================================Maude100a===========================================
+
 2013-10-29  Steven Eker  <eker@ape.csl.sri.com>
 
 	* nonFinalExtor.cc (setActiveSlots): fix bug where unsigned NONE

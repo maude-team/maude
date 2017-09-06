@@ -33,6 +33,7 @@ class FreeNet
 public:
   typedef set<int> PatternSet;
 
+  FreeNet();
   ~FreeNet();
 
   //
@@ -61,6 +62,7 @@ public:
   //	For stack machine execution.
   //
   long findRemainderListIndex(DagNode** argumentList);
+  bool fastHandling() const;
 
 #ifdef DUMP
   void dump(ostream& s, int indentLevel = 0);
@@ -135,6 +137,7 @@ private:
   Vector<Vector<FreeRemainder*> > fastApplicable;
   Vector<FreeRemainder*> remainders;
   Vector<PatternSet> applicable;
+  bool fast;
 
   friend class FreeInstruction;
   friend class FreeGeneralExtor;
@@ -157,6 +160,12 @@ inline bool
 FreeNet::applyReplaceNoOwise(DagNode* subject, RewritingContext& context)
 {
   return !applicable.isNull() ? applyReplaceNoOwise2(subject, context) : false;
+}
+
+inline bool
+FreeNet::fastHandling() const
+{
+  return fast;
 }
 
 #endif

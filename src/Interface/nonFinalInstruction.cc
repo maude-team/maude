@@ -35,7 +35,6 @@
 //#include "dagNode.hh"
 #include "nonFinalInstruction.hh"
 
-
 NonFinalInstruction::~NonFinalInstruction()
 {
   delete nextInstruction;

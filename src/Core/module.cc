@@ -270,14 +270,20 @@ Module::closeTheory()
       s->compileRules();
       // s->finalizeSymbol();
     }
+}
 
-  /*
-  const Vector<Equation*>& equations = getEquations() const;
+void
+Module::stackMachineCompile()
+{
+  Assert(status >= THEORY_CLOSED, "bad status");
+  if (status == STACK_MACHINE_COMPILED)
+    return;
+  status = STACK_MACHINE_COMPILED;
+  const Vector<Equation*>& equations = getEquations();
   FOR_EACH_CONST(i, Vector<Equation*>, equations)
     {
       (*i)->stackMachineCompile();
     }
-  */
 }
 
 void

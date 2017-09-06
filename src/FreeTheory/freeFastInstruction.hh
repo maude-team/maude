@@ -22,7 +22,7 @@
 
 //
 //      Stack machine instruction for a free symbols that have 0 to 3 arguments and only fast equations (if any).
-//	that is not the final instruction for a rhs.
+//	This might be combined with FreeInstruction at some point.
 //
 #ifndef _freeFastInstruction_hh_
 #define _freeFastInstruction_hh_

@@ -638,7 +638,7 @@ MetaLevel::upGather(const Vector<int>& gather, PointerMap& qidMap)
   args.resize(gatherLength);
   for (int i = 0; i < gatherLength; i++)
     {
-      const char* s;
+      const char* s = "e";  // to avoid uninitailized variable warning
       switch (gather[i])
 	{
 	case MixfixModule::GATHER_e:

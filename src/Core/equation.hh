@@ -50,6 +50,7 @@ public:
   void setVariant();
   bool isVariant() const;
 
+  void stackMachineCompile();
   Instruction* getInstructionSequence() const;
 
 private:

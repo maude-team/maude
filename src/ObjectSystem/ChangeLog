@@ -1,3 +1,11 @@
+2014-02-06  Steven Eker  <eker@ape.csl.sri.com>
+
+	* pseudoThread.cc (processCallBacks): added comment
+	(eventLoop): fix a bug where we were putting wait in a shadowing
+	variable
+
+===================================Maude100a===========================================
+
 2012-11-09  Steven Eker  <eker@ape.csl.sri.com>
 
 	* pseudoThread.cc (processFds): update idea of time after poll() call

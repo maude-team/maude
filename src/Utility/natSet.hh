@@ -67,6 +67,7 @@ public:
   void intersect(const NatSet& other);
   NatSet& operator=(const NatSet& original);
   FastBool contains(value_type i) const;  // constant time
+  bool containsSmall(value_type i) const;  // only correct for small arguments
   bool contains(const NatSet& other) const;  // i.e. improper subset test
   bool disjoint(const NatSet& other) const;
   bool operator==(const NatSet& other) const;
@@ -110,6 +111,12 @@ private:
   Vector<Word> array;
 
   friend class iterator;
+
+public:
+  enum Values
+    {
+      smallIntBound = BITS_PER_WORD - 1
+    };
 };
 
 inline
@@ -175,6 +182,14 @@ NatSet::contains(value_type i) const
 {
   Assert(i >= 0, "-ve argument");
   return i < BITS_PER_WORD ? ((firstWord >> i) & 1) : arrayContains(i);
+}
+
+inline bool
+NatSet::containsSmall(value_type i) const
+{
+  Assert(i >= 0, "-ve argument " << i);
+  Assert(i < BITS_PER_WORD, "too big: " << i);
+  return ((firstWord >> i) & 1);
 }
 
 inline bool

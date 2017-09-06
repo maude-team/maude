@@ -55,6 +55,7 @@ public:
   int compare(const DagNode* other) const;
   bool equal(const DagNode* other) const;
   bool leq(const Sort* sort) const;
+  bool fastLeq(const Sort* sort) const;
 
   bool isReduced() const;
   void reduce(RewritingContext& context);
@@ -655,6 +656,15 @@ inline bool
 DagNode::leq(const Sort* sort) const
 {
   return ::leq(getSortIndex(), sort);
+}
+
+inline bool
+DagNode::fastLeq(const Sort* sort) const
+{
+  //
+  //	Only works for sorts on which fastGeqSufficient() is true.
+  //
+  return sort->fastGeq(getSortIndex());
 }
 
 inline size_t

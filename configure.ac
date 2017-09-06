@@ -3,7 +3,7 @@
 #
 #	Initialize autoconf stuff.
 #
-AC_INIT(Maude, alpha100, [maude-bugs@maude.cs.uiuc.edu])
+AC_INIT(Maude, 2.7, [maude-bugs@maude.cs.uiuc.edu])
 #
 #	Allow directory names that look like macros.
 #
@@ -16,7 +16,7 @@ AC_CANONICAL_HOST
 #
 #	Initialize automake stuff.
 #
-AM_INIT_AUTOMAKE(Maude, alpha100)
+AM_INIT_AUTOMAKE(Maude, 2.7)
 #
 #	Cause defines to be put in a header file rather than passed as
 #	compiler flags.
@@ -94,21 +94,6 @@ else
 fi
 AC_SUBST(TECLA_LIBS)
 #
-#	Check to see if we should use hacked version of Mac rope implementation.
-#
-AC_ARG_WITH(rope-ugly-hack,
-	    AC_HELP_STRING([--with-rope-ugly-hack],
-                           [use hacked up version of Mac rope implentation [default=no]]),
-			   [WITH_ROPE_UGLY_HACK=$withval],
-			   [WITH_ROPE_UGLY_HACK=no])
-if (test $WITH_ROPE_UGLY_HACK = yes) then
-#
-#	Define flag so we include local hacked up version rather than system version of
-#	rope and ropeimpl.h
-#
-  AC_DEFINE([USE_ROPE_UGLY_HACK], [], [use hacked up version of Mac rope implementation])
-fi
-#
 #	Check to see if we should use libsigsegv to handle segmentation faults.
 #
 AC_ARG_WITH(libsigsegv,
@@ -137,6 +122,14 @@ if (test -z "$GMP_LIBS") then
   GMP_LIBS="-lgmpxx -lgmp"
 fi
 AC_SUBST(GMP_LIBS)
+#
+#	Check if the user set particular GCC libraries to use - otherwise
+#	let the compiler pick.
+#
+if (test -z "$GCC_LIBS") then
+  GCC_LIBS=""
+fi
+AC_SUBST(GCC_LIBS)
 #
 #	*** HEADERS ***
 #
@@ -273,14 +266,6 @@ else
   fi
 fi
 #
-#	Check to see if we should use Doug Lea's malloc().
-#
-AC_ARG_WITH(dlmalloc,
-	    AC_HELP_STRING([--with-dlmalloc],
-                           [use Doug Lea's malloc() [default=yes]]),
-			   [WITH_DLMALLOC=$withval],
-			   [WITH_DLMALLOC=yes])
-#
 #	Fixes for known hosts.
 #
 FIXFLAGS=""
@@ -294,20 +279,15 @@ case $host in
     FIXFLAGS="-mieee"
     ;;
 #
-#	gcc on x86-64 on linux doesn't seem to be able to link an
-#	external malloc with conflicting with the one defined in
-#	lib64/libc.a
+#	(no longer deal with dlmalloc)
 #
   x86_64-*-linux-*)
-    WITH_DLMALLOC=no
     ;;
 #
-#	Doug Lea's malloc() is unstable on Darwin - presumably because
-#	of brk()/sbrk() issues.
+#	(no longer deal with dlmalloc)
 #    
   *-darwin*)
     AC_DEFINE([DARWIN], [], [enable Darwin specific fixes])
-    WITH_DLMALLOC=no
     ;;
 
 esac
@@ -350,7 +330,6 @@ fi
 #
 #	Conditional compilation and linking.
 #
-AM_CONDITIONAL(USE_DLMALLOC, test $WITH_DLMALLOC = yes) 
 AM_CONDITIONAL(BUILD_COMPILER, test $COMPILER = yes) 
 
 AC_CONFIG_FILES([Makefile

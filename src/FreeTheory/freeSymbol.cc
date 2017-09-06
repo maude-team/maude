@@ -445,6 +445,9 @@ FreeSymbol::makeCanonicalCopy(DagNode* original, HashConsSet* hcs)
 Instruction*
 FreeSymbol::generateFinalInstruction(const Vector<int>& argumentSlots)
 {
+  if (!(discriminationNet.fastHandling()))
+    return new FreeGeneralExtorFinal(this, argumentSlots);
+
   int nrArgs = arity();
   if (nrArgs > 3)
     {
@@ -470,6 +473,9 @@ FreeSymbol::generateFinalInstruction(const Vector<int>& argumentSlots)
 Instruction*
 FreeSymbol::generateInstruction(int destination, const Vector<int>& argumentSlots, Instruction* nextInstruction)
 {
+  if (!(discriminationNet.fastHandling()))
+    return new FreeGeneralExtor(this, argumentSlots, destination, nextInstruction);
+
   int nrArgs = arity();
   if (nrArgs > 3)
     {

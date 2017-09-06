@@ -125,6 +125,9 @@ Equation::compile(bool compileLhs)
 
   compileMatch(compileLhs, true);
 
+  builder.remapIndices(*this);
+
+  /*
   StackMachineRhsCompiler compiler;
   if (builder.recordInfo(compiler) && !hasCondition())  // we don't handle conditions, and rhs might share subterms with condition
     {
@@ -145,10 +148,27 @@ Equation::compile(bool compileLhs)
     }
 
   //builder.dump(cerr, *this);
-  builder.remapIndices(*this);
   //builder.dump(cerr, *this);
 
+  //builder.remapIndices(*this);
+  */
+
   fast = hasCondition() ? DEFAULT : getNrProtectedVariables();  // HACK
+}
+
+void
+Equation::stackMachineCompile()
+{
+  //
+  //	We assume that the equation has already been compiled and thus its builder contains
+  //	all the information on the rhs.
+  //	We now generation a stack machine instruction sequence for that rhs.
+  //
+  StackMachineRhsCompiler compiler;
+  if (builder.recordInfo(compiler) && !hasCondition())  // we don't handle conditions, and rhs might share subterms with condition
+    {
+      instructionSequence = compiler.compileInstructionSequence();
+    }
 }
 
 int

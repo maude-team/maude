@@ -1,3 +1,45 @@
+2014-01-31  Steven Eker  <eker@ape.csl.sri.com>
+
+	* freeSymbol.cc (generateFinalInstruction, generateInstruction):
+	check for fast handling and use most general case if not
+
+	* freeNet.hh (fastHandling): added
+
+	* freeNet.cc (FreeNet): added
+
+	* freeNet.hh (F): declare ctor
+
+	* freeNet.cc (buildRemainders): compute value for fast data member
+
+	* freeRemainder.hh (fastCheckAndBind): added Assert() that we
+	really don't require slow case processing
+	(fastCheckAndBind, generalCheckAndBind): better commenting
+	(fastHandling): added
+
+2013-12-20  Steven Eker  <eker@ape.csl.sri.com>
+
+	* freeGeneralExtorFinal.cc (execute): use generalCheckAndBind()
+
+	* freeGeneralExtor.cc (execute): use generalCheckAndBind()
+
+	* freeRemainder.cc (slowCheckAndBind): added
+
+	* freeRemainder.hh (generalCheckAndBind): added
+	(FreeLhsStructs): added decl for slowCheckAndBind
+
+2013-11-21  Steven Eker  <eker@ape.csl.sri.com>
+
+	* freeInstruction.cc (execute): refactored, so that ctor cases
+	always preload symbol since this seems to give better code
+
+	* freeRemainder.cc (FreeRemainder): rearranged "fast" and
+	"super-fast" determination; use fastGeqSufficient()
+
+	* freeRemainder.hh (fastMatchReplace, fastCheckAndBind): use
+	fastLeq()
+
+===================================Maude100a===========================================
+
 2013-10-27  Steven Eker  <eker@ape.csl.sri.com>
 
 	* freeTheory.hh: added classes FreeGeneralExtor and

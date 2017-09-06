@@ -21,8 +21,9 @@
 */
 
 //
-//      Stack machine instruction for a free binary symbol with only "fast" equations
-//	that is not the final instruction for a rhs.
+//      Stack machine instruction for a free symbol with only "fast" equations.
+//	It can be final or non-final, extor or ctor but we inherit from NonFinalExtor to get
+//	the extra non-final and extor stuff in case we need it.
 //
 #ifndef _freeInstruction_hh_
 #define _freeInstruction_hh_
@@ -60,17 +61,12 @@ public:
 
   void execute(StackMachine* machine) const;
 
-  //void static execute2(const Instruction* n, StackMachine* machine);
-
-
 #ifdef DUMP
   void dump(ostream& s, int indentLevel);
 #endif
 
 private:
   FreeSymbol* const symbol;  // our symbol
-
-
 };
 
 #endif
