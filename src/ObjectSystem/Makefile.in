@@ -105,7 +105,9 @@ am_libobjectSystem_a_OBJECTS =  \
 	libobjectSystem_a-objectSystemRewritingContext.$(OBJEXT) \
 	libobjectSystem_a-externalObjectManagerSymbol.$(OBJEXT) \
 	libobjectSystem_a-socketManagerSymbol.$(OBJEXT) \
-	libobjectSystem_a-pseudoThread.$(OBJEXT)
+	libobjectSystem_a-pseudoThread.$(OBJEXT) \
+	libobjectSystem_a-fileManagerSymbol.$(OBJEXT) \
+	libobjectSystem_a-streamManagerSymbol.$(OBJEXT)
 libobjectSystem_a_OBJECTS = $(am_libobjectSystem_a_OBJECTS)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -297,7 +299,9 @@ libobjectSystem_a_SOURCES = \
 	objectSystemRewritingContext.cc \
 	externalObjectManagerSymbol.cc \
 	socketManagerSymbol.cc \
-	pseudoThread.cc 
+	pseudoThread.cc \
+	fileManagerSymbol.cc \
+	streamManagerSymbol.cc
 
 EXTRA_DIST = \
 	objectMap.cc \
@@ -305,7 +309,11 @@ EXTRA_DIST = \
 	socketSignature.cc \
 	socketStuff.cc \
 	socketAsync.cc \
-	socketOutcomes.cc
+	socketOutcomes.cc \
+	fileSignature.cc \
+	fileActions.cc \
+	fileOutcomes.cc \
+	streamSignature.cc
 
 noinst_HEADERS = \
 	configSymbol.hh \
@@ -313,7 +321,9 @@ noinst_HEADERS = \
 	objectSystemRewritingContext.hh \
 	externalObjectManagerSymbol.hh \
 	socketManagerSymbol.hh \
-	pseudoThread.hh
+	pseudoThread.hh \
+	fileManagerSymbol.hh \
+	streamManagerSymbol.hh
 
 all: all-am
 
@@ -366,9 +376,11 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libobjectSystem_a-configSymbol.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libobjectSystem_a-externalObjectManagerSymbol.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libobjectSystem_a-fileManagerSymbol.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libobjectSystem_a-objectSystemRewritingContext.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libobjectSystem_a-pseudoThread.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libobjectSystem_a-socketManagerSymbol.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libobjectSystem_a-streamManagerSymbol.Po@am__quote@
 
 .cc.o:
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -453,6 +465,34 @@ libobjectSystem_a-pseudoThread.obj: pseudoThread.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='pseudoThread.cc' object='libobjectSystem_a-pseudoThread.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libobjectSystem_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libobjectSystem_a-pseudoThread.obj `if test -f 'pseudoThread.cc'; then $(CYGPATH_W) 'pseudoThread.cc'; else $(CYGPATH_W) '$(srcdir)/pseudoThread.cc'; fi`
+
+libobjectSystem_a-fileManagerSymbol.o: fileManagerSymbol.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libobjectSystem_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libobjectSystem_a-fileManagerSymbol.o -MD -MP -MF $(DEPDIR)/libobjectSystem_a-fileManagerSymbol.Tpo -c -o libobjectSystem_a-fileManagerSymbol.o `test -f 'fileManagerSymbol.cc' || echo '$(srcdir)/'`fileManagerSymbol.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libobjectSystem_a-fileManagerSymbol.Tpo $(DEPDIR)/libobjectSystem_a-fileManagerSymbol.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='fileManagerSymbol.cc' object='libobjectSystem_a-fileManagerSymbol.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libobjectSystem_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libobjectSystem_a-fileManagerSymbol.o `test -f 'fileManagerSymbol.cc' || echo '$(srcdir)/'`fileManagerSymbol.cc
+
+libobjectSystem_a-fileManagerSymbol.obj: fileManagerSymbol.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libobjectSystem_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libobjectSystem_a-fileManagerSymbol.obj -MD -MP -MF $(DEPDIR)/libobjectSystem_a-fileManagerSymbol.Tpo -c -o libobjectSystem_a-fileManagerSymbol.obj `if test -f 'fileManagerSymbol.cc'; then $(CYGPATH_W) 'fileManagerSymbol.cc'; else $(CYGPATH_W) '$(srcdir)/fileManagerSymbol.cc'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libobjectSystem_a-fileManagerSymbol.Tpo $(DEPDIR)/libobjectSystem_a-fileManagerSymbol.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='fileManagerSymbol.cc' object='libobjectSystem_a-fileManagerSymbol.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libobjectSystem_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libobjectSystem_a-fileManagerSymbol.obj `if test -f 'fileManagerSymbol.cc'; then $(CYGPATH_W) 'fileManagerSymbol.cc'; else $(CYGPATH_W) '$(srcdir)/fileManagerSymbol.cc'; fi`
+
+libobjectSystem_a-streamManagerSymbol.o: streamManagerSymbol.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libobjectSystem_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libobjectSystem_a-streamManagerSymbol.o -MD -MP -MF $(DEPDIR)/libobjectSystem_a-streamManagerSymbol.Tpo -c -o libobjectSystem_a-streamManagerSymbol.o `test -f 'streamManagerSymbol.cc' || echo '$(srcdir)/'`streamManagerSymbol.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libobjectSystem_a-streamManagerSymbol.Tpo $(DEPDIR)/libobjectSystem_a-streamManagerSymbol.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='streamManagerSymbol.cc' object='libobjectSystem_a-streamManagerSymbol.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libobjectSystem_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libobjectSystem_a-streamManagerSymbol.o `test -f 'streamManagerSymbol.cc' || echo '$(srcdir)/'`streamManagerSymbol.cc
+
+libobjectSystem_a-streamManagerSymbol.obj: streamManagerSymbol.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libobjectSystem_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libobjectSystem_a-streamManagerSymbol.obj -MD -MP -MF $(DEPDIR)/libobjectSystem_a-streamManagerSymbol.Tpo -c -o libobjectSystem_a-streamManagerSymbol.obj `if test -f 'streamManagerSymbol.cc'; then $(CYGPATH_W) 'streamManagerSymbol.cc'; else $(CYGPATH_W) '$(srcdir)/streamManagerSymbol.cc'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libobjectSystem_a-streamManagerSymbol.Tpo $(DEPDIR)/libobjectSystem_a-streamManagerSymbol.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='streamManagerSymbol.cc' object='libobjectSystem_a-streamManagerSymbol.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libobjectSystem_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libobjectSystem_a-streamManagerSymbol.obj `if test -f 'streamManagerSymbol.cc'; then $(CYGPATH_W) 'streamManagerSymbol.cc'; else $(CYGPATH_W) '$(srcdir)/streamManagerSymbol.cc'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique

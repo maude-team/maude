@@ -1,4 +1,4 @@
-Maude> ==========================================
+==========================================
 reduce in META-LEVEL : sortLeq(fmod 'FOO is
   nil
   sorts 'NzNat ; 'Nat ; 'Int ; 'NzInt .
@@ -333,4 +333,4 @@ result TypeList: (nil).TypeList
 reduce in META-LEVEL : glbSorts(['RAT], '`[Int`], 'Int) .
 rewrites: 2
 result Sort: 'Int
-Maude> Bye.
+Bye.

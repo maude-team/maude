@@ -1,4 +1,4 @@
-Maude> fmod BAR is
+fmod BAR is
   inc FOO * (sort Foo to Baz, sort Bar to Quux) .
 endfm
 fmod BAR is
@@ -276,6 +276,7 @@ fmod FLOAT
 fmod STRING
 fmod CONVERSION
 fmod RANDOM
+fmod BOUND
 fmod QID
 fth TRIV
 fth STRICT-WEAK-ORDER
@@ -303,6 +304,7 @@ fmod META-TERM
 fmod META-MODULE
 fmod META-VIEW
 fmod META-LEVEL
+fmod LEXICAL
 mod COUNTER
 mod LOOP-MODE
 mod CONFIGURATION
@@ -424,4 +426,4 @@ fmod FOO' * (sort Foo to Quux, op _+_ : [Baz] [Baz] -> [Foo,Bar] to _._ [prec
 fmod FOO' * (sort Foo to Quux, op _+_ to _*_ [prec 29 gather (E E)])
 fmod BASH * (op f : [Foo,Bar] -> [Foo,Bar] to g)
 fmod DIFF * (op f : [Bar] -> [Bar] to g, op f : [Foo] -> [Foo] to g)
-Maude> Bye.
+Bye.

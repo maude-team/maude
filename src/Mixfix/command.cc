@@ -297,7 +297,9 @@ SyntacticPreModule::printAttributes(ostream& s, const OpDef& opDef)
 	    "id-hook", "op-hook", "term-hook"
 	  };
 	  s << "\n    " << hookTypes[i->type] << ' ' <<
-	    Token::name(i->name) << " (" << i->details << ')';
+	    Token::name(i->name);
+	  if (!(i->details.empty()))
+	    s << " (" << i->details << ')';
 	}
       s << ')';
     }

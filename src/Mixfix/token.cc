@@ -171,6 +171,37 @@ Token::fixUp(const char* tokenString, int& lineNumber)
   lineNumber += nrBackslashNewlineCombos;
 }
 
+int
+Token::fixUp(const char* tokenString)
+{
+  //
+  //	Remove \ newline sequences.
+  //
+  int nrBackslashNewlineCombos = 0;
+  int j = 0;
+  for (int i = 0;; i++)
+    {
+      char c = tokenString[i];
+      if (c == '\\' && tokenString[i + 1] == '\n')
+	{
+	  //
+	  //	Fix up \ newline case.
+	  //
+	  ++i;
+	  ++nrBackslashNewlineCombos;
+	}
+      else
+	{
+	  bufferExpandTo(j + 1);
+	  buffer[j] = c;
+	  ++j;
+	  if (c == '\0')
+	    break;
+	}
+    } 
+  return encode(buffer);
+}
+
 void
 Token::dropChar(const Token& original)
 {

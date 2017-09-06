@@ -1,4 +1,4 @@
-Maude> ==========================================
+==========================================
 reduce in META-LEVEL : metaPrettyPrint(fmod 'FOO is
   protecting 'FLOAT .
   sorts none .
@@ -132,4 +132,4 @@ reduce in META-LEVEL : metaPrettyPrint(fmod 'FOO is
 endfm, '_/_['-_['s_^6789['0.Zero]],'s_^12345['0.Zero]], mixfix rat) .
 rewrites: 1
 result Sort: '-6789/12345
-Maude> Bye.
+Bye.

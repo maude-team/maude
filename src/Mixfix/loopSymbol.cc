@@ -164,8 +164,7 @@ LoopSymbol::extractQid(DagNode* metaQid, int& id)
 {
   if (metaQid->symbol() == qidSymbol)
     {
-      id =
-	Token::unBackQuoteSpecials(static_cast<QuotedIdentifierDagNode*>(metaQid)->getIdIndex());
+      id = Token::unBackQuoteSpecials(static_cast<QuotedIdentifierDagNode*>(metaQid)->getIdIndex());
       return true;
     }
   return false;

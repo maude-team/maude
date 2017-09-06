@@ -1,4 +1,4 @@
-Maude> ==========================================
+==========================================
 reduce in META-LEVEL : upSorts('META-LEVEL, true) .
 rewrites: 1
 result NeSortSet: 'Assignment ; 'Attr ; 'AttrSet ; 'Bool ; 'Bound ; 'Char ;
@@ -27,7 +27,7 @@ result NeSortSet: 'Assignment ; 'Attr ; 'AttrSet ; 'Bool ; 'Bound ; 'Char ;
 ==========================================
 reduce in META-LEVEL : upSorts('META-LEVEL, false) .
 rewrites: 1
-result NeSortSet: 'Bound ; 'MatchPair ; 'MatchPair? ; 'NarrowingApplyResult ;
+result NeSortSet: 'MatchPair ; 'MatchPair? ; 'NarrowingApplyResult ;
     'NarrowingApplyResult? ; 'NarrowingSearchPathResult ;
     'NarrowingSearchPathResult? ; 'NarrowingSearchResult ;
     'NarrowingSearchResult? ; 'NarrowingStep ; 'NarrowingTrace ; 'Parent ;
@@ -141,7 +141,6 @@ subsort 'NarrowingApplyResult < 'NarrowingApplyResult? .
 subsort 'NarrowingSearchPathResult < 'NarrowingSearchPathResult? .
 subsort 'NarrowingSearchResult < 'NarrowingSearchResult? .
 subsort 'NarrowingStep < 'NarrowingTrace .
-subsort 'Nat < 'Bound .
 subsort 'Nat < 'Parent .
 subsort 'PrintOption < 'PrintOptionSet .
 subsort 'Result4Tuple < 'Result4Tuple? .
@@ -159,7 +158,8 @@ subsort 'Variant < 'Variant? .
 ==========================================
 reduce in META-LEVEL : upImports('META-LEVEL) .
 rewrites: 1
-result Import: protecting 'META-VIEW .
+result ImportList: protecting 'META-VIEW .
+protecting 'BOUND .
 ==========================================
 reduce in META-LEVEL : upImports('NAT) .
 rewrites: 1
@@ -1604,7 +1604,6 @@ op 'sameKind : '`[Module`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,Parameter
 op 'sortLeq : '`[Module`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`] -> '`[Bool`] [special(
     id-hook('MetaLevelOpSymbol, 'metaSortLeq) 
     op-hook('shareWith, 'metaReduce, 'Module 'QidSet, 'ResultPair?))] .
-op 'unbounded : nil -> 'Bound [ctor] .
 op 'upEqs : '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`] '`[Bool`] -> '`[EquationSet`] [special(
     id-hook('MetaLevelOpSymbol, 'metaUpEqs) 
     op-hook('shareWith, 'metaReduce, 'Module 'QidSet, 'ResultPair?))] .
@@ -3045,7 +3044,8 @@ reduce in META-LEVEL : upModule('META-LEVEL, false) .
 rewrites: 1
 result FModule: fmod 'META-LEVEL is
   protecting 'META-VIEW .
-  sorts 'Bound ; 'MatchPair ; 'MatchPair? ; 'NarrowingApplyResult ;
+  protecting 'BOUND .
+  sorts 'MatchPair ; 'MatchPair? ; 'NarrowingApplyResult ;
     'NarrowingApplyResult? ; 'NarrowingSearchPathResult ;
     'NarrowingSearchPathResult? ; 'NarrowingSearchResult ;
     'NarrowingSearchResult? ; 'NarrowingStep ; 'NarrowingTrace ; 'Parent ;
@@ -3059,7 +3059,6 @@ result FModule: fmod 'META-LEVEL is
   subsort 'NarrowingSearchPathResult < 'NarrowingSearchPathResult? .
   subsort 'NarrowingSearchResult < 'NarrowingSearchResult? .
   subsort 'NarrowingStep < 'NarrowingTrace .
-  subsort 'Nat < 'Bound .
   subsort 'Nat < 'Parent .
   subsort 'PrintOption < 'PrintOptionSet .
   subsort 'Result4Tuple < 'Result4Tuple? .
@@ -3527,7 +3526,6 @@ result FModule: fmod 'META-LEVEL is
   op 'sortLeq : '`[Module`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`] -> '`[Bool`] [special(
     id-hook('MetaLevelOpSymbol, 'metaSortLeq) 
     op-hook('shareWith, 'metaReduce, 'Module 'QidSet, 'ResultPair?))] .
-  op 'unbounded : nil -> 'Bound [ctor] .
   op 'upEqs : '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`] '`[Bool`] -> '`[EquationSet`] [special(
     id-hook('MetaLevelOpSymbol, 'metaUpEqs) 
     op-hook('shareWith, 'metaReduce, 'Module 'QidSet, 'ResultPair?))] .
@@ -11086,4 +11084,4 @@ reduce in META-LEVEL : metaReduce(upModule('META-LEVEL, true), 'upModule[
     'FModule} .
 rewrites: 9
 result Bool: false
-Maude> Bye.
+Bye.

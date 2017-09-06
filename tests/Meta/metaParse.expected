@@ -1,4 +1,4 @@
-Maude> ==========================================
+==========================================
 reduce in META-LEVEL : metaParse(fmod 'FOO is
   protecting 'FLOAT .
   sorts none .
@@ -75,4 +75,4 @@ reduce in META-LEVEL : metaParse(fmod 'FOO is
 endfm, 's^1234 '`( 'true '`), anyType) .
 rewrites: 1
 result ResultPair: {'s^1234['true.Bool],'Bool}
-Maude> Bye.
+Bye.

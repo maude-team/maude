@@ -1,3 +1,90 @@
+2017-08-11  Steven Eker  <eker@install.csl.sri.com>
+
+	* tokenizer.ll (Rope): use fixUp()
+	(Rope): don't allow \t in strings
+
+	* token.hh (T): added decl for static version of fixUp()
+
+	* token.cc (fixUp): added static version
+
+	* tokenizer.ll (Rope): use endOfRope flag
+	(Rope): use EOT character to indicate endOfRope and avoid
+	flex EOF handling
+
+	* quotedIdentifierOpSymbol.cc (eqRewrite): use builtInReplace()
+	in the empty and singleton tokenize() cases
+
+2017-08-10  Steven Eker  <eker@install.csl.sri.com>
+
+	* tokenizer.ll: created
+
+	* quotedIdentifierOpSymbol.hh (FreeSymbol): added decl for
+	makeQid()
+
+	* quotedIdentifierOpSymbol.cc (eqRewrite): implement tokenize()
+	(makeQid): added
+
+2017-08-08  Steven Eker  <eker@install.csl.sri.com>
+
+	* quotedIdentifierOpSymbol.cc (printQid): new needSpace
+	rule
+	(printQid): handle '\c Qids specially
+
+2017-08-07  Steven Eker  <eker@install.csl.sri.com>
+
+	* quotedIdentifierOpSymbol.cc (eqRewrite): implemented print()
+	case
+
+	* quotedIdentifierOpSymbol.hh (FreeSymbol): added decl for
+	printQidList(), printQid()
+
+	* quotedIdentifierOpSymbol.cc (printQid): added
+	(printQidList): added
+
+2017-08-04  Steven Eker  <eker@install.csl.sri.com>
+
+	* quotedIdentifierOpSymbol.hh (FreeSymbol): use
+	quotedIdentifierOpSignature.cc
+
+	* quotedIdentifierOpSymbol.cc (QuotedIdentifierOpSymbol)
+	(copyAttachments, getSymbolAttachments, attachSymbol): use
+	quotedIdentifierOpSignature.cc
+	(getDataAttachments): added cases for print and tokenize
+
+	* quotedIdentifierOpSignature.cc: created
+
+2017-07-31  Steven Eker  <eker@install.csl.sri.com>
+
+	* lexerAux.cc (getInput): added comments
+
+2017-07-28  Steven Eker  <eker@install.csl.sri.com>
+
+	* entry.cc (newFancySymbol): added
+	SymbolType::STREAM_MANAGER_SYMBOL case
+
+	* symbolType.hh (S): added STREAM_MANAGER_SYMBOL
+
+	* specialSymbolTypes.cc: added streamManagerSymbol
+
+2017-07-24  Steven Eker  <eker@install.csl.sri.com>
+
+	* variableGenerator.cc (push, pop, clearAssertions): added
+	stub versions to allow linking without SMT support
+
+2017-07-19  Steven Eker  <eker@install.csl.sri.com>
+
+	* symbolType.hh (S): added FILE_MANAGER_SYMBOL
+
+	* entry.cc (newFancySymbol): add
+	SymbolType::FILE_MANAGER_SYMBOL case
+
+	* specialSymbolTypes.cc: added fileManagerSymbol
+
+	* command.cc (printAttributes): only print hook details
+	if nonempty
+
+===================================Maude115===========================================
+
 2017-07-11  Steven Eker  <eker@install.csl.sri.com>
 
 	* search.cc (checkSearchRestrictions): check for SMT

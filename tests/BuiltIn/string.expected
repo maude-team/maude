@@ -1,4 +1,4 @@
-Maude> ==========================================
+==========================================
 reduce in STRING : ascii("A") .
 rewrites: 1
 result NzNat: 65
@@ -244,4 +244,4 @@ result [FindResult]: ascii("aa")
 reduce in STRING : char(1000) .
 rewrites: 0
 result [String]: char(1000)
-Maude> Bye.
+Bye.

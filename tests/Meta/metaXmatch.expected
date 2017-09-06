@@ -1,4 +1,4 @@
-Maude> ==========================================
+==========================================
 reduce in META-LEVEL : metaXmatch(['SEARCH-TEST], 'X:Nat, '_*_['a.Nat,'_+_[
     'b.Nat,'c.Nat]], '_+_['Y:Nat,'Z:Nat] := 'X:Nat, 1, 2, 0) .
 rewrites: 2
@@ -346,7 +346,7 @@ rewrites: 1
 result MatchPair: {
   'X:Foo <- 'f['a.Foo,'b.Foo,'c.Foo] ; 
   'Y:Foo <- 'c.Foo,[]}
-Maude> ==========================================
+==========================================
 reduce in META-LEVEL : metaXmatch(fmod 'FOO is
   protecting 'BOOL .
   sorts 'Bar ; 'Foo .
@@ -597,4 +597,4 @@ Solution 31
 Matched portion = f(a, b)
 X:Foo --> b
 Y:Foo --> a
-Maude> Bye.
+Bye.

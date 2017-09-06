@@ -162,6 +162,7 @@ main(int argc, char* argv[])
     }
   Tty::setEscapeSequencesAllowed(ansiColor);
 
+  bool inputIsTerminal = (isatty(STDIN_FILENO) == 1);
   if (useTecla == UNDECIDED)
     {
       //
@@ -173,10 +174,9 @@ main(int argc, char* argv[])
       const char* term = getenv("TERM");
       if ((term != 0 && (strcmp("emacs", term) == 0 ||
 			 strcmp("dumb", term) == 0)) ||
-	  isatty(STDIN_FILENO) == 0)
+	  !inputIsTerminal)
 	useTecla = false;
     }
-
   //
   //	Make sure we flush cout before we output any error messages so things hit the tty in a consistent order.
   //
@@ -188,6 +188,8 @@ main(int argc, char* argv[])
   UserLevelRewritingContext::setHandlers(handleCtrlC);
   if (useTecla)
     ioManager.setCommandLineEditing();
+  if (inputIsTerminal)
+    ioManager.setUsePromptsAnyway();  // even if useTecla == false, or Tecla is not linked
   directoryManager.initialize();
   string executable(argv[0]);
   findExecutableDirectory(executableDirectory, executable);

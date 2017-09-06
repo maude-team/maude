@@ -1,3 +1,13 @@
+Overview of Changes in alpha115
+===============================
+* fixed bug show mod command output empty parentheses
+* fixed bug where maude wouldn't compile without SMT support
+* support for file i/o
+* support for standard streams
+* support for lexical level QidList <-> String conversion
+* no prompting when stdin redirect to read from file
+* sort Bound and op unbounded have their own fmod
+
 Overview of Changes in alpha114
 ===============================
 * more sanity checks at object level and meta level

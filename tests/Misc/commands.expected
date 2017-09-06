@@ -1,4 +1,4 @@
-Maude> Warning: <standard input>, line 12 (mod FOO): variable Z is used before it is
+Warning: <standard input>, line 12 (mod FOO): variable Z is used before it is
     bound in rule:
 crl f(X, Y, Y) => f(Z, X) if Z =/= Y = true .
 mod FOO is
@@ -422,7 +422,7 @@ fmod INT is
   sorts NzInt Int .
   subsorts NzNat < NzInt Nat < Int .
   op -_ : NzNat -> NzInt [ctor special (
-    id-hook MinusSymbol ()
+    id-hook MinusSymbol
     op-hook succSymbol (s_ : Nat ~> NzNat)
     op-hook minusSymbol (-_ : NzNat ~> Int))] .
   op -_ : NzInt -> NzInt [ditto] .
@@ -1229,4 +1229,4 @@ mod FOO is
   rl f(X, X, Y) => f(Y, Y) .
   crl f(X, Y, Y) => f(Z, X) if (Z =/= Y) = true [nonexec] .
 endm
-Maude> Bye.
+Bye.

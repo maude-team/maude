@@ -1,4 +1,4 @@
-Maude> ==========================================
+==========================================
 reduce in TEST : metaXapply(m, 'f['a.Foo,'b.Foo], 'k, none, 0, 100, 0) .
 rewrites: 3
 result Result4Tuple: {'a.Foo,'Foo,
@@ -102,4 +102,4 @@ result Result4Tuple: {'g['f['c.Foo,'c.Foo],'f['a.Foo,'b.Foo]],'Foo,(
 reduce in ALL-ONE-STEP-REWRITES : findAllRews(m, 'f['a.Foo,'b.Foo], 'k) .
 rewrites: 27
 result TermSet: 'a.Foo | 'b.Foo | ('f['b.Foo,'c.Foo])
-Maude> Bye.
+Bye.

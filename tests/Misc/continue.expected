@@ -1,4 +1,4 @@
-Maude> ==========================================
+==========================================
 debug search [10] in COLLATZ : f(27) =>+ f(N) .
 *********** trial #1
 crl f(N) => f(N / 2) if N rem 2 = 0 .
@@ -780,4 +780,4 @@ result Foo: g(b, e)
 
 No more solutions.
 rewrites: 0
-Maude> Bye.
+Bye.

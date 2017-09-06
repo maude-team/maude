@@ -117,6 +117,7 @@ public:
   static int flaggedCode(int code);
   static bool isFlagged(int code);
   static int unflaggedCode(int code);
+  static int fixUp(const char* tokenString);
 
 private:
   enum SpecialValues

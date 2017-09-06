@@ -1,3 +1,12 @@
+2017-07-25  Steven Eker  <eker@install.csl.sri.com>
+
+	* minusSymbol.hh (NumberOpSymbol): added decl for
+	getSignedInt64()
+
+	* minusSymbol.cc (getSignedInt64): added
+
+===================================Maude115===========================================
+
 2017-03-10  Steven Eker  <eker@install.csl.sri.com>
 
 	* branchSymbol.hh (FreeSymbol): updated decl for stackArguments()

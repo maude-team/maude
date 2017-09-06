@@ -47,7 +47,7 @@ SocketManagerSymbol::getActiveSocket(DagNode* socketArg, int& socketId, ActiveSo
       if (succSymbol->getSignedInt(idArg, socketId))
 	{
 	  SocketMap::iterator i = activeSockets.find(socketId);
-	  if (activeSockets.find(socketId) != activeSockets.end())
+	  if (i != activeSockets.end())
 	    {
 	      asp = &(i->second);
 	      return true;

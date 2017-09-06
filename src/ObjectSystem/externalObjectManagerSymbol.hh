@@ -48,6 +48,10 @@ public:
   //	allocated to an external object.
   //
   virtual void cleanUp(DagNode* objectId) = 0;
+
+  void trivialReply(Symbol* replySymbol, 
+		    FreeDagNode* originalMessage,
+		    ObjectSystemRewritingContext& context);
 };
 
 #endif

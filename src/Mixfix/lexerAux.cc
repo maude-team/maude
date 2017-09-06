@@ -37,7 +37,7 @@ bool fakeNewlineStack[MAX_IN_DEPTH];
 void
 getInput(char* buf, yy_size_t& result, yy_size_t max_size)
 {
-  result = YY_NULL;
+  result = YY_NULL;  // if we don't update result, YY_NULL will indicate an EOF condition
   if (UserLevelRewritingContext::interrupted())
     fakeNewline = false;
   else
@@ -50,10 +50,17 @@ getInput(char* buf, yy_size_t& result, yy_size_t max_size)
 	  if (n > 0)
 	    {
 	      result = n;
+	      //
+	      //	If the last character we saw wasn't a newline then if we
+	      //	hit EOF next getInput() call we will need to fake one.
+	      //
 	      fakeNewline = (buf[n - 1] != '\n');
 	    }
 	  else
 	    {
+	      //
+	      //	Saw EOF so fake a newline if needed.
+	      //
 	      if (fakeNewline && max_size > 0)
 		{
 		  buf[0] = '\n';

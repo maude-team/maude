@@ -111,7 +111,7 @@ am__libmixfix_a_SOURCES_DIST = syntaxContainer.cc renaming.cc view.cc \
 	maudemlBuffer.cc interpreter.cc moduleDatabase.cc \
 	viewDatabase.cc profileModule.cc mixfixParser.cc \
 	visibleModule.cc sharedTokens.cc metadataStore.cc \
-	printAttribute.cc banner.cc lexer.cc surface.cc \
+	printAttribute.cc banner.cc lexer.cc tokenizer.cc surface.cc \
 	freshVariableSource.cc variableGenerator.cc compiler.cc
 @BUILD_COMPILER_TRUE@am__objects_1 = libmixfix_a-compiler.$(OBJEXT)
 am_libmixfix_a_OBJECTS = libmixfix_a-syntaxContainer.$(OBJEXT) \
@@ -144,9 +144,10 @@ am_libmixfix_a_OBJECTS = libmixfix_a-syntaxContainer.$(OBJEXT) \
 	libmixfix_a-metadataStore.$(OBJEXT) \
 	libmixfix_a-printAttribute.$(OBJEXT) \
 	libmixfix_a-banner.$(OBJEXT) libmixfix_a-lexer.$(OBJEXT) \
-	libmixfix_a-surface.$(OBJEXT) \
+	libmixfix_a-tokenizer.$(OBJEXT) libmixfix_a-surface.$(OBJEXT) \
 	libmixfix_a-freshVariableSource.$(OBJEXT) \
-	libmixfix_a-variableGenerator.$(OBJEXT) $(am__objects_1)
+	libmixfix_a-variableGenerator.$(OBJEXT) \
+	libmixfix_a-tokenizer.$(OBJEXT) $(am__objects_1)
 libmixfix_a_OBJECTS = $(am_libmixfix_a_OBJECTS)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -383,16 +384,18 @@ libmixfix_a_SOURCES = \
 	printAttribute.cc \
 	banner.cc \
 	lexer.cc \
+	tokenizer.cc \
 	surface.cc \
 	freshVariableSource.cc \
 	variableGenerator.cc \
+	tokenizer.cc \
 	$(COMPILER_SRC)
 
 EXTRA_libmixfix_a_SOURCES = \
 	compiler.cc
 
-BUILT_SOURCES = surface.yy surface.cc surface.h lexer.cc
-CLEANFILES = surface.yy surface.cc surface.h lexer.cc
+BUILT_SOURCES = surface.yy surface.cc surface.h lexer.cc tokenizer.cc
+CLEANFILES = surface.yy surface.cc surface.h lexer.cc tokenizer.cc
 EXTRA_DIST = \
 	renameModule.cc \
 	parameterization.cc \
@@ -427,6 +430,7 @@ EXTRA_DIST = \
 	commands.yy \
 	bottom.yy \
 	lexer.ll \
+	tokenizer.ll \
 	graphPrint.cc \
 	ansiEscapeSequences.cc \
 	narrowing.cc \
@@ -434,7 +438,9 @@ EXTRA_DIST = \
 	getVariants.cc \
 	smtSearch.cc \
 	cvc4_Bindings.cc \
-	yices2_Bindings.cc
+	yices2_Bindings.cc \
+	quotedIdentifierOpSignature.cc \
+	tokenizer.ll
 
 noinst_HEADERS = \
 	renaming.hh \
@@ -560,6 +566,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-syntacticPreModule.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-syntaxContainer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-token.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-tokenizer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-userLevelRewritingContext.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-variableGenerator.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-view.Po@am__quote@
@@ -1057,6 +1064,20 @@ libmixfix_a-lexer.obj: lexer.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-lexer.obj `if test -f 'lexer.cc'; then $(CYGPATH_W) 'lexer.cc'; else $(CYGPATH_W) '$(srcdir)/lexer.cc'; fi`
 
+libmixfix_a-tokenizer.o: tokenizer.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-tokenizer.o -MD -MP -MF $(DEPDIR)/libmixfix_a-tokenizer.Tpo -c -o libmixfix_a-tokenizer.o `test -f 'tokenizer.cc' || echo '$(srcdir)/'`tokenizer.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libmixfix_a-tokenizer.Tpo $(DEPDIR)/libmixfix_a-tokenizer.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tokenizer.cc' object='libmixfix_a-tokenizer.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-tokenizer.o `test -f 'tokenizer.cc' || echo '$(srcdir)/'`tokenizer.cc
+
+libmixfix_a-tokenizer.obj: tokenizer.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-tokenizer.obj -MD -MP -MF $(DEPDIR)/libmixfix_a-tokenizer.Tpo -c -o libmixfix_a-tokenizer.obj `if test -f 'tokenizer.cc'; then $(CYGPATH_W) 'tokenizer.cc'; else $(CYGPATH_W) '$(srcdir)/tokenizer.cc'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libmixfix_a-tokenizer.Tpo $(DEPDIR)/libmixfix_a-tokenizer.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='tokenizer.cc' object='libmixfix_a-tokenizer.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-tokenizer.obj `if test -f 'tokenizer.cc'; then $(CYGPATH_W) 'tokenizer.cc'; else $(CYGPATH_W) '$(srcdir)/tokenizer.cc'; fi`
+
 libmixfix_a-surface.o: surface.cc
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-surface.o -MD -MP -MF $(DEPDIR)/libmixfix_a-surface.Tpo -c -o libmixfix_a-surface.o `test -f 'surface.cc' || echo '$(srcdir)/'`surface.cc
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libmixfix_a-surface.Tpo $(DEPDIR)/libmixfix_a-surface.Po
@@ -1340,6 +1361,10 @@ surface.cc surface.h: surface.yy
 lexer.cc: \
 	$(srcdir)/lexer.ll surface.h
 	$(FLEX) -t -p -p $(srcdir)/lexer.ll > lexer.cc
+
+tokenizer.cc: \
+	$(srcdir)/tokenizer.ll
+	$(FLEX) -Pzz -t -p -p $(srcdir)/tokenizer.ll > tokenizer.cc
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

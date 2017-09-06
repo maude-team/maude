@@ -91,6 +91,7 @@ class IntSet;
 class Indent;
 class MpzSystem;
 class IntSystem;
+class Rope;
 
 //
 //	Types for storage efficiency.

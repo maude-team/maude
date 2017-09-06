@@ -85,6 +85,21 @@ VariableGenerator::checkDag(DagNode* dag)
   return SAT_UNKNOWN;
 }
 
+void
+VariableGenerator::push()
+{
+}
+
+void
+VariableGenerator::pop()
+{
+}
+
+inline void
+VariableGenerator::clearAssertions()
+{
+}
+
 #endif
 
 //
