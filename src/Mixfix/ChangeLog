@@ -1,3 +1,9 @@
+2014-11-19  Steven Eker  <eker@ape.csl.sri.com>
+
+	* importTranslation.cc (translateRegularSymbol): more detailed Assert()
+
+===================================Maude106===========================================
+
 2014-10-29  Steven Eker  <eker@ape.csl.sri.com>
 
 	* search.cc (smtSearch): deleted

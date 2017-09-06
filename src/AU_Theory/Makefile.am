@@ -32,6 +32,8 @@ EXTRA_DIST = \
 	AU_FullMatcher.cc \
 	AU_GreedyMatcher.cc \
 	AU_DequeMatcher.cc \
+	AU_OldUnificationAlgorithm.cc \
+	AU_NewUnificationAlgorithm.cc \
 	ChangeLog.A_Theory
 
 noinst_HEADERS = \

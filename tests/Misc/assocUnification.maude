@@ -78,3 +78,32 @@ unify g(h(A, B, B) C h(G, H), X Y a Z) =?
 
 unify h(h(A, B, B) C h(G, H), X Y a Z) =?
       h(I h(J, i(K)) L, U b V W) .
+
+***
+*** New algorithm lifts many of the above restrictions, though variables occuring under an associative
+*** symbol (perhaps indirectly via collapse) should still be linear, unless they are element variables
+*** or are otherwise constrained. No more than two subterms headed by the same associative symbol should
+*** the same variable unless at least for one of the terms has all the arguments are collapse-free
+*** aliens or element variables.
+***
+
+unify h(A, A) =? h(f(B, C), f(I, J)) .
+*** this is OK
+
+unify h(A, A, A) =? h(f(B, C), f(I, J), f(X, Y)) .
+*** this forces 3 h-terms to unify against A and fails
+
+unify h(f(a, b), f(a, b), f(a, b)) =? h(f(B, C), f(I, J), f(X, Y)) .
+*** this is OK
+
+unify A E B F C E D =? W F X E Y F Z .
+*** OK because the nonlinear variable are all element variables
+
+unify A =? h(B, C) /\ X A Y =? U h(C, D) V E A W .
+*** OK because A is bound to a collapse-free alien before the associative theory sees it
+
+unify X A Y =? U h(C, D) V E A W /\ A =? h(B, C) .
+*** Swapping the order fails
+
+unify j(A, f(B, E, C), f(D, E, j(G, H), I)) =? j(U, f(V, W), f(X, j(Y, Z), S)) .
+*** very complicated cases with collapse work as long as only element variables are nonlinear

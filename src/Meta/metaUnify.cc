@@ -47,6 +47,7 @@ MetaLevelOpSymbol::getCachedUnificationProblem(MetaModule* m,
 bool
 MetaLevelOpSymbol::metaUnify2(FreeDagNode* subject, RewritingContext& context, bool disjoint)
 {
+  DebugAdvisory(Tty(Tty::CYAN) << "meta unfication call: " << Tty(Tty::GREEN) << (DagNode*) subject << Tty(Tty::RESET));
   //
   //	We handle both metaUnify() and metaDisjointUnify().
   //

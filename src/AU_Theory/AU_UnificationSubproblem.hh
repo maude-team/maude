@@ -25,7 +25,7 @@
 //
 #ifndef _AU_UnificationSubproblem_hh_
 #define _AU_UnificationSubproblem_hh_
-#include <list>
+//#include <list>
 #include "unificationSubproblem.hh"
 #include "simpleRootContainer.hh"
 #include "natSet.hh"
@@ -64,15 +64,32 @@ private:
   bool buildSolution(const Unification& unification, UnificationContext& solution, PendingUnificationStack& pending);
   bool resolve(DagNode* subterm, const Vector<DagNode*>& freshVariables, UnificationContext& solution, PendingUnificationStack& pending);
 
+  //
+  //	New algorithm.
+  //
   bool hasArgumentBoundInTheory(AU_DagNode* target, UnificationContext& solution);
   AU_DagNode* flatten(int index, AU_DagNode* target, UnificationContext& solution);
   bool interflattenBindings(UnificationContext& solution);
   bool simplify(UnificationContext& solution, PendingUnificationStack& pending);
   bool purifyAndBind(VariableDagNode* variable, AU_DagNode* target, UnificationContext& solution, PendingUnificationStack& pending);
+  void handleNonlinearVariable(VariableDagNode* v);
+  void computeBounds(UnificationContext& solution);
+  bool constrained(AU_DagNode* target, UnificationContext& solution);
+  void updateBounds(int freshVariableIndex, int bound);
+
+  void dump(UnificationContext& solution);
+  void makeSequenceAssignmentProblems(UnificationContext& solution);
+  bool flattenUnifications(UnificationContext& solution);
+  AU_DagNode* flattenDag(AU_DagNode* target, UnificationContext& solution, NatSet& seenVariables);
+
 
 
   AU_Symbol* const topSymbol;
   Vector<Unification> unifications;
+  //
+  //	For keeping track of variables bounds. We only track representative variables.
+  //
+  Vector<int> bounds;
   //
   //	For backtracking.
   //

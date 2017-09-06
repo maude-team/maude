@@ -57,7 +57,18 @@ UnificationProblem::UnificationProblem(Vector<Term*>& lhs,
 				       FreshVariableGenerator* freshVariableGenerator)
   : freshVariableGenerator(freshVariableGenerator)
 {
-  //cerr << this << " UnificationProblem " << lhs[0] << " " << rhs[0] << endl;
+#ifndef NO_ASSERT
+  if (globalAdvisoryFlag)
+    {
+      cerr << Tty(Tty::RED) << "==== UnificationProblem ====" << Tty(Tty::RESET) << endl;
+      for (int i = 0; i < lhs.length(); ++i)
+	cerr << "lhs[" << i << "] = " << lhs[i] << endl;
+      for (int i = 0; i < rhs.length(); ++i)
+	cerr << "rhs[" << i << "] = " << rhs[i] << endl;
+      cerr << Tty(Tty::RED) << "=========================================" << Tty(Tty::RESET) << endl;
+    }
+#endif
+
   problemOkay = false;  // until we have verified it is ok
   Assert(lhs.size() == rhs.size(), "lhs/rhs size clash");
   leftHandSides.swap(lhs);

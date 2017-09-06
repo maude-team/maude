@@ -1,3 +1,13 @@
+2014-11-18  Steven Eker  <eker@ape.csl.sri.com>
+
+	* unificationProblem.cc (UnificationProblem): added
+	instrumentation
+
+	* narrowingUnificationProblem.cc (NarrowingUnificationProblem):
+	use DebugAdvisory()
+
+===================================Maude106===========================================
+
 2014-08-06  Steven Eker  <eker@ape.csl.sri.com>
 
 	* equalityConditionFragment.hh (ConditionFragment): added decl for

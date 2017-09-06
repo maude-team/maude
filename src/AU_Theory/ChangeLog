@@ -1,3 +1,73 @@
+2014-11-18  Steven Eker  <eker@ape.csl.sri.com>
+
+	* AU_NewUnificationAlgorithm.cc (simplify): unify with purified
+	lhs on first pass
+
+2014-11-17  Steven Eker  <eker@ape.csl.sri.com>
+
+	* AU_UnificationSubproblem.hh (SimpleRootContainer): added decls
+	for constrained() and updateBounds()
+
+	* AU_NewUnificationAlgorithm.cc (computeBounds): check for
+	variables at that are bound to a term headed by our top symbol
+	(solve): do computeBounds() first so we can make use of any known
+	bounds when disposing of f(...) =? X type unifications
+	(updateBounds): added
+	(simplify): handle constrained cases first
+	(purifyAndBind): call updateBounds()
+	(constrained): added()
+
+2014-11-14  Steven Eker  <eker@ape.csl.sri.com>
+
+	* AU_UnificationSubproblem.hh (SimpleRootContainer): adde decls
+	for handleNonlinearVariable() and computeBounds()
+
+	* AU_NewUnificationAlgorithm.cc (computeBounds): added
+	(findUpperBound): added new version
+	(handleNonlinearVariable): added
+	(solve): call computeBounds()
+	(flattenDag): call handleNonlinearVariable() in 3 places
+	(flattenUnifications): no need to check for null return from
+	flattenDag()
+
+	* AU_UnificationSubproblem.hh (SimpleRootContainer): added data
+	member bounds
+
+2014-11-07  Steven Eker  <eker@ape.csl.sri.com>
+
+	* AU_NewUnificationAlgorithm.cc (solve): need to undo old solution
+	before we look for a new one
+
+	* AU_UnificationSubproblem.hh (SimpleRootContainer): added decl
+	for dump()
+
+	* AU_NewUnificationAlgorithm.cc (dump): added
+
+	* AU_UnificationSubproblem.hh (SimpleRootContainer): added
+	declarations for makeSequenceAssignmentProblems(),
+	flattenUnifications(), flattenDag()
+
+	* AU_NewUnificationAlgorithm.cc (makeSequenceAssignments): added
+	(makeSequenceAssignmentProblems): added
+
+2014-11-06  Steven Eker  <eker@ape.csl.sri.com>
+
+	* AU_NewUnificationAlgorithm.cc (flattenUnifications): added
+
+	* AU_UnificationSubproblem.cc: moved unification code from two
+	different algorithm out in to two different files
+	(markReachableNodes): need to protect dags in local unifications
+	for the new algorithm since it creates new local unifications and
+	modifies existing ones
+
+	* AU_NewUnificationAlgorithm.cc: created the hold code for second
+	associative unification algorithm
+
+	* AU_OldUnificationAlgorithm.cc: created to hold code from first
+	associative unification algorithm
+
+===================================Maude106===========================================
+
 2014-06-30  Steven Eker  <eker@ape.csl.sri.com>
 
 	* AU_UnificationSubproblem.cc (purifyAndBind): rewritten to no

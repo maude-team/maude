@@ -55,6 +55,7 @@ MetaLevelOpSymbol::getCachedVariantSearch(MetaModule* m,
 bool
 MetaLevelOpSymbol::metaGetVariant2(FreeDagNode* subject, RewritingContext& context, bool irredundant)
 {
+  DebugAdvisory(Tty(Tty::CYAN) << "meta variant call: " << Tty(Tty::GREEN) << (DagNode*) subject << Tty(Tty::RESET));
   //
   //	We handle both metaGenerateVariant() and metaGenerateIrredundantVariant().
   //
@@ -146,6 +147,7 @@ MetaLevelOpSymbol::metaGetIrredundantVariant(FreeDagNode* subject, RewritingCont
 bool
 MetaLevelOpSymbol::metaVariantUnify2(FreeDagNode* subject, RewritingContext& context, bool disjoint)
 {
+  DebugAdvisory(Tty(Tty::CYAN) << "meta variant unify call: " << Tty(Tty::GREEN) << (DagNode*) subject << Tty(Tty::RESET));
   //
   //	We handle both metaVariantUnify() and metaVariantDisjointUnify().
   //
