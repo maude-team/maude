@@ -1,3 +1,10 @@
+2007-08-06  Steven Eker  <eker@goo.csl.sri.com>
+
+	* interpreter.cc (setCurrentModule): fix bug where we were
+	printing out "in" as part of the "no module" warning
+
+===================================Maude89e===========================================
+
 2007-07-06  Steven Eker  <eker@goo.csl.sri.com>
 
 	* unify.cc (doUnification): support extension

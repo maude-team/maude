@@ -1,3 +1,8 @@
+Overview of Changes in Maude alpha89e
+=====================================
+* fixed bug where we were deleting unification subproblems twice
+* fixed module name in "no module" warning
+
 Overview of Changes in Maude alpha89d
 =====================================
 * fixed bug where we were not reserving enough BDD variables for free
