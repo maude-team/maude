@@ -406,7 +406,7 @@ NumberOpSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
 			  break;
 			}
 		      default:
-			CantHappen("bad number op");
+			CantHappen("bad number op " << op << " in subject " << subject);
 		      }
 		    Assert(trueTerm.getTerm() != 0 && falseTerm.getTerm() != 0,
 			   "null true/false for relational op");

@@ -149,7 +149,7 @@ PreModule::getFlatSignature()
 void
 PreModule::finishModule()
 {
-  autoImports = interpreter.getIncludes(); // deep copy
+  autoImports = interpreter.getAutoImports(); // deep copy
   isCompleteFlag = true;
   interpreter.insertModule(id(), this);
   process();

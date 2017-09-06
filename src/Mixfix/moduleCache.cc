@@ -188,7 +188,6 @@ ModuleCache::showCreatedModules() const
   FOR_EACH_CONST(i, ModuleMap, moduleMap)
     {
       MixfixModule* m = i->second;
-      cout << ((m->getModuleType() == MixfixModule::SYSTEM_MODULE) ? "mod " : "fmod ") <<
-	m << '\n';
+      cout << MixfixModule::moduleTypeString(m->getModuleType()) << ' ' << m << '\n';
     }
 }

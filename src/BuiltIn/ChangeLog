@@ -1,3 +1,16 @@
+2004-05-06  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_NumberOpSymbol.cc (getDataAttachments): fixed bug where we
+	were reporting our id hook as NumberOpSymbol
+
+	* CUI_NumberOpSymbol.cc (getDataAttachments): fixed bug where we
+	were reporting our id hook as NumberOpSymbol
+
+	* numberOpSymbol.cc (eqRewrite): added more detailed CantHappen()
+	message
+	
+===================================Maude84a===========================================
+
 2003-11-10  Steven Eker  <eker@goo.csl.sri.com>
 
 	* stringOpSymbol.cc (getDataAttachments): fixed bug where we were

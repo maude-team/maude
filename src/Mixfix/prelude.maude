@@ -22,13 +22,13 @@
 
 ***
 ***	Maude interpreter standard prelude.
-***	Version 2.1
+***	Version 84a
 ***
 ***	Some of the overall structure is taken from the OBJ3
 ***	interpreter standard prelude.
 ***
 
-set include BOOL off .
+set protect BOOL off .
 
 fmod TRUTH-VALUE is
   sort Bool .
@@ -76,7 +76,7 @@ fmod BOOL is
   eq A implies B = not(A xor A and B) .
 endfm
 
-set include BOOL on .
+set protect BOOL on .
 
 fmod EXT-BOOL is
   op _and-then_ : Bool Bool -> Bool [strat (1 0) gather (e E) prec 55] .

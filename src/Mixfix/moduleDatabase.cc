@@ -83,13 +83,13 @@ ModuleDatabase::deleteModule(int name)
 }
 
 void
-ModuleDatabase::setInclude(Token name, bool polarity)
+ModuleDatabase::setAutoImport(ImportMode importMode, Token name, bool polarity)
 {
   int code = name.code();
   if (polarity)
-    defaultIncludes.insert(code);
+    autoImports[code] = importMode;
   else
-    defaultIncludes.subtract(code);
+    autoImports.erase(code);
 }
 
 void
@@ -108,7 +108,6 @@ ModuleDatabase::showNamedModules() const
   FOR_EACH_CONST(i, ModuleMap, moduleMap)
     {
       PreModule* m = i->second;
-      cout << ((m->getModuleType() == MixfixModule::SYSTEM_MODULE) ? "mod " : "fmod ") <<
-	m << '\n';
+      cout << MixfixModule::moduleTypeString(m->getModuleType()) << ' ' << m << '\n';
     }
 }

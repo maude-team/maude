@@ -1,3 +1,63 @@
+2004-04-27  Steven Eker  <eker@goo.csl.sri.com>
+
+	* command.cc (showModule): use moduleEndString()
+
+	* visibleModule.cc (showModule): use moduleEndString()
+
+	* mixfixModule.cc (moduleEndString): added
+
+	* mixfixModule.hh (CommonTokens): added decl for moduleEndString()
+
+	* moduleCache.cc (showCreatedModules): use moduleTypeString()
+
+	* moduleDatabase.cc (showNamedModules): use moduleTypeString()
+
+	* command.cc (showModule): use moduleTypeString()
+
+	* mixfixModule.cc (moduleTypeString): added
+
+	* mixfixModule.hh (CommonTokens): added FUNCTIONAL_THEORY and
+	SYSTEM_THEORY to enum ModuleType
+	(CommonTokens): added decl for moduleTypeString()
+
+	* import.cc (processImports): use new autoImports
+
+	* preModule.hh (Parent): data member autoImports becomes a
+	ModuleDatabase::ImportMap
+	(getAutoImport): becomes getAutoImports()
+	(getNrAutoImports): deleted
+
+	* preModule.cc (finishModule): use getAutoImports() in place of
+	getIncludes()
+
+	* moduleDatabase.cc (setAutoImport): use autoImports instead of
+	defaultIncludes
+
+	* moduleDatabase.hh (class ModuleDatabase): added ImportMap
+	typedef; getIncludes() becomes getAutoImports(); data member
+	defaultIncludes becomes autoImports
+	(getAutoImports): replaces getIncludes()
+
+	* prelude.maude: set include BOOL becomes set protect BOOL
+
+	* moduleDatabase.cc (setInclude): becomes setAutoImport()
+
+	* moduleDatabase.hh (class ModuleDatabase): setInclude() becomes
+	setAutoImport()
+
+	* top.yy: added yyImportMode to union
+
+	* commands.yy (importMode): added
+	(command): use setAutoImport()
+
+	* moduleDatabase.hh (class ModuleDatabase): added enum ImportMode
+
+	* top.yy: added tokens KW_PROTECT and KW_EXTEND
+
+	* lexer.ll: added keywords protect and extend
+	
+===================================Maude84a===========================================
+
 2004-03-10  Steven Eker  <eker@goo.csl.sri.com>
 
 	* modules.yy (fDeclaration): fixed nasty bug where we were not

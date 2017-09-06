@@ -29,6 +29,7 @@
 #include "lineNumber.hh"
 #include "commonTokens.hh"
 #include "importModule.hh"
+#include "moduleDatabase.hh"
 
 class PreModule
   : public NamedEntity,
@@ -77,9 +78,8 @@ public:
   VisibleModule* getFlatModule();
 
   MixfixModule::ModuleType getModuleType() const;
-  int getNrAutoImports() const;
+  const ModuleDatabase::ImportMap& getAutoImports() const;
   int getNrImports() const;
-  int getAutoImport(int index) const;
   int getImportMode(int index) const;
   const ModuleExpression* getImport(int index) const;
 
@@ -189,7 +189,7 @@ private:
   Vector<OpDef> opDefs;
   Vector<Vector<Token> > statements;
   IntSet labels;
-  IntSet autoImports;
+  ModuleDatabase::ImportMap autoImports;
   VisibleModule* flatModule;
 
   friend ostream& operator<<(ostream& s, const PreModule::Type& type);
@@ -219,22 +219,16 @@ PreModule::addSubsortDecl(const Vector<Token>& subsortDecl)
   subsortDecls.append(subsortDecl);
 }
 
-inline int
-PreModule::getNrAutoImports() const
+inline const ModuleDatabase::ImportMap&
+PreModule::getAutoImports() const
 {
-  return autoImports.cardinality();
+  return autoImports;
 }
 
 inline int
 PreModule::getNrImports() const
 {
   return imports.length();
-}
-
-inline int
-PreModule::getAutoImport(int index) const
-{
-  return autoImports.index2Int(index); 
 }
 
 inline int

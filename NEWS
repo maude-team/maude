@@ -1,3 +1,8 @@
+Overview of Changes in Maude alpha84a
+=====================================
+* set protect/extend <module> on/off added, BOOL now protected
+* fixed upModule() bug wrt CUI_NumberSymbol and ACU_NumberSymbol hooks
+
 Overview of Changes in Maude 2.1
 ================================
 * added -no-banner flag

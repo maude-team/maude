@@ -1,3 +1,10 @@
+2004-04-27  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaUpModule.cc (upImports): use getAutoImports() and handle
+	protecting/extending
+	
+===================================Maude84a===========================================
+
 2004-02-27  Steven Eker  <eker@goo.csl.sri.com>
 
 	* metaDownRenamings.cc (downModuleExpression): use interpreter

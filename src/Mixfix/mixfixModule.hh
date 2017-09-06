@@ -45,8 +45,10 @@ class MixfixModule : public ProfileModule, public MetadataStore, protected Commo
 public:
   enum ModuleType
   {
-    FUNCTIONAL_MODULE,
-    SYSTEM_MODULE
+    FUNCTIONAL_MODULE = 0,
+    SYSTEM_MODULE = 1,
+    FUNCTIONAL_THEORY = 2,
+    SYSTEM_THEORY = 3
   };
 
   enum GatherSymbols
@@ -144,6 +146,8 @@ public:
   //	Get functions.
   //
   ModuleType getModuleType() const;
+  static const char* moduleTypeString(ModuleType type);
+  static const char* moduleEndString(ModuleType type);
   SymbolType getSymbolType(Symbol* symbol) const;
   int getPrec(Symbol* symbol) const;
   void getGather(Symbol* symbol, Vector<int>& gather) const;

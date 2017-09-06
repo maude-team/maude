@@ -411,11 +411,11 @@ command		:	KW_SELECT		{ lexerCmdMode(); clear(); }
 			{
 			  interpreter.setFlag(Interpreter::BREAK, $3);
 			}
-		|	KW_SET KW_INCLUDE		{ lexerCmdMode(); }
+		|	KW_SET importMode		{ lexerCmdMode(); }
 			cSimpleTokenBarDot		{ lexerInitialMode(); }
 			polarity '.'
 			{
-			  interpreter.setInclude($4, $6);
+			  interpreter.setAutoImport($2, $4, $6);
 			}
 		|	KW_SET KW_OMOD KW_INCLUDE	{ lexerCmdMode(); }
 			cSimpleTokenBarDot		{ lexerInitialMode(); }
@@ -509,6 +509,11 @@ optDebug       	:	KW_DEBUG 	       	{ $$ = true; }
 
 optNumber	:	SIMPLE_NUMBER	        { $$ = $1; }
 		|				{ $$ = NONE; }
+		;
+
+importMode	:	KW_PROTECT		{ $$ = ModuleDatabase::PROTECTING; }
+		|	KW_EXTEND		{ $$ = ModuleDatabase::EXTENDING; }
+		|	KW_INCLUDE		{ $$ = ModuleDatabase::INCLUDING; }
 		;
 /*
  *	Optional module expression followed by term followed by dot.

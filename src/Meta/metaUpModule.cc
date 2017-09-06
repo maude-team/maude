@@ -50,11 +50,16 @@ MetaLevel::upImports(PreModule* pm, PointerMap& qidMap)
   //	Handle automatic imports.
   //
   {
-    int nrAutoImports = pm->getNrAutoImports();
-    for (int i = 0; i < nrAutoImports; i++)
+    const ModuleDatabase::ImportMap& autoImports = pm->getAutoImports();
+    FOR_EACH_CONST(i, ModuleDatabase::ImportMap, autoImports)
       {
-	args2[0] = upQid(pm->getAutoImport(i), qidMap);
-	args.append(includingSymbol->makeDagNode(args2));
+	args2[0] = upQid(i->first, qidMap);
+	Symbol* s = includingSymbol;
+	if (i->second == ModuleDatabase::PROTECTING)
+	  s = protectingSymbol;
+	else if (i->second == ModuleDatabase::EXTENDING)
+	  s = extendingSymbol;
+	args.append(s->makeDagNode(args2));
       }
   }
   //

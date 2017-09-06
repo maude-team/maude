@@ -27,15 +27,9 @@
 void
 PreModule::processImports()
 {
-  /*
-  const ModuleDatabase::NameSet::const_iterator e = autoImports.end();
-  for (ModuleDatabase::NameSet::const_iterator i = autoImports.begin(); i != e; ++i)
-    importModule(*i, *this);
-  */
-  int nrAutoImports = autoImports.cardinality();
-  for (int i = 0; i < nrAutoImports; i++)
+  FOR_EACH_CONST(i, ModuleDatabase::ImportMap, autoImports)
     {
-      if (ImportModule* fm = getModule(autoImports.index2Int(i), *this))
+      if (ImportModule* fm = getModule(i->first, *this))
 	flatModule->addImport(fm);
     }
 
