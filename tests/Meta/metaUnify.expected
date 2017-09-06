@@ -79,10 +79,10 @@ result UnificationPair: {
     ; 
 	'Y:Nat <- '_+_['#100000000000000000002:Nat,
     '#100000000000000000004:Nat],100000000000000000004}
-Warning: unsafe variable name #1:Nat in unification problem.
 ==========================================
 reduce in META-LEVEL : metaUnify(['NAT], '_+_['X:Nat,'Y:Nat] =? '_+_['#1:Nat,
     'Y:Nat], 0, 0) .
+Warning: unsafe variable name #1:Nat in unification problem.
 rewrites: 1
 result [UnificationPair?]: metaUnify(th 'NAT is
   including 'NAT .

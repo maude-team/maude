@@ -25,24 +25,25 @@
 //
 
 void
-Interpreter::unify(const Vector<Token>& bubble, bool withExtension, Int64 limit)
+Interpreter::unify(const Vector<Token>& bubble, Int64 limit)
 {
   VisibleModule* fm = currentModule->getFlatModule();
-  Vector<Term*> lhs(1);
-  Vector<Term*> rhs(1);
-  if (!(fm->parseUnifyCommand(bubble, lhs[0], rhs[0])))
+  Vector<Term*> lhs;
+  Vector<Term*> rhs;
+  if (!(fm->parseUnifyCommand(bubble, lhs, rhs)))
     return;
 
   if (getFlag(SHOW_COMMAND))
     {
       UserLevelRewritingContext::beginCommand();
-      if (withExtension)
-	cout << 'x';
       cout << "unify ";
       if (limit != NONE)
 	cout << '[' << limit << "] ";
-      cout << "in " << currentModule << " : " << lhs[0] <<
-	" =? " << rhs[0] << " .\n";
+      cout << "in " << currentModule << " : ";
+      int nrPairs = lhs.size();
+      for (int i = 0; i < nrPairs; ++i)
+	cout << lhs[i] << " =? " << rhs[i] << ((i == nrPairs - 1) ? " ." : " /\\ ");
+      cout << endl;
     }
 
   startUsingModule(fm);
@@ -52,7 +53,7 @@ Interpreter::unify(const Vector<Token>& bubble, bool withExtension, Int64 limit)
 #endif
 
   Timer timer(getFlag(SHOW_TIMING));
-  UnificationProblem* problem = new UnificationProblem(lhs, rhs, new FreshVariableSource(fm), withExtension);
+  UnificationProblem* problem = new UnificationProblem(lhs, rhs, new FreshVariableSource(fm), false);
   if (problem->problemOK())
     doUnification(timer, fm, problem, 0, limit);
   else
@@ -87,15 +88,6 @@ Interpreter::doUnification(Timer& timer,
       if (solutionCount == 1)
 	printDecisionTime(timer);
       cout << "\nSolution " << solutionCount << '\n';
-      ExtensionInfo* extensionInfo = problem->getExtensionInfo();
-      if (extensionInfo != 0)
-	{
-	  cout << "Unified portion = ";
-	  if (extensionInfo->matchedWhole())
-	    cout << "(whole)\n";
-	  else
-	    cout << extensionInfo->buildMatchedPortion() << '\n';
-	}
       UserLevelRewritingContext::printSubstitution(problem->getSolution(), problem->getVariableInfo());
       if (UserLevelRewritingContext::interrupted())
 	break;

@@ -320,7 +320,7 @@ MatrixOpSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
 	  ds.insertEqn(row);
 	}
       for (int j = 1; j < rowSize; j++)
-	row[j] = UNBOUNDED;
+	row[j] = NONE;
       row[0] = 1;
       ds.setUpperBounds(row);
       //

@@ -210,7 +210,8 @@ private:
   enum Flags
   {
     NONEXEC = 1,
-    OWISE = 2
+    OWISE = 2,
+    PRINT = 4
   };
 
   struct AttributeInfo
@@ -227,6 +228,17 @@ private:
     int metadata;
     DagNode* identity;
     DagNode* fixUpInfo;
+  };
+
+  struct StatementAttributeInfo
+  {
+    StatementAttributeInfo();
+
+    FlagSet flags;
+    int label;
+    int metadata;
+    Vector<int> printNames;
+    Vector<Sort*> printSorts;
   };
 
   static int iterToken(DagNode* dagNode);
@@ -348,8 +360,10 @@ private:
 			     MixfixModule* m,
 			     ConditionFragment*& fragment);
 
-  bool downStatementAttrSet(DagNode* metaAttrSet, int& label, int& metadata, FlagSet& flags);
-  bool downStatementAttr(DagNode* metaAttr, int& label, int& metadata, FlagSet& flags);
+  bool downStatementAttrSet(DagNode* metaAttrSet, MixfixModule* m, StatementAttributeInfo& ai);
+  bool downStatementAttr(DagNode* metaAttr, MixfixModule* m, StatementAttributeInfo& ai);
+  bool downPrintList(DagNode* metaPrintList, MixfixModule* m, StatementAttributeInfo& ai);
+  bool downPrintListItem(DagNode* metaPrintListItem, MixfixModule* m, StatementAttributeInfo& ai);
 
   bool downMembAxs(DagNode* metaMembAxs, MixfixModule* m);
   bool downMembAx(DagNode* metaMembAx, MixfixModule* m);
@@ -412,6 +426,13 @@ MetaLevel::AttributeInfo::AttributeInfo()
   metadata = NONE;
   identity = 0;
   fixUpInfo = 0;
+}
+
+inline
+MetaLevel::StatementAttributeInfo::StatementAttributeInfo()
+{
+  label = NONE;
+  metadata = NONE;
 }
 
 inline DagNode*

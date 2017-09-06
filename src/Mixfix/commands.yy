@@ -145,7 +145,7 @@ command		:	KW_SELECT		{ lexBubble(END_COMMAND, 1) }
 			  if (interpreter.setCurrentModule(moduleExpr, 1))
 			    interpreter.match(lexerBubble, $1, number);
 			}
-		|	unify
+		|	KW_UNIFY
 			{
 			  lexerCmdMode();
 			  moduleExpr.contractTo(0);
@@ -155,7 +155,7 @@ command		:	KW_SELECT		{ lexBubble(END_COMMAND, 1) }
 			{
 			  lexerInitialMode();
 			  if (interpreter.setCurrentModule(moduleExpr, 1))
-			    interpreter.unify(lexerBubble, $1, number);
+			    interpreter.unify(lexerBubble, number);
 			}
 		|	optDebug KW_CONTINUE optNumber '.'
 			{
@@ -248,7 +248,7 @@ command		:	KW_SELECT		{ lexBubble(END_COMMAND, 1) }
 			  if (interpreter.setCurrentModule(lexerBubble))
 			    interpreter.showSortsAndSubsorts();
 			}
-		|	KW_SHOW KW_OPS		{ lexBubble(END_COMMAND, 0); }
+		|	KW_SHOW KW_OPS2		{ lexBubble(END_COMMAND, 0); }
 			endBubble
 			{
 			  if (interpreter.setCurrentModule(lexerBubble))
@@ -346,6 +346,14 @@ command		:	KW_SELECT		{ lexBubble(END_COMMAND, 1) }
 		|	KW_SET KW_PRINT printOption polarity '.'
 			{
 			  interpreter.setPrintFlag($3, $4);
+			}
+		|	KW_SET KW_PRINT KW_ATTRIBUTE polarity '.'
+			{
+			  interpreter.setFlag(Interpreter::PRINT_ATTRIBUTE, $4);
+			}
+		|	KW_SET KW_PRINT KW_ATTRIBUTE KW_NEWLINE polarity '.'
+			{
+			  interpreter.setFlag(Interpreter::PRINT_ATTRIBUTE_NEWLINE, $5);
 			}
 		|	KW_SET KW_TRACE traceOption polarity '.'
 			{
@@ -481,10 +489,6 @@ search		:	KW_NARROW		{ $$ = Interpreter::NARROW; }
 
 match		:	KW_XMATCH		{ $$ = true; }
 		|	KW_MATCH		{ $$ = false; }
-		;
-
-unify		:	/*KW_XUNIFY		{ $$ = true; }
-		|*/	KW_UNIFY		{ $$ = false; }
 		;
 
 optDebug       	:	KW_DEBUG 	       	{ $$ = true; }

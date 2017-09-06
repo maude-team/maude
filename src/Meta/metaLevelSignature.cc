@@ -134,6 +134,7 @@
      MACRO(metadataSymbol, FreeSymbol, 0, 1)
      MACRO(owiseSymbol, Symbol, 0, 0)
      MACRO(nonexecSymbol, Symbol, 0, 0)
+     MACRO(printSymbol, FreeSymbol, 0, 1)
 
      MACRO(emptyAttrSetSymbol, Symbol, 0, 0)
      MACRO(attrSetSymbol, Symbol, SymbolType::ASSOC | SymbolType::COMM, 2)

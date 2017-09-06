@@ -111,8 +111,12 @@ DisjunctiveSubproblemAccumulator::extract(Substitution& solution,
     {
       if (firstDifference != 0)
 	{
+#ifdef NO_ASSERT
+	  (void) firstDifference->assert(solution);
+#else
 	  bool ok = firstDifference->assert(solution);
 	  Assert(ok, "binding clash");
+#endif
 	}
       returnedSubproblem = firstSubproblem;
       firstSubproblem = 0;  // so dtor won't delete it

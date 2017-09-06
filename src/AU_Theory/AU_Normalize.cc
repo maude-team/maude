@@ -39,7 +39,7 @@ AU_DagNode::normalizeAtTop(bool dumb)
   int expansion = 0;
   int nrIdentities = 0;
   int maxDeque = 0;
-  ArgVec<DagNode*>::const_iterator maxDequeIter;
+  ArgVec<DagNode*>::const_iterator maxDequeIter;  // gcc gives uninitialized warning
   //
   //	First examine the argument list looking for either our top symbol
   //	or our identity.

@@ -67,6 +67,14 @@ maude_LDADD = \
 maude_SOURCES = \
 	main.cc
 
+data_DATA = \
+	prelude.maude \
+	model-checker.maude \
+	socket.maude \
+	linear.maude \
+	machine-int.maude \
+	term-order.maude
+
 EXTRA_DIST = \
 	prelude.maude \
 	model-checker.maude \

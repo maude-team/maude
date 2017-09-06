@@ -112,6 +112,22 @@ UserLevelRewritingContext::dontTrace(const DagNode* redex, const PreEquation* pe
 }
 
 void
+UserLevelRewritingContext::checkForPrintAttribute(MixfixModule::ItemType itemType, const PreEquation* item)
+{
+  if (item != 0)
+    {
+      MixfixModule* m = safeCast(MixfixModule*, item->getModule());
+      const PrintAttribute* pa = m->getPrintAttribute(itemType, item);
+      if (pa != 0)
+	{
+	  pa->print(cout, *this);
+	  if (interpreter.getFlag(Interpreter::PRINT_ATTRIBUTE_NEWLINE))
+	    cout << '\n';
+	}
+    }
+}
+
+void
 UserLevelRewritingContext::tracePreEqRewrite(DagNode* redex,
 					     const Equation* equation,
 					     int type)
@@ -121,6 +137,9 @@ UserLevelRewritingContext::tracePreEqRewrite(DagNode* redex,
       safeCast(ProfileModule*, root()->symbol()->getModule())->
 	profileEqRewrite(redex, equation, type);
     }
+  if (interpreter.getFlag(Interpreter::PRINT_ATTRIBUTE))
+    checkForPrintAttribute(MetadataStore::EQUATION, equation);
+
   if (handleDebug(redex, equation) ||
       !localTraceFlag ||
       !(interpreter.getFlag(Interpreter::TRACE_EQ)) ||
@@ -184,6 +203,9 @@ UserLevelRewritingContext::tracePreRuleRewrite(DagNode* redex, const Rule* rule)
       safeCast(ProfileModule*, root()->symbol()->getModule())->
 	profileRlRewrite(redex, rule);
     }
+  if (interpreter.getFlag(Interpreter::PRINT_ATTRIBUTE))
+    checkForPrintAttribute(MetadataStore::RULE, rule);
+
   if (handleDebug(redex, rule) ||
       !localTraceFlag ||
       !(interpreter.getFlag(Interpreter::TRACE_RL)) ||
@@ -291,6 +313,9 @@ UserLevelRewritingContext::tracePreScApplication(DagNode* subject, const SortCon
       safeCast(ProfileModule*, root()->symbol()->getModule())->
 	profileMbRewrite(subject, sc);
     }
+  if (interpreter.getFlag(Interpreter::PRINT_ATTRIBUTE))
+    checkForPrintAttribute(MetadataStore::MEMB_AX, sc);
+
   if (handleDebug(subject, sc) ||
       !localTraceFlag ||
       !(interpreter.getFlag(Interpreter::TRACE_MB)) ||

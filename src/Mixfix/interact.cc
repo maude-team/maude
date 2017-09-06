@@ -103,6 +103,9 @@ UserLevelRewritingContext::setHandlers(bool handleCtrlC)
 void
 UserLevelRewritingContext::stackOverflowHandler(int emergency, stackoverflow_context_t scp)
 {
+  //
+  //	Assume machine state is bad - so use a system call.
+  //
   static char message[] = "\nFatal error: stack overflow.\n\
 This can happen because you have an infinite computation, say a runaway\n\
 recursion, or model checking an infinite model. It can also happen because\n\
@@ -117,13 +120,12 @@ or the bash command 'ulimit -s unlimited'.\n\n";
   _exit(1);  // don't call atexit() functions with a bad machine state
 }
 
-
 int
 UserLevelRewritingContext::sigsegvHandler(void *fault_address, int serious)
 {
-  if (!serious)
-    return 0;  // stack overflow
-  internalErrorHandler(SIGSEGV);
+  if (serious)  // real segmentation fault
+    internalErrorHandler(SIGSEGV);  // doesn't return
+  return 0;  // must have been a stack overflow
 }
 
 #endif
@@ -131,18 +133,17 @@ UserLevelRewritingContext::sigsegvHandler(void *fault_address, int serious)
 void
 UserLevelRewritingContext::internalErrorHandler(int /* signalNr */)
 {
+  //
+  //	Assume machine state is bad - so use system calls.
+  //
   static char message1[] = "\nMaude internal error.\nPlease submit a bug report to: ";
   static char message2[] = PACKAGE_BUGREPORT;
   static char message3[] = "\nPlease include the platform details, Maude version, and a file\n\
 `crash.maude' that can be loaded to reproduce the crash (it may load\n\
 other files).\n\n";
-  //
-  //	Assume machine state is bad - so use system calls.
-  //
   write(STDERR_FILENO, message1, sizeof(message1) - 1);
   write(STDERR_FILENO, message2, sizeof(message2) - 1);
   write(STDERR_FILENO, message3, sizeof(message3) - 1);
-
   _exit(1);  // don't call atexit() functions with a bad machine state
 }
 
@@ -336,12 +337,13 @@ UserLevelRewritingContext::handleDebug(const DagNode* subject, const PreEquation
 	  CantHappen("bad value in case");
 	}
     }
+  return true;  // never executed
 }
 
 void
 UserLevelRewritingContext::where()
 {
-  static char* purposeString[] =
+  static const char* purposeString[] =
   {
     "which arose while checking a condition during the evaluation of:",
     "which arose while doing a sort computation during the evaluation of:",

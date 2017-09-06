@@ -22,6 +22,7 @@ TESTS = \
 	metaModExp \
 	metaPolymorph \
 	metaUpDown \
+	metaPrintAttr \
 	metaMetadata
 
 MAUDE_FILES = \
@@ -48,6 +49,7 @@ MAUDE_FILES = \
 	metaModExp.maude \
 	metaPolymorph.maude \
 	metaUpDown.maude \
+	metaPrintAttr.maude \
 	metaMetadata.maude
 
 RESULT_FILES = \
@@ -76,6 +78,7 @@ RESULT_FILES = \
 	metaModExp.expected \
 	metaPolymorph.expected \
 	metaUpDown.expected \
+	metaPrintAttr.expected \
 	metaMetadata.expected
 
 EXTRA_DIST = $(TESTS) $(MAUDE_FILES) $(RESULT_FILES)

@@ -280,6 +280,8 @@ FreeDagNode::computeBaseSortForGroundSubterms()
 	  }
 	case UNIMPLEMENTED:
 	  return UNIMPLEMENTED;
+	default:
+	  ;  // to avoid compiler warning
 	}
     }
   if (ground)

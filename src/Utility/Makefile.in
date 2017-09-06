@@ -61,7 +61,7 @@ am_libutility_a_OBJECTS = macros.$(OBJEXT) preVector.$(OBJEXT) \
 	pointerMap.$(OBJEXT) sequencePartition.$(OBJEXT) \
 	indent.$(OBJEXT) binBuf.$(OBJEXT) decBuf.$(OBJEXT) \
 	bddUser.$(OBJEXT) tty.$(OBJEXT) bdd.$(OBJEXT) timer.$(OBJEXT) \
-	mpzSystem.$(OBJEXT) allSat.$(OBJEXT)
+	mpzSystem.$(OBJEXT) intSystem.$(OBJEXT) allSat.$(OBJEXT)
 libutility_a_OBJECTS = $(am_libutility_a_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
@@ -202,6 +202,7 @@ libutility_a_SOURCES = \
 	bdd.cc \
 	timer.cc \
 	mpzSystem.cc \
+	intSystem.cc \
 	allSat.cc
 
 noinst_HEADERS = \
@@ -227,16 +228,17 @@ noinst_HEADERS = \
 	stringTable.hh \
 	timer.hh \
 	tty.hh \
-	ttyAttributes.hh \
 	unionFind.hh \
 	vector.hh \
 	timeStuff.hh \
 	mathStuff.hh \
 	ropeStuff.hh \
 	mpzSystem.hh \
+	intSystem.hh \
 	allSat.hh
 
 EXTRA_DIST = \
+	intContejeanDevie.cc \
 	mpzContejeanDevie.cc \
 	mpzGcdInit.cc \
 	mpzGcdTrivial.cc \
@@ -299,6 +301,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/graph.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/indent.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/intSet.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/intSystem.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/macros.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mpzSystem.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/natSet.Po@am__quote@

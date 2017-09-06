@@ -1,3 +1,53 @@
+2008-09-12  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaDownOps.cc (downOpDecl): added a check to see of we are
+	subsort overloading an operator from one of our parameters
+
+2008-09-11  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ascentFunctions.cc (metaUpImports): deleted decl for unused
+	variable flat
+
+	* metaDownRenamings.cc (downModuleExpression): avoid sign/unsigned
+	comparison warning
+
+2008-08-27  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaLevel.hh (class MetaLevel): updated decls for
+	downStatementAttrSet(), downStatementAttr(), downPrintList(),
+	downPrintListItem()
+
+	* metaDown.cc (downMembAx): use StatementAttributeInfo
+	(downEquation): use StatementAttributeInfo
+	(downRule): use StatementAttributeInfo
+	(downStatementAttrSet, downStatementAttr, downStatementAttr) 
+	(downPrintList): use StatementAttributeInfo
+	(downStatementAttr): disallow multiple print attributes
+
+	* metaLevel.hh (StatementAttributeInfo): added
+	(class MetaLevel): added class StatementAttributeInfo
+
+2008-08-26  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaLevel.hh (class MetaLevel): updated decls for
+	downStatementAttrSet(), downStatementAttr(); added decls for
+	downPrintList(), downPrintListItem()
+	(class MetaLevel): added PRINT to enum Flags
+
+	* metaDown.cc (downStatementAttrSet, downStatementAttr): take
+	printNames, printSorts
+	(downPrintList, downPrintListItem): added
+	(downStatementAttrSet, downStatementAttr): take MixfixModule*
+	(downMembAx): support print attribute
+	(downEquation): support print attribute
+	(downRule): support print attribute
+
+	* metaUpModule.cc (upStatementAttributes): support print attribute
+
+	* metaLevelSignature.cc (MACRO): added printSymbol
+
+===================================Maude91a===========================================
+
 2008-03-23  Steven Eker  <eker@goo.csl.sri.com>
 
 	* metaLevelOpSymbol.hh (class MetaLevelOpSymbol): deleted decl for

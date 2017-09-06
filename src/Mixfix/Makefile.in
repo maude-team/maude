@@ -63,8 +63,9 @@ am__libmixfix_a_SOURCES_DIST = syntaxContainer.cc renaming.cc view.cc \
 	userLevelRewritingContext.cc preModule.cc symbolType.cc \
 	xmlBuffer.cc maudemlBuffer.cc interpreter.cc moduleDatabase.cc \
 	viewDatabase.cc profileModule.cc mixfixParser.cc \
-	visibleModule.cc sharedTokens.cc metadataStore.cc banner.cc \
-	lexer.cc surface.cc freshVariableSource.cc compiler.cc
+	visibleModule.cc sharedTokens.cc metadataStore.cc \
+	printAttribute.cc banner.cc lexer.cc surface.cc \
+	freshVariableSource.cc compiler.cc
 @BUILD_COMPILER_TRUE@am__objects_1 = libmixfix_a-compiler.$(OBJEXT)
 am_libmixfix_a_OBJECTS = libmixfix_a-syntaxContainer.$(OBJEXT) \
 	libmixfix_a-renaming.$(OBJEXT) libmixfix_a-view.$(OBJEXT) \
@@ -93,6 +94,7 @@ am_libmixfix_a_OBJECTS = libmixfix_a-syntaxContainer.$(OBJEXT) \
 	libmixfix_a-visibleModule.$(OBJEXT) \
 	libmixfix_a-sharedTokens.$(OBJEXT) \
 	libmixfix_a-metadataStore.$(OBJEXT) \
+	libmixfix_a-printAttribute.$(OBJEXT) \
 	libmixfix_a-banner.$(OBJEXT) libmixfix_a-lexer.$(OBJEXT) \
 	libmixfix_a-surface.$(OBJEXT) \
 	libmixfix_a-freshVariableSource.$(OBJEXT) $(am__objects_1)
@@ -274,6 +276,7 @@ libmixfix_a_SOURCES = \
 	visibleModule.cc \
 	sharedTokens.cc \
 	metadataStore.cc \
+	printAttribute.cc \
 	banner.cc \
 	lexer.cc \
 	surface.cc \
@@ -340,6 +343,7 @@ noinst_HEADERS = \
 	global.hh \
 	maudemlBuffer.hh \
 	metadataStore.hh \
+	printAttribute.hh \
 	mixfix.hh \
 	mixfixModule.hh \
 	mixfixParser.hh \
@@ -426,6 +430,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-moduleDatabase.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-moduleExpression.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-preModule.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-printAttribute.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-profileModule.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-quotedIdentifierDagNode.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libmixfix_a-quotedIdentifierOpSymbol.Po@am__quote@
@@ -876,6 +881,20 @@ libmixfix_a-metadataStore.obj: metadataStore.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='metadataStore.cc' object='libmixfix_a-metadataStore.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-metadataStore.obj `if test -f 'metadataStore.cc'; then $(CYGPATH_W) 'metadataStore.cc'; else $(CYGPATH_W) '$(srcdir)/metadataStore.cc'; fi`
+
+libmixfix_a-printAttribute.o: printAttribute.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-printAttribute.o -MD -MP -MF "$(DEPDIR)/libmixfix_a-printAttribute.Tpo" -c -o libmixfix_a-printAttribute.o `test -f 'printAttribute.cc' || echo '$(srcdir)/'`printAttribute.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-printAttribute.Tpo" "$(DEPDIR)/libmixfix_a-printAttribute.Po"; else rm -f "$(DEPDIR)/libmixfix_a-printAttribute.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='printAttribute.cc' object='libmixfix_a-printAttribute.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-printAttribute.o `test -f 'printAttribute.cc' || echo '$(srcdir)/'`printAttribute.cc
+
+libmixfix_a-printAttribute.obj: printAttribute.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-printAttribute.obj -MD -MP -MF "$(DEPDIR)/libmixfix_a-printAttribute.Tpo" -c -o libmixfix_a-printAttribute.obj `if test -f 'printAttribute.cc'; then $(CYGPATH_W) 'printAttribute.cc'; else $(CYGPATH_W) '$(srcdir)/printAttribute.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/libmixfix_a-printAttribute.Tpo" "$(DEPDIR)/libmixfix_a-printAttribute.Po"; else rm -f "$(DEPDIR)/libmixfix_a-printAttribute.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='printAttribute.cc' object='libmixfix_a-printAttribute.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libmixfix_a-printAttribute.obj `if test -f 'printAttribute.cc'; then $(CYGPATH_W) 'printAttribute.cc'; else $(CYGPATH_W) '$(srcdir)/printAttribute.cc'; fi`
 
 libmixfix_a-banner.o: banner.cc
 @am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libmixfix_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libmixfix_a-banner.o -MD -MP -MF "$(DEPDIR)/libmixfix_a-banner.Tpo" -c -o libmixfix_a-banner.o `test -f 'banner.cc' || echo '$(srcdir)/'`banner.cc; \

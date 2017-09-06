@@ -1,8 +1,275 @@
+2008-09-16  Steven Eker  <eker@goo.csl.sri.com>
+
+	* execute.cc: removed commented out eRewrite() and eRewriteCont()
+
+	* search.cc (search): same issue as below
+
+	* match.cc (match): same issue as below
+
+	* srewrite.cc (sRewrite): same issue as below
+
+	* erewrite.cc (eRewrite): same issue as below
+
+	* execute.cc (reduce): same issue as below
+	(rewrite): same issue as below
+	(fRewrite): same issue as below
+
+	* unify.cc (unify): make sure we output an endl after the command
+	to flush the output buffer - otherwise we could get error messages
+	getting ahead of the command that produced them
+
+	* view.hh (operator<<): added missing return statement
+
+	* symbolType.cc (operator<<): added missing return statement
+
+	* interact.cc (handleDebug): added return statement to silence
+	compiler warning
+
+	* importModule.hh (operator<<): added missing return statement
+
+	* entity.hh (class Entity): use a virtual dtor rather than
+	dummyToAllowDynamicCasts()
+
+	* entity.cc (operator<<): fixed missing return value (both
+	versions)
+
+	* interact.cc (sigsegvHandler): rewritten to avoid compiler
+	warning
+
+2008-09-12  Steven Eker  <eker@goo.csl.sri.com>
+
+	* preModule.hh (operator<<): added missing return value
+
+	* process.cc (processOps): added a check to see of we are subsort
+	overloading an operator from one of our parameters
+
+2008-09-11  Steven Eker  <eker@goo.csl.sri.com>
+
+	* view.cc (checkSorts): clean up and comment code; use transKind
+
+	* mixfixParser.cc (parseSentence): don't make second call to
+	getErrorPosition()
+	(makeStrategyCommand): aviod duplicated parser.getChild() calls
+
+	* import.cc (makeModule): avoid sign/unsigned comparison warning
+	(processImports): push using check into Assert()
+
+	* mixfixModule.cc (copyFixUpBubbleSpec): use newSymbol rather than
+	do another translation
+
+	* doParse.cc (getParserStats): commented out unused variable nrKinds
+
+	* makeGrammar.cc (makePolymorphProductions): commented out unused
+	variable type
+
+	* importModule.cc (deepCopyCondition): assign dummy value to n to
+	avoid compiler warning
+
+	* moduleExpression.cc (deepSelfDestruct): added case MODULE to
+	avoid compiler warning
+
+2008-09-04  Steven Eker  <eker@goo.csl.sri.com>
+
+	* interact.cc (where): fix char constness
+
+	* prettyPrint.cc (printAttributes): fix char constness
+
+	* top.yy: fix duplicated KW_OPS by renaming the non token
+	returning version to KW_OPS2
+
+	* commands.yy (command): KW_OPS -> KW_OPS2
+
+	* lexer.ll: KW_OPS -> KW_OPS2 for non token returning version
+
+2008-08-27  Steven Eker  <eker@goo.csl.sri.com>
+
+	* userLevelRewritingContext.cc (checkForPrintAttribute): fix bug
+	where we were checking PRINT_ATTRIBUTE instead of
+	PRINT_ATTRIBUTE_NEWLINE
+
+2008-08-26  Steven Eker  <eker@goo.csl.sri.com>
+
+	* mixfixParser.cc (makeStatementPart): test PRINT flag rather than
+	number of items
+	(makeAttributePart): set PRINT flag; handle empty print attribute
+	case
+
+	* mixfixParser.hh (class MixfixParser): added PRINT to enum Flags
+
+	* makeGrammar.cc (makeAttributeProductions): added production for
+	empty print attribute
+
+2008-08-21  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prettyPrint.cc (printAttributes): rewritten
+
+	* userLevelRewritingContext.cc (checkForPrintAttribute): rewritten
+
+	* importModule.cc (copyMetadata): rewritten
+
+	* mixfixParser.hh (class MixfixParser): updated decls
+
+	* metadataStore.hh (class MetadataStore): updated decls
+
+	* metadataStore.cc (getPrintAttribute, insertPrintAttribute):
+	rewritten to use new convention
+
+	* mixfixParser.cc (makePrintList): rewritten to use two vector
+	convention
+	(makeStatement): update convention
+	(makeStatementPart): update convention
+
+	* printAttribute.cc: created
+
+	* printAttribute.hh: created
+
+	* mixfix.hh: added class PrintAttribute
+
+2008-08-20  Steven Eker  <eker@goo.csl.sri.com>
+
+	* userLevelRewritingContext.hh (class UserLevelRewritingContext):
+	added decl for checkForPrintAttribute()
+
+	* userLevelRewritingContext.cc (tracePreScApplication) 
+	(tracePreRuleRewrite, tracePreEqRewrite): call
+	checkForPrintAttribute() 
+	(checkForPrintAttribute): added
+
+	* commands.yy (command): added syntax for set print attribute and
+	set print attribute newline
+
+	* lexer.ll: added attr as abbreviation for attribute
+
+	* interpreter.hh (endif): added flags PRINT_ATTRIBUTE and
+	PRINT_ATTRIBUTE_NEWLINE
+
+2008-08-19  Steven Eker  <eker@goo.csl.sri.com>
+
+	* top.yy: added KW_ATTRIBUTE, KW_NEWLINE
+
+	* lexer.ll: added keywords attribute and newline
+
+	* mixfixParser.hh (class MixfixParser): updated decls for
+	makeAttributePart(), makePrintList(), makeStatementPart()
+
+	* mixfixParser.cc (makePrintList): take and fill out printList argument
+	(makeAttributePart): take and pass printList argument
+	(makeStatement): pass printList argument
+
+2008-08-14  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metadataStore.cc (insertMetadata, insertPrintAttribute) 
+	(getPrintAttribute): const-ness change
+
+	* metadataStore.hh (class MetadataStore): changed const-ness for
+	ModuleItem* item in 3 declarations
+
+	* mixfixModule.hh (SharedTokens): update decl for printAttributes()
+
+	* prettyPrint.cc (printAttributes): handle printAttribute
+	(operator<<): pass extra argument to printAttributes()
+	(SortConstraint*, Equation*, Rule* versions)
+	(printAttributes): rewritten; no longer static
+	(operator<<): use new printAttributes() convention
+
+	* importModule.cc (copyMetadata): added
+	(donateStatements2): use copyMetadata (3 places)
+
+	* metadataStore.cc (insertPrintAttribute): added
+	(getPrintAttribute): added
+
+	* metadataStore.hh (class MetadataStore): added data member
+	printAttributeMap and decls for insertPrintAttribute() and
+	getPrintAttribute()
+
+2008-08-13  Steven Eker  <eker@goo.csl.sri.com>
+
+	* token.hh (tokenize): added Assert()
+
+	* mixfixParser.cc (makePrintList): fix bug where we doing extra
+	getChild() step
+
+2008-08-12  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unify.cc (unify): support systems of equations
+
+	* mixfixModule.hh (SharedTokens): update decl for
+	parseUnifyCommand()
+
+	* doParse.cc (parseUnifyCommand): handle systems of equations
+
+	* mixfixParser.hh (class MixfixParser): updated decl for
+	makeUnifyCommand()
+
+	* mixfixParser.cc (makeUnifyCommand): parse systems of equations
+
+	* mixfixParser.hh (class MixfixParser): added UNIFY_LIST to enum
+	SemanticActions
+
+	* makeGrammar.cc (makeComplexProductions): allow UNIFY_COMMAND to
+	consist of multiple UNIFY_PAIRs
+
+2008-05-16  Steven Eker  <eker@goo.csl.sri.com>
+
+	* mixfixParser.hh (class MixfixParser): added decl for
+	makePrintList
+
+	* mixfixParser.cc (makePrintList): added
+
+	* makeGrammar.cc (makeAttributeProductions): pass MAKE_STRING and
+	MAKE_VARIABLE to appropriate items
+
+2008-05-15  Steven Eker  <eker@goo.csl.sri.com>
+
+	* makeGrammar.cc (makeComponentProductions): added VARIABLE
+	version of 4 variable productions
+	(makeVariableProductions): added VARIABLE version of variable
+	production
+	(makeSpecialProductions): added VARIABLE version of variable
+	production
+
+	* mixfixParser.hh (class MixfixParser): added MAKE_PRINT_LIST
+	to enum SemanticActions
+
+	* mixfixModule.hh (SharedTokens): added VARIABLE, PRINT_ITEM and
+	PRINT_LIST to enum NonTerminal; made extra nonterminals use
+	relative numbering
+
+	* makeGrammar.cc (makeAttributeProductions): added syntax for
+	print items and print lists
+
+2008-05-14  Steven Eker  <eker@goo.csl.sri.com>
+
+	* mixfixParser.hh (class MixfixParser): added MAKE_PRINT_ATTRIBUTE
+	to enum SemanticActions
+
+	* specialTokens.cc (MACRO): added print
+
+	* makeGrammar.cc (makeAttributeProductions): added syntax for
+	print attribute
+
+2008-05-08  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unify.cc (doUnification): deleted extension handling code
+
+	* top.yy: deleted decl for nonterminal unify
+
+	* commands.yy (command): don't pass withExtension arg to unify
+	(unify): deleted
+
+	* interpreter.hh (endif): updated declf for unify()
+
+	* unify.cc (unify): remove with extension argument
+
+===================================Maude91a===========================================
+
 2008-04-20  Steven Eker  <eker@goo.csl.sri.com>
 
 	* unify.cc (unify): fix bug where we were not deleting problem
 	after problemOK failed, allowing a garbage collect to call the bad
 	problems markReachableNodes()
+
+===================================Maude91===========================================
 
 2008-03-23  Steven Eker  <eker@goo.csl.sri.com>
 

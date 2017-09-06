@@ -1,3 +1,11 @@
+2008-09-11  Steven Eker  <eker@goo.csl.sri.com>
+
+	* applicationProcess.cc (resolveRemainingConditionFragments):
+	remove cute coding; don't look up a AssignmentConditionFragment*
+	twice
+
+===================================Maude91a===========================================
+
 2007-09-28  Steven Eker  <eker@goo.csl.sri.com>
 
 	* applicationProcess.cc (resolveRemainingConditionFragments):

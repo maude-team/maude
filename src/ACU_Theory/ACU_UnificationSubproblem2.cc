@@ -28,7 +28,7 @@
 #include "macros.hh"
 #include "vector.hh"
 #include "indent.hh"
-#include "diophantineSystem.hh"
+#include "intSystem.hh"
 
 //      forward declarations
 #include "interface.hh"
@@ -45,7 +45,6 @@
 
 //      core class definitions
 #include "variableInfo.hh"
-//#include "subproblemAccumulator.hh"
 #include "unificationContext.hh"
 #include "localBinding.hh"
 
@@ -267,12 +266,12 @@ bool
 ACU_UnificationSubproblem2::buildAndSolveDiophantineSystem(UnificationContext& solution)
 {
 #ifndef NO_ASSERT
-      DebugAdvisory("building DiophantineSystem for ACU_UnificationSubproblem2 " << ((void*) this));
-      /*
-      for (int i = 0; i < subterms.length(); ++i)
-	cerr << subterms[i] << '\t';
-      cerr << endl;
-      */
+  DebugAdvisory("building DiophantineSystem for ACU_UnificationSubproblem2 " << ((void*) this));
+  /*
+  for (int i = 0; i < subterms.length(); ++i)
+  cerr << subterms[i] << '\t';
+  cerr << endl;
+  */
 #endif
   //
   //	Each distinct alien subdag from a unification problem that didn't get cancelled
@@ -285,30 +284,14 @@ ACU_UnificationSubproblem2::buildAndSolveDiophantineSystem(UnificationContext& s
   //
   //	Create the Diophantine system.
   //
-  MpzSystem system;
-  MpzSystem::IntVec equation(nrDioVars);
+  IntSystem system(nrDioVars);
   FOR_EACH_CONST(i, list<Vector<int> >, unifications)
-    {
-      for (int j = 0; j < nrDioVars; ++j)
-	equation[j] = 0;
-      int nrUsedVars = i->size();
-      for (int j = 0; j < nrUsedVars; ++j)
-	equation[j] = (*i)[j];
-      system.insertEqn(equation);
-#ifndef NO_ASSERT
-      DebugAdvisory("added equation for ACU_UnificationSubproblem2 " << ((void*) this));
-      /*
-      for (int i = 0; i < equation.length(); ++i)
-	cerr << equation[i] << '\t';
-      cerr << endl;
-      */
-#endif
-    }
+    system.insertEqn(*i);
   //
   //	Compute an upperbound on the assignment to each Diophantine variable.
   //
   upperBounds.resize(nrDioVars);  // for basis selection use
-  MpzSystem::IntVec upperBnds(nrDioVars);  // for Diophantine system use
+  IntSystem::IntVec upperBnds(nrDioVars);  // for Diophantine system use
   for (int i = 0; i < nrDioVars; ++i)
     {
       int bound = 1;  // for aliens and variables bound to aliens
@@ -326,7 +309,7 @@ ACU_UnificationSubproblem2::buildAndSolveDiophantineSystem(UnificationContext& s
   //
   //	Extract the basis.
   //
-  MpzSystem::IntVec dioSol;
+  Vector<int> dioSol;
   while (system.findNextMinimalSolution(dioSol))
     {
 #ifndef NO_ASSERT
@@ -343,7 +326,7 @@ ACU_UnificationSubproblem2::buildAndSolveDiophantineSystem(UnificationContext& s
       e.element.resize(nrDioVars);
       for (int i = 0; i < nrDioVars; ++i)
 	{
-	  if ((e.element[i] = dioSol[i].get_si()) != 0)
+	  if ((e.element[i] = dioSol[i]) != 0)
 	    accumulator.insert(i);  // subterm i is covered
 	}
     }

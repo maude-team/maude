@@ -127,7 +127,7 @@ FreePreNet::buildNet(FreeSymbol* symbol)
 	}
       liveSet.insert(i);
       if ((flags & SUBSUMER) && !(p->ground()))
-	potentialSubsumers;
+	potentialSubsumers.insert(i);  //  to avoid trivial quadratic blow-up we keep track of potential subsumers
     subsumedAtTop:
       patterns[i].flags = flags;
     }

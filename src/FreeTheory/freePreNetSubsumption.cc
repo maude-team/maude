@@ -51,7 +51,8 @@ FreePreNet::subsumesWrtReducedFringe(Term* subsumer,
 	  //	Therefore this free symbol will have been matched in
 	  //	the subject and we may be able to do better than naive subsumption.
 	  //
-	  if (FreeTerm* vf = dynamic_cast<FreeTerm*>(victim))
+	  FreeTerm* vf = dynamic_cast<FreeTerm*>(victim);
+	  if (vf != 0)
 	    {
 	      Assert(sf->symbol() == vf->symbol(), "free symbol clash");
 	      //

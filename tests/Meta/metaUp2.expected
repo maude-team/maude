@@ -680,6 +680,7 @@ op 'metaReduce : '`[Module`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,Paramet
     op-hook('metadataSymbol, 'metadata, 'String, 'Attr) 
     op-hook('owiseSymbol, 'owise, nil, 'Attr) 
     op-hook('nonexecSymbol, 'nonexec, nil, 'Attr) 
+    op-hook('printSymbol, 'print, 'QidList, 'Attr) 
     op-hook('emptyAttrSetSymbol, 'none, nil, 'AttrSet) 
     op-hook('attrSetSymbol, '__, 'AttrSet 'AttrSet, 'AttrSet) 
     op-hook('opDeclSymbol, 'op_:_->_`[_`]., 'Qid 'TypeList 'Type 'AttrSet,
@@ -843,6 +844,7 @@ op 'op_to_`[_`] : 'Qid 'Qid 'AttrSet -> 'Renaming [ctor format('d 'd 'd 'd 's
 op 'owise : nil -> 'Attr [ctor] .
 op 'poly : 'NeNatList -> 'Attr [ctor] .
 op 'prec : 'Nat -> 'Attr [ctor] .
+op 'print : 'QidList -> 'Attr [ctor] .
 op 'protecting_. : 'ModuleExpression -> 'Import [ctor] .
 op 'qid : '`[String`] -> '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`] [special(
     id-hook('QuotedIdentifierOpSymbol, 'qid) 
@@ -1116,6 +1118,7 @@ op 'metaReduce : '`[Module`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,Paramet
     op-hook('metadataSymbol, 'metadata, 'String, 'Attr) 
     op-hook('owiseSymbol, 'owise, nil, 'Attr) 
     op-hook('nonexecSymbol, 'nonexec, nil, 'Attr) 
+    op-hook('printSymbol, 'print, 'QidList, 'Attr) 
     op-hook('emptyAttrSetSymbol, 'none, nil, 'AttrSet) 
     op-hook('attrSetSymbol, '__, 'AttrSet 'AttrSet, 'AttrSet) 
     op-hook('opDeclSymbol, 'op_:_->_`[_`]., 'Qid 'TypeList 'Type 'AttrSet,
@@ -1910,6 +1913,7 @@ result FModule: fmod 'META-LEVEL is
     op-hook('metadataSymbol, 'metadata, 'String, 'Attr) 
     op-hook('owiseSymbol, 'owise, nil, 'Attr) 
     op-hook('nonexecSymbol, 'nonexec, nil, 'Attr) 
+    op-hook('printSymbol, 'print, 'QidList, 'Attr) 
     op-hook('emptyAttrSetSymbol, 'none, nil, 'AttrSet) 
     op-hook('attrSetSymbol, '__, 'AttrSet 'AttrSet, 'AttrSet) 
     op-hook('opDeclSymbol, 'op_:_->_`[_`]., 'Qid 'TypeList 'Type 'AttrSet,
@@ -2073,6 +2077,7 @@ result FModule: fmod 'META-LEVEL is
   op 'owise : nil -> 'Attr [ctor] .
   op 'poly : 'NeNatList -> 'Attr [ctor] .
   op 'prec : 'Nat -> 'Attr [ctor] .
+  op 'print : 'QidList -> 'Attr [ctor] .
   op 'protecting_. : 'ModuleExpression -> 'Import [ctor] .
   op 'qid : '`[String`] -> '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`] [special(
     id-hook('QuotedIdentifierOpSymbol, 'qid) 
@@ -2594,6 +2599,7 @@ result FModule: fmod 'META-LEVEL is
     op-hook('metadataSymbol, 'metadata, 'String, 'Attr) 
     op-hook('owiseSymbol, 'owise, nil, 'Attr) 
     op-hook('nonexecSymbol, 'nonexec, nil, 'Attr) 
+    op-hook('printSymbol, 'print, 'QidList, 'Attr) 
     op-hook('emptyAttrSetSymbol, 'none, nil, 'AttrSet) 
     op-hook('attrSetSymbol, '__, 'AttrSet 'AttrSet, 'AttrSet) 
     op-hook('opDeclSymbol, 'op_:_->_`[_`]., 'Qid 'TypeList 'Type 'AttrSet,
@@ -3784,6 +3790,7 @@ result FModule: fmod 'META-LEVEL is
     op-hook('metadataSymbol, 'metadata, 'String, 'Attr) 
     op-hook('owiseSymbol, 'owise, nil, 'Attr) 
     op-hook('nonexecSymbol, 'nonexec, nil, 'Attr) 
+    op-hook('printSymbol, 'print, 'QidList, 'Attr) 
     op-hook('emptyAttrSetSymbol, 'none, nil, 'AttrSet) 
     op-hook('attrSetSymbol, '__, 'AttrSet 'AttrSet, 'AttrSet) 
     op-hook('opDeclSymbol, 'op_:_->_`[_`]., 'Qid 'TypeList 'Type 'AttrSet,
@@ -3947,6 +3954,7 @@ result FModule: fmod 'META-LEVEL is
   op 'owise : nil -> 'Attr [ctor] .
   op 'poly : 'NeNatList -> 'Attr [ctor] .
   op 'prec : 'Nat -> 'Attr [ctor] .
+  op 'print : 'QidList -> 'Attr [ctor] .
   op 'protecting_. : 'ModuleExpression -> 'Import [ctor] .
   op 'qid : '`[String`] -> '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`] [special(
     id-hook('QuotedIdentifierOpSymbol, 'qid) 
@@ -5198,7 +5206,8 @@ result ResultPair: {'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,
     ''Qid.Sort,''Attr.Sort],'op-hook[''metadataSymbol.Sort,''metadata.Sort,
     ''String.Sort,''Attr.Sort],'op-hook[''owiseSymbol.Sort,''owise.Sort,
     'nil.TypeList,''Attr.Sort],'op-hook[''nonexecSymbol.Sort,''nonexec.Sort,
-    'nil.TypeList,''Attr.Sort],'op-hook[''emptyAttrSetSymbol.Sort,''none.Sort,
+    'nil.TypeList,''Attr.Sort],'op-hook[''printSymbol.Sort,''print.Sort,
+    ''QidList.Sort,''Attr.Sort],'op-hook[''emptyAttrSetSymbol.Sort,''none.Sort,
     'nil.TypeList,''AttrSet.Sort],'op-hook[''attrSetSymbol.Sort,''__.Sort,'__[
     ''AttrSet.Sort,''AttrSet.Sort],''AttrSet.Sort],'op-hook[
     ''opDeclSymbol.Sort,''op_:_->_`[_`]..Qid,'__[''Qid.Sort,''TypeList.Sort,
@@ -5403,6 +5412,7 @@ result ResultPair: {'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,
     'op_:_->_`[_`].[''owise.Sort,'nil.TypeList,''Attr.Sort,'ctor.Attr],
     'op_:_->_`[_`].[''poly.Sort,''NeNatList.Sort,''Attr.Sort,'ctor.Attr],
     'op_:_->_`[_`].[''prec.Sort,''Nat.Sort,''Attr.Sort,'ctor.Attr],
+    'op_:_->_`[_`].[''print.Sort,''QidList.Sort,''Attr.Sort,'ctor.Attr],
     'op_:_->_`[_`].[''protecting_..Qid,''ModuleExpression.Sort,''Import.Sort,
     'ctor.Attr],'op_:_->_`[_`].[''qid.Sort,''`[String`].Kind,''`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`].Kind,'special['__['id-hook[''QuotedIdentifierOpSymbol.Sort,''qid.Sort],'op-hook[
     ''quotedIdentifierSymbol.Sort,''<Qids>.Sort,'nil.TypeList,''Qid.Sort],
@@ -6651,7 +6661,8 @@ result GroundTerm: 'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,'nil.ImportList,
     ''Qid.Sort,''Attr.Sort],'op-hook[''metadataSymbol.Sort,''metadata.Sort,
     ''String.Sort,''Attr.Sort],'op-hook[''owiseSymbol.Sort,''owise.Sort,
     'nil.TypeList,''Attr.Sort],'op-hook[''nonexecSymbol.Sort,''nonexec.Sort,
-    'nil.TypeList,''Attr.Sort],'op-hook[''emptyAttrSetSymbol.Sort,''none.Sort,
+    'nil.TypeList,''Attr.Sort],'op-hook[''printSymbol.Sort,''print.Sort,
+    ''QidList.Sort,''Attr.Sort],'op-hook[''emptyAttrSetSymbol.Sort,''none.Sort,
     'nil.TypeList,''AttrSet.Sort],'op-hook[''attrSetSymbol.Sort,''__.Sort,'__[
     ''AttrSet.Sort,''AttrSet.Sort],''AttrSet.Sort],'op-hook[
     ''opDeclSymbol.Sort,''op_:_->_`[_`]..Qid,'__[''Qid.Sort,''TypeList.Sort,
@@ -6856,6 +6867,7 @@ result GroundTerm: 'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,'nil.ImportList,
     'op_:_->_`[_`].[''owise.Sort,'nil.TypeList,''Attr.Sort,'ctor.Attr],
     'op_:_->_`[_`].[''poly.Sort,''NeNatList.Sort,''Attr.Sort,'ctor.Attr],
     'op_:_->_`[_`].[''prec.Sort,''Nat.Sort,''Attr.Sort,'ctor.Attr],
+    'op_:_->_`[_`].[''print.Sort,''QidList.Sort,''Attr.Sort,'ctor.Attr],
     'op_:_->_`[_`].[''protecting_..Qid,''ModuleExpression.Sort,''Import.Sort,
     'ctor.Attr],'op_:_->_`[_`].[''qid.Sort,''`[String`].Kind,''`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`].Kind,'special['__['id-hook[''QuotedIdentifierOpSymbol.Sort,''qid.Sort],'op-hook[
     ''quotedIdentifierSymbol.Sort,''<Qids>.Sort,'nil.TypeList,''Qid.Sort],
@@ -8105,7 +8117,8 @@ result ResultPair: {'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,
     ''Qid.Sort,''Attr.Sort],'op-hook[''metadataSymbol.Sort,''metadata.Sort,
     ''String.Sort,''Attr.Sort],'op-hook[''owiseSymbol.Sort,''owise.Sort,
     'nil.TypeList,''Attr.Sort],'op-hook[''nonexecSymbol.Sort,''nonexec.Sort,
-    'nil.TypeList,''Attr.Sort],'op-hook[''emptyAttrSetSymbol.Sort,''none.Sort,
+    'nil.TypeList,''Attr.Sort],'op-hook[''printSymbol.Sort,''print.Sort,
+    ''QidList.Sort,''Attr.Sort],'op-hook[''emptyAttrSetSymbol.Sort,''none.Sort,
     'nil.TypeList,''AttrSet.Sort],'op-hook[''attrSetSymbol.Sort,''__.Sort,'__[
     ''AttrSet.Sort,''AttrSet.Sort],''AttrSet.Sort],'op-hook[
     ''opDeclSymbol.Sort,''op_:_->_`[_`]..Qid,'__[''Qid.Sort,''TypeList.Sort,
@@ -8310,6 +8323,7 @@ result ResultPair: {'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,
     'op_:_->_`[_`].[''owise.Sort,'nil.TypeList,''Attr.Sort,'ctor.Attr],
     'op_:_->_`[_`].[''poly.Sort,''NeNatList.Sort,''Attr.Sort,'ctor.Attr],
     'op_:_->_`[_`].[''prec.Sort,''Nat.Sort,''Attr.Sort,'ctor.Attr],
+    'op_:_->_`[_`].[''print.Sort,''QidList.Sort,''Attr.Sort,'ctor.Attr],
     'op_:_->_`[_`].[''protecting_..Qid,''ModuleExpression.Sort,''Import.Sort,
     'ctor.Attr],'op_:_->_`[_`].[''qid.Sort,''`[String`].Kind,''`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`].Kind,'special['__['id-hook[''QuotedIdentifierOpSymbol.Sort,''qid.Sort],'op-hook[
     ''quotedIdentifierSymbol.Sort,''<Qids>.Sort,'nil.TypeList,''Qid.Sort],
