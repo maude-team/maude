@@ -1,3 +1,10 @@
+2010-04-30  Steven Eker  <eker@rho>
+
+	* metaDown.cc (MetaLevel::downParameterDecl): fix bug by passing m
+	rather than 0 as enclosingModule to downModuleExpression()
+
+===================================Maude93b===========================================
+
 2009-11-06  Steven Eker  <eker@goo.csl.sri.com>
 
 	* metaLevelOpSymbol.hh (class MetaLevelOpSymbol): updated ctor
