@@ -226,7 +226,7 @@
      MACRO(traceStepSymbol, FreeSymbol, 0, 3)
      MACRO(nilTraceSymbol, Symbol, 0, 0)
      MACRO(traceSymbol, Symbol, SymbolType::ASSOC, 2)
-     MACRO(smtResultSymbol, FreeSymbol, 0, 2)
+     MACRO(smtResultSymbol, FreeSymbol, 0, 4)
      //
      //	Failure constructors.
      //

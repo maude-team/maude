@@ -1,3 +1,43 @@
+2014-10-29  Steven Eker  <eker@ape.csl.sri.com>
+
+	* metaSearch.cc (makeSMT_RewriteSequenceSearch): check that search
+	type isn't =>!
+	(getCachedSMT_RewriteSequenceSearch): use getRootContext() to
+	patch potentially state parent pointer
+
+2014-10-28  Steven Eker  <eker@ape.csl.sri.com>
+
+	* metaLevelOpSymbol.hh (FreeSymbol):
+	getCachedSMT_RewriteSearchState() ->
+	getCachedSMT_RewriteSequenceSearch()
+	(FreeSymbol): makeSMT_RewriteSearchState() ->
+	makeSMT_RewriteSequenceSearch()
+
+	* metaSearch.cc (getCachedSMT_RewriteSearchState): becomes
+	getCachedSMT_RewriteSequenceSearch()
+	(metaSmtSearch): rewritten
+	(makeSMT_RewriteSearchState): becomes 
+
+2014-10-27  Steven Eker  <eker@ape.csl.sri.com>
+
+	* metaLevel.hh (M): added decl for upSmtSubstitution(); updated
+	decl for upSmtResult()
+
+	* metaUp.cc (upSmtResult): new 4 arg value
+	(upSmtSubstitution): created
+
+	* metaLevelSignature.cc: updated nr args for smtResultSymbol
+
+	* descentSignature.cc: updated metaSmtSearch nr args
+
+2014-09-29  Steven Eker  <eker@ape.csl.sri.com>
+
+	* metaSearch.cc (makeSMT_RewriteSearchState): pass
+	VariableGenerator object to SMT_RewriteSearchState by pointer
+	rather than reference
+
+===================================Maude105===========================================
+
 2014-09-26  Steven Eker  <eker@ape.csl.sri.com>
 
 	* metaSearch.cc (makeSMT_RewriteSearchState): new

@@ -1,3 +1,220 @@
+2014-10-29  Steven Eker  <eker@ape.csl.sri.com>
+
+	* SMT_RewriteSearchState.cc (findNextRewrite): call
+	tracePreRuleRewrite(), traceAbort(), traceAbort()
+	(findNextRewrite): call getTraceStatus()
+
+	* SMT_RewriteSequenceSearch.cc (~SMT_RewriteSequenceSearch): delete
+	context stored in State struct
+	(SMT_RewriteSequenceSearch): delete condition once we've make the
+	dag
+	(~SMT_RewriteSequenceSearch): delete engine
+
+	* SMT_RewriteSequenceSearch.hh (getRootContext): added
+
+2014-10-27  Steven Eker  <eker@ape.csl.sri.com>
+
+	* SMT_RewriteSequenceSearch.hh (getMaxVariableNumber): added
+
+	* SMT_RewriteSequenceSearch.cc (makeNewState): initialize search
+	to 0 so we don't have an issue deleting object
+
+	* SMT_RewriteSearchState.cc (checkConsistancy): switch the order
+	conjuncting constraint and condition so new stuff goes to the end
+
+2014-10-24  Steven Eker  <eker@ape.csl.sri.com>
+
+	* SMT_RewriteSequenceSearch.cc (findNextState): respect
+	needToTryInitialState and maxDepth
+	(SMT_RewriteSequenceSearch): compute sort of initial state
+
+	* SMT_RewriteSequenceSearch.hh (SimpleRootContainer): added data
+	member needToTryInitialState
+
+	* SMT_RewriteSequenceSearch.cc (SMT_RewriteSequenceSearch): force
+	maxDepth to 1 for searchType ONE_STEP
+	(SMT_RewriteSequenceSearch): initialize needToTryInitialState
+
+2014-10-23  Steven Eker  <eker@ape.csl.sri.com>
+
+	* SMT_RewriteSequenceSearch.cc (checkMatchConstraint): fix bug
+	where we weren't checking checkDag() result against
+	SMT_EngineWrapper::SAT
+
+	* SMT_RewriteSequenceSearch.hh (getSMT_VarIndices): added
+
+	* SMT_RewriteSequenceSearch.cc (checkMatchConstraint): rewritten
+	(markReachableNodes): mark finalConstraint rather than
+	matchConstraint
+	(SMT_RewriteSequenceSearch): init finalConstraint rather than
+	matchConstraint
+	(SMT_RewriteSequenceSearch): call findSMT_Variables()
+
+	* SMT_RewriteSequenceSearch.hh (SimpleRootContainer): replaced
+	data member match constraint with data member finalConstraint
+	(getMatchConstraint): becomes getFinalConstraint()
+
+	* SMT_RewriteSequenceSearch.cc (findSMT_Variables): added
+
+	* SMT_RewriteSequenceSearch.hh (SimpleRootContainer): deleted data
+	member goal
+	(SimpleRootContainer): added typedef SMT_VarDags, data members
+	smtVarIndices, smtVarDags
+	(SimpleRootContainer): added decl for findSMT_Variables()
+
+	* SMT_RewriteSequenceSearch.cc (makeConstraintFromCondition): added
+	(~SMT_RewriteSequenceSearch): don't delete goal
+
+	* SMT_RewriteSequenceSearch.hh (SimpleRootContainer): derive from
+	class Pattern
+	(SimpleRootContainer): updated ctor
+
+2014-10-22  Steven Eker  <eker@ape.csl.sri.com>
+
+	* SMT_RewriteSequenceSearch.hh (getSubstitution)
+	(getMatchConstraint, getCurrentStateNumber): added
+
+2014-10-21  Steven Eker  <eker@ape.csl.sri.com>
+
+	* SMT_RewriteSequenceSearch.hh (SimpleRootContainer): added data
+	member matchConstraint
+	(SimpleRootContainer): added decls for findNextMatch() and
+	checkMatchConstraint()
+	(SimpleRootContainer): added datat member newStateNr
+
+	* SMT_RewriteSequenceSearch.cc (checkMatchConstraint): added
+	(findNextMatch): added
+	(markReachableNodes): protect matchConstraint
+	(SMT_RewriteSequenceSearch): initialize matchConstraint
+
+	* SMT_RewriteSequenceSearch.hh (SimpleRootContainer): added data
+	member matchState
+
+	* SMT_RewriteSequenceSearch.cc (SMT_RewriteSequenceSearch): handle goal
+	(~SMT_RewriteSequenceSearch): delete goal
+	(SMT_RewriteSequenceSearch): init matchState
+	(~SMT_RewriteSequenceSearch): delete matchState
+
+	* SMT_RewriteSequenceSearch.hh (SimpleRootContainer): added data
+	member goal; updated decl for ctor
+
+	* SMT_EngineWrapper.hh (S): added declarations for push() and
+	pop()
+
+	* SMT_RewriteSearchState.cc (findNextRewrite): pop old SMT state
+	(checkConsistancy): use push() and pop()
+
+2014-10-17  Steven Eker  <eker@ape.csl.sri.com>
+
+	* SMT_RewriteSearchState.hh (SimpleRootContainer): deleted data
+	members pairingSymbol, nextPair; added data members newState and
+	newConstraint
+
+	* SMT_RewriteSequenceSearch.hh (getState): used to be getStatePair()
+
+	* SMT_RewriteSequenceSearch.cc (makeNewState): use getNewState()
+	and getNewConstraint()
+	(findNextState): pass constraint to SMT_RewriteSearchState()
+
+	* SMT_RewriteSequenceSearch.hh (SimpleRootContainer): deleted data
+	member initial
+
+	* SMT_RewriteSequenceSearch.cc (SMT_RewriteSequenceSearch): take
+	and init constraint
+	(SMT_RewriteSequenceSearch): initialize constraint field of State
+	object
+	(markReachableNodes): added
+	(SMT_RewriteSequenceSearch): pass constraint to
+	SMT_RewriteSearchState(); don't init initial and constraint data
+	members after all
+
+	* SMT_RewriteSequenceSearch.hh (SequenceSearch): added constraint
+	field to struct State
+	(SimpleRootContainer): derive from SimpleRootContainer
+	(SimpleRootContainer): added decl for markReachableNodes()
+	(SimpleRootContainer): updated decl for ctor
+	(getConstraint): added
+
+	* SMT_RewriteSearchState.hh (getNewPair): deleted
+	(getNewState, getNewConstraint): added
+
+	* SMT_RewriteSearchState.cc (SMT_RewriteSearchState):
+	take/initialize constraint
+	(markReachableNodes): mark constaint
+	(checkAndConvertState): simplified
+	(markReachableNodes): mark newConstraint, newState
+	(SMT_RewriteSearchState): initialize newState and newConstraint
+	(SMT_RewriteSearchState): don't mention nextPair
+	(markReachableNodes): don't mention nextPair
+
+	* SMT_RewriteSearchState.hh (SimpleRootContainer): updated decl
+	for ctor; made constraint const
+
+2014-10-15  Steven Eker  <eker@ape.csl.sri.com>
+
+	* SMT_RewriteSequenceSearch.cc (findNextState): fix bug where we
+	were using wrong state object inside loop
+
+	* SMT_RewriteSequenceSearch.hh (getStateParent): added
+
+	* SMT_RewriteSequenceSearch.cc (makeNewState): use pr variable
+
+	* SMT_RewriteSequenceSearch.hh: added
+
+2014-10-14  Steven Eker  <eker@ape.csl.sri.com>
+
+	* SMT_RewriteSequenceSearch.cc (SMT_RewriteSequenceSearch):
+	swapped argument order on account of defaults
+
+	* SMT_RewriteSequenceSearch.hh (SequenceSearch): updated decl for
+	ctor
+
+	* SMT.hh: added class SMT_RewriteSequenceSearch
+
+2014-10-03  Steven Eker  <eker@ape.csl.sri.com>
+
+	* SMT_RewriteSequenceSearch.hh (SequenceSearch): added decl for
+	makeNewState()
+
+	* SMT_RewriteSequenceSearch.cc (findNextState): implemented
+	(makeNewState): added
+
+	* SMT_EngineWrapper.hh (S): added decl for clearAssertions()
+
+2014-10-01  Steven Eker  <eker@ape.csl.sri.com>
+
+	* SMT_RewriteSequenceSearch.cc: created
+
+	* SMT_RewriteSequenceSearch.hh: created
+
+2014-09-29  Steven Eker  <eker@ape.csl.sri.com>
+
+	* SMT_RewriteSearchState.cc (SMT_RewriteSearchState): take engine
+	as a pointer
+	(SMT_RewriteSearchState): engine is now a pointer
+	(checkConsistancy): engine is now a pointer
+	(checkAndConvertState): engine is now a pointer
+
+	* SMT_RewriteSearchState.hh (SimpleRootContainer): made engine
+	into a constant pointer rather than a reference
+	(SimpleRootContainer): updated decl for ctor
+
+	* SMT_RewriteSearchState.cc: SMT_VariableManager ->
+	SMT_EngineWrapper; variableManger -> engine throughout
+
+	* SMT_RewriteSearchState.hh (SimpleRootContainer):
+	SMT_VariableManager -> SMT_EngineWrapper; variableManger -> engine
+
+	* SMT_Symbol.hh: removed CVC4 specific stuff
+
+	* SMT_NumberSymbol.hh (SMT_Base): removed CVC4 specific stuff
+
+	* SMT.hh: SMT_EngineWrapper replaces SMT_VariableManager
+
+	* SMT_EngineWrapper.hh (S): renamed from SMT_VariableManager
+
+===================================Maude105===========================================
+
 2014-09-26  Steven Eker  <eker@ape.csl.sri.com>
 
 	* SMT_RewriteSearchState.cc (checkConsistancy): call

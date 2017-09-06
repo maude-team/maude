@@ -56,6 +56,7 @@ am_libSMT_a_OBJECTS = libSMT_a-SMT_Symbol.$(OBJEXT) \
 	libSMT_a-SMT_NumberDagNode.$(OBJEXT) \
 	libSMT_a-SMT_NumberTerm.$(OBJEXT) \
 	libSMT_a-SMT_RewriteSearchState.$(OBJEXT) \
+	libSMT_a-SMT_RewriteSequenceSearch.$(OBJEXT) \
 	libSMT_a-SMT_Info.$(OBJEXT)
 libSMT_a_OBJECTS = $(am_libSMT_a_OBJECTS)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
@@ -198,6 +199,7 @@ libSMT_a_SOURCES = \
 	SMT_NumberDagNode.cc \
 	SMT_NumberTerm.cc \
 	SMT_RewriteSearchState.cc \
+	SMT_RewriteSequenceSearch.cc \
 	SMT_Info.cc
 
 EXTRA_DIST = 
@@ -208,7 +210,8 @@ noinst_HEADERS = \
 	SMT_NumberSymbol.hh \
 	SMT_NumberDagNode.hh \
 	SMT_NumberTerm.hh \
-	SMT_VariableManager.hh \
+	SMT_EngineWrapper.hh \
+	SMT_RewriteSequenceSearch.hh \
 	SMT_RewriteSearchState.hh \
 	SMT_Info.hh
 
@@ -265,6 +268,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libSMT_a-SMT_NumberSymbol.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libSMT_a-SMT_NumberTerm.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libSMT_a-SMT_RewriteSearchState.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libSMT_a-SMT_RewriteSequenceSearch.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libSMT_a-SMT_Symbol.Po@am__quote@
 
 .cc.o:
@@ -350,6 +354,20 @@ libSMT_a-SMT_RewriteSearchState.obj: SMT_RewriteSearchState.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='SMT_RewriteSearchState.cc' object='libSMT_a-SMT_RewriteSearchState.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libSMT_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libSMT_a-SMT_RewriteSearchState.obj `if test -f 'SMT_RewriteSearchState.cc'; then $(CYGPATH_W) 'SMT_RewriteSearchState.cc'; else $(CYGPATH_W) '$(srcdir)/SMT_RewriteSearchState.cc'; fi`
+
+libSMT_a-SMT_RewriteSequenceSearch.o: SMT_RewriteSequenceSearch.cc
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libSMT_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libSMT_a-SMT_RewriteSequenceSearch.o -MD -MP -MF $(DEPDIR)/libSMT_a-SMT_RewriteSequenceSearch.Tpo -c -o libSMT_a-SMT_RewriteSequenceSearch.o `test -f 'SMT_RewriteSequenceSearch.cc' || echo '$(srcdir)/'`SMT_RewriteSequenceSearch.cc
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libSMT_a-SMT_RewriteSequenceSearch.Tpo $(DEPDIR)/libSMT_a-SMT_RewriteSequenceSearch.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='SMT_RewriteSequenceSearch.cc' object='libSMT_a-SMT_RewriteSequenceSearch.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libSMT_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libSMT_a-SMT_RewriteSequenceSearch.o `test -f 'SMT_RewriteSequenceSearch.cc' || echo '$(srcdir)/'`SMT_RewriteSequenceSearch.cc
+
+libSMT_a-SMT_RewriteSequenceSearch.obj: SMT_RewriteSequenceSearch.cc
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libSMT_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libSMT_a-SMT_RewriteSequenceSearch.obj -MD -MP -MF $(DEPDIR)/libSMT_a-SMT_RewriteSequenceSearch.Tpo -c -o libSMT_a-SMT_RewriteSequenceSearch.obj `if test -f 'SMT_RewriteSequenceSearch.cc'; then $(CYGPATH_W) 'SMT_RewriteSequenceSearch.cc'; else $(CYGPATH_W) '$(srcdir)/SMT_RewriteSequenceSearch.cc'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libSMT_a-SMT_RewriteSequenceSearch.Tpo $(DEPDIR)/libSMT_a-SMT_RewriteSequenceSearch.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='SMT_RewriteSequenceSearch.cc' object='libSMT_a-SMT_RewriteSequenceSearch.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libSMT_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libSMT_a-SMT_RewriteSequenceSearch.obj `if test -f 'SMT_RewriteSequenceSearch.cc'; then $(CYGPATH_W) 'SMT_RewriteSequenceSearch.cc'; else $(CYGPATH_W) '$(srcdir)/SMT_RewriteSequenceSearch.cc'; fi`
 
 libSMT_a-SMT_Info.o: SMT_Info.cc
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libSMT_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libSMT_a-SMT_Info.o -MD -MP -MF $(DEPDIR)/libSMT_a-SMT_Info.Tpo -c -o libSMT_a-SMT_Info.o `test -f 'SMT_Info.cc' || echo '$(srcdir)/'`SMT_Info.cc

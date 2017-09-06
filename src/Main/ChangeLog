@@ -1,3 +1,9 @@
+2014-10-28  Steven Eker  <eker@ape.csl.sri.com>
+
+	* prelude.maude: updated decls for metaSmtSearch() and SmtResult ctor
+
+===================================Maude105===========================================
+
 2014-09-22  Steven Eker  <eker@ape.csl.sri.com>
 
 	* prelude.maude: added syntax for metaSmtSearch and its constructors
@@ -12,7 +18,7 @@
 	* smt.maude: don't include BOOL; include BOOLEAN; use === and =/==
 	in place of = and !=; use true and false in place of tt and ff
 
-===================================Maude103===========================================
+===================================Maude104===========================================
 
 2014-05-20  Steven Eker  <eker@ape.csl.sri.com>
 

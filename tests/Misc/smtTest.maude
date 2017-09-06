@@ -121,87 +121,135 @@ red metaCheck(['META-CHECK], upTerm( not((I > J ? I : J) === I or (I > J ? I : J
 red metaCheck(['META-CHECK], upTerm( (I > J ? I : J) =/== I and (I > J ? I : J) =/== J )) .
 red metaCheck(['META-CHECK], upTerm( (I > J ? I : J) =/== I or (I > J ? I : J) =/== J )) .
 
-*** 1-step rewriting modulo SMT
-
-mod INTEGER-SOUP is
+mod MULTI is
   pr INTEGER .
 
-  sorts State Pair .
-  op <_|_> : State Boolean -> Pair [ctor] .
+  vars A B C D E : Boolean .
+  vars I J K L M N : Integer .
+  vars X Y : Foo .
 
-  sort Soup .
-  subsort Integer < Soup .
-  op __ : Soup Soup -> Soup [assoc comm] .
+  sort Pair .
+  sort State .
+  op <_|_> : State Boolean -> Pair .
 
-  op f : Soup -> State .
-  op g : Integer Integer -> State .
+  sort Foo .
+  ops f g : Integer Foo -> State .
 
-  vars I J K : Integer .
-  var S : Soup .
 
-  crl f(I J S) => g(I, J) if I === 3 * J = true .
+  crl f(I, X) => g(I + 1, Y) if I < 0 = true [nonexec] .
 endm
 
-smt-search [3] in INTEGER-SOUP : < f(1 2 3 4 5 6  7 8 9 10 11 12) | true > .
-smt-search  < f(K 1 2 3 4 5 6  7 8 9 10 11 12) | true > .
-smt-search  < f(K 1 2 3 4 5 6  7 8 9 10 11 12) | K <= 24 > .
-smt-search  < f(K 1 2 3 4 5 6  7 8 9 10 11 12) | K divisible 5 > .
+smt-search [10] f(-2, X) =>* Z:State .
 
-mod INTEGER-SOUP2 is
+mod TEST is
+  pr MULTI .
+  pr META-LEVEL .
+
+  vars X Y : Foo .
+
+endm
+
+red metaSmtSearch(['MULTI],
+                  upTerm(f(-2, X)),
+                  'Z:State,
+                  nil,
+                  '*, 1, 1, 0) .
+
+
+red metaSmtSearch(['MULTI],
+                  upTerm(f(-2, X)),
+                  'Z:State,
+                  nil,
+                  '*, 1, 1, 1) .
+
+red metaSmtSearch(['MULTI],
+                  upTerm(f(-2, X)),
+                  'Z:State,
+                  nil,
+                  '*, 1, 1, 2) .
+
+red metaSmtSearch(['MULTI],
+                  upTerm(f(-2, X)),
+                  'Z:State,
+                  nil,
+                  '+, 200, 1, 0) .
+
+red metaSmtSearch(['MULTI],
+                  upTerm(f(-2, X)),
+                  'Z:State,
+                  nil,
+                  '+, 200, 1, 1) .
+
+
+mod ITEST is
   pr INTEGER .
 
-  sorts State Pair .
-  op <_|_> : State Boolean -> Pair [ctor] .
+  vars A B C D E : Boolean .
+  vars I J K L M N : Integer .
 
-  sort Soup .
-  subsort Integer < Soup .
-  op __ : Soup Soup -> Soup [assoc comm] .
+  sort State .
 
-  op f : Soup -> State .
-  op g : Integer Integer -> State .
+  sort Foo .
+  ops f : Integer -> State .
+  var X : State .
 
-  vars I J K : Integer .
-  var S : Soup .
 
-  crl f(I S) => g(I, K) if I === 3 * K = true [nonexec] .
+  crl f(I) => f(I + 1) if I >= 10 = true /\ I <= 12  = true .
+  crl f(I) => f(I - 1) if I >= 10 = true /\ I <= 12  = true .
 endm
 
-smt-search < f(1 2 3 4 5 6  7 8 9 10 11 12) | true > .
+smt-search [4] f(11) =>1 X .
+smt-search [4] f(11) =>* X .
+smt-search [4] f(11) =>+ X .
 
-mod TEST is
-  pr INTEGER-SOUP2 .
+smt-search [4, 1] f(11) =>+ X .
+smt-search [4, 2] f(11) =>+ X .
+
+smt-search [4, 0] f(11) =>* X .
+smt-search [4, 1] f(11) =>* X .
+smt-search [4, 2] f(11) =>* X .
+
+smt-search [20] f(11) =>* X .
+
+smt-search [4] f(J) =>* X .
+
+smt-search [4] f(J) =>* f(J)  .
+
+smt-search [4] f(J) =>* f(K)  such that J = K .
+
+mod TEST2 is
+  pr ITEST .
   pr META-LEVEL .
+  vars I J K L M N : Integer .
 endm
 
-red metaSmtSearch(['INTEGER-SOUP2], upTerm(< f(1 2 3 4 5 6  7 8 9 10 11 12) | true >), '+, 0, 1, 0) .
-red metaSmtSearch(['INTEGER-SOUP2], upTerm(< f(1 2 3 4 5 6  7 8 9 10 11 12) | true >), '+, 0, 1, 1) .
-red metaSmtSearch(['INTEGER-SOUP2], upTerm(< f(1 2 3 4 5 6  7 8 9 10 11 12) | true >), '+, 0, 1, 2) .
-red metaSmtSearch(['INTEGER-SOUP2], upTerm(< f(1 2 3 4 5 6  7 8 9 10 11 12) | true >), '+, 0, 1, 3) .
-red metaSmtSearch(['INTEGER-SOUP2], upTerm(< f(1 2 3 4 5 6  7 8 9 10 11 12) | true >), '+, 0, 1, 5) .
+red metaSmtSearch(['ITEST],
+                  upTerm(f(J)),
+                  upTerm(f(K)),
+                  'J:Integer = 'K:Integer,
+                  '*, 42, 2, 0) .
 
-red metaSmtSearch(['INTEGER-SOUP2], upTerm(< f(1 2 3 4 5 6  7 8 9 10 11 12) | true >), '+, 42, 1, 0) .
+red metaSmtSearch(['ITEST],
+                  upTerm(f(J)),
+                  upTerm(f(K)),
+                  'J:Integer = 'K:Integer,
+                  '*, 42, 2, 1) .
 
-mod TEST is
-  pr INTEGER-SOUP .
-  pr META-LEVEL .
+red metaSmtSearch(['ITEST],
+                  upTerm(f(J)),
+                  upTerm(f(K)),
+                  'J:Integer = 'K:Integer,
+                  '*, 42, 2, 2) .
 
-  vars I J K L : Integer .
+red metaSmtSearch(['ITEST],
+                  upTerm(f(J)),
+                  upTerm(f(K)),
+                  'J:Integer = 'K:Integer,
+                  '*, 42, 2, 3) .
 
-  sort SmtResultList .
-  subsort SmtResult < SmtResultList .
-  op nil : -> SmtResultList .
-  op __ : SmtResultList SmtResultList -> SmtResultList [assoc id: nil format (d n d)] .
 
-  var T : Term .
-  var N : Nat .
-
-  op gen : Term Nat -> SmtResultList 
-  eq gen(T, N) = if metaSmtSearch(['INTEGER-SOUP], T, '+, 0, 1, N) == failure then
-       nil
-     else
-       metaSmtSearch(['INTEGER-SOUP], T, '+, 0, 1, N) gen(T, N + 1)
-     fi .
-
-endm
-
-red gen( upTerm(< f(K 1 2 3 4 5 6  7 8 9 10 11 12) | true >) , 0) .
+red in TEST2 : metaSmtSearch(['ITEST],
+                  upTerm(f(J)),
+                  upTerm(f(K)),
+                  'J:Integer = 'K:Integer,
+                  '*, 42, unbounded, 3) .

@@ -53,7 +53,6 @@
 #include "SMT_Symbol.hh"
 #include "SMT_NumberSymbol.hh"
 #include "SMT_NumberDagNode.hh"
-#include "SMT_VariableManager.hh"
 
 const char* SMT_Symbol::operatorNames[] =
   {

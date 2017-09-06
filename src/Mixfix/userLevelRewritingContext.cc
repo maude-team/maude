@@ -437,26 +437,31 @@ UserLevelRewritingContext::tracePreScApplication(DagNode* subject, const SortCon
 
 void
 UserLevelRewritingContext::printSubstitution(const Substitution& substitution,
-					     const VariableInfo& varInfo)
+					     const VariableInfo& varInfo,
+					     const NatSet& ignoredIndices)
 {
   int nrVars = varInfo.getNrRealVariables();
-  if (nrVars == 0)
-    cout << "empty substitution\n";
-  else
+  bool printedVariable = false;
+  for (int i = 0; i < nrVars; i++)
     {
-      for (int i = 0; i < nrVars; i++)
-	{
-	  Term* v = varInfo.index2Variable(i);
-	  DagNode* d = substitution.value(i);
+      if (ignoredIndices.contains(i))
+	continue;
+
+      Term* v = varInfo.index2Variable(i);
+      DagNode* d = substitution.value(i);
+	  /*
 	  DebugAdvisory(static_cast<void*>(v) << " --> " <<
 			static_cast<void*>(d) << " / " <<
 			((d == 0) ? static_cast<void*>(0) : static_cast<void*>(d->symbol())));
-	  Assert(v != 0, "null variable");
-	  cout << v << " --> ";
-	  if (d == 0)
-	    cout << "(unbound)\n";
-	  else
-	    cout << d << '\n';
-	}
+	  */
+      Assert(v != 0, "null variable");
+      cout << v << " --> ";
+      if (d == 0)
+	cout << "(unbound)\n";
+      else
+	cout << d << '\n';
+      printedVariable = true;
     }
+  if (!printedVariable)
+    cout << "empty substitution\n";
 }

@@ -17,6 +17,7 @@ libSMT_a_SOURCES = \
 	SMT_NumberDagNode.cc \
 	SMT_NumberTerm.cc \
 	SMT_RewriteSearchState.cc \
+	SMT_RewriteSequenceSearch.cc \
 	SMT_Info.cc
 
 EXTRA_DIST =
@@ -28,6 +29,7 @@ noinst_HEADERS = \
 	SMT_NumberSymbol.hh \
 	SMT_NumberDagNode.hh \
 	SMT_NumberTerm.hh \
-	SMT_VariableManager.hh \
+	SMT_EngineWrapper.hh \
+	SMT_RewriteSequenceSearch.hh \
 	SMT_RewriteSearchState.hh \
 	SMT_Info.hh

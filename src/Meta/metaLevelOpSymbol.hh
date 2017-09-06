@@ -85,12 +85,12 @@ private:
 					  Int64 solutionNr,
 					  UnificationProblem*& unification,
 					  Int64& lastSolutionNr);
-  static bool getCachedSMT_RewriteSearchState(MetaModule* m,
-					      FreeDagNode* subject,
-					      RewritingContext& context,
-					      Int64 solutionNr,
-					      SMT_RewriteSearchState*& search,
-					      Int64& lastSolutionNr);
+  static bool getCachedSMT_RewriteSequenceSearch(MetaModule* m,
+						 FreeDagNode* subject,
+						 RewritingContext& context,
+						 Int64 solutionNr,
+						 SMT_RewriteSequenceSearch*& search,
+						 Int64& lastSolutionNr);
 
 
   MatchSearchState* makeMatchSearchState(MetaModule* m,
@@ -102,9 +102,9 @@ private:
   RewriteSequenceSearch* makeRewriteSequenceSearch(MetaModule* m,
 						   FreeDagNode* subject,
 						   RewritingContext& context) const;
-  SMT_RewriteSearchState* makeSMT_RewriteSearchState(MetaModule* m,
-						     FreeDagNode* subject,
-						     RewritingContext& context) const;
+  SMT_RewriteSequenceSearch* makeSMT_RewriteSequenceSearch(MetaModule* m,
+							   FreeDagNode* subject,
+							   RewritingContext& context) const;
 
   bool metaUnify2(FreeDagNode* subject, RewritingContext& context, bool disjoint);
   bool metaGetVariant2(FreeDagNode* subject, RewritingContext& context, bool irredundant);

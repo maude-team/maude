@@ -34,8 +34,9 @@ class SMT_NumberTerm;
 class SMT_NumberDagNode;
 
 class SMT_Info;
-class SMT_VariableManager;
+class SMT_EngineWrapper;
 
 class SMT_RewriteSearchState;
+class SMT_RewriteSequenceSearch;
 
 #endif

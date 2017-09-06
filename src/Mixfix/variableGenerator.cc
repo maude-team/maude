@@ -60,6 +60,8 @@ VariableGenerator::VariableGenerator(const SMT_Info& smtInfo)
   exprManager = new ExprManager();
   smtEngine = new SmtEngine(exprManager);
   smtEngine->setOption("rewrite-divk", SExpr(true));
+  smtEngine->push();  // make a new context so we have a clean context to pop() back to
+  pushCount = 0;
 }
 
 VariableGenerator::~VariableGenerator()

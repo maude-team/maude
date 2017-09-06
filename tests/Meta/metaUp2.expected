@@ -422,6 +422,7 @@ op '_|_ : 'NzNat 'Nat -> 'NzNat [assoc comm prec(57) special(
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
 op '`[_`] : 'Qid -> 'Module [none] .
 op '`[`] : nil -> 'Context [ctor] .
+op '`{_`,_`,_`,_`} : 'Term 'Substitution 'Term 'Nat -> 'SmtResult [ctor] .
 op '`{_`,_`,_`,_`} : 'Term 'Type 'Substitution 'Context -> 'Result4Tuple [ctor]
     .
 op '`{_`,_`,_`} : 'Substitution 'Substitution 'Nat -> 'UnificationTriple [ctor]
@@ -431,7 +432,6 @@ op '`{_`,_`,_`} : 'Term 'Type 'Rule -> 'TraceStep [ctor] .
 op '`{_`,_`,_`} : 'Term 'Type 'Substitution -> 'ResultTriple [ctor] .
 op '`{_`,_`} : 'Substitution 'Context -> 'MatchPair [ctor] .
 op '`{_`,_`} : 'Substitution 'Nat -> 'UnificationPair [ctor] .
-op '`{_`,_`} : 'Term 'Nat -> 'SmtResult [ctor] .
 op '`{_`,_`} : 'Term 'Type -> 'ResultPair [ctor] .
 op 'ambiguity : 'ResultPair 'ResultPair -> 'ResultPair? [ctor] .
 op 'anyType : nil -> 'Type? [ctor] .
@@ -783,7 +783,8 @@ op 'metaReduce : '`[Module`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,Paramet
     op-hook('traceStepSymbol, '`{_`,_`,_`}, 'Term 'Type 'Rule, 'TraceStep) 
     op-hook('nilTraceSymbol, 'nil, nil, 'Trace) 
     op-hook('traceSymbol, '__, 'Trace 'Trace, 'Trace) 
-    op-hook('smtResultSymbol, '`{_`,_`}, 'Term 'Nat, 'SmtResult) 
+    op-hook('smtResultSymbol, '`{_`,_`,_`,_`}, 'Term 'Substitution 'Term 'Nat,
+    'SmtResult) 
     op-hook('noParseSymbol, 'noParse, 'Nat, 'ResultPair?) 
     op-hook('ambiguitySymbol, 'ambiguity, 'ResultPair 'ResultPair,
     'ResultPair?) 
@@ -820,8 +821,7 @@ op 'metaSearchPath : '`[Module`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,Par
     '`[Trace?`] [special(
     id-hook('MetaLevelOpSymbol, 'metaSearchPath) 
     op-hook('shareWith, 'metaReduce, 'Module 'QidSet, 'ResultPair?))] .
-op 'metaSmtSearch : '`[Module`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`]
-    '`[FindResult`,NatList`,Bound`] '`[FindResult`,NatList`,Bound`]
+op 'metaSmtSearch : '`[Module`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`] '`[Condition`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`] '`[FindResult`,NatList`,Bound`] '`[FindResult`,NatList`,Bound`]
     '`[FindResult`,NatList`,Bound`] -> '`[SmtResult?`] [special(
     id-hook('MetaLevelOpSymbol, 'metaSmtSearch) 
     op-hook('shareWith, 'metaReduce, 'Module 'QidSet, 'ResultPair?))] .
@@ -1033,6 +1033,7 @@ op '_=?_ : 'Term 'Term -> 'UnificandPair [ctor prec(71)] .
 op '__ : 'PrintOptionSet 'PrintOptionSet -> 'PrintOptionSet [assoc comm ctor
     id('none.PrintOptionSet)] .
 op '__ : 'Trace 'Trace -> 'Trace [assoc ctor id('nil.Trace) format('d 'n 'd)] .
+op '`{_`,_`,_`,_`} : 'Term 'Substitution 'Term 'Nat -> 'SmtResult [ctor] .
 op '`{_`,_`,_`,_`} : 'Term 'Type 'Substitution 'Context -> 'Result4Tuple [ctor]
     .
 op '`{_`,_`,_`} : 'Substitution 'Substitution 'Nat -> 'UnificationTriple [ctor]
@@ -1042,7 +1043,6 @@ op '`{_`,_`,_`} : 'Term 'Type 'Rule -> 'TraceStep [ctor] .
 op '`{_`,_`,_`} : 'Term 'Type 'Substitution -> 'ResultTriple [ctor] .
 op '`{_`,_`} : 'Substitution 'Context -> 'MatchPair [ctor] .
 op '`{_`,_`} : 'Substitution 'Nat -> 'UnificationPair [ctor] .
-op '`{_`,_`} : 'Term 'Nat -> 'SmtResult [ctor] .
 op '`{_`,_`} : 'Term 'Type -> 'ResultPair [ctor] .
 op 'ambiguity : 'ResultPair 'ResultPair -> 'ResultPair? [ctor] .
 op 'anyType : nil -> 'Type? [ctor] .
@@ -1285,7 +1285,8 @@ op 'metaReduce : '`[Module`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,Paramet
     op-hook('traceStepSymbol, '`{_`,_`,_`}, 'Term 'Type 'Rule, 'TraceStep) 
     op-hook('nilTraceSymbol, 'nil, nil, 'Trace) 
     op-hook('traceSymbol, '__, 'Trace 'Trace, 'Trace) 
-    op-hook('smtResultSymbol, '`{_`,_`}, 'Term 'Nat, 'SmtResult) 
+    op-hook('smtResultSymbol, '`{_`,_`,_`,_`}, 'Term 'Substitution 'Term 'Nat,
+    'SmtResult) 
     op-hook('noParseSymbol, 'noParse, 'Nat, 'ResultPair?) 
     op-hook('ambiguitySymbol, 'ambiguity, 'ResultPair 'ResultPair,
     'ResultPair?) 
@@ -1322,8 +1323,7 @@ op 'metaSearchPath : '`[Module`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,Par
     '`[Trace?`] [special(
     id-hook('MetaLevelOpSymbol, 'metaSearchPath) 
     op-hook('shareWith, 'metaReduce, 'Module 'QidSet, 'ResultPair?))] .
-op 'metaSmtSearch : '`[Module`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`]
-    '`[FindResult`,NatList`,Bound`] '`[FindResult`,NatList`,Bound`]
+op 'metaSmtSearch : '`[Module`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`] '`[Condition`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`] '`[FindResult`,NatList`,Bound`] '`[FindResult`,NatList`,Bound`]
     '`[FindResult`,NatList`,Bound`] -> '`[SmtResult?`] [special(
     id-hook('MetaLevelOpSymbol, 'metaSmtSearch) 
     op-hook('shareWith, 'metaReduce, 'Module 'QidSet, 'ResultPair?))] .
@@ -1787,6 +1787,7 @@ result FModule: fmod 'META-LEVEL is
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op '`[_`] : 'Qid -> 'Module [none] .
   op '`[`] : nil -> 'Context [ctor] .
+  op '`{_`,_`,_`,_`} : 'Term 'Substitution 'Term 'Nat -> 'SmtResult [ctor] .
   op '`{_`,_`,_`,_`} : 'Term 'Type 'Substitution 'Context -> 'Result4Tuple [
     ctor] .
   op '`{_`,_`,_`} : 'Substitution 'Substitution 'Nat -> 'UnificationTriple [
@@ -1796,7 +1797,6 @@ result FModule: fmod 'META-LEVEL is
   op '`{_`,_`,_`} : 'Term 'Type 'Substitution -> 'ResultTriple [ctor] .
   op '`{_`,_`} : 'Substitution 'Context -> 'MatchPair [ctor] .
   op '`{_`,_`} : 'Substitution 'Nat -> 'UnificationPair [ctor] .
-  op '`{_`,_`} : 'Term 'Nat -> 'SmtResult [ctor] .
   op '`{_`,_`} : 'Term 'Type -> 'ResultPair [ctor] .
   op 'ambiguity : 'ResultPair 'ResultPair -> 'ResultPair? [ctor] .
   op 'anyType : nil -> 'Type? [ctor] .
@@ -2149,7 +2149,8 @@ result FModule: fmod 'META-LEVEL is
     op-hook('traceStepSymbol, '`{_`,_`,_`}, 'Term 'Type 'Rule, 'TraceStep) 
     op-hook('nilTraceSymbol, 'nil, nil, 'Trace) 
     op-hook('traceSymbol, '__, 'Trace 'Trace, 'Trace) 
-    op-hook('smtResultSymbol, '`{_`,_`}, 'Term 'Nat, 'SmtResult) 
+    op-hook('smtResultSymbol, '`{_`,_`,_`,_`}, 'Term 'Substitution 'Term 'Nat,
+    'SmtResult) 
     op-hook('noParseSymbol, 'noParse, 'Nat, 'ResultPair?) 
     op-hook('ambiguitySymbol, 'ambiguity, 'ResultPair 'ResultPair,
     'ResultPair?) 
@@ -2186,8 +2187,7 @@ result FModule: fmod 'META-LEVEL is
     '`[Trace?`] [special(
     id-hook('MetaLevelOpSymbol, 'metaSearchPath) 
     op-hook('shareWith, 'metaReduce, 'Module 'QidSet, 'ResultPair?))] .
-  op 'metaSmtSearch : '`[Module`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`]
-    '`[FindResult`,NatList`,Bound`] '`[FindResult`,NatList`,Bound`]
+  op 'metaSmtSearch : '`[Module`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`] '`[Condition`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`] '`[FindResult`,NatList`,Bound`] '`[FindResult`,NatList`,Bound`]
     '`[FindResult`,NatList`,Bound`] -> '`[SmtResult?`] [special(
     id-hook('MetaLevelOpSymbol, 'metaSmtSearch) 
     op-hook('shareWith, 'metaReduce, 'Module 'QidSet, 'ResultPair?))] .
@@ -2665,6 +2665,7 @@ result FModule: fmod 'META-LEVEL is
     id('none.PrintOptionSet)] .
   op '__ : 'Trace 'Trace -> 'Trace [assoc ctor id('nil.Trace) format('d 'n 'd)]
     .
+  op '`{_`,_`,_`,_`} : 'Term 'Substitution 'Term 'Nat -> 'SmtResult [ctor] .
   op '`{_`,_`,_`,_`} : 'Term 'Type 'Substitution 'Context -> 'Result4Tuple [
     ctor] .
   op '`{_`,_`,_`} : 'Substitution 'Substitution 'Nat -> 'UnificationTriple [
@@ -2674,7 +2675,6 @@ result FModule: fmod 'META-LEVEL is
   op '`{_`,_`,_`} : 'Term 'Type 'Substitution -> 'ResultTriple [ctor] .
   op '`{_`,_`} : 'Substitution 'Context -> 'MatchPair [ctor] .
   op '`{_`,_`} : 'Substitution 'Nat -> 'UnificationPair [ctor] .
-  op '`{_`,_`} : 'Term 'Nat -> 'SmtResult [ctor] .
   op '`{_`,_`} : 'Term 'Type -> 'ResultPair [ctor] .
   op 'ambiguity : 'ResultPair 'ResultPair -> 'ResultPair? [ctor] .
   op 'anyType : nil -> 'Type? [ctor] .
@@ -2918,7 +2918,8 @@ result FModule: fmod 'META-LEVEL is
     op-hook('traceStepSymbol, '`{_`,_`,_`}, 'Term 'Type 'Rule, 'TraceStep) 
     op-hook('nilTraceSymbol, 'nil, nil, 'Trace) 
     op-hook('traceSymbol, '__, 'Trace 'Trace, 'Trace) 
-    op-hook('smtResultSymbol, '`{_`,_`}, 'Term 'Nat, 'SmtResult) 
+    op-hook('smtResultSymbol, '`{_`,_`,_`,_`}, 'Term 'Substitution 'Term 'Nat,
+    'SmtResult) 
     op-hook('noParseSymbol, 'noParse, 'Nat, 'ResultPair?) 
     op-hook('ambiguitySymbol, 'ambiguity, 'ResultPair 'ResultPair,
     'ResultPair?) 
@@ -2955,8 +2956,7 @@ result FModule: fmod 'META-LEVEL is
     '`[Trace?`] [special(
     id-hook('MetaLevelOpSymbol, 'metaSearchPath) 
     op-hook('shareWith, 'metaReduce, 'Module 'QidSet, 'ResultPair?))] .
-  op 'metaSmtSearch : '`[Module`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`]
-    '`[FindResult`,NatList`,Bound`] '`[FindResult`,NatList`,Bound`]
+  op 'metaSmtSearch : '`[Module`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`] '`[Condition`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`] '`[FindResult`,NatList`,Bound`] '`[FindResult`,NatList`,Bound`]
     '`[FindResult`,NatList`,Bound`] -> '`[SmtResult?`] [special(
     id-hook('MetaLevelOpSymbol, 'metaSmtSearch) 
     op-hook('shareWith, 'metaReduce, 'Module 'QidSet, 'ResultPair?))] .
@@ -3801,6 +3801,7 @@ result FModule: fmod 'META-LEVEL is
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op '`[_`] : 'Qid -> 'Module [none] .
   op '`[`] : nil -> 'Context [ctor] .
+  op '`{_`,_`,_`,_`} : 'Term 'Substitution 'Term 'Nat -> 'SmtResult [ctor] .
   op '`{_`,_`,_`,_`} : 'Term 'Type 'Substitution 'Context -> 'Result4Tuple [
     ctor] .
   op '`{_`,_`,_`} : 'Substitution 'Substitution 'Nat -> 'UnificationTriple [
@@ -3810,7 +3811,6 @@ result FModule: fmod 'META-LEVEL is
   op '`{_`,_`,_`} : 'Term 'Type 'Substitution -> 'ResultTriple [ctor] .
   op '`{_`,_`} : 'Substitution 'Context -> 'MatchPair [ctor] .
   op '`{_`,_`} : 'Substitution 'Nat -> 'UnificationPair [ctor] .
-  op '`{_`,_`} : 'Term 'Nat -> 'SmtResult [ctor] .
   op '`{_`,_`} : 'Term 'Type -> 'ResultPair [ctor] .
   op 'ambiguity : 'ResultPair 'ResultPair -> 'ResultPair? [ctor] .
   op 'anyType : nil -> 'Type? [ctor] .
@@ -4163,7 +4163,8 @@ result FModule: fmod 'META-LEVEL is
     op-hook('traceStepSymbol, '`{_`,_`,_`}, 'Term 'Type 'Rule, 'TraceStep) 
     op-hook('nilTraceSymbol, 'nil, nil, 'Trace) 
     op-hook('traceSymbol, '__, 'Trace 'Trace, 'Trace) 
-    op-hook('smtResultSymbol, '`{_`,_`}, 'Term 'Nat, 'SmtResult) 
+    op-hook('smtResultSymbol, '`{_`,_`,_`,_`}, 'Term 'Substitution 'Term 'Nat,
+    'SmtResult) 
     op-hook('noParseSymbol, 'noParse, 'Nat, 'ResultPair?) 
     op-hook('ambiguitySymbol, 'ambiguity, 'ResultPair 'ResultPair,
     'ResultPair?) 
@@ -4200,8 +4201,7 @@ result FModule: fmod 'META-LEVEL is
     '`[Trace?`] [special(
     id-hook('MetaLevelOpSymbol, 'metaSearchPath) 
     op-hook('shareWith, 'metaReduce, 'Module 'QidSet, 'ResultPair?))] .
-  op 'metaSmtSearch : '`[Module`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`]
-    '`[FindResult`,NatList`,Bound`] '`[FindResult`,NatList`,Bound`]
+  op 'metaSmtSearch : '`[Module`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`] '`[Condition`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`] '`[FindResult`,NatList`,Bound`] '`[FindResult`,NatList`,Bound`]
     '`[FindResult`,NatList`,Bound`] -> '`[SmtResult?`] [special(
     id-hook('MetaLevelOpSymbol, 'metaSmtSearch) 
     op-hook('shareWith, 'metaReduce, 'Module 'QidSet, 'ResultPair?))] .
@@ -5273,6 +5273,8 @@ result ResultPair: {'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,
     ''succSymbol.Sort,''s_.Sort,''Nat.Sort,''NzNat.Sort]]]]],'op_:_->_`[_`].[
     ''`[_`].Kind,''Qid.Sort,''Module.Sort,'none.AttrSet],'op_:_->_`[_`].[
     ''`[`].Kind,'nil.TypeList,''Context.Sort,'ctor.Attr],'op_:_->_`[_`].[
+    ''`{_`,_`,_`,_`}.Qid,'__[''Term.Sort,''Substitution.Sort,''Term.Sort,
+    ''Nat.Sort],''SmtResult.Sort,'ctor.Attr],'op_:_->_`[_`].[
     ''`{_`,_`,_`,_`}.Qid,'__[''Term.Sort,''Type.Sort,''Substitution.Sort,
     ''Context.Sort],''Result4Tuple.Sort,'ctor.Attr],'op_:_->_`[_`].[
     ''`{_`,_`,_`}.Qid,'__[''Substitution.Sort,''Substitution.Sort,''Nat.Sort],
@@ -5284,29 +5286,28 @@ result ResultPair: {'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,
     'ctor.Attr],'op_:_->_`[_`].[''`{_`,_`}.Qid,'__[''Substitution.Sort,
     ''Context.Sort],''MatchPair.Sort,'ctor.Attr],'op_:_->_`[_`].[
     ''`{_`,_`}.Qid,'__[''Substitution.Sort,''Nat.Sort],''UnificationPair.Sort,
-    'ctor.Attr],'op_:_->_`[_`].[''`{_`,_`}.Qid,'__[''Term.Sort,''Nat.Sort],
-    ''SmtResult.Sort,'ctor.Attr],'op_:_->_`[_`].[''`{_`,_`}.Qid,'__[
-    ''Term.Sort,''Type.Sort],''ResultPair.Sort,'ctor.Attr],'op_:_->_`[_`].[
-    ''ambiguity.Sort,'__[''ResultPair.Sort,''ResultPair.Sort],
-    ''ResultPair?.Sort,'ctor.Attr],'op_:_->_`[_`].[''anyType.Sort,
-    'nil.TypeList,''Type?.Sort,'ctor.Attr],'op_:_->_`[_`].[''append.Sort,'__[
-    ''NatList.Sort,''NatList.Sort],''NatList.Sort,'none.AttrSet],
-    'op_:_->_`[_`].[''append.Sort,'__[''NatList.Sort,''NeNatList.Sort],
+    'ctor.Attr],'op_:_->_`[_`].[''`{_`,_`}.Qid,'__[''Term.Sort,''Type.Sort],
+    ''ResultPair.Sort,'ctor.Attr],'op_:_->_`[_`].[''ambiguity.Sort,'__[
+    ''ResultPair.Sort,''ResultPair.Sort],''ResultPair?.Sort,'ctor.Attr],
+    'op_:_->_`[_`].[''anyType.Sort,'nil.TypeList,''Type?.Sort,'ctor.Attr],
+    'op_:_->_`[_`].[''append.Sort,'__[''NatList.Sort,''NatList.Sort],
+    ''NatList.Sort,'none.AttrSet],'op_:_->_`[_`].[''append.Sort,'__[
+    ''NatList.Sort,''NeNatList.Sort],''NeNatList.Sort,'none.AttrSet],
+    'op_:_->_`[_`].[''append.Sort,'__[''NeNatList.Sort,''NatList.Sort],
     ''NeNatList.Sort,'none.AttrSet],'op_:_->_`[_`].[''append.Sort,'__[
-    ''NeNatList.Sort,''NatList.Sort],''NeNatList.Sort,'none.AttrSet],
-    'op_:_->_`[_`].[''append.Sort,'__[''NeQidList.Sort,''QidList.Sort],
+    ''NeQidList.Sort,''QidList.Sort],''NeQidList.Sort,'none.AttrSet],
+    'op_:_->_`[_`].[''append.Sort,'__[''QidList.Sort,''NeQidList.Sort],
     ''NeQidList.Sort,'none.AttrSet],'op_:_->_`[_`].[''append.Sort,'__[
-    ''QidList.Sort,''NeQidList.Sort],''NeQidList.Sort,'none.AttrSet],
-    'op_:_->_`[_`].[''append.Sort,'__[''QidList.Sort,''QidList.Sort],
-    ''QidList.Sort,'none.AttrSet],'op_:_->_`[_`].[''ascii.Sort,''Char.Sort,
-    ''Nat.Sort,'special['__['id-hook[''StringOpSymbol.Sort,''ascii.Sort],
-    'op-hook[''stringSymbol.Sort,''<Strings>.Sort,'nil.TypeList,''Char.Sort],
-    'op-hook[''succSymbol.Sort,''s_.Sort,''Nat.Sort,''NzNat.Sort]]]],
-    'op_:_->_`[_`].[''assoc.Sort,'nil.TypeList,''Attr.Sort,'ctor.Attr],
-    'op_:_->_`[_`].[''ceq_=_if_`[_`]..Qid,'__[''Term.Sort,''Term.Sort,
-    ''EqCondition.Sort,''AttrSet.Sort],''Equation.Sort,'__['ctor.Attr,'format[
-    '__[''d.Sort,''d.Sort,''d.Sort,''d.Sort,''d.Sort,''d.Sort,''s.Sort,
-    ''d.Sort,''d.Sort,''s.Sort,''d.Sort]]]],'op_:_->_`[_`].[''char.Sort,
+    ''QidList.Sort,''QidList.Sort],''QidList.Sort,'none.AttrSet],
+    'op_:_->_`[_`].[''ascii.Sort,''Char.Sort,''Nat.Sort,'special['__['id-hook[
+    ''StringOpSymbol.Sort,''ascii.Sort],'op-hook[''stringSymbol.Sort,
+    ''<Strings>.Sort,'nil.TypeList,''Char.Sort],'op-hook[''succSymbol.Sort,
+    ''s_.Sort,''Nat.Sort,''NzNat.Sort]]]],'op_:_->_`[_`].[''assoc.Sort,
+    'nil.TypeList,''Attr.Sort,'ctor.Attr],'op_:_->_`[_`].[
+    ''ceq_=_if_`[_`]..Qid,'__[''Term.Sort,''Term.Sort,''EqCondition.Sort,
+    ''AttrSet.Sort],''Equation.Sort,'__['ctor.Attr,'format['__[''d.Sort,
+    ''d.Sort,''d.Sort,''d.Sort,''d.Sort,''d.Sort,''s.Sort,''d.Sort,''d.Sort,
+    ''s.Sort,''d.Sort]]]],'op_:_->_`[_`].[''char.Sort,
     ''`[FindResult`,NatList`,Bound`].Kind,''`[String`].Kind,'special['__[
     'id-hook[''StringOpSymbol.Sort,''char.Sort],'op-hook[''stringSymbol.Sort,
     ''<Strings>.Sort,'nil.TypeList,''Char.Sort],'op-hook[''succSymbol.Sort,
@@ -5696,19 +5697,19 @@ result ResultPair: {'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,
     ''Rule.Sort],''TraceStep.Sort],'op-hook[''nilTraceSymbol.Sort,''nil.Sort,
     'nil.TypeList,''Trace.Sort],'op-hook[''traceSymbol.Sort,''__.Sort,'__[
     ''Trace.Sort,''Trace.Sort],''Trace.Sort],'op-hook[''smtResultSymbol.Sort,
-    ''`{_`,_`}.Qid,'__[''Term.Sort,''Nat.Sort],''SmtResult.Sort],'op-hook[
-    ''noParseSymbol.Sort,''noParse.Sort,''Nat.Sort,''ResultPair?.Sort],
-    'op-hook[''ambiguitySymbol.Sort,''ambiguity.Sort,'__[''ResultPair.Sort,
-    ''ResultPair.Sort],''ResultPair?.Sort],'op-hook[''failure2Symbol.Sort,
-    ''failure.Sort,'nil.TypeList,''ResultPair?.Sort],'op-hook[
-    ''failure3Symbol.Sort,''failure.Sort,'nil.TypeList,''ResultTriple?.Sort],
-    'op-hook[''failure4Symbol.Sort,''failure.Sort,'nil.TypeList,
-    ''Result4Tuple?.Sort],'op-hook[''noUnifierPairSymbol.Sort,''noUnifier.Sort,
-    'nil.TypeList,''UnificationPair?.Sort],'op-hook[
-    ''noUnifierTripleSymbol.Sort,''noUnifier.Sort,'nil.TypeList,
-    ''UnificationTriple?.Sort],'op-hook[''noVariantSymbol.Sort,
-    ''noVariant.Sort,'nil.TypeList,''Variant?.Sort],'op-hook[
-    ''noMatchSubstSymbol.Sort,''noMatch.Sort,'nil.TypeList,
+    ''`{_`,_`,_`,_`}.Qid,'__[''Term.Sort,''Substitution.Sort,''Term.Sort,
+    ''Nat.Sort],''SmtResult.Sort],'op-hook[''noParseSymbol.Sort,''noParse.Sort,
+    ''Nat.Sort,''ResultPair?.Sort],'op-hook[''ambiguitySymbol.Sort,
+    ''ambiguity.Sort,'__[''ResultPair.Sort,''ResultPair.Sort],
+    ''ResultPair?.Sort],'op-hook[''failure2Symbol.Sort,''failure.Sort,
+    'nil.TypeList,''ResultPair?.Sort],'op-hook[''failure3Symbol.Sort,
+    ''failure.Sort,'nil.TypeList,''ResultTriple?.Sort],'op-hook[
+    ''failure4Symbol.Sort,''failure.Sort,'nil.TypeList,''Result4Tuple?.Sort],
+    'op-hook[''noUnifierPairSymbol.Sort,''noUnifier.Sort,'nil.TypeList,
+    ''UnificationPair?.Sort],'op-hook[''noUnifierTripleSymbol.Sort,
+    ''noUnifier.Sort,'nil.TypeList,''UnificationTriple?.Sort],'op-hook[
+    ''noVariantSymbol.Sort,''noVariant.Sort,'nil.TypeList,''Variant?.Sort],
+    'op-hook[''noMatchSubstSymbol.Sort,''noMatch.Sort,'nil.TypeList,
     ''Substitution?.Sort],'op-hook[''noMatchPairSymbol.Sort,''noMatch.Sort,
     'nil.TypeList,''MatchPair?.Sort],'op-hook[''failureTraceSymbol.Sort,
     ''failure.Sort,'nil.TypeList,''Trace?.Sort],'op-hook[
@@ -5745,6 +5746,7 @@ result ResultPair: {'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,
     ''shareWith.Sort,''metaReduce.Sort,'__[''Module.Sort,''QidSet.Sort],
     ''ResultPair?.Sort]]]],'op_:_->_`[_`].[''metaSmtSearch.Sort,'__[
     ''`[Module`].Kind,''`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`].Kind,''`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`].Kind,
+    ''`[Condition`].Kind,''`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`].Kind,
     ''`[FindResult`,NatList`,Bound`].Kind,
     ''`[FindResult`,NatList`,Bound`].Kind,
     ''`[FindResult`,NatList`,Bound`].Kind],''`[SmtResult?`].Kind,'special['__[
@@ -6849,6 +6851,8 @@ result GroundTerm: 'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,'nil.ImportList,
     ''succSymbol.Sort,''s_.Sort,''Nat.Sort,''NzNat.Sort]]]]],'op_:_->_`[_`].[
     ''`[_`].Kind,''Qid.Sort,''Module.Sort,'none.AttrSet],'op_:_->_`[_`].[
     ''`[`].Kind,'nil.TypeList,''Context.Sort,'ctor.Attr],'op_:_->_`[_`].[
+    ''`{_`,_`,_`,_`}.Qid,'__[''Term.Sort,''Substitution.Sort,''Term.Sort,
+    ''Nat.Sort],''SmtResult.Sort,'ctor.Attr],'op_:_->_`[_`].[
     ''`{_`,_`,_`,_`}.Qid,'__[''Term.Sort,''Type.Sort,''Substitution.Sort,
     ''Context.Sort],''Result4Tuple.Sort,'ctor.Attr],'op_:_->_`[_`].[
     ''`{_`,_`,_`}.Qid,'__[''Substitution.Sort,''Substitution.Sort,''Nat.Sort],
@@ -6860,29 +6864,28 @@ result GroundTerm: 'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,'nil.ImportList,
     'ctor.Attr],'op_:_->_`[_`].[''`{_`,_`}.Qid,'__[''Substitution.Sort,
     ''Context.Sort],''MatchPair.Sort,'ctor.Attr],'op_:_->_`[_`].[
     ''`{_`,_`}.Qid,'__[''Substitution.Sort,''Nat.Sort],''UnificationPair.Sort,
-    'ctor.Attr],'op_:_->_`[_`].[''`{_`,_`}.Qid,'__[''Term.Sort,''Nat.Sort],
-    ''SmtResult.Sort,'ctor.Attr],'op_:_->_`[_`].[''`{_`,_`}.Qid,'__[
-    ''Term.Sort,''Type.Sort],''ResultPair.Sort,'ctor.Attr],'op_:_->_`[_`].[
-    ''ambiguity.Sort,'__[''ResultPair.Sort,''ResultPair.Sort],
-    ''ResultPair?.Sort,'ctor.Attr],'op_:_->_`[_`].[''anyType.Sort,
-    'nil.TypeList,''Type?.Sort,'ctor.Attr],'op_:_->_`[_`].[''append.Sort,'__[
-    ''NatList.Sort,''NatList.Sort],''NatList.Sort,'none.AttrSet],
-    'op_:_->_`[_`].[''append.Sort,'__[''NatList.Sort,''NeNatList.Sort],
+    'ctor.Attr],'op_:_->_`[_`].[''`{_`,_`}.Qid,'__[''Term.Sort,''Type.Sort],
+    ''ResultPair.Sort,'ctor.Attr],'op_:_->_`[_`].[''ambiguity.Sort,'__[
+    ''ResultPair.Sort,''ResultPair.Sort],''ResultPair?.Sort,'ctor.Attr],
+    'op_:_->_`[_`].[''anyType.Sort,'nil.TypeList,''Type?.Sort,'ctor.Attr],
+    'op_:_->_`[_`].[''append.Sort,'__[''NatList.Sort,''NatList.Sort],
+    ''NatList.Sort,'none.AttrSet],'op_:_->_`[_`].[''append.Sort,'__[
+    ''NatList.Sort,''NeNatList.Sort],''NeNatList.Sort,'none.AttrSet],
+    'op_:_->_`[_`].[''append.Sort,'__[''NeNatList.Sort,''NatList.Sort],
     ''NeNatList.Sort,'none.AttrSet],'op_:_->_`[_`].[''append.Sort,'__[
-    ''NeNatList.Sort,''NatList.Sort],''NeNatList.Sort,'none.AttrSet],
-    'op_:_->_`[_`].[''append.Sort,'__[''NeQidList.Sort,''QidList.Sort],
+    ''NeQidList.Sort,''QidList.Sort],''NeQidList.Sort,'none.AttrSet],
+    'op_:_->_`[_`].[''append.Sort,'__[''QidList.Sort,''NeQidList.Sort],
     ''NeQidList.Sort,'none.AttrSet],'op_:_->_`[_`].[''append.Sort,'__[
-    ''QidList.Sort,''NeQidList.Sort],''NeQidList.Sort,'none.AttrSet],
-    'op_:_->_`[_`].[''append.Sort,'__[''QidList.Sort,''QidList.Sort],
-    ''QidList.Sort,'none.AttrSet],'op_:_->_`[_`].[''ascii.Sort,''Char.Sort,
-    ''Nat.Sort,'special['__['id-hook[''StringOpSymbol.Sort,''ascii.Sort],
-    'op-hook[''stringSymbol.Sort,''<Strings>.Sort,'nil.TypeList,''Char.Sort],
-    'op-hook[''succSymbol.Sort,''s_.Sort,''Nat.Sort,''NzNat.Sort]]]],
-    'op_:_->_`[_`].[''assoc.Sort,'nil.TypeList,''Attr.Sort,'ctor.Attr],
-    'op_:_->_`[_`].[''ceq_=_if_`[_`]..Qid,'__[''Term.Sort,''Term.Sort,
-    ''EqCondition.Sort,''AttrSet.Sort],''Equation.Sort,'__['ctor.Attr,'format[
-    '__[''d.Sort,''d.Sort,''d.Sort,''d.Sort,''d.Sort,''d.Sort,''s.Sort,
-    ''d.Sort,''d.Sort,''s.Sort,''d.Sort]]]],'op_:_->_`[_`].[''char.Sort,
+    ''QidList.Sort,''QidList.Sort],''QidList.Sort,'none.AttrSet],
+    'op_:_->_`[_`].[''ascii.Sort,''Char.Sort,''Nat.Sort,'special['__['id-hook[
+    ''StringOpSymbol.Sort,''ascii.Sort],'op-hook[''stringSymbol.Sort,
+    ''<Strings>.Sort,'nil.TypeList,''Char.Sort],'op-hook[''succSymbol.Sort,
+    ''s_.Sort,''Nat.Sort,''NzNat.Sort]]]],'op_:_->_`[_`].[''assoc.Sort,
+    'nil.TypeList,''Attr.Sort,'ctor.Attr],'op_:_->_`[_`].[
+    ''ceq_=_if_`[_`]..Qid,'__[''Term.Sort,''Term.Sort,''EqCondition.Sort,
+    ''AttrSet.Sort],''Equation.Sort,'__['ctor.Attr,'format['__[''d.Sort,
+    ''d.Sort,''d.Sort,''d.Sort,''d.Sort,''d.Sort,''s.Sort,''d.Sort,''d.Sort,
+    ''s.Sort,''d.Sort]]]],'op_:_->_`[_`].[''char.Sort,
     ''`[FindResult`,NatList`,Bound`].Kind,''`[String`].Kind,'special['__[
     'id-hook[''StringOpSymbol.Sort,''char.Sort],'op-hook[''stringSymbol.Sort,
     ''<Strings>.Sort,'nil.TypeList,''Char.Sort],'op-hook[''succSymbol.Sort,
@@ -7273,19 +7276,19 @@ result GroundTerm: 'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,'nil.ImportList,
     ''Rule.Sort],''TraceStep.Sort],'op-hook[''nilTraceSymbol.Sort,''nil.Sort,
     'nil.TypeList,''Trace.Sort],'op-hook[''traceSymbol.Sort,''__.Sort,'__[
     ''Trace.Sort,''Trace.Sort],''Trace.Sort],'op-hook[''smtResultSymbol.Sort,
-    ''`{_`,_`}.Qid,'__[''Term.Sort,''Nat.Sort],''SmtResult.Sort],'op-hook[
-    ''noParseSymbol.Sort,''noParse.Sort,''Nat.Sort,''ResultPair?.Sort],
-    'op-hook[''ambiguitySymbol.Sort,''ambiguity.Sort,'__[''ResultPair.Sort,
-    ''ResultPair.Sort],''ResultPair?.Sort],'op-hook[''failure2Symbol.Sort,
-    ''failure.Sort,'nil.TypeList,''ResultPair?.Sort],'op-hook[
-    ''failure3Symbol.Sort,''failure.Sort,'nil.TypeList,''ResultTriple?.Sort],
-    'op-hook[''failure4Symbol.Sort,''failure.Sort,'nil.TypeList,
-    ''Result4Tuple?.Sort],'op-hook[''noUnifierPairSymbol.Sort,''noUnifier.Sort,
-    'nil.TypeList,''UnificationPair?.Sort],'op-hook[
-    ''noUnifierTripleSymbol.Sort,''noUnifier.Sort,'nil.TypeList,
-    ''UnificationTriple?.Sort],'op-hook[''noVariantSymbol.Sort,
-    ''noVariant.Sort,'nil.TypeList,''Variant?.Sort],'op-hook[
-    ''noMatchSubstSymbol.Sort,''noMatch.Sort,'nil.TypeList,
+    ''`{_`,_`,_`,_`}.Qid,'__[''Term.Sort,''Substitution.Sort,''Term.Sort,
+    ''Nat.Sort],''SmtResult.Sort],'op-hook[''noParseSymbol.Sort,''noParse.Sort,
+    ''Nat.Sort,''ResultPair?.Sort],'op-hook[''ambiguitySymbol.Sort,
+    ''ambiguity.Sort,'__[''ResultPair.Sort,''ResultPair.Sort],
+    ''ResultPair?.Sort],'op-hook[''failure2Symbol.Sort,''failure.Sort,
+    'nil.TypeList,''ResultPair?.Sort],'op-hook[''failure3Symbol.Sort,
+    ''failure.Sort,'nil.TypeList,''ResultTriple?.Sort],'op-hook[
+    ''failure4Symbol.Sort,''failure.Sort,'nil.TypeList,''Result4Tuple?.Sort],
+    'op-hook[''noUnifierPairSymbol.Sort,''noUnifier.Sort,'nil.TypeList,
+    ''UnificationPair?.Sort],'op-hook[''noUnifierTripleSymbol.Sort,
+    ''noUnifier.Sort,'nil.TypeList,''UnificationTriple?.Sort],'op-hook[
+    ''noVariantSymbol.Sort,''noVariant.Sort,'nil.TypeList,''Variant?.Sort],
+    'op-hook[''noMatchSubstSymbol.Sort,''noMatch.Sort,'nil.TypeList,
     ''Substitution?.Sort],'op-hook[''noMatchPairSymbol.Sort,''noMatch.Sort,
     'nil.TypeList,''MatchPair?.Sort],'op-hook[''failureTraceSymbol.Sort,
     ''failure.Sort,'nil.TypeList,''Trace?.Sort],'op-hook[
@@ -7322,6 +7325,7 @@ result GroundTerm: 'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,'nil.ImportList,
     ''shareWith.Sort,''metaReduce.Sort,'__[''Module.Sort,''QidSet.Sort],
     ''ResultPair?.Sort]]]],'op_:_->_`[_`].[''metaSmtSearch.Sort,'__[
     ''`[Module`].Kind,''`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`].Kind,''`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`].Kind,
+    ''`[Condition`].Kind,''`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`].Kind,
     ''`[FindResult`,NatList`,Bound`].Kind,
     ''`[FindResult`,NatList`,Bound`].Kind,
     ''`[FindResult`,NatList`,Bound`].Kind],''`[SmtResult?`].Kind,'special['__[
@@ -8426,6 +8430,8 @@ result ResultPair: {'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,
     ''succSymbol.Sort,''s_.Sort,''Nat.Sort,''NzNat.Sort]]]]],'op_:_->_`[_`].[
     ''`[_`].Kind,''Qid.Sort,''Module.Sort,'none.AttrSet],'op_:_->_`[_`].[
     ''`[`].Kind,'nil.TypeList,''Context.Sort,'ctor.Attr],'op_:_->_`[_`].[
+    ''`{_`,_`,_`,_`}.Qid,'__[''Term.Sort,''Substitution.Sort,''Term.Sort,
+    ''Nat.Sort],''SmtResult.Sort,'ctor.Attr],'op_:_->_`[_`].[
     ''`{_`,_`,_`,_`}.Qid,'__[''Term.Sort,''Type.Sort,''Substitution.Sort,
     ''Context.Sort],''Result4Tuple.Sort,'ctor.Attr],'op_:_->_`[_`].[
     ''`{_`,_`,_`}.Qid,'__[''Substitution.Sort,''Substitution.Sort,''Nat.Sort],
@@ -8437,29 +8443,28 @@ result ResultPair: {'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,
     'ctor.Attr],'op_:_->_`[_`].[''`{_`,_`}.Qid,'__[''Substitution.Sort,
     ''Context.Sort],''MatchPair.Sort,'ctor.Attr],'op_:_->_`[_`].[
     ''`{_`,_`}.Qid,'__[''Substitution.Sort,''Nat.Sort],''UnificationPair.Sort,
-    'ctor.Attr],'op_:_->_`[_`].[''`{_`,_`}.Qid,'__[''Term.Sort,''Nat.Sort],
-    ''SmtResult.Sort,'ctor.Attr],'op_:_->_`[_`].[''`{_`,_`}.Qid,'__[
-    ''Term.Sort,''Type.Sort],''ResultPair.Sort,'ctor.Attr],'op_:_->_`[_`].[
-    ''ambiguity.Sort,'__[''ResultPair.Sort,''ResultPair.Sort],
-    ''ResultPair?.Sort,'ctor.Attr],'op_:_->_`[_`].[''anyType.Sort,
-    'nil.TypeList,''Type?.Sort,'ctor.Attr],'op_:_->_`[_`].[''append.Sort,'__[
-    ''NatList.Sort,''NatList.Sort],''NatList.Sort,'none.AttrSet],
-    'op_:_->_`[_`].[''append.Sort,'__[''NatList.Sort,''NeNatList.Sort],
+    'ctor.Attr],'op_:_->_`[_`].[''`{_`,_`}.Qid,'__[''Term.Sort,''Type.Sort],
+    ''ResultPair.Sort,'ctor.Attr],'op_:_->_`[_`].[''ambiguity.Sort,'__[
+    ''ResultPair.Sort,''ResultPair.Sort],''ResultPair?.Sort,'ctor.Attr],
+    'op_:_->_`[_`].[''anyType.Sort,'nil.TypeList,''Type?.Sort,'ctor.Attr],
+    'op_:_->_`[_`].[''append.Sort,'__[''NatList.Sort,''NatList.Sort],
+    ''NatList.Sort,'none.AttrSet],'op_:_->_`[_`].[''append.Sort,'__[
+    ''NatList.Sort,''NeNatList.Sort],''NeNatList.Sort,'none.AttrSet],
+    'op_:_->_`[_`].[''append.Sort,'__[''NeNatList.Sort,''NatList.Sort],
     ''NeNatList.Sort,'none.AttrSet],'op_:_->_`[_`].[''append.Sort,'__[
-    ''NeNatList.Sort,''NatList.Sort],''NeNatList.Sort,'none.AttrSet],
-    'op_:_->_`[_`].[''append.Sort,'__[''NeQidList.Sort,''QidList.Sort],
+    ''NeQidList.Sort,''QidList.Sort],''NeQidList.Sort,'none.AttrSet],
+    'op_:_->_`[_`].[''append.Sort,'__[''QidList.Sort,''NeQidList.Sort],
     ''NeQidList.Sort,'none.AttrSet],'op_:_->_`[_`].[''append.Sort,'__[
-    ''QidList.Sort,''NeQidList.Sort],''NeQidList.Sort,'none.AttrSet],
-    'op_:_->_`[_`].[''append.Sort,'__[''QidList.Sort,''QidList.Sort],
-    ''QidList.Sort,'none.AttrSet],'op_:_->_`[_`].[''ascii.Sort,''Char.Sort,
-    ''Nat.Sort,'special['__['id-hook[''StringOpSymbol.Sort,''ascii.Sort],
-    'op-hook[''stringSymbol.Sort,''<Strings>.Sort,'nil.TypeList,''Char.Sort],
-    'op-hook[''succSymbol.Sort,''s_.Sort,''Nat.Sort,''NzNat.Sort]]]],
-    'op_:_->_`[_`].[''assoc.Sort,'nil.TypeList,''Attr.Sort,'ctor.Attr],
-    'op_:_->_`[_`].[''ceq_=_if_`[_`]..Qid,'__[''Term.Sort,''Term.Sort,
-    ''EqCondition.Sort,''AttrSet.Sort],''Equation.Sort,'__['ctor.Attr,'format[
-    '__[''d.Sort,''d.Sort,''d.Sort,''d.Sort,''d.Sort,''d.Sort,''s.Sort,
-    ''d.Sort,''d.Sort,''s.Sort,''d.Sort]]]],'op_:_->_`[_`].[''char.Sort,
+    ''QidList.Sort,''QidList.Sort],''QidList.Sort,'none.AttrSet],
+    'op_:_->_`[_`].[''ascii.Sort,''Char.Sort,''Nat.Sort,'special['__['id-hook[
+    ''StringOpSymbol.Sort,''ascii.Sort],'op-hook[''stringSymbol.Sort,
+    ''<Strings>.Sort,'nil.TypeList,''Char.Sort],'op-hook[''succSymbol.Sort,
+    ''s_.Sort,''Nat.Sort,''NzNat.Sort]]]],'op_:_->_`[_`].[''assoc.Sort,
+    'nil.TypeList,''Attr.Sort,'ctor.Attr],'op_:_->_`[_`].[
+    ''ceq_=_if_`[_`]..Qid,'__[''Term.Sort,''Term.Sort,''EqCondition.Sort,
+    ''AttrSet.Sort],''Equation.Sort,'__['ctor.Attr,'format['__[''d.Sort,
+    ''d.Sort,''d.Sort,''d.Sort,''d.Sort,''d.Sort,''s.Sort,''d.Sort,''d.Sort,
+    ''s.Sort,''d.Sort]]]],'op_:_->_`[_`].[''char.Sort,
     ''`[FindResult`,NatList`,Bound`].Kind,''`[String`].Kind,'special['__[
     'id-hook[''StringOpSymbol.Sort,''char.Sort],'op-hook[''stringSymbol.Sort,
     ''<Strings>.Sort,'nil.TypeList,''Char.Sort],'op-hook[''succSymbol.Sort,
@@ -8850,19 +8855,19 @@ result ResultPair: {'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,
     ''Rule.Sort],''TraceStep.Sort],'op-hook[''nilTraceSymbol.Sort,''nil.Sort,
     'nil.TypeList,''Trace.Sort],'op-hook[''traceSymbol.Sort,''__.Sort,'__[
     ''Trace.Sort,''Trace.Sort],''Trace.Sort],'op-hook[''smtResultSymbol.Sort,
-    ''`{_`,_`}.Qid,'__[''Term.Sort,''Nat.Sort],''SmtResult.Sort],'op-hook[
-    ''noParseSymbol.Sort,''noParse.Sort,''Nat.Sort,''ResultPair?.Sort],
-    'op-hook[''ambiguitySymbol.Sort,''ambiguity.Sort,'__[''ResultPair.Sort,
-    ''ResultPair.Sort],''ResultPair?.Sort],'op-hook[''failure2Symbol.Sort,
-    ''failure.Sort,'nil.TypeList,''ResultPair?.Sort],'op-hook[
-    ''failure3Symbol.Sort,''failure.Sort,'nil.TypeList,''ResultTriple?.Sort],
-    'op-hook[''failure4Symbol.Sort,''failure.Sort,'nil.TypeList,
-    ''Result4Tuple?.Sort],'op-hook[''noUnifierPairSymbol.Sort,''noUnifier.Sort,
-    'nil.TypeList,''UnificationPair?.Sort],'op-hook[
-    ''noUnifierTripleSymbol.Sort,''noUnifier.Sort,'nil.TypeList,
-    ''UnificationTriple?.Sort],'op-hook[''noVariantSymbol.Sort,
-    ''noVariant.Sort,'nil.TypeList,''Variant?.Sort],'op-hook[
-    ''noMatchSubstSymbol.Sort,''noMatch.Sort,'nil.TypeList,
+    ''`{_`,_`,_`,_`}.Qid,'__[''Term.Sort,''Substitution.Sort,''Term.Sort,
+    ''Nat.Sort],''SmtResult.Sort],'op-hook[''noParseSymbol.Sort,''noParse.Sort,
+    ''Nat.Sort,''ResultPair?.Sort],'op-hook[''ambiguitySymbol.Sort,
+    ''ambiguity.Sort,'__[''ResultPair.Sort,''ResultPair.Sort],
+    ''ResultPair?.Sort],'op-hook[''failure2Symbol.Sort,''failure.Sort,
+    'nil.TypeList,''ResultPair?.Sort],'op-hook[''failure3Symbol.Sort,
+    ''failure.Sort,'nil.TypeList,''ResultTriple?.Sort],'op-hook[
+    ''failure4Symbol.Sort,''failure.Sort,'nil.TypeList,''Result4Tuple?.Sort],
+    'op-hook[''noUnifierPairSymbol.Sort,''noUnifier.Sort,'nil.TypeList,
+    ''UnificationPair?.Sort],'op-hook[''noUnifierTripleSymbol.Sort,
+    ''noUnifier.Sort,'nil.TypeList,''UnificationTriple?.Sort],'op-hook[
+    ''noVariantSymbol.Sort,''noVariant.Sort,'nil.TypeList,''Variant?.Sort],
+    'op-hook[''noMatchSubstSymbol.Sort,''noMatch.Sort,'nil.TypeList,
     ''Substitution?.Sort],'op-hook[''noMatchPairSymbol.Sort,''noMatch.Sort,
     'nil.TypeList,''MatchPair?.Sort],'op-hook[''failureTraceSymbol.Sort,
     ''failure.Sort,'nil.TypeList,''Trace?.Sort],'op-hook[
@@ -8899,6 +8904,7 @@ result ResultPair: {'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,
     ''shareWith.Sort,''metaReduce.Sort,'__[''Module.Sort,''QidSet.Sort],
     ''ResultPair?.Sort]]]],'op_:_->_`[_`].[''metaSmtSearch.Sort,'__[
     ''`[Module`].Kind,''`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`].Kind,''`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`].Kind,
+    ''`[Condition`].Kind,''`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`].Kind,
     ''`[FindResult`,NatList`,Bound`].Kind,
     ''`[FindResult`,NatList`,Bound`].Kind,
     ''`[FindResult`,NatList`,Bound`].Kind],''`[SmtResult?`].Kind,'special['__[

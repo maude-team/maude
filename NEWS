@@ -1,3 +1,7 @@
+Overview of Changes in alpha105
+===============================
+* experimental support for multi-step search modulo SMT
+
 Overview of Changes in alpha104
 ===============================
 * fixed duplicate advisories about missing sorts

@@ -1,3 +1,66 @@
+2014-10-29  Steven Eker  <eker@ape.csl.sri.com>
+
+	* search.cc (smtSearch): deleted
+	(search): allocate VariableGenerator object on the heap now that
+	SMT_RewriteSequenceSearch destructs it
+	(search): call clearDebug() in SMT case
+	(search): call validForSMT_Rewriting()
+
+2014-10-23  Steven Eker  <eker@ape.csl.sri.com>
+
+	* search.cc (search): new solution format for smt-search results
+
+	* userLevelRewritingContext.hh (ObjectSystemRewritingContext):
+	updated decl for printSubstitution
+
+	* userLevelRewritingContext.cc (printSubstitution): rewritten to
+	take ignoredIndices
+
+	* search.cc (search): use new SMT_RewriteSequenceSearch semantics
+	(search): use getFinalConstraint() rather than getMatchConstraint
+
+2014-10-22  Steven Eker  <eker@ape.csl.sri.com>
+
+	* search.cc (search): rewritten to hande search modulo SMT
+	directly
+
+2014-10-21  Steven Eker  <eker@ape.csl.sri.com>
+
+	* variableGenerator.cc (VariableGenerator): initialize pushCount
+
+	* variableGenerator.hh (push): added
+	(pop): added
+	(clearAssertions): handle pushCount;
+	(SMT_EngineWrapper): added data member pushCount
+
+2014-10-17  Steven Eker  <eker@ape.csl.sri.com>
+
+	* search.cc (smtSearch): rewritten to use new
+	SMT_RewriteSequenceSearch design
+
+2014-10-15  Steven Eker  <eker@ape.csl.sri.com>
+
+	* search.cc (smtSearch): rewritten to use SMT_RewriteSequenceSearch
+
+2014-10-14  Steven Eker  <eker@ape.csl.sri.com>
+
+	* variableGenerator.hh (clearAssertions): made inline
+
+2014-10-03  Steven Eker  <eker@ape.csl.sri.com>
+
+	* variableGenerator.cc (VariableGenerator): call push()
+
+	* variableGenerator.hh (clearAssertions): added
+
+2014-09-29  Steven Eker  <eker@ape.csl.sri.com>
+
+	* search.cc (smtSearch): pass VariableGenerator object to
+	SMT_RewriteSearchState via pointer rather than reference
+
+	* variableGenerator.hh: SMT_VariableManager -> SMT_EngineWrapper
+
+===================================Maude105===========================================
+
 2014-09-26  Steven Eker  <eker@ape.csl.sri.com>
 
 	* execute.cc (test): turned in to stub

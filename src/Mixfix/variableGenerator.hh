@@ -27,14 +27,14 @@
 #define _variableGenerator_hh_
 #include <map>
 #include "SMT_Info.hh"
-#include "SMT_VariableManager.hh"
+#include "SMT_EngineWrapper.hh"
 
 #include "cvc4/expr/expr_manager.h"
 #include "cvc4/smt/smt_engine.h"
 
 using namespace CVC4;
 
-class VariableGenerator : public SMT_VariableManager
+class VariableGenerator : public SMT_EngineWrapper
 {
 public:
   VariableGenerator(const SMT_Info& smtInfo);
@@ -44,6 +44,9 @@ public:
   //
   Result assertDag(DagNode* dag);
   Result checkDag(DagNode* dag);
+  void clearAssertions();
+  void push();
+  void pop();
 
   VariableDagNode* makeFreshVariable(Term* baseVariable, const mpz_class& number);
 
@@ -67,9 +70,39 @@ private:
 
   const SMT_Info& smtInfo;
   VariableMap variableMap;
-
+  int pushCount;
+  //
+  //	CVC4 objects.
+  //
   ExprManager* exprManager;
   SmtEngine* smtEngine;
 };
+
+inline void
+VariableGenerator::push()
+{
+  smtEngine->push();
+  ++pushCount;
+}
+
+inline void
+VariableGenerator::pop()
+{
+  Assert(pushCount > 0, "bad pop");
+  smtEngine->pop();
+  --pushCount;
+}
+
+inline void
+VariableGenerator::clearAssertions()
+{
+  while (pushCount > 0)
+    {
+      smtEngine->pop();
+      --pushCount;
+    }
+  smtEngine->pop();  // get back to original clean context
+  smtEngine->push();  // make a new context so we don't pollute the context we want to pop back to
+}
 
 #endif
