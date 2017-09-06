@@ -1,5 +1,18 @@
-Overview of Changes in Maude alpha91d
-=====================================
+Overview of Changes in Maude alpha92
+====================================
+* fixed a bug in unification sort calculations on polymorphic symbols
+* if_then_else_fi now uses generic sort mechanism and can give
+  preregularity warnings
+* fixed module reparsing bug
+* fixed CUI matcher bug
+* fixed pending unification stack bug
+* added rewrite condition fragments to search command
+* fixed instantiation by theory-view bug
+* added meta-view syntax and upView() operator
+* first attempt at meta-interpreter
+
+Overview of Changes in Maude 2.4 (alpha91d)
+===========================================
 * fixed AU term normalization bug
 
 Overview of Changes in Maude alpha91c

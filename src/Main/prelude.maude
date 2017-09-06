@@ -2,7 +2,7 @@
 
     This file is part of the Maude 2 interpreter.
 
-    Copyright 1997-2008 SRI International, Menlo Park, CA 94025, USA.
+    Copyright 1997-2009 SRI International, Menlo Park, CA 94025, USA.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 
 ***
 ***	Maude interpreter standard prelude.
-***	Version 2.4.
+***	Version alpha92.
 ***
 ***	Some of the overall structure is taken from the OBJ3
 ***	interpreter standard prelude.
@@ -1526,8 +1526,8 @@ fmod META-TERM is
   op <Qids> : -> Kind [special (id-hook QuotedIdentifierSymbol (kindQid))] .
 
 *** terms
-  sorts Constant Variable GroundTerm Term NeGroundTermList GroundTermList NeTermList TermList .
-  subsorts Constant Variable < Qid Term .
+  sorts Constant Variable TermQid GroundTerm Term NeGroundTermList GroundTermList NeTermList TermList .
+  subsorts Constant Variable < TermQid < Qid Term .
   subsorts Constant < GroundTerm < Term NeGroundTermList < NeTermList .
   subsorts NeGroundTermList < NeTermList GroundTermList < TermList .
   op <Qids> : -> Constant [special (id-hook QuotedIdentifierSymbol (constantQid))] .
@@ -1871,8 +1871,39 @@ fmod META-MODULE is
   eq getRls(th Q is IL sorts SS . SSDS OPDS MAS EQS RLS endth) = RLS .
 endfm
 
-fmod META-LEVEL is
+fmod META-VIEW is
   protecting META-MODULE .
+
+*** sort mappings
+  sorts SortMapping SortMappingSet .
+  subsort SortMapping < SortMappingSet .
+  op sort_to_. : Sort Sort -> SortMapping [ctor] .
+  op none : -> SortMappingSet [ctor] .
+  op __ : SortMappingSet SortMappingSet -> SortMappingSet
+    [ctor assoc comm id: none format (d ni d)] .
+  eq S:SortMapping S:SortMapping = S:SortMapping .
+
+*** operator mappings
+  sorts OpMapping OpMappingSet .
+  subsort OpMapping < OpMappingSet .
+
+  op (op_to_.) : Qid Qid -> OpMapping [ctor] .
+  op (op_:_->_to_.) : Qid TypeList Type Qid -> OpMapping [ctor] .
+  op (op_to term_.) : Term Term -> OpMapping [ctor] .
+
+  op none : -> OpMappingSet [ctor] .
+  op __ : OpMappingSet OpMappingSet -> OpMappingSet
+    [ctor assoc comm id: none format (d ni d)] .
+  eq O:OpMapping O:OpMapping = O:OpMapping .
+
+  sort View .
+  op view_from_to_is__endv : Header ModuleExpression ModuleExpression
+    SortMappingSet OpMappingSet -> View [ctor gather (& & & & &)
+     format (d d d d d d d n++i ni n--i d)] .
+endfm
+
+fmod META-LEVEL is
+  protecting META-VIEW .
 
 *** bounds
   sort Bound .
@@ -2098,10 +2129,28 @@ fmod META-LEVEL is
                         Qid ImportList SortSet SubsortDeclSet OpDeclSet 
                         MembAxSet EquationSet RuleSet ~> Module)
 
+        op-hook sortMappingSymbol	(sort_to_. : Sort Sort ~> SortMapping [ctor] .)
+	op-hook emptySortMappingSetSymbol	(none : ~> SortMappingSet)
+        op-hook sortMappingSetSymbol
+                (__ : SortMappingSet SortMappingSet ~> SortMappingSet)
+
+        op-hook opMappingSymbol		(op_to_. : Qid Qid ~> OpMapping)
+        op-hook opSpecificMappingSymbol	(op_:_->_to_. : Qid TypeList Type Qid ~> OpMapping)
+        op-hook opTermMappingSymbol	(op_to`term_. : Term Term ~> OpMapping)
+
+	op-hook emptyOpMappingSetSymbol	(none : ~> OpMappingSet)
+        op-hook opMappingSetSymbol
+                (__ : OpMappingSet OpMappingSet ~> OpMappingSet)
+
+        op-hook viewSymbol
+                (view_from_to_is__endv : Header ModuleExpression ModuleExpression
+                 SortMappingSet OpMappingSet ~> View)
+
         op-hook anyTypeSymbol		(anyType : ~> Type?)
 
 	op-hook unificandPairSymbol	(_=?_ : Term Term ~> UnificandPair)
-        op-hook unificationConjunctionSymbol	(_/\_ : UnificationProblem UnificationProblem ~> UnificationProblem)
+        op-hook unificationConjunctionSymbol
+                (_/\_ : UnificationProblem UnificationProblem ~> UnificationProblem)
 
         op-hook resultPairSymbol	({_,_} : Term Type ~> ResultPair)
         op-hook resultTripleSymbol
@@ -2322,6 +2371,11 @@ fmod META-LEVEL is
   op upRls : Qid Bool ~> RuleSet
         [special (
            id-hook MetaLevelOpSymbol	(metaUpRls)
+           op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .
+
+  op upView : Qid ~> View
+        [special (
+           id-hook MetaLevelOpSymbol	(metaUpView)
            op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .
 
   op upTerm : Universal -> Term

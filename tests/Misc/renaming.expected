@@ -300,6 +300,7 @@ fmod QID-LIST
 fmod QID-SET
 fmod META-TERM
 fmod META-MODULE
+fmod META-VIEW
 fmod META-LEVEL
 mod COUNTER
 mod LOOP-MODE

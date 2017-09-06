@@ -88,7 +88,7 @@
 #include "metaLevel.hh"
 #include "metaLevelOpSymbol.hh"
 #include "fileTable.hh"
-#include "preModule.hh"
+#include "syntacticPreModule.hh"
 #include "interpreter.hh"
 #include "visibleModule.hh"
 #include "global.hh"  // HACK: shouldn't access global variables
@@ -152,7 +152,6 @@ MetaLevelOpSymbol::attachSymbol(const char* purpose, Symbol* symbol)
     BIND_SYMBOL(purpose, symbol, shareWith, MetaLevelOpSymbol*);
   return (okToBind() && metaLevel->bind(purpose, symbol)) ? true :
     FreeSymbol::attachSymbol(purpose, symbol);
-    
 }
 
 bool
@@ -257,8 +256,9 @@ bool
 MetaLevelOpSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
 {
   Assert(this == subject->symbol(), "Bad symbol");
-  if (metaLevel == 0)
-    metaLevel = shareWith->metaLevel;
+  Assert(metaLevel != 0, "metaLevel not set for " << this);
+  //if (metaLevel == 0)
+  //  metaLevel = shareWith->metaLevel;
   FreeDagNode* d = safeCast(FreeDagNode*, subject);
   int nrArgs = arity();
   for (int i = 0; i < nrArgs; i++)

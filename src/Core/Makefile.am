@@ -115,4 +115,5 @@ noinst_HEADERS = \
 	unificationContext.hh \
 	freshVariableGenerator.hh \
 	protectedDagNodeSet.hh \
-	pendingUnificationStack.hh
+	pendingUnificationStack.hh \
+	environment.hh

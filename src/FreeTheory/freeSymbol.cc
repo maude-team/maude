@@ -332,7 +332,8 @@ FreeSymbol::computeGeneralizedSort(const SortBdds& sortBdds,
       for (int j = 0; j < nrBdds; ++j, ++varCounter)
 	bdd_setbddpair(argMap, varCounter, argGenSort[j]);
     }
-  const Vector<Bdd>& sortFunction = sortBdds.getSortFunction(getIndexWithinModule());
+  DebugAdvisory("getting sort function for " << this << " " << subject);
+  const Vector<Bdd>& sortFunction = sortBdds.getSortFunction(this);
   int nrBdds = sortFunction.size();
   generalizedSort.resize(nrBdds);
   for (int i = 0; i < nrBdds; ++i)

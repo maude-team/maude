@@ -112,7 +112,7 @@ inline DagNode*
 Substitution::value(int index) const
 {
   Assert(index >= 0, "-ve index " << index);
-  Assert(index < values.size(), "index too big " << index << " vs " << values.size());
+  Assert(index < static_cast<int>(values.size()), "index too big " << index << " vs " << values.size());
   return values[index];
 }
 
@@ -120,7 +120,7 @@ inline void
 Substitution::bind(int index, DagNode* value)
 {
   Assert(index >= 0, "-ve index " << index);
-  Assert(index < values.size(), "index too big " << index << " vs " << values.size());
+  Assert(index < static_cast<int>(values.size()), "index too big " << index << " vs " << values.size());
   values[index] = value;
 }
 

@@ -312,6 +312,7 @@ SortTable::buildSortDiagram()
     singleNonErrorSort = componentVector[nrArgs]->sort(singleNonErrorSortIndex);
   if (!(badTerminals.empty()))
     sortErrorAnalysis(true, badTerminals);
+  DebugAdvisory("sort table for " << static_cast<Symbol*>(this) << " has " << sortDiagram.size() << " entries");
 }
 
 int
