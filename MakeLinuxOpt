@@ -1,0 +1,26 @@
+#
+#	Optimized version for Linux.
+#
+
+#
+#	GNU stuff
+#
+BISON =	bison
+FLEX =	flex
+CC =	gcc
+CXX =	g++
+AR =	ar
+
+DFLAGS =	-DLINUX -DNO_ASSERT -DSPEED_HACKS \
+		-DCOMPILER -DANNOTATE -fno-exceptions \
+		-DNO_IMPLEMENT_INLINES -DLOCAL_INLINES \
+		-Wall -Winline -Wno-non-virtual-dtor -Wno-reorder \
+		-O2 -mpreferred-stack-boundary=2 \
+		-mcpu=pentiumpro -fomit-frame-pointer \
+		-I/csl/include \
+		-I/homes/eker/include \
+		-L/homes/eker/Linux/lib
+
+LINKAGE =	-static
+
+ARFLAGS =	rus

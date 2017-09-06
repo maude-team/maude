@@ -1,0 +1,30 @@
+#
+#	Debug version for Solaris.
+#
+
+#
+#	Purify stuff.
+#
+QUANTIFY =	quantify
+PURECOV =	purecov
+PURIFY =	purify
+QUANTIFY_INCLUDE =	/csl/include
+#
+#	GNU stuff
+#
+BISON =	bison
+FLEX =	flex
+CC =	gcc
+CXX =	g++
+AR =	ar
+
+# -Wno-reorder is needed for rope package!
+DFLAGS =	-Wall -Wno-non-virtual-dtor -Wno-reorder -DSOLARIS \
+		-ggdb -DDUMP -DCOMPILER -DANNOTATE -DTDEBUG -fno-exceptions \
+		-I/csl/include \
+		-I/homes/eker/include \
+		-L/homes/eker/Solaris/lib
+
+LINKAGE =
+
+ARFLAGS =	rus

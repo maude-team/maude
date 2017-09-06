@@ -1,0 +1,15 @@
+2001-04-20  Steven Eker  <eker@goo.csl.sri.com>
+
+	* configSymbol.hh (class ConfigSymbol): added struct MessageQueue,
+	struct dagNodeLt, class ObjectMap
+	(class ConfigSymbol): added struct AutomatonPair and data member
+	automatonPairs
+
+	* configSymbol.cc (checkArgs): added
+
+2001-04-17  Steven Eker  <eker@goo.csl.sri.com>
+
+	* configSymbol.hh: created
+
+	* objectSystem.hh: created
+

@@ -1,0 +1,32 @@
+#
+#	Optimized version for Solaris.
+#
+
+#
+#	Purify stuff
+#
+QUANTIFY =	quantify
+PURECOV =	purecov
+PURIFY =	purify
+QUANTIFY_INCLUDE =	/csl/include
+#
+#	GNU stuff
+#
+BISON =	bison
+FLEX =	flex
+CC =	gcc
+CXX =	g++
+AR =	ar
+
+DFLAGS =	-DSOLARIS -DNO_ASSERT -DSPEED_HACKS \
+		-DCOMPILER -DANNOTATE -Wall \
+		-Wno-non-virtual-dtor -Wno-reorder -fno-exceptions \
+		-DNO_IMPLEMENT_INLINES -DLOCAL_INLINES \
+		-O2 -mcpu=v8 -mtune=ultrasparc -fomit-frame-pointer \
+		-I/csl/include \
+		-I/homes/eker/include \
+		-L/homes/eker/Solaris/lib
+
+LINKAGE =
+
+ARFLAGS =	rus
