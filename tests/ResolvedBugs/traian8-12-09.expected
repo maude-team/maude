@@ -1,0 +1,119 @@
+Maude> Maude> ==========================================
+rewrite in TEST : 
+<config> 
+<k>
+assert   
+   <config> 
+   <env> p |-> ?p ; q |-> ?q ; t |-> ?t ; path |-> ?path </env> 
+   <heap>
+        stackInGraph (?p,(?in-p # ?p[?t,?r]),?in-t)
+     ** graph[0] (?t,?in-t,?in-p # ?p[?t,?r])
+   </heap> 
+   <bnd> ?t,?p,?q,?in-t,?in-p,?r </bnd> 
+   <form> ~(0 === ?p) /\ in === ?in-t # ?in-p # ?p[?t,?r] </form>
+   </config> \/ 
+   <config> 
+   <env> p |-> ?p ; q |-> ?q ; t |-> ?t ; path |-> ?path </env> 
+   <heap>
+        stackInGraph (?p,(?in-p # ?p[?t,?r]),?in-t)
+     ** graph[1] (?t,?in-t,?in-p # ?p[?t,?r])
+   </heap> 
+   <bnd> ?t,?p,?q,?in-t,?in-p,?r </bnd> 
+   <form> ~(0 === ?p) /\ in === ?in-t # ?in-p # ?p[?t,?r] </form>
+   </config> \/ 
+   <config> 
+   <env> p |-> ?p ; q |-> ?q ; t |-> ?t ; path |-> ?path </env> 
+   <heap>
+        stackInGraph (?p,(?in-p # ?p[?l,?t]),?in-t)
+     ** graph[0] (?t,?in-t,?in-p # ?p[?l,?t])
+   </heap> 
+   <bnd> ?t,?p,?q,?in-t,?in-p,?l </bnd> 
+   <form> ~(0 === ?p) /\ in === ?in-t # ?in-p # ?p[?l,?t] </form>
+   </config> \/ 
+   <config> 
+   <env> p |-> ?p ; q |-> ?q ; t |-> ?t ; path |-> ?path </env> 
+   <heap>
+        stackInGraph (?p,(?in-p # ?p[?l,?t]),?in-t)
+     ** graph[1] (?t,?in-t,?in-p # ?p[?l,?t])
+   </heap> 
+   <bnd> ?t,?p,?q,?in-t,?in-p,?l </bnd> 
+   <form> ~(0 === ?p) /\ in === ?in-t # ?in-p # ?p[?l,?t] </form>
+   </config>   
+</k> 
+<env> p |-> ?t ; q |-> ?p ; t |-> ?Int(0) ; path |-> 3 </env> 
+<heap>
+     ?t |-> 1 : clean
+  ** (?t + 1) |-> 0 : neighbor
+  ** (?t + 2) |-> ?p : left
+  ** (?t + 3) |-> ?Int(1) : right
+  ** (graph[0] (?Int(0),?Graph(2),?in-p # ?Graph(3) # ?p[?l,?t] # ?t[?Int(0),
+    ?Int(1)])
+  ** graph[0] (?Int(1),?Graph(3),?in-p # ?Graph(2) # ?p[?l,?t] # ?t[?Int(0),
+    ?Int(1)]))
+  ** stackInGraph (?p,(?in-p # ?p[?l,?t]),?in-t)
+</heap> 
+<bnd> ?t,?p,?q,?in-t,?in-p,?l,?Int(0),?Int(1),?Graph(2),?Graph(3) </bnd> 
+<form> ~(0 === ?p) /\ in === ?in-t # ?in-p # ?p[?l,?t] /\ ?in-t === ?Graph(2) #
+    ?Graph(3) # ?t[?Int(0),?Int(1)] </form> 
+<newSym> 4 </newSym>
+</config> .
+rewrites: 898
+result ConfigItem: 
+<config> 
+<k>
+assert   
+   <config> 
+   <env> p |-> ?p ; q |-> ?q ; t |-> ?t ; path |-> ?path </env> 
+   <heap>
+        stackInGraph (?p,(?in-p # ?p[?t,?r]),?in-t)
+     ** graph[0] (?t,?in-t,?in-p # ?p[?t,?r])
+   </heap> 
+   <bnd> ?t,?p,?q,?in-t,?in-p,?r </bnd> 
+   <form> ~(0 === ?p) /\ in === ?in-t # ?in-p # ?p[?t,?r] </form>
+   </config> \/ 
+   <config> 
+   <env> p |-> ?p ; q |-> ?q ; t |-> ?t ; path |-> ?path </env> 
+   <heap>
+        stackInGraph (?p,(?in-p # ?p[?t,?r]),?in-t)
+     ** graph[1] (?t,?in-t,?in-p # ?p[?t,?r])
+   </heap> 
+   <bnd> ?t,?p,?q,?in-t,?in-p,?r </bnd> 
+   <form> ~(0 === ?p) /\ in === ?in-t # ?in-p # ?p[?t,?r] </form>
+   </config> \/ 
+   <config> 
+   <env> p |-> ?p ; q |-> ?q ; t |-> ?t ; path |-> ?path </env> 
+   <heap>
+        stackInGraph (?p,(?in-p # ?p[?l,?t]),?in-t)
+     ** graph[0] (?t,?in-t,?in-p # ?p[?l,?t])
+   </heap> 
+   <bnd> ?t,?p,?q,?in-t,?in-p,?l </bnd> 
+   <form> ~(0 === ?p) /\ in === ?in-t # ?in-p # ?p[?l,?t] </form>
+   </config> \/ 
+   <config> 
+   <env> p |-> ?p ; q |-> ?q ; t |-> ?t ; path |-> ?path </env> 
+   <heap>
+        stackInGraph (?p,(?in-p # ?p[?l,?t]),?in-t)
+     ** graph[1] (?t,?in-t,?in-p # ?p[?l,?t])
+   </heap> 
+   <bnd> ?t,?p,?q,?in-t,?in-p,?l </bnd> 
+   <form> ~(0 === ?p) /\ in === ?in-t # ?in-p # ?p[?l,?t] </form>
+   </config>   
+</k> 
+<env> p |-> ?t ; q |-> ?p ; t |-> ?Int(0) ; path |-> 3 </env> 
+<heap>
+     ?t |-> 1 : clean
+  ** (?t + 1) |-> 0 : neighbor
+  ** (?t + 2) |-> ?p : left
+  ** (?t + 3) |-> ?Int(1) : right
+  ** stackInGraph (?p,(?in-p # ?p[?l,?t]),?in-t)
+  ** graph[0] (?Int(0),?Graph(2),?in-p # ?Graph(3) # ?p[?l,?t] # ?t[?Int(0),
+    ?Int(1)])
+  ** graph[0] (?Int(1),?Graph(3),?in-p # ?Graph(2) # ?p[?l,?t] # ?t[?Int(0),
+    ?Int(1)])
+</heap> 
+<bnd> ?t,?p,?q,?in-t,?in-p,?l,?Int(0),?Int(1),?Graph(2),?Graph(3) </bnd> 
+<form> ~(0 === ?p) /\ in === ?in-t # ?in-p # ?p[?l,?t] /\ ?in-t === ?Graph(2) #
+    ?Graph(3) # ?t[?Int(0),?Int(1)] </form> 
+<newSym> 4 </newSym>
+</config>
+Bye.

@@ -30,6 +30,7 @@
 #include "macros.hh"
 #include "vector.hh"
 #include "pointerSet.hh"
+#include "bddUser.hh"
  
 //      forward declarations
 #include "interface.hh"

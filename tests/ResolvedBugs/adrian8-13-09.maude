@@ -1,0 +1,15 @@
+***(
+Bug reported by ADRIAN RIESCO RODRIGUEZ <ariesco@fdi.ucm.es>
+Received 8/13/09; modified to make code legal.
+
+Crash due different parts of the module instantiation code
+disagreeing about the renaming of sorts in pathological cases.
+
+Resolved in alpha92.
+)
+
+view A from TRIV to TRIV + NAT is sort Elt to Nat . endv
+fmod B{Y :: TRIV + NAT} is pr LIST{A}{Y} . endfm
+
+show modules .
+show all .

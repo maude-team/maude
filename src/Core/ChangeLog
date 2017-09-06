@@ -1,3 +1,10 @@
+2009-10-28  Steven Eker  <eker@goo.csl.sri.com>
+
+	* sortBdds.cc (SortBdds): fix incorrect comment; add
+	DebugAdvisory()
+
+===================================Maude92a===========================================
+
 2009-08-06  Steven Eker  <eker@goo.csl.sri.com>
 
 	* substitution.hh (bind, value): added static_cast<>s to keep g++

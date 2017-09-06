@@ -1,3 +1,13 @@
+Overview of Changes in Maude alpha92a
+=====================================
+* fixed BDD variable bug introduced by lazy computation of symbol sort
+  calculation BDDs in alpha92
+* fixed bug where free, fresh variables were not constrained to have a
+  valid sort
+* partly fixed a performance bug in constraint propagaion analysis
+  phase of pattern compilation
+* partial support for strat in metalevel builtins
+
 Overview of Changes in Maude alpha92
 ====================================
 * fixed a bug in unification sort calculations on polymorphic symbols

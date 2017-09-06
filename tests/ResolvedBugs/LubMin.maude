@@ -1,0 +1,110 @@
+****This module is designed to solve a specific equation
+****  Inf( forall x_i >0 )
+****  ( sum_{i=1,n} x_i
+****   +
+****    max_{i=1,n} [ b_i - a_i * x_i ]+
+****  )
+**** The name of the module "Lub" comes form the article
+****    "Delay bounds for FIFO aggegates: a case study"
+****     Luciano Lenzini, and  Enzo Mingozzi and  Giovanni Stea
+**** The proof of this results is in file DelayCPL.tex
+**** Some differences with the paper:
+****  - the b_i does not need to be sorted (sorting is done
+****   i the code
+****  - there is no check (up to now) that b_i >= 0 and a_i >= 1
+
+**** TO BE DONE:
+****   Verify precondition b_i >=0 and a_i >= 1
+
+load Pair.maude
+
+*** Importing ERROR-RAT
+load ErrorRat.maude
+
+fmod RatxRat< is
+  protecting PAIR{Rat,Rat} .
+  op _ < _ : Pair{Rat,Rat} Pair{Rat,Rat} -> Bool .
+  vars p q r s : Rat .
+  eq (pair< p , q >) < (pair< r , s >) =  (p < r) .  
+endfm
+
+view RatxRat< from STRICT-TOTAL-ORDER to RatxRat< is
+  sort Elt to Pair{Rat,Rat} .  
+endv
+
+
+
+fmod LUB-MIN is
+  protecting RAT .
+  protecting ERROR-RAT .
+  protecting (LIST * (op __ : List{X} List{X} -> List{X} to _:_ )){Rat} .	
+  protecting (SORTABLE-LIST * (op __ : List{X} List{X} -> List{X} to _:_ )){RatxRat<} .	
+
+  **** @arg1 : list of a
+  **** @arg2 : list of b
+  op lub-min( _ , _ ) : List{Rat} List{Rat} -> Rat .
+  op #lub-min( _ ) with-sumbi/ai= _ sum1/ai= _ : 
+     List{RatxRat<} Rat Rat -> Rat .
+  
+  op inv-list( _ ) : List{Rat} -> List{Rat} .
+  
+  vars r r' : Rat .
+  var tail tail' : NeList{Rat} .
+  
+  eq inv-list( r ) = 1 / r .
+  eq inv-list( r : tail ) = 1 / r : inv-list( tail ) .
+  
+  op pair-list( _ , _ )  : List{Rat} List{Rat} -> List{RatxRat<} .
+  eq pair-list( r , r' ) = pair< r , r' > .
+  eq pair-list( r : tail , r' : tail' ) = pair< r , r' > : pair-list( tail, tail' ) .
+  
+  op sum _ : List{Rat} -> Rat .
+  eq sum r = r .
+  eq sum r : tail = r + sum tail .
+  
+  vars a-list b-list : List{Rat} .
+  eq lub-min( a-list , b-list ) =
+     #lub-min ( sort ( pair-list(  b-list , a-list ) ) 
+	      )
+	      with-sumbi/ai= 0
+	      sum1/ai= 0 .
+	      
+	      
+ var ba-list : List{RatxRat<} .    
+ vars ba-sum a-sum bk ak : Rat .
+ 
+ ceq [#lub-min-nil-leq-1] :
+     #lub-min( nil )
+     with-sumbi/ai= ba-sum 
+           sum1/ai= a-sum
+     = ba-sum  
+     if a-sum <= 1 .	   
+     
+ ceq [#lub-min-nil-gt-1] :
+     #lub-min( nil )
+     with-sumbi/ai= ba-sum 
+           sum1/ai= a-sum
+     = error-Rat( "Internal error: #lubmin, rule #lub-min-nil-gt-1 should never be used")
+     if a-sum > 1 .	        
+     
+      
+ ceq [#lub-min-nelist-gt-1] :
+     #lub-min( ba-list : pair< bk , ak > )
+     with-sumbi/ai= ba-sum 
+           sum1/ai= a-sum
+     = ( ba-sum + ( bk / ak ) )
+       + 
+       bk * ( 1 - (a-sum + 1 / ak))  
+     if a-sum + 1 / ak > 1 .    
+     
+  ceq [#lub-min-nelist-leq-1] :
+      #lub-min( ba-list : pair< bk , ak > )
+      with-sumbi/ai= ba-sum 
+           sum1/ai= a-sum
+     = #lub-min( ba-list  )
+      with-sumbi/ai= ba-sum  + bk / ak
+           sum1/ai= a-sum + 1 / ak
+      if a-sum + 1 / ak <= 1 .         
+    
+    
+endfm
