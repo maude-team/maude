@@ -480,9 +480,8 @@ ACU_Symbol::makeUnificationSubproblem()
 int 
 ACU_Symbol::unificationPriority() const
 {
-  return 10;
+  return 10 + 10 * (getIdentity() != 0);
 }
-
 
 //
 //	Hash cons code.

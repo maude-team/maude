@@ -77,6 +77,11 @@ operator<<(ostream& s, const Term* term)
 ostream&
 operator<<(ostream& s, DagNode* dagNode)
 {
+  if (dagNode == 0)
+    {
+      s << "(null DagNode*)";
+      return s;
+    }
   MixfixModule::globalIndent = 0;
   MixfixModule* module = static_cast<MixfixModule*>(dagNode->symbol()->getModule());
   if (interpreter.getPrintFlag(Interpreter::PRINT_GRAPH))

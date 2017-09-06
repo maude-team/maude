@@ -1,3 +1,20 @@
+2015-08-07  Steven Eker  <eker@ape.csl.sri.com>
+
+	* ACU_Symbol.cc (unificationPriority): make ACU have a lower
+	priority than AC
+
+2015-07-31  Steven Eker  <eker@ape.csl.sri.com>
+
+	* ACU_UnificationSubproblem2.cc (classify): handle ground aliens
+	specially
+
+2015-07-30  Steven Eker  <eker@ape.csl.sri.com>
+
+	* ACU_DagNode.cc (computeBaseSortForGroundSubterms): call
+	setGround() in the ground case
+
+===================================Maude108===========================================
+
 2014-06-20  Steven Eker  <eker@ape.csl.sri.com>
 
 	* ACU_UnificationSubproblem2.cc (solve): added comment with new

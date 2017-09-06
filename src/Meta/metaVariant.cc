@@ -89,7 +89,7 @@ MetaLevelOpSymbol::metaGetVariant2(FreeDagNode* subject, RewritingContext& conte
 		      blockerDags.append(t->term2Dag());
 		      t->deepSelfDestruct();
 		    }
-		  vs = new VariantSearch(startContext, blockerDags, new FreshVariableSource(m, varIndex), irredundant);
+		  vs = new VariantSearch(startContext, blockerDags, new FreshVariableSource(m, varIndex), false, irredundant);
 		  lastSolutionNr = -1;
 		}
 	      else
@@ -114,8 +114,9 @@ MetaLevelOpSymbol::metaGetVariant2(FreeDagNode* subject, RewritingContext& conte
 		  variant = vs->getNextVariant(nrFreeVariables);
 		  if (variant == 0)
 		    {
+		      bool incomplete = vs->isIncomplete();
 		      delete vs;
-		      result = metaLevel->upNoVariant();
+		      result = metaLevel->upNoVariant(incomplete);
 		      goto fail;
 		    }
 		  
@@ -202,7 +203,7 @@ MetaLevelOpSymbol::metaVariantUnify2(FreeDagNode* subject, RewritingContext& con
 		  blockerDags.append(t->term2Dag());
 		  t->deepSelfDestruct();
 		}
-	      vs = new VariantSearch(startContext, blockerDags, new FreshVariableSource(m, varIndex), true);
+	      vs = new VariantSearch(startContext, blockerDags, new FreshVariableSource(m, varIndex), true, false);
 	      lastSolutionNr = -1;
 	    }
 
@@ -224,8 +225,9 @@ MetaLevelOpSymbol::metaVariantUnify2(FreeDagNode* subject, RewritingContext& con
 		  unifier = vs->getNextUnifier(nrFreeVariables);
 		  if (unifier == 0)
 		    {
+		      bool incomplete = vs->isIncomplete();
 		      delete vs;
-		      result = disjoint ? metaLevel->upNoUnifierTriple() : metaLevel->upNoUnifierPair();
+		      result = disjoint ? metaLevel->upNoUnifierTriple(incomplete) : metaLevel->upNoUnifierPair(incomplete);
 		      goto fail;
 		    }
 

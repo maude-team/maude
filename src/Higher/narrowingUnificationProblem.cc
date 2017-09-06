@@ -200,7 +200,7 @@ NarrowingUnificationProblem::findNextUnifier()
     {
       if (!pendingStack.solve(first, *unsortedSolution))
 	return false;
-      if (extractUnifier() && findOrderSortedUnifiers())
+      if (extractUnifier() && findOrderSortedUnifiers())  // This looks like a BUG now that cycle detect is done in PendingUnificationStack
 	{
 #ifdef NO_ASSERT
 	  (void) orderSortedUnifiers->nextAssignment();
@@ -341,19 +341,21 @@ NarrowingUnificationProblem::findOrderSortedUnifiers()
   //
   Vector<int> realToBdd(newSubstitutionSize);
   int nextBddVariable = sortBdds->getFirstAvailableVariable();
+  //cout << "---> First BDD var used is " << sortBdds->getFirstAvailableVariable() << endl;
   {
     FOR_EACH_CONST(i, NatSet, sortConstrainedVariables)
       {
 	int fv = *i;
 	//cout << "variable with index " << fv << endl;
+	//cout << "allocated BDD variables " << nextBddVariable << endl;
 	realToBdd[fv] = nextBddVariable;
 	Sort* sort = variableIndexToSort(fv);
 	nextBddVariable += sortBdds->getNrVariables(sort->component()->getIndexWithinModule());
-	//cout << "allocated bdds" << endl;
+	//cout << "through " << nextBddVariable - 1 << endl;
       }
   }
   DebugAdvisory("allocated " << nextBddVariable << " BDD variables" <<
-		"sc vars " << sortConstrainedVariables.size() << " freeVariables " << freeVariables.size());
+		" sc vars " << sortConstrainedVariables.size() << " freeVariables " << freeVariables.size());
   //
   //	Make sure BDD package has enough variables allocated.
   //
@@ -369,22 +371,13 @@ NarrowingUnificationProblem::findOrderSortedUnifiers()
 	if (fv >= substitutionSize)
 	  {
 	    Sort* sort = unsortedSolution->getFreshVariableSort(fv);
-	    int nrBddVariables = sortBdds->getNrVariables(sort->component()->getIndexWithinModule());
-	    int firstVar = realToBdd[fv];
-	    
-	    bddPair* bitMap = bdd_newpair();
-	    for (int j = 0; j < nrBddVariables; ++j)
-	      bdd_setbddpair(bitMap, j, bdd_ithvar(firstVar + j));
-	    
-	    Bdd leqRelation = sortBdds->getLeqRelation(sort->getIndexWithinModule());
-	    leqRelation = bdd_veccompose(leqRelation, bitMap);
+	    Bdd leqRelation = sortBdds->getRemappedLeqRelation(sort, realToBdd[fv]);
 	    unifier = bdd_and(unifier, leqRelation);
 	    DebugAdvisory("NarrowingUnificationProblem::findOrderSortedUnifiers() : Adding constraint for free, non-original variable; nodes in new bdd = " <<
 			  bdd_nodecount(unifier) << " unifier = " << unifier);
 
-	    //	    DebugAdvisory("NarrowingUnificationProblem::findOrderSortedUnifiers() : Adding constraint for free, non-original variable: "
-	    //			  << leqRelation << " unifier becomes " << unifier);
-	    bdd_freepair(bitMap);
+	    DebugAdvisory("NarrowingUnificationProblem::findOrderSortedUnifiers() : Adding constraint for free, non-original variable: "
+			  << leqRelation << " unifier becomes " << unifier);
 	  }
       }
   }
@@ -407,9 +400,10 @@ NarrowingUnificationProblem::findOrderSortedUnifiers()
       DagNode* d = sortedSolution->value(i);
       if (d != 0 || sortConstrainedVariables.contains(i))
 	{
-	  bddPair* bitMap = bdd_newpair();
+	  //bddPair* bitMap = bdd_newpair();
 	  Sort* sort = variableIndexToSort(i);
-	  Bdd leqRelation = sortBdds->getLeqRelation(sort->getIndexWithinModule());
+	  //Bdd leqRelation = sortBdds->getLeqRelation(sort->getIndexWithinModule());
+	  Bdd leqRelation;
 	  if (d != 0)
 	    {
 	      //
@@ -417,24 +411,30 @@ NarrowingUnificationProblem::findOrderSortedUnifiers()
 	      //
 	      Vector<Bdd> genSort;
 	      d->computeGeneralizedSort(*sortBdds, realToBdd, genSort);	  
-	      int nrBdds =  genSort.size();
-	      for (int j = 0; j < nrBdds; ++j)
-		bdd_setbddpair(bitMap, j, genSort[j]);
-	      leqRelation = bdd_veccompose(leqRelation, bitMap);
+	      leqRelation = sortBdds->applyLeqRelation(sort, genSort);
+	      DebugAdvisory("bound to " << d << " induces leqRelation " << leqRelation);
+
+	      //int nrBdds =  genSort.size();
+	      //for (int j = 0; j < nrBdds; ++j)
+	      //	bdd_setbddpair(bitMap, j, genSort[j]);
+	      //leqRelation = bdd_veccompose(leqRelation, bitMap);
 	    }
 	  else
 	    {
 	      //
 	      //	Free, sort constrained variable: sort assigned to free variable must be <= variables original sort.
 	      //
-	      int firstVar = realToBdd[i];
-	      int nrBdds= sortBdds->getNrVariables(sort->component()->getIndexWithinModule());
-	      for (int j = 0; j < nrBdds; ++j)
-		bdd_setpair(bitMap, j, firstVar + j);
-	      leqRelation = bdd_replace(leqRelation, bitMap);
+	      leqRelation = sortBdds->getRemappedLeqRelation(sort, realToBdd[i]);
+	      DebugAdvisory("free variable induces leqRelation " << leqRelation);
+	      //int firstVar = realToBdd[i];
+	      //int nrBdds= sortBdds->getNrVariables(sort->component()->getIndexWithinModule());
+	      //for (int j = 0; j < nrBdds; ++j)
+	      //	bdd_setpair(bitMap, j, firstVar + j);
+	      //leqRelation = bdd_replace(leqRelation, bitMap);
 	    }
-	  bdd_freepair(bitMap);
+	  //bdd_freepair(bitMap);
 	  unifier = bdd_and(unifier, leqRelation);
+	  DebugAdvisory("unifier = " << unifier);
 	  if (unifier == bddfalse)
 	    return false;
 	}
@@ -466,12 +466,14 @@ NarrowingUnificationProblem::findOrderSortedUnifiers()
 	{
 	  int bddVariable = firstVar + j;
 	  bdd_setpair(realTofirstArg, bddVariable, j);
+	  //cout << "realTofirstArg maps " << bddVariable << " to " << j << endl;
 	  bdd_setpair(secondArgToReal, secondBase + j, bddVariable);
 	}
       Bdd gtRelation = sortBdds->getGtRelation(sort->component()->getIndexWithinModule());
       Bdd modifiedGtRelation = bdd_replace(gtRelation, secondArgToReal);
       bdd_freepair(secondArgToReal);
-      Bdd modifiedUnifier = bdd_replace(unifier, realTofirstArg);
+      //cout << "unifier = " << unifier << endl;
+      Bdd modifiedUnifier = bdd_replace(unifier, realTofirstArg);  // failing here
       bdd_freepair(realTofirstArg);
       maximal = bdd_and(maximal, bdd_appall(modifiedGtRelation, modifiedUnifier, bddop_nand,
 					    sortBdds->makeVariableBdd(0, nrBddVariables)));
@@ -498,6 +500,7 @@ NarrowingUnificationProblem::extractUnifier()
     {
       if (i < nrPreEquationVariables || i >= firstTargetSlot)
 	{
+	  //cout << "slot " << i << " bound to " << unsortedSolution->value(i) << endl;
 	  if (unsortedSolution->value(i) == 0)
 	    freeVariables.insert(i);
 	  else if (!explore(i))

@@ -56,6 +56,7 @@ public:
   //
   //	Unification stuff.
   //
+  int unificationPriority() const;
   void computeGeneralizedSort(const SortBdds& sortBdds,
 			      const Vector<int>& realToBdd,
 			      DagNode* subject,

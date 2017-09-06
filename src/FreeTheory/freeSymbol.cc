@@ -349,6 +349,16 @@ FreeSymbol::termify(DagNode* dagNode)
 //	Unification code.
 //
 
+int 
+FreeSymbol::unificationPriority() const
+{
+  //
+  //	We don't expect this to be used by current code since there are no free
+  //	unification subproblems.
+  //
+  return 1;
+}
+
 void
 FreeSymbol::computeGeneralizedSort(const SortBdds& sortBdds,
 				   const Vector<int>& realToBdd,

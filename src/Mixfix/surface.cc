@@ -102,8 +102,9 @@
 #define store(token)		tokenSequence.append(token)
 #define fragClear()		fragments.contractTo(0);
 #define fragStore(token)	fragments.append(token)
-#define YYPARSE_PARAM	parseResult
-#define PARSE_RESULT	(*((UserLevelRewritingContext::ParseResult*) parseResult))
+//#define YYPARSE_PARAM	parseResult
+//#define PARSE_RESULT	(*((UserLevelRewritingContext::ParseResult*) parseResult))
+#define PARSE_RESULT	(*parseResult)
 
 #define CM		interpreter.getCurrentModule()
 #define CV		interpreter.getCurrentView()
@@ -134,7 +135,7 @@ SyntaxContainer* oldSyntaxContainer = 0;
 Int64 number;
 Int64 number2;
 
-static void yyerror(char *s);
+static void yyerror(UserLevelRewritingContext::ParseResult* parseResult, char *s);
 
 void cleanUpModuleExpression();
 void cleanUpParser();
@@ -142,7 +143,7 @@ void missingSpace(const Token& token);
 
 
 /* Line 268 of yacc.c  */
-#line 146 "surface.c"
+#line 147 "surface.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -337,7 +338,7 @@ typedef union YYSTYPE
 {
 
 /* Line 293 of yacc.c  */
-#line 103 "surface.yy"
+#line 105 "surface.yy"
 
   bool yyBool;
   Int64 yyInt64;
@@ -351,7 +352,7 @@ typedef union YYSTYPE
 
 
 /* Line 293 of yacc.c  */
-#line 355 "surface.c"
+#line 356 "surface.c"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -362,13 +363,13 @@ typedef union YYSTYPE
 /* Copy the second part of user declarations.  */
 
 /* Line 343 of yacc.c  */
-#line 114 "surface.yy"
+#line 116 "surface.yy"
 
 int yylex(YYSTYPE* lvalp);
 
 
 /* Line 343 of yacc.c  */
-#line 372 "surface.c"
+#line 373 "surface.c"
 
 #ifdef short
 # undef short
@@ -893,69 +894,69 @@ static const yytype_int16 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   233,   233,   235,   240,   241,   242,   243,   249,   249,
-     259,   259,   269,   273,   273,   284,   284,   295,   306,   306,
-     311,   316,   349,   353,   357,   358,   359,   360,   368,   377,
-     378,   388,   389,   392,   393,   394,   401,   410,   410,   419,
-     422,   423,   430,   435,   429,   441,   442,   445,   446,   449,
-     453,   457,   458,   457,   464,   464,   466,   472,   472,   474,
-     477,   478,   481,   482,   482,   484,   484,   486,   486,   493,
-     495,   503,   493,   516,   517,   520,   525,   528,   532,   533,
-     533,   535,   538,   539,   549,   557,   548,   566,   565,   598,
-     599,   608,   608,   615,   617,   615,   630,   631,   640,   641,
-     644,   645,   648,   656,   657,   665,   674,   675,   678,   678,
-     681,   682,   685,   692,   692,   695,   695,   698,   699,   698,
-     702,   704,   706,   707,   706,   710,   711,   712,   710,   715,
-     716,   715,   719,   720,   721,   719,   724,   725,   724,   728,
-     729,   730,   728,   733,   734,   733,   737,   743,   742,   749,
-     749,   752,   763,   764,   767,   768,   771,   776,   777,   780,
-     781,   784,   785,   788,   789,   790,   797,   803,   806,   807,
-     812,   819,   826,   827,   830,   831,   834,   835,   838,   843,
-     843,   850,   851,   854,   855,   858,   859,   862,   866,   870,
-     876,   880,   884,   884,   886,   890,   894,   895,   895,   897,
-     897,   899,   899,   901,   901,   903,   907,   911,   916,   916,
-     918,   922,   926,   930,   934,   934,   936,   937,   947,   948,
-     951,   952,   955,   956,   959,   960,   961,   962,   968,   970,
-     976,   978,   986,   987,   990,   991,   992,   992,   999,  1011,
-    1012,  1012,  1016,  1016,  1018,  1024,  1024,  1024,  1024,  1024,
-    1027,  1027,  1027,  1028,  1028,  1028,  1031,  1031,  1031,  1031,
-    1032,  1032,  1032,  1032,  1032,  1032,  1035,  1035,  1035,  1036,
-    1036,  1036,  1036,  1037,  1037,  1037,  1037,  1037,  1040,  1040,
-    1046,  1046,  1046,  1046,  1046,  1046,  1046,  1046,  1047,  1047,
-    1050,  1050,  1050,  1050,  1053,  1053,  1056,  1056,  1056,  1056,
-    1056,  1056,  1057,  1057,  1057,  1058,  1058,  1058,  1058,  1058,
-    1058,  1058,  1058,  1061,  1061,  1061,  1061,  1061,  1061,  1061,
-    1064,  1064,  1064,  1067,  1067,  1067,  1067,  1067,  1067,  1067,
-    1068,  1068,  1068,  1068,  1068,  1068,  1069,  1069,  1069,  1069,
-    1070,  1070,  1070,  1070,  1071,  1071,  1071,  1098,  1098,  1103,
-    1103,  1110,  1109,  1122,  1121,  1134,  1133,  1146,  1145,  1158,
-    1157,  1170,  1169,  1183,  1182,  1196,  1195,  1209,  1208,  1221,
-    1220,  1234,  1233,  1246,  1245,  1258,  1257,  1271,  1270,  1282,
-    1287,  1286,  1301,  1300,  1311,  1317,  1317,  1323,  1323,  1329,
-    1329,  1335,  1335,  1341,  1349,  1349,  1355,  1355,  1361,  1361,
-    1367,  1367,  1373,  1377,  1381,  1381,  1387,  1387,  1393,  1393,
-    1399,  1399,  1405,  1405,  1411,  1411,  1417,  1417,  1423,  1423,
-    1429,  1433,  1437,  1441,  1441,  1450,  1454,  1458,  1462,  1466,
-    1470,  1474,  1478,  1482,  1486,  1490,  1494,  1498,  1502,  1503,
-    1502,  1508,  1509,  1508,  1514,  1518,  1522,  1526,  1530,  1534,
-    1541,  1545,  1549,  1553,  1560,  1564,  1571,  1571,  1578,  1579,
-    1580,  1581,  1582,  1583,  1584,  1585,  1586,  1587,  1590,  1591,
-    1592,  1593,  1594,  1595,  1596,  1597,  1598,  1599,  1600,  1603,
-    1604,  1607,  1608,  1611,  1612,  1615,  1616,  1621,  1622,  1623,
-    1624,  1627,  1628,  1631,  1632,  1635,  1636,  1639,  1640,  1643,
-    1644,  1645,  1654,  1655,  1655,  1659,  1659,  1661,  1671,  1671,
-    1673,  1674,  1674,  1679,  1679,  1681,  1681,  1683,  1687,  1687,
-    1689,  1689,  1691,  1704,  1704,  1706,  1707,  1707,  1716,  1716,
-    1718,  1718,  1720,  1720,  1722,  1730,  1730,  1732,  1732,  1734,
-    1734,  1736,  1744,  1744,  1746,  1746,  1748,  1757,  1756,  1763,
-    1763,  1765,  1773,  1773,  1775,  1775,  1777,  1785,  1785,  1787,
-    1787,  1789,  1792,  1792,  1794,  1798,  1798,  1800,  1800,  1802,
-    1813,  1813,  1813,  1813,  1813,  1813,  1813,  1816,  1816,  1816,
-    1816,  1816,  1816,  1820,  1820,  1820,  1820,  1820,  1820,  1824,
-    1824,  1824,  1824,  1824,  1824,  1828,  1828,  1828,  1828,  1828,
-    1832,  1832,  1832,  1832,  1832,  1838,  1839,  1842,  1843,  1846,
-    1853,  1854,  1857,  1862,  1869,  1869,  1869,  1869,  1869,  1869,
-    1869
+       0,   235,   235,   237,   242,   243,   244,   245,   251,   251,
+     261,   261,   271,   275,   275,   286,   286,   297,   308,   308,
+     313,   318,   351,   355,   359,   360,   361,   362,   370,   379,
+     380,   390,   391,   394,   395,   396,   403,   412,   412,   421,
+     424,   425,   432,   437,   431,   443,   444,   447,   448,   451,
+     455,   459,   460,   459,   466,   466,   468,   474,   474,   476,
+     479,   480,   483,   484,   484,   486,   486,   488,   488,   495,
+     497,   505,   495,   518,   519,   522,   527,   530,   534,   535,
+     535,   537,   540,   541,   551,   559,   550,   568,   567,   600,
+     601,   610,   610,   617,   619,   617,   632,   633,   642,   643,
+     646,   647,   650,   658,   659,   667,   676,   677,   680,   680,
+     683,   684,   687,   694,   694,   697,   697,   700,   701,   700,
+     704,   706,   708,   709,   708,   712,   713,   714,   712,   717,
+     718,   717,   721,   722,   723,   721,   726,   727,   726,   730,
+     731,   732,   730,   735,   736,   735,   739,   745,   744,   751,
+     751,   754,   765,   766,   769,   770,   773,   778,   779,   782,
+     783,   786,   787,   790,   791,   792,   799,   805,   808,   809,
+     814,   821,   828,   829,   832,   833,   836,   837,   840,   845,
+     845,   852,   853,   856,   857,   860,   861,   864,   868,   872,
+     878,   882,   886,   886,   888,   892,   896,   897,   897,   899,
+     899,   901,   901,   903,   903,   905,   909,   913,   918,   918,
+     920,   924,   928,   932,   936,   936,   938,   939,   949,   950,
+     953,   954,   957,   958,   961,   962,   963,   964,   970,   972,
+     978,   980,   988,   989,   992,   993,   994,   994,  1001,  1013,
+    1014,  1014,  1018,  1018,  1020,  1026,  1026,  1026,  1026,  1026,
+    1029,  1029,  1029,  1030,  1030,  1030,  1033,  1033,  1033,  1033,
+    1034,  1034,  1034,  1034,  1034,  1034,  1037,  1037,  1037,  1038,
+    1038,  1038,  1038,  1039,  1039,  1039,  1039,  1039,  1042,  1042,
+    1048,  1048,  1048,  1048,  1048,  1048,  1048,  1048,  1049,  1049,
+    1052,  1052,  1052,  1052,  1055,  1055,  1058,  1058,  1058,  1058,
+    1058,  1058,  1059,  1059,  1059,  1060,  1060,  1060,  1060,  1060,
+    1060,  1060,  1060,  1063,  1063,  1063,  1063,  1063,  1063,  1063,
+    1066,  1066,  1066,  1069,  1069,  1069,  1069,  1069,  1069,  1069,
+    1070,  1070,  1070,  1070,  1070,  1070,  1071,  1071,  1071,  1071,
+    1072,  1072,  1072,  1072,  1073,  1073,  1073,  1100,  1100,  1105,
+    1105,  1112,  1111,  1124,  1123,  1136,  1135,  1148,  1147,  1160,
+    1159,  1172,  1171,  1185,  1184,  1198,  1197,  1211,  1210,  1223,
+    1222,  1236,  1235,  1248,  1247,  1260,  1259,  1273,  1272,  1284,
+    1289,  1288,  1303,  1302,  1313,  1319,  1319,  1325,  1325,  1331,
+    1331,  1337,  1337,  1343,  1351,  1351,  1357,  1357,  1363,  1363,
+    1369,  1369,  1375,  1379,  1383,  1383,  1389,  1389,  1395,  1395,
+    1401,  1401,  1407,  1407,  1413,  1413,  1419,  1419,  1425,  1425,
+    1431,  1435,  1439,  1443,  1443,  1452,  1456,  1460,  1464,  1468,
+    1472,  1476,  1480,  1484,  1488,  1492,  1496,  1500,  1504,  1505,
+    1504,  1510,  1511,  1510,  1516,  1520,  1524,  1528,  1532,  1536,
+    1543,  1547,  1551,  1555,  1562,  1566,  1573,  1573,  1580,  1581,
+    1582,  1583,  1584,  1585,  1586,  1587,  1588,  1589,  1592,  1593,
+    1594,  1595,  1596,  1597,  1598,  1599,  1600,  1601,  1602,  1605,
+    1606,  1609,  1610,  1613,  1614,  1617,  1618,  1623,  1624,  1625,
+    1626,  1629,  1630,  1633,  1634,  1637,  1638,  1641,  1642,  1645,
+    1646,  1647,  1656,  1657,  1657,  1661,  1661,  1663,  1673,  1673,
+    1675,  1676,  1676,  1681,  1681,  1683,  1683,  1685,  1689,  1689,
+    1691,  1691,  1693,  1706,  1706,  1708,  1709,  1709,  1718,  1718,
+    1720,  1720,  1722,  1722,  1724,  1732,  1732,  1734,  1734,  1736,
+    1736,  1738,  1746,  1746,  1748,  1748,  1750,  1759,  1758,  1765,
+    1765,  1767,  1775,  1775,  1777,  1777,  1779,  1787,  1787,  1789,
+    1789,  1791,  1794,  1794,  1796,  1800,  1800,  1802,  1802,  1804,
+    1815,  1815,  1815,  1815,  1815,  1815,  1815,  1818,  1818,  1818,
+    1818,  1818,  1818,  1822,  1822,  1822,  1822,  1822,  1822,  1826,
+    1826,  1826,  1826,  1826,  1826,  1830,  1830,  1830,  1830,  1830,
+    1834,  1834,  1834,  1834,  1834,  1840,  1841,  1844,  1845,  1848,
+    1855,  1856,  1859,  1864,  1871,  1871,  1871,  1871,  1871,  1871,
+    1871
 };
 #endif
 
@@ -2087,7 +2088,7 @@ do								\
     }								\
   else								\
     {								\
-      yyerror (YY_("syntax error: cannot back up")); \
+      yyerror (parseResult, YY_("syntax error: cannot back up")); \
       YYERROR;							\
     }								\
 while (YYID (0))
@@ -2158,7 +2159,7 @@ do {									  \
     {									  \
       YYFPRINTF (stderr, "%s ", Title);					  \
       yy_symbol_print (stderr,						  \
-		  Type, Value); \
+		  Type, Value, parseResult); \
       YYFPRINTF (stderr, "\n");						  \
     }									  \
 } while (YYID (0))
@@ -2172,17 +2173,19 @@ do {									  \
 #if (defined __STDC__ || defined __C99__FUNC__ \
      || defined __cplusplus || defined _MSC_VER)
 static void
-yy_symbol_value_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep)
+yy_symbol_value_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep, UserLevelRewritingContext::ParseResult* parseResult)
 #else
 static void
-yy_symbol_value_print (yyoutput, yytype, yyvaluep)
+yy_symbol_value_print (yyoutput, yytype, yyvaluep, parseResult)
     FILE *yyoutput;
     int yytype;
     YYSTYPE const * const yyvaluep;
+    UserLevelRewritingContext::ParseResult* parseResult;
 #endif
 {
   if (!yyvaluep)
     return;
+  YYUSE (parseResult);
 # ifdef YYPRINT
   if (yytype < YYNTOKENS)
     YYPRINT (yyoutput, yytoknum[yytype], *yyvaluep);
@@ -2204,13 +2207,14 @@ yy_symbol_value_print (yyoutput, yytype, yyvaluep)
 #if (defined __STDC__ || defined __C99__FUNC__ \
      || defined __cplusplus || defined _MSC_VER)
 static void
-yy_symbol_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep)
+yy_symbol_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep, UserLevelRewritingContext::ParseResult* parseResult)
 #else
 static void
-yy_symbol_print (yyoutput, yytype, yyvaluep)
+yy_symbol_print (yyoutput, yytype, yyvaluep, parseResult)
     FILE *yyoutput;
     int yytype;
     YYSTYPE const * const yyvaluep;
+    UserLevelRewritingContext::ParseResult* parseResult;
 #endif
 {
   if (yytype < YYNTOKENS)
@@ -2218,7 +2222,7 @@ yy_symbol_print (yyoutput, yytype, yyvaluep)
   else
     YYFPRINTF (yyoutput, "nterm %s (", yytname[yytype]);
 
-  yy_symbol_value_print (yyoutput, yytype, yyvaluep);
+  yy_symbol_value_print (yyoutput, yytype, yyvaluep, parseResult);
   YYFPRINTF (yyoutput, ")");
 }
 
@@ -2261,12 +2265,13 @@ do {								\
 #if (defined __STDC__ || defined __C99__FUNC__ \
      || defined __cplusplus || defined _MSC_VER)
 static void
-yy_reduce_print (YYSTYPE *yyvsp, int yyrule)
+yy_reduce_print (YYSTYPE *yyvsp, int yyrule, UserLevelRewritingContext::ParseResult* parseResult)
 #else
 static void
-yy_reduce_print (yyvsp, yyrule)
+yy_reduce_print (yyvsp, yyrule, parseResult)
     YYSTYPE *yyvsp;
     int yyrule;
+    UserLevelRewritingContext::ParseResult* parseResult;
 #endif
 {
   int yynrhs = yyr2[yyrule];
@@ -2280,7 +2285,7 @@ yy_reduce_print (yyvsp, yyrule)
       YYFPRINTF (stderr, "   $%d = ", yyi + 1);
       yy_symbol_print (stderr, yyrhs[yyprhs[yyrule] + yyi],
 		       &(yyvsp[(yyi + 1) - (yynrhs)])
-		       		       );
+		       		       , parseResult);
       YYFPRINTF (stderr, "\n");
     }
 }
@@ -2288,7 +2293,7 @@ yy_reduce_print (yyvsp, yyrule)
 # define YY_REDUCE_PRINT(Rule)		\
 do {					\
   if (yydebug)				\
-    yy_reduce_print (yyvsp, Rule); \
+    yy_reduce_print (yyvsp, Rule, parseResult); \
 } while (YYID (0))
 
 /* Nonzero means print parse trace.  It is left uninitialized so that
@@ -2565,16 +2570,18 @@ yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
 #if (defined __STDC__ || defined __C99__FUNC__ \
      || defined __cplusplus || defined _MSC_VER)
 static void
-yydestruct (const char *yymsg, int yytype, YYSTYPE *yyvaluep)
+yydestruct (const char *yymsg, int yytype, YYSTYPE *yyvaluep, UserLevelRewritingContext::ParseResult* parseResult)
 #else
 static void
-yydestruct (yymsg, yytype, yyvaluep)
+yydestruct (yymsg, yytype, yyvaluep, parseResult)
     const char *yymsg;
     int yytype;
     YYSTYPE *yyvaluep;
+    UserLevelRewritingContext::ParseResult* parseResult;
 #endif
 {
   YYUSE (yyvaluep);
+  YYUSE (parseResult);
 
   if (!yymsg)
     yymsg = "Deleting";
@@ -2598,7 +2605,7 @@ int yyparse ();
 #endif
 #else /* ! YYPARSE_PARAM */
 #if defined __STDC__ || defined __cplusplus
-int yyparse (void);
+int yyparse (UserLevelRewritingContext::ParseResult* parseResult);
 #else
 int yyparse ();
 #endif
@@ -2623,11 +2630,11 @@ yyparse (YYPARSE_PARAM)
 #if (defined __STDC__ || defined __C99__FUNC__ \
      || defined __cplusplus || defined _MSC_VER)
 int
-yyparse (void)
+yyparse (UserLevelRewritingContext::ParseResult* parseResult)
 #else
 int
-yyparse ()
-
+yyparse (parseResult)
+    UserLevelRewritingContext::ParseResult* parseResult;
 #endif
 #endif
 {
@@ -2882,14 +2889,14 @@ yyreduce:
         case 2:
 
 /* Line 1806 of yacc.c  */
-#line 233 "surface.yy"
+#line 235 "surface.yy"
     { YYACCEPT; }
     break;
 
   case 3:
 
 /* Line 1806 of yacc.c  */
-#line 235 "surface.yy"
+#line 237 "surface.yy"
     {
 			  PARSE_RESULT = UserLevelRewritingContext::QUIT;
 			}
@@ -2898,14 +2905,14 @@ yyreduce:
   case 8:
 
 /* Line 1806 of yacc.c  */
-#line 249 "surface.yy"
+#line 251 "surface.yy"
     { lexerFileNameMode(); }
     break;
 
   case 9:
 
 /* Line 1806 of yacc.c  */
-#line 251 "surface.yy"
+#line 253 "surface.yy"
     {
 			  int lineNr = lineNumber;
 			  //eatComment(false); // eat \n so that line number is correct
@@ -2919,14 +2926,14 @@ yyreduce:
   case 10:
 
 /* Line 1806 of yacc.c  */
-#line 259 "surface.yy"
+#line 261 "surface.yy"
     { lexerFileNameMode(); }
     break;
 
   case 11:
 
 /* Line 1806 of yacc.c  */
-#line 261 "surface.yy"
+#line 263 "surface.yy"
     {
 			  int lineNr = lineNumber;
 			  //eatComment(false); // eat \n so that line number is correct
@@ -2940,7 +2947,7 @@ yyreduce:
   case 12:
 
 /* Line 1806 of yacc.c  */
-#line 270 "surface.yy"
+#line 272 "surface.yy"
     {
 			  cout << directoryManager.getCwd() << '\n';
 			}
@@ -2949,14 +2956,14 @@ yyreduce:
   case 13:
 
 /* Line 1806 of yacc.c  */
-#line 273 "surface.yy"
+#line 275 "surface.yy"
     { lexerFileNameMode(); }
     break;
 
   case 14:
 
 /* Line 1806 of yacc.c  */
-#line 275 "surface.yy"
+#line 277 "surface.yy"
     {
 			  string directory;
 			  directoryManager.realPath((yyvsp[(3) - (3)].yyString), directory);
@@ -2971,14 +2978,14 @@ yyreduce:
   case 15:
 
 /* Line 1806 of yacc.c  */
-#line 284 "surface.yy"
+#line 286 "surface.yy"
     { lexerFileNameMode(); }
     break;
 
   case 16:
 
 /* Line 1806 of yacc.c  */
-#line 286 "surface.yy"
+#line 288 "surface.yy"
     {
 			  string directory;
 			  directoryManager.realPath((yyvsp[(3) - (3)].yyString), directory);
@@ -2993,7 +3000,7 @@ yyreduce:
   case 17:
 
 /* Line 1806 of yacc.c  */
-#line 296 "surface.yy"
+#line 298 "surface.yy"
     {
 			  const char* path = directoryManager.popd();
 			  if (path != 0)
@@ -3009,14 +3016,14 @@ yyreduce:
   case 18:
 
 /* Line 1806 of yacc.c  */
-#line 306 "surface.yy"
+#line 308 "surface.yy"
     { lexerStringMode(); }
     break;
 
   case 19:
 
 /* Line 1806 of yacc.c  */
-#line 308 "surface.yy"
+#line 310 "surface.yy"
     {
 			  system((string("ls") + (yyvsp[(3) - (3)].yyString)).c_str());
 			}
@@ -3025,7 +3032,7 @@ yyreduce:
   case 20:
 
 /* Line 1806 of yacc.c  */
-#line 312 "surface.yy"
+#line 314 "surface.yy"
     {
 			  PARSE_RESULT = UserLevelRewritingContext::QUIT;
 			  YYACCEPT;
@@ -3035,7 +3042,7 @@ yyreduce:
   case 21:
 
 /* Line 1806 of yacc.c  */
-#line 317 "surface.yy"
+#line 319 "surface.yy"
     {
 			  if(!handleEof())
 			    {
@@ -3047,7 +3054,7 @@ yyreduce:
   case 22:
 
 /* Line 1806 of yacc.c  */
-#line 350 "surface.yy"
+#line 352 "surface.yy"
     {
                           moduleExpressions.push(new ModuleExpression((yyvsp[(1) - (2)].yyToken)));
                         }
@@ -3056,7 +3063,7 @@ yyreduce:
   case 23:
 
 /* Line 1806 of yacc.c  */
-#line 354 "surface.yy"
+#line 356 "surface.yy"
     {
                           moduleExpressions.push(new ModuleExpression((yyvsp[(1) - (2)].yyToken)));
                         }
@@ -3065,7 +3072,7 @@ yyreduce:
   case 27:
 
 /* Line 1806 of yacc.c  */
-#line 361 "surface.yy"
+#line 363 "surface.yy"
     {
 			  ModuleExpression* m1 = moduleExpressions.top();
 			  moduleExpressions.pop();
@@ -3078,7 +3085,7 @@ yyreduce:
   case 28:
 
 /* Line 1806 of yacc.c  */
-#line 369 "surface.yy"
+#line 371 "surface.yy"
     {
 			  Token t;
 			  t.dropChar((yyvsp[(1) - (1)].yyToken));
@@ -3090,7 +3097,7 @@ yyreduce:
   case 30:
 
 /* Line 1806 of yacc.c  */
-#line 379 "surface.yy"
+#line 381 "surface.yy"
     {
 			  ModuleExpression* m1 = moduleExpressions.top();
 			  moduleExpressions.pop();
@@ -3103,7 +3110,7 @@ yyreduce:
   case 35:
 
 /* Line 1806 of yacc.c  */
-#line 395 "surface.yy"
+#line 397 "surface.yy"
     {
                           moduleExpressions.push(new ModuleExpression((yyvsp[(1) - (1)].yyToken)));
                         }
@@ -3112,7 +3119,7 @@ yyreduce:
   case 36:
 
 /* Line 1806 of yacc.c  */
-#line 402 "surface.yy"
+#line 404 "surface.yy"
     {
 			  ModuleExpression* m = moduleExpressions.top();
 			  moduleExpressions.pop();
@@ -3124,14 +3131,14 @@ yyreduce:
   case 37:
 
 /* Line 1806 of yacc.c  */
-#line 410 "surface.yy"
+#line 412 "surface.yy"
     { clear(); }
     break;
 
   case 38:
 
 /* Line 1806 of yacc.c  */
-#line 412 "surface.yy"
+#line 414 "surface.yy"
     {
 			  ModuleExpression* m = moduleExpressions.top();
 			  moduleExpressions.pop();
@@ -3142,28 +3149,28 @@ yyreduce:
   case 39:
 
 /* Line 1806 of yacc.c  */
-#line 419 "surface.yy"
+#line 421 "surface.yy"
     {}
     break;
 
   case 40:
 
 /* Line 1806 of yacc.c  */
-#line 422 "surface.yy"
+#line 424 "surface.yy"
     { store((yyvsp[(3) - (3)].yyToken)); }
     break;
 
   case 41:
 
 /* Line 1806 of yacc.c  */
-#line 423 "surface.yy"
+#line 425 "surface.yy"
     { store((yyvsp[(1) - (1)].yyToken)); }
     break;
 
   case 42:
 
 /* Line 1806 of yacc.c  */
-#line 430 "surface.yy"
+#line 432 "surface.yy"
     {
 			  oldSyntaxContainer = currentSyntaxContainer;
 			  currentSyntaxContainer = currentRenaming = new Renaming;
@@ -3173,7 +3180,7 @@ yyreduce:
   case 43:
 
 /* Line 1806 of yacc.c  */
-#line 435 "surface.yy"
+#line 437 "surface.yy"
     {
 			  currentSyntaxContainer = oldSyntaxContainer;
 			}
@@ -3182,7 +3189,7 @@ yyreduce:
   case 49:
 
 /* Line 1806 of yacc.c  */
-#line 450 "surface.yy"
+#line 452 "surface.yy"
     {
 			  currentRenaming->addSortMapping((yyvsp[(2) - (4)].yyToken), (yyvsp[(4) - (4)].yyToken));
 			}
@@ -3191,7 +3198,7 @@ yyreduce:
   case 50:
 
 /* Line 1806 of yacc.c  */
-#line 454 "surface.yy"
+#line 456 "surface.yy"
     {
 			  currentRenaming->addLabelMapping((yyvsp[(2) - (4)].yyToken), (yyvsp[(4) - (4)].yyToken));
 			}
@@ -3200,126 +3207,126 @@ yyreduce:
   case 51:
 
 /* Line 1806 of yacc.c  */
-#line 457 "surface.yy"
+#line 459 "surface.yy"
     { lexBubble(BAR_COLON | BAR_TO, 1); }
     break;
 
   case 52:
 
 /* Line 1806 of yacc.c  */
-#line 458 "surface.yy"
+#line 460 "surface.yy"
     { lexBubble(BAR_COMMA | BAR_LEFT_BRACKET | BAR_RIGHT_PAREN, 1); }
     break;
 
   case 53:
 
 /* Line 1806 of yacc.c  */
-#line 459 "surface.yy"
+#line 461 "surface.yy"
     {}
     break;
 
   case 54:
 
 /* Line 1806 of yacc.c  */
-#line 464 "surface.yy"
+#line 466 "surface.yy"
     { Token::peelParens(lexerBubble); currentRenaming->addOpMapping(lexerBubble); }
     break;
 
   case 55:
 
 /* Line 1806 of yacc.c  */
-#line 465 "surface.yy"
+#line 467 "surface.yy"
     {}
     break;
 
   case 56:
 
 /* Line 1806 of yacc.c  */
-#line 466 "surface.yy"
+#line 468 "surface.yy"
     { Token::peelParens(lexerBubble); currentRenaming->addOpMapping(lexerBubble); }
     break;
 
   case 57:
 
 /* Line 1806 of yacc.c  */
-#line 472 "surface.yy"
+#line 474 "surface.yy"
     { Token::peelParens(lexerBubble); currentRenaming->addOpTarget(lexerBubble); }
     break;
 
   case 58:
 
 /* Line 1806 of yacc.c  */
-#line 473 "surface.yy"
+#line 475 "surface.yy"
     {}
     break;
 
   case 59:
 
 /* Line 1806 of yacc.c  */
-#line 474 "surface.yy"
+#line 476 "surface.yy"
     { Token::peelParens(lexerBubble); currentRenaming->addOpTarget(lexerBubble); }
     break;
 
   case 62:
 
 /* Line 1806 of yacc.c  */
-#line 481 "surface.yy"
+#line 483 "surface.yy"
     { currentRenaming->setPrec((yyvsp[(2) - (2)].yyToken)); }
     break;
 
   case 63:
 
 /* Line 1806 of yacc.c  */
-#line 482 "surface.yy"
+#line 484 "surface.yy"
     { clear(); }
     break;
 
   case 64:
 
 /* Line 1806 of yacc.c  */
-#line 483 "surface.yy"
+#line 485 "surface.yy"
     { currentRenaming->setGather(tokenSequence); }
     break;
 
   case 65:
 
 /* Line 1806 of yacc.c  */
-#line 484 "surface.yy"
+#line 486 "surface.yy"
     { clear(); }
     break;
 
   case 66:
 
 /* Line 1806 of yacc.c  */
-#line 485 "surface.yy"
+#line 487 "surface.yy"
     { currentRenaming->setFormat(tokenSequence); }
     break;
 
   case 67:
 
 /* Line 1806 of yacc.c  */
-#line 486 "surface.yy"
+#line 488 "surface.yy"
     { lexerLatexMode(); }
     break;
 
   case 68:
 
 /* Line 1806 of yacc.c  */
-#line 487 "surface.yy"
+#line 489 "surface.yy"
     { currentRenaming->setLatexMacro((yyvsp[(4) - (5)].yyString)); }
     break;
 
   case 69:
 
 /* Line 1806 of yacc.c  */
-#line 493 "surface.yy"
+#line 495 "surface.yy"
     { lexerIdMode(); }
     break;
 
   case 70:
 
 /* Line 1806 of yacc.c  */
-#line 495 "surface.yy"
+#line 497 "surface.yy"
     {
 			  fileTable.beginModule((yyvsp[(1) - (5)].yyToken), (yyvsp[(3) - (5)].yyToken));
 			  interpreter.setCurrentView(new View((yyvsp[(3) - (5)].yyToken)));
@@ -3332,7 +3339,7 @@ yyreduce:
   case 71:
 
 /* Line 1806 of yacc.c  */
-#line 503 "surface.yy"
+#line 505 "surface.yy"
     {
 			  CV->addTo(moduleExpressions.top());
 			  moduleExpressions.pop();
@@ -3342,7 +3349,7 @@ yyreduce:
   case 72:
 
 /* Line 1806 of yacc.c  */
-#line 508 "surface.yy"
+#line 510 "surface.yy"
     {
 			  lexerInitialMode();
 			  fileTable.endModule(lineNumber);
@@ -3354,7 +3361,7 @@ yyreduce:
   case 75:
 
 /* Line 1806 of yacc.c  */
-#line 521 "surface.yy"
+#line 523 "surface.yy"
     {
 			  IssueWarning(LineNumber((yyvsp[(1) - (1)].yyToken).lineNumber()) <<
 				       ": skipping " << QUOTE("->") << " in variable declaration.");
@@ -3364,7 +3371,7 @@ yyreduce:
   case 77:
 
 /* Line 1806 of yacc.c  */
-#line 529 "surface.yy"
+#line 531 "surface.yy"
     {
 			  CV->addSortMapping((yyvsp[(2) - (4)].yyToken), (yyvsp[(4) - (4)].yyToken));
 			}
@@ -3373,28 +3380,28 @@ yyreduce:
   case 78:
 
 /* Line 1806 of yacc.c  */
-#line 532 "surface.yy"
+#line 534 "surface.yy"
     {}
     break;
 
   case 79:
 
 /* Line 1806 of yacc.c  */
-#line 533 "surface.yy"
+#line 535 "surface.yy"
     { lexBubble(BAR_COLON | BAR_TO, 1); }
     break;
 
   case 82:
 
 /* Line 1806 of yacc.c  */
-#line 538 "surface.yy"
+#line 540 "surface.yy"
     { (yyval.yyToken) = (yyvsp[(1) - (2)].yyToken); }
     break;
 
   case 83:
 
 /* Line 1806 of yacc.c  */
-#line 540 "surface.yy"
+#line 542 "surface.yy"
     {
 			  Token t;
 			  t.dropChar((yyvsp[(1) - (1)].yyToken));
@@ -3406,7 +3413,7 @@ yyreduce:
   case 84:
 
 /* Line 1806 of yacc.c  */
-#line 549 "surface.yy"
+#line 551 "surface.yy"
     {
 			  //
 			  //	Specific op->op mapping.
@@ -3419,7 +3426,7 @@ yyreduce:
   case 85:
 
 /* Line 1806 of yacc.c  */
-#line 557 "surface.yy"
+#line 559 "surface.yy"
     {
 			  lexBubble(END_STATEMENT, 1);
 			}
@@ -3428,7 +3435,7 @@ yyreduce:
   case 86:
 
 /* Line 1806 of yacc.c  */
-#line 561 "surface.yy"
+#line 563 "surface.yy"
     {
 			  Token::peelParens(lexerBubble);  // remove any enclosing parens from op name
 			  CV->addOpTarget(lexerBubble);
@@ -3438,7 +3445,7 @@ yyreduce:
   case 87:
 
 /* Line 1806 of yacc.c  */
-#line 566 "surface.yy"
+#line 568 "surface.yy"
     {
 			  //
 			  //	At this point we don't know if we have an op->term mapping
@@ -3453,7 +3460,7 @@ yyreduce:
   case 88:
 
 /* Line 1806 of yacc.c  */
-#line 576 "surface.yy"
+#line 578 "surface.yy"
     {
 			  if (lexerBubble[0].code() == Token::encode("term"))
 			    {
@@ -3478,14 +3485,14 @@ yyreduce:
   case 89:
 
 /* Line 1806 of yacc.c  */
-#line 598 "surface.yy"
+#line 600 "surface.yy"
     {}
     break;
 
   case 90:
 
 /* Line 1806 of yacc.c  */
-#line 600 "surface.yy"
+#line 602 "surface.yy"
     {
 			  Token t;
 			  t.dropChar((yyvsp[(1) - (1)].yyToken));
@@ -3497,28 +3504,28 @@ yyreduce:
   case 91:
 
 /* Line 1806 of yacc.c  */
-#line 608 "surface.yy"
+#line 610 "surface.yy"
     { lexBubble(BAR_RIGHT_PAREN, 1); }
     break;
 
   case 92:
 
 /* Line 1806 of yacc.c  */
-#line 609 "surface.yy"
+#line 611 "surface.yy"
     {}
     break;
 
   case 93:
 
 /* Line 1806 of yacc.c  */
-#line 615 "surface.yy"
+#line 617 "surface.yy"
     { lexerIdMode(); }
     break;
 
   case 94:
 
 /* Line 1806 of yacc.c  */
-#line 617 "surface.yy"
+#line 619 "surface.yy"
     {
 			  interpreter.setCurrentModule(new SyntacticPreModule((yyvsp[(1) - (3)].yyToken), (yyvsp[(3) - (3)].yyToken)));
 			  currentSyntaxContainer = CM;
@@ -3529,7 +3536,7 @@ yyreduce:
   case 95:
 
 /* Line 1806 of yacc.c  */
-#line 623 "surface.yy"
+#line 625 "surface.yy"
     {
 			  lexerInitialMode();
 			  fileTable.endModule(lineNumber);
@@ -3540,14 +3547,14 @@ yyreduce:
   case 96:
 
 /* Line 1806 of yacc.c  */
-#line 630 "surface.yy"
+#line 632 "surface.yy"
     {}
     break;
 
   case 97:
 
 /* Line 1806 of yacc.c  */
-#line 632 "surface.yy"
+#line 634 "surface.yy"
     {
 			  Token t;
 			  t.dropChar((yyvsp[(1) - (1)].yyToken));
@@ -3559,14 +3566,14 @@ yyreduce:
   case 98:
 
 /* Line 1806 of yacc.c  */
-#line 640 "surface.yy"
+#line 642 "surface.yy"
     {}
     break;
 
   case 102:
 
 /* Line 1806 of yacc.c  */
-#line 649 "surface.yy"
+#line 651 "surface.yy"
     {
 			  ModuleExpression* me = moduleExpressions.top();
 			  moduleExpressions.pop();
@@ -3577,14 +3584,14 @@ yyreduce:
   case 103:
 
 /* Line 1806 of yacc.c  */
-#line 656 "surface.yy"
+#line 658 "surface.yy"
     {}
     break;
 
   case 104:
 
 /* Line 1806 of yacc.c  */
-#line 658 "surface.yy"
+#line 660 "surface.yy"
     {
 			  IssueWarning(LineNumber((yyvsp[(1) - (1)].yyToken).lineNumber()) <<
 			    ": saw " << QUOTE(':') << " instead of " <<
@@ -3595,7 +3602,7 @@ yyreduce:
   case 105:
 
 /* Line 1806 of yacc.c  */
-#line 666 "surface.yy"
+#line 668 "surface.yy"
     {
 			  singleton[0].dropChar((yyvsp[(1) - (1)].yyToken));
 			  missingSpace(singleton[0]);
@@ -3607,14 +3614,14 @@ yyreduce:
   case 107:
 
 /* Line 1806 of yacc.c  */
-#line 675 "surface.yy"
+#line 677 "surface.yy"
     {}
     break;
 
   case 112:
 
 /* Line 1806 of yacc.c  */
-#line 686 "surface.yy"
+#line 688 "surface.yy"
     {
 			  ModuleExpression* me = moduleExpressions.top();
 			  moduleExpressions.pop();
@@ -3625,238 +3632,238 @@ yyreduce:
   case 113:
 
 /* Line 1806 of yacc.c  */
-#line 692 "surface.yy"
+#line 694 "surface.yy"
     { clear(); }
     break;
 
   case 114:
 
 /* Line 1806 of yacc.c  */
-#line 693 "surface.yy"
+#line 695 "surface.yy"
     { CM->addSortDecl(tokenSequence); }
     break;
 
   case 115:
 
 /* Line 1806 of yacc.c  */
-#line 695 "surface.yy"
+#line 697 "surface.yy"
     { clear(); }
     break;
 
   case 116:
 
 /* Line 1806 of yacc.c  */
-#line 696 "surface.yy"
+#line 698 "surface.yy"
     { CM->addSubsortDecl(tokenSequence); }
     break;
 
   case 117:
 
 /* Line 1806 of yacc.c  */
-#line 698 "surface.yy"
+#line 700 "surface.yy"
     { lexBubble(BAR_COLON, 1); }
     break;
 
   case 118:
 
 /* Line 1806 of yacc.c  */
-#line 699 "surface.yy"
+#line 701 "surface.yy"
     { Token::peelParens(lexerBubble); CM->addOpDecl(lexerBubble); }
     break;
 
   case 119:
 
 /* Line 1806 of yacc.c  */
-#line 700 "surface.yy"
+#line 702 "surface.yy"
     {}
     break;
 
   case 120:
 
 /* Line 1806 of yacc.c  */
-#line 702 "surface.yy"
+#line 704 "surface.yy"
     {}
     break;
 
   case 121:
 
 /* Line 1806 of yacc.c  */
-#line 704 "surface.yy"
+#line 706 "surface.yy"
     {}
     break;
 
   case 122:
 
 /* Line 1806 of yacc.c  */
-#line 706 "surface.yy"
+#line 708 "surface.yy"
     { lexBubble((yyvsp[(1) - (1)].yyToken), BAR_COLON, 1); }
     break;
 
   case 123:
 
 /* Line 1806 of yacc.c  */
-#line 707 "surface.yy"
+#line 709 "surface.yy"
     { lexContinueBubble((yyvsp[(3) - (3)].yyToken), END_STATEMENT, 1); }
     break;
 
   case 124:
 
 /* Line 1806 of yacc.c  */
-#line 708 "surface.yy"
+#line 710 "surface.yy"
     { CM->addStatement(lexerBubble); }
     break;
 
   case 125:
 
 /* Line 1806 of yacc.c  */
-#line 710 "surface.yy"
+#line 712 "surface.yy"
     { lexBubble((yyvsp[(1) - (1)].yyToken), BAR_COLON, 1);  }
     break;
 
   case 126:
 
 /* Line 1806 of yacc.c  */
-#line 711 "surface.yy"
+#line 713 "surface.yy"
     { lexContinueBubble((yyvsp[(3) - (3)].yyToken), BAR_IF, 1); }
     break;
 
   case 127:
 
 /* Line 1806 of yacc.c  */
-#line 712 "surface.yy"
+#line 714 "surface.yy"
     { lexContinueBubble((yyvsp[(5) - (5)].yyToken), END_STATEMENT, 1); }
     break;
 
   case 128:
 
 /* Line 1806 of yacc.c  */
-#line 713 "surface.yy"
+#line 715 "surface.yy"
     { CM->addStatement(lexerBubble); }
     break;
 
   case 129:
 
 /* Line 1806 of yacc.c  */
-#line 715 "surface.yy"
+#line 717 "surface.yy"
     { lexBubble((yyvsp[(1) - (1)].yyToken), BAR_EQUALS, 1); }
     break;
 
   case 130:
 
 /* Line 1806 of yacc.c  */
-#line 716 "surface.yy"
+#line 718 "surface.yy"
     { lexContinueBubble((yyvsp[(3) - (3)].yyToken), END_STATEMENT, 1); }
     break;
 
   case 131:
 
 /* Line 1806 of yacc.c  */
-#line 717 "surface.yy"
+#line 719 "surface.yy"
     { CM->addStatement(lexerBubble); }
     break;
 
   case 132:
 
 /* Line 1806 of yacc.c  */
-#line 719 "surface.yy"
+#line 721 "surface.yy"
     { lexBubble((yyvsp[(1) - (1)].yyToken), BAR_EQUALS, 1); }
     break;
 
   case 133:
 
 /* Line 1806 of yacc.c  */
-#line 720 "surface.yy"
+#line 722 "surface.yy"
     { lexContinueBubble((yyvsp[(3) - (3)].yyToken), BAR_IF, 1); }
     break;
 
   case 134:
 
 /* Line 1806 of yacc.c  */
-#line 721 "surface.yy"
+#line 723 "surface.yy"
     { lexContinueBubble((yyvsp[(5) - (5)].yyToken), END_STATEMENT, 1); }
     break;
 
   case 135:
 
 /* Line 1806 of yacc.c  */
-#line 722 "surface.yy"
+#line 724 "surface.yy"
     { CM->addStatement(lexerBubble); }
     break;
 
   case 136:
 
 /* Line 1806 of yacc.c  */
-#line 724 "surface.yy"
+#line 726 "surface.yy"
     { lexBubble((yyvsp[(1) - (1)].yyToken), BAR_ARROW2, 1); }
     break;
 
   case 137:
 
 /* Line 1806 of yacc.c  */
-#line 725 "surface.yy"
+#line 727 "surface.yy"
     { lexContinueBubble((yyvsp[(3) - (3)].yyToken), END_STATEMENT, 1); }
     break;
 
   case 138:
 
 /* Line 1806 of yacc.c  */
-#line 726 "surface.yy"
+#line 728 "surface.yy"
     { CM->addStatement(lexerBubble); }
     break;
 
   case 139:
 
 /* Line 1806 of yacc.c  */
-#line 728 "surface.yy"
+#line 730 "surface.yy"
     { lexBubble((yyvsp[(1) - (1)].yyToken), BAR_ARROW2, 1); }
     break;
 
   case 140:
 
 /* Line 1806 of yacc.c  */
-#line 729 "surface.yy"
+#line 731 "surface.yy"
     { lexContinueBubble((yyvsp[(3) - (3)].yyToken), BAR_IF, 1); }
     break;
 
   case 141:
 
 /* Line 1806 of yacc.c  */
-#line 730 "surface.yy"
+#line 732 "surface.yy"
     { lexContinueBubble((yyvsp[(5) - (5)].yyToken), END_STATEMENT, 1); }
     break;
 
   case 142:
 
 /* Line 1806 of yacc.c  */
-#line 731 "surface.yy"
+#line 733 "surface.yy"
     { CM->addStatement(lexerBubble); }
     break;
 
   case 143:
 
 /* Line 1806 of yacc.c  */
-#line 733 "surface.yy"
+#line 735 "surface.yy"
     { lexBubble(BAR_COLON, 1); }
     break;
 
   case 144:
 
 /* Line 1806 of yacc.c  */
-#line 734 "surface.yy"
+#line 736 "surface.yy"
     { Token::peelParens(lexerBubble); CM->addOpDecl(lexerBubble); }
     break;
 
   case 145:
 
 /* Line 1806 of yacc.c  */
-#line 735 "surface.yy"
+#line 737 "surface.yy"
     { CM->setFlag(SymbolType::MESSAGE); }
     break;
 
   case 146:
 
 /* Line 1806 of yacc.c  */
-#line 738 "surface.yy"
+#line 740 "surface.yy"
     {
 			  CM->setFlag(SymbolType::MESSAGE);
 			}
@@ -3865,7 +3872,7 @@ yyreduce:
   case 147:
 
 /* Line 1806 of yacc.c  */
-#line 743 "surface.yy"
+#line 745 "surface.yy"
     {
 			}
     break;
@@ -3873,7 +3880,7 @@ yyreduce:
   case 148:
 
 /* Line 1806 of yacc.c  */
-#line 746 "surface.yy"
+#line 748 "surface.yy"
     {
 			}
     break;
@@ -3881,21 +3888,21 @@ yyreduce:
   case 149:
 
 /* Line 1806 of yacc.c  */
-#line 749 "surface.yy"
+#line 751 "surface.yy"
     { clear(); }
     break;
 
   case 150:
 
 /* Line 1806 of yacc.c  */
-#line 750 "surface.yy"
+#line 752 "surface.yy"
     { CM->addSubsortDecl(tokenSequence); }
     break;
 
   case 151:
 
 /* Line 1806 of yacc.c  */
-#line 753 "surface.yy"
+#line 755 "surface.yy"
     {
 			  //
 			  //	Fix things that might be in a bad state due
@@ -3909,21 +3916,21 @@ yyreduce:
   case 152:
 
 /* Line 1806 of yacc.c  */
-#line 763 "surface.yy"
+#line 765 "surface.yy"
     {}
     break;
 
   case 153:
 
 /* Line 1806 of yacc.c  */
-#line 764 "surface.yy"
+#line 766 "surface.yy"
     {}
     break;
 
   case 156:
 
 /* Line 1806 of yacc.c  */
-#line 772 "surface.yy"
+#line 774 "surface.yy"
     {
 			}
     break;
@@ -3931,35 +3938,35 @@ yyreduce:
   case 157:
 
 /* Line 1806 of yacc.c  */
-#line 776 "surface.yy"
+#line 778 "surface.yy"
     { currentSyntaxContainer->addVarDecl((yyvsp[(2) - (2)].yyToken)); }
     break;
 
   case 158:
 
 /* Line 1806 of yacc.c  */
-#line 777 "surface.yy"
+#line 779 "surface.yy"
     { currentSyntaxContainer->addVarDecl((yyvsp[(1) - (1)].yyToken)); }
     break;
 
   case 161:
 
 /* Line 1806 of yacc.c  */
-#line 784 "surface.yy"
+#line 786 "surface.yy"
     { singleton[0] = (yyvsp[(1) - (1)].yyToken); CM->addOpDecl(singleton); }
     break;
 
   case 162:
 
 /* Line 1806 of yacc.c  */
-#line 785 "surface.yy"
+#line 787 "surface.yy"
     { CM->addOpDecl(lexerBubble); }
     break;
 
   case 165:
 
 /* Line 1806 of yacc.c  */
-#line 791 "surface.yy"
+#line 793 "surface.yy"
     {
 			  IssueWarning(LineNumber(lineNumber) <<
 				       ": missing " << QUOTE("->") << " in constant declaration.");
@@ -3969,7 +3976,7 @@ yyreduce:
   case 166:
 
 /* Line 1806 of yacc.c  */
-#line 798 "surface.yy"
+#line 800 "surface.yy"
     {
 			  IssueWarning(LineNumber((yyvsp[(1) - (1)].yyToken).lineNumber()) <<
 				       ": skipping stray " << QUOTE(":") << " in operator declaration.");
@@ -3980,7 +3987,7 @@ yyreduce:
   case 169:
 
 /* Line 1806 of yacc.c  */
-#line 808 "surface.yy"
+#line 810 "surface.yy"
     {
 			  IssueWarning(LineNumber((yyvsp[(1) - (1)].yyToken).lineNumber()) <<
 			  ": missing " << QUOTE("->") << " in operator declaration.");
@@ -3990,7 +3997,7 @@ yyreduce:
   case 170:
 
 /* Line 1806 of yacc.c  */
-#line 813 "surface.yy"
+#line 815 "surface.yy"
     {
 			  IssueWarning(LineNumber((yyvsp[(1) - (1)].yyToken).lineNumber()) <<
 			  ": missing " << QUOTE("->") << " in operator declaration.");
@@ -4000,7 +4007,7 @@ yyreduce:
   case 171:
 
 /* Line 1806 of yacc.c  */
-#line 820 "surface.yy"
+#line 822 "surface.yy"
     {
 			  if ((yyvsp[(1) - (2)].yyBool))
 			    CM->convertSortsToKinds();
@@ -4010,28 +4017,28 @@ yyreduce:
   case 173:
 
 /* Line 1806 of yacc.c  */
-#line 827 "surface.yy"
+#line 829 "surface.yy"
     {}
     break;
 
   case 174:
 
 /* Line 1806 of yacc.c  */
-#line 830 "surface.yy"
+#line 832 "surface.yy"
     { (yyval.yyBool) = false; }
     break;
 
   case 175:
 
 /* Line 1806 of yacc.c  */
-#line 831 "surface.yy"
+#line 833 "surface.yy"
     { (yyval.yyBool) = true; }
     break;
 
   case 178:
 
 /* Line 1806 of yacc.c  */
-#line 839 "surface.yy"
+#line 841 "surface.yy"
     {
 			  singleton[0] = (yyvsp[(1) - (1)].yyToken);
 			  currentSyntaxContainer->addType(false, singleton);
@@ -4041,14 +4048,14 @@ yyreduce:
   case 179:
 
 /* Line 1806 of yacc.c  */
-#line 843 "surface.yy"
+#line 845 "surface.yy"
     { clear(); }
     break;
 
   case 180:
 
 /* Line 1806 of yacc.c  */
-#line 845 "surface.yy"
+#line 847 "surface.yy"
     {
 			  currentSyntaxContainer->addType(true, tokenSequence);
 			}
@@ -4057,28 +4064,28 @@ yyreduce:
   case 181:
 
 /* Line 1806 of yacc.c  */
-#line 850 "surface.yy"
+#line 852 "surface.yy"
     { store((yyvsp[(3) - (3)].yyToken)); }
     break;
 
   case 182:
 
 /* Line 1806 of yacc.c  */
-#line 851 "surface.yy"
+#line 853 "surface.yy"
     { store((yyvsp[(1) - (1)].yyToken)); }
     break;
 
   case 183:
 
 /* Line 1806 of yacc.c  */
-#line 854 "surface.yy"
+#line 856 "surface.yy"
     {}
     break;
 
   case 187:
 
 /* Line 1806 of yacc.c  */
-#line 863 "surface.yy"
+#line 865 "surface.yy"
     {
 			  CM->setFlag(SymbolType::LEFT_ID | SymbolType::RIGHT_ID);
 			}
@@ -4087,7 +4094,7 @@ yyreduce:
   case 188:
 
 /* Line 1806 of yacc.c  */
-#line 867 "surface.yy"
+#line 869 "surface.yy"
     {
 			  CM->setFlag(SymbolType::LEFT_ID);
 			}
@@ -4096,7 +4103,7 @@ yyreduce:
   case 189:
 
 /* Line 1806 of yacc.c  */
-#line 871 "surface.yy"
+#line 873 "surface.yy"
     {
 			  CM->setFlag(SymbolType::RIGHT_ID);
 			}
@@ -4105,7 +4112,7 @@ yyreduce:
   case 190:
 
 /* Line 1806 of yacc.c  */
-#line 877 "surface.yy"
+#line 879 "surface.yy"
     {
 			  CM->setFlag(SymbolType::ASSOC);
 			}
@@ -4114,7 +4121,7 @@ yyreduce:
   case 191:
 
 /* Line 1806 of yacc.c  */
-#line 881 "surface.yy"
+#line 883 "surface.yy"
     {
 			  CM->setFlag(SymbolType::COMM);
 			}
@@ -4123,21 +4130,21 @@ yyreduce:
   case 192:
 
 /* Line 1806 of yacc.c  */
-#line 884 "surface.yy"
+#line 886 "surface.yy"
     { lexBubble(BAR_RIGHT_BRACKET | BAR_OP_ATTRIBUTE, 1); }
     break;
 
   case 193:
 
 /* Line 1806 of yacc.c  */
-#line 885 "surface.yy"
+#line 887 "surface.yy"
     { CM->setIdentity(lexerBubble); }
     break;
 
   case 194:
 
 /* Line 1806 of yacc.c  */
-#line 887 "surface.yy"
+#line 889 "surface.yy"
     {
 			  CM->setFlag(SymbolType::IDEM);
 			}
@@ -4146,7 +4153,7 @@ yyreduce:
   case 195:
 
 /* Line 1806 of yacc.c  */
-#line 891 "surface.yy"
+#line 893 "surface.yy"
     {
 			  CM->setFlag(SymbolType::ITER);
 			}
@@ -4155,70 +4162,70 @@ yyreduce:
   case 196:
 
 /* Line 1806 of yacc.c  */
-#line 894 "surface.yy"
+#line 896 "surface.yy"
     { CM->setPrec((yyvsp[(2) - (2)].yyToken)); }
     break;
 
   case 197:
 
 /* Line 1806 of yacc.c  */
-#line 895 "surface.yy"
+#line 897 "surface.yy"
     { clear(); }
     break;
 
   case 198:
 
 /* Line 1806 of yacc.c  */
-#line 896 "surface.yy"
+#line 898 "surface.yy"
     { CM->setGather(tokenSequence); }
     break;
 
   case 199:
 
 /* Line 1806 of yacc.c  */
-#line 897 "surface.yy"
+#line 899 "surface.yy"
     { clear(); }
     break;
 
   case 200:
 
 /* Line 1806 of yacc.c  */
-#line 898 "surface.yy"
+#line 900 "surface.yy"
     { CM->setFormat(tokenSequence); }
     break;
 
   case 201:
 
 /* Line 1806 of yacc.c  */
-#line 899 "surface.yy"
+#line 901 "surface.yy"
     { clear(); }
     break;
 
   case 202:
 
 /* Line 1806 of yacc.c  */
-#line 900 "surface.yy"
+#line 902 "surface.yy"
     { CM->setStrat(tokenSequence); }
     break;
 
   case 203:
 
 /* Line 1806 of yacc.c  */
-#line 901 "surface.yy"
+#line 903 "surface.yy"
     { clear(); }
     break;
 
   case 204:
 
 /* Line 1806 of yacc.c  */
-#line 902 "surface.yy"
+#line 904 "surface.yy"
     { CM->setPoly(tokenSequence); }
     break;
 
   case 205:
 
 /* Line 1806 of yacc.c  */
-#line 904 "surface.yy"
+#line 906 "surface.yy"
     {
 			  CM->setFlag(SymbolType::MEMO);
 			}
@@ -4227,7 +4234,7 @@ yyreduce:
   case 206:
 
 /* Line 1806 of yacc.c  */
-#line 908 "surface.yy"
+#line 910 "surface.yy"
     {
 			  CM->setFlag(SymbolType::CTOR);
 			}
@@ -4236,7 +4243,7 @@ yyreduce:
   case 207:
 
 /* Line 1806 of yacc.c  */
-#line 912 "surface.yy"
+#line 914 "surface.yy"
     {
 			  clear();
 			  CM->setFrozen(tokenSequence);
@@ -4246,21 +4253,21 @@ yyreduce:
   case 208:
 
 /* Line 1806 of yacc.c  */
-#line 916 "surface.yy"
+#line 918 "surface.yy"
     { clear(); }
     break;
 
   case 209:
 
 /* Line 1806 of yacc.c  */
-#line 917 "surface.yy"
+#line 919 "surface.yy"
     { CM->setFrozen(tokenSequence); }
     break;
 
   case 210:
 
 /* Line 1806 of yacc.c  */
-#line 919 "surface.yy"
+#line 921 "surface.yy"
     {
 			  CM->setFlag(SymbolType::CONFIG);
 			}
@@ -4269,7 +4276,7 @@ yyreduce:
   case 211:
 
 /* Line 1806 of yacc.c  */
-#line 923 "surface.yy"
+#line 925 "surface.yy"
     {
 			  CM->setFlag(SymbolType::OBJECT);
 			}
@@ -4278,7 +4285,7 @@ yyreduce:
   case 212:
 
 /* Line 1806 of yacc.c  */
-#line 927 "surface.yy"
+#line 929 "surface.yy"
     {
 			  CM->setFlag(SymbolType::MESSAGE);
 			}
@@ -4287,7 +4294,7 @@ yyreduce:
   case 213:
 
 /* Line 1806 of yacc.c  */
-#line 931 "surface.yy"
+#line 933 "surface.yy"
     {
 			  CM->setMetadata((yyvsp[(2) - (2)].yyToken));
 			}
@@ -4296,28 +4303,28 @@ yyreduce:
   case 214:
 
 /* Line 1806 of yacc.c  */
-#line 934 "surface.yy"
+#line 936 "surface.yy"
     { lexerLatexMode(); }
     break;
 
   case 215:
 
 /* Line 1806 of yacc.c  */
-#line 935 "surface.yy"
+#line 937 "surface.yy"
     { CM->setLatexMacro((yyvsp[(4) - (5)].yyString)); }
     break;
 
   case 216:
 
 /* Line 1806 of yacc.c  */
-#line 936 "surface.yy"
+#line 938 "surface.yy"
     {}
     break;
 
   case 217:
 
 /* Line 1806 of yacc.c  */
-#line 938 "surface.yy"
+#line 940 "surface.yy"
     {
 			  CM->setFlag(SymbolType::DITTO);
 			}
@@ -4326,56 +4333,56 @@ yyreduce:
   case 220:
 
 /* Line 1806 of yacc.c  */
-#line 951 "surface.yy"
+#line 953 "surface.yy"
     { store((yyvsp[(2) - (2)].yyToken)); }
     break;
 
   case 221:
 
 /* Line 1806 of yacc.c  */
-#line 952 "surface.yy"
+#line 954 "surface.yy"
     { store((yyvsp[(1) - (1)].yyToken)); }
     break;
 
   case 224:
 
 /* Line 1806 of yacc.c  */
-#line 959 "surface.yy"
+#line 961 "surface.yy"
     { clear(); CM->addHook(SyntacticPreModule::ID_HOOK, (yyvsp[(2) - (2)].yyToken), tokenSequence); }
     break;
 
   case 225:
 
 /* Line 1806 of yacc.c  */
-#line 960 "surface.yy"
+#line 962 "surface.yy"
     { CM->addHook(SyntacticPreModule::ID_HOOK, (yyvsp[(2) - (3)].yyToken), lexerBubble); }
     break;
 
   case 226:
 
 /* Line 1806 of yacc.c  */
-#line 961 "surface.yy"
+#line 963 "surface.yy"
     { CM->addHook(SyntacticPreModule::OP_HOOK, (yyvsp[(2) - (3)].yyToken), lexerBubble); }
     break;
 
   case 227:
 
 /* Line 1806 of yacc.c  */
-#line 962 "surface.yy"
+#line 964 "surface.yy"
     { CM->addHook(SyntacticPreModule::TERM_HOOK, (yyvsp[(2) - (3)].yyToken), lexerBubble); }
     break;
 
   case 228:
 
 /* Line 1806 of yacc.c  */
-#line 968 "surface.yy"
+#line 970 "surface.yy"
     {}
     break;
 
   case 229:
 
 /* Line 1806 of yacc.c  */
-#line 970 "surface.yy"
+#line 972 "surface.yy"
     {
 			  IssueWarning(LineNumber(lineNumber) << ": missing " <<
 				       QUOTE("is") << " keyword.");
@@ -4385,14 +4392,14 @@ yyreduce:
   case 230:
 
 /* Line 1806 of yacc.c  */
-#line 976 "surface.yy"
+#line 978 "surface.yy"
     {}
     break;
 
   case 231:
 
 /* Line 1806 of yacc.c  */
-#line 978 "surface.yy"
+#line 980 "surface.yy"
     {
 			  IssueWarning(LineNumber(lineNumber) << ": missing period.");
 			}
@@ -4401,42 +4408,42 @@ yyreduce:
   case 232:
 
 /* Line 1806 of yacc.c  */
-#line 986 "surface.yy"
+#line 988 "surface.yy"
     { store((yyvsp[(2) - (2)].yyToken)); }
     break;
 
   case 234:
 
 /* Line 1806 of yacc.c  */
-#line 990 "surface.yy"
+#line 992 "surface.yy"
     { store((yyvsp[(2) - (2)].yyToken)); }
     break;
 
   case 235:
 
 /* Line 1806 of yacc.c  */
-#line 991 "surface.yy"
+#line 993 "surface.yy"
     { store((yyvsp[(2) - (2)].yyToken)); }
     break;
 
   case 236:
 
 /* Line 1806 of yacc.c  */
-#line 992 "surface.yy"
+#line 994 "surface.yy"
     { store((yyvsp[(1) - (1)].yyToken)); }
     break;
 
   case 237:
 
 /* Line 1806 of yacc.c  */
-#line 993 "surface.yy"
+#line 995 "surface.yy"
     { store((yyvsp[(4) - (4)].yyToken)); }
     break;
 
   case 238:
 
 /* Line 1806 of yacc.c  */
-#line 1000 "surface.yy"
+#line 1002 "surface.yy"
     {
 			  Token t;
 			  if (fragments.size() == 1)
@@ -4451,56 +4458,56 @@ yyreduce:
   case 239:
 
 /* Line 1806 of yacc.c  */
-#line 1011 "surface.yy"
+#line 1013 "surface.yy"
     { fragStore((yyvsp[(1) - (1)].yyToken)); }
     break;
 
   case 240:
 
 /* Line 1806 of yacc.c  */
-#line 1012 "surface.yy"
+#line 1014 "surface.yy"
     { fragStore((yyvsp[(2) - (2)].yyToken)); }
     break;
 
   case 241:
 
 /* Line 1806 of yacc.c  */
-#line 1013 "surface.yy"
+#line 1015 "surface.yy"
     { fragStore((yyvsp[(5) - (5)].yyToken)); }
     break;
 
   case 242:
 
 /* Line 1806 of yacc.c  */
-#line 1016 "surface.yy"
+#line 1018 "surface.yy"
     { fragStore((yyvsp[(2) - (2)].yyToken)); }
     break;
 
   case 243:
 
 /* Line 1806 of yacc.c  */
-#line 1017 "surface.yy"
+#line 1019 "surface.yy"
     {}
     break;
 
   case 244:
 
 /* Line 1806 of yacc.c  */
-#line 1018 "surface.yy"
+#line 1020 "surface.yy"
     {}
     break;
 
   case 347:
 
 /* Line 1806 of yacc.c  */
-#line 1098 "surface.yy"
+#line 1100 "surface.yy"
     { lexBubble(END_COMMAND, 1); }
     break;
 
   case 348:
 
 /* Line 1806 of yacc.c  */
-#line 1100 "surface.yy"
+#line 1102 "surface.yy"
     {
 			  interpreter.setCurrentModule(lexerBubble);
 			}
@@ -4509,14 +4516,14 @@ yyreduce:
   case 349:
 
 /* Line 1806 of yacc.c  */
-#line 1103 "surface.yy"
+#line 1105 "surface.yy"
     { lexBubble(END_COMMAND, 1); }
     break;
 
   case 350:
 
 /* Line 1806 of yacc.c  */
-#line 1105 "surface.yy"
+#line 1107 "surface.yy"
     {
 			  if (interpreter.setCurrentModule(lexerBubble))
 			    CM->dump();
@@ -4526,7 +4533,7 @@ yyreduce:
   case 351:
 
 /* Line 1806 of yacc.c  */
-#line 1110 "surface.yy"
+#line 1112 "surface.yy"
     {
 			  lexerCmdMode();
 			  moduleExpr.contractTo(0);
@@ -4536,7 +4543,7 @@ yyreduce:
   case 352:
 
 /* Line 1806 of yacc.c  */
-#line 1115 "surface.yy"
+#line 1117 "surface.yy"
     {
 			  lexerInitialMode();
 			  if (interpreter.setCurrentModule(moduleExpr, 1))
@@ -4547,7 +4554,7 @@ yyreduce:
   case 353:
 
 /* Line 1806 of yacc.c  */
-#line 1122 "surface.yy"
+#line 1124 "surface.yy"
     {
 			  lexerCmdMode();
 			  moduleExpr.contractTo(0);
@@ -4557,7 +4564,7 @@ yyreduce:
   case 354:
 
 /* Line 1806 of yacc.c  */
-#line 1127 "surface.yy"
+#line 1129 "surface.yy"
     {
 			  lexerInitialMode();
 			  if (interpreter.setCurrentModule(moduleExpr, 1))
@@ -4568,7 +4575,7 @@ yyreduce:
   case 355:
 
 /* Line 1806 of yacc.c  */
-#line 1134 "surface.yy"
+#line 1136 "surface.yy"
     {
 			  lexerCmdMode();
 			  moduleExpr.contractTo(0);
@@ -4578,7 +4585,7 @@ yyreduce:
   case 356:
 
 /* Line 1806 of yacc.c  */
-#line 1139 "surface.yy"
+#line 1141 "surface.yy"
     {
 			  lexerInitialMode();
 			  if (interpreter.setCurrentModule(moduleExpr, 1))
@@ -4589,7 +4596,7 @@ yyreduce:
   case 357:
 
 /* Line 1806 of yacc.c  */
-#line 1146 "surface.yy"
+#line 1148 "surface.yy"
     {
 			  lexerCmdMode();
 			  moduleExpr.contractTo(0);
@@ -4599,7 +4606,7 @@ yyreduce:
   case 358:
 
 /* Line 1806 of yacc.c  */
-#line 1151 "surface.yy"
+#line 1153 "surface.yy"
     {
 			  lexerInitialMode();
 			  if (interpreter.setCurrentModule(moduleExpr, 1))
@@ -4610,7 +4617,7 @@ yyreduce:
   case 359:
 
 /* Line 1806 of yacc.c  */
-#line 1158 "surface.yy"
+#line 1160 "surface.yy"
     {
 			  lexerCmdMode();
 			  moduleExpr.contractTo(0);
@@ -4621,7 +4628,7 @@ yyreduce:
   case 360:
 
 /* Line 1806 of yacc.c  */
-#line 1164 "surface.yy"
+#line 1166 "surface.yy"
     {
 			  lexerInitialMode();
 			  if (interpreter.setCurrentModule(moduleExpr, 1))
@@ -4632,7 +4639,7 @@ yyreduce:
   case 361:
 
 /* Line 1806 of yacc.c  */
-#line 1170 "surface.yy"
+#line 1172 "surface.yy"
     {
 			  lexerCmdMode();
 			  moduleExpr.contractTo(0);
@@ -4644,7 +4651,7 @@ yyreduce:
   case 362:
 
 /* Line 1806 of yacc.c  */
-#line 1177 "surface.yy"
+#line 1179 "surface.yy"
     {
 			  lexerInitialMode();
 			  if (interpreter.setCurrentModule(moduleExpr, 1))
@@ -4655,7 +4662,7 @@ yyreduce:
   case 363:
 
 /* Line 1806 of yacc.c  */
-#line 1183 "surface.yy"
+#line 1185 "surface.yy"
     {
 			  lexerCmdMode();
 			  moduleExpr.contractTo(0);
@@ -4667,7 +4674,7 @@ yyreduce:
   case 364:
 
 /* Line 1806 of yacc.c  */
-#line 1190 "surface.yy"
+#line 1192 "surface.yy"
     {
 			  lexerInitialMode();
 			  if (interpreter.setCurrentModule(moduleExpr, 1))
@@ -4678,7 +4685,7 @@ yyreduce:
   case 365:
 
 /* Line 1806 of yacc.c  */
-#line 1196 "surface.yy"
+#line 1198 "surface.yy"
     {
 			  lexerCmdMode();
 			  moduleExpr.contractTo(0);
@@ -4689,7 +4696,7 @@ yyreduce:
   case 366:
 
 /* Line 1806 of yacc.c  */
-#line 1202 "surface.yy"
+#line 1204 "surface.yy"
     {
 			  lexerInitialMode();
 			  if (interpreter.setCurrentModule(moduleExpr, 1))
@@ -4700,7 +4707,7 @@ yyreduce:
   case 367:
 
 /* Line 1806 of yacc.c  */
-#line 1209 "surface.yy"
+#line 1211 "surface.yy"
     {
 			  lexerCmdMode();
 			  moduleExpr.contractTo(0);
@@ -4710,7 +4717,7 @@ yyreduce:
   case 368:
 
 /* Line 1806 of yacc.c  */
-#line 1214 "surface.yy"
+#line 1216 "surface.yy"
     {
 			  lexerInitialMode();
 			  if (interpreter.setCurrentModule(moduleExpr, 1))
@@ -4721,7 +4728,7 @@ yyreduce:
   case 369:
 
 /* Line 1806 of yacc.c  */
-#line 1221 "surface.yy"
+#line 1223 "surface.yy"
     {
 			  lexerCmdMode();
 			  moduleExpr.contractTo(0);
@@ -4733,7 +4740,7 @@ yyreduce:
   case 370:
 
 /* Line 1806 of yacc.c  */
-#line 1228 "surface.yy"
+#line 1230 "surface.yy"
     {
 			  lexerInitialMode();
 			  if (interpreter.setCurrentModule(moduleExpr, 1))
@@ -4744,7 +4751,7 @@ yyreduce:
   case 371:
 
 /* Line 1806 of yacc.c  */
-#line 1234 "surface.yy"
+#line 1236 "surface.yy"
     {
 			  lexerCmdMode();
 			  moduleExpr.contractTo(0);
@@ -4755,7 +4762,7 @@ yyreduce:
   case 372:
 
 /* Line 1806 of yacc.c  */
-#line 1240 "surface.yy"
+#line 1242 "surface.yy"
     {
 			  lexerInitialMode();
 			  if (interpreter.setCurrentModule(moduleExpr, 1))
@@ -4766,7 +4773,7 @@ yyreduce:
   case 373:
 
 /* Line 1806 of yacc.c  */
-#line 1246 "surface.yy"
+#line 1248 "surface.yy"
     {
 			  lexerCmdMode();
 			  moduleExpr.contractTo(0);
@@ -4777,7 +4784,7 @@ yyreduce:
   case 374:
 
 /* Line 1806 of yacc.c  */
-#line 1252 "surface.yy"
+#line 1254 "surface.yy"
     {
 			  lexerInitialMode();
 			  if (interpreter.setCurrentModule(moduleExpr, 1))
@@ -4788,7 +4795,7 @@ yyreduce:
   case 375:
 
 /* Line 1806 of yacc.c  */
-#line 1258 "surface.yy"
+#line 1260 "surface.yy"
     {
 			  lexerCmdMode();
 			  moduleExpr.contractTo(0);
@@ -4799,7 +4806,7 @@ yyreduce:
   case 376:
 
 /* Line 1806 of yacc.c  */
-#line 1264 "surface.yy"
+#line 1266 "surface.yy"
     {
 			  lexerInitialMode();
 			  if (interpreter.setCurrentModule(moduleExpr, 1))
@@ -4810,7 +4817,7 @@ yyreduce:
   case 377:
 
 /* Line 1806 of yacc.c  */
-#line 1271 "surface.yy"
+#line 1273 "surface.yy"
     {
 			  lexerCmdMode();
 			  moduleExpr.contractTo(0);
@@ -4821,7 +4828,7 @@ yyreduce:
   case 378:
 
 /* Line 1806 of yacc.c  */
-#line 1277 "surface.yy"
+#line 1279 "surface.yy"
     {
 			  lexerInitialMode();
 			  if (interpreter.setCurrentModule(moduleExpr, 1))
@@ -4832,7 +4839,7 @@ yyreduce:
   case 379:
 
 /* Line 1806 of yacc.c  */
-#line 1283 "surface.yy"
+#line 1285 "surface.yy"
     {
 			  interpreter.cont((yyvsp[(3) - (4)].yyInt64), (yyvsp[(1) - (4)].yyBool));
 			}
@@ -4841,7 +4848,7 @@ yyreduce:
   case 380:
 
 /* Line 1806 of yacc.c  */
-#line 1287 "surface.yy"
+#line 1289 "surface.yy"
     {
 			  //
 			  //	test is a generic command to call code with a term for development purposes.
@@ -4854,7 +4861,7 @@ yyreduce:
   case 381:
 
 /* Line 1806 of yacc.c  */
-#line 1295 "surface.yy"
+#line 1297 "surface.yy"
     {
 			  lexerInitialMode();
 			  if (interpreter.setCurrentModule(moduleExpr, 1))
@@ -4865,7 +4872,7 @@ yyreduce:
   case 382:
 
 /* Line 1806 of yacc.c  */
-#line 1301 "surface.yy"
+#line 1303 "surface.yy"
     {
 			  lexerCmdMode();
 			  moduleExpr.contractTo(0);
@@ -4875,7 +4882,7 @@ yyreduce:
   case 383:
 
 /* Line 1806 of yacc.c  */
-#line 1306 "surface.yy"
+#line 1308 "surface.yy"
     {
 			  lexerInitialMode();
 			  if (interpreter.setCurrentModule(moduleExpr, 1))
@@ -4886,7 +4893,7 @@ yyreduce:
   case 384:
 
 /* Line 1806 of yacc.c  */
-#line 1312 "surface.yy"
+#line 1314 "surface.yy"
     {
 			  moduleExpr.contractTo(0);
 			  if (interpreter.setCurrentModule(moduleExpr))  // HACK
@@ -4897,14 +4904,14 @@ yyreduce:
   case 385:
 
 /* Line 1806 of yacc.c  */
-#line 1317 "surface.yy"
+#line 1319 "surface.yy"
     { lexerCmdMode(); }
     break;
 
   case 386:
 
 /* Line 1806 of yacc.c  */
-#line 1319 "surface.yy"
+#line 1321 "surface.yy"
     {
 			  lexerInitialMode();
 			  interpreter.traceSelect((yyvsp[(2) - (4)].yyBool));
@@ -4914,14 +4921,14 @@ yyreduce:
   case 387:
 
 /* Line 1806 of yacc.c  */
-#line 1323 "surface.yy"
+#line 1325 "surface.yy"
     { lexerCmdMode(); }
     break;
 
   case 388:
 
 /* Line 1806 of yacc.c  */
-#line 1325 "surface.yy"
+#line 1327 "surface.yy"
     {
 			  lexerInitialMode();
 			  interpreter.traceExclude((yyvsp[(2) - (4)].yyBool));
@@ -4931,14 +4938,14 @@ yyreduce:
   case 389:
 
 /* Line 1806 of yacc.c  */
-#line 1329 "surface.yy"
+#line 1331 "surface.yy"
     { lexerCmdMode(); }
     break;
 
   case 390:
 
 /* Line 1806 of yacc.c  */
-#line 1331 "surface.yy"
+#line 1333 "surface.yy"
     {
 			  lexerInitialMode();
 			  interpreter.breakSelect((yyvsp[(2) - (4)].yyBool));
@@ -4948,14 +4955,14 @@ yyreduce:
   case 391:
 
 /* Line 1806 of yacc.c  */
-#line 1335 "surface.yy"
+#line 1337 "surface.yy"
     { lexerCmdMode(); }
     break;
 
   case 392:
 
 /* Line 1806 of yacc.c  */
-#line 1337 "surface.yy"
+#line 1339 "surface.yy"
     {
 			  lexerInitialMode();
 			  interpreter.printConceal((yyvsp[(2) - (4)].yyBool));
@@ -4965,7 +4972,7 @@ yyreduce:
   case 393:
 
 /* Line 1806 of yacc.c  */
-#line 1342 "surface.yy"
+#line 1344 "surface.yy"
     {
 			  if (CM != 0)  // HACK
 			    CM->getFlatSignature()->clearMemo();
@@ -4975,14 +4982,14 @@ yyreduce:
   case 394:
 
 /* Line 1806 of yacc.c  */
-#line 1349 "surface.yy"
+#line 1351 "surface.yy"
     { lexBubble(END_COMMAND, 0); }
     break;
 
   case 395:
 
 /* Line 1806 of yacc.c  */
-#line 1351 "surface.yy"
+#line 1353 "surface.yy"
     {
 			  if (interpreter.setCurrentModule(lexerBubble))
 			    CM->showModule();
@@ -4992,14 +4999,14 @@ yyreduce:
   case 396:
 
 /* Line 1806 of yacc.c  */
-#line 1355 "surface.yy"
+#line 1357 "surface.yy"
     { lexBubble(END_COMMAND, 0); }
     break;
 
   case 397:
 
 /* Line 1806 of yacc.c  */
-#line 1357 "surface.yy"
+#line 1359 "surface.yy"
     {
 			  if (interpreter.setCurrentModule(lexerBubble))
 			    CM->showModule();
@@ -5009,14 +5016,14 @@ yyreduce:
   case 398:
 
 /* Line 1806 of yacc.c  */
-#line 1361 "surface.yy"
+#line 1363 "surface.yy"
     { lexBubble(END_COMMAND, 0); }
     break;
 
   case 399:
 
 /* Line 1806 of yacc.c  */
-#line 1363 "surface.yy"
+#line 1365 "surface.yy"
     {
 			  if (interpreter.setCurrentModule(lexerBubble))
 			    interpreter.showModule(true);
@@ -5026,14 +5033,14 @@ yyreduce:
   case 400:
 
 /* Line 1806 of yacc.c  */
-#line 1367 "surface.yy"
+#line 1369 "surface.yy"
     { lexBubble(END_COMMAND, 0); }
     break;
 
   case 401:
 
 /* Line 1806 of yacc.c  */
-#line 1369 "surface.yy"
+#line 1371 "surface.yy"
     {
 			  if (interpreter.setCurrentView(lexerBubble))
 			    interpreter.showView();
@@ -5043,7 +5050,7 @@ yyreduce:
   case 402:
 
 /* Line 1806 of yacc.c  */
-#line 1374 "surface.yy"
+#line 1376 "surface.yy"
     {
 			  interpreter.showModules(true);
 			}
@@ -5052,7 +5059,7 @@ yyreduce:
   case 403:
 
 /* Line 1806 of yacc.c  */
-#line 1378 "surface.yy"
+#line 1380 "surface.yy"
     {
 			  interpreter.showNamedViews();
 			}
@@ -5061,14 +5068,14 @@ yyreduce:
   case 404:
 
 /* Line 1806 of yacc.c  */
-#line 1381 "surface.yy"
+#line 1383 "surface.yy"
     { lexBubble(END_COMMAND, 0); }
     break;
 
   case 405:
 
 /* Line 1806 of yacc.c  */
-#line 1383 "surface.yy"
+#line 1385 "surface.yy"
     {
 			  if (interpreter.setCurrentModule(lexerBubble))
 			    interpreter.showSortsAndSubsorts();
@@ -5078,14 +5085,14 @@ yyreduce:
   case 406:
 
 /* Line 1806 of yacc.c  */
-#line 1387 "surface.yy"
+#line 1389 "surface.yy"
     { lexBubble(END_COMMAND, 0); }
     break;
 
   case 407:
 
 /* Line 1806 of yacc.c  */
-#line 1389 "surface.yy"
+#line 1391 "surface.yy"
     {
 			  if (interpreter.setCurrentModule(lexerBubble))
 			    interpreter.showOps();
@@ -5095,14 +5102,14 @@ yyreduce:
   case 408:
 
 /* Line 1806 of yacc.c  */
-#line 1393 "surface.yy"
+#line 1395 "surface.yy"
     { lexBubble(END_COMMAND, 0); }
     break;
 
   case 409:
 
 /* Line 1806 of yacc.c  */
-#line 1395 "surface.yy"
+#line 1397 "surface.yy"
     {
 			  if (interpreter.setCurrentModule(lexerBubble))
 			    interpreter.showVars();
@@ -5112,14 +5119,14 @@ yyreduce:
   case 410:
 
 /* Line 1806 of yacc.c  */
-#line 1399 "surface.yy"
+#line 1401 "surface.yy"
     { lexBubble(END_COMMAND, 0); }
     break;
 
   case 411:
 
 /* Line 1806 of yacc.c  */
-#line 1401 "surface.yy"
+#line 1403 "surface.yy"
     {
 			  if (interpreter.setCurrentModule(lexerBubble))
 			    interpreter.showMbs();
@@ -5129,14 +5136,14 @@ yyreduce:
   case 412:
 
 /* Line 1806 of yacc.c  */
-#line 1405 "surface.yy"
+#line 1407 "surface.yy"
     { lexBubble(END_COMMAND, 0); }
     break;
 
   case 413:
 
 /* Line 1806 of yacc.c  */
-#line 1407 "surface.yy"
+#line 1409 "surface.yy"
     {
 			  if (interpreter.setCurrentModule(lexerBubble))
 			    interpreter.showEqs();
@@ -5146,14 +5153,14 @@ yyreduce:
   case 414:
 
 /* Line 1806 of yacc.c  */
-#line 1411 "surface.yy"
+#line 1413 "surface.yy"
     { lexBubble(END_COMMAND, 0); }
     break;
 
   case 415:
 
 /* Line 1806 of yacc.c  */
-#line 1413 "surface.yy"
+#line 1415 "surface.yy"
     {
 			  if (interpreter.setCurrentModule(lexerBubble))
 			    interpreter.showRls();
@@ -5163,14 +5170,14 @@ yyreduce:
   case 416:
 
 /* Line 1806 of yacc.c  */
-#line 1417 "surface.yy"
+#line 1419 "surface.yy"
     { lexBubble(END_COMMAND, 0); }
     break;
 
   case 417:
 
 /* Line 1806 of yacc.c  */
-#line 1419 "surface.yy"
+#line 1421 "surface.yy"
     {
 			  if (interpreter.setCurrentModule(lexerBubble))
 			    interpreter.showSummary();
@@ -5180,14 +5187,14 @@ yyreduce:
   case 418:
 
 /* Line 1806 of yacc.c  */
-#line 1423 "surface.yy"
+#line 1425 "surface.yy"
     { lexBubble(END_COMMAND, 0); }
     break;
 
   case 419:
 
 /* Line 1806 of yacc.c  */
-#line 1425 "surface.yy"
+#line 1427 "surface.yy"
     {
 			  if (interpreter.setCurrentModule(lexerBubble))
 			    interpreter.showKinds();
@@ -5197,7 +5204,7 @@ yyreduce:
   case 420:
 
 /* Line 1806 of yacc.c  */
-#line 1430 "surface.yy"
+#line 1432 "surface.yy"
     {
 			  interpreter.showSearchPath((yyvsp[(3) - (4)].yyInt64));
 			}
@@ -5206,7 +5213,7 @@ yyreduce:
   case 421:
 
 /* Line 1806 of yacc.c  */
-#line 1434 "surface.yy"
+#line 1436 "surface.yy"
     {
 			  interpreter.showSearchPathLabels((yyvsp[(4) - (5)].yyInt64));
 			}
@@ -5215,7 +5222,7 @@ yyreduce:
   case 422:
 
 /* Line 1806 of yacc.c  */
-#line 1438 "surface.yy"
+#line 1440 "surface.yy"
     {
 			  interpreter.showSearchGraph();
 			}
@@ -5224,14 +5231,14 @@ yyreduce:
   case 423:
 
 /* Line 1806 of yacc.c  */
-#line 1441 "surface.yy"
+#line 1443 "surface.yy"
     { lexBubble(END_COMMAND, 0); }
     break;
 
   case 424:
 
 /* Line 1806 of yacc.c  */
-#line 1443 "surface.yy"
+#line 1445 "surface.yy"
     {
 			  if (interpreter.setCurrentModule(lexerBubble))
 			    interpreter.showProfile();
@@ -5241,7 +5248,7 @@ yyreduce:
   case 425:
 
 /* Line 1806 of yacc.c  */
-#line 1451 "surface.yy"
+#line 1453 "surface.yy"
     {
 			  globalAdvisoryFlag = alwaysAdviseFlag ? true : (yyvsp[(4) - (5)].yyBool);
 			}
@@ -5250,7 +5257,7 @@ yyreduce:
   case 426:
 
 /* Line 1806 of yacc.c  */
-#line 1455 "surface.yy"
+#line 1457 "surface.yy"
     {
 			  interpreter.setFlag(Interpreter::SHOW_STATS, (yyvsp[(4) - (5)].yyBool));
 			}
@@ -5259,7 +5266,7 @@ yyreduce:
   case 427:
 
 /* Line 1806 of yacc.c  */
-#line 1459 "surface.yy"
+#line 1461 "surface.yy"
     {
 			  interpreter.setFlag(Interpreter::SHOW_LOOP_STATS, (yyvsp[(5) - (6)].yyBool));
 			}
@@ -5268,7 +5275,7 @@ yyreduce:
   case 428:
 
 /* Line 1806 of yacc.c  */
-#line 1463 "surface.yy"
+#line 1465 "surface.yy"
     {
 			  interpreter.setFlag(Interpreter::SHOW_TIMING, (yyvsp[(4) - (5)].yyBool));
 			}
@@ -5277,7 +5284,7 @@ yyreduce:
   case 429:
 
 /* Line 1806 of yacc.c  */
-#line 1467 "surface.yy"
+#line 1469 "surface.yy"
     {
 			  interpreter.setFlag(Interpreter::SHOW_BREAKDOWN, (yyvsp[(4) - (5)].yyBool));
 			}
@@ -5286,7 +5293,7 @@ yyreduce:
   case 430:
 
 /* Line 1806 of yacc.c  */
-#line 1471 "surface.yy"
+#line 1473 "surface.yy"
     {
 			  interpreter.setFlag(Interpreter::SHOW_LOOP_TIMING, (yyvsp[(5) - (6)].yyBool));
 			}
@@ -5295,7 +5302,7 @@ yyreduce:
   case 431:
 
 /* Line 1806 of yacc.c  */
-#line 1475 "surface.yy"
+#line 1477 "surface.yy"
     {
 			  interpreter.setFlag(Interpreter::SHOW_COMMAND, (yyvsp[(4) - (5)].yyBool));
 			}
@@ -5304,7 +5311,7 @@ yyreduce:
   case 432:
 
 /* Line 1806 of yacc.c  */
-#line 1479 "surface.yy"
+#line 1481 "surface.yy"
     {
 			  MemoryCell::setShowGC((yyvsp[(4) - (5)].yyBool));
 			}
@@ -5313,7 +5320,7 @@ yyreduce:
   case 433:
 
 /* Line 1806 of yacc.c  */
-#line 1483 "surface.yy"
+#line 1485 "surface.yy"
     {
 			  interpreter.setPrintFlag((yyvsp[(3) - (5)].yyPrintFlags), (yyvsp[(4) - (5)].yyBool));
 			}
@@ -5322,7 +5329,7 @@ yyreduce:
   case 434:
 
 /* Line 1806 of yacc.c  */
-#line 1487 "surface.yy"
+#line 1489 "surface.yy"
     {
 			  interpreter.setFlag(Interpreter::PRINT_ATTRIBUTE, (yyvsp[(4) - (5)].yyBool));
 			}
@@ -5331,7 +5338,7 @@ yyreduce:
   case 435:
 
 /* Line 1806 of yacc.c  */
-#line 1491 "surface.yy"
+#line 1493 "surface.yy"
     {
 			  interpreter.setFlag(Interpreter::PRINT_ATTRIBUTE_NEWLINE, (yyvsp[(5) - (6)].yyBool));
 			}
@@ -5340,7 +5347,7 @@ yyreduce:
   case 436:
 
 /* Line 1806 of yacc.c  */
-#line 1495 "surface.yy"
+#line 1497 "surface.yy"
     {
 			  interpreter.setFlag((yyvsp[(3) - (5)].yyFlags), (yyvsp[(4) - (5)].yyBool));
 			}
@@ -5349,7 +5356,7 @@ yyreduce:
   case 437:
 
 /* Line 1806 of yacc.c  */
-#line 1499 "surface.yy"
+#line 1501 "surface.yy"
     {
 			  interpreter.setFlag(Interpreter::BREAK, (yyvsp[(3) - (4)].yyBool));
 			}
@@ -5358,21 +5365,21 @@ yyreduce:
   case 438:
 
 /* Line 1806 of yacc.c  */
-#line 1502 "surface.yy"
+#line 1504 "surface.yy"
     { lexerCmdMode(); }
     break;
 
   case 439:
 
 /* Line 1806 of yacc.c  */
-#line 1503 "surface.yy"
+#line 1505 "surface.yy"
     { lexerInitialMode(); }
     break;
 
   case 440:
 
 /* Line 1806 of yacc.c  */
-#line 1505 "surface.yy"
+#line 1507 "surface.yy"
     {
 			  interpreter.setAutoImport((yyvsp[(2) - (7)].yyImportMode), (yyvsp[(4) - (7)].yyToken), (yyvsp[(6) - (7)].yyBool));
 			}
@@ -5381,21 +5388,21 @@ yyreduce:
   case 441:
 
 /* Line 1806 of yacc.c  */
-#line 1508 "surface.yy"
+#line 1510 "surface.yy"
     { lexerCmdMode(); }
     break;
 
   case 442:
 
 /* Line 1806 of yacc.c  */
-#line 1509 "surface.yy"
+#line 1511 "surface.yy"
     { lexerInitialMode(); }
     break;
 
   case 443:
 
 /* Line 1806 of yacc.c  */
-#line 1511 "surface.yy"
+#line 1513 "surface.yy"
     {
 			  interpreter.setOmodInclude((yyvsp[(5) - (8)].yyToken), (yyvsp[(7) - (8)].yyBool));
 			}
@@ -5404,7 +5411,7 @@ yyreduce:
   case 444:
 
 /* Line 1806 of yacc.c  */
-#line 1515 "surface.yy"
+#line 1517 "surface.yy"
     {
 			  globalVerboseFlag = (yyvsp[(3) - (4)].yyBool);
 			}
@@ -5413,7 +5420,7 @@ yyreduce:
   case 445:
 
 /* Line 1806 of yacc.c  */
-#line 1519 "surface.yy"
+#line 1521 "surface.yy"
     {
 			  interpreter.setFlag(Interpreter::AUTO_CLEAR_MEMO, (yyvsp[(4) - (5)].yyBool));
 			}
@@ -5422,7 +5429,7 @@ yyreduce:
   case 446:
 
 /* Line 1806 of yacc.c  */
-#line 1523 "surface.yy"
+#line 1525 "surface.yy"
     {
 			  interpreter.setFlag(Interpreter::AUTO_CLEAR_RULES, (yyvsp[(4) - (5)].yyBool));
 			}
@@ -5431,7 +5438,7 @@ yyreduce:
   case 447:
 
 /* Line 1806 of yacc.c  */
-#line 1527 "surface.yy"
+#line 1529 "surface.yy"
     {
 			  interpreter.setFlag(Interpreter::COMPILE_COUNT, (yyvsp[(4) - (5)].yyBool));
 			}
@@ -5440,7 +5447,7 @@ yyreduce:
   case 448:
 
 /* Line 1806 of yacc.c  */
-#line 1531 "surface.yy"
+#line 1533 "surface.yy"
     {
 			  interpreter.setFlag(Interpreter::PROFILE, (yyvsp[(3) - (4)].yyBool));
 			}
@@ -5449,7 +5456,7 @@ yyreduce:
   case 449:
 
 /* Line 1806 of yacc.c  */
-#line 1535 "surface.yy"
+#line 1537 "surface.yy"
     {
 			  interpreter.setFlag(Interpreter::AUTO_CLEAR_PROFILE, (yyvsp[(4) - (5)].yyBool));
 			}
@@ -5458,7 +5465,7 @@ yyreduce:
   case 450:
 
 /* Line 1806 of yacc.c  */
-#line 1542 "surface.yy"
+#line 1544 "surface.yy"
     {
 			  PARSE_RESULT = UserLevelRewritingContext::RESUME;
 			}
@@ -5467,7 +5474,7 @@ yyreduce:
   case 451:
 
 /* Line 1806 of yacc.c  */
-#line 1546 "surface.yy"
+#line 1548 "surface.yy"
     {
 			  PARSE_RESULT = UserLevelRewritingContext::ABORT;
 			}
@@ -5476,7 +5483,7 @@ yyreduce:
   case 452:
 
 /* Line 1806 of yacc.c  */
-#line 1550 "surface.yy"
+#line 1552 "surface.yy"
     {
 			  PARSE_RESULT = UserLevelRewritingContext::STEP;
 			}
@@ -5485,7 +5492,7 @@ yyreduce:
   case 453:
 
 /* Line 1806 of yacc.c  */
-#line 1554 "surface.yy"
+#line 1556 "surface.yy"
     {
 			  PARSE_RESULT = UserLevelRewritingContext::WHERE;
 			}
@@ -5494,7 +5501,7 @@ yyreduce:
   case 454:
 
 /* Line 1806 of yacc.c  */
-#line 1561 "surface.yy"
+#line 1563 "surface.yy"
     {
 			  MemoryCell::setShowGC((yyvsp[(4) - (5)].yyBool));
 			}
@@ -5503,7 +5510,7 @@ yyreduce:
   case 455:
 
 /* Line 1806 of yacc.c  */
-#line 1565 "surface.yy"
+#line 1567 "surface.yy"
     {
 			  interpreter.setFlag(Interpreter::SHOW_STATS, (yyvsp[(3) - (4)].yyBool));
 			}
@@ -5512,448 +5519,448 @@ yyreduce:
   case 456:
 
 /* Line 1806 of yacc.c  */
-#line 1571 "surface.yy"
+#line 1573 "surface.yy"
     { lexerInitialMode(); }
     break;
 
   case 458:
 
 /* Line 1806 of yacc.c  */
-#line 1578 "surface.yy"
+#line 1580 "surface.yy"
     { (yyval.yyPrintFlags) = Interpreter::PRINT_MIXFIX; }
     break;
 
   case 459:
 
 /* Line 1806 of yacc.c  */
-#line 1579 "surface.yy"
+#line 1581 "surface.yy"
     { (yyval.yyPrintFlags) = Interpreter::PRINT_FLAT; }
     break;
 
   case 460:
 
 /* Line 1806 of yacc.c  */
-#line 1580 "surface.yy"
+#line 1582 "surface.yy"
     { (yyval.yyPrintFlags) = Interpreter::PRINT_WITH_ALIASES; }
     break;
 
   case 461:
 
 /* Line 1806 of yacc.c  */
-#line 1581 "surface.yy"
+#line 1583 "surface.yy"
     { (yyval.yyPrintFlags) = Interpreter::PRINT_WITH_PARENS; }
     break;
 
   case 462:
 
 /* Line 1806 of yacc.c  */
-#line 1582 "surface.yy"
+#line 1584 "surface.yy"
     { (yyval.yyPrintFlags) = Interpreter::PRINT_GRAPH; }
     break;
 
   case 463:
 
 /* Line 1806 of yacc.c  */
-#line 1583 "surface.yy"
+#line 1585 "surface.yy"
     { (yyval.yyPrintFlags) = Interpreter::PRINT_CONCEAL; }
     break;
 
   case 464:
 
 /* Line 1806 of yacc.c  */
-#line 1584 "surface.yy"
+#line 1586 "surface.yy"
     { (yyval.yyPrintFlags) = Interpreter::PRINT_NUMBER; }
     break;
 
   case 465:
 
 /* Line 1806 of yacc.c  */
-#line 1585 "surface.yy"
+#line 1587 "surface.yy"
     { (yyval.yyPrintFlags) = Interpreter::PRINT_RAT; }
     break;
 
   case 466:
 
 /* Line 1806 of yacc.c  */
-#line 1586 "surface.yy"
+#line 1588 "surface.yy"
     { (yyval.yyPrintFlags) = Interpreter::PRINT_COLOR; }
     break;
 
   case 467:
 
 /* Line 1806 of yacc.c  */
-#line 1587 "surface.yy"
+#line 1589 "surface.yy"
     { (yyval.yyPrintFlags) = Interpreter::PRINT_FORMAT; }
     break;
 
   case 468:
 
 /* Line 1806 of yacc.c  */
-#line 1590 "surface.yy"
+#line 1592 "surface.yy"
     { (yyval.yyFlags) = Interpreter::TRACE; }
     break;
 
   case 469:
 
 /* Line 1806 of yacc.c  */
-#line 1591 "surface.yy"
+#line 1593 "surface.yy"
     { (yyval.yyFlags) = Interpreter::TRACE_CONDITION; }
     break;
 
   case 470:
 
 /* Line 1806 of yacc.c  */
-#line 1592 "surface.yy"
+#line 1594 "surface.yy"
     { (yyval.yyFlags) = Interpreter::TRACE_WHOLE; }
     break;
 
   case 471:
 
 /* Line 1806 of yacc.c  */
-#line 1593 "surface.yy"
+#line 1595 "surface.yy"
     { (yyval.yyFlags) = Interpreter::TRACE_SUBSTITUTION; }
     break;
 
   case 472:
 
 /* Line 1806 of yacc.c  */
-#line 1594 "surface.yy"
+#line 1596 "surface.yy"
     { (yyval.yyFlags) = Interpreter::TRACE_SELECT; }
     break;
 
   case 473:
 
 /* Line 1806 of yacc.c  */
-#line 1595 "surface.yy"
+#line 1597 "surface.yy"
     { (yyval.yyFlags) = Interpreter::TRACE_MB; }
     break;
 
   case 474:
 
 /* Line 1806 of yacc.c  */
-#line 1596 "surface.yy"
+#line 1598 "surface.yy"
     { (yyval.yyFlags) = Interpreter::TRACE_EQ; }
     break;
 
   case 475:
 
 /* Line 1806 of yacc.c  */
-#line 1597 "surface.yy"
+#line 1599 "surface.yy"
     { (yyval.yyFlags) = Interpreter::TRACE_RL; }
     break;
 
   case 476:
 
 /* Line 1806 of yacc.c  */
-#line 1598 "surface.yy"
+#line 1600 "surface.yy"
     { (yyval.yyFlags) = Interpreter::TRACE_REWRITE; }
     break;
 
   case 477:
 
 /* Line 1806 of yacc.c  */
-#line 1599 "surface.yy"
+#line 1601 "surface.yy"
     { (yyval.yyFlags) = Interpreter::TRACE_BODY; }
     break;
 
   case 478:
 
 /* Line 1806 of yacc.c  */
-#line 1600 "surface.yy"
+#line 1602 "surface.yy"
     { (yyval.yyFlags) = Interpreter::TRACE_BUILTIN; }
     break;
 
   case 479:
 
 /* Line 1806 of yacc.c  */
-#line 1603 "surface.yy"
+#line 1605 "surface.yy"
     { (yyval.yyBool) = true; }
     break;
 
   case 480:
 
 /* Line 1806 of yacc.c  */
-#line 1604 "surface.yy"
+#line 1606 "surface.yy"
     { (yyval.yyBool) = false; }
     break;
 
   case 481:
 
 /* Line 1806 of yacc.c  */
-#line 1607 "surface.yy"
+#line 1609 "surface.yy"
     { (yyval.yyBool) = true; }
     break;
 
   case 482:
 
 /* Line 1806 of yacc.c  */
-#line 1608 "surface.yy"
+#line 1610 "surface.yy"
     { (yyval.yyBool) = false; }
     break;
 
   case 483:
 
 /* Line 1806 of yacc.c  */
-#line 1611 "surface.yy"
+#line 1613 "surface.yy"
     { (yyval.yyBool) = true; }
     break;
 
   case 484:
 
 /* Line 1806 of yacc.c  */
-#line 1612 "surface.yy"
+#line 1614 "surface.yy"
     { (yyval.yyBool) = false; }
     break;
 
   case 485:
 
 /* Line 1806 of yacc.c  */
-#line 1615 "surface.yy"
+#line 1617 "surface.yy"
     { (yyval.yyBool) = true; }
     break;
 
   case 486:
 
 /* Line 1806 of yacc.c  */
-#line 1616 "surface.yy"
+#line 1618 "surface.yy"
     { (yyval.yyBool) = false; }
     break;
 
   case 487:
 
 /* Line 1806 of yacc.c  */
-#line 1621 "surface.yy"
+#line 1623 "surface.yy"
     { (yyval.yySearchKind) = Interpreter::NARROW; }
     break;
 
   case 488:
 
 /* Line 1806 of yacc.c  */
-#line 1622 "surface.yy"
+#line 1624 "surface.yy"
     { (yyval.yySearchKind) = Interpreter::XG_NARROW; }
     break;
 
   case 489:
 
 /* Line 1806 of yacc.c  */
-#line 1623 "surface.yy"
+#line 1625 "surface.yy"
     { (yyval.yySearchKind) = Interpreter::SEARCH; }
     break;
 
   case 490:
 
 /* Line 1806 of yacc.c  */
-#line 1624 "surface.yy"
+#line 1626 "surface.yy"
     { (yyval.yySearchKind) = Interpreter::SMT_SEARCH; }
     break;
 
   case 491:
 
 /* Line 1806 of yacc.c  */
-#line 1627 "surface.yy"
+#line 1629 "surface.yy"
     { (yyval.yyBool) = true; }
     break;
 
   case 492:
 
 /* Line 1806 of yacc.c  */
-#line 1628 "surface.yy"
+#line 1630 "surface.yy"
     { (yyval.yyBool) = false; }
     break;
 
   case 493:
 
 /* Line 1806 of yacc.c  */
-#line 1631 "surface.yy"
+#line 1633 "surface.yy"
     { (yyval.yyBool) = true; }
     break;
 
   case 494:
 
 /* Line 1806 of yacc.c  */
-#line 1632 "surface.yy"
+#line 1634 "surface.yy"
     { (yyval.yyBool) = false; }
     break;
 
   case 495:
 
 /* Line 1806 of yacc.c  */
-#line 1635 "surface.yy"
+#line 1637 "surface.yy"
     { (yyval.yyBool) = true; }
     break;
 
   case 496:
 
 /* Line 1806 of yacc.c  */
-#line 1636 "surface.yy"
+#line 1638 "surface.yy"
     { (yyval.yyBool) = false; }
     break;
 
   case 497:
 
 /* Line 1806 of yacc.c  */
-#line 1639 "surface.yy"
+#line 1641 "surface.yy"
     { (yyval.yyInt64) = (yyvsp[(1) - (1)].yyInt64); }
     break;
 
   case 498:
 
 /* Line 1806 of yacc.c  */
-#line 1640 "surface.yy"
+#line 1642 "surface.yy"
     { (yyval.yyInt64) = NONE; }
     break;
 
   case 499:
 
 /* Line 1806 of yacc.c  */
-#line 1643 "surface.yy"
+#line 1645 "surface.yy"
     { (yyval.yyImportMode) = ImportModule::PROTECTING; }
     break;
 
   case 500:
 
 /* Line 1806 of yacc.c  */
-#line 1644 "surface.yy"
+#line 1646 "surface.yy"
     { (yyval.yyImportMode) = ImportModule::EXTENDING; }
     break;
 
   case 501:
 
 /* Line 1806 of yacc.c  */
-#line 1645 "surface.yy"
+#line 1647 "surface.yy"
     { (yyval.yyImportMode) = ImportModule::INCLUDING; }
     break;
 
   case 503:
 
 /* Line 1806 of yacc.c  */
-#line 1655 "surface.yy"
+#line 1657 "surface.yy"
     { lexBubble((yyvsp[(1) - (1)].yyToken), END_COMMAND, 0); }
     break;
 
   case 505:
 
 /* Line 1806 of yacc.c  */
-#line 1659 "surface.yy"
+#line 1661 "surface.yy"
     { moduleExpr = lexerBubble; lexBubble(END_COMMAND, 1); }
     break;
 
   case 508:
 
 /* Line 1806 of yacc.c  */
-#line 1671 "surface.yy"
+#line 1673 "surface.yy"
     { lexSave((yyvsp[(1) - (1)].yyToken)); }
     break;
 
   case 511:
 
 /* Line 1806 of yacc.c  */
-#line 1674 "surface.yy"
+#line 1676 "surface.yy"
     { lexBubble((yyvsp[(1) - (1)].yyToken), END_COMMAND, 0);  }
     break;
 
   case 513:
 
 /* Line 1806 of yacc.c  */
-#line 1679 "surface.yy"
+#line 1681 "surface.yy"
     { lexContinueSave((yyvsp[(1) - (1)].yyToken)); }
     break;
 
   case 515:
 
 /* Line 1806 of yacc.c  */
-#line 1681 "surface.yy"
+#line 1683 "surface.yy"
     { lexContinueBubble((yyvsp[(1) - (1)].yyToken), END_COMMAND, 0); }
     break;
 
   case 518:
 
 /* Line 1806 of yacc.c  */
-#line 1687 "surface.yy"
+#line 1689 "surface.yy"
     { number = Token::codeToInt64(lexerBubble[1].code()); }
     break;
 
   case 520:
 
 /* Line 1806 of yacc.c  */
-#line 1689 "surface.yy"
+#line 1691 "surface.yy"
     { lexContinueBubble((yyvsp[(1) - (1)].yyToken), END_COMMAND, 0); }
     break;
 
   case 523:
 
 /* Line 1806 of yacc.c  */
-#line 1704 "surface.yy"
+#line 1706 "surface.yy"
     { lexSave((yyvsp[(1) - (1)].yyToken)); }
     break;
 
   case 526:
 
 /* Line 1806 of yacc.c  */
-#line 1707 "surface.yy"
+#line 1709 "surface.yy"
     { lexBubble((yyvsp[(1) - (1)].yyToken), END_COMMAND, 0); }
     break;
 
   case 528:
 
 /* Line 1806 of yacc.c  */
-#line 1716 "surface.yy"
+#line 1718 "surface.yy"
     { lexContinueSave((yyvsp[(1) - (1)].yyToken)); }
     break;
 
   case 530:
 
 /* Line 1806 of yacc.c  */
-#line 1718 "surface.yy"
+#line 1720 "surface.yy"
     { lexContinueSave((yyvsp[(1) - (1)].yyToken)); }
     break;
 
   case 532:
 
 /* Line 1806 of yacc.c  */
-#line 1720 "surface.yy"
+#line 1722 "surface.yy"
     { lexContinueBubble((yyvsp[(1) - (1)].yyToken), END_COMMAND, 0); }
     break;
 
   case 535:
 
 /* Line 1806 of yacc.c  */
-#line 1730 "surface.yy"
+#line 1732 "surface.yy"
     { number = Token::codeToInt64(lexerBubble[1].code()); }
     break;
 
   case 537:
 
 /* Line 1806 of yacc.c  */
-#line 1732 "surface.yy"
+#line 1734 "surface.yy"
     { lexContinueSave((yyvsp[(1) - (1)].yyToken)); }
     break;
 
   case 539:
 
 /* Line 1806 of yacc.c  */
-#line 1734 "surface.yy"
+#line 1736 "surface.yy"
     { lexContinueBubble((yyvsp[(1) - (1)].yyToken), END_COMMAND, 0); }
     break;
 
   case 542:
 
 /* Line 1806 of yacc.c  */
-#line 1744 "surface.yy"
+#line 1746 "surface.yy"
     { lexContinueSave((yyvsp[(1) - (1)].yyToken)); }
     break;
 
   case 544:
 
 /* Line 1806 of yacc.c  */
-#line 1746 "surface.yy"
+#line 1748 "surface.yy"
     { lexContinueBubble((yyvsp[(1) - (1)].yyToken), END_COMMAND, 0); }
     break;
 
   case 547:
 
 /* Line 1806 of yacc.c  */
-#line 1757 "surface.yy"
+#line 1759 "surface.yy"
     {
 			  number = Token::codeToInt64(lexerBubble[1].code());
 			  number2 = Token::codeToInt64(lexerBubble[3].code());
@@ -5964,63 +5971,63 @@ yyreduce:
   case 549:
 
 /* Line 1806 of yacc.c  */
-#line 1763 "surface.yy"
+#line 1765 "surface.yy"
     { lexContinueBubble((yyvsp[(1) - (1)].yyToken), END_COMMAND, 0); }
     break;
 
   case 552:
 
 /* Line 1806 of yacc.c  */
-#line 1773 "surface.yy"
+#line 1775 "surface.yy"
     { lexContinueSave((yyvsp[(1) - (1)].yyToken)); }
     break;
 
   case 554:
 
 /* Line 1806 of yacc.c  */
-#line 1775 "surface.yy"
+#line 1777 "surface.yy"
     { lexContinueBubble((yyvsp[(1) - (1)].yyToken), END_COMMAND, 0); }
     break;
 
   case 557:
 
 /* Line 1806 of yacc.c  */
-#line 1785 "surface.yy"
+#line 1787 "surface.yy"
     { number2 = Token::codeToInt64(lexerBubble[2].code()); }
     break;
 
   case 559:
 
 /* Line 1806 of yacc.c  */
-#line 1787 "surface.yy"
+#line 1789 "surface.yy"
     { lexContinueBubble((yyvsp[(1) - (1)].yyToken), END_COMMAND, 0); }
     break;
 
   case 562:
 
 /* Line 1806 of yacc.c  */
-#line 1792 "surface.yy"
+#line 1794 "surface.yy"
     { lexContinueBubble((yyvsp[(1) - (1)].yyToken), END_COMMAND, 0, 1); }
     break;
 
   case 565:
 
 /* Line 1806 of yacc.c  */
-#line 1798 "surface.yy"
+#line 1800 "surface.yy"
     { lexBubble((yyvsp[(1) - (1)].yyToken), END_COMMAND, 1, 1); }
     break;
 
   case 567:
 
 /* Line 1806 of yacc.c  */
-#line 1800 "surface.yy"
+#line 1802 "surface.yy"
     { lexBubble((yyvsp[(1) - (1)].yyToken), BAR_COLON | END_COMMAND, 0); }
     break;
 
   case 569:
 
 /* Line 1806 of yacc.c  */
-#line 1803 "surface.yy"
+#line 1805 "surface.yy"
     {
 			  lexerBubble.resize(1);
 			  lexerBubble[0].dropChar((yyvsp[(1) - (1)].yyToken));
@@ -6031,14 +6038,14 @@ yyreduce:
   case 607:
 
 /* Line 1806 of yacc.c  */
-#line 1842 "surface.yy"
+#line 1844 "surface.yy"
     {}
     break;
 
   case 609:
 
 /* Line 1806 of yacc.c  */
-#line 1847 "surface.yy"
+#line 1849 "surface.yy"
     {
 			  singleton[0].dropChar((yyvsp[(1) - (1)].yyToken));
 			  missingSpace(singleton[0]);
@@ -6049,7 +6056,7 @@ yyreduce:
   case 612:
 
 /* Line 1806 of yacc.c  */
-#line 1858 "surface.yy"
+#line 1860 "surface.yy"
     {
 			  singleton[0] = (yyvsp[(1) - (1)].yyToken);
 			  interpreter.addSelected(singleton);
@@ -6059,7 +6066,7 @@ yyreduce:
   case 613:
 
 /* Line 1806 of yacc.c  */
-#line 1863 "surface.yy"
+#line 1865 "surface.yy"
     {
 			  interpreter.addSelected(lexerBubble);
 			}
@@ -6068,7 +6075,7 @@ yyreduce:
 
 
 /* Line 1806 of yacc.c  */
-#line 6072 "surface.c"
+#line 6079 "surface.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -6118,7 +6125,7 @@ yyerrlab:
     {
       ++yynerrs;
 #if ! YYERROR_VERBOSE
-      yyerror (YY_("syntax error"));
+      yyerror (parseResult, YY_("syntax error"));
 #else
 # define YYSYNTAX_ERROR yysyntax_error (&yymsg_alloc, &yymsg, \
                                         yyssp, yytoken)
@@ -6145,7 +6152,7 @@ yyerrlab:
                 yymsgp = yymsg;
               }
           }
-        yyerror (yymsgp);
+        yyerror (parseResult, yymsgp);
         if (yysyntax_error_status == 2)
           goto yyexhaustedlab;
       }
@@ -6169,7 +6176,7 @@ yyerrlab:
       else
 	{
 	  yydestruct ("Error: discarding",
-		      yytoken, &yylval);
+		      yytoken, &yylval, parseResult);
 	  yychar = YYEMPTY;
 	}
     }
@@ -6225,7 +6232,7 @@ yyerrlab1:
 
 
       yydestruct ("Error: popping",
-		  yystos[yystate], yyvsp);
+		  yystos[yystate], yyvsp, parseResult);
       YYPOPSTACK (1);
       yystate = *yyssp;
       YY_STACK_PRINT (yyss, yyssp);
@@ -6260,7 +6267,7 @@ yyabortlab:
 | yyexhaustedlab -- memory exhaustion comes here.  |
 `-------------------------------------------------*/
 yyexhaustedlab:
-  yyerror (YY_("memory exhausted"));
+  yyerror (parseResult, YY_("memory exhausted"));
   yyresult = 2;
   /* Fall through.  */
 #endif
@@ -6272,7 +6279,7 @@ yyreturn:
          user semantic actions for why this is necessary.  */
       yytoken = YYTRANSLATE (yychar);
       yydestruct ("Cleanup: discarding lookahead",
-                  yytoken, &yylval);
+                  yytoken, &yylval, parseResult);
     }
   /* Do not reclaim the symbols of the rule which action triggered
      this YYABORT or YYACCEPT.  */
@@ -6281,7 +6288,7 @@ yyreturn:
   while (yyssp != yyss)
     {
       yydestruct ("Cleanup: popping",
-		  yystos[*yyssp], yyvsp);
+		  yystos[*yyssp], yyvsp, parseResult);
       YYPOPSTACK (1);
     }
 #ifndef yyoverflow
@@ -6299,11 +6306,11 @@ yyreturn:
 
 
 /* Line 2067 of yacc.c  */
-#line 1893 "surface.yy"
+#line 1895 "surface.yy"
 
 
 static void
-yyerror(char *s)
+yyerror(UserLevelRewritingContext::ParseResult* /*parseResult*/, char *s)
 {
   if (!(UserLevelRewritingContext::interrupted()))
     IssueWarning(LineNumber(lineNumber) << ": " << s);

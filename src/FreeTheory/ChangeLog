@@ -1,3 +1,16 @@
+2015-09-18  Steven Eker  <eker@ape.csl.sri.com>
+
+	* freeArgumentIterator.hh (_freeArgumentIterator_hh_): fixed
+	define guard
+
+2015-08-07  Steven Eker  <eker@ape.csl.sri.com>
+
+	* freeSymbol.hh (Symbol): added dec for unificationPriority()
+
+	* freeSymbol.cc (unificationPriority): added
+
+===================================Maude108===========================================
+
 2014-02-13  Steven Eker  <eker@ape.csl.sri.com>
 
 	* freeRhsAutomaton.cc (recordInfo): don't pass needContiguous

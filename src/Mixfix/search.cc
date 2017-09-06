@@ -482,6 +482,8 @@ Interpreter::getVariants(const Vector<Token>& bubble, Int64 limit, bool irredund
       if (counter != limit)
 	{
 	  cout << ((counter == 0) ? "No variants.\n" : "No more variants.\n");
+	  if (vs.isIncomplete())
+	    IssueWarning("Some variants may have been missed due to incomplete unification algorithm(s).");
 	  if (!irredundant)
 	    printStats(timer, *context, getFlag(SHOW_TIMING));
 	}
@@ -575,6 +577,8 @@ Interpreter::variantUnify(const Vector<Token>& bubble, Int64 limit, bool debug)
       if (counter != limit)
 	{
 	  cout << ((counter == 0) ? "No unifiers.\n" : "No more unifiers.\n");
+	  if (vs.isIncomplete())
+	    IssueWarning("Some unifiers may have been missed due to incomplete unification algorithm(s).");
 	  printStats(timer, *context, getFlag(SHOW_TIMING));
 	}
     }

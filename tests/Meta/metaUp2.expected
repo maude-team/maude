@@ -793,7 +793,12 @@ op 'metaReduce : '`[Module`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,Paramet
     op-hook('failure4Symbol, 'failure, nil, 'Result4Tuple?) 
     op-hook('noUnifierPairSymbol, 'noUnifier, nil, 'UnificationPair?) 
     op-hook('noUnifierTripleSymbol, 'noUnifier, nil, 'UnificationTriple?) 
+    op-hook('noUnifierIncompletePairSymbol, 'noUnifierIncomplete, nil,
+    'UnificationPair?) 
+    op-hook('noUnifierIncompleteTripleSymbol, 'noUnifierIncomplete, nil,
+    'UnificationTriple?) 
     op-hook('noVariantSymbol, 'noVariant, nil, 'Variant?) 
+    op-hook('noVariantIncompleteSymbol, 'noVariantIncomplete, nil, 'Variant?) 
     op-hook('noMatchSubstSymbol, 'noMatch, nil, 'Substitution?) 
     op-hook('noMatchPairSymbol, 'noMatch, nil, 'MatchPair?) 
     op-hook('failureTraceSymbol, 'failure, nil, 'Trace?) 
@@ -884,7 +889,10 @@ op 'noMatch : nil -> 'Substitution? [ctor] .
 op 'noParse : 'Nat -> 'ResultPair? [ctor] .
 op 'noUnifier : nil -> 'UnificationPair? [ctor] .
 op 'noUnifier : nil -> 'UnificationTriple? [ctor] .
+op 'noUnifierIncomplete : nil -> 'UnificationPair? [ctor] .
+op 'noUnifierIncomplete : nil -> 'UnificationTriple? [ctor] .
 op 'noVariant : nil -> 'Variant? [ctor] .
+op 'noVariantIncomplete : nil -> 'Variant? [ctor] .
 op 'none : nil -> 'AttrSet [ctor] .
 op 'none : nil -> 'EmptyTypeSet [ctor] .
 op 'none : nil -> 'EquationSet [ctor] .
@@ -1295,7 +1303,12 @@ op 'metaReduce : '`[Module`] '`[QidSet`,QidList`,TypeListSet`,GTermList`,Paramet
     op-hook('failure4Symbol, 'failure, nil, 'Result4Tuple?) 
     op-hook('noUnifierPairSymbol, 'noUnifier, nil, 'UnificationPair?) 
     op-hook('noUnifierTripleSymbol, 'noUnifier, nil, 'UnificationTriple?) 
+    op-hook('noUnifierIncompletePairSymbol, 'noUnifierIncomplete, nil,
+    'UnificationPair?) 
+    op-hook('noUnifierIncompleteTripleSymbol, 'noUnifierIncomplete, nil,
+    'UnificationTriple?) 
     op-hook('noVariantSymbol, 'noVariant, nil, 'Variant?) 
+    op-hook('noVariantIncompleteSymbol, 'noVariantIncomplete, nil, 'Variant?) 
     op-hook('noMatchSubstSymbol, 'noMatch, nil, 'Substitution?) 
     op-hook('noMatchPairSymbol, 'noMatch, nil, 'MatchPair?) 
     op-hook('failureTraceSymbol, 'failure, nil, 'Trace?) 
@@ -1362,7 +1375,10 @@ op 'noMatch : nil -> 'Substitution? [ctor] .
 op 'noParse : 'Nat -> 'ResultPair? [ctor] .
 op 'noUnifier : nil -> 'UnificationPair? [ctor] .
 op 'noUnifier : nil -> 'UnificationTriple? [ctor] .
+op 'noUnifierIncomplete : nil -> 'UnificationPair? [ctor] .
+op 'noUnifierIncomplete : nil -> 'UnificationTriple? [ctor] .
 op 'noVariant : nil -> 'Variant? [ctor] .
+op 'noVariantIncomplete : nil -> 'Variant? [ctor] .
 op 'none : nil -> 'PrintOptionSet [ctor] .
 op 'number : nil -> 'PrintOption [ctor] .
 op 'rat : nil -> 'PrintOption [ctor] .
@@ -2159,7 +2175,12 @@ result FModule: fmod 'META-LEVEL is
     op-hook('failure4Symbol, 'failure, nil, 'Result4Tuple?) 
     op-hook('noUnifierPairSymbol, 'noUnifier, nil, 'UnificationPair?) 
     op-hook('noUnifierTripleSymbol, 'noUnifier, nil, 'UnificationTriple?) 
+    op-hook('noUnifierIncompletePairSymbol, 'noUnifierIncomplete, nil,
+    'UnificationPair?) 
+    op-hook('noUnifierIncompleteTripleSymbol, 'noUnifierIncomplete, nil,
+    'UnificationTriple?) 
     op-hook('noVariantSymbol, 'noVariant, nil, 'Variant?) 
+    op-hook('noVariantIncompleteSymbol, 'noVariantIncomplete, nil, 'Variant?) 
     op-hook('noMatchSubstSymbol, 'noMatch, nil, 'Substitution?) 
     op-hook('noMatchPairSymbol, 'noMatch, nil, 'MatchPair?) 
     op-hook('failureTraceSymbol, 'failure, nil, 'Trace?) 
@@ -2249,7 +2270,10 @@ result FModule: fmod 'META-LEVEL is
   op 'noParse : 'Nat -> 'ResultPair? [ctor] .
   op 'noUnifier : nil -> 'UnificationPair? [ctor] .
   op 'noUnifier : nil -> 'UnificationTriple? [ctor] .
+  op 'noUnifierIncomplete : nil -> 'UnificationPair? [ctor] .
+  op 'noUnifierIncomplete : nil -> 'UnificationTriple? [ctor] .
   op 'noVariant : nil -> 'Variant? [ctor] .
+  op 'noVariantIncomplete : nil -> 'Variant? [ctor] .
   op 'none : nil -> 'AttrSet [ctor] .
   op 'none : nil -> 'EmptyTypeSet [ctor] .
   op 'none : nil -> 'EquationSet [ctor] .
@@ -2928,7 +2952,12 @@ result FModule: fmod 'META-LEVEL is
     op-hook('failure4Symbol, 'failure, nil, 'Result4Tuple?) 
     op-hook('noUnifierPairSymbol, 'noUnifier, nil, 'UnificationPair?) 
     op-hook('noUnifierTripleSymbol, 'noUnifier, nil, 'UnificationTriple?) 
+    op-hook('noUnifierIncompletePairSymbol, 'noUnifierIncomplete, nil,
+    'UnificationPair?) 
+    op-hook('noUnifierIncompleteTripleSymbol, 'noUnifierIncomplete, nil,
+    'UnificationTriple?) 
     op-hook('noVariantSymbol, 'noVariant, nil, 'Variant?) 
+    op-hook('noVariantIncompleteSymbol, 'noVariantIncomplete, nil, 'Variant?) 
     op-hook('noMatchSubstSymbol, 'noMatch, nil, 'Substitution?) 
     op-hook('noMatchPairSymbol, 'noMatch, nil, 'MatchPair?) 
     op-hook('failureTraceSymbol, 'failure, nil, 'Trace?) 
@@ -2994,7 +3023,10 @@ result FModule: fmod 'META-LEVEL is
   op 'noParse : 'Nat -> 'ResultPair? [ctor] .
   op 'noUnifier : nil -> 'UnificationPair? [ctor] .
   op 'noUnifier : nil -> 'UnificationTriple? [ctor] .
+  op 'noUnifierIncomplete : nil -> 'UnificationPair? [ctor] .
+  op 'noUnifierIncomplete : nil -> 'UnificationTriple? [ctor] .
   op 'noVariant : nil -> 'Variant? [ctor] .
+  op 'noVariantIncomplete : nil -> 'Variant? [ctor] .
   op 'none : nil -> 'PrintOptionSet [ctor] .
   op 'number : nil -> 'PrintOption [ctor] .
   op 'rat : nil -> 'PrintOption [ctor] .
@@ -4173,7 +4205,12 @@ result FModule: fmod 'META-LEVEL is
     op-hook('failure4Symbol, 'failure, nil, 'Result4Tuple?) 
     op-hook('noUnifierPairSymbol, 'noUnifier, nil, 'UnificationPair?) 
     op-hook('noUnifierTripleSymbol, 'noUnifier, nil, 'UnificationTriple?) 
+    op-hook('noUnifierIncompletePairSymbol, 'noUnifierIncomplete, nil,
+    'UnificationPair?) 
+    op-hook('noUnifierIncompleteTripleSymbol, 'noUnifierIncomplete, nil,
+    'UnificationTriple?) 
     op-hook('noVariantSymbol, 'noVariant, nil, 'Variant?) 
+    op-hook('noVariantIncompleteSymbol, 'noVariantIncomplete, nil, 'Variant?) 
     op-hook('noMatchSubstSymbol, 'noMatch, nil, 'Substitution?) 
     op-hook('noMatchPairSymbol, 'noMatch, nil, 'MatchPair?) 
     op-hook('failureTraceSymbol, 'failure, nil, 'Trace?) 
@@ -4263,7 +4300,10 @@ result FModule: fmod 'META-LEVEL is
   op 'noParse : 'Nat -> 'ResultPair? [ctor] .
   op 'noUnifier : nil -> 'UnificationPair? [ctor] .
   op 'noUnifier : nil -> 'UnificationTriple? [ctor] .
+  op 'noUnifierIncomplete : nil -> 'UnificationPair? [ctor] .
+  op 'noUnifierIncomplete : nil -> 'UnificationTriple? [ctor] .
   op 'noVariant : nil -> 'Variant? [ctor] .
+  op 'noVariantIncomplete : nil -> 'Variant? [ctor] .
   op 'none : nil -> 'AttrSet [ctor] .
   op 'none : nil -> 'EmptyTypeSet [ctor] .
   op 'none : nil -> 'EquationSet [ctor] .
@@ -5708,20 +5748,26 @@ result ResultPair: {'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,
     'op-hook[''noUnifierPairSymbol.Sort,''noUnifier.Sort,'nil.TypeList,
     ''UnificationPair?.Sort],'op-hook[''noUnifierTripleSymbol.Sort,
     ''noUnifier.Sort,'nil.TypeList,''UnificationTriple?.Sort],'op-hook[
-    ''noVariantSymbol.Sort,''noVariant.Sort,'nil.TypeList,''Variant?.Sort],
-    'op-hook[''noMatchSubstSymbol.Sort,''noMatch.Sort,'nil.TypeList,
-    ''Substitution?.Sort],'op-hook[''noMatchPairSymbol.Sort,''noMatch.Sort,
-    'nil.TypeList,''MatchPair?.Sort],'op-hook[''failureTraceSymbol.Sort,
-    ''failure.Sort,'nil.TypeList,''Trace?.Sort],'op-hook[
-    ''smtFailureSymbol.Sort,''failure.Sort,'nil.TypeList,''SmtResult?.Sort],
-    'op-hook[''mixfixSymbol.Sort,''mixfix.Sort,'nil.TypeList,
-    ''PrintOption.Sort],'op-hook[''withParensSymbol.Sort,''with-parens.Sort,
-    'nil.TypeList,''PrintOption.Sort],'op-hook[''flatSymbol.Sort,''flat.Sort,
-    'nil.TypeList,''PrintOption.Sort],'op-hook[''formatPrintOptionSymbol.Sort,
-    ''format.Sort,'nil.TypeList,''PrintOption.Sort],'op-hook[
-    ''numberSymbol.Sort,''number.Sort,'nil.TypeList,''PrintOption.Sort],
-    'op-hook[''ratSymbol.Sort,''rat.Sort,'nil.TypeList,''PrintOption.Sort],
-    'op-hook[''emptyPrintOptionSetSymbol.Sort,''none.Sort,'nil.TypeList,
+    ''noUnifierIncompletePairSymbol.Sort,''noUnifierIncomplete.Sort,
+    'nil.TypeList,''UnificationPair?.Sort],'op-hook[
+    ''noUnifierIncompleteTripleSymbol.Sort,''noUnifierIncomplete.Sort,
+    'nil.TypeList,''UnificationTriple?.Sort],'op-hook[''noVariantSymbol.Sort,
+    ''noVariant.Sort,'nil.TypeList,''Variant?.Sort],'op-hook[
+    ''noVariantIncompleteSymbol.Sort,''noVariantIncomplete.Sort,'nil.TypeList,
+    ''Variant?.Sort],'op-hook[''noMatchSubstSymbol.Sort,''noMatch.Sort,
+    'nil.TypeList,''Substitution?.Sort],'op-hook[''noMatchPairSymbol.Sort,
+    ''noMatch.Sort,'nil.TypeList,''MatchPair?.Sort],'op-hook[
+    ''failureTraceSymbol.Sort,''failure.Sort,'nil.TypeList,''Trace?.Sort],
+    'op-hook[''smtFailureSymbol.Sort,''failure.Sort,'nil.TypeList,
+    ''SmtResult?.Sort],'op-hook[''mixfixSymbol.Sort,''mixfix.Sort,
+    'nil.TypeList,''PrintOption.Sort],'op-hook[''withParensSymbol.Sort,
+    ''with-parens.Sort,'nil.TypeList,''PrintOption.Sort],'op-hook[
+    ''flatSymbol.Sort,''flat.Sort,'nil.TypeList,''PrintOption.Sort],'op-hook[
+    ''formatPrintOptionSymbol.Sort,''format.Sort,'nil.TypeList,
+    ''PrintOption.Sort],'op-hook[''numberSymbol.Sort,''number.Sort,
+    'nil.TypeList,''PrintOption.Sort],'op-hook[''ratSymbol.Sort,''rat.Sort,
+    'nil.TypeList,''PrintOption.Sort],'op-hook[
+    ''emptyPrintOptionSetSymbol.Sort,''none.Sort,'nil.TypeList,
     ''PrintOptionSet.Sort],'op-hook[''printOptionSetSymbol.Sort,''__.Sort,'__[
     ''PrintOptionSet.Sort,''PrintOptionSet.Sort],''PrintOptionSet.Sort],
     'term-hook[''trueTerm.Sort,''true.Bool.Constant],'term-hook[
@@ -5825,14 +5871,18 @@ result ResultPair: {'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,
     ''noParse.Sort,''Nat.Sort,''ResultPair?.Sort,'ctor.Attr],'op_:_->_`[_`].[
     ''noUnifier.Sort,'nil.TypeList,''UnificationPair?.Sort,'ctor.Attr],
     'op_:_->_`[_`].[''noUnifier.Sort,'nil.TypeList,''UnificationTriple?.Sort,
+    'ctor.Attr],'op_:_->_`[_`].[''noUnifierIncomplete.Sort,'nil.TypeList,
+    ''UnificationPair?.Sort,'ctor.Attr],'op_:_->_`[_`].[
+    ''noUnifierIncomplete.Sort,'nil.TypeList,''UnificationTriple?.Sort,
     'ctor.Attr],'op_:_->_`[_`].[''noVariant.Sort,'nil.TypeList,''Variant?.Sort,
-    'ctor.Attr],'op_:_->_`[_`].[''none.Sort,'nil.TypeList,''AttrSet.Sort,
-    'ctor.Attr],'op_:_->_`[_`].[''none.Sort,'nil.TypeList,''EmptyTypeSet.Sort,
-    'ctor.Attr],'op_:_->_`[_`].[''none.Sort,'nil.TypeList,''EquationSet.Sort,
-    'ctor.Attr],'op_:_->_`[_`].[''none.Sort,'nil.TypeList,''MembAxSet.Sort,
-    'ctor.Attr],'op_:_->_`[_`].[''none.Sort,'nil.TypeList,''OpDeclSet.Sort,
-    'ctor.Attr],'op_:_->_`[_`].[''none.Sort,'nil.TypeList,''OpMappingSet.Sort,
-    'ctor.Attr],'op_:_->_`[_`].[''none.Sort,'nil.TypeList,
+    'ctor.Attr],'op_:_->_`[_`].[''noVariantIncomplete.Sort,'nil.TypeList,
+    ''Variant?.Sort,'ctor.Attr],'op_:_->_`[_`].[''none.Sort,'nil.TypeList,
+    ''AttrSet.Sort,'ctor.Attr],'op_:_->_`[_`].[''none.Sort,'nil.TypeList,
+    ''EmptyTypeSet.Sort,'ctor.Attr],'op_:_->_`[_`].[''none.Sort,'nil.TypeList,
+    ''EquationSet.Sort,'ctor.Attr],'op_:_->_`[_`].[''none.Sort,'nil.TypeList,
+    ''MembAxSet.Sort,'ctor.Attr],'op_:_->_`[_`].[''none.Sort,'nil.TypeList,
+    ''OpDeclSet.Sort,'ctor.Attr],'op_:_->_`[_`].[''none.Sort,'nil.TypeList,
+    ''OpMappingSet.Sort,'ctor.Attr],'op_:_->_`[_`].[''none.Sort,'nil.TypeList,
     ''PrintOptionSet.Sort,'ctor.Attr],'op_:_->_`[_`].[''none.Sort,
     'nil.TypeList,''QidSet.Sort,'ctor.Attr],'op_:_->_`[_`].[''none.Sort,
     'nil.TypeList,''RuleSet.Sort,'ctor.Attr],'op_:_->_`[_`].[''none.Sort,
@@ -7287,20 +7337,26 @@ result GroundTerm: 'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,'nil.ImportList,
     'op-hook[''noUnifierPairSymbol.Sort,''noUnifier.Sort,'nil.TypeList,
     ''UnificationPair?.Sort],'op-hook[''noUnifierTripleSymbol.Sort,
     ''noUnifier.Sort,'nil.TypeList,''UnificationTriple?.Sort],'op-hook[
-    ''noVariantSymbol.Sort,''noVariant.Sort,'nil.TypeList,''Variant?.Sort],
-    'op-hook[''noMatchSubstSymbol.Sort,''noMatch.Sort,'nil.TypeList,
-    ''Substitution?.Sort],'op-hook[''noMatchPairSymbol.Sort,''noMatch.Sort,
-    'nil.TypeList,''MatchPair?.Sort],'op-hook[''failureTraceSymbol.Sort,
-    ''failure.Sort,'nil.TypeList,''Trace?.Sort],'op-hook[
-    ''smtFailureSymbol.Sort,''failure.Sort,'nil.TypeList,''SmtResult?.Sort],
-    'op-hook[''mixfixSymbol.Sort,''mixfix.Sort,'nil.TypeList,
-    ''PrintOption.Sort],'op-hook[''withParensSymbol.Sort,''with-parens.Sort,
-    'nil.TypeList,''PrintOption.Sort],'op-hook[''flatSymbol.Sort,''flat.Sort,
-    'nil.TypeList,''PrintOption.Sort],'op-hook[''formatPrintOptionSymbol.Sort,
-    ''format.Sort,'nil.TypeList,''PrintOption.Sort],'op-hook[
-    ''numberSymbol.Sort,''number.Sort,'nil.TypeList,''PrintOption.Sort],
-    'op-hook[''ratSymbol.Sort,''rat.Sort,'nil.TypeList,''PrintOption.Sort],
-    'op-hook[''emptyPrintOptionSetSymbol.Sort,''none.Sort,'nil.TypeList,
+    ''noUnifierIncompletePairSymbol.Sort,''noUnifierIncomplete.Sort,
+    'nil.TypeList,''UnificationPair?.Sort],'op-hook[
+    ''noUnifierIncompleteTripleSymbol.Sort,''noUnifierIncomplete.Sort,
+    'nil.TypeList,''UnificationTriple?.Sort],'op-hook[''noVariantSymbol.Sort,
+    ''noVariant.Sort,'nil.TypeList,''Variant?.Sort],'op-hook[
+    ''noVariantIncompleteSymbol.Sort,''noVariantIncomplete.Sort,'nil.TypeList,
+    ''Variant?.Sort],'op-hook[''noMatchSubstSymbol.Sort,''noMatch.Sort,
+    'nil.TypeList,''Substitution?.Sort],'op-hook[''noMatchPairSymbol.Sort,
+    ''noMatch.Sort,'nil.TypeList,''MatchPair?.Sort],'op-hook[
+    ''failureTraceSymbol.Sort,''failure.Sort,'nil.TypeList,''Trace?.Sort],
+    'op-hook[''smtFailureSymbol.Sort,''failure.Sort,'nil.TypeList,
+    ''SmtResult?.Sort],'op-hook[''mixfixSymbol.Sort,''mixfix.Sort,
+    'nil.TypeList,''PrintOption.Sort],'op-hook[''withParensSymbol.Sort,
+    ''with-parens.Sort,'nil.TypeList,''PrintOption.Sort],'op-hook[
+    ''flatSymbol.Sort,''flat.Sort,'nil.TypeList,''PrintOption.Sort],'op-hook[
+    ''formatPrintOptionSymbol.Sort,''format.Sort,'nil.TypeList,
+    ''PrintOption.Sort],'op-hook[''numberSymbol.Sort,''number.Sort,
+    'nil.TypeList,''PrintOption.Sort],'op-hook[''ratSymbol.Sort,''rat.Sort,
+    'nil.TypeList,''PrintOption.Sort],'op-hook[
+    ''emptyPrintOptionSetSymbol.Sort,''none.Sort,'nil.TypeList,
     ''PrintOptionSet.Sort],'op-hook[''printOptionSetSymbol.Sort,''__.Sort,'__[
     ''PrintOptionSet.Sort,''PrintOptionSet.Sort],''PrintOptionSet.Sort],
     'term-hook[''trueTerm.Sort,''true.Bool.Constant],'term-hook[
@@ -7404,14 +7460,18 @@ result GroundTerm: 'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,'nil.ImportList,
     ''noParse.Sort,''Nat.Sort,''ResultPair?.Sort,'ctor.Attr],'op_:_->_`[_`].[
     ''noUnifier.Sort,'nil.TypeList,''UnificationPair?.Sort,'ctor.Attr],
     'op_:_->_`[_`].[''noUnifier.Sort,'nil.TypeList,''UnificationTriple?.Sort,
+    'ctor.Attr],'op_:_->_`[_`].[''noUnifierIncomplete.Sort,'nil.TypeList,
+    ''UnificationPair?.Sort,'ctor.Attr],'op_:_->_`[_`].[
+    ''noUnifierIncomplete.Sort,'nil.TypeList,''UnificationTriple?.Sort,
     'ctor.Attr],'op_:_->_`[_`].[''noVariant.Sort,'nil.TypeList,''Variant?.Sort,
-    'ctor.Attr],'op_:_->_`[_`].[''none.Sort,'nil.TypeList,''AttrSet.Sort,
-    'ctor.Attr],'op_:_->_`[_`].[''none.Sort,'nil.TypeList,''EmptyTypeSet.Sort,
-    'ctor.Attr],'op_:_->_`[_`].[''none.Sort,'nil.TypeList,''EquationSet.Sort,
-    'ctor.Attr],'op_:_->_`[_`].[''none.Sort,'nil.TypeList,''MembAxSet.Sort,
-    'ctor.Attr],'op_:_->_`[_`].[''none.Sort,'nil.TypeList,''OpDeclSet.Sort,
-    'ctor.Attr],'op_:_->_`[_`].[''none.Sort,'nil.TypeList,''OpMappingSet.Sort,
-    'ctor.Attr],'op_:_->_`[_`].[''none.Sort,'nil.TypeList,
+    'ctor.Attr],'op_:_->_`[_`].[''noVariantIncomplete.Sort,'nil.TypeList,
+    ''Variant?.Sort,'ctor.Attr],'op_:_->_`[_`].[''none.Sort,'nil.TypeList,
+    ''AttrSet.Sort,'ctor.Attr],'op_:_->_`[_`].[''none.Sort,'nil.TypeList,
+    ''EmptyTypeSet.Sort,'ctor.Attr],'op_:_->_`[_`].[''none.Sort,'nil.TypeList,
+    ''EquationSet.Sort,'ctor.Attr],'op_:_->_`[_`].[''none.Sort,'nil.TypeList,
+    ''MembAxSet.Sort,'ctor.Attr],'op_:_->_`[_`].[''none.Sort,'nil.TypeList,
+    ''OpDeclSet.Sort,'ctor.Attr],'op_:_->_`[_`].[''none.Sort,'nil.TypeList,
+    ''OpMappingSet.Sort,'ctor.Attr],'op_:_->_`[_`].[''none.Sort,'nil.TypeList,
     ''PrintOptionSet.Sort,'ctor.Attr],'op_:_->_`[_`].[''none.Sort,
     'nil.TypeList,''QidSet.Sort,'ctor.Attr],'op_:_->_`[_`].[''none.Sort,
     'nil.TypeList,''RuleSet.Sort,'ctor.Attr],'op_:_->_`[_`].[''none.Sort,
@@ -8866,20 +8926,26 @@ result ResultPair: {'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,
     'op-hook[''noUnifierPairSymbol.Sort,''noUnifier.Sort,'nil.TypeList,
     ''UnificationPair?.Sort],'op-hook[''noUnifierTripleSymbol.Sort,
     ''noUnifier.Sort,'nil.TypeList,''UnificationTriple?.Sort],'op-hook[
-    ''noVariantSymbol.Sort,''noVariant.Sort,'nil.TypeList,''Variant?.Sort],
-    'op-hook[''noMatchSubstSymbol.Sort,''noMatch.Sort,'nil.TypeList,
-    ''Substitution?.Sort],'op-hook[''noMatchPairSymbol.Sort,''noMatch.Sort,
-    'nil.TypeList,''MatchPair?.Sort],'op-hook[''failureTraceSymbol.Sort,
-    ''failure.Sort,'nil.TypeList,''Trace?.Sort],'op-hook[
-    ''smtFailureSymbol.Sort,''failure.Sort,'nil.TypeList,''SmtResult?.Sort],
-    'op-hook[''mixfixSymbol.Sort,''mixfix.Sort,'nil.TypeList,
-    ''PrintOption.Sort],'op-hook[''withParensSymbol.Sort,''with-parens.Sort,
-    'nil.TypeList,''PrintOption.Sort],'op-hook[''flatSymbol.Sort,''flat.Sort,
-    'nil.TypeList,''PrintOption.Sort],'op-hook[''formatPrintOptionSymbol.Sort,
-    ''format.Sort,'nil.TypeList,''PrintOption.Sort],'op-hook[
-    ''numberSymbol.Sort,''number.Sort,'nil.TypeList,''PrintOption.Sort],
-    'op-hook[''ratSymbol.Sort,''rat.Sort,'nil.TypeList,''PrintOption.Sort],
-    'op-hook[''emptyPrintOptionSetSymbol.Sort,''none.Sort,'nil.TypeList,
+    ''noUnifierIncompletePairSymbol.Sort,''noUnifierIncomplete.Sort,
+    'nil.TypeList,''UnificationPair?.Sort],'op-hook[
+    ''noUnifierIncompleteTripleSymbol.Sort,''noUnifierIncomplete.Sort,
+    'nil.TypeList,''UnificationTriple?.Sort],'op-hook[''noVariantSymbol.Sort,
+    ''noVariant.Sort,'nil.TypeList,''Variant?.Sort],'op-hook[
+    ''noVariantIncompleteSymbol.Sort,''noVariantIncomplete.Sort,'nil.TypeList,
+    ''Variant?.Sort],'op-hook[''noMatchSubstSymbol.Sort,''noMatch.Sort,
+    'nil.TypeList,''Substitution?.Sort],'op-hook[''noMatchPairSymbol.Sort,
+    ''noMatch.Sort,'nil.TypeList,''MatchPair?.Sort],'op-hook[
+    ''failureTraceSymbol.Sort,''failure.Sort,'nil.TypeList,''Trace?.Sort],
+    'op-hook[''smtFailureSymbol.Sort,''failure.Sort,'nil.TypeList,
+    ''SmtResult?.Sort],'op-hook[''mixfixSymbol.Sort,''mixfix.Sort,
+    'nil.TypeList,''PrintOption.Sort],'op-hook[''withParensSymbol.Sort,
+    ''with-parens.Sort,'nil.TypeList,''PrintOption.Sort],'op-hook[
+    ''flatSymbol.Sort,''flat.Sort,'nil.TypeList,''PrintOption.Sort],'op-hook[
+    ''formatPrintOptionSymbol.Sort,''format.Sort,'nil.TypeList,
+    ''PrintOption.Sort],'op-hook[''numberSymbol.Sort,''number.Sort,
+    'nil.TypeList,''PrintOption.Sort],'op-hook[''ratSymbol.Sort,''rat.Sort,
+    'nil.TypeList,''PrintOption.Sort],'op-hook[
+    ''emptyPrintOptionSetSymbol.Sort,''none.Sort,'nil.TypeList,
     ''PrintOptionSet.Sort],'op-hook[''printOptionSetSymbol.Sort,''__.Sort,'__[
     ''PrintOptionSet.Sort,''PrintOptionSet.Sort],''PrintOptionSet.Sort],
     'term-hook[''trueTerm.Sort,''true.Bool.Constant],'term-hook[
@@ -8983,14 +9049,18 @@ result ResultPair: {'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,
     ''noParse.Sort,''Nat.Sort,''ResultPair?.Sort,'ctor.Attr],'op_:_->_`[_`].[
     ''noUnifier.Sort,'nil.TypeList,''UnificationPair?.Sort,'ctor.Attr],
     'op_:_->_`[_`].[''noUnifier.Sort,'nil.TypeList,''UnificationTriple?.Sort,
+    'ctor.Attr],'op_:_->_`[_`].[''noUnifierIncomplete.Sort,'nil.TypeList,
+    ''UnificationPair?.Sort,'ctor.Attr],'op_:_->_`[_`].[
+    ''noUnifierIncomplete.Sort,'nil.TypeList,''UnificationTriple?.Sort,
     'ctor.Attr],'op_:_->_`[_`].[''noVariant.Sort,'nil.TypeList,''Variant?.Sort,
-    'ctor.Attr],'op_:_->_`[_`].[''none.Sort,'nil.TypeList,''AttrSet.Sort,
-    'ctor.Attr],'op_:_->_`[_`].[''none.Sort,'nil.TypeList,''EmptyTypeSet.Sort,
-    'ctor.Attr],'op_:_->_`[_`].[''none.Sort,'nil.TypeList,''EquationSet.Sort,
-    'ctor.Attr],'op_:_->_`[_`].[''none.Sort,'nil.TypeList,''MembAxSet.Sort,
-    'ctor.Attr],'op_:_->_`[_`].[''none.Sort,'nil.TypeList,''OpDeclSet.Sort,
-    'ctor.Attr],'op_:_->_`[_`].[''none.Sort,'nil.TypeList,''OpMappingSet.Sort,
-    'ctor.Attr],'op_:_->_`[_`].[''none.Sort,'nil.TypeList,
+    'ctor.Attr],'op_:_->_`[_`].[''noVariantIncomplete.Sort,'nil.TypeList,
+    ''Variant?.Sort,'ctor.Attr],'op_:_->_`[_`].[''none.Sort,'nil.TypeList,
+    ''AttrSet.Sort,'ctor.Attr],'op_:_->_`[_`].[''none.Sort,'nil.TypeList,
+    ''EmptyTypeSet.Sort,'ctor.Attr],'op_:_->_`[_`].[''none.Sort,'nil.TypeList,
+    ''EquationSet.Sort,'ctor.Attr],'op_:_->_`[_`].[''none.Sort,'nil.TypeList,
+    ''MembAxSet.Sort,'ctor.Attr],'op_:_->_`[_`].[''none.Sort,'nil.TypeList,
+    ''OpDeclSet.Sort,'ctor.Attr],'op_:_->_`[_`].[''none.Sort,'nil.TypeList,
+    ''OpMappingSet.Sort,'ctor.Attr],'op_:_->_`[_`].[''none.Sort,'nil.TypeList,
     ''PrintOptionSet.Sort,'ctor.Attr],'op_:_->_`[_`].[''none.Sort,
     'nil.TypeList,''QidSet.Sort,'ctor.Attr],'op_:_->_`[_`].[''none.Sort,
     'nil.TypeList,''RuleSet.Sort,'ctor.Attr],'op_:_->_`[_`].[''none.Sort,

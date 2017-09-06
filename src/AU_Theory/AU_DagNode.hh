@@ -120,6 +120,7 @@ private:
   friend class AU_ExtensionInfo;	// for constructing matched portion
   friend class AU_DequeDagNode;		// for conversion & comparison
   friend class AU_UnificationSubproblem;
+  friend class AU_UnificationSubproblem2;
 };
 
 AU_DagNode* getAU_DagNode(DagNode* dagNode);

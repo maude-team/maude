@@ -48,7 +48,7 @@
 #include "AU_DequeDagNode.hh"
 #include "AU_Term.hh"
 #include "AU_ExtensionInfo.hh"
-#include "AU_UnificationSubproblem.hh"
+#include "AU_UnificationSubproblem2.hh"
 
 AU_Symbol::AU_Symbol(int id,
 		     const Vector<int>& strategy,
@@ -568,7 +568,7 @@ AU_Symbol::computeGeneralizedSort(const SortBdds& sortBdds,
 UnificationSubproblem*
 AU_Symbol::makeUnificationSubproblem()
 {
-  return new AU_UnificationSubproblem(this);
+  return new AU_UnificationSubproblem2(this);
 }
 
 //

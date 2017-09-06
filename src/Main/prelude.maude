@@ -22,7 +22,7 @@
 
 ***
 ***	Maude interpreter standard prelude.
-***	Version alpha105
+***	Version alpha108
 ***
 ***	Some of the overall structure is taken from the OBJ3
 ***	interpreter standard prelude.
@@ -1994,7 +1994,10 @@ fmod META-LEVEL is
   op failure : -> Result4Tuple? [ctor] .
   op noUnifier : -> UnificationPair? [ctor] .
   op noUnifier : -> UnificationTriple? [ctor] .
+  op noUnifierIncomplete : -> UnificationPair? [ctor] .
+  op noUnifierIncomplete : -> UnificationTriple? [ctor] .
   op noVariant : -> Variant? [ctor] .
+  op noVariantIncomplete : -> Variant? [ctor] .
   op noMatch : -> Substitution? [ctor] .
   op noMatch : -> MatchPair? [ctor] .
   op failure : -> Trace? [ctor] .
@@ -2211,7 +2214,10 @@ fmod META-LEVEL is
         op-hook failure4Symbol		(failure : ~> Result4Tuple?)
         op-hook noUnifierPairSymbol	(noUnifier : ~> UnificationPair?)
         op-hook noUnifierTripleSymbol	(noUnifier : ~> UnificationTriple?)
+        op-hook noUnifierIncompletePairSymbol	(noUnifierIncomplete : ~> UnificationPair?)
+        op-hook noUnifierIncompleteTripleSymbol	(noUnifierIncomplete : ~> UnificationTriple?)
         op-hook noVariantSymbol		(noVariant : ~> Variant?)
+        op-hook noVariantIncompleteSymbol	(noVariantIncomplete : ~> Variant?)
         op-hook noMatchSubstSymbol	(noMatch : ~> Substitution?)
         op-hook noMatchPairSymbol	(noMatch : ~> MatchPair?)
         op-hook failureTraceSymbol	(failure : ~> Trace?)

@@ -296,7 +296,8 @@ AU_DagNode::computeBaseSortForGroundSubterms()
 {
   AU_Symbol* s = symbol();
   //
-  //	If we have an identity we bail.
+  //	If we have an identity we bail to backstop version since AU/AUl/AUr is not
+  //	currently supported for unification.
   //
   if (s->hasIdentity())
     return DagNode::computeBaseSortForGroundSubterms();
@@ -321,6 +322,7 @@ AU_DagNode::computeBaseSortForGroundSubterms()
   if (ground)
     {
       s->computeBaseSort(this);
+      setGround();
       return GROUND;
     }
   return NONGROUND;

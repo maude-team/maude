@@ -63,7 +63,7 @@ am_libAU_Theory_a_OBJECTS = libAU_Theory_a-AU_Symbol.$(OBJEXT) \
 	libAU_Theory_a-AU_ArgumentIterator.$(OBJEXT) \
 	libAU_Theory_a-AU_Layer.$(OBJEXT) \
 	libAU_Theory_a-AU_Subproblem.$(OBJEXT) \
-	libAU_Theory_a-AU_UnificationSubproblem.$(OBJEXT)
+	libAU_Theory_a-AU_UnificationSubproblem2.$(OBJEXT)
 libAU_Theory_a_OBJECTS = $(am_libAU_Theory_a_OBJECTS)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
@@ -209,7 +209,7 @@ libAU_Theory_a_SOURCES = \
 	AU_ArgumentIterator.cc \
 	AU_Layer.cc \
 	AU_Subproblem.cc \
-	AU_UnificationSubproblem.cc
+	AU_UnificationSubproblem2.cc
 
 EXTRA_DIST = \
 	AU_DagOperations.cc \
@@ -220,8 +220,6 @@ EXTRA_DIST = \
 	AU_FullMatcher.cc \
 	AU_GreedyMatcher.cc \
 	AU_DequeMatcher.cc \
-	AU_OldUnificationAlgorithm.cc \
-	AU_NewUnificationAlgorithm.cc \
 	ChangeLog.A_Theory
 
 noinst_HEADERS = \
@@ -239,7 +237,7 @@ noinst_HEADERS = \
 	AU_Symbol.hh \
 	AU_Term.hh \
 	AU_Theory.hh \
-	AU_UnificationSubproblem.hh
+	AU_UnificationSubproblem2.hh
 
 all: all-am
 
@@ -301,7 +299,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libAU_Theory_a-AU_Subproblem.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libAU_Theory_a-AU_Symbol.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libAU_Theory_a-AU_Term.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libAU_Theory_a-AU_UnificationSubproblem.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libAU_Theory_a-AU_UnificationSubproblem2.Po@am__quote@
 
 .cc.o:
 @am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -485,19 +483,19 @@ libAU_Theory_a-AU_Subproblem.obj: AU_Subproblem.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libAU_Theory_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libAU_Theory_a-AU_Subproblem.obj `if test -f 'AU_Subproblem.cc'; then $(CYGPATH_W) 'AU_Subproblem.cc'; else $(CYGPATH_W) '$(srcdir)/AU_Subproblem.cc'; fi`
 
-libAU_Theory_a-AU_UnificationSubproblem.o: AU_UnificationSubproblem.cc
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libAU_Theory_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libAU_Theory_a-AU_UnificationSubproblem.o -MD -MP -MF $(DEPDIR)/libAU_Theory_a-AU_UnificationSubproblem.Tpo -c -o libAU_Theory_a-AU_UnificationSubproblem.o `test -f 'AU_UnificationSubproblem.cc' || echo '$(srcdir)/'`AU_UnificationSubproblem.cc
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libAU_Theory_a-AU_UnificationSubproblem.Tpo $(DEPDIR)/libAU_Theory_a-AU_UnificationSubproblem.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='AU_UnificationSubproblem.cc' object='libAU_Theory_a-AU_UnificationSubproblem.o' libtool=no @AMDEPBACKSLASH@
+libAU_Theory_a-AU_UnificationSubproblem2.o: AU_UnificationSubproblem2.cc
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libAU_Theory_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libAU_Theory_a-AU_UnificationSubproblem2.o -MD -MP -MF $(DEPDIR)/libAU_Theory_a-AU_UnificationSubproblem2.Tpo -c -o libAU_Theory_a-AU_UnificationSubproblem2.o `test -f 'AU_UnificationSubproblem2.cc' || echo '$(srcdir)/'`AU_UnificationSubproblem2.cc
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libAU_Theory_a-AU_UnificationSubproblem2.Tpo $(DEPDIR)/libAU_Theory_a-AU_UnificationSubproblem2.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='AU_UnificationSubproblem2.cc' object='libAU_Theory_a-AU_UnificationSubproblem2.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libAU_Theory_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libAU_Theory_a-AU_UnificationSubproblem.o `test -f 'AU_UnificationSubproblem.cc' || echo '$(srcdir)/'`AU_UnificationSubproblem.cc
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libAU_Theory_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libAU_Theory_a-AU_UnificationSubproblem2.o `test -f 'AU_UnificationSubproblem2.cc' || echo '$(srcdir)/'`AU_UnificationSubproblem2.cc
 
-libAU_Theory_a-AU_UnificationSubproblem.obj: AU_UnificationSubproblem.cc
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libAU_Theory_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libAU_Theory_a-AU_UnificationSubproblem.obj -MD -MP -MF $(DEPDIR)/libAU_Theory_a-AU_UnificationSubproblem.Tpo -c -o libAU_Theory_a-AU_UnificationSubproblem.obj `if test -f 'AU_UnificationSubproblem.cc'; then $(CYGPATH_W) 'AU_UnificationSubproblem.cc'; else $(CYGPATH_W) '$(srcdir)/AU_UnificationSubproblem.cc'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libAU_Theory_a-AU_UnificationSubproblem.Tpo $(DEPDIR)/libAU_Theory_a-AU_UnificationSubproblem.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='AU_UnificationSubproblem.cc' object='libAU_Theory_a-AU_UnificationSubproblem.obj' libtool=no @AMDEPBACKSLASH@
+libAU_Theory_a-AU_UnificationSubproblem2.obj: AU_UnificationSubproblem2.cc
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libAU_Theory_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libAU_Theory_a-AU_UnificationSubproblem2.obj -MD -MP -MF $(DEPDIR)/libAU_Theory_a-AU_UnificationSubproblem2.Tpo -c -o libAU_Theory_a-AU_UnificationSubproblem2.obj `if test -f 'AU_UnificationSubproblem2.cc'; then $(CYGPATH_W) 'AU_UnificationSubproblem2.cc'; else $(CYGPATH_W) '$(srcdir)/AU_UnificationSubproblem2.cc'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libAU_Theory_a-AU_UnificationSubproblem2.Tpo $(DEPDIR)/libAU_Theory_a-AU_UnificationSubproblem2.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='AU_UnificationSubproblem2.cc' object='libAU_Theory_a-AU_UnificationSubproblem2.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libAU_Theory_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libAU_Theory_a-AU_UnificationSubproblem.obj `if test -f 'AU_UnificationSubproblem.cc'; then $(CYGPATH_W) 'AU_UnificationSubproblem.cc'; else $(CYGPATH_W) '$(srcdir)/AU_UnificationSubproblem.cc'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libAU_Theory_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libAU_Theory_a-AU_UnificationSubproblem2.obj `if test -f 'AU_UnificationSubproblem2.cc'; then $(CYGPATH_W) 'AU_UnificationSubproblem2.cc'; else $(CYGPATH_W) '$(srcdir)/AU_UnificationSubproblem2.cc'; fi`
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \

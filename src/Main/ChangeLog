@@ -1,3 +1,11 @@
+2015-08-14  Steven Eker  <eker@ape.csl.sri.com>
+
+	* prelude.maude: added constant noVariantIncomplete
+
+2015-07-23  Steven Eker  <eker@ape.csl.sri.com>
+
+	* prelude.maude: added two constants noUnifierIncomplete
+
 2014-10-28  Steven Eker  <eker@ape.csl.sri.com>
 
 	* prelude.maude: updated decls for metaSmtSearch() and SmtResult ctor

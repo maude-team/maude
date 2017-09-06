@@ -1,3 +1,39 @@
+2015-08-21  Steven Eker  <eker@ape.csl.sri.com>
+
+	* metaVariant.cc (metaGetVariant2): fix a bug where we were
+	passing the irredundant flag as the unificationMode argument with
+	resulting chaos in the metaGetIrredundantVariant() case
+	(metaVariantUnify2): don't rely on default value for last argument
+	of VariantSearch()
+
+2015-08-14  Steven Eker  <eker@ape.csl.sri.com>
+
+	* metaLevel.hh (M): updated decl for upNoVariant()
+
+	* metaUp.cc (upNoVariant): handle incomplete flag
+
+	* metaVariant.cc (metaVariantUnify2): pass incomplete flag to
+	upNoUnifierTriple() and upNoUnifierPair()
+	(metaGetVariant2): pass incomplete flag to upNoVariant()
+
+	* metaLevelSignature.cc: added noVariantIncompleteSymbol
+
+2015-07-23  Steven Eker  <eker@ape.csl.sri.com>
+
+	* metaUnify.cc (metaUnify2): pass incomplete flag to
+	upNoUnifierTriple() and upNoUnifierPair()
+
+	* metaUp.cc (upNoUnifierPair, upNoUnifierTriple): handle
+	incomplete flag
+
+	* metaLevel.hh (M): updated decls for upNoUnifierPair() and
+	upNoUnifierTriple()
+
+	* metaLevelSignature.cc: added noUnifierIncompletePairSymbol and
+	noUnifierIncompleteTripleSymbol
+
+===================================Maude108===========================================
+
 2015-02-23  Steven Eker  <eker@ape.csl.sri.com>
 
 	* metaVariant.cc (getCachedVariantSearch): revert, now that we

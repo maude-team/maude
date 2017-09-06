@@ -73,6 +73,7 @@ public:
   bool findNextUnifier();
   Substitution& getSolution() const;
   int getNrFreeVariables() const;
+  bool isIncomplete() const;
 
 private:
   void markReachableNodes();
@@ -117,6 +118,13 @@ inline int
 NarrowingUnificationProblem::getNrFreeVariables() const
 {
   return freeVariables.size();
+}
+
+inline bool
+NarrowingUnificationProblem::isIncomplete() const
+{
+  //cout << "NarrowingUnificationProblem::isIncomplete() returned " << pendingStack.isIncomplete() << endl;
+  return pendingStack.isIncomplete();
 }
 
 #endif

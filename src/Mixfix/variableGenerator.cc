@@ -57,19 +57,96 @@
 VariableGenerator::VariableGenerator(const SMT_Info& smtInfo)
   : smtInfo(smtInfo)
 {
+#ifdef USE_CVC4
   exprManager = new ExprManager();
   smtEngine = new SmtEngine(exprManager);
   smtEngine->setOption("rewrite-divk", SExpr(true));
   smtEngine->push();  // make a new context so we have a clean context to pop() back to
   pushCount = 0;
+#else
+  IssueWarning("No SMT solver compiled in");
+#endif
 }
 
 VariableGenerator::~VariableGenerator()
 {
+#ifdef USE_CVC4
   variableMap.clear();  // need to get rid of Expr objects before we can safely delete exprManager
   delete smtEngine;
   delete exprManager;
+#endif
 }
+
+VariableDagNode*
+VariableGenerator::makeFreshVariable(Term* baseVariable, const mpz_class& number)
+{
+  Symbol* s = baseVariable->symbol();
+  VariableTerm* vt = safeCast(VariableTerm*, baseVariable);
+  int id = vt->id();
+
+  string newNameString = "#";
+  char* name = mpz_get_str(0, 10, number.get_mpz_t());
+  newNameString += name;
+  free(name);
+  newNameString += "-";
+  newNameString +=  Token::name(id);
+  int newId = Token::encode(newNameString.c_str());
+
+  return new VariableDagNode(s, newId, NONE);
+}
+
+VariableGenerator::Result
+VariableGenerator::assertDag(DagNode* dag)
+{
+#ifdef USE_CVC4
+  Expr e = makeBooleanExpr(dag);
+  if (e.isNull())
+    return BAD_DAG;
+
+  smtEngine->assertFormula(e);
+  //
+  //	While assertFormula() returns a Result, it may be unknown since
+  //	it doesn't do a full sat solve.
+  //
+  const CVC4::Result result = smtEngine->checkSat(exprManager->mkConst(true));
+  DebugAdvisory("CVC4 checkSat() returned " << result);
+
+  CVC4::Result::Sat sat = result.isSat();
+  if (sat == CVC4::Result::SAT_UNKNOWN)
+    {
+      IssueWarning("CVC4 not able to determine satisfiability  - giving up.");
+      return SAT_UNKNOWN;
+    }
+  return (sat == false) ? UNSAT : SAT;
+#else
+  return SAT_UNKNOWN;
+#endif
+}
+
+VariableGenerator::Result
+VariableGenerator::checkDag(DagNode* dag)
+{
+#ifdef USE_CVC4
+  Expr e = makeBooleanExpr(dag);
+  if (e.isNull())
+    return BAD_DAG;
+
+  const CVC4::Result result = smtEngine->checkSat(e);
+  DebugAdvisory("CVC4 checkSat() returned " << result);
+
+  CVC4::Result::Sat sat = result.isSat();
+  if (sat == CVC4::Result::SAT_UNKNOWN)
+    {
+      IssueWarning("CVC4 not able to determine satisfiability  - giving up.");
+      return SAT_UNKNOWN;
+    }
+  return (sat == false) ? UNSAT : SAT;
+#else
+  return SAT_UNKNOWN;
+#endif
+}
+
+#ifdef USE_CVC4
 
 Expr
 VariableGenerator::makeVariable(VariableDagNode* v)
@@ -130,24 +207,6 @@ VariableGenerator::makeVariable(VariableDagNode* v)
   return newVariable;
 }
 
-VariableDagNode*
-VariableGenerator::makeFreshVariable(Term* baseVariable, const mpz_class& number)
-{
-  Symbol* s = baseVariable->symbol();
-  VariableTerm* vt = safeCast(VariableTerm*, baseVariable);
-  int id = vt->id();
-
-  string newNameString = "#";
-  char* name = mpz_get_str(0, 10, number.get_mpz_t());
-  newNameString += name;
-  free(name);
-  newNameString += "-";
-  newNameString +=  Token::name(id);
-  int newId = Token::encode(newNameString.c_str());
-
-  return new VariableDagNode(s, newId, NONE);
-}
-
 Expr
 VariableGenerator::makeBooleanExpr(DagNode* dag)
 {
@@ -171,49 +230,6 @@ VariableGenerator::makeBooleanExpr(DagNode* dag)
 
   WarningCheck(!e.isNull(), "Expecting an SMT Boolean expression but saw but saw " << dag);
   return e;
-}
-
-VariableGenerator::Result
-VariableGenerator::assertDag(DagNode* dag)
-{
-  Expr e = makeBooleanExpr(dag);
-  if (e.isNull())
-    return BAD_DAG;
-
-  smtEngine->assertFormula(e);
-  //
-  //	While assertFormula() returns a Result, it may be unknown since
-  //	it doesn't do a full sat solve.
-  //
-  const CVC4::Result result = smtEngine->checkSat(exprManager->mkConst(true));
-  DebugAdvisory("CVC4 checkSat() returned " << result);
-
-  CVC4::Result::Sat sat = result.isSat();
-  if (sat == CVC4::Result::SAT_UNKNOWN)
-    {
-      IssueWarning("CVC4 not able to determine satisfiability  - giving up.");
-      return SAT_UNKNOWN;
-    }
-  return (sat == false) ? UNSAT : SAT;
-}
-
-VariableGenerator::Result
-VariableGenerator::checkDag(DagNode* dag)
-{
-  Expr e = makeBooleanExpr(dag);
-  if (e.isNull())
-    return BAD_DAG;
-
-  const CVC4::Result result = smtEngine->checkSat(e);
-  DebugAdvisory("CVC4 checkSat() returned " << result);
-
-  CVC4::Result::Sat sat = result.isSat();
-  if (sat == CVC4::Result::SAT_UNKNOWN)
-    {
-      IssueWarning("CVC4 not able to determine satisfiability  - giving up.");
-      return SAT_UNKNOWN;
-    }
-  return (sat == false) ? UNSAT : SAT;
 }
 
 Expr
@@ -401,3 +417,5 @@ VariableGenerator::dagToCVC4(DagNode* dag)
  fail:
   return Expr();
 }
+
+#endif

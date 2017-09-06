@@ -68,7 +68,8 @@ am_libutility_a_OBJECTS = libutility_a-macros.$(OBJEXT) \
 	libutility_a-mpzSystem.$(OBJEXT) \
 	libutility_a-intSystem.$(OBJEXT) libutility_a-allSat.$(OBJEXT) \
 	libutility_a-sequenceAssignment.$(OBJEXT) \
-	libutility_a-pigPug.$(OBJEXT)
+	libutility_a-pigPug.$(OBJEXT) libutility_a-wordLevel.$(OBJEXT) \
+	libutility_a-wordSystem.$(OBJEXT)
 libutility_a_OBJECTS = $(am_libutility_a_OBJECTS)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
@@ -221,7 +222,9 @@ libutility_a_SOURCES = \
 	intSystem.cc \
 	allSat.cc \
 	sequenceAssignment.cc \
-	pigPug.cc
+	pigPug.cc \
+	wordLevel.cc \
+	wordSystem.cc
 
 noinst_HEADERS = \
 	bdd.hh \
@@ -255,14 +258,18 @@ noinst_HEADERS = \
 	intSystem.hh \
 	allSat.hh \
 	sequenceAssignment.hh \
-	pigPug.hh
+	pigPug.hh \
+	wordLevel.hh \
+	wordSystem.hh
 
 EXTRA_DIST = \
 	intContejeanDevie.cc \
 	mpzContejeanDevie.cc \
 	mpzGcdInit.cc \
 	mpzGcdTrivial.cc \
-	mpzGcdBasedSolver.cc
+	mpzGcdBasedSolver.cc \
+	wordLevel-simplifyAssignments.cc \
+	wordLevel-simplifyEquations.cc
 
 all: all-am
 
@@ -337,6 +344,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libutility_a-timer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libutility_a-tty.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libutility_a-unionFind.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libutility_a-wordLevel.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libutility_a-wordSystem.Po@am__quote@
 
 .cc.o:
 @am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -701,6 +710,34 @@ libutility_a-pigPug.obj: pigPug.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='pigPug.cc' object='libutility_a-pigPug.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libutility_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libutility_a-pigPug.obj `if test -f 'pigPug.cc'; then $(CYGPATH_W) 'pigPug.cc'; else $(CYGPATH_W) '$(srcdir)/pigPug.cc'; fi`
+
+libutility_a-wordLevel.o: wordLevel.cc
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libutility_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libutility_a-wordLevel.o -MD -MP -MF $(DEPDIR)/libutility_a-wordLevel.Tpo -c -o libutility_a-wordLevel.o `test -f 'wordLevel.cc' || echo '$(srcdir)/'`wordLevel.cc
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libutility_a-wordLevel.Tpo $(DEPDIR)/libutility_a-wordLevel.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='wordLevel.cc' object='libutility_a-wordLevel.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libutility_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libutility_a-wordLevel.o `test -f 'wordLevel.cc' || echo '$(srcdir)/'`wordLevel.cc
+
+libutility_a-wordLevel.obj: wordLevel.cc
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libutility_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libutility_a-wordLevel.obj -MD -MP -MF $(DEPDIR)/libutility_a-wordLevel.Tpo -c -o libutility_a-wordLevel.obj `if test -f 'wordLevel.cc'; then $(CYGPATH_W) 'wordLevel.cc'; else $(CYGPATH_W) '$(srcdir)/wordLevel.cc'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libutility_a-wordLevel.Tpo $(DEPDIR)/libutility_a-wordLevel.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='wordLevel.cc' object='libutility_a-wordLevel.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libutility_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libutility_a-wordLevel.obj `if test -f 'wordLevel.cc'; then $(CYGPATH_W) 'wordLevel.cc'; else $(CYGPATH_W) '$(srcdir)/wordLevel.cc'; fi`
+
+libutility_a-wordSystem.o: wordSystem.cc
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libutility_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libutility_a-wordSystem.o -MD -MP -MF $(DEPDIR)/libutility_a-wordSystem.Tpo -c -o libutility_a-wordSystem.o `test -f 'wordSystem.cc' || echo '$(srcdir)/'`wordSystem.cc
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libutility_a-wordSystem.Tpo $(DEPDIR)/libutility_a-wordSystem.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='wordSystem.cc' object='libutility_a-wordSystem.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libutility_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libutility_a-wordSystem.o `test -f 'wordSystem.cc' || echo '$(srcdir)/'`wordSystem.cc
+
+libutility_a-wordSystem.obj: wordSystem.cc
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libutility_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libutility_a-wordSystem.obj -MD -MP -MF $(DEPDIR)/libutility_a-wordSystem.Tpo -c -o libutility_a-wordSystem.obj `if test -f 'wordSystem.cc'; then $(CYGPATH_W) 'wordSystem.cc'; else $(CYGPATH_W) '$(srcdir)/wordSystem.cc'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libutility_a-wordSystem.Tpo $(DEPDIR)/libutility_a-wordSystem.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='wordSystem.cc' object='libutility_a-wordSystem.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libutility_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libutility_a-wordSystem.obj `if test -f 'wordSystem.cc'; then $(CYGPATH_W) 'wordSystem.cc'; else $(CYGPATH_W) '$(srcdir)/wordSystem.cc'; fi`
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \

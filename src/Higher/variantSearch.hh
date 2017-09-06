@@ -45,14 +45,15 @@ public:
   VariantSearch(RewritingContext* context,
 		const Vector<DagNode*>& blockerDags,
 		FreshVariableGenerator* freshVariableGenerator,
-		bool unificationMode = false,
-		bool irredundantMode = false);
+		bool unificationMode,
+		bool irredundantMode);
   ~VariantSearch();
 
   const NarrowingVariableInfo& getVariableInfo() const;
   const Vector<DagNode*>* getNextVariant(int& nrFreeVariables);
   const Vector<DagNode*>* getNextUnifier(int& nrFreeVariables);
   RewritingContext* getContext() const;
+  bool isIncomplete() const;
   //
   //	Returns the last variant returned by getNextVariant().
   //
@@ -78,6 +79,7 @@ private:
   FreshVariableGenerator* const freshVariableGenerator;
   const bool unificationMode;
 
+  bool incompleteFlag;
   NarrowingVariableInfo variableInfo;
   int nrVariantVariables;
   VariantFolder variantCollection;
@@ -112,6 +114,12 @@ inline const Vector<DagNode*>*
 VariantSearch::getLastReturnedUnifier(int& nrFreeVariables)
 {
   return variantCollection.getLastReturnedVariant(nrFreeVariables);
+}
+
+inline bool
+VariantSearch::isIncomplete() const
+{
+  return incompleteFlag;
 }
 
 #endif

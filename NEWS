@@ -1,3 +1,11 @@
+Overview of Changes in alpha108
+===============================
+* new associative unification algorithm based on PIG-PUG
+* unification infrastructure support for incomplete algorithms
+* fixed bug in metaGetIrredundantVariant()
+* fixed bug in variant narrowing where collapse terms were being narrowed
+  with variant equations from the wrong kind
+
 Overview of Changes in alpha107
 ===============================
 * fixed bug where asking for the same variant or variant unify twice in

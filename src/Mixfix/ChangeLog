@@ -1,3 +1,37 @@
+2015-09-11  Steven Eker  <eker@ape.csl.sri.com>
+
+	* prettyPrint.cc (<<): handle null DagNode* gracefully
+
+2015-08-21  Steven Eker  <eker@ape.csl.sri.com>
+
+	* bottom.yy: yyerror() now takes 2 args
+
+	* top.yy: #define YYPARSE_PARAM removed; %parse-param added;
+	PARSE_RESULT no longer needs a cast; yyerror() decl now takes 2
+	args
+
+	* interact.cc: yyparse() now takes
+	UserLevelRewritingContext::ParseResult* in decl
+
+	* top.yy: %pure_parser becomes %pure-parser
+
+2015-08-20  Steven Eker  <eker@ape.csl.sri.com>
+
+	* variableGenerator.cc: respect USE_CVC4 flag
+
+	* variableGenerator.hh: respect USE_CVC4 flag
+
+2015-08-13  Steven Eker  <eker@ape.csl.sri.com>
+
+	* search.cc (variantUnify): check for incompleteness
+	(getVariants): check for incompleteness
+
+2015-07-23  Steven Eker  <eker@ape.csl.sri.com>
+
+	* unify.cc (doUnification): check for incompleteness
+
+===================================Maude108===========================================
+
 2014-11-20  Steven Eker  <eker@ape.csl.sri.com>
 
 	* parameterization.cc (handleRegularImports): added

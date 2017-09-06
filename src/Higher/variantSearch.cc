@@ -65,6 +65,7 @@ VariantSearch::VariantSearch(RewritingContext* context,
     freshVariableGenerator(freshVariableGenerator),
     unificationMode(unificationMode)
 {
+  incompleteFlag = false;
   //
   //	Index variables in initial dag. We don't want to do reduction on initial dag for two reasons:
   //	(1) We rely on variable dags not going away to protect variable dags in variableInfo from GC.
@@ -341,6 +342,7 @@ VariantSearch::expandVariant(const Vector<DagNode*>& variant, int index)
       //
       protectedVariant.clear();
     }
+  incompleteFlag |= vnss.isIncomplete();
   //
   //	Move rewrite count from narrowing context to original context.
   //

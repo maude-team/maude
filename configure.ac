@@ -3,7 +3,7 @@
 #
 #	Initialize autoconf stuff.
 #
-AC_INIT(Maude, alpha107, [maude-bugs@maude.cs.uiuc.edu])
+AC_INIT(Maude, alpha108, [maude-bugs@maude.cs.uiuc.edu])
 #
 #	Allow directory names that look like macros.
 #
@@ -16,7 +16,7 @@ AC_CANONICAL_HOST
 #
 #	Initialize automake stuff.
 #
-AM_INIT_AUTOMAKE(Maude, alpha107)
+AM_INIT_AUTOMAKE(Maude, alpha108)
 #
 #	Cause defines to be put in a header file rather than passed as
 #	compiler flags.
@@ -73,17 +73,30 @@ if (test -z "$BUDDY_LIB") then
 fi
 AC_SUBST(BUDDY_LIB)
 #
+#	Check to see if we should use CVC4 for SMT solving.
+#
+AC_ARG_WITH(cvc4,
+	    AC_HELP_STRING([--with-cvc4],
+                           [use CVC4 SMT solver library [default=yes]]),
+			   [WITH_CVC4=$withval],
+			   [WITH_CVC4=yes])
+if (test $WITH_CVC4 = yes) then
+#
 #	Check if user set a particular CVC4 library to use and if
 #	not set default.
 #
-if (test -z "$CVC4_LIB") then
-  CVC4_LIB="-lcvc4"
-fi
-AC_SUBST(CVC4_LIB)
+  AC_DEFINE([USE_CVC4], [], [use CVC4 SMT solver library])
+  if (test -z "$CVC4_LIB") then
+    CVC4_LIB="-lcvc4"
+  fi
+  AC_SUBST(CVC4_LIB)
 #
 #	CVC4 needs the clock_gettime() function from the POSIX Realtime Extensions library.
 #
-AC_CHECK_LIB(rt, clock_gettime)
+  AC_CHECK_LIB(rt, clock_gettime)
+else
+  CVC4_LIB=""
+fi
 #
 #	Check to see if we should use Tecla for command line editing.
 #

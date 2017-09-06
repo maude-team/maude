@@ -1,3 +1,50 @@
+2015-09-17  Steven Eker  <eker@ape.csl.sri.com>
+
+	* variantNarrowingSearchState.cc (VariantNarrowingSearchState):
+	fixed nasty bug where we were narrowing with variant equations
+	from the wrong component
+
+	* narrowingUnificationProblem.cc (findOrderSortedUnifiers): use
+	getRemappedLeqRelation() for fresh variables
+	(findOrderSortedUnifiers): use applyLeqRelation() and
+	getRemappedLeqRelation() for original variables
+
+2015-08-21  Steven Eker  <eker@ape.csl.sri.com>
+
+	* variantSearch.hh (SimpleRootContainer): get rid of default
+	values for arguments
+
+2015-08-13  Steven Eker  <eker@ape.csl.sri.com>
+
+	* variantSearch.hh (SimpleRootContainer): added data member
+	incompleteFlag
+	(isIncomplete): added
+
+	* variantSearch.cc (expandVariant): update incompleteFlag
+	(VariantSearch): clear incompleteFlag
+
+	* narrowingUnificationProblem.hh (isIncomplete): added
+
+	* variantNarrowingSearchState.hh (PositionState): added data
+	member incompleteFlag
+	(isIncomplete): added
+
+	* variantNarrowingSearchState.cc (VariantNarrowingSearchState):
+	check unification problems for incompleteness and update incompleteFlag
+	(VariantNarrowingSearchState): clear incompleteFlag
+
+2015-07-23  Steven Eker  <eker@ape.csl.sri.com>
+
+	* unificationProblem.cc: deleted commented out variable order
+	stuff
+
+	* unificationProblem.hh (isIncomplete): added
+	(SimpleRootContainer): deleted commented out variable order stuff
+	that is now done in PendingUnficationStack as part of the cycle
+	breaking code
+
+===================================Maude108===========================================
+
 2015-02-23  Steven Eker  <eker@ape.csl.sri.com>
 
 	* variantSearch.hh (getLastReturnedVariant)

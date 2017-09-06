@@ -55,6 +55,7 @@ public:
   //
   //	Unification stuff.
   //
+  int unificationPriority() const;
   void computeSortFunctionBdds(const SortBdds& sortBdds, Vector<Bdd>& sortFunctionBdds) const;
   void computeGeneralizedSort(const SortBdds& sortBdds,
 			      const Vector<int>& realToBdd,
