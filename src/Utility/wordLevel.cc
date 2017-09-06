@@ -69,25 +69,24 @@ WordLevel::findNextPartialSolution()
       //
       //	Need to chose an equation and create a PigPug.
       //
-      chooseEquation();
+      bool strictLeftLinear = chooseEquation();
       if (chosenEquation == NONE)
 	return ResultPair(SUCCESS, 0);  // no equations left to solve
-      makePigPug();
+      makePigPug(strictLeftLinear);
     }
   if (pigPug == 0)
     return ResultPair(FAILURE, 0);  // must have already returned the unique solution
   //
   //	Get next PigPug solution; create a new WordLevel.
-  //	Because we used PigPug, we may have had to use an incomplete transformation
-  //	and thus we need to OR in the incompleteness flag.
   //
   Subst unifier;
-  int nextFreshVariable = pigPug->getNextUnifier(unifier);
+  PigPug::ResultPair result = pigPug->getNextUnifier(unifier);
+  int nextFreshVariable = result.second;
   if (nextFreshVariable == NONE)
-    return ResultPair(FAILURE | incompletenessFlag, 0);  // PigPug solutions exhausted
+    return ResultPair(result.first, 0);  // failure
 
   WordLevel* next = makeNewLevel(unifier, nextFreshVariable);
-  return ResultPair(SUCCESS | incompletenessFlag, next);
+  return ResultPair(result.first, next);
 }
 
 bool
@@ -157,14 +156,15 @@ WordLevel::makeNewLevel(const Subst& unifier, int nextFreshVariable)
   return newLevel;
 }
 
-void
+bool
 WordLevel::chooseEquation()
 {
   //
   //	Chosen an unsolved equation and set chosenEquation to it true.
   //	If there are no unsolved equations set chosenEquation to NONE.
+  //	Returns true if chosen equation is strict left-linear and false otherwise.
   //
-  int firstUnsolved = NONE;
+  chosenEquation = NONE;  // if we don't find one
   int nrEquations = unsolvedEquations.size();
   for (int i = 0; i < nrEquations; ++i)
     {
@@ -184,78 +184,29 @@ WordLevel::chooseEquation()
 	    {
 	      if (lhsNonlinear.empty())
 		{
+		  //
+		  //	We found a strict left-linear equation so choose it.
+		  //
 		  chosenEquation = i;
-		  return;
+		  return true;
 		}
 	      if (rhsNonlinear.empty())
 		{
 		  //
-		  //	Need to flip equation.
+		  //	We found a strict right-linear equation so flip it into a
+		  //	strict left-linear equation and choose it.
 		  //
 		  e.lhs.swap(e.rhs);
 		  chosenEquation = i;
-		  return;
+		  return true;
 		}
+	      chosenEquation = i;  // prefer an equation with disjoint lhs/rhs variable sets
 	    }
-	  if (firstUnsolved == NONE)
-	    firstUnsolved = i;
+	  if (chosenEquation == NONE)
+	    chosenEquation = i;  // we'll take this one if we don't see anything better
 	}
     }
-  if (firstUnsolved == NONE)
-    {
-      //
-      //	We didn't see any unsolved equations.
-      //
-      chosenEquation = NONE;
-      return;
-    }
-  //
-  //	Didn't see an equation we could solved with PigPug.
-  //	We take the first unsolved equation and add constraints to make it sovable with PigPug.
-  //
-  //IssueWarning("Associative unification encountered too hard an instance - may be incomplete");
-  //dump(cout);
-  incompletenessFlag = INCOMPLETE;
-  Equation& e = unsolvedEquations[firstUnsolved];
-  NatSet lhsOccurs;
-  NatSet lhsNonlinear;
-  checkUnconstrainedVariables(e.lhs, lhsOccurs, lhsNonlinear);
-  NatSet rhsOccurs;
-  NatSet rhsNonlinear;
-  checkUnconstrainedVariables(e.rhs, rhsOccurs, rhsNonlinear);
-
-  lhsOccurs.intersect(rhsOccurs);
-  if (!(lhsOccurs.empty()))
-    {
-      //
-      //	Any unconstrained variable that occurs on both sides must be constrained to be
-      //	an element variable.
-      //
-      FOR_EACH_CONST(i, NatSet, lhsOccurs)
-	constraintMap[*i] = PigPug::ELEMENT;
-      //
-      //	This may have also fixed any nonlinearity issue.
-      //
-      lhsNonlinear.subtract(lhsOccurs);
-      rhsNonlinear.subtract(rhsOccurs);
-    }
-  //
-  //	Flip equation if rhs has few nonlinear unconstrained variables.
-  //
-  if (rhsNonlinear.cardinality() < lhsNonlinear.cardinality())
-    {
-      e.lhs.swap(e.rhs);
-      lhsNonlinear.swap(rhsNonlinear);
-    }
-  //
-  //	Constrain nonlinear lhs variables.
-  //
-  FOR_EACH_CONST(i, NatSet, lhsNonlinear)
-    constraintMap[*i] = PigPug::ELEMENT;
-  //
-  //	And now we have our chosen, hacked up equation.
-  //
-  chosenEquation = firstUnsolved;
+  return false;  // we didn't find a strict left-linear equation
 }
 
 void
@@ -275,11 +226,11 @@ WordLevel::checkUnconstrainedVariables(const Word& word, NatSet& occurs, NatSet&
 }
 
 void
-WordLevel::makePigPug()
+WordLevel::makePigPug(bool strictLeftLinear)
 {
   Equation& e = unsolvedEquations[chosenEquation];
   int nrVariables = partialSolution.size();
-  pigPug = new PigPug(e.lhs, e.rhs, constraintMap, nrVariables - 1, nrVariables);
+  pigPug = new PigPug(e.lhs, e.rhs, constraintMap, nrVariables - 1, nrVariables, strictLeftLinear);
 }
 
 void

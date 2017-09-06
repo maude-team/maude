@@ -333,6 +333,10 @@ PendingUnificationStack::killTopSubproblem()
 int
 PendingUnificationStack::findCycle(UnificationContext& solution)
 {
+  //
+  //	This includes all the original variables together with
+  //	fresh variables we added during unification.
+  //
   int nrVariables = solution.nrFragileBindings();
   variableStatus.resize(nrVariables);
   for (int i = 0; i < nrVariables; ++i)

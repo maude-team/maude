@@ -1,3 +1,10 @@
+Overview of Changes in alpha110
+===============================
+* reorganization of unification sort computations
+* added -print-to-stderr flag
+* added cycle detection and depth bounds to PIG-PUG
+* fixed some uninitialized memory reads in SMT code
+
 Overview of Changes in alpha109
 ===============================
 * new metalevel interface for variant narrowing
@@ -44,7 +51,7 @@ Overview of Changes in alpha103
 * 0/1 is now a valid Rat constant
 * advisory printed when downTerm() fails because of kind clash
 * experimental support for calling CVC4
-* fixed bug where metaPrettyPrint() was failing to generate neeed
+* fixed bug where metaPrettyPrint() was failing to generate needed
   disambiguation for built-in data types
 
 Overview of Changes in alpha102

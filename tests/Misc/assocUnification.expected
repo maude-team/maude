@@ -1656,13 +1656,13 @@ M --> #1:List
 N --> #2:List #3:List
 ==========================================
 unify in A-UNIF : A B =? B C .
-Warning: Unification modulo the theory of operator __ has encoutered an
-    instance for which it may not be complete.
 
 Solution 1
 A --> #1:List #2:List
 B --> #1:List
 C --> #2:List #1:List
+Warning: Unification modulo the theory of operator __ has encoutered an
+    instance for which it may not be complete.
 
 Solution 2
 A --> #1:List
@@ -10341,6 +10341,128 @@ V --> #2:List
 E --> #3:Elt
 W --> #4:List
 B --> #5:List
+==========================================
+unify in A-UNIF : A =? h(B, C) /\ X A Y =? U h(C, D) V E A W .
+
+Solution 1
+A --> h(#6:List, #8:List)
+B --> #8:List
+C --> #6:List
+X --> #1:List h(#6:List, #7:List) #2:List #3:Elt h(#6:List, #8:List) #4:List
+Y --> #5:List
+U --> #1:List
+D --> #7:List
+V --> #2:List
+E --> #3:Elt
+W --> #4:List h(#6:List, #8:List) #5:List
+
+Solution 2
+A --> h(#5:List, #7:List)
+B --> #7:List
+C --> #5:List
+X --> #1:List h(#5:List, #6:List) #2:List #3:Elt h(#5:List, #7:List)
+Y --> #4:List
+U --> #1:List
+D --> #6:List
+V --> #2:List
+E --> #3:Elt
+W --> h(#5:List, #7:List) #4:List
+
+Solution 3
+A --> h(#5:List, #7:List)
+B --> #7:List
+C --> #5:List
+X --> #1:List h(#5:List, #6:List) #2:List #3:Elt
+Y --> #4:List
+U --> #1:List
+D --> #6:List
+V --> #2:List
+E --> #3:Elt
+W --> #4:List
+
+Solution 4
+A --> h(#6:List, #8:List)
+B --> #8:List
+C --> #6:List
+X --> #1:List h(#6:List, #7:List) #2:List
+Y --> #3:List #4:Elt h(#6:List, #8:List) #5:List
+U --> #1:List
+D --> #7:List
+V --> #2:List h(#6:List, #8:List) #3:List
+E --> #4:Elt
+W --> #5:List
+
+Solution 5
+A --> h(#5:List, #7:List)
+B --> #7:List
+C --> #5:List
+X --> #1:List h(#5:List, #6:List) #2:List
+Y --> #3:Elt h(#5:List, #7:List) #4:List
+U --> #1:List
+D --> #6:List
+V --> #2:List h(#5:List, #7:List)
+E --> #3:Elt
+W --> #4:List
+
+Solution 6
+A --> h(#5:List, #7:List)
+B --> #7:List
+C --> #5:List
+X --> #1:List h(#5:List, #6:List)
+Y --> #2:List #3:Elt h(#5:List, #7:List) #4:List
+U --> #1:List
+D --> #6:List
+V --> h(#5:List, #7:List) #2:List
+E --> #3:Elt
+W --> #4:List
+
+Solution 7
+A --> h(#4:List, #6:List)
+B --> #6:List
+C --> #4:List
+X --> #1:List h(#4:List, #5:List)
+Y --> #2:Elt h(#4:List, #6:List) #3:List
+U --> #1:List
+D --> #5:List
+V --> h(#4:List, #6:List)
+E --> #2:Elt
+W --> #3:List
+
+Solution 8
+A --> h(#6:List, #8:List)
+B --> #8:List
+C --> #6:List
+X --> #1:List
+Y --> #2:List h(#6:List, #7:List) #3:List #4:Elt h(#6:List, #8:List) #5:List
+U --> #1:List h(#6:List, #8:List) #2:List
+D --> #7:List
+V --> #3:List
+E --> #4:Elt
+W --> #5:List
+
+Solution 9
+A --> h(#5:List, #7:List)
+B --> #7:List
+C --> #5:List
+X --> #1:List
+Y --> h(#5:List, #6:List) #2:List #3:Elt h(#5:List, #7:List) #4:List
+U --> #1:List h(#5:List, #7:List)
+D --> #6:List
+V --> #2:List
+E --> #3:Elt
+W --> #4:List
+
+Solution 10
+A --> h(#5:List, #6:List)
+B --> #5:List
+C --> #6:List
+X --> #1:List
+Y --> #2:List #3:Elt h(#5:List, #6:List) #4:List
+U --> #1:List
+D --> #5:List
+V --> #2:List
+E --> #3:Elt
+W --> #4:List
 ==========================================
 unify in A-UNIF : j(A, f(B, E, C), f(D, E, j(G, H), I)) =? j(U, f(V, W), f(X,
     j(Y, Z), S)) .
@@ -73948,4 +74070,1496 @@ X --> #2:List
 Z --> 1
 Y --> #6:Elt
 S --> f(j(#7:List, #8:List), #3:List)
+==========================================
+unify in FOO : P P =? Q Q R R H .
+No unifier.
+==========================================
+unify in FOO : P P Q =? Q R R H .
+No unifier.
+==========================================
+unify in FOO : P P =? Q Q G G H .
+No unifier.
+==========================================
+unify in FOO : P P Q =? Q G G H .
+No unifier.
+==========================================
+unify in FOO : P P =? Q Q R H R .
+No unifier.
+==========================================
+unify in FOO : P P Q =? Q R H R .
+No unifier.
+==========================================
+unify in FOO : P P =? Q Q G H G .
+No unifier.
+==========================================
+unify in FOO : P P Q =? Q G H G .
+No unifier.
+==========================================
+unify in FOO : P P =? Q Q G S S .
+No unifier.
+==========================================
+unify in FOO : P P Q =? Q G S S .
+No unifier.
+==========================================
+unify in FOO : P P =? Q Q G H H .
+No unifier.
+==========================================
+unify in FOO : P P Q =? Q G H H .
+No unifier.
+==========================================
+unify in FOO : P P =? Q Q G H I .
+No unifier.
+==========================================
+unify in FOO : P P Q =? Q G H I .
+No unifier.
+==========================================
+unify in FOO : P P =? Q G Q S S .
+No unifier.
+==========================================
+unify in FOO : P P Q =? G Q S S .
+No unifier.
+==========================================
+unify in FOO : P P =? F R R S S .
+No unifier.
+==========================================
+unify in FOO : P P F =? R R S S .
+No unifier.
+==========================================
+unify in FOO : P Q P =? Q R R H .
+No unifier.
+==========================================
+unify in FOO : P Q P =? Q G G H .
+No unifier.
+==========================================
+unify in FOO : P Q P =? Q R H R .
+No unifier.
+==========================================
+unify in FOO : P Q P =? Q G H G .
+No unifier.
+==========================================
+unify in FOO : P Q P =? Q G S S .
+No unifier.
+==========================================
+unify in FOO : P Q P =? Q G H H .
+No unifier.
+==========================================
+unify in FOO : P Q P =? Q G H I .
+No unifier.
+==========================================
+unify in FOO : P Q P =? G Q S S .
+No unifier.
+==========================================
+unify in FOO : P F P =? R R S S .
+No unifier.
+==========================================
+unify in FOO : P Q Q =? R P R H .
+No unifier.
+==========================================
+unify in FOO : P Q Q =? G P G H .
+No unifier.
+==========================================
+unify in FOO : P Q Q =? R P H R .
+No unifier.
+==========================================
+unify in FOO : P Q Q =? G P H G .
+No unifier.
+==========================================
+unify in FOO : P Q Q =? G P S S .
+No unifier.
+==========================================
+unify in FOO : P Q Q =? G P H H .
+No unifier.
+==========================================
+unify in FOO : P Q Q =? G P H I .
+No unifier.
+==========================================
+unify in FOO : P Q Q =? R R P H .
+No unifier.
+==========================================
+unify in FOO : P Q Q =? G G P H .
+No unifier.
+==========================================
+unify in FOO : P Q Q =? R R H P .
+No unifier.
+==========================================
+unify in FOO : P Q Q =? G G H P .
+No unifier.
+==========================================
+unify in FOO : E Q Q =? R R S S .
+No unifier.
+==========================================
+unify in FOO : P Q Q =? R H P R .
+No unifier.
+==========================================
+unify in FOO : P Q Q =? G H P G .
+No unifier.
+==========================================
+unify in FOO : P Q Q =? G S P S .
+No unifier.
+==========================================
+unify in FOO : P Q Q =? G H P H .
+No unifier.
+==========================================
+unify in FOO : P Q Q =? G H P I .
+No unifier.
+==========================================
+unify in FOO : P Q Q =? R H R P .
+No unifier.
+==========================================
+unify in FOO : P Q Q =? G H G P .
+No unifier.
+==========================================
+unify in FOO : P Q Q =? G S S P .
+No unifier.
+==========================================
+unify in FOO : P Q Q =? G H H P .
+No unifier.
+==========================================
+unify in FOO : P Q Q =? G H I P .
+No unifier.
+==========================================
+unify in FOO : P Q R R =? H H Q I I .
+
+Solution 1
+P --> #1:Elt #1:Elt
+Q --> #2:Foo
+R --> #3:Elt
+H --> #1:Elt
+I --> #3:Elt
+==========================================
+unify in FOO : P Q R R =? H H Q I J .
+
+Solution 1
+P --> #1:Elt #1:Elt
+Q --> #2:Foo
+R --> #3:Elt
+H --> #1:Elt
+I --> #3:Elt
+J --> #3:Elt
+==========================================
+unify in FOO : P Q R R =? H I Q H I .
+
+Solution 1
+P --> #1:Elt #1:Elt
+Q --> #2:Foo
+R --> #1:Elt
+H --> #1:Elt
+I --> #1:Elt
+==========================================
+unify in FOO : P Q R R =? H I Q H J .
+
+Solution 1
+P --> #1:Elt #2:Elt
+Q --> #3:Foo
+R --> #1:Elt
+H --> #1:Elt
+I --> #2:Elt
+J --> #1:Elt
+==========================================
+unify in FOO : P Q R R =? H I Q I H .
+
+Solution 1
+P --> #1:Elt #1:Elt
+Q --> #2:Foo
+R --> #1:Elt
+H --> #1:Elt
+I --> #1:Elt
+==========================================
+unify in FOO : P Q R R =? H I Q I J .
+
+Solution 1
+P --> #1:Elt #2:Elt
+Q --> #3:Foo
+R --> #2:Elt
+H --> #1:Elt
+I --> #2:Elt
+J --> #2:Elt
+==========================================
+unify in FOO : P Q R R =? H I Q J H .
+
+Solution 1
+P --> #1:Elt #2:Elt
+Q --> #3:Foo
+R --> #1:Elt
+H --> #1:Elt
+I --> #2:Elt
+J --> #1:Elt
+==========================================
+unify in FOO : P Q R R =? H I Q J I .
+
+Solution 1
+P --> #1:Elt #2:Elt
+Q --> #3:Foo
+R --> #2:Elt
+H --> #1:Elt
+I --> #2:Elt
+J --> #2:Elt
+==========================================
+unify in FOO : P Q R R =? H I Q J J .
+
+Solution 1
+P --> #1:Elt #2:Elt
+Q --> #3:Foo
+R --> #4:Elt
+H --> #1:Elt
+I --> #2:Elt
+J --> #4:Elt
+==========================================
+unify in FOO : P Q R R =? H I Q J K .
+
+Solution 1
+P --> #1:Elt #2:Elt
+Q --> #3:Foo
+R --> #4:Elt
+H --> #1:Elt
+I --> #2:Elt
+J --> #4:Elt
+K --> #4:Elt
+==========================================
+unify in FOO : a Q =? Q c .
+No unifier.
+==========================================
+unify in FOO : P b =? c P .
+No unifier.
+==========================================
+unify in FOO : a a Q =? Q c c .
+No unifier.
+==========================================
+unify in FOO : a a Q =? Q c S .
+No unifier.
+==========================================
+unify in FOO : a a Q =? Q R d .
+No unifier.
+==========================================
+unify in FOO : P P =? Q Q c d .
+No unifier.
+==========================================
+unify in FOO : P P Q =? Q c d .
+No unifier.
+==========================================
+unify in FOO : a a Q =? Q c d .
+No unifier.
+==========================================
+unify in FOO : a a Q =? R Q d .
+No unifier.
+==========================================
+unify in FOO : P P Q =? c Q d .
+No unifier.
+==========================================
+unify in FOO : P P =? b R R d .
+No unifier.
+==========================================
+unify in FOO : P P =? Q c d Q .
+No unifier.
+==========================================
+unify in FOO : P P b =? R d R .
+No unifier.
+==========================================
+unify in FOO : P P =? b c S S .
+No unifier.
+==========================================
+unify in FOO : a Q a =? Q c c .
+No unifier.
+==========================================
+unify in FOO : a Q a =? Q c S .
+No unifier.
+==========================================
+unify in FOO : a Q a =? Q R d .
+No unifier.
+==========================================
+unify in FOO : P Q P =? Q c d .
+No unifier.
+==========================================
+unify in FOO : a Q a =? Q c d .
+No unifier.
+==========================================
+unify in FOO : P b P =? R R d .
+No unifier.
+==========================================
+unify in FOO : a Q a =? R d Q .
+No unifier.
+==========================================
+unify in FOO : P Q P =? c d Q .
+No unifier.
+==========================================
+unify in FOO : P b P =? c S S .
+No unifier.
+==========================================
+unify in FOO : P b b =? c P c .
+No unifier.
+==========================================
+unify in FOO : P b b =? c P S .
+No unifier.
+==========================================
+unify in FOO : P b b =? R P d .
+No unifier.
+==========================================
+unify in FOO : P Q Q =? c P d .
+No unifier.
+==========================================
+unify in FOO : P b b =? c P d .
+No unifier.
+==========================================
+unify in FOO : P b b =? c c P .
+No unifier.
+==========================================
+unify in FOO : P b b =? c S P .
+No unifier.
+==========================================
+unify in FOO : P b b =? R d P .
+No unifier.
+==========================================
+unify in FOO : P Q Q =? c d P .
+No unifier.
+==========================================
+unify in FOO : P b b =? c d P .
+No unifier.
+==========================================
+unify in FOO : a Q Q =? R d R .
+No unifier.
+==========================================
+unify in FOO : P b R =? P R d .
+No unifier.
+==========================================
+unify in FOO : a b R =? a R d .
+No unifier.
+==========================================
+unify in FOO : P Q c =? P d Q .
+No unifier.
+==========================================
+unify in FOO : a Q c =? a d Q .
+No unifier.
+==========================================
+unify in FOO : P Q c =? Q P d .
+No unifier.
+==========================================
+unify in FOO : a Q c =? Q a d .
+No unifier.
+==========================================
+unify in FOO : P b c =? b P d .
+No unifier.
+==========================================
+unify in FOO : a Q c =? Q c a .
+No unifier.
+==========================================
+unify in FOO : a Q c =? Q c S .
+No unifier.
+==========================================
+unify in FOO : a Q R =? Q R d .
+No unifier.
+==========================================
+unify in FOO : P b R =? b R d .
+No unifier.
+==========================================
+unify in FOO : P Q c =? Q c d .
+No unifier.
+==========================================
+unify in FOO : a Q c =? Q c d .
+No unifier.
+==========================================
+unify in FOO : a Q c =? Q S a .
+No unifier.
+==========================================
+unify in FOO : a Q R =? Q d a .
+No unifier.
+==========================================
+unify in FOO : P Q c =? Q d P .
+No unifier.
+==========================================
+unify in FOO : a Q c =? Q d a .
+No unifier.
+==========================================
+unify in FOO : P b c =? b d P .
+No unifier.
+==========================================
+unify in FOO : a Q R =? Q d R .
+No unifier.
+==========================================
+unify in FOO : a Q c =? Q d c .
+No unifier.
+==========================================
+unify in FOO : a Q c =? Q S S .
+No unifier.
+==========================================
+unify in FOO : a Q R =? Q d d .
+No unifier.
+==========================================
+unify in FOO : P Q c =? Q d d .
+No unifier.
+==========================================
+unify in FOO : a Q c =? Q d d .
+No unifier.
+==========================================
+unify in FOO : a Q R =? Q d T .
+No unifier.
+==========================================
+unify in FOO : a Q c =? Q d T .
+No unifier.
+==========================================
+unify in FOO : P Q c =? Q S e .
+No unifier.
+==========================================
+unify in FOO : a Q c =? Q S e .
+No unifier.
+==========================================
+unify in FOO : a Q R =? Q d e .
+No unifier.
+==========================================
+unify in FOO : P Q c =? Q d e .
+No unifier.
+Maude> ==========================================
+unify in FOO : a Q c =? Q d e .
+No unifier.
+==========================================
+unify in FOO : P b c =? c P b .
+No unifier.
+==========================================
+unify in FOO : P b c =? c P S .
+No unifier.
+==========================================
+unify in FOO : P b R =? R P d .
+No unifier.
+==========================================
+unify in FOO : a b R =? R a d .
+No unifier.
+==========================================
+unify in FOO : P Q c =? c P d .
+No unifier.
+==========================================
+unify in FOO : P b c =? c P d .
+No unifier.
+==========================================
+unify in FOO : a Q R =? R Q d .
+No unifier.
+==========================================
+unify in FOO : a b R =? R b d .
+No unifier.
+==========================================
+unify in FOO : P b R =? R d P .
+No unifier.
+==========================================
+unify in FOO : a b R =? R d a .
+No unifier.
+==========================================
+unify in FOO : P b c =? c d P .
+No unifier.
+==========================================
+unify in FOO : a Q R =? R d Q .
+No unifier.
+==========================================
+unify in FOO : a b R =? R d b .
+No unifier.
+==========================================
+unify in FOO : P Q c =? c d Q .
+No unifier.
+==========================================
+unify in FOO : a b R =? R S S .
+No unifier.
+==========================================
+unify in FOO : a Q R =? R d d .
+No unifier.
+==========================================
+unify in FOO : P b R =? R d d .
+No unifier.
+==========================================
+unify in FOO : a b R =? R d d .
+No unifier.
+==========================================
+unify in FOO : a b R =? R d T .
+No unifier.
+==========================================
+unify in FOO : a b R =? R S e .
+No unifier.
+==========================================
+unify in FOO : a Q R =? R d e .
+No unifier.
+==========================================
+unify in FOO : P b R =? R d e .
+No unifier.
+==========================================
+unify in FOO : a b R =? R d e .
+No unifier.
+==========================================
+unify in FOO : a Q c =? S a Q .
+No unifier.
+==========================================
+unify in FOO : P b c =? S P b .
+No unifier.
+==========================================
+unify in FOO : P b R =? d P b .
+No unifier.
+==========================================
+unify in FOO : P Q c =? d P Q .
+No unifier.
+==========================================
+unify in FOO : P b c =? d P b .
+No unifier.
+==========================================
+unify in FOO : P b R =? d P R .
+No unifier.
+==========================================
+unify in FOO : P b c =? d P c .
+No unifier.
+==========================================
+unify in FOO : P b c =? S P S .
+No unifier.
+==========================================
+unify in FOO : P b R =? d P d .
+No unifier.
+==========================================
+unify in FOO : P Q c =? d P d .
+No unifier.
+==========================================
+unify in FOO : P b c =? d P d .
+No unifier.
+==========================================
+unify in FOO : P b R =? d P T .
+No unifier.
+==========================================
+unify in FOO : P b c =? d P T .
+No unifier.
+==========================================
+unify in FOO : P Q c =? S P e .
+No unifier.
+==========================================
+unify in FOO : P b c =? S P e .
+No unifier.
+==========================================
+unify in FOO : P b R =? d P e .
+No unifier.
+==========================================
+unify in FOO : P Q c =? d P e .
+No unifier.
+==========================================
+unify in FOO : P b c =? d P e .
+No unifier.
+==========================================
+unify in FOO : P Q c =? d Q P .
+No unifier.
+==========================================
+unify in FOO : P b c =? d b P .
+No unifier.
+==========================================
+unify in FOO : a b R =? S R a .
+No unifier.
+==========================================
+unify in FOO : P b R =? d R P .
+No unifier.
+==========================================
+unify in FOO : P b c =? d c P .
+No unifier.
+==========================================
+unify in FOO : a b R =? S R S .
+No unifier.
+==========================================
+unify in FOO : P b R =? d R d .
+No unifier.
+==========================================
+unify in FOO : P b R =? S R e .
+No unifier.
+==========================================
+unify in FOO : a b R =? S R e .
+No unifier.
+==========================================
+unify in FOO : P b R =? d R e .
+No unifier.
+==========================================
+unify in FOO : P b c =? S S P .
+No unifier.
+==========================================
+unify in FOO : P b R =? d d P .
+No unifier.
+==========================================
+unify in FOO : P Q c =? d d P .
+No unifier.
+==========================================
+unify in FOO : P b c =? d d P .
+No unifier.
+==========================================
+unify in FOO : a Q c =? S S Q .
+No unifier.
+==========================================
+unify in FOO : P Q c =? d d Q .
+No unifier.
+==========================================
+unify in FOO : P b c =? d T P .
+No unifier.
+==========================================
+unify in FOO : P b c =? S e P .
+No unifier.
+==========================================
+unify in FOO : P b R =? d e P .
+No unifier.
+==========================================
+unify in FOO : P Q c =? d e P .
+No unifier.
+==========================================
+unify in FOO : P b c =? d e P .
+No unifier.
+==========================================
+unify in FOO : P Q c =? S e Q .
+No unifier.
+==========================================
+unify in FOO : a Q c =? S e Q .
+No unifier.
+==========================================
+unify in FOO : P Q c =? d e Q .
+No unifier.
+==========================================
+unify in FOO : P P =? Q Q R R d .
+No unifier.
+==========================================
+unify in FOO : P P Q =? Q R R d .
+No unifier.
+==========================================
+unify in FOO : P P =? Q Q c c d .
+No unifier.
+==========================================
+unify in FOO : P P Q =? Q c c d .
+No unifier.
+==========================================
+unify in FOO : P P =? Q Q R d R .
+No unifier.
+==========================================
+unify in FOO : P P Q =? Q R d R .
+No unifier.
+==========================================
+unify in FOO : P P =? Q Q c d c .
+No unifier.
+==========================================
+unify in FOO : P P Q =? Q c d c .
+No unifier.
+==========================================
+unify in FOO : P P =? Q Q c S S .
+No unifier.
+==========================================
+unify in FOO : P P Q =? Q c S S .
+No unifier.
+==========================================
+unify in FOO : P P =? Q Q c d d .
+No unifier.
+==========================================
+unify in FOO : P P Q =? Q c d d .
+No unifier.
+==========================================
+unify in FOO : P P =? Q Q c d e .
+No unifier.
+==========================================
+unify in FOO : P P Q =? Q c d e .
+No unifier.
+==========================================
+unify in FOO : P P =? Q c Q S S .
+No unifier.
+==========================================
+unify in FOO : P P Q =? c Q S S .
+No unifier.
+==========================================
+unify in FOO : P P =? b R R S S .
+No unifier.
+==========================================
+unify in FOO : P P b =? R R S S .
+No unifier.
+==========================================
+unify in FOO : P P b =? R R S e .
+No unifier.
+==========================================
+unify in FOO : P P b =? R S R e .
+No unifier.
+==========================================
+unify in FOO : P P b =? R S S e .
+No unifier.
+==========================================
+unify in FOO : P Q P =? Q R R d .
+No unifier.
+==========================================
+unify in FOO : P Q P =? Q c c d .
+No unifier.
+==========================================
+unify in FOO : P Q P =? Q R d R .
+No unifier.
+==========================================
+unify in FOO : P Q P =? Q c d c .
+No unifier.
+==========================================
+unify in FOO : P Q P =? Q c S S .
+No unifier.
+==========================================
+unify in FOO : P Q P =? Q c d d .
+No unifier.
+==========================================
+unify in FOO : P Q P =? Q c d e .
+No unifier.
+==========================================
+unify in FOO : P Q P =? c Q S S .
+No unifier.
+==========================================
+unify in FOO : P b P =? R R S S .
+No unifier.
+==========================================
+unify in FOO : P Q Q =? R P R d .
+No unifier.
+==========================================
+unify in FOO : P Q Q =? c P c d .
+No unifier.
+==========================================
+unify in FOO : P Q Q =? R P d R .
+No unifier.
+==========================================
+unify in FOO : P Q Q =? c P d c .
+No unifier.
+==========================================
+unify in FOO : P Q Q =? c P S S .
+No unifier.
+==========================================
+unify in FOO : P Q Q =? c P d d .
+No unifier.
+==========================================
+unify in FOO : P Q Q =? c P d e .
+No unifier.
+==========================================
+unify in FOO : P Q Q =? R R P d .
+No unifier.
+==========================================
+unify in FOO : P Q Q =? c c P d .
+No unifier.
+==========================================
+unify in FOO : P Q Q =? R R d P .
+No unifier.
+==========================================
+unify in FOO : P Q Q =? c c d P .
+No unifier.
+==========================================
+unify in FOO : a Q Q =? R R S S .
+No unifier.
+==========================================
+unify in FOO : P Q Q =? R d P R .
+No unifier.
+==========================================
+unify in FOO : P Q Q =? c d P c .
+No unifier.
+==========================================
+unify in FOO : P Q Q =? c S P S .
+No unifier.
+==========================================
+unify in FOO : P Q Q =? c d P d .
+No unifier.
+==========================================
+unify in FOO : P Q Q =? c d P e .
+No unifier.
+==========================================
+unify in FOO : P Q Q =? R d R P .
+No unifier.
+==========================================
+unify in FOO : P Q Q =? c d c P .
+No unifier.
+==========================================
+unify in FOO : P Q Q =? c S S P .
+No unifier.
+==========================================
+unify in FOO : P Q Q =? c d d P .
+No unifier.
+==========================================
+unify in FOO : P Q Q =? c d e P .
+No unifier.
+==========================================
+unify in FOO : P b R =? b R d d .
+No unifier.
+==========================================
+unify in FOO : P Q c =? Q c d d .
+No unifier.
+==========================================
+unify in FOO : P Q c =? Q c S e .
+No unifier.
+==========================================
+unify in FOO : P b R =? b R d e .
+No unifier.
+==========================================
+unify in FOO : P Q c =? Q c d e .
+No unifier.
+==========================================
+unify in FOO : a Q R =? Q d a d .
+No unifier.
+==========================================
+unify in FOO : a Q R =? Q d a T .
+No unifier.
+==========================================
+unify in FOO : a Q R =? Q d a e .
+No unifier.
+==========================================
+unify in FOO : P b R =? b d R d .
+No unifier.
+==========================================
+unify in FOO : P Q c =? Q d c d .
+No unifier.
+==========================================
+unify in FOO : P b R =? b S R e .
+No unifier.
+==========================================
+unify in FOO : P Q c =? Q S c e .
+No unifier.
+==========================================
+unify in FOO : P b R =? b d R e .
+No unifier.
+==========================================
+unify in FOO : P Q c =? Q d c e .
+No unifier.
+==========================================
+unify in FOO : a Q R =? Q d d a .
+No unifier.
+==========================================
+unify in FOO : a Q R =? Q d d T .
+No unifier.
+==========================================
+unify in FOO : P Q c =? Q S S e .
+No unifier.
+==========================================
+unify in FOO : a Q R =? Q d d e .
+No unifier.
+==========================================
+unify in FOO : P Q c =? Q d d e .
+No unifier.
+==========================================
+unify in FOO : a Q R =? Q d T a .
+No unifier.
+==========================================
+unify in FOO : a Q R =? Q d e a .
+No unifier.
+==========================================
+unify in FOO : a Q R =? Q d T d .
+No unifier.
+==========================================
+unify in FOO : P Q c =? Q d T d .
+No unifier.
+==========================================
+unify in FOO : a Q R =? Q d e d .
+No unifier.
+==========================================
+unify in FOO : P Q c =? Q d e d .
+No unifier.
+==========================================
+unify in FOO : a Q R =? Q d T T .
+No unifier.
+==========================================
+unify in FOO : P Q c =? Q S e e .
+No unifier.
+==========================================
+unify in FOO : a Q R =? Q d e e .
+No unifier.
+==========================================
+unify in FOO : P Q c =? Q d e e .
+No unifier.
+==========================================
+unify in FOO : a Q R =? Q d T U .
+No unifier.
+==========================================
+unify in FOO : a Q R =? Q d e U .
+No unifier.
+==========================================
+unify in FOO : P Q c =? Q S T f .
+No unifier.
+==========================================
+unify in FOO : a Q R =? Q d T f .
+No unifier.
+==========================================
+unify in FOO : P Q c =? Q d T f .
+No unifier.
+==========================================
+unify in FOO : P Q c =? Q S e f .
+No unifier.
+==========================================
+unify in FOO : a Q R =? Q d e f .
+No unifier.
+==========================================
+unify in FOO : P Q c =? Q d e f .
+No unifier.
+==========================================
+unify in FOO : P Q c =? c P d d .
+No unifier.
+==========================================
+unify in FOO : P Q c =? c P S e .
+No unifier.
+==========================================
+unify in FOO : P Q c =? c P d e .
+No unifier.
+==========================================
+unify in FOO : P Q c =? c Q d d .
+No unifier.
+==========================================
+unify in FOO : P Q c =? c Q S e .
+No unifier.
+==========================================
+unify in FOO : P Q c =? c Q d e .
+No unifier.
+==========================================
+unify in FOO : P Q c =? c d P d .
+No unifier.
+==========================================
+unify in FOO : P Q c =? c S P e .
+No unifier.
+==========================================
+unify in FOO : P Q c =? c d P e .
+No unifier.
+==========================================
+unify in FOO : P Q c =? c d d Q .
+No unifier.
+==========================================
+unify in FOO : a Q R =? R d d e .
+No unifier.
+==========================================
+unify in FOO : P b R =? R d d e .
+No unifier.
+==========================================
+unify in FOO : P Q c =? c S e Q .
+No unifier.
+==========================================
+unify in FOO : P Q c =? c d e Q .
+No unifier.
+==========================================
+unify in FOO : a Q R =? R d e d .
+No unifier.
+==========================================
+unify in FOO : P b R =? R d e d .
+No unifier.
+==========================================
+unify in FOO : a Q R =? R d e e .
+No unifier.
+==========================================
+unify in FOO : P b R =? R d e e .
+No unifier.
+==========================================
+unify in FOO : a Q R =? R d e f .
+No unifier.
+==========================================
+unify in FOO : P b R =? R d e f .
+No unifier.
+==========================================
+unify in FOO : P b R =? d P b d .
+No unifier.
+==========================================
+unify in FOO : P b R =? d P b T .
+No unifier.
+==========================================
+unify in FOO : P b R =? d P b e .
+No unifier.
+==========================================
+unify in FOO : P Q c =? d P c d .
+No unifier.
+==========================================
+unify in FOO : P Q c =? S P c e .
+No unifier.
+==========================================
+unify in FOO : P Q c =? d P c e .
+No unifier.
+==========================================
+unify in FOO : P b R =? d P d b .
+No unifier.
+==========================================
+unify in FOO : P b R =? d P d T .
+No unifier.
+==========================================
+unify in FOO : P Q c =? S P S e .
+No unifier.
+==========================================
+unify in FOO : P b R =? d P d e .
+No unifier.
+==========================================
+unify in FOO : P Q c =? d P d e .
+No unifier.
+==========================================
+unify in FOO : P b R =? d P T b .
+No unifier.
+==========================================
+unify in FOO : P b R =? d P e b .
+No unifier.
+==========================================
+unify in FOO : P b R =? d P T d .
+No unifier.
+==========================================
+unify in FOO : P Q c =? d P T d .
+No unifier.
+==========================================
+unify in FOO : P b R =? d P e d .
+No unifier.
+==========================================
+unify in FOO : P Q c =? d P e d .
+No unifier.
+==========================================
+unify in FOO : P b R =? d P T T .
+No unifier.
+==========================================
+unify in FOO : P Q c =? S P e e .
+No unifier.
+==========================================
+unify in FOO : P b R =? d P e e .
+No unifier.
+==========================================
+unify in FOO : P Q c =? d P e e .
+No unifier.
+==========================================
+unify in FOO : P b R =? d P T U .
+No unifier.
+==========================================
+unify in FOO : P b R =? d P e U .
+No unifier.
+==========================================
+unify in FOO : P Q c =? S P T f .
+No unifier.
+==========================================
+unify in FOO : P b R =? d P T f .
+No unifier.
+==========================================
+unify in FOO : P Q c =? d P T f .
+No unifier.
+==========================================
+unify in FOO : P Q c =? S P e f .
+No unifier.
+==========================================
+unify in FOO : P b R =? d P e f .
+No unifier.
+==========================================
+unify in FOO : P Q c =? d P e f .
+No unifier.
+==========================================
+unify in FOO : P b R =? d b R d .
+No unifier.
+==========================================
+unify in FOO : P Q c =? d Q c d .
+No unifier.
+==========================================
+unify in FOO : P b R =? S b R e .
+No unifier.
+==========================================
+unify in FOO : P Q c =? S Q c e .
+No unifier.
+==========================================
+unify in FOO : P b R =? d b R e .
+No unifier.
+==========================================
+unify in FOO : P Q c =? d Q c e .
+No unifier.
+==========================================
+unify in FOO : P Q c =? S Q S e .
+No unifier.
+==========================================
+unify in FOO : P Q c =? d Q d e .
+No unifier.
+==========================================
+unify in FOO : P Q c =? d Q T d .
+No unifier.
+==========================================
+unify in FOO : P Q c =? d Q e d .
+No unifier.
+==========================================
+unify in FOO : P Q c =? S Q e e .
+No unifier.
+==========================================
+unify in FOO : P Q c =? d Q e e .
+No unifier.
+==========================================
+unify in FOO : P Q c =? S Q T f .
+No unifier.
+==========================================
+unify in FOO : P Q c =? d Q T f .
+No unifier.
+==========================================
+unify in FOO : P Q c =? S Q e f .
+No unifier.
+==========================================
+unify in FOO : P Q c =? d Q e f .
+No unifier.
+==========================================
+unify in FOO : P Q c =? d c P d .
+No unifier.
+==========================================
+unify in FOO : P Q c =? S c P e .
+No unifier.
+==========================================
+unify in FOO : P Q c =? d c P e .
+No unifier.
+==========================================
+unify in FOO : P Q c =? d c d Q .
+No unifier.
+==========================================
+unify in FOO : P b R =? d R d e .
+No unifier.
+==========================================
+unify in FOO : P Q c =? S c e Q .
+No unifier.
+==========================================
+unify in FOO : P Q c =? d c e Q .
+No unifier.
+==========================================
+unify in FOO : P b R =? d R e d .
+No unifier.
+==========================================
+unify in FOO : P b R =? S R e e .
+No unifier.
+==========================================
+unify in FOO : P b R =? d R e e .
+No unifier.
+==========================================
+unify in FOO : P b R =? S R e f .
+No unifier.
+==========================================
+unify in FOO : P b R =? d R e f .
+No unifier.
+==========================================
+unify in FOO : P b R =? d d P b .
+No unifier.
+==========================================
+unify in FOO : P b R =? d d P T .
+No unifier.
+==========================================
+unify in FOO : P Q c =? S S P e .
+No unifier.
+==========================================
+unify in FOO : P b R =? d d P e .
+No unifier.
+==========================================
+unify in FOO : P Q c =? d d P e .
+No unifier.
+==========================================
+unify in FOO : P b R =? S S R e .
+No unifier.
+==========================================
+unify in FOO : P b R =? d d R e .
+No unifier.
+==========================================
+unify in FOO : P b R =? d d e P .
+No unifier.
+==========================================
+unify in FOO : P Q c =? d d e P .
+No unifier.
+==========================================
+unify in FOO : P Q c =? S S e Q .
+No unifier.
+==========================================
+unify in FOO : P Q c =? d d e Q .
+No unifier.
+==========================================
+unify in FOO : P b R =? d e P b .
+No unifier.
+==========================================
+unify in FOO : P Q c =? d T P d .
+No unifier.
+==========================================
+unify in FOO : P b R =? d e P d .
+No unifier.
+==========================================
+unify in FOO : P Q c =? d e P d .
+No unifier.
+==========================================
+unify in FOO : P Q c =? S e P e .
+No unifier.
+==========================================
+unify in FOO : P b R =? d e P e .
+No unifier.
+==========================================
+unify in FOO : P Q c =? d e P e .
+No unifier.
+==========================================
+unify in FOO : P b R =? d e P U .
+No unifier.
+==========================================
+unify in FOO : P Q c =? S T P f .
+No unifier.
+==========================================
+unify in FOO : P Q c =? d T P f .
+No unifier.
+==========================================
+unify in FOO : P Q c =? S e P f .
+No unifier.
+==========================================
+unify in FOO : P b R =? d e P f .
+No unifier.
+==========================================
+unify in FOO : P Q c =? d e P f .
+No unifier.
+==========================================
+unify in FOO : P b R =? d T R d .
+No unifier.
+==========================================
+unify in FOO : P b R =? d e R d .
+No unifier.
+==========================================
+unify in FOO : P b R =? S e R e .
+No unifier.
+==========================================
+unify in FOO : P b R =? d e R e .
+No unifier.
+==========================================
+unify in FOO : P b R =? S T R f .
+No unifier.
+==========================================
+unify in FOO : P b R =? d T R f .
+No unifier.
+==========================================
+unify in FOO : P b R =? S e R f .
+No unifier.
+==========================================
+unify in FOO : P b R =? d e R f .
+No unifier.
+==========================================
+unify in FOO : P b R =? d e d P .
+No unifier.
+==========================================
+unify in FOO : P Q c =? d e d P .
+No unifier.
+==========================================
+unify in FOO : P Q c =? d T d Q .
+No unifier.
+==========================================
+unify in FOO : P Q c =? d e d Q .
+No unifier.
+==========================================
+unify in FOO : P b R =? d e e P .
+No unifier.
+==========================================
+unify in FOO : P Q c =? d e e P .
+No unifier.
+==========================================
+unify in FOO : P Q c =? S e e Q .
+No unifier.
+==========================================
+unify in FOO : P Q c =? d e e Q .
+No unifier.
+==========================================
+unify in FOO : P b R =? d e f P .
+No unifier.
+==========================================
+unify in FOO : P Q c =? d e f P .
+No unifier.
+==========================================
+unify in FOO : P Q c =? S T f Q .
+No unifier.
+==========================================
+unify in FOO : P Q c =? d T f Q .
+No unifier.
+==========================================
+unify in FOO : P Q c =? S e f Q .
+No unifier.
+==========================================
+unify in FOO : P Q c =? d e f Q .
+No unifier.
+==========================================
+unify in FOO : P Q R R =? d d Q e e .
+
+Solution 1
+P --> d d
+Q --> #1:Foo
+R --> e
+==========================================
+unify in FOO : P Q R R =? d e Q f f .
+
+Solution 1
+P --> d e
+Q --> #1:Foo
+R --> f
+==========================================
+unify in FOO : P b R S =? e b R e f .
+
+Solution 1
+P --> e
+R --> #1:Foo
+S --> e f
+==========================================
+unify in FOO : P Q c S =? e Q c e f .
+
+Solution 1
+P --> e
+Q --> #1:Foo
+S --> e f
+==========================================
+unify in FOO : P b R S =? e b R f e .
+
+Solution 1
+P --> e
+R --> #1:Foo
+S --> f e
+==========================================
+unify in FOO : P Q c S =? e Q c f e .
+
+Solution 1
+P --> e
+Q --> #1:Foo
+S --> f e
+==========================================
+unify in FOO : P b R S =? e b R f f .
+
+Solution 1
+P --> e
+R --> #1:Foo
+S --> f f
+==========================================
+unify in FOO : P Q c S =? e Q c f f .
+
+Solution 1
+P --> e
+Q --> #1:Foo
+S --> f f
+==========================================
+unify in FOO : P b R S =? e b R f g .
+
+Solution 1
+P --> e
+R --> #1:Foo
+S --> f g
+==========================================
+unify in FOO : P Q c S =? e Q c f g .
+
+Solution 1
+P --> e
+Q --> #1:Foo
+S --> f g
+==========================================
+unify in FOO : P Q c S =? e e Q c f .
+
+Solution 1
+P --> e e
+Q --> #1:Foo
+S --> f
+==========================================
+unify in FOO : P Q c S =? e f Q c e .
+
+Solution 1
+P --> e f
+Q --> #1:Foo
+S --> e
+==========================================
+unify in FOO : P Q c S =? e f Q c f .
+
+Solution 1
+P --> e f
+Q --> #1:Foo
+S --> f
+==========================================
+unify in FOO : P Q c S =? e f Q c g .
+
+Solution 1
+P --> e f
+Q --> #1:Foo
+S --> g
+==========================================
+unify in FOO : X X =? Y a Y .
+No unifier.
+==========================================
+unify in FOO : X X =? E Y a b Y E .
+No unifier.
+==========================================
+unify in FOO : X X =? Y Y .
+
+Solution 1
+X --> #1:Foo
+Y --> #1:Foo
+==========================================
+unify in FOO : X X =? Y a Y a .
+
+Solution 1
+X --> #1:Foo a
+Y --> #1:Foo
+==========================================
+unify in FOO : X X =? E Y F E Y F .
+
+Solution 1
+X --> #1:Elt #2:Foo #3:Elt
+E --> #1:Elt
+Y --> #2:Foo
+F --> #3:Elt
+==========================================
+unify in FOO : X X =? E Y a b Y F .
+No unifier.
+==========================================
+unify in FOO : X X =? E Y F b Y E .
+No unifier.
+==========================================
+unify in FOO : X X =? E Y b b Y E .
+No unifier.
+==========================================
+unify in FOO : X Y =? Y X .
+Warning: Unification modulo the theory of operator __ has encoutered an
+    instance for which it may not be complete.
+
+Solution 1
+X --> #1:Foo
+Y --> #1:Foo
+Warning: Some unifiers may have been missed due to incomplete unification
+    algorithm(s).
+==========================================
+unify in FOO : X Y X =? Z Z .
+
+Solution 1
+X --> #1:Foo
+Y --> #2:Foo #1:Foo #1:Foo #2:Foo
+Z --> #1:Foo #2:Foo #1:Foo
+Warning: Unification modulo the theory of operator __ has encoutered an
+    instance for which it may not be complete.
+
+Solution 2
+X --> #1:Foo
+Y --> #1:Foo #1:Foo
+Z --> #1:Foo #1:Foo
+Warning: Some unifiers may have been missed due to incomplete unification
+    algorithm(s).
+==========================================
+unify in FOO : X X =? Y a a Y .
+Warning: Unification modulo the theory of operator __ has encoutered an
+    instance for which it may not be complete.
+
+Solution 1
+X --> a a
+Y --> a
+Warning: Some unifiers may have been missed due to incomplete unification
+    algorithm(s).
+==========================================
+unify in FOO : X Y =? Y X .
+Warning: Unification modulo the theory of operator __ has encoutered an
+    instance for which it may not be complete.
+
+Solution 1
+X --> #1:Foo
+Y --> #1:Foo
+Warning: Some unifiers may have been missed due to incomplete unification
+    algorithm(s).
+==========================================
+unify in FOO : X X X =? Y Y Y Y .
+
+Solution 1
+X --> #1:Foo #1:Foo #1:Foo #1:Foo
+Y --> #1:Foo #1:Foo #1:Foo
+==========================================
+unify in FOO : X Y =? Y X /\ X X X =? Y Y Y Y .
+
+Solution 1
+X --> #1:Foo #1:Foo #1:Foo #1:Foo
+Y --> #1:Foo #1:Foo #1:Foo
+==========================================
+unify in FOO : X X X =? Y Y Y Y /\ X Y =? Y X .
+
+Solution 1
+X --> #1:Foo #1:Foo #1:Foo #1:Foo
+Y --> #1:Foo #1:Foo #1:Foo
+==========================================
+unify in FOO : X X =? Y Y Y .
+
+Solution 1
+X --> #1:Foo #1:Foo #1:Foo
+Y --> #1:Foo #1:Foo
+==========================================
+unify in FOO : X Y X =? Y X Y .
+
+Solution 1
+X --> #1:Foo
+Y --> #1:Foo
+==========================================
+unify in FOO : X X X =? Y Y Y Y .
+
+Solution 1
+X --> #1:Foo #1:Foo #1:Foo #1:Foo
+Y --> #1:Foo #1:Foo #1:Foo
+==========================================
+unify in FOO : X Y X =? Y Y Y Y .
+
+Solution 1
+X --> #1:Foo #1:Foo #1:Foo
+Y --> #1:Foo #1:Foo
 Maude> Bye.

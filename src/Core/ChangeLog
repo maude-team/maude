@@ -1,3 +1,43 @@
+2016-04-07  Steven Eker  <eker@install.csl.sri.com>
+
+	* pendingUnificationStack.cc (findCycle): added comment
+
+2016-03-25  Steven Eker  <eker@install.csl.sri.com>
+
+	* sortBdds.cc (getRemappedLeqRelation, applyLeqRelation): use
+	getCachedPairing()
+
+2016-03-24  Steven Eker  <eker@install.csl.sri.com>
+
+	* sortBdds.hh (BddUser): added decl for appendVariableVector()
+
+	* sortBdds.cc (appendVariableVector): added
+
+2016-03-17  Steven Eker  <eker@install.csl.sri.com>
+
+	* sortBdds.cc (appendIndexVector): added
+
+	* sortTable.hh (S): added dec for computeGeneralizedSort2()
+
+	* sortBdds.hh (BddUser): updated decl for operatorCompose()
+
+	* sortBdds.cc (operatorCompose): rewritten to use a
+	Vector of output BDDs
+
+2016-03-16  Steven Eker  <eker@install.csl.sri.com>
+
+	* sortBdds.hh (BddUser): updated decl for operatorCompose()
+
+	* sortBdds.cc (operatorCompose): made const
+
+2016-03-11  Steven Eker  <eker@install.csl.sri.com>
+
+	* sortBdds.hh (BddUser): added decl for operatorCompose()
+
+	* sortBdds.cc (operatorCompose): added
+
+===================================Maude110===========================================
+
 2015-12-23  Steven Eker  <eker@ape.csl.sri.com>
 
 	* equation.hh (PreEquation): commented out nrSlots member since we

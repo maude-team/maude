@@ -565,6 +565,53 @@ AU_Symbol::computeGeneralizedSort(const SortBdds& sortBdds,
   bdd_freepair(argMap);
 }
 
+// experimental code
+void
+AU_Symbol::computeGeneralizedSort2(const SortBdds& sortBdds,
+				   const Vector<int>& realToBdd,
+				   DagNode* subject,
+				   Vector<Bdd>& outputBdds)
+{
+  Assert(safeCast(AU_BaseDagNode*, subject)->isDeque() == false,
+	 "Deque case not implemented: " << subject <<
+	 " " <<  static_cast<void*>(dynamic_cast<AU_DagNode*>(subject)) <<
+	 " " <<  static_cast<void*>(dynamic_cast<AU_DequeDagNode*>(subject)));
+
+  Vector<Bdd> inputBdds;  // assemble input to our sort function
+  Vector<Bdd> middleBdds;  // put our output here if we're not finished
+
+  ArgVec<DagNode*>& args = safeCast(AU_DagNode*, subject)->argArray;
+  int lastArg = args.length() - 1;
+  for (int i = 0;; i++)
+    {
+      //
+      //	Generalized sort of ith argument.
+      //
+      args[i]->computeGeneralizedSort2(sortBdds, realToBdd, inputBdds);
+      if (i == lastArg)
+	{
+	  //
+	  //	Final application of our sort function with result
+	  //	directly appended to outputBdds.
+	  //
+	  sortBdds.operatorCompose(this, inputBdds, outputBdds);
+	  break;
+	}
+      else if (i > 0)
+	{
+	  //
+	  //	Middle case - write result to middleBdds.
+	  //
+	  middleBdds.clear();
+	  sortBdds.operatorCompose(this, inputBdds, middleBdds);
+	  //
+	  //	middleBdds become first part of inputBdds.
+	  //
+	  inputBdds.swap(middleBdds);
+	}
+    }
+}
+
 UnificationSubproblem*
 AU_Symbol::makeUnificationSubproblem()
 {

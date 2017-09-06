@@ -463,8 +463,9 @@ Interpreter::check(const Vector<Token>& subject)
 {
   if (Term* term = currentModule->getFlatModule()->parseTerm(subject))
     {
+      term = term->normalize(false);
       DagNode* d = term->term2Dag();
-
+ 
       if (getFlag(SHOW_COMMAND))
 	{
 	  UserLevelRewritingContext::beginCommand();

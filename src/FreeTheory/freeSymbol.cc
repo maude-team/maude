@@ -399,6 +399,30 @@ FreeSymbol::isStable() const
   return true;
 }
 
+// experimental code for faster sort computations
+
+void
+FreeSymbol::computeGeneralizedSort2(const SortBdds& sortBdds,
+				    const Vector<int>& realToBdd,
+				    DagNode* subject,
+				    Vector<Bdd>& outputBdds)
+{
+  DebugAdvisory("computeGeneralizedSort2() called on symbol " << this << " for dag " << subject);
+  int nrArgs = arity();
+  Assert(nrArgs > 0, "we shouldn't be called on constants: " << subject);
+  //
+  //	Gather the input BDDs for the generalized sorts of the arguments.
+  //
+  Vector<Bdd> inputBdds;
+  DagNode** args = safeCast(FreeDagNode*, subject)->argArray();
+  for (int i = 0; i < nrArgs; i++)
+    args[i]->computeGeneralizedSort2(sortBdds, realToBdd, inputBdds);
+  //
+  //	Append our generalized sort to the output BDDs.
+  //
+  sortBdds.operatorCompose(this, inputBdds, outputBdds);
+}
+
 //
 //	Hash cons code.
 //

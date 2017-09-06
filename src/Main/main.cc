@@ -64,13 +64,6 @@
 #include "interpreter.hh"
 #include "global.hh"
 
-#ifdef USE_CVC4
-#include "cvc4/expr/expr_manager.h"
-#include "cvc4/smt/smt_engine.h"
-
-using namespace CVC4;
-#endif
-
 int
 main(int argc, char* argv[])
 {
@@ -139,6 +132,8 @@ main(int argc, char* argv[])
 	    handleCtrlC = false;
 	  else if (strcmp(arg, "-interactive") == 0)
 	    forceInteractive = true;
+	  else if (strcmp(arg, "-print-to-stderr") == 0)
+	    UserLevelRewritingContext::setPrintAttributeStream(&cerr);
 	  else
 	    {
 	      IssueWarning(LineNumber(FileTable::COMMAND_LINE) <<
@@ -241,7 +236,7 @@ printHelp(const char* name)
     "  -no-prelude\t\tDo not read in the standard prelude\n" <<
     "  -no-banner\t\tDo not output banner on startup\n" <<
     "  -no-advise\t\tNo advisories on startup\n" <<
-    "  -always-advise\t\tAlways show advisories regardless" <<
+    "  -always-advise\tAlways show advisories regardless\n" <<
     "  -no-mixfix\t\tDo not use mixfix notation for output\n" <<
     "  -no-wrap\t\tDo not automatic line wrapping for output\n" <<
     "  -ansi-color\t\tUse ANSI control sequences\n" <<
@@ -250,6 +245,7 @@ printHelp(const char* name)
     "  -no-tecla\t\tDo not use tecla command line editing\n" <<
     "  -batch\t\tRun in batch mode\n" <<
     "  -interactive\t\tRun in interactive mode\n" <<
+    "  -print-to-stderr\tPrint attribute should use stderr rather than stdout\n" <<
     "  -random-seed=<int>\tSet seed for random number generator\n" <<
     "  -xml-log=<filename>\tSet file in which to produce an xml log\n" <<
     "\n" <<
@@ -297,128 +293,3 @@ findPrelude(string& directory, string& fileName)
 	       ": unable to locate file: " << QUOTE(fileName));
   return false;
 }
-
-#include "sequenceAssignment.hh"
-
-int delannoy(int m, int n);
-int countAssignments(int nrLhsVars, int nrRhsVars);
-
-void
-testSeq()
-{
-  int lhsMax = 10;
-  int rhsMax = 10;
-
-  for (int i = 0; i < lhsMax; ++i)
-    {
-      for (int j = 0; j < rhsMax; ++j)
-	{
-	  int d = delannoy(i, j);
-	  int a = countAssignments(i + 1, j + 1);
-	  if (a == d)
-	    cout << "correct " << d << endl;
-	  else
-	    cout << "fail " << a << " vs " << d << endl;
-	}
-      cout << endl;
-    }
-}
-
-
-int
-countAssignments(int nrLhsVars, int nrRhsVars)
-{
-  SequenceAssignment s(nrLhsVars, nrRhsVars);
-
-  int nrSols = 0;
-  while (s.findNextSolution(nrSols == 0))
-    ++nrSols;
-
-  return nrSols;
-}
-
-  /*
-  int nrLhsVars = 5;
-  int nrRhsVars = 4;
-
-  SequenceAssignment s(nrLhsVars, nrRhsVars);
-
-  s.setLhsBound(2, 1);
-  s.setRhsBound(1, 1);
-  s.setRhsBound(2, 1);
-
-  int solNr = 1;
-  while (s.findNextSolution())
-    {
-      Vector<Vector<int> > lhsAssign(nrLhsVars);
-      Vector<Vector<int> > rhsAssign(nrRhsVars);
-
-      int freeVarIndex = 0;
-      int lIndex = 0;
-      int rIndex = 0;
-
-      lhsAssign[lIndex].append(freeVarIndex);
-      rhsAssign[rIndex].append(freeVarIndex);
-
-      const SequenceAssignment::Solution& sol = s.getSolution();
-      cout << "(sol " << solNr << ") ";
-      FOR_EACH_CONST(i, SequenceAssignment::Solution, sol)
-	{
-	  cout << " " << *i;
-	  ++freeVarIndex;
-	  lIndex += SequenceAssignment::leftDelta(*i);
-	  rIndex += SequenceAssignment::rightDelta(*i);
-	  lhsAssign[lIndex].append(freeVarIndex);
-	  rhsAssign[rIndex].append(freeVarIndex);
-	}
-      cout << endl;
-      {
-	int v = 0;
-	FOR_EACH_CONST(j, Vector<Vector<int> >, lhsAssign)
-	  {
-	    cout << "L" << v << " <-";
-	    FOR_EACH_CONST(k, Vector<int>, *j)
-	      cout << " X" << *k;
-	    cout << endl;
-	    ++v;
-	  }
-      }
-      {
-	int v = 0;
-	FOR_EACH_CONST(j, Vector<Vector<int> >, rhsAssign)
-	  {
-	    cout << "R" << v << " <-";
-	    FOR_EACH_CONST(k, Vector<int>, *j)
-	      cout << " X" << *k;
-	    cout << endl;
-	    ++v;
-	  }
-      }
-
-      cout << endl;
-      ++solNr;
-    }
-  */
-
-#include <map>
-
-int
-delannoy(int m, int n)
-{
-  typedef pair<int, int> Pair;
-  typedef map<Pair, int> Memo;
-  static Memo memo;
-
-  if (m == 0 || n == 0)
-    return 1;
-
-  Pair p(m, n);
-  Memo::const_iterator i = memo.find(p);
-  if (i != memo.end())
-    return i->second;
-
-  int d = delannoy(m - 1, n) + delannoy(m - 1, n - 1) + delannoy(m, n - 1);
-  memo.insert(Memo::value_type(p, d));
-  return d;
-}
-

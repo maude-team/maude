@@ -1,3 +1,11 @@
+2016-05-17  Steven Eker  <eker@install.csl.sri.com>
+
+	* descentFunctions.cc (metaCheck): call normalize() and markEager()
+	before dagifying term
+	(metaCheck): don't bother with markEager()
+
+===================================Maude110===========================================
+
 2016-02-04  Steven Eker  <eker@install.csl.sri.com>
 
 	* metaUp.cc (upVariant): fix arg vector size

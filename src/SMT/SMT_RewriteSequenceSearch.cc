@@ -176,6 +176,7 @@ SMT_RewriteSequenceSearch::makeConstraintFromCondition(Term* target, const Vecto
       //
       //	Dagify and optimize out equal case.
       //
+      fragment->normalize(false);
       DagNode* lhs = fragment->getLhs()->term2Dag();
       DagNode* rhs = fragment->getRhs()->term2Dag();
       if (lhs->equal(rhs))
