@@ -62,7 +62,7 @@ CopyRhsAutomaton::recordInfo(StackMachineRhsCompiler& compiler)
 {
   Vector<int> sources(1);
   sources[0] = originalIndex;
-  compiler.recordFunctionEval(0, copyIndex, sources, false);
+  compiler.recordFunctionEval(0, copyIndex, sources);
   return true;
 }
 

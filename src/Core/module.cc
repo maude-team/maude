@@ -279,11 +279,13 @@ Module::stackMachineCompile()
   if (status == STACK_MACHINE_COMPILED)
     return;
   status = STACK_MACHINE_COMPILED;
-  const Vector<Equation*>& equations = getEquations();
-  FOR_EACH_CONST(i, Vector<Equation*>, equations)
-    {
-      (*i)->stackMachineCompile();
-    }
+  {
+    const Vector<Equation*>& equations = getEquations();
+    FOR_EACH_CONST(i, Vector<Equation*>, equations)
+      {
+	(*i)->stackMachineCompile();
+      }
+  }
 }
 
 void

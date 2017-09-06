@@ -56,10 +56,10 @@ MetaLevelOpSymbol::getCachedVariantSearch(MetaModule* m,
 }
 
 bool
-MetaLevelOpSymbol::metaGetVariant(FreeDagNode* subject, RewritingContext& context)
+MetaLevelOpSymbol::metaGetVariant2(FreeDagNode* subject, RewritingContext& context, bool irredundant)
 {
   //
-  //	op metaGenerateVariant : Module Term TermList Nat Nat ~> Variant? .
+  //	We handle both metaGenerateVariant() and metaGenerateIrredundantVariant().
   //
   if (MetaModule* m = metaLevel->downModule(subject->getArgument(0)))
     {
@@ -92,7 +92,7 @@ MetaLevelOpSymbol::metaGetVariant(FreeDagNode* subject, RewritingContext& contex
 		      blockerDags.append(t->term2Dag());
 		      t->deepSelfDestruct();
 		    }
-		  vs = new VariantSearch(startContext, blockerDags, new FreshVariableSource(m, varIndex));
+		  vs = new VariantSearch(startContext, blockerDags, new FreshVariableSource(m, varIndex), irredundant);
 		  lastSolutionNr = -1;
 		}
 	      else
@@ -127,6 +127,24 @@ MetaLevelOpSymbol::metaGetVariant(FreeDagNode* subject, RewritingContext& contex
 	}
     }
   return false;
+}
+
+bool
+MetaLevelOpSymbol::metaGetVariant(FreeDagNode* subject, RewritingContext& context)
+{
+  //
+  //	op metaGenerateVariant : Module Term TermList Nat Nat ~> Variant? .
+  //
+  return metaGetVariant2(subject, context, false);
+}
+
+bool
+MetaLevelOpSymbol::metaGetIrredundantVariant(FreeDagNode* subject, RewritingContext& context)
+{
+  //
+  //	op metaGenerateIrredundantVariant : Module Term TermList Nat Nat ~> Variant? .
+  //
+  return metaGetVariant2(subject, context, true);
 }
 
 bool

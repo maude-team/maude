@@ -1,14 +1,14 @@
 Maude> ==========================================
 reduce in META-TEST : metaVariantUnify(['XOR], upTerm(cst1 + X:XOR) =? upTerm(
     cst2 + Y:XOR), empty, 0, 0) .
-rewrites: 28
+rewrites: 10
 result UnificationPair: {
 	'X:XOR <- '_+_['cst2.Elem,'%1:XOR] ; 
 	'Y:XOR <- '_+_['cst1.Elem,'%1:XOR],1}
 ==========================================
 reduce in META-TEST : metaVariantUnify(['XOR], upTerm(cst1 + X:XOR) =? upTerm(
     cst2 + Y:XOR), empty, 10, 0) .
-rewrites: 28
+rewrites: 10
 result UnificationPair: {
 	'X:XOR <- '_+_['cst2.Elem,'%11:XOR] ; 
 	'Y:XOR <- '_+_['cst1.Elem,'%11:XOR],11}
@@ -22,7 +22,7 @@ result UnificationPair: {
 ==========================================
 reduce in META-TEST : metaVariantUnify(['XOR], upTerm(cst1 + X:XOR) =? upTerm(
     cst2 + Y:XOR), empty, 0, 2) .
-rewrites: 4
+rewrites: 22
 result UnificationPair: {
 	'X:XOR <- '_+_['cst1.Elem,'cst2.Elem,'#1:XOR] ; 
 	'Y:XOR <- '#1:XOR,1}
@@ -69,14 +69,14 @@ result UnificationPair?: (noUnifier).UnificationPair?
 ==========================================
 reduce in META-TEST : metaVariantDisjointUnify(['XOR], upTerm(cst1 + X:XOR) =?
     upTerm(cst2 + X:XOR), empty, 0, 0) .
-rewrites: 28
+rewrites: 10
 result UnificationTriple: {
 	'X:XOR <- '_+_['cst2.Elem,'%1:XOR],
 	'X:XOR <- '_+_['cst1.Elem,'%1:XOR],1}
 ==========================================
 reduce in META-TEST : metaVariantDisjointUnify(['XOR], upTerm(cst1 + X:XOR) =?
     upTerm(cst2 + X:XOR), empty, 10, 0) .
-rewrites: 28
+rewrites: 10
 result UnificationTriple: {
 	'X:XOR <- '_+_['cst2.Elem,'%11:XOR],
 	'X:XOR <- '_+_['cst1.Elem,'%11:XOR],11}
@@ -90,7 +90,7 @@ result UnificationTriple: {
 ==========================================
 reduce in META-TEST : metaVariantDisjointUnify(['XOR], upTerm(cst1 + X:XOR) =?
     upTerm(cst2 + X:XOR), empty, 0, 2) .
-rewrites: 4
+rewrites: 22
 result UnificationTriple: {
 	'X:XOR <- '_+_['cst1.Elem,'cst2.Elem,'#1:XOR],
 	'X:XOR <- '#1:XOR,1}

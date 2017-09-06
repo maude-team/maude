@@ -32,26 +32,30 @@ U --> 1f
 V --> f(#1:Foo, #2:Foo)
 ==========================================
 variant unify in FOO : f(X, Y) =? f(U, V)  .
-rewrites: 0
 
 Unifier #1
+rewrites: 0
 X --> %1:Foo
 Y --> %2:Foo
 U --> %1:Foo
 V --> %2:Foo
 
 Unifier #2
+rewrites: 0
 X --> 1f
 Y --> f(%1:Foo, %2:Foo)
 U --> %1:Foo
 V --> %2:Foo
 
 Unifier #3
+rewrites: 0
 X --> %1:Foo
 Y --> %2:Foo
 U --> 1f
 V --> f(%1:Foo, %2:Foo)
 
+No more unifiers.
+rewrites: 0
 ==========================================
 unify in FOO : f(X, Y) =? X .
 
@@ -60,12 +64,14 @@ X --> 1f
 Y --> 1f
 ==========================================
 variant unify in FOO : f(X, Y) =? X  .
-rewrites: 0
 
 Unifier #1
+rewrites: 0
 X --> 1f
 Y --> 1f
 
+No more unifiers.
+rewrites: 0
 ==========================================
 unify in FOO : f(X, Y) =? Y .
 
@@ -74,12 +80,14 @@ X --> 1f
 Y --> #1:Foo
 ==========================================
 variant unify in FOO : f(X, Y) =? Y  .
-rewrites: 0
 
 Unifier #1
+rewrites: 0
 X --> 1f
 Y --> %1:Foo
 
+No more unifiers.
+rewrites: 0
 ==========================================
 unify in FOO2 : f(X, Y) =? f(U, V) .
 
@@ -114,26 +122,30 @@ U --> f(#1:Foo, #2:Foo)
 V --> 1f
 ==========================================
 variant unify in FOO2 : f(X, Y) =? f(U, V)  .
-rewrites: 0
 
 Unifier #1
+rewrites: 0
 X --> %1:Foo
 Y --> %2:Foo
 U --> %1:Foo
 V --> %2:Foo
 
 Unifier #2
+rewrites: 0
 X --> f(%1:Foo, %2:Foo)
 Y --> 1f
 U --> %1:Foo
 V --> %2:Foo
 
 Unifier #3
+rewrites: 0
 X --> %1:Foo
 Y --> %2:Foo
 U --> f(%1:Foo, %2:Foo)
 V --> 1f
 
+No more unifiers.
+rewrites: 0
 ==========================================
 unify in FOO2 : f(X, Y) =? X .
 
@@ -142,12 +154,14 @@ X --> #1:Foo
 Y --> 1f
 ==========================================
 variant unify in FOO2 : f(X, Y) =? X  .
-rewrites: 0
 
 Unifier #1
+rewrites: 0
 X --> %1:Foo
 Y --> 1f
 
+No more unifiers.
+rewrites: 0
 ==========================================
 unify in FOO2 : f(X, Y) =? Y .
 
@@ -156,12 +170,14 @@ X --> 1f
 Y --> 1f
 ==========================================
 variant unify in FOO2 : f(X, Y) =? Y  .
-rewrites: 0
 
 Unifier #1
+rewrites: 0
 X --> 1f
 Y --> 1f
 
+No more unifiers.
+rewrites: 0
 ==========================================
 unify in FOO3 : f(X, Y) =? f(U, V) .
 
@@ -244,38 +260,44 @@ U --> f(#1:Foo, #2:Foo)
 V --> 1f
 ==========================================
 variant unify in FOO3 : f(X, Y) =? f(U, V)  .
-rewrites: 0
 
 Unifier #1
+rewrites: 0
 X --> %1:Foo
 Y --> %2:Foo
 U --> %1:Foo
 V --> %2:Foo
 
 Unifier #2
+rewrites: 0
 X --> 1f
 Y --> f(%1:Foo, %2:Foo)
 U --> %1:Foo
 V --> %2:Foo
 
 Unifier #3
+rewrites: 0
 X --> f(%1:Foo, %2:Foo)
 Y --> 1f
 U --> %1:Foo
 V --> %2:Foo
 
 Unifier #4
+rewrites: 0
 X --> %1:Foo
 Y --> %2:Foo
 U --> 1f
 V --> f(%1:Foo, %2:Foo)
 
 Unifier #5
+rewrites: 0
 X --> %1:Foo
 Y --> %2:Foo
 U --> f(%1:Foo, %2:Foo)
 V --> 1f
 
+No more unifiers.
+rewrites: 0
 ==========================================
 unify in FOO3 : f(X, Y) =? X .
 
@@ -288,12 +310,14 @@ X --> #1:Foo
 Y --> 1f
 ==========================================
 variant unify in FOO3 : f(X, Y) =? X  .
-rewrites: 0
 
 Unifier #1
+rewrites: 0
 X --> %1:Foo
 Y --> 1f
 
+No more unifiers.
+rewrites: 0
 ==========================================
 unify in FOO3 : f(X, Y) =? Y .
 
@@ -306,12 +330,14 @@ X --> 1f
 Y --> 1f
 ==========================================
 variant unify in FOO3 : f(X, Y) =? Y  .
-rewrites: 0
 
 Unifier #1
+rewrites: 0
 X --> 1f
 Y --> %1:Foo
 
+No more unifiers.
+rewrites: 0
 ==========================================
 unify in FOO4 : f(X, Y) =? f(U, V) .
 
@@ -400,44 +426,51 @@ V --> f(#1:Foo, #2:Foo)
 U --> 1f
 ==========================================
 variant unify in FOO4 : f(X, Y) =? f(U, V)  .
-rewrites: 0
 
 Unifier #1
+rewrites: 0
 X --> %1:Foo
 Y --> %2:Foo
 V --> %1:Foo
 U --> %2:Foo
 
 Unifier #2
+rewrites: 0
 X --> %2:Foo
 Y --> %1:Foo
 V --> %1:Foo
 U --> %2:Foo
 
 Unifier #3
+rewrites: 0
 X --> 1f
 Y --> f(%1:Foo, %2:Foo)
 V --> %1:Foo
 U --> %2:Foo
 
 Unifier #4
+rewrites: 0
 X --> f(%1:Foo, %2:Foo)
 Y --> 1f
 V --> %1:Foo
 U --> %2:Foo
 
 Unifier #5
+rewrites: 0
 X --> %1:Foo
 Y --> %2:Foo
 V --> 1f
 U --> f(%1:Foo, %2:Foo)
 
 Unifier #6
+rewrites: 0
 X --> %1:Foo
 Y --> %2:Foo
 V --> f(%1:Foo, %2:Foo)
 U --> 1f
 
+No more unifiers.
+rewrites: 0
 ==========================================
 unify in FOO4 : f(X, Y) =? X .
 
@@ -450,12 +483,14 @@ X --> #1:Foo
 Y --> 1f
 ==========================================
 variant unify in FOO4 : f(X, Y) =? X  .
-rewrites: 0
 
 Unifier #1
+rewrites: 0
 X --> %1:Foo
 Y --> 1f
 
+No more unifiers.
+rewrites: 0
 ==========================================
 unify in FOO4 : f(X, Y) =? Y .
 
@@ -468,10 +503,12 @@ X --> 1f
 Y --> 1f
 ==========================================
 variant unify in FOO4 : f(X, Y) =? Y  .
-rewrites: 0
 
 Unifier #1
+rewrites: 0
 X --> 1f
 Y --> %1:Foo
 
+No more unifiers.
+rewrites: 0
 Maude> Bye.

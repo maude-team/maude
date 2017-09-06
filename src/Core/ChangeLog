@@ -1,3 +1,46 @@
+2014-02-27  Steven Eker  <eker@ape.csl.sri.com>
+
+	* run.cc (ruleRewrite): removed debugging code that was producing
+	spurious messages
+
+2014-02-18  Steven Eker  <eker@ape.csl.sri.com>
+
+	* module.cc (stackMachineCompile): reformatted
+
+	* cachedDag.hh (C): added data member instructionSequence
+	(CachedDag): init instructionSequence
+	(~CachedDag): delete instructionSequence
+	(generateInstructionSequence): added
+	(getInstructionSequence): added
+
+2014-02-14  Steven Eker  <eker@ape.csl.sri.com>
+
+	* termSet.cc (insert): return index where we inserted term
+
+	* termSet.hh (PointerSet): updated decl for insert()
+
+	* stackMachineRhsCompiler.hh (S): delete decl for addCopy() from
+	struct FunctionEval
+
+2014-02-13  Steven Eker  <eker@ape.csl.sri.com>
+
+	* copyRhsAutomaton.cc (recordInfo): don't pass needContiguous
+	argument to recordFunctionEval()
+
+	* trivialRhsAutomaton.cc (recordInfo): don't pass needContiguous
+	argument to recordFunctionEval()
+
+	* stackMachineRhsCompiler.cc (recordFunctionEval): deleted
+	needContiguous argument
+
+	* stackMachineRhsCompiler.hh (S): updated decl for
+	recordFunctionEval()
+
+	* stackMachineRhsCompiler.cc (compileInstructionSequence): handle
+	failure to generate an instruction gracefully
+
+===================================Maude101===========================================
+
 2014-02-06  Steven Eker  <eker@ape.csl.sri.com>
 
 	* stackMachineRhsCompiler.cc (dump): drastically simplified

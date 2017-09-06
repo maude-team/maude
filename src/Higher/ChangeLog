@@ -1,3 +1,61 @@
+2014-03-03  Steven Eker  <eker@ape.csl.sri.com>
+
+	* variantSearch.cc (VariantSearch): don't initialize
+	irredundantMode mode
+	(expandLayer): clear both frontiers if we abort
+
+	* variantSearch.hh (SimpleRootContainer): deleted data members
+	unifierCollection, irredundantMode, unifierIndex
+	(SimpleRootContainer): added data member nrVariantVariables
+	(SimpleRootContainer): updated decl for expandLayer()
+
+	* variantSearch.cc (expandVariant): rewritten to place variants
+	corresponding to unifiers in the common VariantFolder
+	(expandLayer): swap frontiers even if newFrontier empty so we
+	don't revisit old frontier
+	(getNextUnifier): rewritten to handle combined variant/unifier
+	collection
+	(VariantSearch): don't rely on expandLayer() return value
+	(getNextVariant): don't rely on expandLayer() return value
+	(expandLayer): don't return a value
+
+	* variantFolder.cc (RetainedVariant): added comments
+	(subsumes): allow comparison of variants of different sizes, with
+	instant failure
+
+2014-02-28  Steven Eker  <eker@ape.csl.sri.com>
+
+	* variantSearch.cc (getNextVariant): use irredundantMode flag
+	(getNextUnifier): use irredundantMode flag
+
+	* variantSearch.hh (SimpleRootContainer): added data member
+	irredundantMode
+
+	* variantSearch.cc (VariantSearch): use expandLayer()
+	(getNextVariant): rewritten to be incemental and moved here
+	(getNextUnifier): rewritten to be incemental and moved here
+	(VariantSearch): no longer call expandLayer() here
+
+	* variantSearch.hh (SimpleRootContainer): added decl
+	expandLayer(); decl for expand() becomes expandVariant()
+
+	* variantSearch.cc (expandLayer): added
+	(expand): becomes expandVariant(), loses odd arg
+
+	* variantSearch.hh (SimpleRootContainer): added data member odd
+
+	* variantFolder.hh (SimpleRootContainer): deleted data members
+	startedExtractingVariants, nextVariant; added data member
+	currentVariantIndex
+
+	* variantFolder.cc (getNextSurvivingVariant): rewritten to allow
+	variants to be extracted, even though fresh variants may still be
+	inserted
+	(VariantFolder): init currentVariantIndex; don't init
+	startedExtractingVariants
+
+===================================Maude101===========================================
+
 2014-02-06  Steven Eker  <eker@ape.csl.sri.com>
 
 	* variantSearch.cc (expand): #if out debugging code

@@ -222,6 +222,7 @@ extend					return KW_EXTEND;
 include					return KW_INCLUDE;
 exclude					return KW_EXCLUDE;
 debug					return KW_DEBUG;
+irredundant				return KW_IRREDUNDANT;
 resume					return KW_RESUME;
 abort					return KW_ABORT;
 step					return KW_STEP;

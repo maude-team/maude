@@ -1,3 +1,14 @@
+2014-03-03  Steven Eker  <eker@ape.csl.sri.com>
+
+	* prelude.maude: added metaGetIrredundantVariant()
+
+2014-02-26  Steven Eker  <eker@ape.csl.sri.com>
+
+	* main.cc (main): added -always-advise
+	(printHelp): added -always-advise
+
+===================================Maude101===========================================
+
 2014-02-07  Steven Eker  <eker@ape.csl.sri.com>
 
 	* main.cc (main): removed commented out code

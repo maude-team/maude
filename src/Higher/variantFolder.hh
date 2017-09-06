@@ -74,9 +74,7 @@ private:
   bool subsumes(const RetainedVariant* retainedVariant, const Vector<DagNode*>& variant);
 
   RetainedVariantMap mostGeneralSoFar;
-
-  bool startedExtractingVariants;
-  RetainedVariantMap::const_iterator nextVariant;
+  int currentVariantIndex;
 };
 
 inline const Vector<DagNode*>*

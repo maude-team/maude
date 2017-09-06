@@ -1,3 +1,16 @@
+2014-03-03  Steven Eker  <eker@ape.csl.sri.com>
+
+	* metaLevelOpSymbol.hh (FreeSymbol): added decl for metaGetVariant2()
+
+	* metaVariant.cc (metaGetVariant2): renamed from metaGetVariant();
+	handle irredundant argument
+	(metaGetIrredundantVariant): added
+	(metaGetVariant): use metaGetVariant2()
+
+	* descentSignature.cc: added metaGetIrredundantVariant
+
+===================================Maude101===========================================
+
 2014-02-06  Steven Eker  <eker@ape.csl.sri.com>
 
 	* metaVariant.cc (metaGetVariant, metaVariantUnify2): added

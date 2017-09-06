@@ -42,7 +42,7 @@
 #include "stackMachineRhsCompiler.hh"
 
 void
-StackMachineRhsCompiler::recordFunctionEval(Symbol* symbol, int destination, const Vector<int>& argumentSlots, bool /* needContiguous */)
+StackMachineRhsCompiler::recordFunctionEval(Symbol* symbol, int destination, const Vector<int>& argumentSlots)
 {
   int nrFunctionEvaluations = functionEvaluations.size();
   functionEvaluations.expandBy(1);
@@ -82,12 +82,21 @@ StackMachineRhsCompiler::compileInstructionSequence()
       FOR_EACH_CONST(i, Vector<int>, f.argumentSlots)
 	activeSlots.insert(*i);
 	    
-      nextInstruction = (nextInstruction == 0) ? 
+      Instruction* newInstruction = (nextInstruction == 0) ? 
 	f.symbol->generateFinalInstruction(f.argumentSlots) :
 	f.symbol->generateInstruction(f.destination, f.argumentSlots, nextInstruction);
-      if (nextInstruction == 0)
-	return 0;  // failed to generate an instruction
-      nextInstruction->setActiveSlots(activeSlots);
+      if (newInstruction == 0)
+	{
+	  //
+	  //	Didn't generate an instruction (maybe an unimplemented case).
+	  //	Warn, clean up and bail.
+	  //
+	  IssueWarning("stack machine compilation not supported for " << f.symbol);
+	  delete nextInstruction;
+	  return 0;
+	}
+      newInstruction->setActiveSlots(activeSlots);
+      nextInstruction = newInstruction;
     }
 
   return nextInstruction;

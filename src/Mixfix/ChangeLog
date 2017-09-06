@@ -1,3 +1,38 @@
+2014-02-28  Steven Eker  <eker@ape.csl.sri.com>
+
+	* search.cc (getVariants): handle irredundant flag
+	(getVariants): output timing information after each variant
+	number in incremental mode
+	(variantUnify): output timing information after each unifier
+	number
+
+	* lexer.ll: added KW_IRREDUNDANT
+
+	* top.yy: added type for optIrredundant; added KW_IRREDUNDANT
+
+	* commands.yy (optIrredundant): added
+	(command): use optIrredundant
+
+2014-02-27  Steven Eker  <eker@ape.csl.sri.com>
+
+	* interact.cc (stackOverflowHandler, internalErrorHandler): added
+	(void) casts
+
+2014-02-26  Steven Eker  <eker@ape.csl.sri.com>
+
+	* global.hh: added alwaysAdviseFlag
+
+	* global.cc: added alwaysAdviseFlag
+
+	* commands.yy (command): honor alwaysAdviseFlag
+
+===================================Maude101===========================================
+
+2014-02-14  Steven Eker  <eker@ape.csl.sri.com>
+
+	* execute.cc (sreduce): use term2InstructionSequence() to get
+	initial sequence of stack machine instructions
+
 2014-02-07  Steven Eker  <eker@ape.csl.sri.com>
 
 	* banner.cc (printBanner): update copyright yearl

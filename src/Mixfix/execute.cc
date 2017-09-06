@@ -386,46 +386,31 @@ Interpreter::creduce(const Vector<Token>& subject)
 #include "stackMachine.hh"
 #include "stackMachineRhsCompiler.hh"
 #include "frame.hh"
-#include "equation.hh"
-#include "termBag.hh"
 
 void
 Interpreter::sreduce(const Vector<Token>& subject)
 {
-  if (Term* s = currentModule->getFlatModule()->parseTerm(subject))
+  if (Term* t = currentModule->getFlatModule()->parseTerm(subject))
     {
-      s = s->normalize(false);
-
-      VariableInfo dummyVariableInfo;
-      s->indexVariables(dummyVariableInfo);
-      if (dummyVariableInfo.getNrRealVariables() > 0)
-	{
-	  IssueWarning("sreduce does not support variables.");
-	  return;
-	}
-
-      s->symbol()->fillInSortInfo(s);
       //
-      //	This is a really kludgy way of getting an instruction stream from a term.
+      //	Partly normalize term (don't flatten).
       //
-      RhsBuilder dummyBuilder;
-      TermBag dummyTerms;
-      s->compileTopRhs(dummyBuilder, dummyVariableInfo, dummyTerms);
-      
+      t = t->normalize(false);
       //
-      //	Convert abstract slot indices into concrete indices.
+      //	Set EAGER flag in eager terms since term2InstructionSequence() needs this
+      //	to determine subterm sharability.
       //
-      dummyVariableInfo.computeIndexRemapping();
-      dummyBuilder.remapIndices(dummyVariableInfo);
-
-      StackMachineRhsCompiler compiler;
-      if (!dummyBuilder.recordInfo(compiler))
-	{
-	  IssueWarning("sreduce unsupported operator (Maude RHS automata).");
-	  return;
-	}
-
-      Instruction* instructionSequence = compiler.compileInstructionSequence();
+      NatSet eagerVariables;
+      Vector<int> problemVariables;
+      t->markEager(0, eagerVariables, problemVariables);
+      //
+      //	Now compile a sequence of instructions to build the term, evaluating alond the way.
+      //
+      Instruction* instructionSequence = t->term2InstructionSequence();
+      //
+      //	If some function symbol didn't generate an instruction we get the null sequence to
+      //	flag unsupported feature.
+      //
       if (instructionSequence == 0)
 	{
 	  IssueWarning("sreduce unsupported operator (Maude VM compiler).");
@@ -443,10 +428,10 @@ Interpreter::sreduce(const Vector<Token>& subject)
       if (getFlag(SHOW_COMMAND))
 	{
 	  UserLevelRewritingContext::beginCommand();
-	  cout << "sreduce in " << currentModule << " : " << s << " ." << endl;
+	  cout << "sreduce in " << currentModule << " : " << t << " ." << endl;
 	}
       
-      s->deepSelfDestruct();
+      t->deepSelfDestruct();
       StackMachine sm;
       DagNode* r = sm.execute(instructionSequence);
       Int64 nrRewrites = sm.getEqCount();

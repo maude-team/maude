@@ -152,10 +152,15 @@ public:
   virtual DagNode* makeCanonicalCopy(DagNode* original, HashConsSet* hcs) = 0;
 
   //
-  //	Generate instructions for stack based interpreter.
+  //	Generate instructions for MVM.
   //
-  virtual Instruction* generateFinalInstruction(const Vector<int>& argumentSlots) {return 0;}
-  virtual Instruction* generateInstruction(int destination, const Vector<int>& argumentSlots, Instruction* nextInstruction) {return 0;}
+  virtual Instruction* generateFinalInstruction(const Vector<int>& argumentSlots);
+  virtual Instruction* generateInstruction(int destination, const Vector<int>& argumentSlots, Instruction* nextInstruction);
+  //
+  //	For symbols that want to do some post-processing after
+  //	equations have been compiled for stack based interpreter.
+  //
+  virtual void stackMachinePostProcess();
 
   int getMatchIndex() const;
   void setMatchIndex(int index);

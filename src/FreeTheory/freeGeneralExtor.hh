@@ -21,7 +21,7 @@
 */
 
 //
-//      Stack machine non-final extor for free symbols having > 3 arguments or non simple behavior
+//      Stack machine non-final extor for free symbols having > 3 arguments or non simple behavior.
 //
 #ifndef _freeGeneralExtor_hh_
 #define _freeGeneralExtor_hh_

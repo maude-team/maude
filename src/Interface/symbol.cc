@@ -227,6 +227,23 @@ Symbol::finalizeSortInfo()
     }
 }
 
+Instruction*
+Symbol::generateFinalInstruction(const Vector<int>& /* argumentSlots */)
+{
+  return 0;
+}
+
+Instruction*
+Symbol::generateInstruction(int /* destination */,  const Vector<int>& /* argumentSlots */, Instruction* /* nextInstruction */)
+{
+  return 0;
+}
+
+void
+Symbol::stackMachinePostProcess()
+{
+}
+
 void
 Symbol::reset()
 {
