@@ -1,3 +1,73 @@
+2007-07-09  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unificationProblem.cc (UnificationProblem): fix bug where we
+	we're initializing subproblem in the case that we returned early
+
+2007-07-06  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unificationProblem.cc (UnificationProblem): pass extensionInfo
+
+2007-06-28  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unificationProblem.cc (~UnificationProblem): delete
+	extensionInfo
+
+2007-06-27  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unificationProblem.hh (class UnificationProblem): added decl for
+	makeContext()
+	(class UnificationProblem): added data member extensionInfo
+	(getLeftHandSides): added
+	(getExtensionInfo): added
+
+	* unificationProblem.cc (UnificationProblem): added withExtension
+	arg (but not implementation yet)
+	(makeContext): added
+
+	* unificationProblem.hh (class UnificationProblem): added
+	withExtension arg to ctor
+
+2007-06-19  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unificationProblem.hh (class UnificationProblem): updated decl
+	for ctor
+	(class UnificationProblem): added data members leftHandDags,
+	rightHandDags, leftHandSides, rightHandSides; deleted data members
+	lhs, rhs, lhsDag, rhsDag
+
+	* unificationProblem.cc (~UnificationProblem): fix memory leak
+	where we weren't deleting terms if variables weren't ok
+	(UnificationProblem): rewritten to do simultaneous unification
+	(~UnificationProblem): destruct vectors of terms
+	(markReachableNodes): mark vectors of dags
+
+2007-06-14  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unificationProblem.hh (variablesOK): added
+	(class UnificationProblem): added data member varsOK
+
+	* unificationProblem.cc (UnificationProblem): check variable names
+	for safety
+	(UnificationProblem): don't delete uninitialized pointers if
+	variables names are not OK
+
+2007-06-11  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unificationProblem.cc (UnificationProblem): removed
+	lastVariableIndex argument
+	(findOrderSortedUnifiers): don't use lastVariableIndex
+
+	* unificationProblem.hh (class UnificationProblem): updated ctor decl
+	(class UnificationProblem): removed lastVariableIndex data member
+
+2007-06-08  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unificationProblem.cc (UnificationProblem): handle
+	lastVariableIndex arg
+	(findOrderSortedUnifiers): use lastVariableIndex
+
+===================================Maude89c===========================================
+
 2007-04-19  Steven Eker  <eker@goo.csl.sri.com>
 
 	* unificationProblem.cc (UnificationProblem): fix bug where

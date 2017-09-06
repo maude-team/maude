@@ -34,11 +34,16 @@ class UnificationProblem : public VariableInfo, private SimpleRootContainer
   NO_COPYING(UnificationProblem);
 
 public:
-  UnificationProblem(Term* lhs, Term* rhs, FreshVariableGenerator* freshVariableGenerator);
+  UnificationProblem(Vector<Term*>& lhs, Vector<Term*>& rhs, FreshVariableGenerator* freshVariableGenerator, bool withExtension = false);
   ~UnificationProblem();
 
+  bool variablesOK() const;
   bool findNextUnifier();
   const Substitution& getSolution() const;
+  int getNrFreeVariables() const;
+  DagNode* makeContext(DagNode* filler) const;
+  ExtensionInfo* getExtensionInfo() const;
+  const Vector<Term*>& getLeftHandSides() const;
 
 private:
   void markReachableNodes();
@@ -46,16 +51,18 @@ private:
   bool extractUnifier();
   bool explore(int index);
 
-  Term* lhs;
-  Term* rhs;
+  Vector<Term*> leftHandSides;
+  Vector<Term*> rightHandSides;
   FreshVariableGenerator* freshVariableGenerator;
 
   const SortBdds* sortBdds;
-  DagNode* lhsDag;
-  DagNode* rhsDag;
+  Vector<DagNode*> leftHandDags;
+  Vector<DagNode*> rightHandDags;
 
+  ExtensionInfo* extensionInfo;
   UnificationContext* unsortedSolution;
   Subproblem* subproblem;
+  bool varsOK;
   bool viable;
   Vector<int> freeVariables;
   AllSat* orderSortedUnifiers;
@@ -68,10 +75,34 @@ private:
   NatSet pending;
 };
 
+inline bool
+UnificationProblem::variablesOK() const
+{
+  return varsOK;
+}
+
 inline const Substitution&
 UnificationProblem::getSolution() const
 {
   return *sortedSolution;
+}
+
+inline int
+UnificationProblem::getNrFreeVariables() const
+{
+  return freeVariables.size();
+}
+
+inline ExtensionInfo*
+UnificationProblem::getExtensionInfo() const
+{
+  return extensionInfo;
+}
+
+inline const Vector<Term*>&
+UnificationProblem::getLeftHandSides() const
+{
+  return leftHandSides;
 }
 
 #endif

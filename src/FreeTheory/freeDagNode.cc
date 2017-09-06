@@ -340,7 +340,8 @@ FreeDagNode::instantiate2(Substitution& substitution)
 bool
 FreeDagNode::computeSolvedForm(DagNode* rhs,
 			       Substitution& solution,
-			       Subproblem*& returnedSubproblem)
+			       Subproblem*& returnedSubproblem,
+			       ExtensionInfo* /* extensionInfo */)
 {
   if (symbol() == rhs->symbol())
     {

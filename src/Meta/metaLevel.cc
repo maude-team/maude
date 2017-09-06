@@ -124,6 +124,7 @@ MetaLevel::MetaLevel()
   SymbolName = 0;
 #include "metaLevelSignature.cc"
 #undef MACRO
+  flagVariables = false;
 }
 
 MetaLevel::~MetaLevel()
@@ -141,6 +142,7 @@ MetaLevel::MetaLevel(const MetaLevel* original, SymbolMap* map)
   trueTerm.setTerm((tt == 0) ? 0 : tt->deepCopy(map));
   Term* ft = original->falseTerm.getTerm();
   falseTerm.setTerm((ft == 0) ? 0 : ft->deepCopy(map));
+  flagVariables = false;
 }
 
 bool

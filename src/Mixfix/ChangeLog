@@ -1,3 +1,67 @@
+2007-07-06  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unify.cc (doUnification): support extension
+	(unify): support extension
+
+2007-06-21  Steven Eker  <eker@goo.csl.sri.com>
+
+	* top.yy (directive): non need to eatComment() now that this in
+	done in file name lexing
+
+	* lexerAux.cc (lexerFileNameMode): erase accumulator
+
+	* lexer.ll: latexCode -> accumulator thoughout; added
+	FILE_NAME_QUOTE_MODE
+
+	* lexerAux.cc (lexerLatexMode): latexCode becomes accumulator
+
+	* lexer.ll: handle file names enclosed in quotes
+
+2007-06-19  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unify.cc (unify): use new UnificationProblem() interface
+
+2007-06-14  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freshVariableSource.cc (variableNameConflict): remember to
+	unflag codes
+
+	* unify.cc (unify): use variablesOK()
+
+	* freshVariableSource.cc (variableNameConflict): implemented
+	(getFreshVariableName): use baseNumber in +ve form
+	(FreshVariableSource): store baseNumber in +ve form
+
+2007-06-13  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freshVariableSource.cc (getFreshVariableName): rewritten to use
+	mpz_class
+
+	* freshVariableSource.hh (class FreshVariableSource): fix bug
+	where we forgot to use INT64_TEXT_SIZE
+	(class FreshVariableSource): base number becomes a mpz_class
+	(class FreshVariableSource): deleted data member name
+
+2007-06-11  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freshVariableSource.cc (variableNameConflict): added stub
+
+	* freshVariableSource.hh (class FreshVariableSource): added data
+	member baseNumber; updated decl for ctor
+
+	* freshVariableSource.cc (FreshVariableSource): handle 64 bit
+	numbers and baseNumber
+	(getFreshVariableName): handle 64 bit numbers and baseNumber
+
+2007-06-07  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prettyPrint.cc (printVariable): handle variables with flagged
+	name codes
+
+	* token.hh (flaggedCode, isFlagged, unflaggedCode): added
+
+===================================Maude89c===========================================
+
 2007-03-16  Steven Eker  <eker@goo.csl.sri.com>
 
 	* renaming.cc (addOpMapping): give safe dummy values to name and

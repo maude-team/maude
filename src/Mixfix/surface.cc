@@ -406,7 +406,7 @@ void lexerStringMode();
 void lexerLatexMode();
 bool handleEof();
 bool includeFile(const string& directory, const string& fileName, bool silent, int lineNr);
-void eatComment(bool firstNonWhite);
+//void eatComment(bool firstNonWhite);
 
 Vector<Token> bubble;
 Vector<Token> fragments;
@@ -3873,7 +3873,7 @@ yyreduce:
 #line 234 "surface.yy"
     {
 			  int lineNr = lineNumber;
-			  eatComment(false); // eat \n so that line number is correct
+			  //eatComment(false); // eat \n so that line number is correct
 			  string directory;
 			  string fileName;
 			  if (findFile((yyvsp[0].yyString), directory, fileName, lineNr))
@@ -3890,7 +3890,7 @@ yyreduce:
 #line 244 "surface.yy"
     {
 			  int lineNr = lineNumber;
-			  eatComment(false); // eat \n so that line number is correct
+			  //eatComment(false); // eat \n so that line number is correct
 			  string directory;
 			  string fileName;
 			  if (findFile((yyvsp[0].yyString), directory, fileName, lineNr))

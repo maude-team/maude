@@ -52,7 +52,8 @@ public:
   //
   bool computeSolvedForm(DagNode* rhs,
 			 Substitution& solution,
-			 Subproblem*& returnedSubproblem);
+			 Subproblem*& returnedSubproblem,
+			 ExtensionInfo* extensionInfo);
   void insertVariables2(NatSet& occurs);
   bool computeBaseSortForGroundSubterms();
   DagNode* instantiate2(Substitution& substitution);

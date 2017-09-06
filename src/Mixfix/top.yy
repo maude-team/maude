@@ -73,7 +73,7 @@ void lexerStringMode();
 void lexerLatexMode();
 bool handleEof();
 bool includeFile(const string& directory, const string& fileName, bool silent, int lineNr);
-void eatComment(bool firstNonWhite);
+//void eatComment(bool firstNonWhite);
 
 Vector<Token> bubble;
 Vector<Token> fragments;
@@ -233,7 +233,7 @@ directive	:	KW_IN		{ lexerFileNameMode(); }
 			FILE_NAME_STRING
 			{
 			  int lineNr = lineNumber;
-			  eatComment(false); // eat \n so that line number is correct
+			  //eatComment(false); // eat \n so that line number is correct
 			  string directory;
 			  string fileName;
 			  if (findFile($3, directory, fileName, lineNr))
@@ -243,7 +243,7 @@ directive	:	KW_IN		{ lexerFileNameMode(); }
 			FILE_NAME_STRING
 			{
 			  int lineNr = lineNumber;
-			  eatComment(false); // eat \n so that line number is correct
+			  //eatComment(false); // eat \n so that line number is correct
 			  string directory;
 			  string fileName;
 			  if (findFile($3, directory, fileName, lineNr))

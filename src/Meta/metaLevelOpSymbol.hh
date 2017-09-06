@@ -92,7 +92,8 @@ private:
   RewriteSequenceSearch* makeRewriteSequenceSearch(MetaModule* m,
 						   FreeDagNode* subject,
 						   RewritingContext& context) const;
-
+  bool metaUnify2(FreeDagNode* subject, RewritingContext& context, bool disjoint);
+  bool metaXunify2(FreeDagNode* subject, RewritingContext& context, bool disjoint);
   bool okToBind();
   bool downSearchType(DagNode* arg, RewriteSequenceSearch::SearchType& searchType) const;
 

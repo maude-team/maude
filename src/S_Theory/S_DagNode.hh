@@ -66,7 +66,8 @@ public:
   //
   bool computeSolvedForm(DagNode* rhs,
 			 Substitution& solution,
-			 Subproblem*& returnedSubproblem);
+			 Subproblem*& returnedSubproblem,
+			 ExtensionInfo* extensionInfo);
   mpz_class nonVariableSize();
   void insertVariables2(NatSet& occurs);
   bool computeBaseSortForGroundSubterms();

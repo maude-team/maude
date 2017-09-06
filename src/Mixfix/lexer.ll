@@ -63,7 +63,8 @@
 
 int braceCount;
 int parenCount;
-string latexCode;
+string accumulator;
+string fileName;
 %}
 
 stringContent	([^[:cntrl:]"\\]|("\\"[^[:cntrl:]])|(\\\n))
@@ -76,6 +77,7 @@ maudeId		(({special}|{normalSeq})+)
 %s ID_MODE
 %s CMD_MODE
 %x FILE_NAME_MODE
+%x FILE_NAME_QUOTE_MODE
 %x STRING_MODE
 %x LATEX_MODE
 %option stack
@@ -282,10 +284,46 @@ endv					RETURN(KW_ENDV)
 }
 
 <FILE_NAME_MODE>{
-	[ \t]*				// eat white space
-	[^ \t\n\r\f]+			{
+	\"				{
+					  if (accumulator.empty())
+					    BEGIN(FILE_NAME_QUOTE_MODE);
+					  else
+					    accumulator += '"';
+					}
+	\\" "				accumulator += ' ';
+	\\\"				accumulator += '"';
+	\\\\				accumulator += '\\';
+	\\				accumulator += '\\';
+	[^"\\ \t\n\r\f]+		accumulator += yytext;
+	[ \t\r]				{
+					  if (!accumulator.empty())
+					    {
+					      yy_pop_state();
+					      lvalp->yyString = accumulator.c_str();
+					      eatComment(false);
+					      return FILE_NAME_STRING;
+					    }
+					}
+	[\n\f]				{
+			                  ++lineNumber;					
 					  yy_pop_state();
-					  lvalp->yyString = yytext;			  
+					  lvalp->yyString = accumulator.c_str();
+					  return FILE_NAME_STRING;
+					}
+}
+
+<FILE_NAME_QUOTE_MODE>{
+	["\t\r]				{
+					   yy_pop_state();
+					   lvalp->yyString = accumulator.c_str();
+					   eatComment(false);
+					   return FILE_NAME_STRING;
+					}
+	[^"\t\n\r\f]+			accumulator += yytext;
+	[\n\f]				{
+			                  ++lineNumber;					
+					  yy_pop_state();
+					  lvalp->yyString = accumulator.c_str();
 					  return FILE_NAME_STRING;
 					}
 }
@@ -305,11 +343,11 @@ endv					RETURN(KW_ENDV)
 }
 
 <LATEX_MODE>{
-(\\[{}()]{0,1})|([a-zA-Z0-9.:;,?!`'\[\]\-/*@#$%&~_^+=|<> \t]+)	latexCode += yytext;
+(\\[{}()]{0,1})|([a-zA-Z0-9.:;,?!`'\[\]\-/*@#$%&~_^+=|<> \t]+)	accumulator += yytext;
 \(					{
 					  if (braceCount == 0)
 					    ++parenCount;
-					  latexCode += yytext;
+					  accumulator += yytext;
 					}
 \)					{
 					  if (braceCount == 0)
@@ -319,23 +357,23 @@ endv					RETURN(KW_ENDV)
 					        {
 						  yyless(0);
 						  yy_pop_state();
-						  lvalp->yyString = latexCode.c_str();
+						  lvalp->yyString = accumulator.c_str();
 						  return LATEX_STRING;
 						}
 					    }
-					  latexCode += yytext;
+					  accumulator += yytext;
 					}
 \{					{
 					  ++braceCount;
-					  latexCode += yytext;
+					  accumulator += yytext;
 					}
 \}					{
 					  --braceCount;
-					  latexCode += yytext;
+					  accumulator += yytext;
 					}
 [\n\f]					{
 			                  ++lineNumber;					
-					  latexCode += yytext;
+					  accumulator += yytext;
 					}
 .					yy_pop_state();  // mindless recovery
 }

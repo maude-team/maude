@@ -100,7 +100,8 @@ NA_DagNode::computeBaseSortForGroundSubterms()
 bool
 NA_DagNode::computeSolvedForm(DagNode* rhs,
 			      Substitution& solution,
-			      Subproblem*& returnedSubproblem)
+			      Subproblem*& returnedSubproblem,
+			      ExtensionInfo* /* extensionInfo */)
 {
   //
   //	As a constant we can only unify with ourself or a variable.

@@ -53,7 +53,8 @@ public:
   //
   virtual bool computeSolvedForm(DagNode* rhs,
 				 Substitution& solution,
-				 Subproblem*& returnedSubproblem);
+				 Subproblem*& returnedSubproblem,
+				 ExtensionInfo* extensionInfo);
   virtual mpz_class nonVariableSize();
   bool computeBaseSortForGroundSubterms();
 

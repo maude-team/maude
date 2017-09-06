@@ -68,8 +68,9 @@ public:
   //	Unification stuff.
   //
   bool computeSolvedForm(DagNode* rhs,
-				 Substitution& solution,
-				 Subproblem*& returnedSubproblem);
+			 Substitution& solution,
+			 Subproblem*& returnedSubproblem,
+			 ExtensionInfo* extensionInfo);
   mpz_class nonVariableSize();
   void insertVariables2(NatSet& occurs);
   bool computeBaseSortForGroundSubterms();
@@ -158,6 +159,7 @@ private:
   friend class ACU_RhsAutomaton;	// for constructing replacement DAG
   friend class ACU_Subproblem;		// for constructing substitution
   friend class ACU_UnificationSubproblem;	// for constructing substitution
+  friend class ACU_UnificationWithExtensionSubproblem;	// for constructing ACU_UnificationSubproblem
   friend class ACU_ExtensionInfo;	// for constructing matched portion
   friend class ACU_DagArgumentIterator;	// to accesss Pair
 

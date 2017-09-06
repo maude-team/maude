@@ -219,6 +219,16 @@ MixfixModule::printCondition(ostream& s, const PreEquation* pe)
 void
 MixfixModule::printVariable(ostream& s, int name, Sort* sort) const
 {
+  if (Token::isFlagged(name))
+    {
+      //
+      //	Variables with flagged codes are used internally to distinguish between two variables
+      //	with identical names during disjoint unification, and might be seen in a debugging
+      //	print statement.	
+      //
+      s << "(flagged)";
+      name = Token::unflaggedCode(name);
+    }
   s << Token::name(name);
   if (interpreter.getPrintFlag(Interpreter::PRINT_WITH_ALIASES))
     {

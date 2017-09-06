@@ -1,3 +1,157 @@
+2007-07-09  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaLevel.cc (MetaLevel): fix nasty bug where we weren't
+	initializing flagVariables in the copy via SymbolMap ctor
+
+2007-06-27  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaUnify.cc (metaXunify2): pass disjoint arg to downTermPair()
+	(metaUnify2): new downUnificationProblem() convention
+
+	* metaDown.cc (downUnificationProblem): moved makeDisjoint arg
+
+	* metaLevel.hh (class MetaLevel): deleted decl for
+	downDisjointTermPair(); added makeDisjoint arg to downTermPair();
+	moved makeDisjoint arg in downUnificandPair() and
+	downUnificationProblem()
+
+	* metaDown.cc (downUnificandPair): moved makeDisjoint arg to last
+	place
+	(downTermPair): added makeDisjoint arg
+	(downDisjointTermPair): deleted
+
+	* metaUnify.cc (metaXunify2): don't assume that left hand sides
+	have had their sort information filled out
+
+	* metaLevelSignature.cc (MACRO): added
+	unificationContextTripleSymbol, unificationContext4TupleSymbol,
+	noUnifierContextTripleSymbol, noUnifierContext4TupleSymbol
+
+	* metaUnify.cc (metaXunify2): use upNoUnifierContext4Tuple(),
+	upNoUnifierContextTriple(), upUnificationContext4Tuple(),
+	upUnificationContextTriple()
+
+	* metaLevel.hh (class MetaLevel): added decls for
+	upNoUnifierContextTriple() and upNoUnifierContext4Tuple()
+
+	* metaUp.cc (upNoUnifierContextTriple, upNoUnifierContext4Tuple):
+	added
+
+	* metaLevel.hh (class MetaLevel): added decls for
+	upUnificationContextTriple() and upUnificationContext4Tuple()
+
+	* metaUp.cc (upUnificationContextTriple) 
+	(upUnificationContext4Tuple): added
+
+	* descentSignature.cc (MACRO): added entries for metaUnify(),
+	metaDisjointUnify()
+
+	* metaUnify.cc (metaUnify, metaDisjointUnify, metaXunify2): added
+
+2007-06-21  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaLevelOpSymbol.hh (class MetaLevelOpSymbol): added decl for
+	metaUnify2()
+
+	* metaUnify.cc (metaUnify2): added
+	(metaUnify, metaDisjointUnify): use metaUnify2()
+
+2007-06-19  Steven Eker  <eker@goo.csl.sri.com>
+
+	* descentSignature.cc (MACRO): updated nr args for metaUnify and
+	metaDisjointUnify
+
+	* metaUnify.cc (metaDisjointUnify, metaUnify): use
+	downUnificationProblem()
+
+	* metaLevel.hh (class MetaLevel): added decls for
+	downUnificationProblem(), downUnificandPair()
+
+	* metaDown.cc (downUnificationProblem, downUnificandPair): added
+
+	* metaLevelSignature.cc (MACRO): added unificandPairSymbol and
+	unificationConjunctionSymbol
+
+	* metaUnify.cc (metaUnify, metaDisjointUnify): use new
+	UnificationProblem() interface
+
+2007-06-14  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaUnify.cc (metaDisjointUnify, metaUnify): check variables and
+	don't do a reduction if a variable is unsafe
+
+	* descentSignature.cc (MACRO): updated entry for metaUnify()
+
+	* metaUnify.cc (metaUnify): rewritten for new semantics
+
+	* metaLevel.hh (class MetaLevel): added decls for
+	upUnificationPair() and upNoUnifierPair()
+
+	* metaUp.cc (upUnificationPair): added
+	(upNoUnifierPair): added
+
+	* metaLevelSignature.cc (MACRO): added unificationPairSymbol and
+	noUnifierPairSymbol
+
+2007-06-13  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaUnify.cc (metaDisjointUnify): rewritten to respect bignum
+	values for varIndex
+
+	* metaLevel.hh (isNat, getNat): added
+
+2007-06-11  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaUnify.cc (metaDisjointUnify): new UnificationProblem() and
+	FreshVariableSource() conventions
+
+2007-06-08  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaUnify.cc (metaDisjointUnify): pass variableIndex to
+	upUnificationTriple()
+
+	* metaLevel.hh (class MetaLevel): updated decl for
+	upUnificationTriple()
+
+	* metaUp.cc (upUnificationTriple): handle variableIndex arg
+
+	* metaUnify.cc (metaDisjointUnify): pass variableIndex to
+	UnificationProblem()
+
+	* metaUp.cc (upVariable): use unflaggedCode()
+
+2007-06-07  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaLevel.hh (class MetaLevel): added decls for
+	upUnificationTriple() and upDisjointSubstitutions()
+
+	* metaUp.cc (upDisjointSubstitutions): added
+	(upUnificationTriple): added
+
+	* metaLevel.hh (class MetaLevel): added decl for
+	upNoUnifierTriple()
+
+	* metaUp.cc (upNoUnifierTriple): added
+
+	* metaLevelSignature.cc (MACRO): added unificationTripleSymbol and
+	noUnifierTripleSymbol
+
+	* metaLevel.hh (class MetaLevel): added decl for
+	downDisjointTermPair()
+
+	* metaDown.cc (downTerm): support flagVariables flag
+	(downDisjointTermPair): added
+
+	* metaLevel.cc (MetaLevel): init flagVariables
+
+	* metaLevel.hh (class MetaLevel): added flagVariables data member
+
+	* metaUnify.cc (metaDisjointUnify): added
+
+	* descentSignature.cc (MACRO): added metaDisjointUnify
+
+===================================Maude89c===========================================
+
 2007-02-13  Steven Eker  <eker@goo.csl.sri.com>
 
 	* metaUnify.cc (metaUnify): use getSolution()

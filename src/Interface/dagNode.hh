@@ -110,7 +110,8 @@ public:
   //
   virtual bool computeSolvedForm(DagNode* rhs,
 				 Substitution& solution,
-				 Subproblem*& returnedSubproblem) { CantHappen("Not implemented"); return false; }
+				 Subproblem*& returnedSubproblem,
+				 ExtensionInfo* extensionInfo = 0) { CantHappen("Not implemented"); return false; }
   virtual mpz_class nonVariableSize() { return 0; }
   void insertVariables(NatSet& occurs);
   virtual void insertVariables2(NatSet& occurs) {}
@@ -125,7 +126,7 @@ public:
 			      Vector<Bdd>& generalizedSort);
   //
   //	These member functions must be defined for each derived class in theories
-  //	that need extension
+  //	that need extension.
   //
   virtual bool matchVariableWithExtension(int index,
 					  const Sort* sort,

@@ -53,6 +53,7 @@
 #include "ACU_ExtensionInfo.hh"
 #include "ACU_Subproblem.hh"
 #include "ACU_UnificationSubproblem.hh"
+#include "ACU_UnificationWithExtensionSubproblem.hh"
 
 //	ACU Red-Black class definitions
 #include "ACU_TreeDagNode.hh"
@@ -475,10 +476,18 @@ ACU_DagNode::argVecComputeBaseSort() const
 bool
 ACU_DagNode::computeSolvedForm(DagNode* rhs,
 			       Substitution& solution,
-			       Subproblem*& returnedSubproblem)
+			       Subproblem*& returnedSubproblem,
+			       ExtensionInfo* extensionInfo)
 {
   if (symbol() == rhs->symbol())
     {
+      if (extensionInfo != 0)
+	{
+	  returnedSubproblem = new ACU_UnificationWithExtensionSubproblem(this,
+									  safeCast(ACU_DagNode*, rhs),
+									  safeCast(ACU_ExtensionInfo*, extensionInfo));
+	  return true;
+	}
       //
       //	We merge together the two aguments lists to get the
       //	list of abstracted terms in the Diophantine problem.
@@ -576,8 +585,7 @@ ACU_DagNode::computeSolvedForm(DagNode* rhs,
 	  return false;
 	}
       returnedSubproblem = sp;
-      return true;
-      
+      return true;      
     }
   if (dynamic_cast<VariableDagNode*>(rhs))
     return rhs->computeSolvedForm(this, solution, returnedSubproblem);
@@ -672,4 +680,3 @@ ACU_DagNode::instantiate2(Substitution& substitution)
     }
   return 0;  // unchanged
 }
-

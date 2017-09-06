@@ -38,44 +38,84 @@
 #include "symbol.hh"
 #include "dagNode.hh"
 #include "subproblem.hh"
+#include "extensionInfo.hh"
 
 //	variable class definitions
 #include "variableDagNode.hh"
+#include "variableTerm.hh"
 
 //	core class definitions
 #include "module.hh"
 #include "sortBdds.hh"
 #include "connectedComponent.hh"
+#include "subproblemAccumulator.hh"
 //#include "rewritingContext.hh"
 #include "unificationContext.hh"
 #include "freshVariableGenerator.hh"
+
+//	higher class definitions
 #include "unificationProblem.hh"
 
-UnificationProblem::UnificationProblem(Term* lhs, Term* rhs, FreshVariableGenerator* freshVariableGenerator)
-  : lhs(lhs),
-    rhs(rhs),
-    freshVariableGenerator(freshVariableGenerator)
+UnificationProblem::UnificationProblem(Vector<Term*>& lhs, Vector<Term*>& rhs, FreshVariableGenerator* freshVariableGenerator, bool withExtension)
+  : freshVariableGenerator(freshVariableGenerator)
 {
-  sortBdds = lhs->symbol()->getModule()->getSortBdds();
+  Assert(lhs.size() == rhs.size(), "lhs/rhs size clash");
+  leftHandSides.swap(lhs);
+  rightHandSides.swap(rhs);
+  subproblem = 0;  // safety in case we return early
+  sortBdds = leftHandSides[0]->symbol()->getModule()->getSortBdds();
   //
-  //	Preprocess terms and create corresponding dags.
+  //	Preprocess terms .
   //
-  lhs = lhs->normalize(true);
-  lhs->indexVariables(*this);
-  lhsDag = lhs->term2Dag();
-  lhsDag->computeBaseSortForGroundSubterms();
-
-  rhs = rhs->normalize(true);
-  rhs->indexVariables(*this);
-  rhsDag = rhs->term2Dag();
-  rhsDag->computeBaseSortForGroundSubterms();
+  int nrEquations = leftHandSides.size();
+  for (int i = 0; i < nrEquations; ++i)
+    {
+      Term*& lhs = leftHandSides[i];
+      lhs = lhs->normalize(true);
+      lhs->indexVariables(*this);
+      Term*& rhs = rightHandSides[i];
+      rhs = rhs->normalize(true);
+      rhs->indexVariables(*this);
+    }
   //
-  //	Solve the underlying many-sorted unification problem, and if it has a
-  //	solution, calculate sorts of free variables, and check sorts of assignments.
+  //	Check that variables have safe names
+  //
+  int nrOriginalVariables = getNrProtectedVariables();
+  for (int i = 0; i < nrOriginalVariables; ++i)
+    {
+      Term* v = index2Variable(i);
+      if (freshVariableGenerator->variableNameConflict(safeCast(VariableTerm*, v)->id()))
+	{
+	  IssueWarning("Unsafe variable name " << QUOTE(v) << " in unification problem.");
+	  varsOK = false;
+	  return;
+	}
+    }
+  varsOK = true;
+  //
+  //	Create corresponding dags.
+  //
+  leftHandDags.resize(nrEquations);
+  rightHandDags.resize(nrEquations);
+  for (int i = 0; i < nrEquations; ++i)
+    {
+      leftHandDags[i] = leftHandSides[i]->term2Dag();
+      leftHandDags[i]->computeBaseSortForGroundSubterms();
+      rightHandDags[i] = rightHandSides[i]->term2Dag();
+      rightHandDags[i]->computeBaseSortForGroundSubterms();
+    }
+  //
+  //	Created extensionInfo object if needed.
+  //
+  extensionInfo = 0;
+  if (withExtension)
+    {
+      Assert(nrEquations == 1, "multiple equations with extension");
+      extensionInfo = rightHandDags[0]->makeExtensionInfo();
+    }
+  //	Initialize the sorted and unsorted solutions.
   //
   orderSortedUnifiers = 0;
-  int nrOriginalVariables = getNrProtectedVariables();
-  //Substitution::notify(nrVariables);
   sortedSolution = new Substitution(nrOriginalVariables);
   unsortedSolution = new UnificationContext(freshVariableGenerator, nrOriginalVariables);
   for (int i = 0; i < nrOriginalVariables; ++i)
@@ -83,47 +123,56 @@ UnificationProblem::UnificationProblem(Term* lhs, Term* rhs, FreshVariableGenera
       sortedSolution->bind(i, 0);  // so GC doesn't barf
       unsortedSolution->bind(i, 0);  // HACK
     }
-  //unsortedSolution->clear(nrOriginalVariables);  // unsafe!
-  //  cout << "=== computing solved form ===" << endl;
   //
-  //	computeSolvedForm() only sets subproblem on success; so if we don't clear it
-  //	here we will attempt to free a random location in our dtor following a failure.
+  //	Solve the underlying many-sorted unification problem.
   //
-  subproblem = 0;
-  viable = lhsDag->computeSolvedForm(rhsDag, *unsortedSolution, subproblem);
-  /*
-  int nrRealVariables = getNrProtectedVariables();
-  for (int i = 0; i < nrRealVariables; ++i)
+  SubproblemAccumulator subproblems;
+  for (int i = 0; i < nrEquations; ++i)
     {
-      cout << index2Variable(i) << " =? ";
-      if (unsortedSolution->value(i) == 0)
-	cout << "(null)" << endl;
-      else
-	cout << unsortedSolution->value(i) << endl;
+      if (!(leftHandDags[i]->computeSolvedForm(rightHandDags[i], *unsortedSolution, subproblem, extensionInfo)))
+	{
+	  viable = false;
+	  return;
+	}
+      subproblems.add(subproblem);
     }
-  cout << "=== end of solved form ===" << endl;
-  */
+  subproblem = subproblems.extractSubproblem();
+  viable = true;
 }
 
 UnificationProblem::~UnificationProblem()
 {
-  delete subproblem;
-  delete orderSortedUnifiers;
   delete freshVariableGenerator;
-  delete unsortedSolution;
-  delete sortedSolution;
+  if (varsOK)
+    {
+      delete subproblem;
+      delete orderSortedUnifiers;
+      delete unsortedSolution;
+      delete sortedSolution;
+      delete extensionInfo;
+    }
   //
   //	Only now can we safely destruct these as they are needed by VariableInfo.
   //
-  rhs->deepSelfDestruct();
-  lhs->deepSelfDestruct();
+  int nrEquations = leftHandSides.size();
+  for (int i = 0; i < nrEquations; ++i)
+    {
+      leftHandSides[i]->deepSelfDestruct();
+      rightHandSides[i]->deepSelfDestruct();
+    }
 }
 
 void
 UnificationProblem::markReachableNodes()
 {
-  lhsDag->mark();
-  rhsDag->mark();
+  {
+    int nrEquations = leftHandSides.size();
+    for (int i = 0; i < nrEquations; ++i)
+      {
+	leftHandDags[i]->mark();
+	rightHandDags[i]->mark();
+      }
+  }
   {
     int nrFragile = sortedSolution->nrFragileBindings();
     for (int i = 0; i < nrFragile; i++)
@@ -424,4 +473,12 @@ UnificationProblem::explore(int index)
    order.append(index);
    done.insert(index);
    return true; 
+}
+
+DagNode*
+UnificationProblem::makeContext(DagNode* filler) const
+{
+  if (extensionInfo != 0 && !(extensionInfo->matchedWhole()))
+    filler = rightHandDags[0]->partialConstruct(filler, extensionInfo);
+  return filler;
 }

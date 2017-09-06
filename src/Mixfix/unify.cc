@@ -28,9 +28,9 @@ void
 Interpreter::unify(const Vector<Token>& bubble, bool withExtension, Int64 limit)
 {
   VisibleModule* fm = currentModule->getFlatModule();
-  Term* lhs;
-  Term* rhs;
-  if (!(fm->parseUnifyCommand(bubble, lhs, rhs)))
+  Vector<Term*> lhs(1);
+  Vector<Term*> rhs(1);
+  if (!(fm->parseUnifyCommand(bubble, lhs[0], rhs[0])))
     return;
 
   if (getFlag(SHOW_COMMAND))
@@ -41,8 +41,8 @@ Interpreter::unify(const Vector<Token>& bubble, bool withExtension, Int64 limit)
       cout << "unify ";
       if (limit != NONE)
 	cout << '[' << limit << "] ";
-      cout << "in " << currentModule << " : " << lhs <<
-	" =? " << rhs << " .\n";
+      cout << "in " << currentModule << " : " << lhs[0] <<
+	" =? " << rhs[0] << " .\n";
     }
 
   startUsingModule(fm);
@@ -52,8 +52,13 @@ Interpreter::unify(const Vector<Token>& bubble, bool withExtension, Int64 limit)
 #endif
 
   Timer timer(getFlag(SHOW_TIMING));
-  UnificationProblem* problem = new UnificationProblem(lhs, rhs, new FreshVariableSource(fm));
-  doUnification(timer, fm, problem, 0, limit);
+  UnificationProblem* problem = new UnificationProblem(lhs, rhs, new FreshVariableSource(fm), withExtension);
+  if (problem->variablesOK())
+    doUnification(timer, fm, problem, 0, limit);
+#ifdef QUANTIFY_REWRITING
+  else
+    quantify_stop_recording_data();
+#endif
 }
 
 void
@@ -80,6 +85,15 @@ Interpreter::doUnification(Timer& timer,
       if (solutionCount == 1)
 	printDecisionTime(timer);
       cout << "\nSolution " << solutionCount << '\n';
+      ExtensionInfo* extensionInfo = problem->getExtensionInfo();
+      if (extensionInfo != 0)
+	{
+	  cout << "Unified portion = ";
+	  if (extensionInfo->matchedWhole())
+	    cout << "(whole)\n";
+	  else
+	    cout << extensionInfo->buildMatchedPortion() << '\n';
+	}
       UserLevelRewritingContext::printSubstitution(problem->getSolution(), *problem);
       if (UserLevelRewritingContext::interrupted())
 	break;
