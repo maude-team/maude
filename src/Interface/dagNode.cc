@@ -48,7 +48,7 @@
 #include "rootContainer.hh"
 #include "sortBdds.hh"
 
-#ifndef NO_ASSERT
+#if 0
 //
 //	Outlined hash code for easy experimentation without changing header.
 //

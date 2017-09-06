@@ -1,3 +1,19 @@
+2010-04-19  Steven Eker  <eker@rho>
+
+	* ACU_FastIter.hh (ACU_FastIter::next): avoid passing null to
+	stackLeftmostPath()
+
+	* ACU_Delete.cc (ACU_RedBlackNode::consDelete): use
+	stackLeftmostPath()
+
+	* ACU_Stack.hh (ACU_Stack::stackLeftmostPath): converted loop from
+	while-do to do-while
+
+	* ACU_SlowIter.hh (ACU_SlowIter::next): deleted commented out
+	version
+
+===================================Maude93a===========================================
+
 2010-02-18  Steven Eker  <eker@rho>
 
 	* ACU_RedBlackNode.hh (ACU_RedBlackNode::getChild): use sign < 0

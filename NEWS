@@ -1,3 +1,10 @@
+Overview of Changes in Maude alpha93a
+=====================================
+* changed AC constraint propagation algorithm to reduce the risk of
+  exponential blow up at semi-compile time
+* changed free theory constraint propagation algorithm to reduce the
+  risk of exponential blow up at semi-compile time
+
 Overview of Changes in Maude alpha93
 ====================================
 * fixed performance bug with huge AC/ACU right hand sides
