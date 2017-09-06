@@ -161,14 +161,14 @@ VariantNarrowingSearchState::collectUnifiers(NarrowingUnificationProblem* unific
       ++nrUnifiersFound;
       if (nrUnifiersFound >= 1000 && (nrUnifiersFound % 1000) == 0)
 	{
-	  /*
+	  
 	  cout << "Variant Narrowing, term = " << context->root();
 	  if (equationIndex == NONE)
 	    cout << "(unifying of subterms) for variant unfication\n";
 	  else
 	    cout << ", subterm = " <<  getDagNode() << " equation = " << module->getEquations()[equationIndex] << '\n';
 	  cout << "number of unifiers seen = " << nrUnifiersFound << endl;
-	  */
+	  
 	}
       const Substitution& solution = unificationProblem->getSolution();
       //

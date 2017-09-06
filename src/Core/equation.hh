@@ -50,6 +50,8 @@ public:
   void setVariant();
   bool isVariant() const;
 
+  Instruction* getInstructionSequence() const;
+
 private:
   enum Flags
   {
@@ -68,6 +70,11 @@ private:
   long fast;  // avoid the need for explicit extension instruction on x86-64
   Term* rhs;
   RhsBuilder builder;
+  //
+  //	For stack based execution.
+  //
+  Instruction* instructionSequence;
+  int nrSlots;
 };
 
 inline bool
@@ -104,6 +111,12 @@ inline const RhsBuilder&
 Equation::getRhsBuilder() const
 {
   return builder;
+}
+
+inline Instruction*
+Equation::getInstructionSequence() const
+{
+  return instructionSequence;
 }
 
 //

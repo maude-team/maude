@@ -25,6 +25,7 @@
 //
 #ifndef _frame_hh_
 #define _frame_hh_
+#include "instruction.hh"
 
 class Frame
 {
@@ -38,13 +39,16 @@ public:
   //
   //	Setting and getting slot values.
   //
-  void setSlot(int index, DagNode* value);
-  DagNode* getSlot(int index) const;
+  void setSlot(Instruction::SlotIndex index, DagNode* value);
+  DagNode* getSlot(Instruction::SlotIndex index) const;
   DagNode** getArgumentListPtr();
+  DagNode* const* getArgumentListPtr() const;
+
   //
   //	Setting a return address and returning values.
   //
-  void setReturnAddress(Frame* ancestor, int index);
+  void setReturnAddress(Frame* ancestor, Instruction::SlotIndex index);
+  void setReturnAddress(DagNode** absoluteAddress);
   void returnValue(DagNode* value) const;
   //
   //	Setting and getting the next instruction pointer.
@@ -56,6 +60,15 @@ public:
   //
   void setAncestorWithValidNextInstruction(Frame* ancestor);
   Frame* getAncestorWithValidNextInstruction() const;
+  Frame* fastPop() const;
+  //
+  //	Copying return information from a deadFrame into a new frame.
+  //
+  void copyReturnInfo(const Frame* deadFrame);
+  //
+  //	Mark active slots, depending on our instruction.
+  //
+  void markActiveSlots() const;
 
 private:
   //
@@ -82,13 +95,15 @@ private:
 };
 
 inline void
-Frame::setSlot(int index, DagNode* value)
+Frame::setSlot(Instruction::SlotIndex index, DagNode* value)
 {
+  //  Assert(((void*) value) > ((void*) this) + 10000 ||
+  //	  ((void*) value) + 10000 < ((void*) this), "dag node point shouldn't be close to fame pointer");
   slots[index] = value;
 }
 
 inline DagNode*
-Frame::getSlot(int index) const
+Frame::getSlot(Instruction::SlotIndex index) const
 {
   return slots[index];
 }
@@ -99,15 +114,29 @@ Frame::getArgumentListPtr()
   return slots;
 }
 
+inline DagNode* const*
+Frame::getArgumentListPtr() const
+{
+  return slots;
+}
+
 inline void
-Frame::setReturnAddress(Frame* ancestor, int index)
+Frame::setReturnAddress(Frame* ancestor, Instruction::SlotIndex index)
 {
   returnAddress = &(ancestor->slots[index]);
 }
 
 inline void
+Frame::setReturnAddress(DagNode** absoluteAddress)
+{
+  returnAddress = absoluteAddress;
+}
+
+inline void
 Frame::returnValue(DagNode* value) const
 {
+  //  Assert(((void*) value) > ((void*) this) + 10000 ||
+  //	  ((void*) value) + 10000 < ((void*) this), "dag node point shouldn't be close to fame pointer");
   *returnAddress = value;
 }
 
@@ -134,5 +163,29 @@ Frame::getAncestorWithValidNextInstruction() const
 {
   return ancestorWithValidNextInstruction;
 }
+
+inline Frame*
+Frame::fastPop() const
+{
+  return ancestorWithValidNextInstruction;
+}
+
+inline void
+Frame::copyReturnInfo(const Frame* deadFrame)
+{
+  //
+  //	We copy the return information from a dead frame into a new frame.
+  //
+  returnAddress = deadFrame->returnAddress;
+  ancestorWithValidNextInstruction = deadFrame->ancestorWithValidNextInstruction;
+}
+
+inline void
+Frame::markActiveSlots() const
+{
+  nextInstruction->markActiveSlots(this);
+}
+
+#define FRAME_SIZE_HACK 5
 
 #endif

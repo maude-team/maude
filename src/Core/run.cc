@@ -58,6 +58,12 @@ RewritingContext::ruleRewrite(Int64 limit)
 				" unstackable = " << d->isUnstackable());
 		  */
 		  d->stackArguments(redexStack, nextToExplore, true);
+		  if (redexStack.size() > 10000)
+		    {
+		      cout << "redex stack size = " << redexStack.size() << endl;
+		      cout << "just explored " << d << endl;
+		    }
+		     
 		  ++nextToExplore;
 		  int len = redexStack.length();
 		  if (len > finish)

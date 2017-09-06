@@ -344,8 +344,8 @@ NarrowingUnificationProblem::findOrderSortedUnifiers()
 	//cout << "allocated bdds" << endl;
       }
   }
-  //cout << "allocated " << nextBddVariable << " BDD variables" << endl;
-  //cout << "sc vars " << sortConstrainedVariables.size() << " freeVariables " << freeVariables.size() << endl;
+  DebugAdvisory("allocated " << nextBddVariable << " BDD variables" <<
+		"sc vars " << sortConstrainedVariables.size() << " freeVariables " << freeVariables.size());
   //
   //	Make sure BDD package has enough variables allocated.
   //
@@ -371,8 +371,11 @@ NarrowingUnificationProblem::findOrderSortedUnifiers()
 	    Bdd leqRelation = sortBdds->getLeqRelation(sort->getIndexWithinModule());
 	    leqRelation = bdd_veccompose(leqRelation, bitMap);
 	    unifier = bdd_and(unifier, leqRelation);
-	    DebugAdvisory("NarrowingUnificationProblem::findOrderSortedUnifiers() : Adding constraint for free, non-original variable: "
-			  << leqRelation << " unifier becomes " << unifier);
+	    DebugAdvisory("NarrowingUnificationProblem::findOrderSortedUnifiers() : Adding constraint for free, non-original variable; nodes in new bdd = " <<
+			  bdd_nodecount(unifier) << " unifier = " << unifier);
+
+	    //	    DebugAdvisory("NarrowingUnificationProblem::findOrderSortedUnifiers() : Adding constraint for free, non-original variable: "
+	    //			  << leqRelation << " unifier becomes " << unifier);
 	    bdd_freepair(bitMap);
 	  }
       }

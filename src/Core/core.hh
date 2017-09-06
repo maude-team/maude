@@ -87,5 +87,8 @@ class MemoMap;
 
 class Frame;
 class StackMachine;
+class StackMachineRhsCompiler;
+class ReturnInstruction;
+class NullInstruction;
 
 #endif

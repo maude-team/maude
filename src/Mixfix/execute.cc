@@ -383,10 +383,91 @@ Interpreter::creduce(const Vector<Token>& subject)
 #endif
 }
 
+#include "stackMachine.hh"
+#include "stackMachineRhsCompiler.hh"
+#include "frame.hh"
+#include "equation.hh"
+#include "termBag.hh"
+
 void
 Interpreter::sreduce(const Vector<Token>& subject)
 {
+  if (Term* s = currentModule->getFlatModule()->parseTerm(subject))
+    {
+      s = s->normalize(false);
 
+      VariableInfo dummyVariableInfo;
+      s->indexVariables(dummyVariableInfo);
+      if (dummyVariableInfo.getNrRealVariables() > 0)
+	{
+	  IssueWarning("sreduce does not support variables.");
+	  return;
+	}
+
+      s->symbol()->fillInSortInfo(s);
+      //
+      //	This is a really kludgy way of getting an instruction stream from a term.
+      //
+      RhsBuilder dummyBuilder;
+      TermBag dummyTerms;
+      s->compileTopRhs(dummyBuilder, dummyVariableInfo, dummyTerms);
+      
+      StackMachineRhsCompiler compiler;
+      if (!dummyBuilder.recordInfo(compiler))
+	{
+	  IssueWarning("sreduce unsupported operator (Maude RHS automata).");
+	  return;
+	}
+
+      int nrSlots = 0;
+      Instruction* instructionSequence = compiler.compileInstructionSequence(nrSlots);
+      if (instructionSequence == 0)
+	{
+	  IssueWarning("sreduce unsupported operator (Maude VM compiler).");
+	  return;
+	}
+      //
+      //	Now run the sequence in a stack machine.
+      //
+      VisibleModule* fm = currentModule->getFlatModule();
+      startUsingModule(fm);
+      Timer timer(getFlag(SHOW_TIMING));
+
+      if (getFlag(SHOW_COMMAND))
+	{
+	  UserLevelRewritingContext::beginCommand();
+	  cout << "sreduce in " << currentModule << " : " << s << " ." << endl;
+	}
+      
+      s->deepSelfDestruct();
+      StackMachine sm;
+      DagNode* r = sm.execute(instructionSequence);
+      Int64 nrRewrites = sm.getEqCount();
+      //
+      //	End of stack based reduction.
+      //
+      if (getFlag(SHOW_STATS))
+	{
+	  cout << "rewrites: " << nrRewrites;
+	  Int64 real;
+	  Int64 virt;
+	  Int64 prof;
+	  if (getFlag(SHOW_TIMING) && timer.getTimes(real, virt, prof))
+	    printTiming(nrRewrites, prof, real);
+	  cout << '\n';
+	}
+      cout << "result " << r->getSort() << ": " << r << '\n';
+      cout.flush();
+      delete instructionSequence;
+      (void) fm->unprotect();
+    }
+}
+
+#if 0
+
+void
+Interpreter::sreduce(const Vector<Token>& subject)
+{
   if (DagNode* d = makeDag(subject))
     {
       if (getFlag(SHOW_COMMAND))
@@ -401,8 +482,26 @@ Interpreter::sreduce(const Vector<Token>& subject)
       //
       //	Start of stack based reduction
       //
+
+      /*
       DagNode* r = d;  // HACK - don't have implementation yet
-      int nrRewrites = 0;
+      */
+      /*
+      DagNode* r;
+      StackMachine sm;
+      Frame* f = sm.newFrame(100);
+      f->setNextInstruction(d->symbol()->getEquations()[0]->getInstructionSequence());
+      f->setReturnAddress(&r);
+      f->setAncestorWithValidNextInstruction(0);
+      sm.execute();
+      int nrRewrites = sm.getEqCount();
+      */
+
+      StackMachine sm;
+      DagNode* r = sm.execute(d->symbol()->getEquations()[0]->getInstructionSequence());
+      Int64 nrRewrites = sm.getEqCount();
+
+      //int nrRewrites = 0;
       //
       //	End of stack based reduction.
       //
@@ -421,3 +520,5 @@ Interpreter::sreduce(const Vector<Token>& subject)
       (void) fm->unprotect();
     }
 }
+
+#endif
