@@ -88,6 +88,10 @@ BranchSymbol::attachTerm(const char* purpose, Term* term)
 	  testTerms[index - 1] = term;
 	  return true;
 	}
+      else
+	{
+	  DebugAdvisory("BranchSymbol::attachTerm(): " << index << " slot already contains " << testTerms[index - 1]);
+	}
     }
   return FreeSymbol::attachTerm(purpose, term);
 }

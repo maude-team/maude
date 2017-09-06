@@ -1,3 +1,11 @@
+2010-05-07  Steven Eker  <eker@rho>
+
+	* mixfixModule.cc (MixfixModule::instantiatePolymorph): avoid
+	calling deepSelfDestruct() on copy of term hook since attachTerm()
+	already does this when it fails
+
+===================================Maude93d===========================================
+
 2010-04-01  Steven Eker  <eker@rho>
 
 	* unify.cc (Interpreter::unify): don't pass withExtension flag to

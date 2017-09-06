@@ -1,3 +1,12 @@
+2010-05-07  Steven Eker  <eker@rho>
+
+	* metaLevel.hh (class MetaLevel): updated decl for upHeader()
+
+	* metaUpModule.cc (MetaLevel::upHeader): handle flat argument
+	(MetaLevel::upModule): pass flag arg to upHeader
+
+===================================Maude93d===========================================
+
 2010-05-05  Steven Eker  <eker@rho>
 
 	* metaUpView.cc (MetaLevel::upOpMappings): fixed bug where we
