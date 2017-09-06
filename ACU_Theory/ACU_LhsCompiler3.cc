@@ -89,6 +89,15 @@ ACU_Term::findLongestIncreasingSequence(const Vector<Pair>& aliens,
 					Vector<int>& dependents,
 					Vector<int>& sequence)
 {
+  //
+  //	Since this function is only used for compiling the greedy case,
+  //	any variable occurring in a potential subsumer must either
+  //	not be a condition variable or must be bound (and hence occurs
+  //	in context). Since an external agency that can bind a variable X
+  //	is required to make X a condition variable we can safely use
+  //	subsumes(), since if X is bound externally it must also occur in
+  //	in context and this will be noted by subsumes().
+  //
   int nrDependents = dependents.length();
   Digraph subsumption(nrDependents);
   for (int i = 0; i < nrDependents; i++)

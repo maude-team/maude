@@ -109,14 +109,15 @@ public:
   //
   virtual bool earlyMatchFailOnInstanceOf(const Term* other) const;
   //
-  //	These member functions compute approximate relations between terms; i.e. they can
-  //	return UNDECIDED whenever the true relation is too expensive to evaluate (or even
-  //	undecidable). The default versions return UNDECIDED most of the time. Theory 
-  //	specific versions may be able to do better but must be prepared to handle UNDECIDED
-  //	results from alien subterms. These functions are intended for use in optimizing
+  //	These member functions compute approximate relations between terms;
+  //	i.e. they can return UNDECIDED whenever the true relation is too
+  //	expensive to evaluate (or even undecidable). The default versions
+  //	return UNDECIDED most of the time. Theory specific versions may be able
+  //	to do better but must be prepared to handle UNDECIDED results from
+  //	alien subterms. These functions are intended for use in optimizing
   //	lhs and rhs automata; if a result is UNDECIDED the optimization is quietly
   //	forgotten.
-
+  //
   //	The following function returns true if any subject that matches "other"
   //	is guarenteed to match "this" taking into account nonlinear variables
   //	in the context. It can be defined conservatively --- returning

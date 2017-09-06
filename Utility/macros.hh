@@ -3,27 +3,32 @@
 //
 #ifndef _macros_hh_
 #define _macros_hh_
+
 //
 //	C stuff.
 //
-using namespace std;
-
 #include <stddef.h>
 #include <limits.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
 #include <strings.h>
+
 //
 //	C++ stuff.
 //
+using namespace std;
 #include <new>
 #include <string>
 #include <iostream>
 #include <fstream>
 #include <algorithm>
-
-//#include <strstream.h>
+//
+//	Mac OS X fix from Fabricio Chalub <fc@gnu.org>
+//
+#if defined MACOSX && !defined (isnan)
+extern "C" int isnan(double);
+#endif
 
 //
 //	Forward declarations for utility classes.
@@ -67,7 +72,8 @@ typedef long long int Int64;
 #endif
 typedef unsigned long long int Uint64;
 //
-//	gcc needs the LL suffix to do the right thing; and these are too big to be enums.
+//	gcc needs the LL suffix to do the right thing; and these are
+//	too big to be enums.
 //
 #define INT64_MAX		(9223372036854775807LL)
 #define INT64_MIN		(-INT64_MAX-1)
@@ -83,6 +89,7 @@ typedef unsigned int Uint32;
 //	This is the largest integer such that all integers in the range
 //	-INT_DOUBLE_MAX, ..., INT_DOUBLE_MAX
 //	can be represented exactly.
+//
 #define INT_DOUBLE_MAX		(1LL << 53)
 
 //
@@ -227,31 +234,10 @@ union MachineWord
 const conType::const_iterator var##_end = container.end(); \
 for (conType::const_iterator var = container.begin(); var != var##_end; ++var)
 
-
-inline void
-swap(int& a, int& b)
-{
-  int t = a;
-  a = b;
-  b = t;
-}
-
 inline int
 uplus(int a, int b)
 {
   return (a == UNBOUNDED || b == UNBOUNDED) ? UNBOUNDED : (a + b);
-}
-
-inline int
-min(int a, int b)
-{
-  return a < b ? a : b;
-}
-
-inline int
-max(int a, int b)
-{
-  return a > b ? a : b;
 }
 
 inline int

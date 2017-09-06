@@ -41,6 +41,7 @@ AU_LhsAutomaton::greedyBindVariables(AU_DagNode* subject,
 	  if (d == 0)
 	    {
 	      int nrSubjects = tv.lastSubject - tv.firstSubject + 1;
+	      Assert(nrSubjects >= 0, "-ve number of subjects " << nrSubjects);
 	      if (nrSubjects == 0)
 		solution.bind(index, topSymbol->getIdentityDag());
 	      else if (nrSubjects == 1)
@@ -267,6 +268,7 @@ AU_LhsAutomaton::greedyMatchVariableBlock(ArgVec<DagNode*>& args,
 	    {
 	      tv.firstSubject = firstSubject;  // take nothing
 	      tv.lastSubject = firstSubject - 1;
+	      DebugAdvisory("1 tv.firstSubject " << tv.firstSubject);
 	    }
 	  else
 	    return false;
@@ -288,8 +290,9 @@ AU_LhsAutomaton::greedyMatchVariableBlock(ArgVec<DagNode*>& args,
 	{
 	  if (spare == 0 || !(args[pos]->leq(tv.sort)))
 	    {
-	      tv.firstSubject = pos + 1;  // take nothing
-	      tv.lastSubject = pos;
+	      tv.firstSubject = pos;  // take nothing
+	      tv.lastSubject = pos - 1;
+	      DebugAdvisory("2 tv.firstSubject " << tv.firstSubject);
 	    }
 	  else
 	    {
@@ -305,6 +308,7 @@ AU_LhsAutomaton::greedyMatchVariableBlock(ArgVec<DagNode*>& args,
 		}
 	      tv.firstSubject = tv.lastSubject = pos++;  // take first available
 	      --spare;
+	      DebugAdvisory("3 tv.firstSubject " << tv.firstSubject);
 	    }
 	}
       else
@@ -339,6 +343,7 @@ AU_LhsAutomaton::greedyMatchVariableBlock(ArgVec<DagNode*>& args,
 	      leftExtend = false;
 	    }
 	  tv.firstSubject = tv.lastSubject = pos++;
+	  DebugAdvisory("4 tv.firstSubject " << tv.firstSubject);
 	}
     }
   if (leftExtend)

@@ -1,6 +1,6 @@
 ***
 ***	Maude LTL satisfiability solver and model checker.
-***	Version alpha 78.
+***	Version alpha 80.
 ***	Copyright 2001-2003 SRI International.
 ***
 
@@ -19,11 +19,13 @@ fmod LTL is
 
   *** defined LTL operators
   op _->_ : Formula Formula -> Formula [gather (e E) prec 65 format (d r o d)] .
-  op _<->_ : Formula Formula -> Formula [prec 65 format (d r o d)].
+  op _<->_ : Formula Formula -> Formula [prec 65 format (d r o d)] .
   op <>_ : Formula -> Formula [prec 53 format (r o d)] .
   op []_ : Formula -> Formula [prec 53 format (r d o d)] .
   op _W_ : Formula Formula -> Formula [prec 63 format (d r o d)] .
   op _|->_ : Formula Formula -> Formula [prec 63 format (d r o d)] . *** leads-to
+  op _=>_ : Formula Formula -> Formula [gather (e E) prec 65 format (d r o d)] .
+  op _<=>_ : Formula Formula -> Formula [prec 65 format (d r o d)] .
 
   vars f g : Formula .
 
@@ -33,6 +35,8 @@ fmod LTL is
   eq [] f = False R f .
   eq f W g = (f U g) \/ [] f .
   eq f |-> g = [](f -> (<> g)) .
+  eq f => g = [] (f -> g) .
+  eq f <=> g = [] (f <-> g) .
 
   *** negative normal form
   eq ~ True = False .

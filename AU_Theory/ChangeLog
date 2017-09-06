@@ -1,3 +1,312 @@
+2003-05-01  Steven Eker  <eker@goo.csl.sri.com>
+
+	* AU_Matcher.cc (determineRigidBlocks): use clear()
+
+	* AU_DequeDagNode.cc (overwriteWithClone): use
+	copySetRewritingFlags() 
+	(makeClone): use copySetRewritingFlags()
+
+	* AU_DagNode.cc (overwriteWithClone): use copySetRewritingFlags()
+	(makeClone): use copySetRewritingFlags()
+
+2003-04-30  Steven Eker  <eker@goo.csl.sri.com>
+
+	* AU_LhsCompiler.cc (addFixedLengthBlock): fixed (invisible) bug
+	where we had the earlyMatchFailOnInstanceOf() the wrong way around
+	(addFixedLengthBlock): rewrote shift calculation inner loop to
+	make it more understandable
+	(addFixedLengthBlock): rewrote shift calculation inner loop to fix
+	bug where the metalevel binds a variable that invalidates the
+	subsumption and we end up with too big of a shift
+
+	* AU_Layer.cc (bindVariables): use safeCast() on result of
+	makeFragment()
+
+	* AU_Matcher.cc (match): use safeCast()
+
+2003-04-29  Steven Eker  <eker@goo.csl.sri.com>
+
+	* AU_GreedyMatcher.cc (greedyMatchVariableBlock): fix bug in the
+	case where a variable has to take the identity by setting it to
+	[pos, pos-1] rather than [pos+1, pos]; this is important since
+	last variable in bloack can have its lastSubject set to pos-1 in
+	the code that assigns spare subterms
+
+	* AU_Symbol.cc (calculateNrSubjectsMatched): fixed bug where we
+	weren't handling the case that d points to a AU_DequeDagNode; use
+	safeCast()
+
+	* AU_GreedyMatcher.cc (greedyBindVariables): added Assert() to
+	catch -ve number of subjects assigned to a variable
+
+	* AU_LhsAutomaton.hh (class AU_LhsAutomaton): deleted decl for
+	calculateNrSubjectsMatched()
+
+	* AU_DequeMatcher.cc (dequeMatch): fixed bug wherewe weren't
+	checking that there was enough arguments before handling a
+	variable bound to an alien
+	(dequeMatch): changed way of keeping track of bounds
+
+2003-04-28  Steven Eker  <eker@goo.csl.sri.com>
+
+	* AU_Symbol.cc (stackArguments): handle deque case properly rather
+	than converting to AU_DagNode
+	(normalizeAndComputeTrueSort): only do arg sort computations and
+	normalizeAtTop() if the subject is fresh
+	(computeBaseSort): rewritten using FOR_EACH_CONST()
+
+	* AU_DequeDagNode.cc (stackArguments): fixed bug where we weren't
+	initializing j
+
+	* AU_Term.cc (deepSelfDestruct): use FOR_EACH_CONST()
+	(normalize): use FOR_EACH_CONST()
+	(findEagerVariables): use FOR_EACH_CONST()
+	(markEagerArguments): use FOR_EACH_CONST()
+	(analyseCollapses2): use FOR_EACH_CONST() (2 places)
+	(dump): use FOR_EACH_CONST()
+	(findAvailableTerms): use FOR_EACH_CONST()
+	(compileRhs2): use FOR_EACH_CONST() (2 places)
+
+	* AU_ExtensionInfo.cc (copy): use safeCast()
+
+	* AU_DagNode.cc (partialReplace): use safeCast()
+	(partialConstruct): use safeCast()
+	(matchVariableWithExtension): use safeCast()
+
+	* AU_Term.cc (normalize): use safeCast() (2 places)
+
+2003-04-25  Steven Eker  <eker@goo.csl.sri.com>
+
+	* AU_Symbol.cc (complexStrategy): simplified using rewriteAtTop()
+	(complexStrategy): simplified using rewriteAtTop()
+
+	* AU_Symbol.hh (class AU_Symbol): updated decl for
+	complexStrategy()
+
+	* AU_Symbol.cc (makeDagNode): use STL copy()
+	(eqRewrite): need to check for equationFree() even in assignment
+	case because reduce flag may not have be set because sort was not
+	known because of an mb.
+	(ruleRewrite): check for ruleFree()
+	(AU_Symbol): set useDequeFlag only if we have standardStrategy()
+	(eqRewrite): safeCast() to AU_DagNode* in the complexStrategy()
+	case
+
+	* AU_DagNode.cc (overwriteWithClone): use STL copy()
+	(makeClone): use STL copy()
+	(copyEagerUptoReduced2): use STL copy()
+
+2003-04-24  Steven Eker  <eker@goo.csl.sri.com>
+
+	* AU_Term.hh (symbol): use safeCast()
+
+	* AU_DagNode.hh (class AU_DagNode): added decl for disappear()
+
+	* AU_Normalize.cc (normalizeAtTop): rewritten
+	(disappear): added
+
+	* AU_BaseDagNode.cc: deleted
+
+	* AU_DagNode.hh (class AU_DagNode): class AU_BaseDagNode no longer
+	a friend
+
+	* AU_BaseDagNode.cc (makeExtensionInfo): deleted
+	(getSize): deleted
+
+	* AU_BaseDagNode.hh (class AU_BaseDagNode): deleted decls for
+	makeExtensionInfo() and getSize()
+
+	* AU_DequeDagNode.cc (matchVariableWithExtension): deleted
+	(makeExtensionInfo): added
+
+	* AU_DequeDagNode.hh (class AU_DequeDagNode): added decl for
+	makeExtensionInfo(); deleted decl for matchVariableWithExtension()
+
+	* AU_Matcher.cc (matchRigidPart): use FOR_EACH_CONST
+
+	* AU_DagNode.cc (overwriteWithClone): fixed bug where we weren't
+	incrementing j
+	(makeClone): fix symmetric bug
+
+2003-04-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* AU_DequeDagNode.cc (getHashValue): implemented properly
+
+	* AU_Normalize.cc (normalizeAtTop): use AU_Deque ctor
+
+	* AU_Symbol.hh (class AU_Symbol): added decl for rewriteAtTop()
+
+	* AU_Symbol.cc (rewriteAtTop): added
+	(eqRewrite): use rewriteAtTop(); assume deque form never needs to
+	be rewritten
+
+	* AU_Normalize.cc (normalizeAtTop): use useDeque()
+
+	* AU_DagNode.cc (getHashValue): use FOR_EACH_CONST()
+	(compareArguments): use FOR_EACH_CONST()
+	(clearCopyPointers2): use FOR_EACH_CONST()
+	(overwriteWithClone): use FOR_EACH_CONST()
+	(makeClone): use FOR_EACH_CONST()
+
+	* AU_DagNode.hh (setProducedByAssignment): use
+	setNormalizationStatus()
+	(producedByAssignment): deleted
+	(nrArgs): deleted
+	(getArgument): deleted
+	(AU_BaseDagNode): use setNormalizationStatus()
+
+	* AU_Symbol.hh (class AU_Symbol): added decl for
+	compileEquations()
+
+	* AU_Symbol.cc (AU_Symbol): init useDequeFlag
+	(compileEquations): added
+
+	* AU_Symbol.hh (class AU_Symbol): added data member useDequeFlag
+	(useDeque): added
+
+	* AU_DagNode.cc (markArguments): rewritten to avoid recursing on
+	the first arg that shares our symbol
+
+2003-04-22  Steven Eker  <eker@goo.csl.sri.com>
+
+	* AU_DequeMatcher.cc (dequeMatch): fixed bug where we weren't
+	assigning to returnedSubproblem in the success case
+
+2003-04-21  Steven Eker  <eker@goo.csl.sri.com>
+
+	* AU_DagOperations.cc (eliminateBackward): first arg no longer
+	const
+	(eliminateForward): first arg no longer const
+
+	* AU_DagNode.hh (class AU_DagNode): updated decls for
+	eliminateForward() and eliminateBackward()
+
+	* AU_DequeMatcher.cc: created
+
+	* AU_Normalize.cc (normalizeAtTop): use safeCast() (2 places)
+
+	* AU_DagOperations.cc (eliminateForward): use getAU_DagNode()
+	rather than static_cast - fixes a bug
+	(eliminateBackward): ditto
+
+	* AU_LhsAutomaton.hh (class AU_LhsAutomaton): added decl for
+	dequeMatch()
+
+	* AU_Matcher.cc (match): handle deque form via dequeMatch()
+
+	* AU_Normalize.cc (normalizeAtTop): only convert to deque form if
+	symbol is equationFree()
+
+	* AU_Symbol.hh (class AU_Symbol): added decl for complexStrategy()
+
+	* AU_Symbol.cc (complexStrategy): added
+	(memoStrategy): use isFresh()
+	(memoStrategy): check for DEQUED
+	(eqRewrite): rewritten to handle deque case
+
+	* AU_BaseDagNode.hh (isFresh): added
+
+2003-04-18  Steven Eker  <eker@goo.csl.sri.com>
+
+	* AU_DequeDagNode.cc (dequeToArgVec): fixed buf where we weren't
+	preserving sort index and reduced flag
+
+	* AU_Normalize.cc (normalizeAtTop): fixed bug where we were
+	setting e to argArray.begin()
+
+2003-04-17  Steven Eker  <eker@goo.csl.sri.com>
+
+	* AU_Symbol.cc (computeBaseSort): fixed bug where we were falling
+	into AU_DagNode* case
+
+	* AU_Normalize.cc (normalizeAtTop): temporary hack to force
+	everything into deque form for testing
+
+	* AU_DequeDagNode.hh (AU_DequeDagNode): initialize deque with copy
+	ctor rather than assignment
+
+2003-04-16  Steven Eker  <eker@goo.csl.sri.com>
+
+	* AU_Normalize.cc: created
+
+	* AU_DequeDagNode.hh (AU_DequeDagNode): take AU_Deque arg
+
+	* AU_DequeDagNode.cc (makeClone): use new ctor
+
+	* AU_DagNode.hh (class AU_DagNode): added DEQUED to enum
+	NormalizationResult
+
+2003-04-15  Steven Eker  <eker@goo.csl.sri.com>
+
+	* AU_Symbol.cc (ruleRewrite): use getAU_DagNode()
+	(eqRewrite): use getAU_DagNode()
+	(memoStrategy): use getAU_DagNode()
+	(computeBaseSort): handle AU_DequeDagNode; use safeCast()
+	(normalizeAndComputeTrueSort): use getAU_DagNode()
+	(stackArguments): use getAU_DagNode()
+
+	* AU_Matcher.cc (match): use getAU_DagNode()
+
+	* AU_DagNode.cc (copyEagerUptoReduced2): use safeCast()
+
+	* AU_Term.cc (compareArguments): code cleaning
+
+	* AU_DequeDagNode.cc (compareArguments): code cleaning
+
+	* AU_BaseDagNode.cc (makeExtensionInfo): use getAU_DagNode()
+	(getSize): handle ACU_TreeDagNode
+
+	* AU_DagNode.hh: added decl for getAU_DagNode()
+
+	* AU_DagNode.cc (getAU_DagNode): added
+
+2003-04-14  Steven Eker  <eker@goo.csl.sri.com>
+
+	* AU_DequeDagNode.cc (arguments): use
+	AU_DequeDagArgumentIterator()
+
+	* AU_Theory.hh: added class AU_DequeDagArgumentIterator
+
+	* AU_DequeDagArgumentIterator.cc: created
+
+	* AU_DequeDagArgumentIterator.hh: created
+
+	* AU_DequeDagNode.hh (getDeque): added
+
+	* AU_Term.cc (compareArguments): (Term* version) use iterators;
+	use new ordering
+	(compareArguments): (DagNode* version) use iterators; use new
+	ordering; handle AU_DequeDagNodes
+
+	* AU_DagNode.cc (compareArguments): check for deque; use new
+	ordering
+
+	* AU_Theory.hh: added class AU_BaseDagNode and class
+	AU_DequeDagNode
+
+	* AU_DagNode.hh (class AU_DagNode): made AU_DequeDagNode a friend
+
+	* AU_DequeDagNode.hh: created
+
+	* AU_DequeDagNode.cc: created
+
+2003-04-11  Steven Eker  <eker@goo.csl.sri.com>
+
+	* AU_DagNode.hh (symbol): deleted
+	(producedByAssignment): sue new theory byte semantics
+	(setProducedByAssignment): use new theory byte semantics
+	(class AU_DagNode): derive from AU_BaseDagNode
+	(AU_BaseDagNode): call AU_BaseDagNode(); use new theory byte
+	semantics
+
+	* AU_BaseDagNode.hh (_AU_BaseDagNode_hh_): created
+
+	* AU_DagNode.hh (class AU_DagNode): delete decl for ~AU_DagNode()
+
+	* AU_DagNode.cc (~AU_DagNode): deleted
+	
+===================================Maude80===========================================
+
 2003-03-28  Steven Eker  <eker@goo.csl.sri.com>
 
 	* AU_Symbol.cc (computeBaseSort): fixed bug: we can't rely on

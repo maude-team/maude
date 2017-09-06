@@ -138,11 +138,9 @@ LoopSymbol::extractQidList(DagNode* metaQidList, Vector<int>& ids)
   int id;
   if (mq == qidListSymbol)
     {
-      AU_DagNode* a = static_cast<AU_DagNode*>(metaQidList);
-      int nrArgs = a->nrArgs();
-      for (int i = 0; i < nrArgs; i++)
+      for (DagArgumentIterator i(metaQidList); i.valid(); i.next())
 	{
-	  if (!extractQid(a->getArgument(i), id))
+	  if (!extractQid(i.argument(), id))
 	    return false;
 	  ids.append(id);
 	}

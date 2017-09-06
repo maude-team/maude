@@ -141,8 +141,7 @@ FreeDagNode::overwriteWithClone(DagNode* old)
   Symbol* s = symbol();
   FreeDagNode* d = new(old) FreeDagNode(s);
   int nrArgs = s->arity();
-  if (isReduced())
-    d->setReduced();
+  d->copySetRewritingFlags(this);
   d->setSortIndex(getSortIndex());
   DagNode** p = argArray();
   DagNode** q = d->argArray();
@@ -156,8 +155,7 @@ FreeDagNode::makeClone()
   Symbol* s = symbol();
   FreeDagNode* d = new FreeDagNode(s);
   int nrArgs = s->arity();
-  if (isReduced())
-    d->setReduced();
+  d->copySetRewritingFlags(this);
   d->setSortIndex(getSortIndex());
   DagNode** p = argArray();
   DagNode** q = d->argArray();

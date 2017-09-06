@@ -1,3 +1,41 @@
+2003-04-18  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaDown.cc (downSimpleSortList): fixed != nilQidListSymbol bug
+	that we introduced today
+
+	* metaDownOps.cc (checkHookList): rewritten to use
+	DagArgumentIterator; fixed fall thru bug
+
+	* metaLevelSignature.cc (MACRO): got rid of AU_DagNode and
+	ACU_DagNode
+
+	* metaDownOps.cc (downOpDecl): rewritten to use
+	DagArgumentIterator
+	(downBubbleSpec): rewritten to use DagArgumentIterator
+
+	* metaDownFixUps.cc (fixUpSpecialSymbol): rewritten to use
+	DagArgumentIterator
+	(fixUpBubble): rewritten to use DagArgumentIterator
+	(fixUpPolymorph): rewritten to use DagArgumentIterator
+
+	* metaDown.cc (downSimpleSortList): rewritten to use
+	DagArgumentIterator
+	(downTypeList): rewritten to use DagArgumentIterator
+	(downCondition): rewritten to use DagArgumentIterator and
+	FOR_EACH_CONST()
+	(downTermList): rewritten to use DagArgumentIterator and
+	FOR_EACH_CONST()
+	(downSubstitution): use clear()
+
+2003-04-17  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaDown.cc (downImports): use DagArgumentIterator instead of
+	casting to AU_DagNode
+	(downNatList): ditto
+	(downQidList): ditto
+
+===================================Maude80===========================================
+
 2003-02-26  Steven Eker  <eker@goo.csl.sri.com>
 
 	* metaUpModule.cc (upConditionFragment): Assert() -> CantHappen()

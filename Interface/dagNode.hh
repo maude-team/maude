@@ -46,6 +46,7 @@ public:
   bool isUnrewritable() const;
   void setUnstackable();
   bool isUnstackable() const;
+  void copySetRewritingFlags(const DagNode* other);
   Byte getTheoryByte() const;
   void setTheoryByte(Byte value);
 
@@ -138,7 +139,7 @@ private:
     COPIED = 2,		// copied in current copy operation; copyPointer valid
     UNREWRITABLE = 4,	// reduced and not rewritable by rules
     UNSTACKABLE = 8,	// unrewritable and all subterms unstackable or frozen
-    CACHED = 16,	// node exists as part of a cache
+    //CACHED = 16,	// node exists as part of a cache
     HASH_VALID = 32	// node has a valid hash value (storage is theory dependent)
   };
 
@@ -182,6 +183,13 @@ inline void
 DagNode::okToCollectGarbage()
 {
   MemoryCell::okToCollectGarbage();
+}
+
+inline void
+DagNode::copySetRewritingFlags(const DagNode* other)
+{
+  getMemoryCell()->copySetFlags(REDUCED | UNREWRITABLE | UNSTACKABLE,
+				other->getMemoryCell());
 }
 
 inline void

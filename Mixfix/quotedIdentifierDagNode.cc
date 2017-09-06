@@ -43,11 +43,20 @@ QuotedIdentifierDagNode::compareArguments(const DagNode* other) const
 void
 QuotedIdentifierDagNode::overwriteWithClone(DagNode* old)
 {
-  (void) new(old) QuotedIdentifierDagNode(static_cast<QuotedIdentifierSymbol*>(symbol()), idIndex);
+  QuotedIdentifierDagNode* d =
+    new(old) QuotedIdentifierDagNode(safeCast(QuotedIdentifierSymbol*, symbol()),
+				     idIndex);
+  d->copySetRewritingFlags(this);
+  d->setSortIndex(getSortIndex());
 }
 
 DagNode*
 QuotedIdentifierDagNode::makeClone()
 {
-  return new QuotedIdentifierDagNode(static_cast<QuotedIdentifierSymbol*>(symbol()), idIndex);
+  QuotedIdentifierDagNode* d =
+    new QuotedIdentifierDagNode(safeCast(QuotedIdentifierSymbol*, symbol()),
+				idIndex);
+  d->copySetRewritingFlags(this);
+  d->setSortIndex(getSortIndex());
+  return d;
 }

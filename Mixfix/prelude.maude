@@ -1,6 +1,6 @@
 ***
 ***	Maude interpreter standard prelude.
-***	Version alpha 78.
+***	Version alpha 80.
 ***	Copyright 1998-2003 SRI International.
 ***
 ***	Some of the overall structure is taken from the OBJ3
@@ -55,6 +55,16 @@ fmod BOOL is
 endfm
 
 set include BOOL on .
+
+fmod EXT-BOOL is
+  op _and-then_ : Bool Bool -> Bool [strat (1 0 2 0) gather (e E) prec 55] .
+  op _or-else_ : Bool Bool -> Bool [strat (1 0 2 0) gather (e E) prec 59] .
+  var B : [Bool] .
+  eq true and-then B = B .
+  eq false and-then B = false .
+  eq true or-else B = true .
+  eq false or-else B = B .
+endfm
 
 fmod IDENTICAL is
   op _===_ : Universal Universal -> Bool 

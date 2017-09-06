@@ -104,7 +104,8 @@ private:
     //
     //	Data storage for full match time use, flex part only
     //
-    int nastyBinding;		// if >= 0, minimum number of subterms binding might match
+    int nastyBinding;		// if >= 0, minimum number of subterms
+    				// that binding might match
     //
     //	Data storage for greedy match time use, flex part only
     //
@@ -204,7 +205,6 @@ private:
   void addVariableBlocks(Substitution& solution,
 			 AU_Subproblem* subproblem,
 			 SubproblemAccumulator& subproblems);
-  int calculateNrSubjectsMatched(DagNode* d, int pos, bool& nasty);
   bool fullMatchRigidBlock(AU_DagNode* subject,
 			   Substitution& solution,
 			   RigidBlock& block,
@@ -248,6 +248,10 @@ private:
 			     Subproblem*& returnedSubproblem,
 			     ExtensionInfo* extensionInfo);
   void bindUnboundVariablesToIdentity(Substitution& solution, int exception);
+
+  int dequeMatch(AU_DequeDagNode* subject,
+		 Substitution& solution,
+		 Subproblem*& returnedSubproblem);
 
   AU_Symbol* const topSymbol;
   const bool matchAtTop;

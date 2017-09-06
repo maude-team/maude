@@ -13,13 +13,13 @@
      //
      MACRO(qidSymbol, QuotedIdentifierSymbol, SymbolType::QUOTED_IDENTIFIER, 0)
      MACRO(metaTermSymbol, FreeSymbol, 0, 2)
-     MACRO(metaArgSymbol, AU_Symbol, SymbolType::ASSOC, 2)
+     MACRO(metaArgSymbol, Symbol, SymbolType::ASSOC, 2)
      //
      //	Substitution and context constructors.
      //
      MACRO(assignmentSymbol, FreeSymbol, 0, 2)
      MACRO(emptySubstitutionSymbol, Symbol, 0, 0)
-     MACRO(substitutionSymbol, ACU_Symbol, SymbolType::ASSOC | SymbolType::COMM, 2)
+     MACRO(substitutionSymbol, Symbol, SymbolType::ASSOC | SymbolType::COMM, 2)
      MACRO(holeSymbol, Symbol, 0, 0)
 
      //
@@ -31,28 +31,28 @@
      MACRO(protectingSymbol, FreeSymbol, 0, 1)
      MACRO(includingSymbol, FreeSymbol, 0, 1)
      MACRO(nilImportListSymbol, Symbol, 0, 0)
-     MACRO(importListSymbol, AU_Symbol, SymbolType::ASSOC, 2)
+     MACRO(importListSymbol, Symbol, SymbolType::ASSOC, 2)
      //
      //	Sort set constructors.
      //
      MACRO(emptySortSetSymbol, Symbol, 0, 0)
-     MACRO(sortSetSymbol, ACU_Symbol, SymbolType::ASSOC | SymbolType::COMM, 2)
+     MACRO(sortSetSymbol, Symbol, SymbolType::ASSOC | SymbolType::COMM, 2)
      //
      //	Subsort set constructors.
      //
      MACRO(subsortSymbol, FreeSymbol, 0, 2)
      MACRO(emptySubsortDeclSetSymbol, Symbol, 0, 0)
-     MACRO(subsortDeclSetSymbol, ACU_Symbol, SymbolType::ASSOC | SymbolType::COMM, 2)
+     MACRO(subsortDeclSetSymbol, Symbol, SymbolType::ASSOC | SymbolType::COMM, 2)
      //
      //	Quoted identifier list constructors.
      //
      MACRO(nilQidListSymbol, Symbol, 0, 0)
-     MACRO(qidListSymbol, AU_Symbol, SymbolType::ASSOC, 2)
+     MACRO(qidListSymbol, Symbol, SymbolType::ASSOC, 2)
      //
      //	Natural number list constructors.
      //
      MACRO(succSymbol, SuccSymbol, SymbolType::ITER, 1)
-     MACRO(natListSymbol, AU_Symbol, SymbolType::ASSOC, 2)
+     MACRO(natListSymbol, Symbol, SymbolType::ASSOC, 2)
      MACRO(unboundedSymbol, Symbol, 0, 0)
      //
      //	String constructor.
@@ -62,7 +62,7 @@
      //	Hook constructors.
      //
      MACRO(termHookSymbol, FreeSymbol, 0, 2)
-     MACRO(hookListSymbol, AU_Symbol, SymbolType::ASSOC, 2)
+     MACRO(hookListSymbol, Symbol, SymbolType::ASSOC, 2)
      MACRO(idHookSymbol, FreeSymbol, 0, 2)
      MACRO(opHookSymbol, FreeSymbol, 0, 4)
      //
@@ -87,12 +87,12 @@
      MACRO(metadataSymbol, FreeSymbol, 0, 1)
      MACRO(owiseSymbol, FreeSymbol, 0, 0)
      MACRO(emptyAttrSetSymbol, Symbol, 0, 0)
-     MACRO(attrSetSymbol, ACU_Symbol, SymbolType::ASSOC | SymbolType::COMM, 2)
+     MACRO(attrSetSymbol, Symbol, SymbolType::ASSOC | SymbolType::COMM, 2)
      //
      //	Operator declaration constructors.
      //
      MACRO(opDeclSymbol, FreeSymbol, 0, 4)
-     MACRO(opDeclSetSymbol, ACU_Symbol, SymbolType::ASSOC | SymbolType::COMM, 2)
+     MACRO(opDeclSetSymbol, Symbol, SymbolType::ASSOC | SymbolType::COMM, 2)
      MACRO(emptyOpDeclSetSymbol, Symbol, 0, 0)
      //
      //	Condition constructors.
@@ -102,14 +102,14 @@
      MACRO(sortTestConditionSymbol, FreeSymbol, 0, 2)
      MACRO(matchConditionSymbol, FreeSymbol, 0, 2)
      MACRO(rewriteConditionSymbol, FreeSymbol, 0, 2)
-     MACRO(conjunctionSymbol, AU_Symbol, SymbolType::ASSOC, 2)
+     MACRO(conjunctionSymbol, Symbol, SymbolType::ASSOC, 2)
      //
      //	Membership axiom constructors.
      //
      MACRO(mbSymbol, FreeSymbol, 0, 3)
      MACRO(cmbSymbol, FreeSymbol, 0, 4)
      MACRO(emptyMembAxSetSymbol, Symbol, 0, 0)
-     MACRO(membAxSetSymbol, ACU_Symbol, SymbolType::ASSOC | SymbolType::COMM, 2)
+     MACRO(membAxSetSymbol, Symbol, SymbolType::ASSOC | SymbolType::COMM, 2)
      //
      //	Equation constructors.
      //
@@ -123,7 +123,7 @@
      MACRO(rlSymbol, FreeSymbol, 0, 3)
      MACRO(crlSymbol, FreeSymbol, 0, 4)
      MACRO(emptyRuleSetSymbol, Symbol, 0, 0)
-     MACRO(ruleSetSymbol, ACU_Symbol, SymbolType::ASSOC | SymbolType::COMM, 2)
+     MACRO(ruleSetSymbol, Symbol, SymbolType::ASSOC | SymbolType::COMM, 2)
      //
      //	Module constructors.
      //
@@ -137,7 +137,7 @@
      //	Kind set constructors.
      //
      MACRO(emptyKindSetSymbol, Symbol, 0, 0)
-     MACRO(kindSetSymbol, ACU_Symbol, SymbolType::ASSOC | SymbolType::COMM, 2)
+     MACRO(kindSetSymbol, Symbol, SymbolType::ASSOC | SymbolType::COMM, 2)
      //
      //	Argument values.
      //  

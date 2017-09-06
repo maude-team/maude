@@ -2,7 +2,7 @@
 //      Implementation for class QuotedIdentifierOpSymbol.
 //
 
-#include <strstream>  // HACK
+#include <sstream>
 
 //      utility stuff
 #include "macros.hh"
@@ -145,14 +145,12 @@ QuotedIdentifierOpSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
 	    const char* s1 = Token::name(d1->getIdIndex());
 	    if (strcmp(s1, "RESET") == 0)
 	      counter = 0;
-	    int s1Len = strlen(s1);
-	    int size = s1Len + INT_TEXT_SIZE + 1;
-	    char* buffer = new char[size];
-	    ostrstream ost(buffer, size);  // should use ostringstream
-	    ost << s1 << counter << '\0';
+
+	    ostringstream ost(s1);
+	    ost << counter;
 	    ++counter;
-	    int idIndex = Token::encode(buffer);
-	    delete [] buffer;
+	    int idIndex = Token::encode(ost.str().c_str());
+
 	    bool trace = RewritingContext::getTraceStatus();
 	    if (trace)
 	      {

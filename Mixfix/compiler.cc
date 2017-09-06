@@ -3,7 +3,7 @@
 //
 
 #include <unistd.h>
-#include <strstream>  // HACK
+#include <sstream>
 
 //      utility stuff
 #include "macros.hh"
@@ -25,7 +25,6 @@
 #include "compilationContext.hh"
 
 //	front end class definitions
-//#include "userLevelRewritingContext.hh"
 #include "visibleModule.hh"
 #include "preModule.hh"
 #include "compiler.hh"
@@ -44,38 +43,18 @@ Compiler::~Compiler()
 const string&
 Compiler::makeBaseName()
 {
+
   static string baseName;
   if (baseName.empty())
     {
+      static ostringstream buffer;
       const char* tmpDir = getenv("TMPDIR");
       if (tmpDir == 0)
 	tmpDir = (access("/usr/tmp", W_OK) == 0) ? "/usr/tmp" : "/tmp";
-      //
-      //	Ugly hack to get pid as a decimal string.
-      //
-      char t[INT_TEXT_SIZE + 1];
-      ostrstream ost(t, INT_TEXT_SIZE + 1);
-      ost << getpid() << '\0';
-
-      baseName = tmpDir;
-      baseName += "/maude";
-      baseName += t;
+      buffer << tmpDir << "/maude" << getpid();
+      baseName = buffer.str();  // deep copy
     }
   return baseName;
-
-  /*
-    This is the right thing but GNU libstdc++ lacks string streams :(
-
-  static ostringstream baseName;
-  if (baseName.str().empty())
-    {
-      const char* tmpDir = getenv("TMPDIR");
-      if (tmpDir == 0)
-	tmpDir = (access("/usr/tmp", W_OK) == 0) ? "/usr/tmp" : "/tmp";
-      baseName << tmpDir << "/maude" << getpid();
-    }
-  return baseName.str();
-  */
 }
 
 bool
@@ -97,7 +76,8 @@ Compiler::fullCompile(PreModule* module, bool countRewrites)
   int nrSymbols = symbols.length();
   //
   //	Generate arity table.
-  //	(eventually this will be more than arities and probably moved into CompilationContext).
+  //	(eventually this will be more than arities and probably moved
+  //	into CompilationContext).
   //
   ccFile << "int arity[] =\n{";
   for (int i = 0; i < nrSymbols; i++)

@@ -1,3 +1,42 @@
+2003-05-03  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: added
+
+2003-05-01  Steven Eker  <eker@goo.csl.sri.com>
+
+	* compiler.cc (makeBaseName): use ostringstream
+
+	* quotedIdentifierOpSymbol.cc (eqRewrite): use ostringstream
+
+	* quotedIdentifierDagNode.cc (overwriteWithClone): rewritten
+	(makeClone): rewritten
+
+2003-04-18  Steven Eker  <eker@goo.csl.sri.com>
+
+	* loopSymbol.cc (extractQidList): use DagArgumentIterator
+
+2003-04-09  Steven Eker  <eker@goo.csl.sri.com>
+
+	* mixfixModule.hh (CommonTokens): updated many decls for color arg
+
+	* termPrint.cc (computeColor): added
+	(prefix): deleted
+	(suffix): take color arg
+	(handleIter): take color arg
+	(handleMinus): take color arg
+	(handleDivision): take color arg
+	(handleFloat): take color arg
+	(handleString): take color arg
+	(handleQuotedIdentifier): take color arg
+	(handleVariable): take color arg
+	(prettyPrint): pass color arg to many functions
+
+2003-04-07  Steven Eker  <eker@goo.csl.sri.com>
+
+	* model-checker.maude: added => and <=> LTL operators
+	
+===================================Maude80===========================================
+
 2003-03-21  Steven Eker  <eker@goo.csl.sri.com>
 
 	* execute.cc (reduce): added threshold search version

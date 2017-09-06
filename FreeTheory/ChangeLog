@@ -1,3 +1,10 @@
+2003-05-01  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeDagNode.cc (overwriteWithClone): use copySetRewritingFlags()
+	(makeClone): use copySetRewritingFlags()
+	
+===================================Maude79===========================================
+
 2003-03-03  Steven Eker  <eker@goo.csl.sri.com>
 
 	* freeNet.cc (buildTernaryTree): use notEqual[] in place of less

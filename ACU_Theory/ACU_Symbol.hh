@@ -50,6 +50,7 @@ protected:
 		       const Vector<int>& multiplicities);
 
 private:
+  bool rewriteAtTop(DagNode* subject, RewritingContext& context);
   bool complexStrategy(DagNode* subject, RewritingContext& context);
   bool memoStrategy(MemoTable::SourceSet& from, DagNode* subject, RewritingContext& context);
   void copyAndReduceSubterms(ACU_DagNode* subject, RewritingContext& context);

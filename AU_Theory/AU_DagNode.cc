@@ -17,14 +17,21 @@
 //      AU theory class definitions
 #include "AU_Symbol.hh"
 #include "AU_DagNode.hh"
+#include "AU_DequeDagNode.hh"
 #include "AU_DagArgumentIterator.hh"
 #include "AU_ExtensionInfo.hh"
 #include "AU_Subproblem.hh"
 
+//	our stuff
+#include "AU_Normalize.cc"
 #include "AU_DagOperations.cc"
 
-AU_DagNode::~AU_DagNode()
+AU_DagNode*
+getAU_DagNode(DagNode* d)
 {
+  if (safeCast(AU_BaseDagNode*, d)->isDeque())
+    return AU_DequeDagNode::dequeToArgVec(safeCast(AU_DequeDagNode*, d));
+  return safeCast(AU_DagNode*, d);
 }
 
 RawDagArgumentIterator*
@@ -37,56 +44,61 @@ size_t
 AU_DagNode::getHashValue()
 {
   size_t hashValue = symbol()->getHashValue();
-  int nrArgs = argArray.length();
-  for (int i = 0; i < nrArgs; i++)
-    hashValue = hash(hashValue, argArray[i]->getHashValue());
+  FOR_EACH_CONST(i, ArgVec<DagNode*>, argArray)
+    hashValue = hash(hashValue, (*i)->getHashValue());
   return hashValue;
 }
 
 int
 AU_DagNode::compareArguments(const DagNode* other) const
 {
-  int nrArgs = argArray.length();
-  const ArgVec<DagNode*>& argArray2 = static_cast<const AU_DagNode*>(other)->argArray;
-  int nrArgs2 = argArray2.length();
-  int limit = min(nrArgs, nrArgs2);
-  Assert(limit >= 1, "no arguments");
-  
-  ArgVec<DagNode*>::const_iterator i = argArray.begin();
+  if (safeCast(const AU_BaseDagNode*, other)->isDeque())
+    return - safeCast(const AU_DequeDagNode*, other)->compare(this);
+
+  const ArgVec<DagNode*>& argArray2 = safeCast(const AU_DagNode*, other)->argArray;
+  int r = argArray.length() - argArray2.length();
+  if (r != 0)
+    return r;
+ 
   ArgVec<DagNode*>::const_iterator j = argArray2.begin();
-  do
+  FOR_EACH_CONST(i, ArgVec<DagNode*>, argArray)
     {
       int r = (*i)->compare(*j);
       if (r != 0)
 	return r;
-      ++i;
       ++j;
     }
-  while (--limit > 0);
-  return nrArgs - nrArgs2;
+  Assert(j == argArray2.end(), "iterator problem");
+
+  return 0;
 }
 
 DagNode*
 AU_DagNode::markArguments()
 {
+  Assert(argArray.length() > 0, "no arguments");
   argArray.evacuate();
-  int nrArgs = argArray.length();
-  Assert(nrArgs > 0, "no arguments");
-
-  ArgVec<DagNode*>::const_iterator i = argArray.begin();
-  while (--nrArgs > 0)
+  //
+  //	We avoid recursing on the first subterm that shares our symbol.
+  //
+  Symbol* s = symbol();
+  DagNode* r = 0;
+  FOR_EACH_CONST(i, ArgVec<DagNode*>, argArray)
     {
-      (*i)->mark();
-      ++i;
+      DagNode* d = *i;
+      if (r == 0 && d->symbol() == s)
+	r = d;
+      else
+	d->mark();
     }
-  return *i;
+  return r;
 }
 
 DagNode*
 AU_DagNode::copyEagerUptoReduced2()
 {
   int nrArgs = argArray.length();
-  AU_Symbol* s = static_cast<AU_Symbol*>(symbol());
+  AU_Symbol* s = safeCast(AU_Symbol*, symbol());
   AU_DagNode* n = new AU_DagNode(s, nrArgs);
   if (s->getPermuteStrategy() == BinarySymbol::EAGER)
     {
@@ -94,32 +106,25 @@ AU_DagNode::copyEagerUptoReduced2()
 	  n->argArray[i] = argArray[i]->copyEagerUptoReduced();
     }
   else
-    {
-      for (int i = 0; i < nrArgs; i++)
-	n->argArray[i] = argArray[i];
-    }
+    copy(argArray.begin(), argArray.end(), n->argArray.begin());
   return n;
 }
 
 void
 AU_DagNode::clearCopyPointers2()
 {
-  int nrArgs = argArray.length();
-  for (int i = 0; i < nrArgs; i++)
-    argArray[i]->clearCopyPointers();
+  FOR_EACH_CONST(i, ArgVec<DagNode*>, argArray)
+    (*i)->clearCopyPointers();
 }
 
 void
 AU_DagNode::overwriteWithClone(DagNode* old)
 {
-  int nrArgs = argArray.length();
-  AU_DagNode* d = new(old) AU_DagNode(symbol(), nrArgs);
+  AU_DagNode* d = new(old) AU_DagNode(symbol(), argArray.length());
+  d->copySetRewritingFlags(this);
   d->setTheoryByte(getTheoryByte());
-  if (isReduced())
-    d->setReduced();
   d->setSortIndex(getSortIndex());
-  for (int i = 0; i < nrArgs; i++)
-    d->argArray[i] = argArray[i];
+  copy(argArray.begin(), argArray.end(), d->argArray.begin());
 }
 
 DagNode*
@@ -127,130 +132,11 @@ AU_DagNode::makeClone()
 {
   int nrArgs = argArray.length();
   AU_DagNode* d = new AU_DagNode(symbol(), nrArgs);
+  d->copySetRewritingFlags(this);
   d->setTheoryByte(getTheoryByte());
-  if (isReduced())
-    d->setReduced();
   d->setSortIndex(getSortIndex());
-  for (int i = 0; i < nrArgs; i++)
-    d->argArray[i] = argArray[i];
+  copy(argArray.begin(), argArray.end(), d->argArray.begin());
   return d;
-}
-
-AU_DagNode::NormalizationResult
-AU_DagNode::normalizeAtTop()
-{
-  AU_Symbol* s = symbol();
-  Term* identity = s->getIdentity();
-  int nrArgs = argArray.length();
-  int expansion = 0;
-  int nrIdentities = 0;
-  //
-  //	First examine the argument list looking for either our top symbol
-  //	or our identity.
-  //
-  if (identity == 0)
-    {
-      for (int i = 0; i < nrArgs; i++)
-	{
-	  DagNode* d = argArray[i];
-	  if (d->symbol() == s)
-	    expansion += static_cast<AU_DagNode*>(d)->argArray.length() - 1;
-	}
-    }
-  else
-    {
-      for (int i = 0; i < nrArgs; i++)
-	{
-	  DagNode* d = argArray[i];
-	  if (d->symbol() == s)
-	    expansion += static_cast<AU_DagNode*>(d)->argArray.length() - 1;
-	  else if (identity->equal(d) &&
-		   ((i > 0 && s->rightId()) || (i < nrArgs - 1 && s->leftId())))
-	    ++nrIdentities;
-	}
-    }
-  // cout << "this = " << this << "\tnrIdentities = " << nrIdentities <<
-  //  "\texpansion = " << expansion << '\n';
-  //
-  //	Now deal efficiently with all the special cases.
-  //
-  if (nrIdentities == 0)
-    {
-      if (expansion == 0)
-	return NORMAL;
-      //
-      //	Flattening but no identities.
-      //
-      argArray.expandBy(expansion);
-      int p = nrArgs + expansion - 1;
-      for (int i = nrArgs - 1; i >= 0; i--)
-	{
-	  Assert(p >= i, "loop invarient failed");
-	  DagNode* d = argArray[i];
-	  if (d->symbol() == s)
-	    {
-	      ArgVec<DagNode*>& argArray2 = static_cast<AU_DagNode*>(d)->argArray;
-	      for (int j = argArray2.length() - 1; j >= 0; j--)
-		argArray[p--] = argArray2[j];
-	    }
-	  else
-	    argArray[p--] = argArray[i];
-	}
-      Assert(p == -1, "bad argArray length");
-      DagNode::okToCollectGarbage();  // needed because of pathological nesting
-      return FLATTENED;
-    }
-  if (expansion == 0)
-    {
-      //
-      //	Identities but no flattening.
-      //
-      int p = 0;
-      for (int i = 0; i < nrArgs; i++)
-	{
-	  DagNode* d = argArray[i];
-	  if (!(identity->equal(d) &&
-		((i > 0 && s->rightId()) || (i < nrArgs - 1 && s->leftId()))))
-	    argArray[p++] = d;
-	}
-      if (p < 2)
-	{
-	  //
-	  //	Eliminating identity causes AU dag node to collapse to its
-	  //	remaining argument or 1st argument of all arguments were
-	  //	identity.
-	  //
-	  DagNode* remaining = (s->getPermuteStrategy() == BinarySymbol::EAGER) ?
-	    argArray[0] : argArray[0]->copyReducible();
-	  remaining->overwriteWithClone(this);
-	  return COLLAPSED;
-	}
-      argArray.contractTo(p);
-      return NORMAL;
-    }
-  //
-  //	Flattening and identities.
-  //
-  ArgVec<DagNode*> buffer(nrArgs + expansion - nrIdentities);
-  int p = 0;
-  for (int i = 0; i < nrArgs; i++)
-    {
-      DagNode* d = argArray[i];
-      if (d->symbol() == s)
-	{
-	  ArgVec<DagNode*>& argArray2 = static_cast<AU_DagNode*>(d)->argArray;
-	  int nrArgs2 = argArray2.length();
-	  for (int j = 0; j < nrArgs2; j++)
-	    buffer[p++] = argArray2[j];
-	}
-      else if (!(identity->equal(d) &&
-		 ((i > 0 && s->rightId()) || (i < nrArgs - 1 && s->leftId()))))
-	buffer[p++] = d;
-    }
-  Assert(p == nrArgs + expansion - nrIdentities, "bad buffer size");
-  argArray.swap(buffer);
-  DagNode::okToCollectGarbage();  // needed because of pathological nesting
-  return FLATTENED;
 }
 
 DagNode*
@@ -307,7 +193,7 @@ AU_DagNode::stackArguments(Vector<RedexPosition>& stack,
 void
 AU_DagNode::partialReplace(DagNode* replacement, ExtensionInfo* extensionInfo)
 {
-  AU_ExtensionInfo* e = static_cast<AU_ExtensionInfo*>(extensionInfo);
+  AU_ExtensionInfo* e = safeCast(AU_ExtensionInfo*, extensionInfo);
   int first = e->firstMatched();
   int last = e->lastMatched();
   argArray[first++] = replacement;
@@ -321,7 +207,7 @@ AU_DagNode::partialReplace(DagNode* replacement, ExtensionInfo* extensionInfo)
 DagNode*
 AU_DagNode::partialConstruct(DagNode* replacement, ExtensionInfo* extensionInfo)
 {
-  AU_ExtensionInfo* e = static_cast<AU_ExtensionInfo*>(extensionInfo);
+  AU_ExtensionInfo* e = safeCast(AU_ExtensionInfo*, extensionInfo);
   int first = e->firstMatched();
   int last = e->lastMatched();
   int nrArgs = argArray.length();
@@ -353,7 +239,7 @@ AU_DagNode::matchVariableWithExtension(int index,
   //    the variable having too smaller sort and return false; the subject having
   //    total subterm multiplicity of 2 and return unique solution.
   //
-  AU_ExtensionInfo* e = static_cast<AU_ExtensionInfo*>(extensionInfo);
+  AU_ExtensionInfo* e = safeCast(AU_ExtensionInfo*, extensionInfo);
   AU_Subproblem* subproblem = new AU_Subproblem(this, 0, argArray.length() - 1, 1, e);
   int min = symbol()->oneSidedId() ? 1 : 2;
   subproblem->addTopVariable(0, index, min, UNBOUNDED, const_cast<Sort*>(sort));  // HACK

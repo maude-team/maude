@@ -48,11 +48,18 @@ MetaLevel::downOpDecl(DagNode* metaOpDecl, MetaModule* m)
 		  DagNode* metaTypeList = f->getArgument(1);
 		  if (metaTypeList->symbol() != qidListSymbol)
 		    goto fail;
-		  AU_DagNode* a = safeCast(AU_DagNode*, metaTypeList);
-		  if (a->nrArgs() != 3 || !downType(a->getArgument(0), m, domainAndRange[0]))
+		  DagArgumentIterator i(metaTypeList);
+		  if (i.valid() &&
+		      downType(i.argument(), m, domainAndRange[0]) &&
+		      (i.next(), i.valid()) &&
+		      (i.next(), i.valid()) &&
+		      !(i.next(), i.valid()))
+		    {
+		      domainAndRange[2] = 0;
+		      domainAndRange[3] = 0;
+		    }
+		  else
 		    goto fail;
-		  domainAndRange[2] = 0;
-		  domainAndRange[3] = 0;
 		}
 	      domainAndRange[1] = 0;
 	      int polymorphIndex = m->addPolymorph(prefixName,
@@ -122,10 +129,11 @@ MetaLevel::downBubbleSpec(DagNode* metaBubbleSpec,
   Symbol* mb = metaBubbleSpec->symbol();
   if (mb != hookListSymbol)
     return false;
-  AU_DagNode* a = safeCast(AU_DagNode*, metaBubbleSpec);
-  DagNode* metaIdHook = a->getArgument(0);
-  Symbol* mi = metaIdHook->symbol();
-  if (mi != idHookSymbol)
+  DagArgumentIterator i(metaBubbleSpec);
+  if (!(i.valid()))
+    return false;
+  DagNode* metaIdHook = i.argument();
+  if (metaIdHook->symbol() != idHookSymbol)
     return false;
   FreeDagNode* f = safeCast(FreeDagNode*, metaIdHook);
   Vector<int> args;
@@ -156,10 +164,9 @@ MetaLevel::downBubbleSpec(DagNode* metaBubbleSpec,
 	    }
 	}
     }
-  int nrArgs2 = a->nrArgs();
-  for (int i = 1; i < nrArgs2; i++)
+  for (i.next(); i.valid(); i.next())
     {
-      FreeDagNode* f = safeCast(FreeDagNode*, a->getArgument(i));
+      FreeDagNode* f = safeCast(FreeDagNode*, i.argument());
       if (f->symbol() == idHookSymbol)
 	{
 	  Vector<int> tokens;
@@ -306,15 +313,13 @@ MetaLevel::downAttr(DagNode* metaAttr, AttributeInfo& ai)
 void
 MetaLevel::checkHookList(DagNode* metaHookList, SymbolType& symbolType)
 {
-  Symbol* mh = metaHookList->symbol();
-  if (mh == hookListSymbol)
+  if (metaHookList->symbol() == hookListSymbol)
     {
-      AU_DagNode* a = static_cast<AU_DagNode*>(metaHookList);
-      int nrArgs = a->nrArgs();
-      for (int i = 0; i < nrArgs; i++)
-	checkHook(a->getArgument(i), symbolType);
+      for (DagArgumentIterator i(metaHookList); i.valid(); i.next())
+	checkHook(i.argument(), symbolType);
     }
-  checkHook(metaHookList, symbolType);
+  else
+    checkHook(metaHookList, symbolType);
 }
 
 void

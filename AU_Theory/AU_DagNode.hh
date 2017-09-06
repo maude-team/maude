@@ -3,14 +3,15 @@
 //
 #ifndef _AU_DagNode_hh_
 #define _AU_DagNode_hh_
-#include "dagNode.hh"
+#include "AU_BaseDagNode.hh"
 #include "argVec.hh"
 
-class AU_DagNode : public DagNode
+class AU_DagNode : public AU_BaseDagNode
 {
+  NO_COPYING(AU_DagNode);
+
 public:
   AU_DagNode(AU_Symbol* symbol, int size);
-  ~AU_DagNode();
   //
   //	Functions required by theory interface.
   //
@@ -37,78 +38,60 @@ public:
   void partialReplace(DagNode* replacement, ExtensionInfo* extensionInfo);
   DagNode* partialConstruct(DagNode* replacement, ExtensionInfo* extensionInfo);
   ExtensionInfo* makeExtensionInfo();
-
   //
   //	Functions particular to AU_DagNode.
   //
-  AU_Symbol* symbol() const;
-  int nrArgs() const;
-  DagNode* getArgument(int i) const;
-  bool producedByAssignment() const;
   void setProducedByAssignment();
   
 private:
   enum NormalizationResult
   {
-    COLLAPSED = 0,
+    COLLAPSED,
+    DEQUED,
     NORMAL,
     FLATTENED
   };
-
+  //
+  //	Functions required by theory interface.
+  //
   DagNode* markArguments();
   DagNode* copyEagerUptoReduced2();
   void clearCopyPointers2();
+  //
+  //	Functions particular to AU_DagNode.
+  //
+  bool disappear(AU_Symbol* s, ArgVec<DagNode*>::const_iterator i);
   NormalizationResult normalizeAtTop();
-  bool eliminateForward(const DagNode* target, int& pos, int limit) const;
-  bool eliminateBackward(const DagNode* target, int& pos, int limit) const;
+  bool eliminateForward(DagNode* target, int& pos, int limit) const;
+  bool eliminateBackward(DagNode* target, int& pos, int limit) const;
   DagNode* makeFragment(int start, int nrSubterms, bool extraId) const;
 
   ArgVec<DagNode*> argArray;
 
-  friend class AU_Symbol;           	// to reduce subterms prior to rewrite, normalization
+  friend class AU_Symbol;           	// to reduce subterms prior to rewriting
   friend class AU_Term;          	// for term->DAG conversion & comparison
   friend class AU_LhsAutomaton;	      	// for matching DAG subject
   friend class AU_RhsAutomaton;		// for constructing replacement DAG
   friend class AU_Layer;		// for constructing substitution
   friend class AU_Subproblem;		// for constructing substitution
   friend class AU_ExtensionInfo;	// for constructing matched portion
+  friend class AU_DequeDagNode;		// for conversion & comparison
 };
+
+AU_DagNode* getAU_DagNode(DagNode* dagNode);
 
 inline
 AU_DagNode::AU_DagNode(AU_Symbol* symbol, int size)
-: DagNode(symbol), argArray(size)
+  : AU_BaseDagNode(symbol),
+    argArray(size)
 {
-  setTheoryByte(false);
-}
-
-inline AU_Symbol*
-AU_DagNode::symbol() const
-{
-  return static_cast<AU_Symbol*>(DagNode::symbol());
-}
-
-inline int
-AU_DagNode::nrArgs() const
-{
-  return argArray.length();
-}
-
-inline DagNode*
-AU_DagNode::getArgument(int i) const
-{
-  return argArray[i];
-}
-
-inline bool
-AU_DagNode::producedByAssignment() const
-{
-  return getTheoryByte();
+  setNormalizationStatus(FRESH);
 }
 
 inline void
 AU_DagNode::setProducedByAssignment()
 {
-  setTheoryByte(true);
+  setNormalizationStatus(ASSIGNMENT);
 }
 
 #endif

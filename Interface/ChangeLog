@@ -1,3 +1,7 @@
+2003-05-01  Steven Eker  <eker@goo.csl.sri.com>
+
+	* dagNode.hh (copySetRewritingFlags): added
+
 2003-03-24  Steven Eker  <eker@goo.csl.sri.com>
 
 	* symbol.hh (getUniqueSortIndex): added

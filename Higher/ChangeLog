@@ -1,3 +1,17 @@
+2003-04-25  Steven Eker  <eker@goo.csl.sri.com>
+
+	* positionState.hh (getExtensionInfo): no longer const
+
+	* positionState.cc (PositionState): init extensionInfoValid
+	(findNextPosition): don't call makeExtensionInfo() here; set
+	extensionInfoValid false if we're working with extension
+
+	* positionState.hh (class PositionState): added data member
+	extensionInfoValid
+	(getExtensionInfo): call makeExtensionInfo() on demand
+	
+===================================Maude80===========================================
+
 2003-02-26  Steven Eker  <eker@goo.csl.sri.com>
 
 	* equalityConditionFragment.cc (preprocess): updated Assert()

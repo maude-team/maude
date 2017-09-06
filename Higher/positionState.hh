@@ -21,17 +21,18 @@ public:
 
   bool findNextPosition();  // should this be protected?
   DagNode* getDagNode() const;
-  ExtensionInfo* getExtensionInfo() const;
+  ExtensionInfo* getExtensionInfo();
   DagNode* rebuildDag(DagNode* replacement) const;
   int getFlags() const;
 
 private:
   bool exploreNextPosition();
 
-  const int flags;
+  const short flags;
   const int minDepth;
   const int maxDepth;
   ExtensionInfo* extensionInfo;
+  bool extensionInfoValid;
   //
   //	For breathfirst traversal over positions.
   //
@@ -55,9 +56,14 @@ PositionState::getDagNode() const
 }
 
 inline ExtensionInfo* 
-PositionState::getExtensionInfo() const
+PositionState::getExtensionInfo()
 {
   Assert(nextToReturn >= 0, "findNextPosition() not called");
+  if (!extensionInfoValid)
+    {
+      extensionInfo = getDagNode()->makeExtensionInfo();
+      extensionInfoValid = true;
+    }
   return extensionInfo;
 }
 

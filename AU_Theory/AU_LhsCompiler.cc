@@ -41,9 +41,9 @@ AU_Term::analyseConstraintPropagation(NatSet& boundUniquely) const
 
 LhsAutomaton*
 AU_Term::compileLhs2(bool matchAtTop,
-		    const VariableInfo& variableInfo,
-		    NatSet& boundUniquely,
-		    bool& subproblemLikely)
+		     const VariableInfo& variableInfo,
+		     NatSet& boundUniquely,
+		     bool& subproblemLikely)
 {
   AU_Symbol* s = symbol();
   bool oneSidedIdentity = s->oneSidedId();
@@ -248,10 +248,11 @@ AU_Term::addFixedLengthBlock(AU_LhsAutomaton* a,
 			     bool& subproblemLikely)
 {
   //
-  //	For each possible shift factor from 1 to blockLength - 1 we find the index
-  //	of the rightmost pattern such that if the pattern matches some subject
-  //	(possibly with a subproblem that may or not be soluble) we can
-  //	rule out that shift factor for future match attempts.
+  //	For each possible shift factor sh from 1 to blockLength - 1 we
+  //	find the index of the rightmost pattern p such that if the p matches
+  //	some subject s (possibly with a subproblem that may or not be soluble),
+  //	the pattern q that is sh places to the left of p will fail early
+  //	on s, thus ruling out a shift of sh during matching.
   //
   Vector<int> largestIndexThatFails(blockLength);
   for (int shift = 1; shift < blockLength; shift++)
@@ -260,7 +261,9 @@ AU_Term::addFixedLengthBlock(AU_LhsAutomaton* a,
       for (int i = blockLength - 1; i >= shift; i--)
 	{
 	  int b = blockStart + i;
-	  if (argArray[b].term->earlyMatchFailOnInstanceOf(argArray[b - shift].term))
+	  Term* p = argArray[b].term;  // assume p matched subject
+	  Term* q = argArray[b - shift].term;  // q will get p's subject after a shift
+	  if (q->earlyMatchFailOnInstanceOf(p))
 	    {
 	      largestIndexThatFails[shift] = i;
 	      break;
@@ -268,7 +271,7 @@ AU_Term::addFixedLengthBlock(AU_LhsAutomaton* a,
 	}
     }
   //
-  //	For each pattern we find the smallest shift that is not ruled out
+  //	For each pattern p we find the smallest shift that is not ruled out
   //	when a match for that pattern fails and matches for all the patterns
   //	to the right of it succeed (modulo a possible subproblem).
   //
@@ -276,25 +279,42 @@ AU_Term::addFixedLengthBlock(AU_LhsAutomaton* a,
   for (int i = 0; i < blockLength; i++)
     {
       int b = blockStart + i;
-      Term* t = argArray[b].term;
+      Term* p = argArray[b].term;
       int shift = 1;
       for (; shift < blockLength; shift++)
 	{
-	  if (!(i < largestIndexThatFails[shift] ||
-		(i >= shift && t->subsumes(argArray[b - shift].term, true))))
-	    break;  // calling subsumes() here is likely a bug if variables can be bound externally
+	  //
+	  //	A shift can be ruled out because a match to the right
+	  //	of p;
+	  //
+	  if (i < largestIndexThatFails[shift])
+	    continue;
+	  //
+	  //	Or because the p is more general than the pattern
+	  //	that will get it's subject after the shift. Here we need
+	  //	to be careful because variables bound by an external agency
+	  //	can invalidate subsumption. We rely on the convention that
+	  //	the external agency adds any variables that it might bind
+	  //	to the set of condition variables.
+	  //
+	  if (i >= shift &&
+	      p->occursBelow().disjoint(variableInfo.getConditionVariables()) &&
+	      p->subsumes(argArray[b - shift].term, true))
+	    continue;
+	  else
+	    break;
 	}
-      VariableTerm* v = dynamic_cast<VariableTerm*>(t);
+      VariableTerm* v = dynamic_cast<VariableTerm*>(p);
       if (v != 0)
 	a->addFlexVariable(v, shift, false);
-      else if (t->ground())
-	a->addFlexGroundAlien(t, shift);
+      else if (p->ground())
+	a->addFlexGroundAlien(p, shift);
       else
 	{
 	  NatSet local(boundUniquely);
 	  bool spl;
 	  LhsAutomaton* subAutomaton =
-	    t->compileLhs(false, variableInfo, local, spl);
+	    p->compileLhs(false, variableInfo, local, spl);
 	  a->addFlexNonGroundAlien(subAutomaton, shift);
 	  subproblemLikely = subproblemLikely || spl;
 	}

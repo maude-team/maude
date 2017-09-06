@@ -50,11 +50,13 @@ public:
   //
   AU_Symbol* symbol() const;
   bool idPossible(int index) const;
+
 private:
   struct Tuple
   {
     Term* term;
-    short abstractionVariableIndex;	// if subterm could enter our theory we abstract it
+    short abstractionVariableIndex;	// if subterm could enter our theory
+    					// we abstract it
     Bool collapseToOurSymbol;		// 1st possible reason for variable abstraction
     Bool matchOurIdentity;		// 2nd possible reason for variable abstraction
   };
@@ -86,7 +88,7 @@ private:
 inline AU_Symbol*
 AU_Term::symbol() const
 {
-  return static_cast<AU_Symbol*>(Term::symbol());
+  return safeCast(AU_Symbol*, Term::symbol());
 }
 
 inline bool

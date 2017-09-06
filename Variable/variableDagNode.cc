@@ -57,8 +57,7 @@ VariableDagNode::overwriteWithClone(DagNode* old)
 {
   
   VariableDagNode* d = new(old) VariableDagNode(symbol(), id());
-  if (isReduced())
-    d->setReduced();
+  d->copySetRewritingFlags(this);
   d->setSortIndex(getSortIndex());
 }
 
@@ -66,8 +65,7 @@ DagNode*
 VariableDagNode::makeClone()
 {
   VariableDagNode* d = new VariableDagNode(symbol(), id());
-  if (isReduced())
-    d->setReduced();
+  d->copySetRewritingFlags(this);
   d->setSortIndex(getSortIndex());
   return d;
 }

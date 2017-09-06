@@ -146,11 +146,9 @@ MetaLevel::downImports(DagNode* metaImports, MetaModule* m)
   Symbol* mi = metaImports->symbol();
   if (mi == importListSymbol)
     {
-      AU_DagNode* a = static_cast<AU_DagNode*>(metaImports);
-      int nrArgs = a->nrArgs();
-      for (int i = 0; i < nrArgs; i++)
+      for (DagArgumentIterator i(metaImports); i.valid(); i.next())
 	{
-	  if (!downImport(a->getArgument(i), m))
+	  if (!downImport(i.argument(), m))
 	    return false;
 	}
     }
@@ -227,11 +225,9 @@ MetaLevel::downNatList(DagNode* metaNatList, Vector<int>& intList)
   int t;
   if (mn == natListSymbol)
     {
-      AU_DagNode* a = static_cast<AU_DagNode*>(metaNatList);
-      int nrArgs = a->nrArgs();
-      for (int i = 0; i < nrArgs; i++)
+      for (DagArgumentIterator i(metaNatList); i.valid(); i.next())
 	{
-	  if (!(succSymbol->getSignedInt(a->getArgument(i), t)))
+	  if (!(succSymbol->getSignedInt(i.argument(), t)))
 	    return false;
 	  intList.append(t);
 	}
@@ -251,18 +247,18 @@ MetaLevel::downQidList(DagNode* metaQidList, Vector<int>& ids)
   int id;
   if (mq == qidListSymbol)
     {
-      AU_DagNode* a = static_cast<AU_DagNode*>(metaQidList);
-      int nrArgs = a->nrArgs();
-      for (int i = 0; i < nrArgs; i++)
+      for (DagArgumentIterator i(metaQidList); i.valid(); i.next())
 	{
-	  if (!downQid(a->getArgument(i), id))
+	  if (!downQid(i.argument(), id))
 	    return false;
 	  ids.append(id);
 	}
     }
+  else if (mq == nilQidListSymbol)
+    ;
   else if (downQid(metaQidList, id))
     ids.append(id);
-  else if (mq != nilQidListSymbol)
+  else
     return false;
   return true;
 }
@@ -270,26 +266,24 @@ MetaLevel::downQidList(DagNode* metaQidList, Vector<int>& ids)
 bool
 MetaLevel::downTypeList(DagNode* metaTypeList, MixfixModule* m, Vector<Sort*>& typeList)
 {
-  Symbol* mt =  metaTypeList->symbol();
+  typeList.clear();
+  Symbol* mt = metaTypeList->symbol();
+  Sort* t;
   if (mt == qidListSymbol)
     {
-      AU_DagNode* a = static_cast<AU_DagNode*>(metaTypeList);
-      int nrArgs = a->nrArgs();
-      typeList.resize(nrArgs);
-      for (int i = 0; i < nrArgs; i++)
+      for (DagArgumentIterator i(metaTypeList); i.valid(); i.next())
 	{
-	  if (!downType(a->getArgument(i), m, typeList[i]))
+	  if (!downType(i.argument(), m, t))
 	    return false;
+	  typeList.append(t);
 	}
     }
   else if (mt == nilQidListSymbol)
-    typeList.contractTo(0);
+    ;
+  else if (downType(metaTypeList, m, t))
+    typeList.append(t);
   else
-    {
-      typeList.resize(1);
-      if (!downType(metaTypeList, m, typeList[0]))
-	return false;
-    }
+    return false;
   return true;
 }
 
@@ -372,28 +366,28 @@ MetaLevel::downComponent(DagNode* metaComponent,
 }
 
 bool
-MetaLevel::downSimpleSortList(DagNode* metaSortList, MixfixModule* m, Vector<Sort*>& sortList)
+MetaLevel::downSimpleSortList(DagNode* metaSortList,
+			      MixfixModule* m,
+			      Vector<Sort*>& sortList)
 {
+  sortList.clear();
   Symbol* ms = metaSortList->symbol();
+  Sort* s;
   if (ms == qidListSymbol)
     {
-      AU_DagNode* a = static_cast<AU_DagNode*>(metaSortList);
-      int nrArgs = a->nrArgs();
-      sortList.resize(nrArgs);
-      for (int i = 0; i < nrArgs; i++)
+      for (DagArgumentIterator i(metaSortList); i.valid(); i.next())
 	{
-	  if (!downSimpleSort(a->getArgument(i), m, sortList[i]))
+	  if (!downSimpleSort(i.argument(), m, s))
 	    return false;
+	  sortList.append(s);
 	}
     }
   else if (ms == nilQidListSymbol)
-    sortList.contractTo(0);
+    ;
+  else if (downSimpleSort(metaSortList, m, s))
+    sortList.append(s);
   else
-    {
-      sortList.resize(1);
-      if (!downSimpleSort(metaSortList, m, sortList[0]))
-	return false;
-    }
+    return false;
   return true;
 }
 
@@ -455,33 +449,29 @@ MetaLevel::downCondition(DagNode* metaCondition,
 			 MixfixModule* m,
 			 Vector<ConditionFragment*>& condition)
 {
+  condition.clear();
   Symbol* mc = metaCondition->symbol();
+  ConditionFragment* cf;
   if (mc == conjunctionSymbol)
     {
-      AU_DagNode* a = static_cast<AU_DagNode*>(metaCondition);
-      int nrArgs = a->nrArgs();
-      condition.resize(nrArgs);
-      for (int i = 0; i < nrArgs; i++)
+      for (DagArgumentIterator i(metaCondition); i.valid(); i.next())
 	{
-	  if (!downConditionFragment(a->getArgument(i), m, condition[i]))
+	  if (!downConditionFragment(i.argument(), m, cf))
 	    {
-	      for (int j = 0; j < i; j++)
-		delete condition[j];
+	      FOR_EACH_CONST(j, Vector<ConditionFragment*>, condition)
+		delete *j;
 	      return false;
 	    }
+	  condition.append(cf);
 	}
-      return true;
     }
   else if (mc == noConditionSymbol)
-    {
-      condition.contractTo(0);
-      return true;
-    }
+    ;
+  else if (downConditionFragment(metaCondition, m, cf))
+    condition.append(cf);
   else
-    {
-      condition.resize(1);
-      return downConditionFragment(metaCondition, m, condition[0]);
-    }
+    return false;
+  return true;
 }
 
 bool
@@ -674,7 +664,8 @@ MetaLevel::downEquation(DagNode* metaEquation, MixfixModule* m)
 	      if (me == eqSymbol  ||
 		  downCondition(f->getArgument(2), m, condition))
 		{
-		  Equation* eq = new Equation(label, l, r, flags.getFlag(OWISE), condition);
+		  Equation* eq = new Equation(label, l, r,
+					      flags.getFlag(OWISE), condition);
 		  m->insertEquation(eq);
 		  if (metadata != NONE)
 		    m->insertMetadata(MixfixModule::EQUATION, eq, metadata);
@@ -913,19 +904,16 @@ MetaLevel::downTerm(DagNode* metaTerm, MixfixModule* m)
 bool
 MetaLevel::downTermList(DagNode* metaTermList, MixfixModule* m, Vector<Term*>& termList)
 {
-  termList.contractTo(0);
-  Symbol* mt = metaTermList->symbol();
-  if (mt == metaArgSymbol)
+  termList.clear();
+  if (metaTermList->symbol() == metaArgSymbol)
     {
-      AU_DagNode* a = static_cast<AU_DagNode*>(metaTermList);
-      int nrArgs = a->nrArgs();
-      for (int i = 0; i < nrArgs; i++)
+      for (DagArgumentIterator i(metaTermList); i.valid(); i.next())
 	{
-	  Term* t = downTerm(a->getArgument(i), m);
+	  Term* t = downTerm(i.argument(), m);
 	  if (t == 0)
 	    {
-	      for (int j = 0; j < i; j++)
-		termList[j]->deepSelfDestruct();
+	      FOR_EACH_CONST(j, Vector<Term*>, termList)
+		(*j)->deepSelfDestruct();
 	      return false;
 	    }
 	  termList.append(t);
@@ -947,8 +935,8 @@ MetaLevel::downSubstitution(DagNode* metaSubstitution,
 			    Vector<Term*>& variables,
 			    Vector<Term*>& values)
 {
-  variables.contractTo(0);
-  values.contractTo(0);
+  variables.clear();
+  values.clear();
   Symbol* ms = metaSubstitution->symbol();
   if (ms == substitutionSymbol)
     {

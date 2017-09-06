@@ -42,11 +42,16 @@ FloatDagNode::compareArguments(const DagNode* other) const
 void
 FloatDagNode::overwriteWithClone(DagNode* old)
 {
-  (void) new(old) FloatDagNode(static_cast<FloatSymbol*>(symbol()), value);
+  FloatDagNode* d = new(old) FloatDagNode(safeCast(FloatSymbol*, symbol()), value);
+  d->copySetRewritingFlags(this);
+  d->setSortIndex(getSortIndex());
 }
 
 DagNode*
 FloatDagNode::makeClone()
 {
-  return new FloatDagNode(static_cast<FloatSymbol*>(symbol()), value);
+  FloatDagNode* d = new FloatDagNode(safeCast(FloatSymbol*, symbol()), value);
+  d->copySetRewritingFlags(this);
+  d->setSortIndex(getSortIndex());
+  return d;
 }

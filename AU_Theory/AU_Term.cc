@@ -11,6 +11,7 @@
 #include "interface.hh"
 #include "core.hh"
 #include "variable.hh"
+#include "AU_Persistent.hh"
 #include "AU_Theory.hh"
 
 //      core class definitions
@@ -24,14 +25,19 @@
 //	variable class definitions
 #include "variableTerm.hh"
 
+//	AU persistent class definitions
+#include "AU_DequeIter.hh"
+
 //	AU theory class definitions
 #include "AU_Symbol.hh"
 #include "AU_DagNode.hh"
+#include "AU_DequeDagNode.hh"
 #include "AU_Term.hh"
 #include "AU_ArgumentIterator.hh"
 #include "AU_LhsAutomaton.hh"
 #include "AU_RhsAutomaton.hh"
 
+//	our stuff
 #include "AU_LhsCompiler.cc"
 
 AU_Term::AU_Term(AU_Symbol* symbol, const Vector<Term*>& arguments)
@@ -44,8 +50,8 @@ AU_Term::AU_Term(AU_Symbol* symbol, const Vector<Term*>& arguments)
 }
 
 AU_Term::AU_Term(const AU_Term& original, SymbolMap* map)
-: Term(map == 0 ? original.symbol() : map->translate(original.symbol())),
-  argArray(original.argArray.length())
+  : Term(map == 0 ? original.symbol() : map->translate(original.symbol())),
+    argArray(original.argArray.length())
 {
   int nrArgs = original.argArray.length();
   for (int i = 0; i < nrArgs; i++)
@@ -61,9 +67,8 @@ AU_Term::arguments()
 void
 AU_Term::deepSelfDestruct()
 {
-  int nrArgs = argArray.length();
-  for (int i = 0; i < nrArgs; i++)
-    argArray[i].term->deepSelfDestruct();
+  FOR_EACH_CONST(i, Vector<Tuple>, argArray)
+    i->term->deepSelfDestruct();
   delete this;
 }
 
@@ -92,7 +97,7 @@ AU_Term::normalize(bool full, bool& changed)
 	changed = true;
       argArray[i].term = t;
       if (full && t->symbol() == s)
-	expansion += static_cast<AU_Term*>(t)->argArray.length() - 1;
+	expansion += safeCast(AU_Term*, t)->argArray.length() - 1;
     }
   //
   //	Pass 2: flatten at the top.
@@ -108,7 +113,7 @@ AU_Term::normalize(bool full, bool& changed)
           Term* t = argArray[i].term;
 	  if (t->symbol() == s)
             {
-	      Vector<Tuple>& argArray2 = static_cast<AU_Term*>(t)->argArray;
+	      Vector<Tuple>& argArray2 = safeCast(AU_Term*, t)->argArray;
 	      for (int j = argArray2.length() - 1; j >= 0; j--)
 		argArray[p--].term = argArray2[j].term;
               delete t;
@@ -153,9 +158,8 @@ AU_Term::normalize(bool full, bool& changed)
   //	Pass 4: compute hash value.
   //
   unsigned int hashValue = s->getHashValue();
-  nrArgs = argArray.length();
-  for (int i = 0; i < nrArgs; i++)
-    hashValue = hash(hashValue, argArray[i].term->getHashValue());
+  FOR_EACH_CONST(i, Vector<Tuple>, argArray)
+    hashValue = hash(hashValue, i->term->getHashValue());
   setHashValue(hashValue);
   return this;
 }
@@ -163,33 +167,71 @@ AU_Term::normalize(bool full, bool& changed)
 int
 AU_Term::compareArguments(const Term* other) const
 {
-  int nrArgs = argArray.length();
-  const Vector<Tuple>& argArray2 = static_cast<const AU_Term*>(other)->argArray;
-  int nrArgs2 = argArray2.length();
-  int limit = min(nrArgs, nrArgs2);
-  for (int i = 0; i < limit; i++)
+  const Vector<Tuple>& argArray2 = safeCast(const AU_Term*, other)->argArray;
+  int r = argArray.length() - argArray2.length();
+  if (r != 0)
+    return r;
+  Vector<Tuple>::const_iterator j = argArray2.begin();
+  Vector<Tuple>::const_iterator i = argArray.begin();
+  const Vector<Tuple>::const_iterator e = argArray.end();
+  do
     {
-      int r = argArray[i].term->compare(argArray2[i].term);
+      r = i->term->compare(j->term);
       if (r != 0)
 	return r;
+      ++j;
+      ++i;
     }
-  return nrArgs - nrArgs2;
+  while (i != e);
+  Assert(j == argArray2.end(), "iterator problem");
+  return 0;
 }
 
 int
 AU_Term::compareArguments(const DagNode* other) const
 {
-  int nrArgs = argArray.length();
-  const ArgVec<DagNode*>& argArray2 = static_cast<const AU_DagNode*>(other)->argArray;
-  int nrArgs2 = argArray2.length();
-  int limit = min(nrArgs, nrArgs2);
-  for (int i = 0; i < limit; i++)
+  int len = argArray.length();
+  if (safeCast(const AU_BaseDagNode*, other)->isDeque())
     {
-      int r = argArray[i].term->compare(argArray2[i]);
+      const AU_DequeDagNode* d2 = safeCast(const AU_DequeDagNode*, other);
+      int r = len - d2->nrArgs();
       if (r != 0)
 	return r;
+      AU_DequeIter j(d2->getDeque());
+      Vector<Tuple>::const_iterator i = argArray.begin();
+      const Vector<Tuple>::const_iterator e = argArray.end();
+      do
+	{
+	  r = i->term->compare(j.getDagNode());
+	  if (r != 0)
+	    return r;
+	  j.next();
+	  ++i;
+	}
+      while (i != e);
+      Assert(!j.valid(), "iterator problem");
     }
-  return nrArgs - nrArgs2;
+  else
+    {
+      const ArgVec<DagNode*>& argArray2 = safeCast(const AU_DagNode*, other)->argArray;
+      int r = len - argArray2.length();
+      if (r != 0)
+	return r;
+      ArgVec<DagNode*>::const_iterator j = argArray2.begin();
+      Vector<Tuple>::const_iterator i = argArray.begin();
+      const Vector<Tuple>::const_iterator e = argArray.end();
+      do
+	{
+	  r = i->term->compare(*j);
+	  if (r != 0)
+	    return r;
+	  ++j;
+	  ++i;
+	}
+      while (i != e);
+      Assert(j == argArray2.end(), "iterator problem");
+    }
+  return 0;
 }
 
 void
@@ -199,9 +241,8 @@ AU_Term::findEagerVariables(bool atTop, NatSet& eagerVariables) const
   if (strat == BinarySymbol::EAGER ||
       (strat == BinarySymbol::SEMI_EAGER && !atTop))
     {
-      int nrArgs = argArray.length();
-      for (int i = 0; i < nrArgs; i++)
-	argArray[i].term->findEagerVariables(false, eagerVariables);
+      FOR_EACH_CONST(i, Vector<Tuple>, argArray)
+	i->term->findEagerVariables(false, eagerVariables);
     }
 }
 
@@ -212,9 +253,8 @@ AU_Term::markEagerArguments(int nrVariables,
 {
   if (symbol()->getPermuteStrategy() == BinarySymbol::EAGER)
     {
-      int nrArgs = argArray.length();
-      for (int i = 0; i < nrArgs; i++)
-	argArray[i].term->markEager(nrVariables, eagerVariables, problemVariables);
+      FOR_EACH_CONST(i, Vector<Tuple>, argArray)
+	i->term->markEager(nrVariables, eagerVariables, problemVariables);
     }
 }
 
@@ -236,8 +276,10 @@ AU_Term::analyseCollapses2()
   //	(1) Analyse our subterms.
   //
   int nrArgs = argArray.length();
-  for (int i = 0; i < nrArgs; i++)
-    argArray[i].term->analyseCollapses();
+  {
+    FOR_EACH_CONST(i, Vector<Tuple>, argArray)
+      i->term->analyseCollapses();
+  }
   //
   //	(2) Does our top symbol have an identity?
   //
@@ -249,7 +291,7 @@ AU_Term::analyseCollapses2()
   //	(3) Can we collapse?
   //
   int firstNonIdArg = NONE;
-  for (int i = 0; i < nrArgs; i++)
+  for (int i = 0; i < nrArgs; i++)    
     {
       Term* t = argArray[i].term;
       if (idPossible(i) && s->mightMatchOurIdentity(t))
@@ -275,9 +317,9 @@ AU_Term::analyseCollapses2()
       //
       //        Can collapse to any of our arguments.
       //
-      for (int i = 0; i < nrArgs; i++)
+      FOR_EACH_CONST(i, Vector<Tuple>, argArray)
         {
-	  Term* t = argArray[i].term;
+	  Term* t = i->term;
 	  addCollapseSymbol(t->symbol());
 	  addCollapseSymbols(t->collapseSymbols());
 	}
@@ -290,7 +332,7 @@ AU_Term::insertAbstractionVariables(VariableInfo& variableInfo)
   AU_Symbol* s = symbol();
   bool honorsGroundOutMatch = true;
   int nrArgs = argArray.length();
-  for (int i = 0; i < nrArgs; i++)
+  for (int i = 0; i < nrArgs; i++)    
     {
       Tuple& t = argArray[i];
       t.term->insertAbstractionVariables(variableInfo);
@@ -320,30 +362,6 @@ AU_Term::insertAbstractionVariables(VariableInfo& variableInfo)
   setHonorsGroundOutMatch(honorsGroundOutMatch);
 }
 
-#ifdef DUMP
-void
-AU_Term::dump(ostream& s, const VariableInfo& variableInfo, int indentLevel)
-{
-  s << Indent(indentLevel) << "Begin{AU_Term}\n";
-  ++indentLevel;
-  dumpCommon(s, variableInfo, indentLevel);
-  s << Indent(indentLevel) << "arguments:\n";
-  ++indentLevel;
-  int nrArgs = argArray.length();
-  for (int i = 0; i < nrArgs; i++)
-    {
-      const Tuple& p = argArray[i];
-      s << Indent(indentLevel) << "collapseToOurSymbol = " << bool(p.collapseToOurSymbol) <<
-        "\tmatchOurIdentity = " << bool(p.matchOurIdentity);
-      if (p.abstractionVariableIndex != NONE)
-        s << "\tabstractionVariableIndex = " << p.abstractionVariableIndex;
-      s << '\n';
-      p.term->dump(s, variableInfo, indentLevel);
-    }
-  s << Indent(indentLevel - 2) << "End{AU_Term}\n";
-}
-#endif
-
 void
 AU_Term::findAvailableTerms(TermBag& availableTerms, bool eagerContext, bool atTop)
 {
@@ -354,9 +372,8 @@ AU_Term::findAvailableTerms(TermBag& availableTerms, bool eagerContext, bool atT
   BinarySymbol::PermuteStrategy strat = symbol()->getPermuteStrategy();
   bool argEager = eagerContext && (strat == BinarySymbol::EAGER ||
 				   (strat == BinarySymbol::SEMI_EAGER && !atTop));
-  int nrArgs = argArray.length();
-  for (int i = 0; i < nrArgs; i++)
-    argArray[i].term->findAvailableTerms(availableTerms, argEager);
+  FOR_EACH_CONST(i, Vector<Tuple>, argArray)
+    i->term->findAvailableTerms(availableTerms, argEager);
 }
 
 int
@@ -367,25 +384,55 @@ AU_Term::compileRhs2(RhsBuilder& rhsBuilder,
 {
   int nrArgs = argArray.length();
   AU_RhsAutomaton* automaton = new AU_RhsAutomaton(symbol(), nrArgs);
-  bool argEager = eagerContext && symbol()->getPermuteStrategy() == BinarySymbol::EAGER;
   Vector<int> sources;
-  for (int i = 0; i < nrArgs; i++)
-    {
-      int index = argArray[i].term->compileRhs(rhsBuilder,
-					       variableInfo,
-					       availableTerms,
-					       argEager);
-      automaton->addArgument(index);
-      sources.append(index);
-    }
+  {
+    bool argEager = eagerContext &&
+      symbol()->getPermuteStrategy() == BinarySymbol::EAGER;
+    FOR_EACH_CONST(i, Vector<Tuple>, argArray)
+      {
+	int index = i->term->compileRhs(rhsBuilder,
+					variableInfo,
+					availableTerms,
+					argEager);
+	automaton->addArgument(index);
+	sources.append(index);
+      }
+  }
   //
   //	Need to flag last use of each source.
   //
-  for (int i = 0; i < nrArgs; i++)
-    variableInfo.useIndex(sources[i]);
-
+  {
+    FOR_EACH_CONST(i, Vector<int>, sources)
+      variableInfo.useIndex(*i);
+  }
   int index = variableInfo.makeConstructionIndex();
   automaton->close(index);
   rhsBuilder.addRhsAutomaton(automaton);
   return index;
 }
+
+#ifdef DUMP
+
+void
+AU_Term::dump(ostream& s, const VariableInfo& variableInfo, int indentLevel)
+{
+  s << Indent(indentLevel) << "Begin{AU_Term}\n";
+  ++indentLevel;
+  dumpCommon(s, variableInfo, indentLevel);
+  s << Indent(indentLevel) << "arguments:\n";
+  ++indentLevel;
+  FOR_EACH_CONST(i, Vector<Tuple>, argArray)
+    {
+      const Tuple& p = *i;
+      s << Indent(indentLevel) << "collapseToOurSymbol = " <<
+	bool(p.collapseToOurSymbol) <<
+        "\tmatchOurIdentity = " << bool(p.matchOurIdentity);
+      if (p.abstractionVariableIndex != NONE)
+        s << "\tabstractionVariableIndex = " << p.abstractionVariableIndex;
+      s << '\n';
+      p.term->dump(s, variableInfo, indentLevel);
+    }
+  s << Indent(indentLevel - 2) << "End{AU_Term}\n";
+}
+
+#endif

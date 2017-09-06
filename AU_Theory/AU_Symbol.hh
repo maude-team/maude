@@ -30,24 +30,35 @@ public:
   //    Member functions overiding default handling.
   //
   void postOpDeclarationPass();
+  void compileEquations();
   //
   //	Member functions particular to AU_Symbol.
   //
   bool leftId() const;
   bool rightId() const;
   bool oneSidedId() const;
+  bool useDeque() const;
   int calculateNrSubjectsMatched(DagNode* d,
 				 bool leftEnd,  // match starts at left extreme
 				 bool rightEnd,  // match end at right extreme
 				 bool& nasty);
 
 private:
-  bool memoStrategy(MemoTable::SourceSet& from, DagNode* subject, RewritingContext& context);
+  bool rewriteAtTop(AU_DagNode* subject, RewritingContext& context);
+  bool complexStrategy(AU_DagNode* subject, RewritingContext& context);
+  bool memoStrategy(MemoTable::SourceSet& from,
+		    DagNode* subject,
+		    RewritingContext& context);
   void copyAndReduceSubterms(AU_DagNode* subject, RewritingContext& context);
 
   const Bool leftIdFlag;
   const Bool rightIdFlag;
   const Bool oneSidedIdFlag;
+  //
+  //	Deque represention of arguments can be used if there is no
+  //	one-sided identity and there are no equations.
+  //
+  Bool useDequeFlag;
 };
 
 inline bool
@@ -66,6 +77,12 @@ inline bool
 AU_Symbol::oneSidedId() const
 {
   return oneSidedIdFlag;
+}
+
+inline bool
+AU_Symbol::useDeque() const
+{
+  return useDequeFlag;
 }
 
 #endif

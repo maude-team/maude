@@ -71,9 +71,8 @@ void
 ACU_TreeDagNode::overwriteWithClone(DagNode* old)
 {
   ACU_TreeDagNode* d = new(old) ACU_TreeDagNode(symbol(), root);
+  d->copySetRewritingFlags(this);
   d->setTheoryByte(getTheoryByte());
-  if (isReduced())
-    d->setReduced();
   d->setSortIndex(getSortIndex());
 }
 
@@ -81,9 +80,8 @@ DagNode*
 ACU_TreeDagNode::makeClone()
 {
   ACU_TreeDagNode* d = new ACU_TreeDagNode(symbol(), root);
+  d->copySetRewritingFlags(this);
   d->setTheoryByte(getTheoryByte());
-  if (isReduced())
-    d->setReduced();
   d->setSortIndex(getSortIndex());
   return d;
 }

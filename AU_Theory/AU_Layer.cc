@@ -338,7 +338,10 @@ AU_Layer::bindVariables(RewritingContext& solution)
 		return false;
 	      if (d->symbol() == topSymbol)
 		{
-		  (static_cast<AU_DagNode*>(d))->setProducedByAssignment();
+		  //
+		  //	makeFragment() will have produced an AU_DagNode*
+		  //
+		  safeCast(AU_DagNode*, d)->setProducedByAssignment();
 		  if (buildReducedNodes && d->getSortIndex() != Sort::SORT_UNKNOWN)
 		    d->setReduced();
 		}
@@ -366,7 +369,7 @@ AU_Layer::bindVariables(RewritingContext& solution)
 	  DagNode* d = solution.value(prevVariables[0].index);
 	  if (nrMatched == 0 ||
 	      (d->symbol() == topSymbol &&
-	       static_cast<AU_DagNode*>(d)->argArray.length() > nrMatched))
+	       static_cast<AU_DagNode*>(d)->argArray.length() > nrMatched))  // FIX
 	    extensionInfo->setExtraIdentity(true);
 	}
     }
@@ -383,7 +386,7 @@ AU_Layer::bindVariables(RewritingContext& solution)
 	  DagNode* d = solution.value(prevVariables[0].index);
 	  if (nrMatched == 0 ||
 	      (d->symbol() == topSymbol &&
-	       static_cast<AU_DagNode*>(d)->argArray.length() > nrMatched))
+	       static_cast<AU_DagNode*>(d)->argArray.length() > nrMatched))  // FIX
 	    extensionInfo->setExtraIdentity(true);
 	}
     }

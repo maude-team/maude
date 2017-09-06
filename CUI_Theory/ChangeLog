@@ -1,3 +1,10 @@
+2003-05-01  Steven Eker  <eker@goo.csl.sri.com>
+
+	* CUI_DagNode.cc (overwriteWithClone): use copySetRewritingFlags()
+	(makeClone): copySetRewritingFlags()
+	
+===================================Maude80===========================================
+
 2003-02-25  Steven Eker  <eker@goo.csl.sri.com>
 
 	* CUI_Term.cc: removed #pragma

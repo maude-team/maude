@@ -64,7 +64,6 @@ public:
   void evacuate();
 
 private:
-
   size_type len;		// number of objects in ArgVec
   size_t allocatedBytes;	// space allocated in bytes
   pointer basePtr;

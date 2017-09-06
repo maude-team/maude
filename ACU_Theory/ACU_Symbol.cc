@@ -50,6 +50,18 @@ ACU_Symbol::ruleRewrite(DagNode* subject, RewritingContext& context)
   return applyRules(subject, context, &extensionInfo);
 }
 
+bool
+ACU_Symbol::rewriteAtTop(DagNode* subject, RewritingContext& context)
+{
+  //
+  //	We have a separate function for this to keep ACU_ExtensionInfo
+  //	off of the eqRewrite() stack frame since recursion through
+  //	eqRewrite() can get very deep.
+  //	
+  ACU_ExtensionInfo extensionInfo(safeCast(ACU_BaseDagNode*, subject));
+  return applyReplace(subject, context, &extensionInfo);
+}
+
 Term*
 ACU_Symbol::makeTerm(const Vector<Term*>& args)
 {
@@ -102,6 +114,9 @@ ACU_Symbol::reduceArgumentsAndNormalize(DagNode* subject, RewritingContext& cont
 	  //
 	  s->argArray[nrArgs - 1].dagNode->reduce(context);
 	  (void) s->extensionNormalizeAtTop();
+	  Term* identity = getIdentity();
+	  if (identity != 0 && s->eliminateArgument(identity))
+	    return false;
 	}
       else
 	{
@@ -114,9 +129,6 @@ ACU_Symbol::reduceArgumentsAndNormalize(DagNode* subject, RewritingContext& cont
 	  if (s->normalizeAtTop())
 	    return false;
 	}
-      Term* identity = getIdentity(); // FIX
-      if (identity != 0 && s->eliminateArgument(identity))
-	return false;
     }
   return true;
 }
@@ -127,15 +139,7 @@ ACU_Symbol::eqRewrite(DagNode* subject, RewritingContext& context)
   Assert(this == subject->symbol(), "bad symbol");
   if (standardStrategy())
     {
-      if (safeCast(ACU_BaseDagNode*, subject)->isTree())
-	{
-	treeCase:
-	  if (equationFree())
-	    return false;
-	  ACU_ExtensionInfo extensionInfo(safeCast(ACU_BaseDagNode*, subject));
-	  return applyReplace(subject, context, &extensionInfo);
-	}
-      else
+      if (!(safeCast(ACU_BaseDagNode*, subject)->isTree()))
 	{
 	  ACU_DagNode* s = safeCast(ACU_DagNode*, subject);
 	  if (s->getNormalizationStatus() != ACU_DagNode::ASSIGNMENT)
@@ -163,21 +167,11 @@ ACU_Symbol::eqRewrite(DagNode* subject, RewritingContext& context)
 		  if (s->normalizeAtTop())
 		    return false;
 		}
-	      if (safeCast(ACU_BaseDagNode*, subject)->isTree())
-		goto treeCase;   // may have been converted
-	      if (equationFree())
-		return false;
 	    }
-	  //
-	  //	We don't test for equation-freeness here
-	  //	because if we were produced by an assignment
-	  //	and our symbol is equation-free, our reduced flag
-	  //	would be set (since we don't have a complex
-	  //	strategy) and we wouldn't be here.
-	  //
-	  ACU_ExtensionInfo extensionInfo(s);
-	  return applyReplace(subject, context, &extensionInfo);
 	}
+      if (equationFree())
+	return false;
+      return rewriteAtTop(subject, context);
     }
   return complexStrategy(subject, context);
 }
@@ -261,7 +255,7 @@ ACU_Symbol::memoStrategy(MemoTable::SourceSet& from,
     }
   else
     {
-      ArgVec<ACU_DagNode::Pair>& args = s->argArray;  // can't use hack!
+      ArgVec<ACU_DagNode::Pair>& args = s->argArray;
      if (s->getNormalizationStatus() != ACU_DagNode::ASSIGNMENT)
 	{
 	  int nrArgs = args.length();
@@ -322,7 +316,7 @@ void
 ACU_Symbol::normalizeAndComputeTrueSort(DagNode* subject, RewritingContext& context)
 {
   Assert(this == subject->symbol(), "bad symbol");
-  ACU_DagNode* s = getACU_DagNode(subject);
+  ACU_DagNode* s = getACU_DagNode(subject);  // FIX
   ArgVec<ACU_DagNode::Pair>& args = s->argArray;
   int nrArgs = args.length();
   //

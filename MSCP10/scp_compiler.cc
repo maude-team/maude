@@ -23,13 +23,13 @@ void ScpParser::insertProd(int xlhs,  const Vector<int>& xrhs,
   curprodtn ++;
 
   Assert(!compiled,
-	 cerr << "SCP-ERROR: call to insertProd after parseSentence" << endl);
+	 "SCP-ERROR: call to insertProd after parseSentence" << endl);
 
   Assert(xlhs < 0, 
-	 cerr << "SCP-ERROR: Bad LHS (" << xlhs << ") " <<
+	 "SCP-ERROR: Bad LHS (" << xlhs << ") " <<
 	 "in production " << curprodtn-1 << endl);
   Assert(xrhs.length() > 0, 
-	 cerr << "SCP-ERROR: RHS empty " <<
+	 "SCP-ERROR: RHS empty " <<
 	 "in production " << curprodtn-1 << endl);
 
   if (curprodtn >= lenprodtn) {
@@ -60,7 +60,7 @@ void ScpParser::insertProd(int xlhs,  const Vector<int>& xrhs,
   for (regcounter=0; regrhs; regrhs--) {
     if (xrhs[regcounter] < 0) {
       Assert(reggather < xgather.length(),
-	     cerr << "SCP-ERROR: Insufficient gather values " <<
+	     "SCP-ERROR: Insufficient gather values " <<
 	     "in production " << curprodtn-1 << endl);
       memrhs[currhs++] = insertBasePrecNT(xrhs[regcounter++],
 					  xgather[reggather++]);
@@ -191,10 +191,10 @@ void ScpParser::insertProd( int nonTerminal,int lowBound,int upperBound,
   curprodtn ++;
 
   Assert(!compiled,
-	 cerr << "SCP-ERROR: call to insertProd after parseSentence" << endl);
+	 "SCP-ERROR: call to insertProd after parseSentence" << endl);
 
   Assert(nonTerminal < 0,
-	 cerr << "SCP-ERROR: Bad nonTerminal(bubble) (" << 
+	 "SCP-ERROR: Bad nonTerminal(bubble) (" << 
 	 nonTerminal << ") " <<
 	 "in production " << curprodtn << endl);
   if (curprodtn >= lenprodtn) {  // changed from > to fix bug 3/8/02 SME

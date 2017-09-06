@@ -1,3 +1,17 @@
+2003-05-01  Steven Eker  <eker@goo.csl.sri.com>
+
+	* macros.hh (swap): deleted
+	(min): deleted
+	(max): deleted
+
+	* checkedConstIterator.hh (operator*): made const
+	(operator->): made const
+
+	* checkedIterator.hh (operator*): made const
+	(operator->): made const
+	
+===================================Maude80===========================================
+
 2003-03-11  Steven Eker  <eker@goo.csl.sri.com>
 
 	* macros.hh: added FOR_EACH_CONST() macro

@@ -530,29 +530,37 @@ private:
   //
   //	Member functions for Term* -> ostream& pretty printer.
   //
-  static void prefix(ostream& s, bool needDisambig);
-  static void suffix(ostream& s, Term* term, bool needDisambig);
+  // static void prefix(ostream& s, bool needDisambig);
+  static const char* computeColor(SymbolType st);
+  static void suffix(ostream& s, Term* term, bool needDisambig, const char* color);
   bool handleIter(ostream& s,
 		  Term* term,
 		  SymbolInfo& si,
-		  bool rangeKnown);
+		  bool rangeKnown,
+		  const char* color);
   bool handleMinus(ostream& s, Term* term,
-		   bool rangeKnown);
+		   bool rangeKnown,
+		   const char* color);
   bool handleDivision(ostream& s,
 		      Term* term,
-		      bool rangeKnown);
+		      bool rangeKnown,
+		      const char* color);
   void handleFloat(ostream& s,
 		   Term* term,
-		   bool rangeKnown);
+		   bool rangeKnown,
+		   const char* color);
   void handleString(ostream& s,
 		    Term* term,
-		    bool rangeKnown);
+		    bool rangeKnown,
+		    const char* color);
   void handleQuotedIdentifier(ostream& s,
 			      Term* term,
-			      bool rangeKnown);
+			      bool rangeKnown,
+			      const char* color);
   void handleVariable(ostream& s,
 		      Term* term,
-		      bool rangeKnown);
+		      bool rangeKnown,
+		      const char* color);
   void prettyPrint(ostream& s,
 		   Term* term,
 		   int requiredPrec,

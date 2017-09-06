@@ -16,7 +16,21 @@ AU_LhsAutomaton::match(DagNode* subject,
     }
   Assert(matchAtTop == (extensionInfo != 0), "matchAtTop disagreement");
   
-  AU_DagNode* s = static_cast<AU_DagNode*>(subject);
+  if (safeCast(AU_BaseDagNode*, subject)->isDeque())
+    {
+      AU_DequeDagNode* t = safeCast(AU_DequeDagNode*, subject);
+      if (matchStrategy == LONE_VARIABLE ||
+	  matchStrategy == FAST_LONE_VARIABLE)
+	{
+	  int r = dequeMatch(t, solution, returnedSubproblem);
+	  if (r == true || r == false)
+	    return r;
+	}
+      (void) AU_DequeDagNode::dequeToArgVec(t);
+    }
+  
+  AU_DagNode* s = safeCast(AU_DagNode*, subject);
+
   int nrArgs = s->argArray.length();
   if (nrArgs < wholeLowerBound || nrArgs > wholeUpperBound)
     return false;
@@ -26,7 +40,7 @@ AU_LhsAutomaton::match(DagNode* subject,
   flexRightPos = flexPart.length() - 1;
 
   SubproblemAccumulator subproblems;
-  AU_ExtensionInfo* e = static_cast<AU_ExtensionInfo*>(extensionInfo);
+  AU_ExtensionInfo* e = safeCast(AU_ExtensionInfo*, extensionInfo);
   if (e == 0)
     {
       if (!matchRigidPart(s, solution, subproblems) ||
@@ -83,22 +97,20 @@ AU_LhsAutomaton::matchRigidPart(AU_DagNode* subject,
 				SubproblemAccumulator& subproblems)
 {
   ArgVec<DagNode*>& args = subject->argArray;
-  int nrRigid = rigidPart.length();
-  for (int i = 0; i < nrRigid; i++)
+  FOR_EACH_CONST(i, Vector<Subterm>, rigidPart)
     {
-      Subterm& r = rigidPart[i];
-      switch (r.type)
+      switch (i->type)
 	{
 	case VARIABLE:
 	  {
-	    TopVariable& tv = r.variable;
+	    const TopVariable& tv = i->variable;
 	    DagNode* b = solution.value(tv.index);
 	    if (b != 0)
 	      {
 		//
 		//	Bound variable case.
 		//
-		if (r.leftEnd)
+		if (i->leftEnd)
 		  {
 		    if (!(subject->eliminateForward(b, leftPos, rightPos - flexLowerBound)))
 		      return false;
@@ -120,7 +132,7 @@ AU_LhsAutomaton::matchRigidPart(AU_DagNode* subject,
 		       "unbound variable which can take identity in rigid part");
 		if (rightPos - leftPos < flexLowerBound)
 		  return false;
-		DagNode* d = args[r.leftEnd ? leftPos++ : rightPos--];
+		DagNode* d = args[i->leftEnd ? leftPos++ : rightPos--];
 		if (!(d->leq(tv.sort)))
 		  return false;
 		solution.bind(tv.index, d);
@@ -130,7 +142,7 @@ AU_LhsAutomaton::matchRigidPart(AU_DagNode* subject,
 	case GROUND_ALIEN:
 	  {
 	    if (rightPos - leftPos < flexLowerBound ||
-		!(r.groundAlien->equal(args[r.leftEnd ? leftPos++ : rightPos--])))
+		!(i->groundAlien->equal(args[i->leftEnd ? leftPos++ : rightPos--])))
 	      return false;
 	    break;
 	  }
@@ -138,8 +150,8 @@ AU_LhsAutomaton::matchRigidPart(AU_DagNode* subject,
 	  {
 	    Subproblem* sp;
 	    if (rightPos - leftPos < flexLowerBound ||
-		!(r.alienAutomaton->
-		  match(args[r.leftEnd ? leftPos++ : rightPos--], solution, sp)))
+		!(i->alienAutomaton->
+		  match(args[i->leftEnd ? leftPos++ : rightPos--], solution, sp)))
 	      return false;
 	    subproblems.add(sp);
 	    break;
@@ -387,7 +399,7 @@ AU_LhsAutomaton::determineRigidBlocks(Substitution& solution)
   r.start = NONE;
   r.nrSubjectsForUs = 0;
   r.nrSubjectsToLeave = 0;
-  rigidBlocks.contractTo(0);
+  rigidBlocks.clear();
   nrSubjectsUsed = 0;
   int lastFlexPart = flexPart.length() - 1;
   int skip;

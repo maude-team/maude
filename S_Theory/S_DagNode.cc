@@ -80,8 +80,7 @@ void
 S_DagNode::overwriteWithClone(DagNode* old)
 {
   S_DagNode* d = new(old) S_DagNode(symbol(), *number, arg);
-  if (isReduced())
-    d->setReduced();
+  d->copySetRewritingFlags(this);
   d->setSortIndex(getSortIndex());
 }
 
@@ -89,8 +88,7 @@ DagNode*
 S_DagNode::makeClone()
 {
   S_DagNode* d = new S_DagNode(symbol(), *number, arg);
-  if (isReduced())
-    d->setReduced();
+  d->copySetRewritingFlags(this);
   d->setSortIndex(getSortIndex());
   return d;
 }

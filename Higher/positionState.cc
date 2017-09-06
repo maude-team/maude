@@ -26,6 +26,7 @@ PositionState::PositionState(DagNode* top, int flags, int minDepth, int maxDepth
   positionQueue.append(RedexPosition(top, UNDEFINED, UNDEFINED));
   depth.append(0);
   extensionInfo = 0;
+  extensionInfoValid = true;  // in case maxDepth = -1 for no extension
   nextToReturn = -1;
   nextToExplore = -1;
 }
@@ -73,7 +74,11 @@ PositionState::findNextPosition()
   if (maxDepth >= 0)
     {
       delete extensionInfo;
-      extensionInfo = getDagNode()->makeExtensionInfo();
+      extensionInfo = 0;
+      //
+      //	Force makeExtensionInfo() if getExtensionInfo() called.
+      //
+      extensionInfoValid = false;
     }
   return true;
 }

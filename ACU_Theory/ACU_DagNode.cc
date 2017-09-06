@@ -122,12 +122,20 @@ ACU_DagNode::markArguments()
 {
   argArray.evacuate();
   Assert(argArray.length() > 0, "no arguments");
-  
-  const ArgVec<Pair>::const_iterator e = argArray.end() - 1;
-  for (ArgVec<Pair>::const_iterator i = argArray.begin(); i != e; ++i)
-    i->dagNode->mark();
-
-  return e->dagNode;
+  //
+  //	We avoid recursing on the first subterm that shares our symbol.
+  //
+  Symbol* s = symbol();
+  DagNode* r = 0;
+  FOR_EACH_CONST(i, ArgVec<Pair>, argArray)
+    {
+      DagNode* d = i->dagNode;
+      if (r == 0 && d->symbol() == s)
+	r = d;
+      else
+	d->mark();
+    }
+  return r;
 }
 
 DagNode*
@@ -165,12 +173,10 @@ ACU_DagNode::overwriteWithClone(DagNode* old)
 {
   int nrArgs = argArray.length();
   ACU_DagNode* d = new(old) ACU_DagNode(symbol(), nrArgs);
+  d->copySetRewritingFlags(this);
   d->setTheoryByte(getTheoryByte());
-  if (isReduced())
-    d->setReduced();
   d->setSortIndex(getSortIndex());
-  for (int i = 0; i < nrArgs; i++)
-    d->argArray[i] = argArray[i];
+  fastCopy(argArray.begin(), argArray.end(), d->argArray.begin());
 }
 
 DagNode*
@@ -178,12 +184,10 @@ ACU_DagNode::makeClone()
 {
   int nrArgs = argArray.length();
   ACU_DagNode* d = new ACU_DagNode(symbol(), nrArgs);
+  d->copySetRewritingFlags(this);
   d->setTheoryByte(getTheoryByte());
-  if (isReduced())
-    d->setReduced();
   d->setSortIndex(getSortIndex());
-  for (int i = 0; i < nrArgs; i++)
-    d->argArray[i] = argArray[i];
+  fastCopy(argArray.begin(), argArray.end(), d->argArray.begin());
   return d;
 }
 

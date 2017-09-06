@@ -1,3 +1,13 @@
+2003-05-01  Steven Eker  <eker@goo.csl.sri.com>
+
+	* memoryCell.hh (copySetFlags): added
+
+2003-04-14  Steven Eker  <eker@goo.csl.sri.com>
+
+	* sortTable.hh (class SortTable): made traverse() public
+	
+===================================Maude80===========================================
+
 2003-03-27  Steven Eker  <eker@goo.csl.sri.com>
 
 	* substitution.cc (operator-): optimized using const_iterators

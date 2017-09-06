@@ -77,15 +77,11 @@ MetaLevel::fixUpSpecialSymbol(DagNode* metaHookList,
 			      Symbol* symbol,
 			      const Vector<Sort*>& domainAndRange)
 {
-
-  Symbol* mh = metaHookList->symbol();
-  if (mh == hookListSymbol)
+  if (metaHookList->symbol() == hookListSymbol)
     {
-      AU_DagNode* a = static_cast<AU_DagNode*>(metaHookList);
-      int nrArgs = a->nrArgs();
-      for (int i = 0; i < nrArgs; i++)
+      for (DagArgumentIterator i(metaHookList); i.valid(); i.next())
 	{
-	  if (!downHook(a->getArgument(i), m, symbol, domainAndRange))
+	  if (!downHook(i.argument(), m, symbol, domainAndRange))
 	    return false;
 	}
       return true;
@@ -177,14 +173,11 @@ MetaLevel::fixUpBubble(DagNode* metaHookList, MetaModule* m, int bubbleSpecIndex
   QuotedIdentifierSymbol* qidSymbol = 0;
   Symbol* nilQidListSymbol = 0;
   Symbol* qidListSymbol = 0;
-  Symbol* mh = metaHookList->symbol();
-  if (mh != hookListSymbol)
+  if (metaHookList->symbol() != hookListSymbol)
     return false;
-  AU_DagNode* a = static_cast<AU_DagNode*>(metaHookList);
-  int nrArgs = a->nrArgs();
-  for (int i = 0; i < nrArgs; i++)
+  for (DagArgumentIterator i(metaHookList); i.valid(); i.next())
     {
-      DagNode* metaHook = a->getArgument(i);
+      DagNode* metaHook = i.argument();
       if (metaHook->symbol() == opHookSymbol)
 	{
 	  int purpose;
@@ -211,17 +204,14 @@ bool
 MetaLevel::fixUpPolymorph(DagNode* metaHookList, MetaModule* m, int polymorphIndex)
 {
   // HACK no way to know which kind of polymorph we have
-  Symbol* mh = metaHookList->symbol();
-  if (mh != hookListSymbol)
+  if (metaHookList->symbol() != hookListSymbol)
     return false;
-  AU_DagNode* a = static_cast<AU_DagNode*>(metaHookList);
-  int nrArgs = a->nrArgs();
   static Vector<Term*> terms(2);
   terms[0] = 0;
   terms[1] = 0;
-  for (int i = 0; i < nrArgs; i++)
+  for (DagArgumentIterator i(metaHookList); i.valid(); i.next())
     {
-      DagNode* metaHook = a->getArgument(i);
+      DagNode* metaHook = i.argument();
       if (metaHook->symbol() == termHookSymbol)
 	{
 	  FreeDagNode* f = safeCast(FreeDagNode*, metaHook);

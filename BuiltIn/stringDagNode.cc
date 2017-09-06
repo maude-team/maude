@@ -46,11 +46,16 @@ StringDagNode::compareArguments(const DagNode* other) const
 void
 StringDagNode::overwriteWithClone(DagNode* old)
 {
-  (void) new(old) StringDagNode(static_cast<StringSymbol*>(symbol()), value);
+  StringDagNode* d = new(old) StringDagNode(safeCast(StringSymbol*, symbol()), value);
+  d->copySetRewritingFlags(this);
+  d->setSortIndex(getSortIndex());
 }
 
 DagNode*
 StringDagNode::makeClone()
 {
-  return new StringDagNode(static_cast<StringSymbol*>(symbol()), value);
+  StringDagNode* d = new StringDagNode(safeCast(StringSymbol*, symbol()), value);
+  d->copySetRewritingFlags(this);
+  d->setSortIndex(getSortIndex());
+  return d;
 }

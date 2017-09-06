@@ -11,6 +11,7 @@
 #include "interface.hh"
 #include "core.hh"
 #include "variable.hh"
+#include "AU_Persistent.hh"
 #include "AU_Theory.hh"
 
 //      interface class definitions
@@ -35,10 +36,13 @@
 //	AU theory class definitions
 #include "AU_Symbol.hh"
 #include "AU_DagNode.hh"
+#include "AU_DequeDagNode.hh"
 #include "AU_LhsAutomaton.hh"
 #include "AU_Subproblem.hh"
 #include "AU_ExtensionInfo.hh"
 
+//	our stuff
+#include "AU_DequeMatcher.cc"
 #include "AU_GreedyMatcher.cc"
 #include "AU_Matcher.cc"
 #include "AU_CollapseMatcher.cc"

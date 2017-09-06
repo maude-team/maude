@@ -16,8 +16,8 @@
 #include "variable.hh"
 #include "higher.hh"
 #include "freeTheory.hh"
-#include "AU_Theory.hh"
-#include "ACU_Theory.hh"
+//#include "AU_Theory.hh"
+//#include "ACU_Theory.hh"
 #include "S_Theory.hh"
 #include "CUI_Theory.hh"
 #include "NA_Theory.hh"
@@ -47,11 +47,11 @@
 #include "freeDagNode.hh"
 
 //      AU theory class definitions
-#include "AU_Symbol.hh"
-#include "AU_DagNode.hh"
+//#include "AU_Symbol.hh"
+//#include "AU_DagNode.hh"
 
 //      ACU theory class definitions
-#include "ACU_Symbol.hh"
+//#include "ACU_Symbol.hh"
 //#include "ACU_DagNode.hh"
 
 //      S theory class definitions

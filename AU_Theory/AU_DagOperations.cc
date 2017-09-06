@@ -4,7 +4,7 @@
 //
 
 bool
-AU_DagNode::eliminateForward(const DagNode* target, int& pos, int limit) const
+AU_DagNode::eliminateForward(DagNode* target, int& pos, int limit) const
 {
   int last = argArray.length() - 1;
   //
@@ -19,7 +19,7 @@ AU_DagNode::eliminateForward(const DagNode* target, int& pos, int limit) const
 
   if (target->symbol() == s)
     {
-      const ArgVec<DagNode*> args2 = static_cast<const AU_DagNode*>(target)->argArray;
+      const ArgVec<DagNode*> args2 = getAU_DagNode(target)->argArray;
       int start = 0;
       int finish = args2.length() - 1;
       if (rightId)
@@ -57,7 +57,7 @@ AU_DagNode::eliminateForward(const DagNode* target, int& pos, int limit) const
 }
 
 bool
-AU_DagNode::eliminateBackward(const DagNode* target, int& pos, int limit) const
+AU_DagNode::eliminateBackward(DagNode* target, int& pos, int limit) const
 {
   int last = argArray.length() - 1;
   //
@@ -72,7 +72,7 @@ AU_DagNode::eliminateBackward(const DagNode* target, int& pos, int limit) const
 
   if (target->symbol() == s)
     {
-      const ArgVec<DagNode*> args2 = static_cast<const AU_DagNode*>(target)->argArray;
+      const ArgVec<DagNode*> args2 = getAU_DagNode(target)->argArray;
       int start = 0;
       int finish = args2.length() - 1;
       if (rightId)

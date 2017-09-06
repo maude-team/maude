@@ -1,3 +1,11 @@
+2003-05-01  Steven Eker  <eker@goo.csl.sri.com>
+
+	* variableDagNode.cc (overwriteWithClone): use
+	copySetRewritingFlags()
+	(makeClone): use copySetRewritingFlags()
+	
+===================================Maude80===========================================
+
 2003-02-24  Steven Eker  <eker@goo.csl.sri.com>
 
 	* variableSymbol.cc (makeTerm): updated Assert()

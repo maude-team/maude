@@ -1,3 +1,13 @@
+2003-05-01  Steven Eker  <eker@goo.csl.sri.com>
+
+	* S_LhsAutomaton.cc (match): call setValidAfterMatch()
+	(extMatchGt): call setValidAfterMatch() before each return true
+
+	* S_DagNode.cc (overwriteWithClone): use copySetRewritingFlags()
+	(makeClone): copySetRewritingFlags()
+	
+===================================Maude80===========================================
+
 2003-02-26  Steven Eker  <eker@goo.csl.sri.com>
 
 	* S_Subproblem.cc (S_Subproblem): pass varSort as const Sort*

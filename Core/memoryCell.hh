@@ -36,9 +36,10 @@ public:
   bool getFlag(int flag) const;
   void setFlag(int flag);
   void clearFlag(int flag);
+  void copySetFlags(int flags, const MemoryCell* other);
   //
   //	Access to garbage collector flags. We can't allow marked flag
-  //	to be cleared and in only makes sense to clear the call dtor
+  //	to be cleared and it only makes sense to clear the call dtor
   //	flag if we are clearing all flags other than marked.
   //
   bool isMarked() const;
@@ -46,8 +47,9 @@ public:
   bool needToCallDtor() const;
   void setCallDtor();
   //
-  //	This is needed when we reallocate a node thats already in use;
-  //	marked flag must be preserved.
+  //	This is needed when we reallocate a node that is already in use
+  //	(for in-place replacement of a subterm); the marked flag must
+  //	be preserved.
   //
   void clearAllExceptMarked();
 
@@ -207,6 +209,13 @@ inline void
 MemoryCell::clearFlag(int flag)
 {
   (static_cast<FullSizeMemoryCell*>(this))->h.flags &= ~flag;
+}
+
+inline void
+MemoryCell::copySetFlags(int flags, const MemoryCell* other)
+{
+  (static_cast<FullSizeMemoryCell*>(this))->h.flags |= flags & 
+    (static_cast<const FullSizeMemoryCell*>(other))->h.flags;
 }
 
 inline bool

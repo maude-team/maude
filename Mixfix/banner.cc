@@ -31,7 +31,7 @@ printBanner(std::ostream& s)
     Tty(Tty::GREEN) << 'e' <<
     Tty(Tty::RESET) << " ---\n";
   s << "\t\t     /||||||||||||||||||\\\n";
-  s << "\tMaude alpha 79 built: " <<
+  s << "\tMaude alpha 80 built: " <<
     __DATE__ << ' ' << __TIME__ << '\n';
   s << "\t     Copyright 1997-2003 SRI International\n";
   s << "\t\t   " << ctime(&secs);

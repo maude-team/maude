@@ -10,11 +10,16 @@
 #include "interface.hh"
 #include "core.hh"
 #include "variable.hh"
+#include "AU_Persistent.hh"
 #include "AU_Theory.hh"
+
+//	AU persistent class definitions
+#include "AU_DequeIter.hh"
 
 //	AU theory class definitions
 #include "AU_Symbol.hh"
 #include "AU_DagNode.hh"
+#include "AU_DequeDagNode.hh"
 #include "AU_Term.hh"
 #include "AU_ExtensionInfo.hh"
 
@@ -29,6 +34,20 @@ AU_Symbol::AU_Symbol(int id,
     rightIdFlag(rightId),
     oneSidedIdFlag(leftId ^ rightId)
 {
+  //
+  //	We only use the deque representaton for arguments if we
+  //	don't need to deal with the complexities of:
+  //	(1)	a one sided identity
+  //	(2)	a lazy or semi-eager strategy
+  //	(3)	memoization
+  //	(4)	rewriting at the top
+  //
+  //	(1) is rare and (2) and (3) don't make sense without (4).
+  //	(4) can't be checked until the compileEquations() pass.
+  //	(4) might not be so rare but there is no fast deque based
+  //	matching algorithm that works with extension.
+  //
+  useDequeFlag = !oneSidedIdFlag && standardStrategy();
 }
 
 void
@@ -41,10 +60,20 @@ AU_Symbol::postOpDeclarationPass()
     rightIdentitySortCheck();
 }
 
+void
+AU_Symbol::compileEquations()
+{
+  AssociativeSymbol::compileEquations();
+  if (!equationFree())
+    useDequeFlag = false;
+}
+
 DagNode*
 AU_Symbol::ruleRewrite(DagNode* subject, RewritingContext& context)
 {
-  AU_ExtensionInfo extensionInfo(static_cast<AU_DagNode*>(subject));
+  if (ruleFree())
+    return 0;
+  AU_ExtensionInfo extensionInfo(getAU_DagNode(subject));
   return applyRules(subject, context, &extensionInfo);
 }
 
@@ -59,72 +88,97 @@ AU_Symbol::makeDagNode(const Vector<DagNode*>& args)
 {
   int nrArgs = args.length();
   AU_DagNode* a = new AU_DagNode(this, nrArgs);
-  ArgVec<DagNode*>& args2 = a->argArray;
-  for (int i = 0; i < nrArgs; i++)
-    args2[i] = args[i];
+  copy(args.begin(), args.end(), a->argArray.begin());
   return a;
+}
+
+bool
+AU_Symbol::rewriteAtTop(AU_DagNode* subject, RewritingContext& context)
+{
+  //
+  //	We have a separate function for this to keep AU_ExtensionInfo
+  //	off of the eqRewrite() stack frame since recursion through
+  //	eqRewrite() can get very deep.
+  //	
+  AU_ExtensionInfo extensionInfo(subject);
+  return applyReplace(subject, context, &extensionInfo);
 }
 
 bool
 AU_Symbol::eqRewrite(DagNode* subject, RewritingContext& context)
 {
   Assert(this == subject->symbol(), "bad symbol");
-  AU_DagNode* s = static_cast<AU_DagNode*>(subject);
-  ArgVec<DagNode*>& args = s->argArray;
   if (standardStrategy())
     {
-      if (!(s->producedByAssignment()))
+      if (safeCast(AU_BaseDagNode*, subject)->isDeque())
 	{
-	  int nrArgs = args.length();
-	  for (int i = 0; i < nrArgs; i++)
-	    args[i]->reduce(context);
+	  Assert(equationFree(), "deque with equations");
+	  return false;
+	}
+      else
+	{
+	  AU_DagNode* s = safeCast(AU_DagNode*, subject);
+	  if (s->isFresh())
+	    {
+	      int nrArgs = s->argArray.length();
+	      for (int i = 0; i < nrArgs; i++)
+		s->argArray[i]->reduce(context);
+	      //
+	      //	We always need to renormalize at the top because
+	      //	shared subterms may have rewritten.
+	      //
+	      if (s->normalizeAtTop() <= AU_DagNode::DEQUED)
+		return false;  // COLLAPSED or DEQUED
+	    }
 	  //
-	  //	We always need to renormalize at the top because
-	  //	shared subterms may have rewritten.
+	  //	Even we were created by an assignment we could
+	  //	be equation-free and not reduced because our true
+	  //	sort was not known because of a membership axiom.
 	  //
-	  if (s->normalizeAtTop() == AU_DagNode::COLLAPSED)
-	    return false;
 	  if (equationFree())
 	    return false;
+	  return rewriteAtTop(s, context);
 	}
     }
-  else
+  return complexStrategy(safeCast(AU_DagNode*, subject), context);
+}
+
+bool
+AU_Symbol::complexStrategy(AU_DagNode* subject, RewritingContext& context)
+{
+  if (isMemoized())
     {
-      if (isMemoized())
-	{
-	  MemoTable::SourceSet from;
-	  bool result = memoStrategy(from, subject, context);
-	  memoEnter(from, subject);
-	  //
-	  //	We may need to return true in the case we collapse to a unreduced subterm.
-	  //
-	  return result;
-	}
-      if (!(s->producedByAssignment()))
-	{
-	  int nrArgs = args.length();
-	  for (int i = 0; i < nrArgs; i++)
-	    args[i]->computeTrueSort(context);
-	  //
-	  //	If we collapse to one of our subterms which has not been reduced
-	  //	we pretend that we did a rewrite so that the reduction process
-	  //	continues.
-	  //
-	  if (s->normalizeAtTop() == AU_DagNode::COLLAPSED)
-	    return !(s->isReduced());
-	}
-      AU_ExtensionInfo extensionInfo(s);
-      if (applyReplace(subject, context, &extensionInfo))
-	return true;
-      if (getPermuteStrategy() == LAZY)
-	return false;
-      copyAndReduceSubterms(s, context);
-      if (s->normalizeAtTop() == AU_DagNode::COLLAPSED)
-	return false;
-      s->repudiateSortInfo();  // applyReplace() might have left sort behind
+      MemoTable::SourceSet from;
+      bool result = memoStrategy(from, subject, context);
+      memoEnter(from, subject);
+      //
+      //	We may need to return true in the case we collapse to
+      //	a unreduced subterm.
+      //
+      return result;
     }
-  AU_ExtensionInfo extensionInfo(s);
-  return applyReplace(subject, context, &extensionInfo);
+  if (subject->isFresh())
+    {
+      int nrArgs = subject->argArray.length();
+      for (int i = 0; i < nrArgs; i++)
+	subject->argArray[i]->computeTrueSort(context);
+      //
+      //	If we collapse to one of our subterms which has not been reduced
+      //	we pretend that we did a rewrite so that the reduction process
+      //	continues.
+      //
+      if (subject->normalizeAtTop() == AU_DagNode::COLLAPSED)
+	return !(subject->isReduced());
+    }
+  if (rewriteAtTop(subject, context))
+    return true;
+  if (getPermuteStrategy() == LAZY)
+    return false;
+  copyAndReduceSubterms(subject, context);
+  if (subject->normalizeAtTop() == AU_DagNode::COLLAPSED)
+    return false;
+  subject->repudiateSortInfo();  // rewriteAtTop() might have left sort behind
+  return rewriteAtTop(subject, context);
 }
 
 bool
@@ -132,12 +186,12 @@ AU_Symbol::memoStrategy(MemoTable::SourceSet& from,
 			DagNode* subject,
 			RewritingContext& context)
 {
-  AU_DagNode* s = static_cast<AU_DagNode*>(subject);
+  AU_DagNode* s = safeCast(AU_DagNode*, subject);
   ArgVec<DagNode*>& args = s->argArray;
   PermuteStrategy strat = getPermuteStrategy();
   if (strat == EAGER)
     {
-      if (!(s->producedByAssignment()))
+      if (s->isFresh())
 	{
 	  int nrArgs = args.length();
 	  for (int i = 0; i < nrArgs; i++)
@@ -152,7 +206,7 @@ AU_Symbol::memoStrategy(MemoTable::SourceSet& from,
     }
   else
     {
-      if (!(s->producedByAssignment()))
+      if (s->isFresh())
 	{
 	  int nrArgs = args.length();
 	  for (int i = 0; i < nrArgs; i++)
@@ -163,12 +217,11 @@ AU_Symbol::memoStrategy(MemoTable::SourceSet& from,
 	  //	continues.
 	  //
 	  if (s->normalizeAtTop() == AU_DagNode::COLLAPSED)
-	    return !(s->isReduced());
+	    return !(s->isReduced());  // the only place we might return true
 	}
       if (memoRewrite(from, subject, context))
 	return false;
-      AU_ExtensionInfo extensionInfo(s);
-      if (applyReplace(subject, context, &extensionInfo))
+      if (rewriteAtTop(s, context))
 	{
 	  subject->reduce(context);
 	  return false;
@@ -178,12 +231,11 @@ AU_Symbol::memoStrategy(MemoTable::SourceSet& from,
       copyAndReduceSubterms(s, context);
       if (s->normalizeAtTop() == AU_DagNode::COLLAPSED)
 	return false;
-      s->repudiateSortInfo();  // applyReplace() might have left sort behind
+      s->repudiateSortInfo();  // rewriteAtTop() might have left sort behind
     }
   if (memoRewrite(from, subject, context))
     return false;
-  AU_ExtensionInfo extensionInfo(s);
-  if (applyReplace(subject, context, &extensionInfo))
+  if (rewriteAtTop(s, context))
     subject->reduce(context);
   return false;
 }
@@ -201,24 +253,27 @@ void
 AU_Symbol::computeBaseSort(DagNode* subject)
 {
   Assert(this == subject->symbol(), "bad symbol");
-  AU_DagNode* s = static_cast<AU_DagNode*>(subject);
-  ArgVec<DagNode*>& args = s->argArray;
-  int nrArgs = args.length();
-  //
-  //	If symbol has a uniform sort structure do a fast sort computation.
-  //
-  const Sort* uniSort = uniformSort();
-  if (uniSort != 0)
+  if (safeCast(AU_BaseDagNode*, subject)->isDeque())
     {
+      subject->setSortIndex(safeCast(AU_DequeDagNode*, subject)->
+			    getDeque().computeBaseSort(this));
+      return;
+    }
+  ArgVec<DagNode*>& args = safeCast(AU_DagNode*, subject)->argArray;
+  if (const Sort* uniSort = uniformSort())
+    {
+      //
+      //	If symbol has a uniform sort structure do a fast sort computation.
+      //
       if (!(uniSort->component()->errorFree()))
 	{
 	  //
 	  //	Check we're not in the error sort.
 	  //
 	  int lastIndex = Sort::SORT_UNKNOWN;
-	  for (int i = 0; i < nrArgs; i++)
+	  FOR_EACH_CONST(i, ArgVec<DagNode*>, args)
 	    {
-	      int index = args[i]->getSortIndex();
+	      int index = (*i)->getSortIndex();
 	      if (index != lastIndex)
 		{
 		  if (!(leq(index, uniSort)))
@@ -234,14 +289,15 @@ AU_Symbol::computeBaseSort(DagNode* subject)
       return;
     }
   //
-  //	Consider subterms until we find a union sort.
+  //	Standard sort calculation.
   //
   int sortIndex = Sort::SORT_UNKNOWN;
-  for (int i = 0; i < nrArgs; i++)
+  FOR_EACH_CONST(i, ArgVec<DagNode*>, args)
     {
-      int t = args[i]->getSortIndex();
-      Assert(t >= 0, "bad sort index");
-      sortIndex = (sortIndex == Sort::SORT_UNKNOWN) ? t : traverse(traverse(0, sortIndex), t);
+      int t = (*i)->getSortIndex();
+      Assert(t != Sort::SORT_UNKNOWN, "bad sort index");
+      sortIndex = (sortIndex == Sort::SORT_UNKNOWN) ? t :
+	traverse(traverse(0, sortIndex), t);
     }
   subject->setSortIndex(sortIndex);
 }
@@ -250,19 +306,22 @@ void
 AU_Symbol::normalizeAndComputeTrueSort(DagNode* subject, RewritingContext& context)
 {
   Assert(this == subject->symbol(), "bad symbol");
-  AU_DagNode* s = static_cast<AU_DagNode*>(subject);
-  ArgVec<DagNode*>& args = s->argArray;
-  int nrArgs = args.length();
-  //
-  //	Make sure each subterm has a sort,
-  //
-  for (int i = 0; i < nrArgs; i++)
-    args[i]->computeTrueSort(context);
-  //
-  //    Put subject in normal form (could collapse to a subterm).
-  //
-  if (s->normalizeAtTop() == AU_DagNode::COLLAPSED)
-    return;
+  if (safeCast(AU_BaseDagNode*, subject)->isFresh())
+    {
+      //
+      //	Make sure each subterm has its true sort.
+      //
+      AU_DagNode* s = safeCast(AU_DagNode*, subject);
+      ArgVec<DagNode*>& args = s->argArray;
+      int nrArgs = args.length();
+      for (int i = 0; i < nrArgs; i++)
+	args[i]->computeTrueSort(context);
+      //
+      //    Put subject in normal form (could collapse to a subterm).
+      //
+      if (s->normalizeAtTop() == AU_DagNode::COLLAPSED)
+	return;
+    }
   //
   //	Finally compute subjects true sort.
   //
@@ -279,7 +338,10 @@ AU_Symbol::calculateNrSubjectsMatched(DagNode* d,
   Term* identity = getIdentity();
   if (d->symbol() == this)
     {
-      ArgVec<DagNode*>& args = static_cast<AU_DagNode*>(d)->argArray;
+      if (safeCast(AU_BaseDagNode*, d)->isDeque())
+	return safeCast(AU_DequeDagNode*, d)->nrArgs();
+
+      ArgVec<DagNode*>& args = safeCast(AU_DagNode*, d)->argArray;
       int nrArgs = args.length();
       if (oneSidedIdFlag)
 	{
@@ -322,13 +384,35 @@ AU_Symbol::stackArguments(DagNode* subject,
 {
   if (!(getFrozen().empty()))
     return;
-  bool eager = (getPermuteStrategy() == EAGER);
-  ArgVec<DagNode*>& args = safeCast(AU_DagNode*, subject)->argArray;
-  int nrArgs = args.length();
-  for (int i = 0; i < nrArgs; i++)
+
+  if (safeCast(AU_BaseDagNode*, subject)->isDeque())
     {
-      DagNode* d = args[i];
-      if (!(d->isUnstackable()))
-	stack.append(RedexPosition(d, parentIndex, i, eager));
+      //
+      //	Deque case.
+      //
+      Assert(getPermuteStrategy() == EAGER, "non eager strategy with deque");
+      int j = 0;
+      for (AU_DequeIter i(safeCast(AU_DequeDagNode*, subject)->getDeque());
+	   i.valid(); i.next(), ++j)
+	{
+	  DagNode* d = i.getDagNode();
+	  if (!(d->isUnstackable()))
+	    stack.append(RedexPosition(d, parentIndex, j, true));
+	}
+    }
+  else
+    {
+      //
+      //	ArgVec case.
+      //
+      bool eager = (getPermuteStrategy() == EAGER);
+      ArgVec<DagNode*>& args = safeCast(AU_DagNode*, subject)->argArray;
+      int nrArgs = args.length();
+      for (int i = 0; i < nrArgs; i++)
+	{
+	  DagNode* d = args[i];
+	  if (!(d->isUnstackable()))
+	    stack.append(RedexPosition(d, parentIndex, i, eager));
+	}
     }
 }

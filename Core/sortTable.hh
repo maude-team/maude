@@ -34,6 +34,7 @@ public:
   // virtual void computeBaseSort(DagNode* subject) = 0;
   // virtual void computeTrueSort(DagNode* subject, RewritingContext& context) = 0;
   virtual bool canProduceErrorSort() const;
+  int traverse(int position, int sortIndex) const;
 
 #ifdef COMPILER
   void generateSortDiagram(CompilationContext& context) const;
@@ -41,7 +42,6 @@ public:
 
 protected:
   bool specialSortHandling() const;
-  int traverse(int position, int sortIndex) const;
   int ctorTraverse(int position, int sortIndex) const;
 
 #ifdef DUMP

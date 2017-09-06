@@ -1,5 +1,5 @@
 //
-//      Implementation for class ACU_DagArgumentIterator.
+//      Implementation for class ACU_TreeDagArgumentIterator.
 //
  
 //	utility stuff

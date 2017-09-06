@@ -29,8 +29,8 @@ public:
   iterator& operator=(const iterator& other);
   bool operator==(const iterator& other) const;
   bool operator!=(const iterator& other) const;
-  reference operator*();
-  pointer operator->();
+  reference operator*() const;
+  pointer operator->() const;
   //
   //	Forward iterator stuff.
   //
@@ -148,7 +148,7 @@ Vector<T>::iterator::operator!=(const iterator& other) const
 
 template<class T>
 inline typename Vector<T>::reference
-Vector<T>::iterator::operator*()
+Vector<T>::iterator::operator*() const
 {
   checkDereferenceable();
   return *ptr;
@@ -156,7 +156,7 @@ Vector<T>::iterator::operator*()
 
 template<class T>
 inline typename Vector<T>::pointer
-Vector<T>::iterator::operator->()
+Vector<T>::iterator::operator->() const
 {
   checkDereferenceable();
   return ptr;

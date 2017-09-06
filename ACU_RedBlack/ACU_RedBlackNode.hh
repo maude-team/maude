@@ -233,7 +233,7 @@ ACU_RedBlackNode::ACU_RedBlackNode(DagNode* dagNode,
 	 ((right == 0) ? 0 : right->size),
 	 "bad size");
   Assert(maxMult ==
-	 min(SAT_MULT, max(multiplicity,
+	 min(static_cast<int>(SAT_MULT), max(multiplicity,
 			   max((left == 0) ? 0 : left->getMaxMult(),
 			       (right == 0) ? 0 : right->getMaxMult()))),
 	  "bad maxMult");

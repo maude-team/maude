@@ -164,6 +164,7 @@ S_LhsAutomaton::extMatchGt(S_DagNode* subject,
 	    returnedSubproblem = 0;
 	    extensionInfo->setMatchedWhole(false);
 	    extensionInfo->setUnmatched(subjectNumber - number);
+	    extensionInfo->setValidAfterMatch(true);
 	    return true;
 	  }
 	break;  // fail
@@ -186,6 +187,7 @@ S_LhsAutomaton::extMatchGt(S_DagNode* subject,
 			extensionInfo->setMatchedWhole(false);
 			extensionInfo->setUnmatched(leftOver);
 		      }
+		    extensionInfo->setValidAfterMatch(true);
 		    return true;
 		  }
 	      }
@@ -196,6 +198,7 @@ S_LhsAutomaton::extMatchGt(S_DagNode* subject,
 		    returnedSubproblem = 0;
 		    extensionInfo->setMatchedWhole(false);
 		    extensionInfo->setUnmatched(subjectNumber - number);
+		    extensionInfo->setValidAfterMatch(true);
 		    return true;
 		  }
 	      }
@@ -203,7 +206,9 @@ S_LhsAutomaton::extMatchGt(S_DagNode* subject,
 	else
 	  {
 	    returnedSubproblem =
-	      new S_Subproblem(subject, subjectNumber - number, varIndex, sort, extensionInfo);
+	      new S_Subproblem(subject, subjectNumber - number,
+			       varIndex, sort, extensionInfo);
+	    extensionInfo->setValidAfterMatch(false);
 	    return true;
 	  }
 	break;  // fail
@@ -213,7 +218,8 @@ S_LhsAutomaton::extMatchGt(S_DagNode* subject,
 	if (automaton->match(arg, solution, returnedSubproblem))
 	  {
 	    extensionInfo->setMatchedWhole(false);
-	    extensionInfo->setUnmatched(subjectNumber - number);  
+	    extensionInfo->setUnmatched(subjectNumber - number); 
+	    extensionInfo->setValidAfterMatch(true);
 	    return true;
 	  }
 	break;  // fail
@@ -230,6 +236,7 @@ S_LhsAutomaton::extMatchGt(S_DagNode* subject,
 							  varIndex,
 							  solution.nrFragileBindings()));
 	returnedSubproblem = subproblems.extractSubproblem();
+	extensionInfo->setValidAfterMatch(false);
 	return true;
       }
     }
@@ -261,6 +268,7 @@ S_LhsAutomaton::match(DagNode* subject,
 	  if (matchEq(arg, solution, returnedSubproblem))
 	    {
 	      e->setMatchedWhole(true);
+	      e->setValidAfterMatch(true);
 	      return true;
 	    }
 	}

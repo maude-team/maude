@@ -86,8 +86,7 @@ void
 CUI_DagNode::overwriteWithClone(DagNode* old)
 {
   CUI_DagNode* d = new(old) CUI_DagNode(symbol());
-  if (isReduced())
-    d->setReduced();
+  d->copySetRewritingFlags(this);
   d->setSortIndex(getSortIndex());
   d->argArray[0] = argArray[0];
   d->argArray[1] = argArray[1];
@@ -97,8 +96,7 @@ DagNode*
 CUI_DagNode::makeClone()
 {
   CUI_DagNode* d = new CUI_DagNode(symbol());
-  if (isReduced())
-    d->setReduced();
+  d->copySetRewritingFlags(this);
   d->setSortIndex(getSortIndex());
   d->argArray[0] = argArray[0];
   d->argArray[1] = argArray[1];

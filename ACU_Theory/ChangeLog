@@ -1,3 +1,39 @@
+2003-05-02  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_Symbol.hh (class ACU_Symbol): added decl for rewriteAtTop()
+
+	* ACU_Symbol.cc (rewriteAtTop): added
+	(eqRewrite): use rewriteAtTop() to avoid having an
+	ACU_ExtensionInfo on our stack frame
+	(eqRewrite): simplified; we no longer assume that if we have
+	standard strategy and our subject was produced by an assignment
+	that we cannot be equation free; mbs can prevent exact sort
+	calculation and setting of reduced flag
+	(reduceArgumentsAndNormalize): only remove identity in
+	ACU_DagNode::EXTENSION case
+
+	* ACU_DagNode.cc (markArguments): avoid recursing on the first arg
+	that shares our symbol
+
+2003-05-01  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_TreeDagNode.cc (overwriteWithClone): use
+	copySetRewritingFlags()
+	(makeClone): use copySetRewritingFlags()
+
+	* ACU_DagNode.cc (overwriteWithClone): use copySetRewritingFlags()
+	and fastCopy()
+	(makeClone): use copySetRewritingFlags() and fastCopy()
+
+2003-04-30  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_LhsCompiler3.cc (findLongestIncreasingSequence): added
+	comment to explain why calling subsumes() is safe even in the
+	presence of external agencies that can bind variables in the
+	subsumer
+	
+===================================Maude80===========================================
+
 2003-03-28  Steven Eker  <eker@goo.csl.sri.com>
 
 	* ACU_LhsAutomaton.hh (class ACU_LhsAutomaton): deleted decl for
