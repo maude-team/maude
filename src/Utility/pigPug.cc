@@ -60,12 +60,12 @@ PigPug::PigPug(const Word& lhs,
       if (variableOccurrencesBoundedBy2(lhs, rhs, lastOriginalVariable))
 	{
 	  cycleDetection = true;
-	  Verbose("Associative unfication using cycle detection.");
+	  Verbose("Associative unification using cycle detection.");
 	}
       else
 	{
 	  depthBound =  lhs.size() + rhs.size();
-	  Verbose("Associative unfication using depth bound of " << depthBound << ".");
+	  Verbose("Associative unification using depth bound of " << depthBound << ".");
 	}
     }
 }
@@ -577,7 +577,7 @@ PigPug::firstMove()
       if (incompletenessFlag != INCOMPLETE)
 	{
 	  incompletenessFlag = INCOMPLETE;
-	  Verbose("Associative unfication algorithm hit depth bound.");
+	  Verbose("Associative unification algorithm hit depth bound.");
 	}
       return FAIL;
     }

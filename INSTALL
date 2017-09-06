@@ -18,7 +18,7 @@ GNU gmp		http://www.swox.com/gmp/
 GNU libsigsegv	http://libsigsegv.sourceforge.net/
 Tecla		http://www.astro.caltech.edu/~mcs/tecla/
 BuDDY		http://sourceforge.net/projects/buddy
-CVC4		http://cvc4.cs.nyu.edu/web/
+CVC4 (optional)	http://cvc4.cs.nyu.edu/web/
 
 
 Configuring the 3rd party packages
@@ -51,6 +51,10 @@ build Maude with the commands:
 
 ./configure
 make
+
+If you don't have CVC4 you can pass --with-cvc4=no to configure. This
+disables the experimental rewriting modulo SMT feature, and produces
+a much smaller binary (CVC4 is much larger than Maude).
 
 A very basic test suite can be run using the command:
 

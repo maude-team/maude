@@ -1,3 +1,8 @@
+Overview of Changes in alpha110b
+================================
+* fixed typos and copyright date
+* minor configuation fixes
+
 Overview of Changes in alpha110a
 ================================
 * fixed bug in ACU unification that was introduced in alpha108

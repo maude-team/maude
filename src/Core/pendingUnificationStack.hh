@@ -131,7 +131,7 @@ PendingUnificationStack::flagAsIncomplete(Symbol* symbol)
     {
       incompleteSymbols.insert(index);
       IssueWarning("Unification modulo the theory of operator " << QUOTE(symbol) <<
-		    " has encoutered an instance for which it may not be complete.");
+		    " has encountered an instance for which it may not be complete.");
     }
 }
 

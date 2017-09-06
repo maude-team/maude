@@ -1,3 +1,11 @@
+2016-06-27  Steven Eker  <eker@install.csl.sri.com>
+
+	* tests/Misc/smtTest (MAUDE_LIB): skip test if we don't define USE_CVC4
+
+	* configure.ac: use no argument form of AM_INIT_AUTOMAKE
+
+===================================Maude110b===========================================
+
 2016-05-05  Steven Eker  <eker@install.csl.sri.com>
 
 	* configure.ac: changed bug report address from maude-bugs@maude.cs.uiuc.edu
