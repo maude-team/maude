@@ -239,6 +239,7 @@ CLEANFILES = surface.yy surface.cc surface.h lexer.cc
 
 EXTRA_DIST = \
 	renameModule.cc \
+	parameterization.cc \
 	lexerAux.cc \
 	import.cc \
 	process.cc \

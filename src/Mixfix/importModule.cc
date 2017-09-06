@@ -59,9 +59,11 @@
 
 //	our stuff
 #include "renameModule.cc"
+#include "parameterization.cc"
 
-ImportModule::ImportModule(int name, ModuleType moduleType, Entity::User* parent)
-  : MixfixModule(name, moduleType)
+ImportModule::ImportModule(int name, ModuleType moduleType, Origin origin, Entity::User* parent)
+  : MixfixModule(name, moduleType),
+    origin(origin)
 {
   if (parent != 0)
     addUser(parent);  // HACK

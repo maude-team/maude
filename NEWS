@@ -1,3 +1,14 @@
+Overview of Changes in Maude alpha86a
+=====================================
+* fixed parameter checking bug for modules with both free and bound
+  parameters
+* structured sorts printed correctly in various places
+* theory-views now pushed into parameterized sorts
+* new naming convention for otf modules
+* bound parameter instantiation now handled like Full Maude
+* -no-advise command line flag
+* declined messages to external objects generate advisories
+
 Overview of Changes in Maude alpha86
 ====================================
 * fixed loop mode \/ bug

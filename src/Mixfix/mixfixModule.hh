@@ -34,7 +34,6 @@
 #include "freeTheory.hh"
 #include "builtIn.hh"
 #include "token.hh"
-#include "intSet.hh"
 #include "pointerSet.hh"
 #include "symbolType.hh"
 
@@ -523,13 +522,12 @@ private:
 
   typedef map<int, int> IntMap;
   IntMap iterSymbols;  // maps from name code to unique nonterminals
-  IntMap leadTokens;  // maps from lead tokens of parameterized sort to unique nonterminals
+  IntMap leadTokens;  // maps from lead tokens of structured sort to unique nonterminals
 
   typedef map<int, Sort*> SortMap;
   SortMap sortNames;  // maps from name codes to sort pointers
 
-  IntSet symbolNames;
-  Vector<int> firstSymbols;
+  IntMap firstSymbols;  // names from name codes to index of first symbol with that name
 
   struct BubbleSpec
   {

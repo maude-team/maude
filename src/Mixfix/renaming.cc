@@ -547,7 +547,7 @@ Renaming::printRenamingType(ostream& s, int opMappingNr, int typeNr) const
   const set<int>& sorts = getTypeSorts(opMappingNr, typeNr);
   FOR_EACH_CONST(i, set<int>, sorts)
     {
-      s << sep << Token::name(*i);
+      s << sep << Token::sortName(*i);
       sep = ',';
     }
   s << ']';
@@ -560,8 +560,8 @@ Renaming::printRenaming(ostream& s, const char* sep, const char* sep2) const
     int nrSortMappings = getNrSortMappings();
     for (int i = 0; i < nrSortMappings; i++)
       {
-	s << sep << "sort " << Token::name(getSortFrom(i)) <<
-	  " to " << Token::name(getSortTo(i));
+	s << sep << "sort " << Token::sortName(getSortFrom(i)) <<
+	  " to " << Token::sortName(getSortTo(i));
 	sep = sep2;
       }
   }

@@ -190,7 +190,7 @@ MetaLevel::downRenamingType(DagNode* metaType, Renaming* renaming)
       switch (Token::auxProperty(id))
 	{
 	case Token::AUX_SORT:
-	case Token::AUX_PARAMETERIZED_SORT:
+	case Token::AUX_STRUCTURED_SORT:
 	  {
 	    Vector<Token> type(1);
 	    type[0].tokenize(id, FileTable::META_LEVEL_CREATED);

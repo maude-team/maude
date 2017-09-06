@@ -46,7 +46,16 @@ public:
     INCLUDING
   };
 
-  ImportModule(int name, ModuleType moduleType, Entity::User* parent = 0);
+  enum Origin
+  {
+    TEXT,
+    SUMMATION,
+    RENAMING,
+    PARAMETER,
+    INSTANTIATION
+  };
+
+  ImportModule(int name, ModuleType moduleType, Origin origin, Entity::User* parent);
   ~ImportModule();
 
   void addImport(ImportModule* importedModule,
@@ -67,9 +76,13 @@ public:
   void protect();
   bool unprotect();
 
+  Origin getOrigin() const;
   int getNrParameters() const;
   int getNrFreeParameters() const;
+  int getNrBoundParameters() const;
   ImportModule* getParameterTheory(int index) const;
+  ImportModule* getFreeParameterTheory(int index) const;
+  int getFreeParameterName(int index) const;
   int getNrImportedSorts() const;
   int getNrUserSorts() const;
   int getNrImportedSubsorts(int sortIndex) const;
@@ -84,8 +97,11 @@ public:
   const set<int>& getLabels() const;
   ImportModule* makeRenamedCopy(int name, Renaming* canonical, ModuleCache* moduleCache);
   ImportModule* makeParameterCopy(int moduleName, int parameterName, ModuleCache* moduleCache);
-  ImportModule* makeInstantiation(int moduleName, const Vector<View*>& arguments, const Vector<int>& parameterArgs, ModuleCache* moduleCache);
-  int findParameterIndex(int name) const;
+  ImportModule* makeInstantiation(int moduleName,
+				  const Vector<View*>& arguments,
+				  const Vector<int>& parameterArgs,
+				  ModuleCache* moduleCache);
+ int findParameterIndex(int name) const;
 
 private:
   enum Phase
@@ -106,6 +122,11 @@ private:
 				const Vector<ConditionFragment*>& original,
 				Vector<ConditionFragment*>& copy);
 
+  ImportModule* instantiateBoundParameters(const Vector<View*>& arguments,
+					   const Vector<int>& parameterArgs,
+					   ModuleCache* moduleCache,
+					   ParameterMap& escapedParameters);
+ 
   void regretToInform(Entity* doomedEntity);
   void donateSorts(ImportModule* importer);
   void donateSorts2(ImportModule* copy, Renaming* renaming = 0);
@@ -118,6 +139,7 @@ private:
   void resetImportPhase();
   void finishCopy(ImportModule* copy, Renaming* canonical);
 
+  const Origin origin;
   Phase importPhase;
   //
   //	These are the theories and modules we directly import.
@@ -131,10 +153,19 @@ private:
   //  Vector<ImportModule*> parameterTheories;
   Vector<ImportModule*> importedModules;
   //
-  //	If we are a renaming of another module we need to store this info.
+  //	If we are a renaming, parameter copy or instantiation of another
+  //	module we need to store this info.
   //
   Renaming* canonicalRenaming;
   ImportModule* baseModule;
+  //
+  //	If we are are a instantiation, and have bound parameters, we keep
+  //	track of the view and parameter arguments our base module was
+  //	instantiated with so we can build a new instantiation when our
+  //	bound parameters are instantiated.
+  //
+  Vector<View*> viewArgs;
+  Vector<int> paramArgs;
   //
   //	Need to keep track of what parts of MixfixModule actually belong
   //	to us (and need to be donated to our importers) and what parts
@@ -177,6 +208,12 @@ ImportModule::protect()
   ++protectCount;
 }
 
+inline ImportModule::Origin
+ImportModule::getOrigin() const
+{
+  return origin;
+}
+
 inline int
 ImportModule::getNrImportedSorts() const
 {
@@ -198,11 +235,30 @@ ImportModule::getNrFreeParameters() const
   return parameterNames.size() - nrBoundParameters;
 }
 
+inline int
+ImportModule::getNrBoundParameters() const
+{
+  return nrBoundParameters;
+}
+
 inline ImportModule*
 ImportModule::getParameterTheory(int index) const
 {
   Assert(index < getNrParameters(), "bad parameter index " << index);
   return importedModules[index]->baseModule;
+}
+
+inline ImportModule*
+ImportModule::getFreeParameterTheory(int index) const
+{
+  Assert(nrBoundParameters + index < getNrParameters(), "bad parameter index " << index);
+  return importedModules[nrBoundParameters + index]->baseModule;
+}
+
+inline int
+ImportModule::getFreeParameterName(int index) const
+{
+  return parameterNames[nrBoundParameters + index];
 }
 
 inline int

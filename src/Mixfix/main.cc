@@ -205,6 +205,8 @@ main(int argc, char* argv[])
 	    readPrelude = false;
 	  else if (strcmp(arg, "-no-banner") == 0)
 	    outputBanner = false;
+	  else if (strcmp(arg, "-no-advise") == 0)
+	    globalAdvisoryFlag = false;
 	  else if (strcmp(arg, "-batch") == 0)
 	    handleCtrlC = false;
 	  else if (strcmp(arg, "-interactive") == 0)
@@ -300,6 +302,7 @@ printHelp(const char* name)
     "  --version\t\tDisplay version number\n" <<
     "  -no-prelude\t\tDo not read in the standard prelude\n" <<
     "  -no-banner\t\tDo not output banner on startup\n" <<
+    "  -no-advise\t\tNo advisories on startup\n" <<
     "  -no-mixfix\t\tDo not use mixfix notation for output\n" <<
     "  -ansi-color\t\tUse ANSI control sequences\n" <<
     "  -no-ansi-color\tDo not use ANSI control sequences\n" <<

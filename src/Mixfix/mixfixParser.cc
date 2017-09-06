@@ -471,7 +471,7 @@ MixfixParser::makeTerm(int node)
 	Token::split((*currentSentence)[pos].code(), varName, sortName);
 	Assert(sortName == NONE ||
 	       sortName == sort->id() ||
-	       Token::auxProperty(sort->id()) == Token::AUX_PARAMETERIZED_SORT,
+	       Token::auxProperty(sort->id()) == Token::AUX_STRUCTURED_SORT,
 	       "sort name clash");
 	t = new VariableTerm(symbol, varName);
 	break;

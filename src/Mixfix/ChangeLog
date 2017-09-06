@@ -1,3 +1,183 @@
+2005-04-29  Steven Eker  <eker@goo.csl.sri.com>
+
+	* main.cc (main): added -no-advise flag
+	(printHelp): mention -no-advise flag
+
+2005-04-27  Steven Eker  <eker@goo.csl.sri.com>
+
+	* moduleCache.cc (makeSummation): don't put parens around name
+	(makeRenamedCopy): put parens around module arg if it is a
+	summation
+	(makeInstatiation): put parens around module arg if it is a
+	renaming
+
+	* visibleModule.cc (VisibleModule): pass TEXT to ImportModule()
+
+	* importModule.cc (ImportModule): init origin from argument
+
+	* renameModule.cc (makeRenamedCopy): pass RENAMING to
+	ImportModule()
+
+	* parameterization.cc (makeParameterCopy): pass PARAMETER to
+	ImportModule()
+	(makeInstantiation): pass INSTANTIATION to ImportModule()
+
+	* moduleCache.cc (makeSummation): pass ImportModule::SUMMATION to
+	ImportModule()
+
+	* importModule.hh (User): added data member origin
+	(getOrigin): added
+	(User): update decl for ctor
+
+	* importModule.cc (ImportModule): init origin to TEXT
+
+	* importModule.hh (User): added enum Origin
+
+	* renameModule.cc (makeRenamedCopy): comment out code to copy
+	nrBoundParameters; Assert that nrBoundParameters == 0
+
+	* parameterization.cc (instantiateBoundParameters): comment out
+	code for handling renaming case; add Assert() to check that our
+	original arguments and base module exist
+
+	* import.cc (makeModule): don't allow renaming of modules with
+	bound parameters
+
+	* importModule.hh (getNrBoundParameters): added
+
+2005-04-26  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: do renaming on LIST{TAO-SET} in SORTABLE-LIST
+
+2005-04-25  Steven Eker  <eker@goo.csl.sri.com>
+
+	* parameterization.cc (makeInstantiation): added DebugAdvisory()
+	for rebinding case
+	(makeInstantiation): rewrote code that generates instantiations
+	for imports so that it can handle imports that share both free and
+	bound parameters
+	(instantiateBoundParameters): added DebugAdvisory() for bound
+	parameters that escape during the construction of a new foundation
+	(instantiateBoundParameters): rewrote code that generates new
+	instantiations of foundations so that it rebinds escaped
+	parameters
+
+	* importModule.hh (User): updated decl of
+	instantiateBoundParameters() and make it private
+
+	* parameterization.cc (instantiateBoundParameters): keep track of
+	escaped parameters
+	(makeInstantiation): check for escaped parameters from imports and
+	generate rebinding instantiations if needed
+
+2005-04-21  Steven Eker  <eker@goo.csl.sri.com>
+
+	* parameterization.cc (makeInstantiation): generate extra argument
+	lists for sorts parameterized by parameter instantiated by
+	theory-view
+	(makeInstantiation): added assert to check for free parameters in
+	instance of imported module
+
+2005-04-20  Steven Eker  <eker@goo.csl.sri.com>
+
+	* parameterization.cc (instantiateBoundParameters): added
+	(makeInstantiation): save arguments if we have bound parameters;
+	use instantiateBoundParameters() rather than
+	ModuleCache::makeInstatiation() to handle imports with bound
+	parameters
+	(makeInstantiation): simplified and reorganized, now that we never
+	have to instantiate bound parameters
+	(instantiateBoundParameters): rewritten for a first crude attempt
+	at handling renamed modules
+
+	* importModule.hh (User): added data members viewArgs, paramArgs
+	(User): added decl for instantiateBoundParameters()
+
+2005-04-19  Steven Eker  <eker@goo.csl.sri.com>
+
+	* mixfixModule.cc (findSymbol): use new firstSymbols convention
+
+	* entry.cc (addOpDeclaration): use new firstSymbols convention
+
+	* mixfixModule.hh (CommonTokens): deleted data member symbolNames;
+	data member firstSymbols becomes an IntMap
+
+	* moduleDatabase.cc (setOmodInclude): substract() -> erase()
+
+	* moduleDatabase.hh (class ModuleDatabase): added typedef
+	ImportSet 
+	(class ModuleDatabase): defaultOmodIncludes becomes an ImportSet
+
+	* bufferPrint.cc (printDotSort, printVarSort, printSort):
+	AUX_PARAMETERIZED_SORT -> AUX_STRUCTURED_SORT
+
+	* mixfixParser.cc (makeTerm): AUX_PARAMETERIZED_SORT ->
+	AUX_STRUCTURED_SORT
+
+	* quotedIdentifierSymbol.cc (determineSort):
+	AUX_PARAMETERIZED_SORT -> AUX_STRUCTURED_SORT
+
+	* makeGrammar.cc (makeComponentProductions) 
+	(makeParameterizedSortProductions): AUX_PARAMETERIZED_SORT ->
+	AUX_STRUCTURED_SORT
+
+	* parameterization.cc (makeInstantiation): AUX_PARAMETERIZED_SORT
+	-> AUX_STRUCTURED_SORT
+
+	* token.hh (class Token): AUX_PARAMETERIZED_SORT ->
+	AUX_STRUCTURED_SORT
+
+	* auxProperty.cc (computeAuxProperty, sortName) 
+	(splitParameterizedSort, splitParameterList):
+	AUX_PARAMETERIZED_SORT -> AUX_STRUCTURED_SORT
+
+	* renaming.cc (printRenaming): use sortName for printing sort
+	mappings
+	(printRenamingType): use sortName
+
+	* visibleModule.cc (showModule): print parameters
+
+	* importModule.hh (getFreeParameterName): added
+
+	* command.cc (showModule): print parameters
+
+2005-04-18  Steven Eker  <eker@goo.csl.sri.com>
+
+	* command.cc (showModule): use printSortTokenVector() (2 places)
+
+	* preModule.hh (User): added decl for printSortTokenVector()
+
+	* command.cc (showModule): use sortName() on sort and subsort tokens
+	(operator<<): PreModule::Type& version; use sortName()
+	(printSortTokenVector): added
+
+	* prettyPrint.cc (operator<<): (Sort* version) simplified; no
+	longer check PRINT_MIXFIX flag
+
+	* view.cc (evaluate): use sortName() in error message about
+	missing sort
+
+	* import.cc (makeModule): use getFreeParameterTheory() rather than
+	getParameterTheory() in 2 of 3 places to fix bug in the case there
+	are bound parameters
+
+	* importModule.hh (getFreeParameterTheory): added
+
+	* parameterization.cc (makeParameterCopy): moved here from
+	renameModule.cc
+	(makeInstantiation): moved here from renameModule.cc
+	(makeInstantiation): allow promotion from fmod to mod if a view
+	has a system module as a target
+
+2005-04-14  Steven Eker  <eker@goo.csl.sri.com>
+
+	* banner.cc (printBanner): update copyright notice to 2005
+
+	* prelude.maude: changed prec and added format for _,_ in MAP;
+	changed prec for _,_ in META-TERM
+
+===================================Maude86a===========================================
+
 2005-04-13  Steven Eker  <eker@goo.csl.sri.com>
 
 	* modules.yy (parameters): fixed value bug that is picked up by

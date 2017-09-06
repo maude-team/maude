@@ -264,15 +264,15 @@ op '__ : 'SubsortDeclSet 'SubsortDeclSet -> 'SubsortDeclSet [assoc comm ctor
     id('none.SubsortDeclSet) format('d 'ni 'd)] .
 op '__ : 'Trace 'Trace -> 'Trace [assoc ctor id('nil.Trace) format('d 'n 'd)] .
 op '__ : 'TypeList 'TypeList -> 'TypeList [assoc ctor id('nil.TypeList)] .
-op '_`,_ : 'CTermList 'TermList -> 'CTermList [assoc ctor prec(120) gather('e
+op '_`,_ : 'CTermList 'TermList -> 'CTermList [assoc ctor prec(121) gather('e
     'E)] .
 op '_`,_ : 'GroundTermList 'GroundTermList -> 'GroundTermList [assoc ctor prec(
-    120) gather('e 'E)] .
+    121) gather('e 'E)] .
 op '_`,_ : 'RenamingSet 'RenamingSet -> 'RenamingSet [assoc comm ctor prec(43)
     format('d 'd 'ni 'd)] .
-op '_`,_ : 'TermList 'CTermList -> 'CTermList [assoc ctor prec(120) gather('e
+op '_`,_ : 'TermList 'CTermList -> 'CTermList [assoc ctor prec(121) gather('e
     'E)] .
-op '_`,_ : 'TermList 'TermList -> 'TermList [assoc ctor prec(120) gather('e
+op '_`,_ : 'TermList 'TermList -> 'TermList [assoc ctor prec(121) gather('e
     'E)] .
 op '_`[_`] : 'Qid 'CTermList -> 'Context [ctor] .
 op '_`[_`] : 'Qid 'GroundTermList -> 'GroundTerm [ctor] .
@@ -1430,15 +1430,15 @@ result FModule: fmod 'META-LEVEL is
   op '__ : 'Trace 'Trace -> 'Trace [assoc ctor id('nil.Trace) format('d 'n 'd)]
     .
   op '__ : 'TypeList 'TypeList -> 'TypeList [assoc ctor id('nil.TypeList)] .
-  op '_`,_ : 'CTermList 'TermList -> 'CTermList [assoc ctor prec(120) gather('e
+  op '_`,_ : 'CTermList 'TermList -> 'CTermList [assoc ctor prec(121) gather('e
     'E)] .
   op '_`,_ : 'GroundTermList 'GroundTermList -> 'GroundTermList [assoc ctor
-    prec(120) gather('e 'E)] .
+    prec(121) gather('e 'E)] .
   op '_`,_ : 'RenamingSet 'RenamingSet -> 'RenamingSet [assoc comm ctor prec(
     43) format('d 'd 'ni 'd)] .
-  op '_`,_ : 'TermList 'CTermList -> 'CTermList [assoc ctor prec(120) gather('e
+  op '_`,_ : 'TermList 'CTermList -> 'CTermList [assoc ctor prec(121) gather('e
     'E)] .
-  op '_`,_ : 'TermList 'TermList -> 'TermList [assoc ctor prec(120) gather('e
+  op '_`,_ : 'TermList 'TermList -> 'TermList [assoc ctor prec(121) gather('e
     'E)] .
   op '_`[_`] : 'Qid 'CTermList -> 'Context [ctor] .
   op '_`[_`] : 'Qid 'GroundTermList -> 'GroundTerm [ctor] .
@@ -3130,15 +3130,15 @@ result FModule: fmod 'META-LEVEL is
   op '__ : 'Trace 'Trace -> 'Trace [assoc ctor id('nil.Trace) format('d 'n 'd)]
     .
   op '__ : 'TypeList 'TypeList -> 'TypeList [assoc ctor id('nil.TypeList)] .
-  op '_`,_ : 'CTermList 'TermList -> 'CTermList [assoc ctor prec(120) gather('e
+  op '_`,_ : 'CTermList 'TermList -> 'CTermList [assoc ctor prec(121) gather('e
     'E)] .
   op '_`,_ : 'GroundTermList 'GroundTermList -> 'GroundTermList [assoc ctor
-    prec(120) gather('e 'E)] .
+    prec(121) gather('e 'E)] .
   op '_`,_ : 'RenamingSet 'RenamingSet -> 'RenamingSet [assoc comm ctor prec(
     43) format('d 'd 'ni 'd)] .
-  op '_`,_ : 'TermList 'CTermList -> 'CTermList [assoc ctor prec(120) gather('e
+  op '_`,_ : 'TermList 'CTermList -> 'CTermList [assoc ctor prec(121) gather('e
     'E)] .
-  op '_`,_ : 'TermList 'TermList -> 'TermList [assoc ctor prec(120) gather('e
+  op '_`,_ : 'TermList 'TermList -> 'TermList [assoc ctor prec(121) gather('e
     'E)] .
   op '_`[_`] : 'Qid 'CTermList -> 'Context [ctor] .
   op '_`[_`] : 'Qid 'GroundTermList -> 'GroundTerm [ctor] .
@@ -4278,17 +4278,17 @@ result ResultPair: {'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,
     ''TypeList.Sort],''TypeList.Sort,'__['assoc.Attr,'ctor.Attr,'id[
     ''nil.TypeList.Constant]]],'op_:_->_`[_`].[''_`,_.Qid,'__[''CTermList.Sort,
     ''TermList.Sort],''CTermList.Sort,'__['assoc.Attr,'ctor.Attr,'gather['__[
-    ''e.Sort,''E.Sort]],'prec['s_^120['0.Zero]]]],'op_:_->_`[_`].[''_`,_.Qid,
+    ''e.Sort,''E.Sort]],'prec['s_^121['0.Zero]]]],'op_:_->_`[_`].[''_`,_.Qid,
     '__[''GroundTermList.Sort,''GroundTermList.Sort],''GroundTermList.Sort,'__[
-    'assoc.Attr,'ctor.Attr,'gather['__[''e.Sort,''E.Sort]],'prec['s_^120[
+    'assoc.Attr,'ctor.Attr,'gather['__[''e.Sort,''E.Sort]],'prec['s_^121[
     '0.Zero]]]],'op_:_->_`[_`].[''_`,_.Qid,'__[''RenamingSet.Sort,
     ''RenamingSet.Sort],''RenamingSet.Sort,'__['assoc.Attr,'comm.Attr,
     'ctor.Attr,'format['__[''d.Sort,''d.Sort,''ni.Sort,''d.Sort]],'prec['s_^43[
     '0.Zero]]]],'op_:_->_`[_`].[''_`,_.Qid,'__[''TermList.Sort,
     ''CTermList.Sort],''CTermList.Sort,'__['assoc.Attr,'ctor.Attr,'gather['__[
-    ''e.Sort,''E.Sort]],'prec['s_^120['0.Zero]]]],'op_:_->_`[_`].[''_`,_.Qid,
+    ''e.Sort,''E.Sort]],'prec['s_^121['0.Zero]]]],'op_:_->_`[_`].[''_`,_.Qid,
     '__[''TermList.Sort,''TermList.Sort],''TermList.Sort,'__['assoc.Attr,
-    'ctor.Attr,'gather['__[''e.Sort,''E.Sort]],'prec['s_^120['0.Zero]]]],
+    'ctor.Attr,'gather['__[''e.Sort,''E.Sort]],'prec['s_^121['0.Zero]]]],
     'op_:_->_`[_`].[''_`[_`].Qid,'__[''Qid.Sort,''CTermList.Sort],
     ''Context.Sort,'ctor.Attr],'op_:_->_`[_`].[''_`[_`].Qid,'__[''Qid.Sort,
     ''GroundTermList.Sort],''GroundTerm.Sort,'ctor.Attr],'op_:_->_`[_`].[
@@ -5425,18 +5425,18 @@ result GroundTerm: 'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,'nil.ImportList,
     'op_:_->_`[_`].[''__.Sort,'__[''TypeList.Sort,''TypeList.Sort],
     ''TypeList.Sort,'__['assoc.Attr,'ctor.Attr,'id[''nil.TypeList.Constant]]],
     'op_:_->_`[_`].[''_`,_.Qid,'__[''CTermList.Sort,''TermList.Sort],
-    ''CTermList.Sort,'__['assoc.Attr,'ctor.Attr,'prec['s_^120['0.Zero]],
+    ''CTermList.Sort,'__['assoc.Attr,'ctor.Attr,'prec['s_^121['0.Zero]],
     'gather['__[''e.Sort,''E.Sort]]]],'op_:_->_`[_`].[''_`,_.Qid,'__[
     ''GroundTermList.Sort,''GroundTermList.Sort],''GroundTermList.Sort,'__[
-    'assoc.Attr,'ctor.Attr,'prec['s_^120['0.Zero]],'gather['__[''e.Sort,
+    'assoc.Attr,'ctor.Attr,'prec['s_^121['0.Zero]],'gather['__[''e.Sort,
     ''E.Sort]]]],'op_:_->_`[_`].[''_`,_.Qid,'__[''RenamingSet.Sort,
     ''RenamingSet.Sort],''RenamingSet.Sort,'__['assoc.Attr,'comm.Attr,
     'ctor.Attr,'prec['s_^43['0.Zero]],'format['__[''d.Sort,''d.Sort,''ni.Sort,
     ''d.Sort]]]],'op_:_->_`[_`].[''_`,_.Qid,'__[''TermList.Sort,
     ''CTermList.Sort],''CTermList.Sort,'__['assoc.Attr,'ctor.Attr,'prec[
-    's_^120['0.Zero]],'gather['__[''e.Sort,''E.Sort]]]],'op_:_->_`[_`].[
+    's_^121['0.Zero]],'gather['__[''e.Sort,''E.Sort]]]],'op_:_->_`[_`].[
     ''_`,_.Qid,'__[''TermList.Sort,''TermList.Sort],''TermList.Sort,'__[
-    'assoc.Attr,'ctor.Attr,'prec['s_^120['0.Zero]],'gather['__[''e.Sort,
+    'assoc.Attr,'ctor.Attr,'prec['s_^121['0.Zero]],'gather['__[''e.Sort,
     ''E.Sort]]]],'op_:_->_`[_`].[''_`[_`].Qid,'__[''Qid.Sort,''CTermList.Sort],
     ''Context.Sort,'ctor.Attr],'op_:_->_`[_`].[''_`[_`].Qid,'__[''Qid.Sort,
     ''GroundTermList.Sort],''GroundTerm.Sort,'ctor.Attr],'op_:_->_`[_`].[
@@ -6575,18 +6575,18 @@ result ResultPair: {'fmod_is_sorts_.____endfm[''META-LEVEL.Sort,
     'op_:_->_`[_`].[''__.Sort,'__[''TypeList.Sort,''TypeList.Sort],
     ''TypeList.Sort,'__['assoc.Attr,'ctor.Attr,'id[''nil.TypeList.Constant]]],
     'op_:_->_`[_`].[''_`,_.Qid,'__[''CTermList.Sort,''TermList.Sort],
-    ''CTermList.Sort,'__['assoc.Attr,'ctor.Attr,'prec['s_^120['0.Zero]],
+    ''CTermList.Sort,'__['assoc.Attr,'ctor.Attr,'prec['s_^121['0.Zero]],
     'gather['__[''e.Sort,''E.Sort]]]],'op_:_->_`[_`].[''_`,_.Qid,'__[
     ''GroundTermList.Sort,''GroundTermList.Sort],''GroundTermList.Sort,'__[
-    'assoc.Attr,'ctor.Attr,'prec['s_^120['0.Zero]],'gather['__[''e.Sort,
+    'assoc.Attr,'ctor.Attr,'prec['s_^121['0.Zero]],'gather['__[''e.Sort,
     ''E.Sort]]]],'op_:_->_`[_`].[''_`,_.Qid,'__[''RenamingSet.Sort,
     ''RenamingSet.Sort],''RenamingSet.Sort,'__['assoc.Attr,'comm.Attr,
     'ctor.Attr,'prec['s_^43['0.Zero]],'format['__[''d.Sort,''d.Sort,''ni.Sort,
     ''d.Sort]]]],'op_:_->_`[_`].[''_`,_.Qid,'__[''TermList.Sort,
     ''CTermList.Sort],''CTermList.Sort,'__['assoc.Attr,'ctor.Attr,'prec[
-    's_^120['0.Zero]],'gather['__[''e.Sort,''E.Sort]]]],'op_:_->_`[_`].[
+    's_^121['0.Zero]],'gather['__[''e.Sort,''E.Sort]]]],'op_:_->_`[_`].[
     ''_`,_.Qid,'__[''TermList.Sort,''TermList.Sort],''TermList.Sort,'__[
-    'assoc.Attr,'ctor.Attr,'prec['s_^120['0.Zero]],'gather['__[''e.Sort,
+    'assoc.Attr,'ctor.Attr,'prec['s_^121['0.Zero]],'gather['__[''e.Sort,
     ''E.Sort]]]],'op_:_->_`[_`].[''_`[_`].Qid,'__[''Qid.Sort,''CTermList.Sort],
     ''Context.Sort,'ctor.Attr],'op_:_->_`[_`].[''_`[_`].Qid,'__[''Qid.Sort,
     ''GroundTermList.Sort],''GroundTerm.Sort,'ctor.Attr],'op_:_->_`[_`].[

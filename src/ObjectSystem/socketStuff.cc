@@ -166,7 +166,7 @@ SocketManagerSymbol::createClientTcpSocket(FreeDagNode* message, ObjectSystemRew
 	}
       return true;
     }
-  DebugAdvisory("declined message: " << message);
+  IssueAdvisory("socket manager declined malformed message " << QUOTE(message) << '.');
   return false;
 }
 
@@ -247,7 +247,7 @@ SocketManagerSymbol::createServerTcpSocket(FreeDagNode* message, ObjectSystemRew
       activeSockets[fd].state = LISTENING;  // HACK - already set to nominal
      return true;
     }
-  DebugAdvisory("declined message: " << message);
+  IssueAdvisory("socket manager declined malformed message " << QUOTE(message) << '.');
   return false;
 }
 
@@ -255,7 +255,8 @@ bool
 SocketManagerSymbol::acceptClient(FreeDagNode* message, ObjectSystemRewritingContext& context)
 {
   int socketId;
-  if (getActiveSocket(message->getArgument(0), socketId))
+  DagNode* socketName = message->getArgument(0);
+  if (getActiveSocket(socketName, socketId))
     {
       ActiveSocket& as = activeSockets[socketId];
       if (as.state == LISTENING)
@@ -289,8 +290,10 @@ SocketManagerSymbol::acceptClient(FreeDagNode* message, ObjectSystemRewritingCon
 	    }
 	  return true;
 	}
+      IssueAdvisory(socketName << " declined message " << QUOTE(message) << '.');
+      return false;
     }
-  DebugAdvisory("declined message: " << message);
+  IssueAdvisory("no socket to receive message " << QUOTE(message) << '.');
   return false;
 }
 
@@ -299,7 +302,8 @@ SocketManagerSymbol::send(FreeDagNode* message, ObjectSystemRewritingContext& co
 {
   int socketId;
   crope text;
-  if (getActiveSocket(message->getArgument(0), socketId) &&
+  DagNode* socketName = message->getArgument(0);
+  if (getActiveSocket(socketName, socketId) &&
       getText(message->getArgument(2), text) &&
       text.size() != 0)
     {
@@ -342,8 +346,10 @@ SocketManagerSymbol::send(FreeDagNode* message, ObjectSystemRewritingContext& co
 	    }
 	  return true;
 	}
+      IssueAdvisory(socketName << " declined message " << QUOTE(message) << '.');
+      return false;
     }
-  DebugAdvisory("declined message: " << message);
+  IssueAdvisory("no socket to receive message " << QUOTE(message) << '.');
   return false;
 }
 
@@ -391,8 +397,12 @@ SocketManagerSymbol::receive(FreeDagNode* message, ObjectSystemRewritingContext&
 	    }
 	  return true;
 	}
+      else
+	DebugAdvisory("as.state = " << as.state);
+      IssueAdvisory(socketName << " declined message " << QUOTE(message) << '.');
+      return false;
     }
-  DebugAdvisory("declined message: " << message);
+  IssueAdvisory("no socket to receive message " << QUOTE(message) << '.');
   return false;
 }
 
@@ -406,7 +416,7 @@ SocketManagerSymbol::closeSocket(FreeDagNode* message, ObjectSystemRewritingCont
       closedSocketReply(socketId, "", message, context);
       return true;
     }
-  DebugAdvisory("declined message: " << message);
+  IssueAdvisory("no socket to receive message " << QUOTE(message) << '.');
   return false;
 }
 

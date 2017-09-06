@@ -294,10 +294,10 @@ MixfixModule::findSymbol(int name,
 			 ConnectedComponent* rangeComponent)
 {
   int nrArgs = domainComponents.length();
-  int index = symbolNames.int2Index(name);
-  if (index != NONE)
+  IntMap::const_iterator first = firstSymbols.find(name);
+  if (first != firstSymbols.end())
     {
-      for (int i = firstSymbols[index]; i != NONE; i = symbolInfo[i].next)
+      for (int i = first->second; i != NONE; i = symbolInfo[i].next)
 	{
 	  Symbol* s = getSymbols()[i];
 	  Assert(s->id() == name, "name lookup error " <<

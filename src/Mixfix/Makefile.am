@@ -130,6 +130,7 @@ lexer.cc: \
 
 EXTRA_DIST = \
 	renameModule.cc \
+	parameterization.cc \
 	lexerAux.cc \
 	import.cc \
 	process.cc \

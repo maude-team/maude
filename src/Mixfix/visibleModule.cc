@@ -49,7 +49,7 @@
 #include "visibleModule.hh"
 
 VisibleModule::VisibleModule(int name, ModuleType moduleType, Entity::User* parent)
-  : ImportModule(name, moduleType, parent)
+  : ImportModule(name, moduleType, TEXT, parent)
 {
 }
 
@@ -161,7 +161,17 @@ VisibleModule::showSortsAndSubsorts(ostream& s) const
 void
 VisibleModule::showModule(ostream& s, bool all) const
 {
-  s << moduleTypeString(getModuleType()) << ' ' << this << " is\n";
+  s << moduleTypeString(getModuleType()) << ' ' << this;
+  int nrParameters = getNrFreeParameters();
+  if (nrParameters > 0)
+    {
+      s << '{' << Token::name(getFreeParameterName(0)) << " :: " << getFreeParameterTheory(0);
+      for (int i = 1; i < nrParameters; ++i)
+	s << ", " << Token::name(getFreeParameterName(i)) << " :: " << getFreeParameterTheory(i);
+      s << '}';
+    }
+  s << " is\n";
+
   showSorts1(s, true, all);
   showSubsorts(s, true, all);
   showPolymorphs(s, true, all);

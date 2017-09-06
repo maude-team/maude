@@ -54,7 +54,7 @@ public:
   enum AuxProperties
   {
     AUX_SORT,
-    AUX_PARAMETERIZED_SORT,
+    AUX_STRUCTURED_SORT,
     AUX_VARIABLE,
     AUX_CONSTANT,
     AUX_KIND

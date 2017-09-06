@@ -101,7 +101,7 @@ ModuleDatabase::setOmodInclude(Token name, bool polarity)
   if (polarity)
     defaultOmodIncludes.insert(code);
   else
-    defaultOmodIncludes.subtract(code);
+    defaultOmodIncludes.erase(code);
 }
 
 void
