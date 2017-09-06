@@ -75,7 +75,7 @@ UnificationProblem::UnificationProblem(Vector<Term*>& lhs,
   rightHandSides.swap(rhs);
   sortBdds = leftHandSides[0]->symbol()->getModule()->getSortBdds();
   //
-  //	Preprocess terms .
+  //	Preprocess terms.
   //
   int nrEquations = leftHandSides.size();
   for (int i = 0; i < nrEquations; ++i)
@@ -88,7 +88,7 @@ UnificationProblem::UnificationProblem(Vector<Term*>& lhs,
       rhs->indexVariables(variableInfo);
     }
   //
-  //	Check that variables have safe names
+  //	Check that variables have safe names.
   //
   int nrOriginalVariables = variableInfo.getNrRealVariables();
   for (int i = 0; i < nrOriginalVariables; ++i)
@@ -478,67 +478,3 @@ UnificationProblem::findOrderSortedUnifiers()
 	}
     }
 }
-
-/*
-bool
-UnificationProblem::extractUnifier()
-{
-  //
-  //	We try to extract a unifier from the solved form by first ordering
-  //	bound variables by their dependencies and if that can be done, by
-  //	instantiating their bindings in that order.
-  //
-  int nrOriginalVariables = variableInfo.getNrRealVariables();
-  order.clear();
-  done.clear();
-  pending.clear();
-  for (int i = 0; i < nrOriginalVariables; ++i)
-    {
-      if (!explore(i))
-	return false;
-    }
-  FOR_EACH_CONST(i, Vector<int>, order)
-    {
-      //cout << "processing " << *i << endl;
-      if (DagNode* d = unsortedSolution->value(*i)->instantiate(*unsortedSolution))
-	unsortedSolution->bind(*i, d);
-    }
-  return true;
-}
-
-bool
-UnificationProblem::explore(int index)
-{
-  //
-  //	Depth-first exploration of the dependencies of the binding for the
-  //	variable with a given index.
-  //
-  if (done.contains(index))
-    return true;
-  DagNode* d = unsortedSolution->value(index);
-  if (d == 0)
-    {
-      done.insert(index);
-      return true;
-    }
-  NatSet occurs;
-  d->insertVariables(occurs);
-  if (!occurs.disjoint(pending))
-    return false;  // dependency cycle
-  occurs.subtract(done);
-  if (!occurs.empty())
-    {
-      pending.insert(index);
-      FOR_EACH_CONST(i, NatSet, occurs)
-	{
-	  if (!explore(*i))
-	    return false;
-	}
-      pending.subtract(index);
-    }
-  order.append(index);
-  done.insert(index);
-  return true; 
-}
-*/
-

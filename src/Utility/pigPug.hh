@@ -60,6 +60,8 @@ public:
   //
   int getNextUnifier(Subst& unifier);
 
+  static void dumpWord(ostream& s, const Word& word);
+
 private:
   enum Moves
     {
@@ -101,8 +103,8 @@ private:
 
   struct Unificand
   {
-    int index;
-    Word word;
+    int index;		// to record the size of the cancelled prefix
+    Word word;		// the word of variables
   };
 
   typedef list<Unificand> UnificandStack;

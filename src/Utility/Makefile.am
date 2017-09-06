@@ -28,7 +28,9 @@ libutility_a_SOURCES = \
 	intSystem.cc \
 	allSat.cc \
 	sequenceAssignment.cc \
-	pigPug.cc
+	pigPug.cc \
+	wordLevel.cc \
+	wordSystem.cc
 
 noinst_HEADERS = \
 	bdd.hh \
@@ -62,11 +64,15 @@ noinst_HEADERS = \
 	intSystem.hh \
 	allSat.hh \
 	sequenceAssignment.hh \
-	pigPug.hh
+	pigPug.hh \
+	wordLevel.hh \
+	wordSystem.hh
 
 EXTRA_DIST = \
 	intContejeanDevie.cc \
 	mpzContejeanDevie.cc \
 	mpzGcdInit.cc \
 	mpzGcdTrivial.cc \
-	mpzGcdBasedSolver.cc
+	mpzGcdBasedSolver.cc \
+	wordLevel-simplifyAssignments.cc \
+	wordLevel-simplifyEquations.cc

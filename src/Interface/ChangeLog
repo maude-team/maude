@@ -1,3 +1,10 @@
+2015-08-06  Steven Eker  <eker@ape.csl.sri.com>
+
+	* dagNode.cc (computeSolvedForm2): use flagAsUnimplemented()
+	(hash): deleted ifdef'd out code
+	(computeSolvedForm2): don't use flagAsUnimplemented() after all;
+	instead use CantHappen()
+
 2014-02-18  Steven Eker  <eker@ape.csl.sri.com>
 
 	* symbol.hh (MemoTable): deleted inline stubs for

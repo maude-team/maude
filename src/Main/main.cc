@@ -33,6 +33,7 @@
 #include "vector.hh"
 #include "tty.hh"
 
+
 //      forward declarations
 #include "interface.hh"
 #include "core.hh"
@@ -63,14 +64,16 @@
 #include "interpreter.hh"
 #include "global.hh"
 
-
+#ifdef USE_CVC4
 #include "cvc4/expr/expr_manager.h"
 #include "cvc4/smt/smt_engine.h"
 
 using namespace CVC4;
+#endif
 
 #include "pigPug.hh"
-
+#include "wordLevel.hh"
+#include "wordSystem.hh"
 void
 testPigPug()
 {
@@ -284,6 +287,7 @@ testPigPug2()
   cout << "total = " << c << endl;
 }
 
+#ifdef USE_CVC4
 void
 testCVC4()
 {
@@ -379,13 +383,342 @@ test4()
   smt.pop();
 
 }
+#endif
 
+void
+testWordLevel()
+{
+  WordLevel l(10, 1);
+  for (int i = 0; i < 5; ++i)
+    l.addConstraint(i, NONE);
+  for (int i = 5; i < 7; ++i)
+    l.addConstraint(i, PigPug::ELEMENT);
+  for (int i = 7; i < 10; ++i)
+    l.addConstraint(i, i);
+
+  WordLevel::Word w0;
+  w0.append(3); w0.append(6);
+  l.addAssignment(0, w0);
+
+  WordLevel::Word w2;
+  w2.append(4); w2.append(7); w2.append(4);
+  l.addAssignment(2, w2);
+
+  WordLevel::Word w6;
+  w6.append(8);
+  l.addAssignment(6, w6);
+
+  WordLevel::Word l0;
+  l0.append(0); l0.append(1);
+  WordLevel::Word r0;
+  r0.append(2); r0.append(2);
+  l.addEquation(0, l0, r0);
+
+  l.dump(cout);
+  cout << "simplify returns " << l.simplify() << endl;
+  l.dump(cout);
+}
+
+void
+testWordLevel2()
+{
+  WordLevel l(10, 1);
+  for (int i = 0; i < 5; ++i)
+    l.addConstraint(i, NONE);
+  for (int i = 5; i < 7; ++i)
+    l.addConstraint(i, PigPug::ELEMENT);
+  for (int i = 7; i < 10; ++i)
+    l.addConstraint(i, i);
+
+  WordLevel::Word w0;
+  w0.append(1); w0.append(2);
+  l.addAssignment(0, w0);
+
+  WordLevel::Word w1;
+  w1.append(7); w1.append(8);
+  l.addAssignment(1, w1);
+
+  WordLevel::Word w2;
+  w2.append(8); w2.append(8);
+  l.addAssignment(2, w2);
+
+  WordLevel::Word w3;
+  w3.append(0); w3.append(4);
+  l.addAssignment(3, w3);
+
+  WordLevel::Word w4;
+  w4.append(5); w4.append(0);
+  l.addAssignment(4, w4);
+
+
+  WordLevel::Word l0;
+  l0.append(5); l0.append(6);
+  WordLevel::Word r0;
+  r0.append(8); r0.append(9);
+  l.addEquation(0, l0, r0);
+
+  l.dump(cout);
+  cout << "simplify returns " << l.simplify() << endl;
+  l.dump(cout);
+}
+
+void
+testWordLevel3()
+{
+  WordLevel l(10, 3);
+  for (int i = 0; i < 5; ++i)
+    l.addConstraint(i, NONE);
+  for (int i = 5; i < 7; ++i)
+    l.addConstraint(i, PigPug::ELEMENT);
+  for (int i = 7; i < 10; ++i)
+    l.addConstraint(i, i);
+
+  WordLevel::Word l0;
+  l0.append(1); l0.append(1); l0.append(3);
+  WordLevel::Word r0;
+  r0.append(2); r0.append(4); r0.append(4);
+  l.addEquation(0, l0, r0);
+
+  WordLevel::Word l1;
+  l1.append(0); l1.append(1);
+  WordLevel::Word r1;
+  r1.append(5); r1.append(2);
+  l.addEquation(1, l1, r1);
+
+  WordLevel::Word l2;
+  l2.append(0); l2.append(5);
+  WordLevel::Word r2;
+  r2.append(6); r2.append(7);
+  l.addEquation(2, l2, r2);
+
+
+  l.dump(cout);
+  cout << "simplify returns " << l.simplify() << endl;
+  l.dump(cout);
+}
+
+void
+testWordLevel4()
+{
+  WordLevel l(10, 1);
+  for (int i = 0; i < 5; ++i)
+    l.addConstraint(i, NONE);
+  for (int i = 5; i < 7; ++i)
+    l.addConstraint(i, PigPug::ELEMENT);
+  for (int i = 7; i < 10; ++i)
+    l.addConstraint(i, i);
+  //
+  //	x8 x0 =? x9 x1 theory clash
+  //
+  WordLevel::Word l0;
+  l0.append(8); l0.append(0);
+  WordLevel::Word r0;
+  r0.append(9); r0.append(1);
+  l.addEquation(0, l0, r0);
+
+  l.dump(cout);
+  cout << "simplify returns " << l.simplify() << endl;
+  l.dump(cout);
+}
+
+void
+testWordLevel5()
+{
+  WordLevel l(10, 1);
+  for (int i = 0; i < 5; ++i)
+    l.addConstraint(i, NONE);
+  for (int i = 5; i < 7; ++i)
+    l.addConstraint(i, PigPug::ELEMENT);
+  for (int i = 7; i < 10; ++i)
+    l.addConstraint(i, i);
+  //
+  //  x0 |-> x1 x2
+  //  x1 |-> x2 x3
+  //  x2 |-> x3 x0
+  //
+  WordLevel::Word w0;
+  w0.append(1); w0.append(2);
+  l.addAssignment(0, w0);
+
+  WordLevel::Word w1;
+  w1.append(2); w1.append(3);
+  l.addAssignment(1, w1);
+
+  WordLevel::Word w2;
+  w2.append(3); w2.append(0);
+  l.addAssignment(2, w2);
+  //
+  // x0 x3 =? x1 x4
+  //
+  WordLevel::Word l0;
+  l0.append(0); l0.append(3);
+  WordLevel::Word r0;
+  r0.append(1); r0.append(4);
+  l.addEquation(0, l0, r0);
+  l.dump(cout);
+  cout << "simplify returns " << l.simplify() << endl;
+  l.dump(cout);
+}
+
+void
+testWordLevel6()
+{
+  WordLevel l(10, 1);
+  for (int i = 0; i < 5; ++i)
+    l.addConstraint(i, NONE);
+  for (int i = 5; i < 7; ++i)
+    l.addConstraint(i, PigPug::ELEMENT);
+  for (int i = 7; i < 10; ++i)
+    l.addConstraint(i, i);
+  //
+  //  x0 |-> x1 x2
+  //  x1 |-> x2 x3
+  //  x2 |-> x3 x0
+  //
+  WordLevel::Word w0;
+  w0.append(1); w0.append(4);
+  l.addAssignment(0, w0);
+
+  WordLevel::Word w1;
+  w1.append(2); w1.append(3);
+  l.addAssignment(1, w1);
+
+  WordLevel::Word w2;
+  w2.append(3); w2.append(0);
+  l.addAssignment(2, w2);
+  //
+  // x0 x3 =? x1 x4
+  //
+  WordLevel::Word l0;
+  l0.append(0); l0.append(3);
+  WordLevel::Word r0;
+  r0.append(1); r0.append(4);
+  l.addEquation(0, l0, r0);
+  l.dump(cout);
+  cout << "simplify returns " << l.simplify() << endl;
+  l.dump(cout);
+}
+
+void
+testWordLevel7()
+{
+  WordLevel l(10, 1);
+  for (int i = 0; i < 5; ++i)
+    l.addConstraint(i, NONE);
+  for (int i = 5; i < 7; ++i)
+    l.addConstraint(i, PigPug::ELEMENT);
+  for (int i = 7; i < 10; ++i)
+    l.addConstraint(i, i);
+  //
+  // x5 x0 =? x7 x1 x0 x2
+  //
+  WordLevel::Word l0;
+  l0.append(5); l0.append(0);
+  WordLevel::Word r0;
+  r0.append(7); r0.append(1); r0.append(0); r0.append(2);
+  l.addEquation(0, l0, r0);
+  l.dump(cout);
+  cout << "simplify returns " << l.simplify() << endl;
+  l.dump(cout);
+}
+
+void
+testWordLevel8()
+{
+  WordLevel l(10, 1);
+  for (int i = 0; i < 5; ++i)
+    l.addConstraint(i, NONE);
+  for (int i = 5; i < 7; ++i)
+    l.addConstraint(i, PigPug::ELEMENT);
+  for (int i = 7; i < 10; ++i)
+    l.addConstraint(i, i);
+  //
+  // x5 x6 =? x7 x0 x2
+  //
+  WordLevel::Word l0;
+  l0.append(5); l0.append(6);
+  WordLevel::Word r0;
+  r0.append(7); r0.append(0); r0.append(2);
+  l.addEquation(0, l0, r0);
+  l.dump(cout);
+  cout << "simplify returns " << l.simplify() << endl;
+  l.dump(cout);
+}
+
+void
+testWordSystem1()
+{
+  WordSystem s(10, 2);
+  for (int i = 0; i < 10; ++i)
+    s.addConstraint(i, NONE);
+ 
+  WordLevel::Word l0;
+  l0.append(0); l0.append(1);
+  WordLevel::Word r0;
+  r0.append(2); r0.append(3);
+  s.addEquation(0, l0, r0);
+
+  WordLevel::Word r1;
+  r1.append(4); r1.append(5);
+  s.addEquation(1, l0, r1);
+
+  int solNr = 0;
+  while(s.findNextSolution())
+    {
+      cout << "Solution " << ++solNr << endl;
+      for (int i = 0; i <= 5; ++i)
+	{
+	  cout << "x" << i << " |-> ";
+	  const WordSystem::Word& w = s.getAssignment(i);
+	  FOR_EACH_CONST(j, WordSystem::Word, w)
+	    cout << " x" << *j;
+	  cout << endl;
+	}
+    }
+  cout << "no more solutions" << endl;
+}
+
+void
+testWordSystem2()
+{
+  WordSystem s(10, 2);
+  for (int i = 0; i < 10; ++i)
+    s.addConstraint(i, NONE);
+ 
+  WordLevel::Word l0;
+  l0.append(0); l0.append(1);
+  WordLevel::Word r0;
+  r0.append(2); r0.append(3); r0.append(2);
+  s.addEquation(0, l0, r0);
+
+  WordLevel::Word l1;
+  l1.append(4); l1.append(5);
+  WordLevel::Word r1;
+  r1.append(0); r1.append(3); r1.append(1);
+  s.addEquation(1, l1, r1);
+
+  int solNr = 0;
+  while(s.findNextSolution())
+    {
+      cout << "Solution " << ++solNr << endl;
+      for (int i = 0; i <= 5; ++i)
+	{
+	  cout << "x" << i << " |-> ";
+	  const WordSystem::Word& w = s.getAssignment(i);
+	  FOR_EACH_CONST(j, WordSystem::Word, w)
+	    cout << " x" << *j;
+	  cout << endl;
+	}
+    }
+  cout << "no more solutions" << endl;
+}
 
 
 int
 main(int argc, char* argv[])
 {
-  void testSeq();
+  //testWordSystem2(); exit(0);
+  //void testSeq();
 
   //testPigPug2();
   //testSeq();

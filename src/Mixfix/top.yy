@@ -59,8 +59,9 @@
 #define store(token)		tokenSequence.append(token)
 #define fragClear()		fragments.contractTo(0);
 #define fragStore(token)	fragments.append(token)
-#define YYPARSE_PARAM	parseResult
-#define PARSE_RESULT	(*((UserLevelRewritingContext::ParseResult*) parseResult))
+//#define YYPARSE_PARAM	parseResult
+//#define PARSE_RESULT	(*((UserLevelRewritingContext::ParseResult*) parseResult))
+#define PARSE_RESULT	(*parseResult)
 
 #define CM		interpreter.getCurrentModule()
 #define CV		interpreter.getCurrentView()
@@ -91,13 +92,14 @@ SyntaxContainer* oldSyntaxContainer = 0;
 Int64 number;
 Int64 number2;
 
-static void yyerror(char *s);
+static void yyerror(UserLevelRewritingContext::ParseResult* parseResult, char *s);
 
 void cleanUpModuleExpression();
 void cleanUpParser();
 void missingSpace(const Token& token);
 %}
-%pure_parser
+%pure-parser
+%parse-param {UserLevelRewritingContext::ParseResult* parseResult}
 
 %union
 {

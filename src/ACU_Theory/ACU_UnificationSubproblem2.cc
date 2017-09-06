@@ -441,9 +441,16 @@ ACU_UnificationSubproblem2::classify(int subtermIndex,
   //	We look to see if the top symbol is stable.
   //
   Symbol* symbol = subject->symbol();
-  DebugAdvisory("ACU_UnificationSubproblem2::classify() symbol = " << symbol <<
-	        " symbol->isStable() = " << symbol->isStable());
-  if (symbol->isStable())
+  DebugAdvisory("ACU_UnificationSubproblem2::classify() subject = " << subject <<
+	        " symbol->isStable() = " << symbol->isStable() <<
+		" subject->isGround() = " << subject->isGround());
+  if (subject->isGround())
+    {
+      upperBound = 1;  // ground alien can unify with at most one thing
+      canTakeIdentity = false;  // identity should not appear as a subterm
+      stableSymbol = symbol;
+    }
+  else if (symbol->isStable())
     {
       //
       //	Anything that unifies with subject must have symbol on top.

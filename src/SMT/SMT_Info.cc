@@ -24,7 +24,7 @@
 //      Implementation for class SMT_Info.
 //
 
-#include "cvc4/util/divisible.h"
+//#include "cvc4/util/divisible.h"
 
 //      utility stuff
 #include "macros.hh"

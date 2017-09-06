@@ -42,11 +42,28 @@ PigPug::PigPug(const Word& lhs,
   rhsStack.push_back(Unificand());
   rhsStack.back().index = 0;
   rhsStack.back().word = rhs;  // deep copy
+  /*
+  cout << "Pig Pug created" << endl;
+  dumpWord(cout, lhs);
+  cout << " =? ";
+  dumpWord(cout, rhs);
+  cout << endl;
+  */
+}
+
+void
+PigPug::dumpWord(ostream& s, const Word& word)
+{
+  FOR_EACH_CONST(i, Word, word)
+    s << "x" << *i << " ";
 }
 
 int
 PigPug::getNextUnifier(Subst& unifier)
 {
+  //
+  //	Returns NONE or index of next unused variable.
+  //
   int result = run(path.empty() ? OK : FAIL);
   if (result == FAIL)
     return NONE;  // no more solutions
@@ -114,9 +131,9 @@ PigPug::equate()
   //
   //	Given
   //	  x... =? y...
-  //	we try to make x and y equal and cancel them. Whether we put x |-> y or y |-> y
+  //	we try to make x and y equal and cancel them. Whether we put x |-> y or y |-> x
   //	depends on which variable is least constrained - we want to replace
-  //	the least constrained variable with more more constrained variable
+  //	the least constrained variable with more constrained variable
   //	breaking ties with x |-> y because if x in unconstrained it must be linear.
   //
   //	In all other cases, the variable being replaced may be nonlinear so we
@@ -465,7 +482,7 @@ PigPug::run(int result)
 	result = firstMove();
       else
 	{
-	  if (result == FAIL || !completed(result))
+	  if (result == FAIL || completed(result) == FAIL)
 	    {
 	      if (path.empty())
 		break;

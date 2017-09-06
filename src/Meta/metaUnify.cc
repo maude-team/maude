@@ -88,8 +88,9 @@ MetaLevelOpSymbol::metaUnify2(FreeDagNode* subject, RewritingContext& context, b
 	    {
 	      if (!(unification->findNextUnifier()))
 		{
+		  bool incomplete = unification->isIncomplete();
 		  delete unification;
-		  result = disjoint ? metaLevel->upNoUnifierTriple() : metaLevel->upNoUnifierPair();
+		  result = disjoint ? metaLevel->upNoUnifierTriple(incomplete) : metaLevel->upNoUnifierPair(incomplete);
 		  goto fail;
 		}
 	    }

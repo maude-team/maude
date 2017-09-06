@@ -334,6 +334,16 @@ S_Symbol::termify(DagNode* dagNode)
 //	Unification code.
 //
 
+int 
+S_Symbol::unificationPriority() const
+{
+  //
+  //	We don't expect this to be used by current code since there are no S Theory
+  //	unification subproblems.
+  //
+  return 1;
+}
+
 void
 S_Symbol::computeSortFunctionBdds(const SortBdds& /* sortBdds */, Vector<Bdd>& /* sortFunctionBdds */) const
 {

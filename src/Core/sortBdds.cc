@@ -239,7 +239,9 @@ SortBdds::applyLeqRelation(Sort* sort, const Vector<Bdd>& argument) const
   //
   int nrBdds = argument.size();
   Assert(nrBdds == getNrVariables(sort->component()->getIndexWithinModule()),
-	 "wrong number of BDD arguments");
+	 "wrong number of BDD arguments: expecting " << getNrVariables(sort->component()->getIndexWithinModule()) <<
+	 " passed " << nrBdds <<
+	 " sort " << sort);
 
   bddPair* argMap = bdd_newpair();
   for (int i = 0; i < nrBdds; ++i)

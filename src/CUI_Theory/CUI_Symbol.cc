@@ -352,6 +352,17 @@ CUI_Symbol::makeUnificationSubproblem()
   return new CUI_UnificationSubproblem();
 }
 
+int
+CUI_Symbol::unificationPriority() const
+{
+  if (idem())
+    return Symbol::unificationPriority();   // unimplemented
+  //
+  //	Make a rough guess about how branchy we are.
+  //
+  return comm() + 2 * (leftId() + rightId());
+}
+
 bool
 CUI_Symbol::canResolveTheoryClash()
 {

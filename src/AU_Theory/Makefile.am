@@ -21,7 +21,7 @@ libAU_Theory_a_SOURCES = \
 	AU_ArgumentIterator.cc \
 	AU_Layer.cc \
 	AU_Subproblem.cc \
-	AU_UnificationSubproblem.cc
+	AU_UnificationSubproblem2.cc
 
 EXTRA_DIST = \
 	AU_DagOperations.cc \
@@ -32,8 +32,6 @@ EXTRA_DIST = \
 	AU_FullMatcher.cc \
 	AU_GreedyMatcher.cc \
 	AU_DequeMatcher.cc \
-	AU_OldUnificationAlgorithm.cc \
-	AU_NewUnificationAlgorithm.cc \
 	ChangeLog.A_Theory
 
 noinst_HEADERS = \
@@ -51,4 +49,4 @@ noinst_HEADERS = \
 	AU_Symbol.hh \
 	AU_Term.hh \
 	AU_Theory.hh \
-	AU_UnificationSubproblem.hh
+	AU_UnificationSubproblem2.hh

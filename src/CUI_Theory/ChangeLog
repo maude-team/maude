@@ -1,3 +1,17 @@
+2015-08-05  Steven Eker  <eker@ape.csl.sri.com>
+
+	* CUI_Symbol.hh (BinarySymbol): added declaration for
+	unificationPriority()
+
+	* CUI_Symbol.cc (unificationPriority): added
+
+2015-07-30  Steven Eker  <eker@ape.csl.sri.com>
+
+	* CUI_DagNode.cc (computeBaseSortForGroundSubterms): call
+	setGround() in ground case
+
+===================================Maude108===========================================
+
 2013-03-01  Steven Eker  <eker@ape.csl.sri.com>
 
 	* CUI_DagNode.cc (makePurifiedVersion): code cleaning

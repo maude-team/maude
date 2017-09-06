@@ -1,3 +1,131 @@
+2015-07-24  Steven Eker  <eker@ape.csl.sri.com>
+
+	* wordSystem.hh (W): updated decl for findNextSolution()
+
+	* wordSystem.cc (findNextSolution): returns int
+
+	* wordSystem.hh (W): incompletenessFlag replaces failureFlag
+
+	* wordSystem.cc (findNextSolution): use incompletenessFlag rather
+	than failureFlag
+
+	* wordSystem.hh (W): don't give local name to Outcome
+	(W): added enum OutcomeFlags
+
+	* wordLevel.hh (W): enum OutcomeFlags replaces enum Outcome;
+	ResultPair now has first component int
+	(W): incompletenessFlag replaces failureFlag
+
+	* wordLevel.cc (findNextPartialSolution): use incompletenessFlag
+	rather than failureFlag
+	(chooseEquation): set incompletenessFlag rather than failureFlag
+
+2015-07-17  Steven Eker  <eker@ape.csl.sri.com>
+
+	* wordLevel.hh (W): added data member failureFlag
+
+	* wordSystem.hh (W): added data member failureFlag
+
+	* wordSystem.cc (WordSystem): initialize failureFlag
+	(findNextSolution): handle new WordLevel Outcome value
+
+	* wordLevel.cc (findNextPartialSolution): use enum Outcome
+	(chooseEquation): set failureFlag to INCOMPLETE if we have to add
+	constraints
+	(WordLevel): initialize failureFlag
+
+	* wordLevel.hh (W): added enum Outcome; ResultPair now includes
+	Outcome
+
+2015-07-09  Steven Eker  <eker@ape.csl.sri.com>
+
+	* wordLevel.hh (addAssignment): support multiple assignments for
+	the same variable by turning subsequent assignments into equations
+
+2015-07-08  Steven Eker  <eker@ape.csl.sri.com>
+
+	* wordSystem.hh (getAssignment): made const
+	(getNrVariables): added
+
+	* wordLevel.hh (getNrVariables): added
+	(getAssignment): made const
+
+2015-07-01  Steven Eker  <eker@ape.csl.sri.com>
+
+	* pigPug.hh (P): added decl for dumpWord()
+
+	* pigPug.cc (dumpWord): added
+
+	* wordSystem.hh (getAssignment): added
+
+	* wordLevel.hh (getAssignment): added
+
+2015-06-26  Steven Eker  <eker@ape.csl.sri.com>
+
+	* wordLevel.cc (makePigPug): implemented
+
+	* wordLevel.hh (WordLevel): added decls for chooseEquation(),
+	checkUnconstrainedVariables(), makePigPug()
+
+	* wordLevel.cc (~WordLevel): added
+	(findNextPartialSolution): call getNextUnifier() and
+	makeNewLevel()
+	(chooseEquation): added
+	(checkUnconstrainedVariables): added
+	(makePigPug): added stub
+
+2015-06-25  Steven Eker  <eker@ape.csl.sri.com>
+
+	* wordSystem.cc: created
+
+2015-06-19  Steven Eker  <eker@ape.csl.sri.com>
+
+	* wordLevel-simplifyEquations.cc (simplifyEquation): fixed bug
+	where we were passing the rhs twice to cancel() rather the lhs and
+	rhs
+
+	* wordLevel.cc (dump): handle cancelled equations
+
+2015-06-18  Steven Eker  <eker@ape.csl.sri.com>
+
+	* wordLevel-simplifyEquations.cc (simplifyEquation): newLhs/lhs
+	the wrong way around; ditto rhs
+
+	* wordLevel.hh (addAssignment): was addAssignment()
+
+2015-06-17  Steven Eker  <eker@ape.csl.sri.com>
+
+	* wordLevel.cc (dump): added
+	(dumpWord): added
+
+	* wordLevel.hh (W): added decl for dump()
+
+	* wordLevel-simplifyAssignments.cc (fullyExpandAssignments):
+	missing decl
+	(reallyExpandAssignment): missing qualifier
+
+2015-06-12  Steven Eker  <eker@ape.csl.sri.com>
+
+	* wordLevel-simplifyEquations.cc: created
+
+2015-06-05  Steven Eker  <eker@ape.csl.sri.com>
+
+	* wordLevel-simplifyAssignments.cc: created
+
+	* wordLevel.hh: created
+
+	* wordLevel.cc: created
+
+2015-05-01  Steven Eker  <eker@ape.csl.sri.com>
+
+	* wordSystem.hh: created
+
+2015-04-30  Steven Eker  <eker@ape.csl.sri.com>
+
+	* pigPug.cc (run): compare value returned from completed() to fail
+
+===================================Maude108===========================================
+
 2015-02-12  Steven Eker  <eker@ape.csl.sri.com>
 
 	* pigPug.hh (P): remapVariables() -> renameVariables()

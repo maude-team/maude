@@ -607,15 +607,15 @@ MetaLevel::upFailureTriple()
 }
 
 DagNode*
-MetaLevel::upNoUnifierPair()
+MetaLevel::upNoUnifierPair(bool incomplete)
 {
-  return noUnifierPairSymbol->makeDagNode();
+  return (incomplete ? noUnifierIncompletePairSymbol : noUnifierPairSymbol)->makeDagNode();
 }
 
 DagNode*
-MetaLevel::upNoUnifierTriple()
+MetaLevel::upNoUnifierTriple(bool incomplete)
 {
-  return noUnifierTripleSymbol->makeDagNode();
+  return (incomplete ? noUnifierIncompleteTripleSymbol : noUnifierTripleSymbol)->makeDagNode();
 }
 
 DagNode*
@@ -936,9 +936,9 @@ MetaLevel::upVariant(const Vector<DagNode*>& variant,
 }
 
 DagNode*
-MetaLevel::upNoVariant()
+MetaLevel::upNoVariant(bool incomplete)
 {
-  return noVariantSymbol->makeDagNode();
+  return (incomplete ? noVariantIncompleteSymbol : noVariantSymbol)->makeDagNode();
 }
 
 DagNode*

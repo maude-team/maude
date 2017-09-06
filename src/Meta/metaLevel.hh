@@ -88,7 +88,7 @@ public:
 		     const NarrowingVariableInfo& variableInfo,
 		     const mpz_class& variableIndex,
 		     MixfixModule* m);
-  DagNode* upNoVariant();
+  DagNode* upNoVariant(bool incomplete);
 
   DagNode* upUnificationPair(const Vector<DagNode*>& unifier,
 			     const NarrowingVariableInfo& variableInfo,
@@ -112,8 +112,8 @@ public:
 			  MixfixModule* m,
 			  PointerMap& qidMap,
 			  PointerMap& dagNodeMap);
-  DagNode* upNoUnifierPair();
-  DagNode* upNoUnifierTriple();
+  DagNode* upNoUnifierPair(bool incomplete);
+  DagNode* upNoUnifierTriple(bool incomplete);
   DagNode* upNoMatchSubst();
   DagNode* upNoMatchPair();
   DagNode* upMatchPair(const Substitution& substitution,
