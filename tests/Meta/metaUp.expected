@@ -88,8 +88,20 @@ rl 'rules.RuleSet => 'upRls[''INTROSPECTION.Sort,'false.Bool] [none] .
 ==========================================
 reduce in META-LEVEL : upEqs('META-LEVEL, true) .
 rewrites: 1
-result EquationSet: eq '_;_['A:Assignment,'A:Assignment] = 'A:Assignment [none]
-    .
+result EquationSet: eq '$reverse['nil.EmptyQidList,'A:QidList] = 'A:QidList [
+    none] .
+eq '$reverse['nil.NatList,'A:NatList] = 'A:NatList [none] .
+eq '$reverse['__['E:Nat,'L:NatList],'A:NatList] = '$reverse['L:NatList,'__[
+    'E:Nat,'A:NatList]] [none] .
+eq '$reverse['__['E:Qid,'L:QidList],'A:QidList] = '$reverse['L:QidList,'__[
+    'E:Qid,'A:QidList]] [none] .
+eq '$size['nil.EmptyQidList,'C:Nat] = 'C:Nat [none] .
+eq '$size['nil.NatList,'C:Nat] = 'C:Nat [none] .
+eq '$size['__['E:Nat,'L:NatList],'C:Nat] = '$size['L:NatList,'_+_['C:Nat,'s_[
+    '0.Zero]]] [none] .
+eq '$size['__['E:Qid,'L:QidList],'C:Nat] = '$size['L:QidList,'_+_['C:Nat,'s_[
+    '0.Zero]]] [none] .
+eq '_;_['A:Assignment,'A:Assignment] = 'A:Assignment [none] .
 eq '_;_['T:TypeList,'T:TypeList] = 'T:TypeList [none] .
 eq '__['A:Attr,'A:Attr] = 'A:Attr [none] .
 eq '__['E:Equation,'E:Equation] = 'E:Equation [none] .
@@ -111,6 +123,10 @@ eq '_xor_['false.Bool,'A:Bool] = 'A:Bool [none] .
 eq '`[_`]['Q:Qid] = 'th_is_sorts_._____endth['Q:Qid,'including_.['Q:Qid],
     'none.EmptyTypeSet,'none.SubsortDeclSet,'none.OpDeclSet,'none.MembAxSet,
     'none.EquationSet,'none.RuleSet] [none] .
+eq 'append['A:NatList,'L:NatList] = '__['A:NatList,'L:NatList] [none] .
+eq 'append['A:QidList,'L:QidList] = '__['A:QidList,'L:QidList] [none] .
+eq 'front['__['L:NatList,'E:Nat]] = 'L:NatList [none] .
+eq 'front['__['L:QidList,'E:Qid]] = 'L:QidList [none] .
 eq 'getContext['`{_`,_`,_`,_`}['T:Term,'T:Type,'S:Substitution,'C:Context]] =
     'C:Context [none] .
 eq 'getContext['`{_`,_`}['S:Substitution,'C:Context]] = 'C:Context [none] .
@@ -234,8 +250,24 @@ eq 'getType['`{_`,_`,_`,_`}['T:Term,'T:Type,'S:Substitution,'C:Context]] =
     'T:Type [none] .
 eq 'getType['`{_`,_`,_`}['T:Term,'T:Type,'S:Substitution]] = 'T:Type [none] .
 eq 'getType['`{_`,_`}['T:Term,'T:Type]] = 'T:Type [none] .
+eq 'head['__['E:Nat,'L:NatList]] = 'E:Nat [none] .
+eq 'head['__['E:Qid,'L:QidList]] = 'E:Qid [none] .
+eq 'last['__['L:NatList,'E:Nat]] = 'E:Nat [none] .
+eq 'last['__['L:QidList,'E:Qid]] = 'E:Qid [none] .
 eq 'metaPrettyPrint['M:Module,'T:Term] = 'metaPrettyPrint['M:Module,'T:Term,
     '__['mixfix.PrintOption,'__['flat.PrintOption,'__['format.PrintOption,'__[
     'number.PrintOption,'rat.PrintOption]]]]] [none] .
 eq 'not_['A:Bool] = '_xor_['true.Bool,'A:Bool] [none] .
+eq 'occurs['E:Nat,'nil.NatList] = 'false.Bool [none] .
+eq 'occurs['E:Nat,'__['E':Nat,'L:NatList]] = 'if_then_else_fi['_==_['E:Nat,
+    'E':Nat],'true.Bool,'occurs['E:Nat,'L:NatList]] [none] .
+eq 'occurs['E:Qid,'nil.EmptyQidList] = 'false.Bool [none] .
+eq 'occurs['E:Qid,'__['E':Qid,'L:QidList]] = 'if_then_else_fi['_==_['E:Qid,
+    'E':Qid],'true.Bool,'occurs['E:Qid,'L:QidList]] [none] .
+eq 'reverse['L:NatList] = '$reverse['L:NatList,'nil.NatList] [none] .
+eq 'reverse['L:QidList] = '$reverse['L:QidList,'nil.EmptyQidList] [none] .
+eq 'size['L:NatList] = '$size['L:NatList,'0.Zero] [none] .
+eq 'size['L:QidList] = '$size['L:QidList,'0.Zero] [none] .
+eq 'tail['__['E:Nat,'L:NatList]] = 'L:NatList [none] .
+eq 'tail['__['E:Qid,'L:QidList]] = 'L:QidList [none] .
 Maude> Bye.

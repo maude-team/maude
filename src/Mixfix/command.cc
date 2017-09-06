@@ -24,22 +24,6 @@
 //	Code for general top level commands.
 //
 
-ostream&
-operator<<(ostream& s, const PreModule::Type& type)
-{
-  if (type.kind)
-    {
-      s << '[' << type.tokens[0];
-      int nrTokens = type.tokens.length();
-      for (int i = 1; i < nrTokens; i++)
-	s << ',' << Token::sortName(type.tokens[i].code());
-      s << ']';
-    }
-  else
-    s << Token::sortName(type.tokens[0].code());
-  return s;
-}
-
 void
 PreModule::loseFocus()
 {

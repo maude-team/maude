@@ -142,6 +142,7 @@ public:
   bool isCreatedOnTheFly() const;
   bool compatible(SymbolType other) const;
   bool dittoProblem() const;
+  bool nonAlgebraic() const;
 
   static int specialNameToBasicType(const char* name);
 
@@ -224,6 +225,16 @@ SymbolType::hasSpecial() const
 {
   int t = getBasicType();
   return (t >= SYSTEM_TRUE) && (t < END_OF_SYMBOLS_WITH_ATTACHMENTS);
+}
+
+inline bool
+SymbolType::nonAlgebraic() const
+{
+  //
+  //	These symbols with these types store nonalebraic "hidden" data.
+  //
+  int t = getBasicType();
+  return t == STRING || t == FLOAT || t == QUOTED_IDENTIFIER;
 }
 
 inline bool

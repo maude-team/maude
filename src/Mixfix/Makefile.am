@@ -65,6 +65,7 @@ maude_LDADD = \
 	$(DLMALLOC_LIB)
 
 maude_SOURCES = \
+	syntaxContainer.cc \
 	renaming.cc \
 	view.cc \
 	entity.cc \
@@ -196,4 +197,5 @@ noinst_HEADERS = \
 	token.hh \
 	userLevelRewritingContext.hh \
 	visibleModule.hh \
-	xmlBuffer.hh
+	xmlBuffer.hh \
+	syntaxContainer.hh

@@ -8,7 +8,7 @@ reduce in META-LEVEL : metaPrettyPrint(fmod 'FOO is
   none
 endfm, '_+_['1.0.FiniteFloat,'1.0.FiniteFloat]) .
 rewrites: 2
-result QidList: '1.0 '+ '1.0
+result NeQidList: '1.0 '+ '1.0
 ==========================================
 reduce in META-LEVEL : metaPrettyPrint(fmod 'FOO is
   protecting 'FLOAT .
@@ -43,7 +43,7 @@ reduce in META-LEVEL : metaPrettyPrint(fmod 'FOO is
   none
 endfm, 's_['s_['0.Zero]], mixfix flat format number rat) .
 rewrites: 1
-result TypeList: 's '1
+result NeTypeList: 's '1
 ==========================================
 reduce in META-LEVEL : metaPrettyPrint(fmod 'FOO is
   protecting 'RAT .
@@ -54,7 +54,7 @@ reduce in META-LEVEL : metaPrettyPrint(fmod 'FOO is
   none
 endfm, 's_['s_['0.Zero]], none) .
 rewrites: 1
-result TypeList: 's_ '`( 's_ '`( '0 '`) '`)
+result NeTypeList: 's_ '`( 's_ '`( '0 '`) '`)
 ==========================================
 reduce in META-LEVEL : metaPrettyPrint(fmod 'FOO is
   protecting 'RAT .
@@ -109,7 +109,7 @@ reduce in META-LEVEL : metaPrettyPrint(fmod 'FOO is
   none
 endfm, '_/_['-_['s_^6789['0.Zero]],'s_^12345['0.Zero]], mixfix) .
 rewrites: 1
-result TypeList: '- 's_^6789 '`( '0 '`) '/ 's_^12345 '`( '0 '`)
+result NeTypeList: '- 's_^6789 '`( '0 '`) '/ 's_^12345 '`( '0 '`)
 ==========================================
 reduce in META-LEVEL : metaPrettyPrint(fmod 'FOO is
   protecting 'RAT .
@@ -120,7 +120,7 @@ reduce in META-LEVEL : metaPrettyPrint(fmod 'FOO is
   none
 endfm, '_/_['-_['s_^6789['0.Zero]],'s_^12345['0.Zero]], mixfix number) .
 rewrites: 1
-result TypeList: '-6789 '/ '12345
+result NeTypeList: '-6789 '/ '12345
 ==========================================
 reduce in META-LEVEL : metaPrettyPrint(fmod 'FOO is
   protecting 'RAT .

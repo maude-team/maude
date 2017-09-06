@@ -21,43 +21,31 @@
 */
 
 //
-//	Class for objects that are numbered within a module.
-//	This provides us with:
-//	  (1) a way of getting back to the module containing an object; and
-//	  (2) a number that is useful for indexing.
+//      Implementation for class View.
 //
-#ifndef _moduleItem_hh_
-#define _moduleItem_hh_
 
-class ModuleItem
+//      utility stuff
+#include "macros.hh"
+#include "vector.hh"
+
+//      forward declarations
+#include "mixfix.hh"
+
+//	front end class definitions
+#include "syntaxContainer.hh"
+
+ostream&
+operator<<(ostream& s, const SyntaxContainer::Type& type)
 {
-public:
-  void setModuleInfo(Module* module, int indexWithinModule);
-  Module* getModule() const;
-  int getIndexWithinModule() const;
-
-private:
-  Module* parentModule;
-  int indexWithinParent;
-};
-
-inline void
-ModuleItem::setModuleInfo(Module* module, int indexWithinModule)
-{
-  parentModule = module;
-  indexWithinParent = indexWithinModule;
+  if (type.kind)
+    {
+      s << '[' << type.tokens[0];
+      int nrTokens = type.tokens.length();
+      for (int i = 1; i < nrTokens; i++)
+	s << ',' << Token::sortName(type.tokens[i].code());
+      s << ']';
+    }
+  else
+    s << Token::sortName(type.tokens[0].code());
+  return s;
 }
-
-inline Module*
-ModuleItem::getModule() const
-{
-  return parentModule;
-}
-
-inline int
-ModuleItem::getIndexWithinModule() const
-{
-  return indexWithinParent;
-}
-
-#endif

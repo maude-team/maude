@@ -196,6 +196,9 @@ private:
 			PointerMap& qidMap,
 			PointerMap& dagNodeMap);
 
+  DagNode* upHeader(PreModule* pm, PointerMap& qidMap);
+  DagNode* upParameterDecls(PreModule* pm, PointerMap& qidMap);
+  DagNode* upParameterDecl(PreModule* pm, int index, PointerMap& qidMap);
   DagNode* upPolymorphDecl(ImportModule* m, int index, PointerMap& qidMap);
   DagNode* upOpDecl(ImportModule* m, int symbolNr, int declNr, PointerMap& qidMap);
   DagNode* upMb(const SortConstraint* mb, MixfixModule* m, PointerMap& qidMap);
@@ -234,6 +237,7 @@ private:
 		     MixfixModule* m,
 		     PointerMap& qidMap);
   DagNode* upModuleExpression(const ModuleExpression* e, PointerMap& qidMap);
+  DagNode* upArguments(const Vector<Token>& arguments, PointerMap& qidMap);
   DagNode* upRenaming(const Renaming* r, PointerMap& qidMap);
   DagNode* upTypeSorts(const set<int>& sorts, PointerMap& qidMap);
   DagNode* upRenamingAttributeSet(const Renaming* r, int index, PointerMap& qidMap);
@@ -248,7 +252,11 @@ private:
 		      bool omitLast,
 		      PointerMap& qidMap);
 
-  bool downModuleExpression(DagNode* metaExpr, ImportModule*& m);
+  bool downHeader(DagNode* metaHeader, int& id, DagNode*& metaParameterDeclList);
+  bool downParameterDeclList(DagNode* metaParameterDeclList, ImportModule* m);
+  bool downParameterDecl(DagNode* metaParameterDecl, ImportModule* m);
+
+  bool downModuleExpression(DagNode* metaExpr, ImportModule* enclosingModule, ImportModule*& m);
   bool downRenamings(DagNode* metaRenamings, Renaming* renaming);
   bool downRenaming(DagNode* metaRenaming, Renaming* renaming);
   bool downRenamingTypes(DagNode* metaTypes, Renaming* renaming);
@@ -298,6 +306,7 @@ private:
   bool downRules(DagNode* metaRules, MixfixModule* m);
   bool downRule(DagNode* metaRule, MixfixModule* m);
   bool downTermList(DagNode* metaTermList, MixfixModule* m, Vector<Term*>& termList);
+  bool downInstantiationArguments(DagNode* metaArguments, Vector<int>& arguments);
   bool downAssignment(DagNode* metaAssignment,
 		      MixfixModule* m,
 		      Vector<Symbol*>& variables,

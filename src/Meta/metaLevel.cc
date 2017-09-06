@@ -106,6 +106,7 @@
 #include "visibleModule.hh"
 #include "moduleExpression.hh"
 #include "renaming.hh"
+#include "view.hh"
 #include "main.hh"  // HACK to access global module database
 
 //	our stuff

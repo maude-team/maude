@@ -39,7 +39,7 @@ public:
 
   void addUser(User* user);
   void removeUser(User* user);
-  bool hasUsers() const;
+  int getNrUsers() const;
   void informUsers();
 
 #ifndef NO_ASSERT
@@ -65,10 +65,15 @@ private:
   UserSet users;
 };
 
-inline bool
-Entity::hasUsers() const
+inline int
+Entity::getNrUsers() const
 {
-  return !users.empty();
+  return users.size();  // inefficient
 }
+
+#ifndef NO_ASSERT
+ostream& operator<<(ostream& s, const Entity* e);
+ostream& operator<<(ostream& s, const Entity::User* u);
+#endif
 
 #endif

@@ -52,7 +52,8 @@ public:
     SUMMATION,
     RENAMING,
     PARAMETER,
-    INSTANTIATION
+    INSTANTIATION,
+    VIEW_LOCAL
   };
 
   ImportModule(int name, ModuleType moduleType, Origin origin, Entity::User* parent);
@@ -101,7 +102,13 @@ public:
 				  const Vector<View*>& arguments,
 				  const Vector<int>& parameterArgs,
 				  ModuleCache* moduleCache);
- int findParameterIndex(int name) const;
+  int findParameterIndex(int name) const;
+  bool moduleDeclared(Sort* sort) const;
+  bool moduleDeclared(Symbol* symbol) const;
+  bool moduleDeclaredPolymorph(int index) const;
+  bool parameterDeclared(Sort* sort) const;
+  bool parameterDeclared(Symbol* symbol) const;
+  bool parameterDeclaredPolymorph(int index) const;
 
 private:
   enum Phase
@@ -139,6 +146,43 @@ private:
   void resetImportPhase();
   void finishCopy(ImportModule* copy, Renaming* canonical);
 
+  void addOpMappingsFromView(Renaming* canonical,
+			     const ImportModule* parameterCopyOfTheory,
+			     const View* view) const;
+  //
+  //	Because makeInstantiation() is such complex procedure we split out 5 major
+  //	subtasks.
+  //
+  void handleInstantiationByParameter(ImportModule* copy,
+				      Renaming* canonical,
+				      ParameterMap& parameterMap,
+				      const Vector<View*>& arguments,
+				      const Vector<int>& parameterArgs,
+				      ModuleCache* moduleCache) const;
+
+  void handleInstantiationByTheoryView(ImportModule* copy,
+				       Renaming* canonical,
+				       ParameterMap& parameterMap,
+				       ParameterMap& extraParameterMap,
+				       const Vector<View*>& arguments,
+				       ModuleCache* moduleCache) const;
+
+  void handleInstantiationByModuleView(ImportModule* copy,
+				       Renaming* canonical,
+				       ParameterMap& parameterMap,
+				       const Vector<View*>& arguments) const;
+
+  void handleParameterizedSorts(Renaming* canonical, 
+				const ParameterMap& parameterMap,
+				const ParameterMap& extraParameterMap) const;
+
+  void handleRegularImports(ImportModule* copy,
+			    const Vector<View*>& arguments,
+			    const Vector<int>& parameterArgs,
+			    ModuleCache* moduleCache) const;
+
+  ConnectedComponent* translateComponent(const Renaming* renaming, const ConnectedComponent* component) const;
+
   const Origin origin;
   Phase importPhase;
   //
@@ -150,8 +194,16 @@ private:
   //
   int nrBoundParameters;
   Vector<int> parameterNames;
-  //  Vector<ImportModule*> parameterTheories;
   Vector<ImportModule*> importedModules;
+  //
+  //	Because for sorts, symbols, and polymorphs, stuff from parameter
+  //	theories is inserted first we can keep track of what came from
+  //	theories in order to stop it from being renamed. For modules
+  //	without parameters these will be set to 0.
+  //
+  int nrSortsFromParameters;
+  int nrSymbolsFromParameters;
+  int nrPolymorphsFromParameters;
   //
   //	If we are a renaming, parameter copy or instantiation of another
   //	module we need to store this info.
@@ -159,13 +211,23 @@ private:
   Renaming* canonicalRenaming;
   ImportModule* baseModule;
   //
-  //	If we are are a instantiation, and have bound parameters, we keep
-  //	track of the view and parameter arguments our base module was
-  //	instantiated with so we can build a new instantiation when our
-  //	bound parameters are instantiated.
+  //	If we are are a instantiation, we keep track of any views that we
+  //	a user of and if we have bound parameters, we also keep track
+  //	track of the parameter arguments our base module was instantiated
+  //	with so we can build a new instantiation when our bound 
+  //	parameters are instantiated.
   //
   Vector<View*> viewArgs;
   Vector<int> paramArgs;
+  //
+  //	These data structures are only filled out for theories and record
+  //	the indices of any sorts and operators that were declared in an
+  //	imported module and are therefore not eligible to be mapped by a
+  //	view.
+  //
+  NatSet sortDeclaredInModule;
+  NatSet opDeclaredInModule;
+  NatSet polymorphDeclaredInModule;
   //
   //	Need to keep track of what parts of MixfixModule actually belong
   //	to us (and need to be donated to our importers) and what parts
@@ -356,5 +418,56 @@ ImportModule::getLabels() const
 {
   return labels;
 }
+
+inline bool
+ImportModule::moduleDeclared(Sort* sort) const
+{
+  Assert(sort->getModule() == this, "wrong module");
+  return sortDeclaredInModule.contains(sort->getIndexWithinModule());
+}
+
+inline bool
+ImportModule::moduleDeclared(Symbol* symbol) const
+{
+  Assert(symbol->getModule() == this, "wrong module");
+  return opDeclaredInModule.contains(symbol->getIndexWithinModule());
+}
+
+inline bool
+ImportModule::moduleDeclaredPolymorph(int index) const
+{
+  return polymorphDeclaredInModule.contains(index);
+}
+
+inline bool
+ImportModule::parameterDeclared(Sort* sort) const
+{
+  Assert(sort->getModule() == this, "wrong module");
+  return sort->getIndexWithinModule() < nrSortsFromParameters;
+}
+
+inline bool
+ImportModule::parameterDeclared(Symbol* symbol) const
+{
+  Assert(symbol->getModule() == this, "wrong module");
+  return symbol->getIndexWithinModule() < nrSymbolsFromParameters;
+}
+
+inline bool
+ImportModule::parameterDeclaredPolymorph(int index) const
+{
+  return index < nrPolymorphsFromParameters;
+}
+
+#ifndef NO_ASSERT
+inline ostream&
+operator<<(ostream& s, const ImportModule* m)
+{
+  //
+  //	Needed to avoid ambiguity.
+  //
+  s << static_cast<const MixfixModule*>(m);
+}
+#endif
 
 #endif

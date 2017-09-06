@@ -104,6 +104,59 @@ MetaLevel::downBool(DagNode* metaBool, bool& value)
   return false;
 }
 
+bool
+MetaLevel::downHeader(DagNode* metaHeader, int& id, DagNode*& metaParameterDeclList)
+{
+  if (metaHeader->symbol() == headerSymbol)
+    {
+      FreeDagNode* f = safeCast(FreeDagNode*, metaHeader);
+      metaParameterDeclList = f->getArgument(1);
+      return downQid(f->getArgument(0), id);
+    }
+  metaParameterDeclList = 0;
+  return downQid(metaHeader, id);
+}
+
+bool
+MetaLevel::downParameterDeclList(DagNode* metaParameterDeclList, ImportModule* m)
+{
+  if (metaParameterDeclList == 0)
+    return true;
+  if (m->isTheory())
+    return false;
+  if (metaParameterDeclList->symbol() == parameterDeclListSymbol)
+    {
+      for (DagArgumentIterator i(metaParameterDeclList); i.valid(); i.next())
+	{
+	  if (!downParameterDecl(i.argument(), m))
+	    return false;
+	}
+      return true;
+    }
+  return downParameterDecl(metaParameterDeclList, m);
+}
+
+bool
+MetaLevel::downParameterDecl(DagNode* metaParameterDecl, ImportModule* m)
+{
+  if (metaParameterDecl->symbol() == parameterDeclSymbol)
+    {
+      FreeDagNode* f = safeCast(FreeDagNode*, metaParameterDecl);
+      int name;
+      ImportModule* theory;
+      if (downQid(f->getArgument(0), name) &&
+	  downModuleExpression(f->getArgument(1), 0, theory) &&
+	  theory->isTheory())
+	{
+	  Token t;
+	  t.tokenize(name, FileTable::META_LEVEL_CREATED);
+	  m->addParameter(t, interpreter.makeParameterCopy(name, theory));
+	  return true;
+	}
+    }
+  return false;
+}
+
 MetaModule*
 MetaLevel::downModule(DagNode* metaModule)
 {
@@ -124,12 +177,14 @@ MetaLevel::downModule(DagNode* metaModule)
   else
     return 0;
 
-  FreeDagNode* f = static_cast<FreeDagNode*>(metaModule);
+  FreeDagNode* f = safeCast(FreeDagNode*, metaModule);
   int id;
-  if (downQid(f->getArgument(0), id))
+  DagNode* metaParameterDeclList;
+  if (downHeader(f->getArgument(0), id, metaParameterDeclList))
     {
       MetaModule* m = new MetaModule(id, mt, &cache);
-      if (downImports(f->getArgument(1), m))
+      if (downParameterDeclList(metaParameterDeclList, m) &&
+	  downImports(f->getArgument(1), m))
 	{
 	  m->importSorts();
 	  if (downSorts(f->getArgument(2), m) &&
@@ -227,7 +282,7 @@ MetaLevel::downImport(DagNode* metaImport, MetaModule* m)
   
   FreeDagNode* f = safeCast(FreeDagNode*, metaImport);
   ImportModule* im;
-  if (downModuleExpression(f->getArgument(0), im))
+  if (downModuleExpression(f->getArgument(0), m, im) && im->getNrFreeParameters() == 0)
     {
       m->addImport(im, mode, LineNumber(FileTable::META_LEVEL_CREATED));
       return true;

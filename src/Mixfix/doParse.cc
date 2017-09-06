@@ -168,7 +168,7 @@ MixfixModule::parseSentence(const Vector<Token>& bubble, int root, int begin, in
 	  IssueWarning(LineNumber(bubble[firstBad].lineNumber()) <<
 		       ": bad token " << QUOTE(bubble[firstBad].name()) << '.');
 	}
-      else if (firstBad == nrTokens)
+      else if (firstBad == begin + nrTokens)
 	{
 	  IssueWarning(LineNumber(bubble[end].lineNumber()) <<
 		       " : unexpected end of tokens.");

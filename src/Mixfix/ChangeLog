@@ -1,3 +1,659 @@
+2005-07-29  Steven Eker  <eker@goo.csl.sri.com>
+
+	* renaming.cc (makeCanonicalVersion): change the way generics are
+	added
+	(makeCanonicalVersion): rewritten to avoid renaming symbols and
+	polymorphs from parameters
+	(makeCanonicalVersion): added hack to that we generate advisory in
+	the generic non-polymorph case
+
+	* renaming.hh (class Renaming): added typedef IdSet
+
+	* renaming.cc (makeCanonicalVersion): ignore mappings for sorts
+	that come from parameters
+
+	* renameModule.cc (makeRenamedCopy): deleted commented out line to
+	copy nrBoundParameters - we do not rename modules with bound
+	parameters
+
+	* importModule.hh (parameterDeclared): added Symbol* and Sort*
+	vesions
+	(parameterDeclaredPolymorph): added
+
+	* importModule.cc (importOps): set nrSymbolsFromParameters and
+	nrPolymorphsFromParameters
+	(importSorts): set nrSortsFromParameters
+	(ImportModule): clear nrSortsFromParameters,
+	nrSymbolsFromParameters, nrPolymorphsFromParameters
+
+	* importModule.hh (User): added data members
+	nrSortsFromParameters, nrSymbolsFromParameters, and
+	nrPolymorphsFromParameters
+
+2005-07-28  Steven Eker  <eker@goo.csl.sri.com>
+
+	* parameterization.cc (addOpMappingsFromView): check
+	moduleDeclaredPolymorph()
+
+	* view.cc (checkPolymorphicOps): don't allow view to map module
+	declared polymorphs
+
+	* importModule.hh (User): added data member
+	polymorphDeclaredInModule
+	(moduleDeclaredPolymorph): added
+
+	* renameModule.cc (donateOps2): keep track of polymorphs declared
+	in modules and donated to theories
+
+	* parameterization.cc (addOpMappingsFromView): handle polymorphs
+
+	* view.hh (User): added decl for checkPolymorphicOps()
+
+	* view.cc (checkOps): check for bad mapping between non-algebraic
+	operators
+	(checkPolymorphicOps): created to hold polymorph checking code
+	(evaluate): use checkPolymorphicOps()
+	(checkPolymorphicOps): look at all polymorphs rather than just
+	imported ones
+
+	* symbolType.hh (nonAlgebraic): added
+
+	* view.cc (~View): deepSelfDestruct() terms in opTermMap
+
+2005-07-27  Steven Eker  <eker@goo.csl.sri.com>
+
+	* parameterization.cc (addOpMappingsFromView): don't map operators
+	that have a module declaration
+	(addOpMappingsFromView): prefer op->term mappings over op->op
+	mappings
+
+	* view.cc (checkOps): don't map operators that have a module
+	declaration
+
+	* view.hh (User): added decl for checkOps()
+
+	* view.cc (checkOps): created to hold op checking code
+	(evaluate): use checkOps()
+
+	* importModule.hh (moduleDeclared): added Symbol* version
+
+	* renameModule.cc (donateOps2): update opDeclaredInModule
+
+	* importModule.hh (moduleDeclared): added
+
+	* view.cc (checkSorts): don't allow mapping of module declared
+	sorts
+
+2005-07-26  Steven Eker  <eker@goo.csl.sri.com>
+
+	* import.cc (makeModule): check badFlag in summation case
+	(makeModule): reorg'd so that bad flag is always tested for
+	modules made by interpreter
+
+	* renameModule.cc (donateSorts2): handle the case where we have a
+	sort imported from both a module and a theory
+
+	* importModule.cc (addImport): changed messages; switch
+	importation module to including for theories and don't allow other
+	illegal imports at all.
+	(addParameter): deleted commented out parameterTheories code
+
+2005-07-25  Steven Eker  <eker@goo.csl.sri.com>
+
+	* renameModule.cc (donateSorts2): update sortDeclaredInModule
+
+	* importModule.hh (User): added data members sortDeclaredInModule,
+	opDeclaredInModule
+
+2005-07-21  Steven Eker  <eker@goo.csl.sri.com>
+
+	* preModule.hh (getNrParameters, getParameterName, getParameter):
+	added
+
+	* parameterization.cc (handleInstantiationByTheoryView) 
+	(handleInstantiationByModuleView, instantiateBoundParameters): use
+	new version of isTheory()
+	(makeParameterCopy): use new version of isTheory()
+	(instantiateBoundParameters): deleted commented out code to handle
+	the instantiation of a renaming of a module with bound parameters
+	since we no longer allow the renaming of modules with bound
+	parameters
+
+	* view.cc (evaluate): use new version of isTheory()
+
+2005-07-20  Steven Eker  <eker@goo.csl.sri.com>
+
+	* mixfixModule.hh (isTheory): added non-static version
+
+	* prelude.maude: added hooks for headerSymbol,
+	parameterDeclSymbol, parameterDeclListSymbol
+
+	* view.cc (evaluate): check for free parameters in toModule
+
+2005-07-19  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: replace metalevel modules with experimental
+	metalevel; defined QID-LIST in terms of LIST{Qid} and added
+	NeTypeList to fix preregularity problems; defined NAT-LIST in
+	terms of LIST{Nat}; added op-hook for instantiation symbol
+
+2005-07-18  Steven Eker  <eker@goo.csl.sri.com>
+
+	* view.cc (evaluate): fullstop in "reexamining view" message
+
+	* importModule.cc (deepSelfDestruct): remove ourself as a user
+	from each view argument
+
+	* parameterization.cc (makeInstantiation): always keep track pf
+	view arguments
+
+	* importModule.hh (User): update comment on viewArgs
+
+	* parameterization.cc (handleInstantiationByModuleView): make copy
+	a user of argumentView
+	(handleInstantiationByTheoryView): make copy a user of
+	argumentView
+
+	* moduleCache.cc (destructUnusedModules): fix bug; we now look for
+	modules with a single user since _we_ are that user
+
+	* entity.hh (hasUsers): becomes getNrUsers()
+
+	* entity.cc (removeUser): fix {} problem
+
+	* view.cc (finishModule2): don't call addUser() - this is already
+	done by ImportModule()
+
+	* entity.cc (addUser): fix {} problem (DebugAdvisory() macro
+	contains an if statement)
+
+	* importModule.cc (ImportModule): replace delete
+	canonicalRenaming with an Assert()
+	(deepSelfDestruct): delete canonicalRenaming here
+
+2005-07-15  Steven Eker  <eker@goo.csl.sri.com>
+
+	* modules.yy (view): need to insert view _before_ we finish it to
+	avoid the existence of two views with the same name when a view is
+	replaced
+
+	* view.hh (User): UNKNOWN -> STALE
+
+	* view.cc (evaluate): added more DebugAdvisory()s
+	(regretToInform): UNKNOWN -> STALE
+	(evaluate): UNKNOWN -> STALE
+
+	* preModule.hh (operator<<): added
+	(User): made Entity::User derivation public
+
+	* view.hh (operator<<): added
+
+	* importModule.hh (operator<<): added
+
+	* entity.cc (operator<<): added Entity* and Entity::User* versions
+	(removeUser): rewritten
+	(addUser): rewritten
+	(informUsers): added DebugAdvisory()
+
+	* view.cc (regretToInform): rewritten
+	(~View): deepSelfDestruct() newFromTheory and newToModule
+	(finishModule2): call addUser()
+	(~View): call informUsers()
+
+	* importModule.cc (deepSelfDestruct): deleted commented out
+	parameterTheories code
+
+	* view.hh (User): derive from Entity
+
+	* entity.cc (informUsers): simplified by fusing loops
+
+2005-07-14  Steven Eker  <eker@goo.csl.sri.com>
+
+	* renaming.cc: unmake change
+
+	* renaming.hh (class Renaming): unmake change
+
+	* importModule.hh (User): unmake change
+
+	* parameterization.cc: unmake previous changes since the
+	deepCopy() idea is a dead duck - both because of a chicken & egg
+	over sorts/symbols and the loss of variable index info from the
+	original
+
+	* renaming.cc (~Renaming): added
+
+	* renaming.hh (class Renaming): adde decl for dtor
+
+	* importModule.hh (User): updated decl for addOpMappingsFromView()
+
+	* parameterization.cc (addOpMappingsFromView): take instance
+	parameter; deepCopy() term part of op->term mappings into instance
+	rather than using the original
+	(handleInstantiationByTheoryView): pass instance parameter to
+	addOpMappingsFromView() 
+	(handleInstantiationByModuleView): pass instance parameter to
+	addOpMappingsFromView()
+
+2005-07-13  Steven Eker  <eker@goo.csl.sri.com>
+
+	* importModule.hh (User): added decl for translateComponent()
+	(User): deleted commented out parameterTheories data member
+
+	* parameterization.cc (addOpMappingsFromView): use translateComponent()
+	(translateComponent): added
+
+	* importTranslation.cc (translate): use FIRST_USER_SORT
+
+2005-06-30  Steven Eker  <eker@goo.csl.sri.com>
+
+	* view.cc (evaluate): skip to symbol existence check for ops that
+	are being mapped to terms
+
+	* importTranslation.cc (translateTerm): added translation splitting
+	(translateTerm): added DebugAdvisory()s
+
+	* importTranslation.hh (class ImportTranslation): added typedef
+	ModuleList
+	(ImportTranslation): added private ctor
+
+2005-06-29  Steven Eker  <eker@goo.csl.sri.com>
+
+	* importTranslation.hh (class ImportTranslation): updated decl for
+	translateRegularSymbol()
+
+	* importTranslation.cc (translateRegularSymbol): need to fill out
+	opToTerm when we hit op->term mapping
+	(translateRegularSymbol): pass back const_iterator
+	(translateTerm, translate): use const_iterator
+
+	* view.cc (evaluate): quick hack to allow bad views to be used for
+	testing
+
+	* importTranslation.cc (translateTerm): crude first implementation
+
+2005-06-28  Steven Eker  <eker@goo.csl.sri.com>
+
+	* parameterization.cc (addOpMappingsFromView): handle op->term
+	mappings
+
+	* view.hh (User): updated decls for getOpMapTerm() and both
+	versions of typeMatch()
+
+	* view.cc (typeMatch): rewritten (both versions)
+	(getOpMapTerm): rewritten
+
+	* parameterization.cc (addOpMappingsFromView): removed
+	qualification for renameOp() call
+
+	* view.cc (evaluate): removed qualification for renameOp() call
+
+	* renaming.hh (class Renaming): de-virtualized renameOp()
+
+	* view.cc (getOpMapTerm): removed CantHappen()
+	(renameOp): deleted
+
+	* view.hh (User): deleted decl for renameOp()
+
+	* importTranslation.cc (translateRegularSymbol): handle id == NONE
+	(translateRegularSymbol): moved Assert() checking for missing
+	translation here
+
+	* renaming.cc (printRenaming): added Assert() to check that we
+	don't try to print a renaming that contains an op->term mapping
+
+	* renaming.hh (class Renaming): added decl for getOpTargetTerm()
+	(getOpTargetTerm): added
+
+	* renaming.cc (addOpTarget): (both versions) clear term field
+	(addOpTargetTerm): added
+
+	* renaming.hh (class Renaming): added term field to struct
+	OpMapping
+	(class Renaming): added decl for addOpTargetTerm(Term* term)
+
+2005-06-27  Steven Eker  <eker@goo.csl.sri.com>
+
+	* parameterization.cc (addOpMappingsFromView): qualify renameOp()
+	call
+
+	* view.hh (User): added decls for typeMatch() (both versions)
+
+	* view.cc (typeMatch): added (two versions)
+	(renameOp): added
+	(getOpMapTerm): added
+	(evaluate): qualify renameOp() call
+
+	* view.hh (User): added decls for getOpMapTerm() and renameOp()
+
+	* renaming.hh (class Renaming): virtualize id version of
+	renameOp()
+
+	* importTranslation.cc (translate): only store mapping int
+	directMap if it is non-null, i.e. op->op; comment out Assert()
+	that mapping is non-null
+
+2005-06-24  Steven Eker  <eker@goo.csl.sri.com>
+
+	* importTranslation.cc (translateTerm): term is const Term*
+
+	* importTranslation.hh (class ImportTranslation): updated decl for
+	translateTerm()
+
+	* importTranslation.cc (findTargetVersionOfSymbol): added
+	(translateTerm): new calling convention for instantiate()
+
+	* importTranslation.hh (class ImportTranslation): added decl for
+	findTargetVersionOfSymbol()
+
+2005-06-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* importTranslation.cc (translate): use translateRegularSymbol()
+	(translateTerm): partly implemented
+
+	* importTranslation.hh (class ImportTranslation): added decl for
+	translateRegularSymbol()
+
+	* importTranslation.cc (translateRegularSymbol): added
+	(translate, translateLabel): using RenamingList
+
+	* renaming.hh (class Renaming): added decls for new member
+	functions
+
+	* renaming.cc (renameOp): added id version
+	(typeMatch): added Vector<int> version
+
+	* importTranslation.hh (class ImportTranslation): added typedef
+	RenamingList
+
+2005-06-22  Steven Eker  <eker@goo.csl.sri.com>
+
+	* importTranslation.cc (makeTranslatedTerm): becomes translateTerm()
+
+	* importTranslation.hh (class ImportTranslation): replaced
+	makeTranslatedTerm() with translateTerm()
+
+2005-06-17  Steven Eker  <eker@goo.csl.sri.com>
+
+	* parameterization.cc (makeParameterCopy): simplified using new
+	addSortMapping(), parameterRename() and addLabelMapping()
+	functions
+	(handleInstantiationByParameter):  simplified using new
+	addSortMapping(), parameterRename()
+	(handleInstantiationByTheoryView): simplified using new
+	addSortMapping(), parameterRename()
+	(handleInstantiationByModuleView): simplified using new
+	addSortMapping()
+	(handleParameterizedSorts): simplified using new
+	addSortMapping()
+	(handleInstantiationByTheoryView): call addOpMappingsFromView() to
+	handle op mappings in the theory-view
+
+	* token.hh (class Token): updated decl for parameterRename()
+
+	* token.cc (parameterRename): now work on ints rather than tokens
+
+	* renaming.hh (class Renaming): added decls for new
+	addSortMapping() and addLabelMapping() versions
+
+	* renaming.cc (addSortMapping): added int version
+	(addLabelMapping): added int version
+
+2005-06-16  Steven Eker  <eker@goo.csl.sri.com>
+
+	* mixfixModule.hh (CommonTokens): updated decl for findSort()
+
+	* mixfixModule.cc (findSort): made const
+
+	* parameterization.cc (addOpMappingsFromView): crude first implementation
+
+	* renaming.hh (class Renaming): added decls for new functions
+
+	* renaming.cc (addType): added component* version
+	(addOpTarget): added int version
+	(addOpMapping): added int version
+
+2005-06-15  Steven Eker  <eker@goo.csl.sri.com>
+
+	* parameterization.cc (handleInstantiationByModuleView): call
+	addOpMappingsFromView()
+
+	* importModule.hh (User): added decl for addOpMappingsFromView()
+
+	* parameterization.cc (makeInstantiation): use
+	handleInstantiationByTheoryView()
+	(handleInstantiationByModuleView): added
+	(makeInstantiation): use handleInstantiationByModuleView()
+	(addOpMappingsFromView): added stub
+
+	* importModule.hh (User): added decl for
+	handleInstantiationByTheoryView()
+
+	* parameterization.cc (handleInstantiationByTheoryView): added
+	(makeInstantiation): use handleInstantiationByParameter()
+
+	* importModule.hh (User): added decl for
+	handleInstantiationByParameter()
+
+	* parameterization.cc (handleInstantiationByParameter): created
+	(makeInstantiation): use handleParameterizedSorts()
+
+	* importModule.hh (User): added decl for handleRegularImports()
+
+	* parameterization.cc (makeInstantiation): use
+	handleRegularImports()
+	(handleParameterizedSorts): added
+
+	* importModule.hh (User): added decl for handleRegularImports()
+
+	* parameterization.cc (handleRegularImports): created
+
+2005-06-14  Steven Eker  <eker@goo.csl.sri.com>
+
+	* parameterization.cc (makeInstantiation): changed importation
+	mode for modules that are the target of module-views from
+	INCLUDING to PROTECTING
+
+2005-06-13  Steven Eker  <eker@goo.csl.sri.com>
+
+	* importTranslation.cc (translate): ERROR_SORT -> KIND
+
+2005-06-10  Steven Eker  <eker@goo.csl.sri.com>
+
+	* view.hh (User): deleted struct OpTermMapping; updated typedef
+	OpTermMap
+
+	* view.cc (mapComponent, mapSort): moved here
+	(handleOpTermMappings): store from and to
+	(showView): print op->term mappings
+
+	* view.hh (User): updated decl for indexRhsVariables()
+
+	* view.cc (handleOpTermMappings): use mapSort(); put sort info in VarMap
+
+	* view.hh (mapSort): added
+
+	* view.cc (handleOpTermMappings): use mapComponent()
+	(evaluate): simplified using mapComponent()
+
+	* view.hh (mapComponent): added
+
+	* view.cc (indexRhsVariables): use VarMap; check variables sort
+
+	* view.hh (User): added decl for indexRhsVariables()
+	(User) IntMap becomes VarMap
+
+	* view.cc (handleOpTermMappings): use indexRhsVariables()
+	(indexRhsVariables): added
+
+2005-06-09  Steven Eker  <eker@goo.csl.sri.com>
+
+	* view.cc (handleOpTermMappings): added to handle op->term mapping
+	code
+	(evaluate): use handleOpTermMappings()
+	(handleOpTermMappings): check lhs arguments
+	(handleOpTermMappings): check for double use of variable name in
+	lhs
+
+	* view.hh (User): added decls for checkSorts(), handleVarDecls()
+
+	* view.cc (evaluate): handle variable aliases
+	(evaluate): fix line numbers for warnings in new code
+	(handleVarDecls): added to hold variable alias code
+	(evaluate): use handleVarDecls()
+	(checkSorts): added to hold sort checking code
+	(evaluate): use checkSorts()
+
+	* preModule.hh (User): deleted friend decl for operator<<()
+
+	* command.cc (operator<<): PreModule::Type& version; moved to
+	syntaxContainer.cc
+
+	* syntaxContainer.cc: created
+
+2005-06-08  Steven Eker  <eker@goo.csl.sri.com>
+
+	* view.hh (User): added decls for finishModule1(), finishModule2()
+
+	* view.cc (finishModule): added
+	(finishModule): split into finishModule1() and finishModule2()
+	(evaluate): generate and use newFromTheory, newToModule
+
+	* importModule.hh (User): added VIEW_LOCAL to enum Origin
+
+	* view.hh (User): added data members newFromTheory, newToModule
+
+	* view.cc (showView): handle variables
+	(View): clear newFromTheory, newToModule
+
+	* mixfix.hh: added class SyntaxContainer
+
+	* view.cc (addVarDecl): implemented
+	(addType): implemented
+
+	* view.hh (User): added struct VarDecl; typedef VarDeclList,
+	typedef TypeList; added data members varDecls and varDefs
+
+	* preModule.hh (User): deleted struct Type
+
+	* syntaxContainer.hh (class SyntaxContainer): added struct Type
+
+2005-06-07  Steven Eker  <eker@goo.csl.sri.com>
+
+	* modules.yy (view): set currentSyntaxContainer
+	(viewDeclaration): use varNameList, typeDot
+	(viewBadType, viewTypeDot, viewTypeList, viewType): deleted
+	(viewVarNameList, viewVarNameList): deleted
+	(viewEndOpMap): use typeList and typeName
+
+	* top.yy: added variable oldSyntaxContainer
+
+	* modules.yy (module): set currentSyntaxContainer
+	(varNameList): use currentSyntaxContainer
+	(badType): use currentSyntaxContainer
+	(typeName): use currentSyntaxContainer
+	(fromSpec): use typeList and typeName
+	(fromTypeList): deleted
+	(fromType): deleted
+	(renaming): save, set and restore currentSyntaxContainer
+
+	* top.yy: added variable currentSyntaxContainer
+
+	* view.hh (User): declaration for addType2() becomes addType()
+
+	* view.cc (addType2): becomes addType()
+
+	* renaming.cc (addVarDecl): added
+	(addType): updated
+
+	* renaming.hh (class Renaming): derive from SyntaxContainer
+	(class Renaming): added decl for addVarDecl(); updated decl for addType()
+
+	* preModule.hh (User): derive from SyntaxContainer
+
+	* syntaxContainer.hh: created
+
+	* modules.yy (viewDeclaration): added syntax for variable
+	declarations
+	(viewVarNameList, viewBadType, viewTypeDot, viewTypeDot): added
+
+	* view.cc (addVarDecl): added stub
+	(addType2): added stub
+
+	* view.hh (User): added decls for addVarDecl() and addType2()
+
+	* doParse.cc (parseSentence): fix longstanding bug where we were
+	testing firstBad against nrTokens rather than begin + nrTokens
+
+	* view.cc (addOpTermMapping): implemented
+	(evaluate): parse op->term mapping bubbles
+	(evaluate): make sure we parse destination term into the correct
+	component
+
+	* view.hh (User): added struct BubblePair, struct OpTermMapping,
+	typedef OpTermList, typedef OpTermMap; added data members
+	opTermList and opTermMap
+
+2005-06-06  Steven Eker  <eker@goo.csl.sri.com>
+
+	* lexer.ll: deleted KW_TERM
+
+	* view.hh (User): updated decl for addOpTermMapping(); deleted decl
+	for addOpTargetTerm()
+
+	* view.cc (addOpTermMapping): updated stub
+	(addOpTargetTerm): deleted stub
+
+	* top.yy: deleted decl for KW_TERM
+
+	* modules.yy (viewFromBubble): deleted
+	(viewDeclaration): use tokensBarColonTo
+	(viewEndOpMap): rewritten
+	(tokenBarTerm): deleted; removed all mention of KW_TERM
+
+	* token.hh (class Token): added decl for peelParens()
+
+	* token.cc (peelParens): added
+
+	* modules.yy (viewTypeList): was viewFromTypeList
+	(viewType): was viewFromType
+	(tokenBarDot, endToken, tokenBarCommaLeft, sortToken, identifier):
+	added KW_TERM
+	(inert): removed KW_TERM
+	(tokenBarColonTo): added KW_TERM
+	(tokenBarTerm): added
+	(viewFromBubble): set parenFlag
+
+2005-06-03  Steven Eker  <eker@goo.csl.sri.com>
+
+	* view.cc (addOpTermMapping): added stub
+	(addOpTargetTerm): added stub
+
+	* view.hh (User): added decls for addOpTermMapping() and
+	addOpTargetTerm()
+
+	* modules.yy (inert): added KW_TERM
+
+	* lexer.ll: added KW_TERM
+
+	* top.yy: added decl for KW_TERM
+
+	* modules.yy (viewFromType): added
+	(viewFromTypeList): added
+	(viewEndOpMap): added
+	(view): dont use currentRenaming = CV trick
+	(viewFromBubble): added
+	(viewDeclaration): rewritten to use viewFromBubble and
+	viewEndOpMap
+
+2005-06-02  Steven Eker  <eker@goo.csl.sri.com>
+
+	* importTranslation.hh (class ImportTranslation): added decl for
+	makeTranslatedTerm()
+
+	* importTranslation.cc (makeTranslatedTerm): added stub
+	
+===================================Maude86b===========================================
+
 2005-04-29  Steven Eker  <eker@goo.csl.sri.com>
 
 	* main.cc (main): added -no-advise flag

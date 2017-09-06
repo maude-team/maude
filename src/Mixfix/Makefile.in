@@ -195,6 +195,7 @@ maude_LDADD = \
 
 
 maude_SOURCES = \
+	syntaxContainer.cc \
 	renaming.cc \
 	view.cc \
 	entity.cc \
@@ -306,7 +307,8 @@ noinst_HEADERS = \
 	token.hh \
 	userLevelRewritingContext.hh \
 	visibleModule.hh \
-	xmlBuffer.hh
+	xmlBuffer.hh \
+	syntaxContainer.hh
 
 subdir = src/Mixfix
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -316,18 +318,20 @@ CONFIG_CLEAN_FILES =
 bin_PROGRAMS = maude$(EXEEXT)
 PROGRAMS = $(bin_PROGRAMS)
 
-am__maude_SOURCES_DIST = renaming.cc view.cc entity.cc moduleCache.cc \
-	moduleExpression.cc importModule.cc importTranslation.cc \
-	fileTable.cc loopSymbol.cc quotedIdentifierSymbol.cc \
-	quotedIdentifierDagNode.cc quotedIdentifierTerm.cc \
-	quotedIdentifierOpSymbol.cc mixfixModule.cc token.cc main.cc \
-	userLevelRewritingContext.cc preModule.cc symbolType.cc \
-	xmlBuffer.cc maudemlBuffer.cc interpreter.cc moduleDatabase.cc \
-	viewDatabase.cc profileModule.cc mixfixParser.cc \
-	visibleModule.cc commonTokens.cc metadataStore.cc banner.cc \
-	lexer.cc surface.cc compiler.cc
+am__maude_SOURCES_DIST = syntaxContainer.cc renaming.cc view.cc \
+	entity.cc moduleCache.cc moduleExpression.cc importModule.cc \
+	importTranslation.cc fileTable.cc loopSymbol.cc \
+	quotedIdentifierSymbol.cc quotedIdentifierDagNode.cc \
+	quotedIdentifierTerm.cc quotedIdentifierOpSymbol.cc \
+	mixfixModule.cc token.cc main.cc userLevelRewritingContext.cc \
+	preModule.cc symbolType.cc xmlBuffer.cc maudemlBuffer.cc \
+	interpreter.cc moduleDatabase.cc viewDatabase.cc \
+	profileModule.cc mixfixParser.cc visibleModule.cc \
+	commonTokens.cc metadataStore.cc banner.cc lexer.cc surface.cc \
+	compiler.cc
 @BUILD_COMPILER_TRUE@am__objects_1 = maude-compiler.$(OBJEXT)
-am_maude_OBJECTS = maude-renaming.$(OBJEXT) maude-view.$(OBJEXT) \
+am_maude_OBJECTS = maude-syntaxContainer.$(OBJEXT) \
+	maude-renaming.$(OBJEXT) maude-view.$(OBJEXT) \
 	maude-entity.$(OBJEXT) maude-moduleCache.$(OBJEXT) \
 	maude-moduleExpression.$(OBJEXT) maude-importModule.$(OBJEXT) \
 	maude-importTranslation.$(OBJEXT) maude-fileTable.$(OBJEXT) \
@@ -463,6 +467,7 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/maude-renaming.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/maude-surface.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/maude-symbolType.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/maude-syntaxContainer.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/maude-token.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/maude-userLevelRewritingContext.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/maude-view.Po \
@@ -554,6 +559,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-renaming.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-surface.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-symbolType.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-syntaxContainer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-token.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-userLevelRewritingContext.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-view.Po@am__quote@
@@ -582,6 +588,28 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXXCOMPILE) -c -o $@ `if test -f '$<'; then $(CYGPATH_W) '$<'; else $(CYGPATH_W) '$(srcdir)/$<'; fi`
+
+maude-syntaxContainer.o: syntaxContainer.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-syntaxContainer.o -MD -MP -MF "$(DEPDIR)/maude-syntaxContainer.Tpo" \
+@am__fastdepCXX_TRUE@	  -c -o maude-syntaxContainer.o `test -f 'syntaxContainer.cc' || echo '$(srcdir)/'`syntaxContainer.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-syntaxContainer.Tpo" "$(DEPDIR)/maude-syntaxContainer.Po"; \
+@am__fastdepCXX_TRUE@	else rm -f "$(DEPDIR)/maude-syntaxContainer.Tpo"; exit 1; \
+@am__fastdepCXX_TRUE@	fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='syntaxContainer.cc' object='maude-syntaxContainer.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/maude-syntaxContainer.Po' tmpdepfile='$(DEPDIR)/maude-syntaxContainer.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-syntaxContainer.o `test -f 'syntaxContainer.cc' || echo '$(srcdir)/'`syntaxContainer.cc
+
+maude-syntaxContainer.obj: syntaxContainer.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-syntaxContainer.obj -MD -MP -MF "$(DEPDIR)/maude-syntaxContainer.Tpo" \
+@am__fastdepCXX_TRUE@	  -c -o maude-syntaxContainer.obj `if test -f 'syntaxContainer.cc'; then $(CYGPATH_W) 'syntaxContainer.cc'; else $(CYGPATH_W) '$(srcdir)/syntaxContainer.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-syntaxContainer.Tpo" "$(DEPDIR)/maude-syntaxContainer.Po"; \
+@am__fastdepCXX_TRUE@	else rm -f "$(DEPDIR)/maude-syntaxContainer.Tpo"; exit 1; \
+@am__fastdepCXX_TRUE@	fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='syntaxContainer.cc' object='maude-syntaxContainer.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/maude-syntaxContainer.Po' tmpdepfile='$(DEPDIR)/maude-syntaxContainer.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-syntaxContainer.obj `if test -f 'syntaxContainer.cc'; then $(CYGPATH_W) 'syntaxContainer.cc'; else $(CYGPATH_W) '$(srcdir)/syntaxContainer.cc'; fi`
 
 maude-renaming.o: renaming.cc
 @am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-renaming.o -MD -MP -MF "$(DEPDIR)/maude-renaming.Tpo" \

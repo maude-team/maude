@@ -149,7 +149,9 @@ PreModule::makeModule(const ModuleExpression* expr, ImportModule* enclosingModul
 		IssueWarning("renamed module " << fm << " has bound parameters.");
 		return 0;
 	      }
-	    return interpreter.makeRenamedCopy(fm, expr->getRenaming());
+	    ImportModule* m = interpreter.makeRenamedCopy(fm, expr->getRenaming());
+	    if (!(m->isBad()))
+	      return m;
 	  }
 	break;
       }
@@ -170,7 +172,11 @@ PreModule::makeModule(const ModuleExpression* expr, ImportModule* enclosingModul
 	      }
 	  }
 	if (!fms.empty())
-	  return interpreter.makeSummation(fms);
+	  {
+	    ImportModule* m = interpreter.makeSummation(fms);
+	    if (!(m->isBad()))
+	      return m;
+	  }
 	break;
       }
     case ModuleExpression::INSTANTIATION:
@@ -224,7 +230,7 @@ PreModule::makeModule(const ModuleExpression* expr, ImportModule* enclosingModul
 		    if (!(v->evaluate()))
 		      {
 			IssueWarning("unusable view " << QUOTE(name) << " while evaluating module instantiation " <<
-				     QUOTE(expr));
+				     QUOTE(expr) << '.');
 			return 0;
 		      }
 		    ImportModule* fromTheory = v->getFromTheory();
@@ -247,7 +253,9 @@ PreModule::makeModule(const ModuleExpression* expr, ImportModule* enclosingModul
 		    return 0;
 		  }
 	      }
-	    return interpreter.makeInstatiation(fm, views, names);
+	    ImportModule* m = interpreter.makeInstatiation(fm, views, names);
+	    if (!(m->isBad()))
+	      return m;
 	  }
 	break;
       }

@@ -282,7 +282,7 @@ MixfixModule::economize()
 }
 
 Sort*
-MixfixModule::findSort(int name)
+MixfixModule::findSort(int name) const
 {
   SortMap::const_iterator i = sortNames.find(name);
   return (i == sortNames.end()) ? 0 : (*i).second;

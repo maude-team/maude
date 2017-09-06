@@ -1,3 +1,16 @@
+Overview of Changes in Maude alpha86b
+=====================================
+* module garbage collection bug fixed
+* metasummation bug fixed
+* target modules with free parameters no longer allowed in views
+* illegal importations no longer tolerated
+* views can no longer map module defined stuff
+* renamings can no longer map parameter defined stuff
+* operator mappings now allowed in views
+* dependency tracking supports views
+* meta support for parameterization
+* identity elements added for various structures in prelude
+
 Overview of Changes in Maude alpha86a
 =====================================
 * fixed parameter checking bug for modules with both free and bound
@@ -36,7 +49,7 @@ Overview of Changes in Maude alpha85
 * glbSorts() now handles kinds
 * show profile now includes percentages
 * show path labels command added
-* metaSearchPath(),  added
+* metaSearchPath() added
 * set clear rules on/off command added
 * maximalAritySet() added
 

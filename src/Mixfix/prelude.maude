@@ -22,7 +22,7 @@
 
 ***
 ***	Maude interpreter standard prelude.
-***	Version Alpha 86a
+***	Version Alpha 86b
 ***
 ***	Some of the overall structure is taken from the OBJ3
 ***	interpreter standard prelude.
@@ -1206,16 +1206,20 @@ fmod MAP{X :: TRIV, Y :: TRIV} is
 endfm
 
 ***
-***	The Metalevel.
+***	List instantiations on builtin data types needed by the metalevel.
 ***
 
-fmod QID-LIST is
-  protecting QID .
-  sort QidList .
-  subsort Qid < QidList .
-  op nil : -> QidList [ctor] .
-  op __ : QidList QidList -> QidList [ctor assoc id: nil] .
+fmod NAT-LIST is
+  protecting LIST{Nat} * (sort NeList{Nat} to NeNatList, sort List{Nat} to NatList) .
 endfm
+
+fmod QID-LIST is
+  protecting LIST{Qid} * (sort NeList{Qid} to NeQidList, sort List{Qid} to QidList) .
+endfm
+
+***
+***	The metalevel.
+***
 
 fmod META-TERM is
   protecting QID .
@@ -1227,15 +1231,21 @@ fmod META-TERM is
   op <Qids> : -> Kind [special (id-hook QuotedIdentifierSymbol (kindQid))] .
 
 *** terms
-  sorts Constant Variable GroundTerm Term GroundTermList TermList .
+  sorts Constant Variable GroundTerm Term NeGroundTermList GroundTermList NeTermList TermList .
   subsorts Constant Variable < Qid Term .
-  subsorts Constant < GroundTerm < Term GroundTermList < TermList .
+  subsorts Constant < GroundTerm < Term NeGroundTermList < NeTermList .
+  subsorts NeGroundTermList < NeTermList GroundTermList < TermList .
   op <Qids> : -> Constant [special (id-hook QuotedIdentifierSymbol (constantQid))] .
   op <Qids> : -> Variable [special (id-hook QuotedIdentifierSymbol (variableQid))] .
-  op _,_ : GroundTermList GroundTermList -> GroundTermList [ctor assoc gather (e E) prec 121] .
+  op empty : -> GroundTermList [ctor] .
+  op _,_ : NeGroundTermList GroundTermList -> NeGroundTermList [ctor assoc id: empty gather (e E) prec 121] .
+  op _,_ : GroundTermList NeGroundTermList -> NeGroundTermList [ctor ditto] .
+  op _,_ : GroundTermList GroundTermList -> GroundTermList [ctor ditto] .
+  op _,_ : NeTermList TermList -> NeTermList [ctor ditto] .
+  op _,_ : TermList NeTermList -> NeTermList [ctor ditto] .
   op _,_ : TermList TermList -> TermList [ctor ditto] .
-  op _[_] : Qid GroundTermList -> GroundTerm [ctor] .
-  op _[_] : Qid TermList -> Term [ctor] .
+  op _[_] : Qid NeGroundTermList -> GroundTerm [ctor] .
+  op _[_] : Qid NeTermList -> Term [ctor] .
 
 *** extraction of names and types
   op getName : Constant -> Qid .
@@ -1268,18 +1278,20 @@ fmod META-TERM is
   eq A:Assignment ; A:Assignment = A:Assignment .
 
 *** contexts (terms with a single hole)
-  sorts Context CTermList GTermList .
-  subsort Context < CTermList .
-  subsorts TermList CTermList < GTermList .
+  sorts Context NeCTermList GTermList .
+  subsort Context < NeCTermList < GTermList .
+  subsorts TermList < GTermList .
 
   op [] : -> Context [ctor] .
-  op _,_ : TermList CTermList -> CTermList [ctor ditto] .
-  op _,_ : CTermList TermList -> CTermList [ctor ditto] .
-  op _[_] : Qid CTermList -> Context [ctor] .
+  op _,_ : TermList NeCTermList -> NeCTermList [ctor ditto] .
+  op _,_ : NeCTermList TermList -> NeCTermList [ctor ditto] .
+  op _,_ : GTermList GTermList -> GTermList [ctor ditto] .
+  op _[_] : Qid NeCTermList -> Context [ctor] .
 endfm
 
 fmod META-MODULE is
   protecting META-TERM .
+  protecting NAT-LIST .
   protecting QID-LIST .
 
 *** subsort declarations
@@ -1303,10 +1315,14 @@ fmod META-MODULE is
   op _;_ : EmptyTypeSet EmptyTypeSet -> EmptyTypeSet [ctor ditto] .
 
 *** type lists
-  sort TypeList .
-  subsort Type < TypeList < QidList .
-  op nil : -> TypeList [ctor] .
+  sort EmptyQidList NeTypeList TypeList .
+  subsorts EmptyQidList < TypeList < QidList .
+  subsorts Type < NeTypeList < TypeList NeQidList .
+  subsort EmptyQidList < GroundTermList .
+  op nil : -> EmptyQidList [ctor] .
   op __ : TypeList TypeList -> TypeList [ctor ditto] .
+  op __ : NeTypeList TypeList -> NeTypeList [ctor ditto] .
+  op __ : TypeList NeTypeList -> NeTypeList [ctor ditto] .
   eq T:TypeList ; T:TypeList = T:TypeList .
 
 *** sets of type lists
@@ -1333,6 +1349,16 @@ fmod META-MODULE is
   op _,_ : RenamingSet RenamingSet -> RenamingSet
     [ctor assoc comm prec 43 format (d d ni d)] .
 
+*** parameter lists
+  sort NeParameterList ParameterList .
+  subsorts Sort < NeParameterList < ParameterList .
+  subsort EmptyQidList < ParameterList .
+
+  op _,_ : ParameterList ParameterList -> ParameterList [ctor ditto] .
+  op _,_ : NeParameterList ParameterList -> NeParameterList [ctor ditto] .
+  op _,_ : ParameterList NeParameterList -> NeParameterList [ctor ditto] .
+  op _,_ : EmptyQidList EmptyQidList -> EmptyQidList [ctor ditto] .
+
 *** module expressions
   sort ModuleExpression .
   subsort Qid < ModuleExpression .
@@ -1340,6 +1366,16 @@ fmod META-MODULE is
     [ctor assoc comm] .
   op _*(_) : ModuleExpression RenamingSet -> ModuleExpression
     [ctor prec 39 format (d d s n++i n--i d)] .
+  op _{_} : ModuleExpression ParameterList -> ModuleExpression [ctor prec 37].
+
+*** parameter declarations
+  sorts ParameterDecl NeParameterDeclList ParameterDeclList .
+  subsorts ParameterDecl < NeParameterDeclList < ParameterDeclList .
+  op _::_ : Sort ModuleExpression -> ParameterDecl .
+  op nil : -> ParameterDeclList [ctor] .
+  op _,_ : ParameterDeclList ParameterDeclList -> ParameterDeclList [ctor assoc id: nil prec 121] .
+  op _,_ : NeParameterDeclList ParameterDeclList -> NeParameterDeclList [ctor ditto] .
+  op _,_ : ParameterDeclList NeParameterDeclList -> NeParameterDeclList [ctor ditto] .
 
 *** importations
   sorts Import ImportList .
@@ -1351,18 +1387,16 @@ fmod META-MODULE is
   op __ : ImportList ImportList -> ImportList
     [ctor assoc id: nil format (d ni d)] .
 
-*** Nat lists
-  sort NatList .
-  subsort Nat < NatList .
-  op __ : NatList NatList -> NatList [ctor assoc] .
-
 *** hooks
-  sorts Hook HookList .
-  subsort Hook < HookList .
+  sorts Hook NeHookList HookList .
+  subsort Hook < NeHookList < HookList .
   op id-hook : Qid QidList -> Hook [ctor format (nssss d)] .
   op op-hook : Qid Qid QidList Qid -> Hook [ctor format (nssss d)] .
   op term-hook : Qid Term -> Hook [ctor format (nssss d)] .
-  op __ : HookList HookList -> HookList [ctor assoc] .
+  op nil : -> HookList .
+  op __ : HookList HookList -> HookList [ctor assoc id: nil] .
+  op __ : NeHookList HookList -> NeHookList [ctor ditto] .
+  op __ : HookList NeHookList -> NeHookList [ctor ditto] .
 
 *** operator attributes
   op assoc : -> Attr [ctor] .
@@ -1372,7 +1406,7 @@ fmod META-MODULE is
   op id : Term -> Attr [ctor] .
   op left-id : Term -> Attr [ctor] .
   op right-id : Term -> Attr [ctor] .
-  op strat : NatList -> Attr [ctor] .
+  op strat : NeNatList -> Attr [ctor] .
   op memo : -> Attr [ctor] .
   op prec : Nat -> Attr [ctor] .
   op gather : QidList -> Attr [ctor] .
@@ -1381,9 +1415,9 @@ fmod META-MODULE is
   op config : -> Attr [ctor] .
   op object : -> Attr [ctor] .
   op msg : -> Attr [ctor] .
-  op frozen : NatList -> Attr [ctor] .
-  op poly : NatList -> Attr [ctor] .
-  op special : HookList -> Attr [ctor] .
+  op frozen : NeNatList -> Attr [ctor] .
+  op poly : NeNatList -> Attr [ctor] .
+  op special : NeHookList -> Attr [ctor] .
 
 *** statement attributes
   op label : Qid -> Attr [ctor] .
@@ -1452,16 +1486,19 @@ fmod META-MODULE is
   sorts FModule SModule FTheory STheory Module .
   subsorts FModule < SModule < Module .
   subsorts FTheory < STheory < Module .
-  op fmod_is_sorts_.____endfm : Qid ImportList SortSet SubsortDeclSet
+  sort Header .
+  subsort Qid < Header .
+  op _{_}  : Qid ParameterDeclList -> Header .
+  op fmod_is_sorts_.____endfm : Header ImportList SortSet SubsortDeclSet
     OpDeclSet MembAxSet EquationSet -> FModule [ctor gather (& & & & & & &)
-     format (d d d n++i ni d d ni ni ni ni n--i d)] .
+     format (d d s n++i ni d d ni ni ni ni n--i d)] .
+  op mod_is_sorts_._____endm : Header ImportList SortSet SubsortDeclSet
+    OpDeclSet MembAxSet EquationSet RuleSet -> SModule
+    [ctor gather (& & & & & & & &)
+     format (d d s n++i ni d d ni ni ni ni ni n--i d)] .
   op fth_is_sorts_.____endfth : Qid ImportList SortSet SubsortDeclSet
     OpDeclSet MembAxSet EquationSet -> FTheory [ctor gather (& & & & & & &)
      format (d d d n++i ni d d ni ni ni ni n--i d)] .
-  op mod_is_sorts_._____endm : Qid ImportList SortSet SubsortDeclSet
-    OpDeclSet MembAxSet EquationSet RuleSet -> SModule
-    [ctor gather (& & & & & & & &)
-     format (d d d n++i ni d d ni ni ni ni ni n--i d)] .
   op th_is_sorts_._____endth : Qid ImportList SortSet SubsortDeclSet
     OpDeclSet MembAxSet EquationSet RuleSet -> STheory
     [ctor gather (& & & & & & & &)
@@ -1610,14 +1647,18 @@ fmod META-LEVEL is
 	id-hook MetaLevelOpSymbol	(metaReduce)
 
 	op-hook qidSymbol		(<Qids> : ~> Qid)
-	op-hook metaTermSymbol		(_[_] : Qid TermList ~> Term)
-	op-hook metaArgSymbol		(_,_ : TermList TermList ~> TermList)
+	op-hook metaTermSymbol		(_[_] : Qid NeTermList ~> Term)
+	op-hook metaArgSymbol		(_,_ : NeTermList NeTermList ~> NeTermList)
 
 	op-hook assignmentSymbol	(_<-_ : Qid Term ~> Assignment)
 	op-hook substitutionSymbol	
 		(_;_ : Substitution Substitution ~> Substitution)
 	op-hook emptySubstitutionSymbol	(none : ~> Substitution)
 	op-hook holeSymbol		([] : ~> Context)
+
+	op-hook headerSymbol		(_{_} : Qid ParameterDeclList ~> Header)
+	op-hook parameterDeclSymbol	(_::_ : Sort ModuleExpression ~> ParameterDecl)
+	op-hook parameterDeclListSymbol	(_,_ : ParameterDeclList ParameterDeclList ~> ParameterDeclList)
 
 	op-hook emptyAttrSetSymbol	(none : ~> AttrSet)
 	op-hook attrSetSymbol		(__ : AttrSet AttrSet ~> AttrSet)
@@ -1630,9 +1671,11 @@ fmod META-LEVEL is
 	op-hook renamingSetSymbol	(_,_ : RenamingSet RenamingSet ~> RenamingSet)
 
 	op-hook sumSymbol
-		(_+_ : ModuleExpression ModuleExpression ~> ModuleExpression)
+                (_+_ : ModuleExpression ModuleExpression ~> ModuleExpression)
 	op-hook renamingSymbol
-		(_*(_) : ModuleExpression RenamingSet ~> ModuleExpression)
+                (_*(_) : ModuleExpression RenamingSet ~> ModuleExpression)
+	op-hook instantiationSymbol
+                (_{_} : ModuleExpression ParameterList ~> ModuleExpression)
 
 	op-hook protectingSymbol	(protecting_. : ModuleExpression ~> Import)
 	op-hook extendingSymbol		(extending_. : ModuleExpression ~> Import)
@@ -1652,7 +1695,7 @@ fmod META-LEVEL is
 	op-hook qidListSymbol		(__ : QidList QidList ~> QidList)
 
 	op-hook succSymbol		(s_ : Nat ~> NzNat)
-	op-hook natListSymbol		(__ : NatList NatList ~> NatList)
+	op-hook natListSymbol		(__ : NeNatList NeNatList ~> NeNatList)
 	op-hook unboundedSymbol		(unbounded : ~> Bound)
 
 	op-hook stringSymbol		(<Strings> : ~> String)
@@ -1668,18 +1711,18 @@ fmod META-LEVEL is
 	op-hook idSymbol		(id : Term ~> Attr)
 	op-hook leftIdSymbol		(left-id : Term ~> Attr)
 	op-hook rightIdSymbol		(right-id : Term ~> Attr)
-	op-hook stratSymbol		(strat : NatList ~> Attr)
+	op-hook stratSymbol		(strat : NeNatList ~> Attr)
 	op-hook memoSymbol		(memo : ~> Attr)
 	op-hook precSymbol		(prec : Nat ~> Attr)
 	op-hook gatherSymbol		(gather : QidList ~> Attr)
 	op-hook formatSymbol		(format : QidList ~> Attr)
 	op-hook ctorSymbol		(ctor : ~> Attr)
-	op-hook frozenSymbol		(frozen : NatList ~> Attr)
-	op-hook polySymbol		(poly : NatList ~> Attr)
+	op-hook frozenSymbol		(frozen : NeNatList ~> Attr)
+	op-hook polySymbol		(poly : NeNatList ~> Attr)
 	op-hook configSymbol		(config : ~> Attr)
 	op-hook objectSymbol		(object : ~> Attr)
 	op-hook msgSymbol		(msg : ~> Attr)
-	op-hook specialSymbol		(special : HookList ~> Attr)
+	op-hook specialSymbol		(special : NeHookList ~> Attr)
 
 	op-hook labelSymbol		(label : Qid ~> Attr)
 	op-hook metadataSymbol		(metadata : String ~> Attr)
