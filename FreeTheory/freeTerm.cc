@@ -156,12 +156,13 @@ FreeTerm::partialCompareArguments(const Substitution& partialSubstitution,
   int nrArgs = argArray.length();
   if (nrArgs != 0)
     {
-      DagNode** da = static_cast<FreeDagNode*>(other)->argArray();
-      for (int i = 0; i < nrArgs; i++, da++)
+      DagNode** da = safeCast(FreeDagNode*, other)->argArray();
+      FOR_EACH_CONST(i, Vector<Term*>, argArray)
 	{
-	  int r = argArray[i]->partialCompare(partialSubstitution, *da);
+	  int r = (*i)->partialCompare(partialSubstitution, *da);
 	  if (r != EQUAL)
 	    return r;
+	  ++da;
 	}
     }
   return 0;

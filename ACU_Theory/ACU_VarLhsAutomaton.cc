@@ -11,7 +11,7 @@
 #include "interface.hh"
 #include "core.hh"
 #include "variable.hh"
-#include "ACU_RedBlack.hh"
+#include "ACU_Persistent.hh"
 #include "ACU_Theory.hh"
 
 //      interface class definitions
@@ -78,7 +78,7 @@ ACU_VarLhsAutomaton::match(DagNode* subject,
 		  //	Red-black case.
 		  //
 		  ACU_TreeDagNode* s = safeCast(ACU_TreeDagNode*, subject);
-		  ACU_SlowIter i(s->getRoot());
+		  ACU_SlowIter i(s->getTree());
 		  do
 		    {
 		      DagNode* d = i.getDagNode();

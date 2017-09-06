@@ -3,17 +3,9 @@
 //
 #include <time.h>
 #include <sys/time.h>
-#ifdef LIBv3
 #include <ostream>
 using namespace std;
-#else
-#include <ostream.h>
-#endif
 #include "tty.hh"
-
-#ifdef SUNOS
-extern "C" int gettimeofday(timeval* tp, timezone* tzp);
-#endif
 
 void
 printBanner(std::ostream& s)
@@ -31,7 +23,7 @@ printBanner(std::ostream& s)
     Tty(Tty::GREEN) << 'e' <<
     Tty(Tty::RESET) << " ---\n";
   s << "\t\t     /||||||||||||||||||\\\n";
-  s << "\tMaude alpha 80 built: " <<
+  s << "\tMaude alpha 80a built: " <<
     __DATE__ << ' ' << __TIME__ << '\n';
   s << "\t     Copyright 1997-2003 SRI International\n";
   s << "\t\t   " << ctime(&secs);

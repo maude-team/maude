@@ -11,7 +11,7 @@ class ACU_TreeDagArgumentIterator : public RawDagArgumentIterator
   NO_COPYING(ACU_TreeDagArgumentIterator);
 
 public:
-  ACU_TreeDagArgumentIterator(ACU_RedBlackNode* root);
+  ACU_TreeDagArgumentIterator(const ACU_Tree& tree);
  
   bool valid() const;
   DagNode* argument() const;
@@ -23,8 +23,8 @@ private:
 };
 
 inline
-ACU_TreeDagArgumentIterator::ACU_TreeDagArgumentIterator(ACU_RedBlackNode* root)
-  : iter(root)
+ACU_TreeDagArgumentIterator::ACU_TreeDagArgumentIterator(const ACU_Tree& tree)
+  : iter(tree)
 {
   multiplicityRemaining = iter.getMultiplicity();
 }

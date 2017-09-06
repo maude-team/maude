@@ -70,13 +70,13 @@ ACU_DagNode::fastMerge(const ACU_DagNode* source0,
   //	Merge the argArray from source0 with red-black tree from
   //	source1 into our argArray.
   //
-  ACU_RedBlackNode* root1 = source1->getRoot();
+  const ACU_Tree& tree1 = source1->getTree();
   argArray.resizeWithoutPreservation(source0->argArray.length() +
-				     root1->getSize());
+				     tree1.getSize());
   
   ArgVec<Pair>::const_iterator s0 = source0->argArray.begin();
   const ArgVec<Pair>::const_iterator e0 = source0->argArray.end();
-  ACU_FastIter s1(root1);
+  ACU_FastIter s1(tree1);
   ArgVec<Pair>::iterator d = argArray.begin();
   for(;;)
     {
@@ -130,12 +130,12 @@ ACU_DagNode::fastMerge(const ACU_TreeDagNode* source0,
   //	Merge the red-black tree from source0 with red-black tree
   //	from source1 into our argArray.
   //
-  ACU_RedBlackNode* root0 = source0->getRoot();
-  ACU_RedBlackNode* root1 = source1->getRoot();
-  argArray.resizeWithoutPreservation(root0->getSize() + root1->getSize());
+  const ACU_Tree& tree0 = source0->getTree();
+  const ACU_Tree& tree1 = source1->getTree();
+  argArray.resizeWithoutPreservation(tree0.getSize() + tree1.getSize());
 
-  ACU_FastIter s0(root0);
-  ACU_FastIter s1(root1);
+  ACU_FastIter s0(tree0);
+  ACU_FastIter s1(tree1);
   ArgVec<Pair>::iterator d = argArray.begin();
   for(;;)
     {

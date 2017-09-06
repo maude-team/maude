@@ -17,7 +17,7 @@ public:
   //
   //	Stuff specific to ACU_ExtensionInfo.
   //
-
+  DagNode* buildUnmatchedPortion() const;
   //
   //	We (sometimes) keep track of the maximum amount of
   //	stuff we can put in the extension and still match
@@ -31,20 +31,15 @@ public:
   //
   void setUnmatched(DagNode* unmatched);
   DagNode* getUnmatched() const;
-
   //
   //	Member functions for tracking the stuff in the
   //	extension as a vector of unmatched multiplicities.
   //
   void clear();  // setup vector and clear it
   void reset();  // setup vector without clearing it
-  void useUnmatched();  // convert to unmatched form if in matched form
   void setUnmatched(int argIndex, int multiplicity);
-  int getUnmatched(int argIndex) const;
 
 private:
-  void convertToUnmatched();  // HACK
-
   ACU_BaseDagNode* subject;
   DagRoot unmatched;
   Vector<int> unmatchedMultiplicity;
@@ -99,23 +94,9 @@ ACU_ExtensionInfo::reset()
 }
 
 inline void
-ACU_ExtensionInfo::useUnmatched()
-{
-  Assert(!(subject->isTree()), "tree form!");
-  if (unmatched.getNode() != 0)
-    convertToUnmatched();  // FIX name
-}
-
-inline void
 ACU_ExtensionInfo::setUnmatched(int argIndex, int multiplicity)
 {
   unmatchedMultiplicity[argIndex] = multiplicity;
-}
-
-inline int
-ACU_ExtensionInfo::getUnmatched(int argIndex) const
-{
-  return unmatchedMultiplicity[argIndex];
 }
 
 #endif

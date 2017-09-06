@@ -59,7 +59,7 @@ LFLAGS =	-L$(ROOT_DIR)/Core \
 		-L$(ROOT_DIR)/AU_Theory \
 		-L$(ROOT_DIR)/AU_Persistent \
 		-L$(ROOT_DIR)/ACU_Theory \
-		-L$(ROOT_DIR)/ACU_RedBlack \
+		-L$(ROOT_DIR)/ACU_Persistent \
 		-L$(ROOT_DIR)/CUI_Theory \
 		-L$(ROOT_DIR)/S_Theory \
 		-L$(ROOT_DIR)/NA_Theory \
@@ -81,7 +81,7 @@ OUR_LIBS =	-lmeta \
 		-lAU_Theory \
 		-lAU_Persistent \
 		-lACU_Theory \
-		-lACU_RedBlack \
+		-lACU_Persistent \
 		-lCUI_Theory \
 		-lS_Theory \
 		-lNA_Theory \
@@ -136,6 +136,12 @@ PURIFY_FLAGS =	-free-queue-length=10000 \
 		-chain-length="20" \
 		-cache-dir=$(CACHE_DIR) \
 		-always-use-cache-dir
+
+#PURIFY_FLAGS =	-free-queue-length=100000 \
+#		-free-queue-threshold=10000000 \
+#		-chain-length="20" \
+#		-cache-dir=$(CACHE_DIR) \
+#		-always-use-cache-dir
 
 PURECOV_FLAGS =
 

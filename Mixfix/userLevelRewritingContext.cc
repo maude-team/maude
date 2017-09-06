@@ -58,7 +58,7 @@ IntSet UserLevelRewritingContext::selected;
 IntSet UserLevelRewritingContext::excluded;
 
 UserLevelRewritingContext::UserLevelRewritingContext(DagNode* root)
-  : RewritingContext(root),
+  : ObjectSystemRewritingContext(root),
     parent(0),
     purpose(TOP_LEVEL_EVAL),
     localTraceFlag(true)
@@ -69,7 +69,7 @@ UserLevelRewritingContext::UserLevelRewritingContext(DagNode* root,
 						     UserLevelRewritingContext* parent,
 						     int purpose,
 						     bool localTraceFlag)
-  : RewritingContext(root),
+  : ObjectSystemRewritingContext(root),
     parent(parent),
     purpose(purpose),
     localTraceFlag(localTraceFlag)

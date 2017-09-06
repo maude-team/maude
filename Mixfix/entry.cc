@@ -358,14 +358,49 @@ MixfixModule::addOpDeclaration(Token prefixName,
 	quotedIdentifierSymbols[c->getIndexWithinModule()] = symbol;
 	break;
       }
-    default:
-      {
-	if (symbolType.hasFlag(SymbolType::OBJECT))
-	  objectSymbols.insert(symbol->getIndexWithinModule());
-	else if (symbolType.hasFlag(SymbolType::MESSAGE))
-	  messageSymbols.insert(symbol->getIndexWithinModule());
-	break;
-      }
+    }
+  if (symbolType.hasFlag(SymbolType::CONFIG))
+    {
+      if (dynamic_cast<ConfigSymbol*>(symbol) == 0)
+	{
+	  IssueWarning(LineNumber(prefixName.lineNumber()) <<
+		       ": operator " <<
+		       BEGIN_QUOTE << symbol << END_QUOTE <<
+		       " cannot take config attribute.");
+	}
+    }
+  if (symbolType.hasFlag(SymbolType::OBJECT))
+    {
+      WarningCheck(!(symbolType.hasFlag(SymbolType::MESSAGE)),
+		   LineNumber(prefixName.lineNumber()) <<
+		   ": operator " <<
+		   BEGIN_QUOTE << symbol << END_QUOTE <<
+		   " is not allowed to have both object and msg attributes.");
+
+      if (nrArgs == 0)
+	{
+	  IssueWarning(LineNumber(prefixName.lineNumber()) <<
+		       ": object attribute for operator " <<
+		       BEGIN_QUOTE << symbol << END_QUOTE <<
+		       " which lacks arguments.");
+	}
+      else
+	objectSymbols.insert(symbol->getIndexWithinModule());
+    }
+  else
+    {
+      if (symbolType.hasFlag(SymbolType::MESSAGE))
+	{
+	  if (nrArgs == 0)
+	    {
+	      IssueWarning(LineNumber(prefixName.lineNumber()) <<
+			   ": msg attribute for operator " <<
+			   BEGIN_QUOTE << symbol << END_QUOTE <<
+			   " which lacks arguments.");
+	    }
+	  else
+	    messageSymbols.insert(symbol->getIndexWithinModule());
+	}
     }
   return symbol;
 }
@@ -373,7 +408,8 @@ MixfixModule::addOpDeclaration(Token prefixName,
 void
 MixfixModule::addVariableAlias(Token name, Sort* sort)
 {
-  pair<AliasMap::iterator, bool> r = variableAliases.insert(AliasMap::value_type(name.code(), sort));
+  pair<AliasMap::iterator, bool> r =
+    variableAliases.insert(AliasMap::value_type(name.code(), sort));
   WarningCheck(r.second, LineNumber(name.lineNumber()) <<
 	       ": redeclaration of variable alias " << QUOTE(name) << '.');
 }

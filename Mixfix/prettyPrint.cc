@@ -95,10 +95,16 @@ MixfixModule::printAttributes(ostream& s, const PreEquation* pe, int metadata)
   int id = l.id();
   const Equation* eq = dynamic_cast<const Equation*>(pe);
   bool owise = eq != 0 && eq->isOwise();
-  if (!owise && id == NONE && metadata == NONE)
+  bool nonexec = pe->isNonexec();
+  if (!nonexec && !owise && id == NONE && metadata == NONE)
     return;
   s << " [";
   char *space = "";
+  if (nonexec)
+    {
+      s << "nonexec";
+      space = " ";
+    }
   if (owise)
     {
       s << "owise";

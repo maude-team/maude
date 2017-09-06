@@ -10,6 +10,11 @@ class RewriteSearchState : public SearchState
   NO_COPYING(RewriteSearchState);
 
 public:
+  enum Flags
+  {
+    ALLOW_NONEXEC = 16
+  };
+
   RewriteSearchState(RewritingContext* context,
 		     int label,
 		     int flags = 0,

@@ -21,6 +21,8 @@ public:
   const Vector<ConditionFragment*>& getCondition() const;
   bool hasCondition() const;
   LhsAutomaton* getLhsAutomaton() const;
+  bool isNonexec() const;
+  void setNonexec();
   //
   //	This is the most general condition checking function that allows
   //	multiple distinct successes; caller must provide trialRef variable
@@ -61,7 +63,8 @@ private:
 
   enum Flags
   {
-    COMPILED = 2
+    COMPILED = 2,
+    NONEXEC = 4
   };
 
   bool solveCondition(bool findFirst,
@@ -85,6 +88,18 @@ inline void
 PreEquation::setCompiled()
 {
   setFlags(COMPILED);
+}
+
+inline bool
+PreEquation::isNonexec() const
+{
+  return getFlag(NONEXEC);
+}
+
+inline void
+PreEquation::setNonexec()
+{
+  setFlags(NONEXEC);
 }
 
 inline const Label&

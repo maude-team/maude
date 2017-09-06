@@ -9,6 +9,10 @@ class RootContainer
 public:
   static void markPhase();
 
+#ifdef DUMP
+  static void dump(ostream& s);
+#endif
+
 protected:
   void link();
   void unlink();

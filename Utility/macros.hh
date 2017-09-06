@@ -231,8 +231,8 @@ union MachineWord
 //	Too bad we don't have a portable typeof operator.
 //
 #define FOR_EACH_CONST(var, conType, container) \
-const conType::const_iterator var##_end = container.end(); \
-for (conType::const_iterator var = container.begin(); var != var##_end; ++var)
+const conType::const_iterator var##_end = (container).end(); \
+for (conType::const_iterator var = (container).begin(); var != var##_end; ++var)
 
 inline int
 uplus(int a, int b)

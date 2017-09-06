@@ -51,6 +51,15 @@ Rule::check()
   NatSet unboundVariables(rhs->occursBelow());
   unboundVariables.subtract(boundVariables);
   addUnboundVariables(unboundVariables);
+  if (!isNonexec() && !getUnboundVariables().empty())
+    {
+      IssueWarning(*this << ": variable " <<
+		   QUOTE(index2Variable(getUnboundVariables().min())) <<
+		   " is used before it is bound in rule:\n" <<
+		   this);
+      //markAsBad();
+      setNonexec();
+    }
 }
 
 void

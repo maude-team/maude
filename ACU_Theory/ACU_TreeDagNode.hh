@@ -4,11 +4,12 @@
 #ifndef _ACU_TreeDagNode_hh_
 #define _ACU_TreeDagNode_hh_
 #include "ACU_BaseDagNode.hh"
+#include "ACU_Tree.hh"
 
 class ACU_TreeDagNode : public ACU_BaseDagNode
 {
 public:
-  ACU_TreeDagNode(ACU_Symbol* symbol, ACU_RedBlackNode* root);
+  ACU_TreeDagNode(ACU_Symbol* symbol, const ACU_Tree& tree);
    //
   //	Member functions required by theory interface.
   //
@@ -39,8 +40,7 @@ public:
   //
   static ACU_DagNode* treeToArgVec(ACU_TreeDagNode* original);
 
-  int treeComputeBaseSort();
-  ACU_RedBlackNode* getRoot() const; // would like to return const ACU_RedBlackNode*
+  const ACU_Tree& getTree() const;
 
 private:
  //
@@ -50,30 +50,29 @@ private:
   DagNode* copyEagerUptoReduced2();
   void clearCopyPointers2();
   //
-  //	Private functions.
-  //
-  static int recComputeBaseSort(ACU_Symbol* symbol, ACU_RedBlackNode* root);
-
-  //
   //	Arguments under ACU symbol.
   //
-  ACU_RedBlackNode* root;
+  ACU_Tree tree;
+  //
+  //	Slot for caching hash value.
+  //
+  size_t hashCache;
 };
 
 inline
-ACU_TreeDagNode::ACU_TreeDagNode(ACU_Symbol* symbol, ACU_RedBlackNode* root)
-  : ACU_BaseDagNode(symbol), root(root)
+ACU_TreeDagNode::ACU_TreeDagNode(ACU_Symbol* symbol, const ACU_Tree& tree)
+  : ACU_BaseDagNode(symbol), tree(tree)
 {
-  Assert(root->getSize() > 1 || root->getMultiplicity() > 1,
-	 "tried to make ACU_TreeDagNode with single argument");
+  Assert(tree.getSize() > 1 || tree.getMaxMult() > 1,
+  	 "tried to make ACU_TreeDagNode with single argument");
   setNormalizationStatus(TREE);
 }
 
 inline
-ACU_RedBlackNode*
-ACU_TreeDagNode::getRoot() const
+const ACU_Tree&
+ACU_TreeDagNode::getTree() const
 {
-  return root;
+  return tree;
 }
 
 #endif

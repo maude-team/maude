@@ -264,6 +264,7 @@ Interpreter::fRewrite(const Vector<Token>& subject, Int64 limit, Int64 gas, bool
 	    xmlBuffer->generateFrewrite(d, limit, gas);
 	}
       UserLevelRewritingContext* context = new UserLevelRewritingContext(d);
+      context->setObjectMode(ObjectSystemRewritingContext::FAIR);
       VisibleModule* fm = currentModule->getFlatModule();
 
       startUsingModule(fm);

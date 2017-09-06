@@ -1,3 +1,20 @@
+2003-05-15  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_NumberOpSymbol.cc (eqRewrite2): fix bug in case that some
+	args aren't numbers
+
+	* ACU_NumberOpSymbol.hh (class ACU_NumberOpSymbol): added decl for
+	eqRewrite2()
+
+	* ACU_NumberOpSymbol.cc (eqRewrite2): added; do most of the work
+	here to avoid a large stack frame for eqRewrite()
+	(eqRewrite): use new reduceArgumentsAndNormalize() convention; use
+	eqRewrite2()
+	(eqRewrite2): use getACU_DagNode(), getArgument(),
+	getMultiplicity()
+	
+===================================Maude80a===========================================
+
 2003-05-01  Steven Eker  <eker@goo.csl.sri.com>
 
 	* floatDagNode.cc (overwriteWithClone): rewritten

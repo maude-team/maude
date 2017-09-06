@@ -1,3 +1,8 @@
+2003-05-06  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeTerm.cc (partialCompareArguments): use FOR_EACH_CONST()
+	(partialCompareArguments): use safeCast()
+
 2003-05-01  Steven Eker  <eker@goo.csl.sri.com>
 
 	* freeDagNode.cc (overwriteWithClone): use copySetRewritingFlags()

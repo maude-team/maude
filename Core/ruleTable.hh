@@ -13,7 +13,7 @@ public:
   bool ruleFree() const;
   virtual void compileRules();
   virtual DagNode* ruleRewrite(DagNode* subject, RewritingContext& context);
-  void resetRules();
+  virtual void resetRules();
   
 protected:
   virtual bool acceptRule(Rule* rule) = 0;

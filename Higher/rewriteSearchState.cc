@@ -46,13 +46,15 @@ RewriteSearchState::findNextRewrite()
 	return false;
     }
   ++ruleIndex;
+  bool allowNonexec = getFlags() & ALLOW_NONEXEC;
   do
     {
       const Vector<Rule*>& rules = getDagNode()->symbol()->getRules();
       for (int nrRules = rules.length(); ruleIndex < nrRules; ruleIndex++)
 	{
 	  Rule* rl = rules[ruleIndex];
-	  if (label == UNDEFINED || rl->getLabel().id() == label)
+	  if ((allowNonexec || !(rl->isNonexec())) &&
+	      (label == UNDEFINED || rl->getLabel().id() == label))
 	    {
 	      LhsAutomaton* a = withExtension ? rl->getExtLhsAutomaton() :
 		rl->getNonExtLhsAutomaton();

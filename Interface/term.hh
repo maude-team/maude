@@ -23,7 +23,8 @@ public:
   {
     GREATER = 1,
     LESS = -2,
-    EQUAL = 0
+    EQUAL = 0,
+    UNKNOWN = -1
   };
 
   Term(Symbol* symbol);
@@ -304,12 +305,7 @@ Term::partialCompare(const Substitution& partialSubstitution,
   Symbol* s = other->symbol();
   if (topSymbol == s)
     return partialCompareArguments(partialSubstitution, other);
-  int t = topSymbol->compare(s);
-  if (t < 0)
-    return LESS;
-  if (t > 0)
-    return GREATER;
-  return EQUAL;
+  return (topSymbol->compare(s) < 0) ? LESS : GREATER;
 }
 
 inline bool

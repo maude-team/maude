@@ -12,7 +12,7 @@ whole:
 	cd $(ROOT_DIR)/Higher; $(MAKE) clean; $(MAKE) -e
 	cd $(ROOT_DIR)/FreeTheory; $(MAKE) clean; $(MAKE) -e
 	cd $(ROOT_DIR)/ACU_Theory; $(MAKE) clean; $(MAKE) -e
-	cd $(ROOT_DIR)/ACU_RedBlack; $(MAKE) clean; $(MAKE) -e
+	cd $(ROOT_DIR)/ACU_Persistent; $(MAKE) clean; $(MAKE) -e
 	cd $(ROOT_DIR)/CUI_Theory; $(MAKE) clean; $(MAKE) -e
 	cd $(ROOT_DIR)/AU_Theory; $(MAKE) clean; $(MAKE) -e
 	cd $(ROOT_DIR)/AU_Persistent; $(MAKE) clean; $(MAKE) -e
@@ -35,7 +35,7 @@ clean:
 	cd $(ROOT_DIR)/Higher; $(MAKE) clean
 	cd $(ROOT_DIR)/FreeTheory; $(MAKE) clean
 	cd $(ROOT_DIR)/ACU_Theory; $(MAKE) clean
-	cd $(ROOT_DIR)/ACU_RedBlack; $(MAKE) clean
+	cd $(ROOT_DIR)/ACU_Persistent; $(MAKE) clean
 	cd $(ROOT_DIR)/CUI_Theory; $(MAKE) clean
 	cd $(ROOT_DIR)/AU_Theory; $(MAKE) clean
 	cd $(ROOT_DIR)/AU_Persistent; $(MAKE) clean

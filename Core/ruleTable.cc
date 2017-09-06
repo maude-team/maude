@@ -57,7 +57,7 @@ RuleTable::applyRules(DagNode* subject,
       if (n >= nrRules)
 	n = n - nrRules;
       Rule* rl = rules[n];
-      if (!(rl->getUnboundVariables().empty()))
+      if (rl->isNonexec())
 	continue;
       int nrVariables = rl->getNrProtectedVariables();
       context.clear(nrVariables);

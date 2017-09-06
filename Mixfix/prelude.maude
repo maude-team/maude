@@ -1,6 +1,6 @@
 ***
 ***	Maude interpreter standard prelude.
-***	Version alpha 80.
+***	Version alpha 80a.
 ***	Copyright 1998-2003 SRI International.
 ***
 ***	Some of the overall structure is taken from the OBJ3
@@ -858,17 +858,17 @@ fmod META-MODULE is
   op gather : QidList -> Attr [ctor] .
   op format : QidList -> Attr [ctor] .
   op ctor : -> Attr [ctor] .
+  op config : -> Attr [ctor] .
+  op object : -> Attr [ctor] .
+  op msg : -> Attr [ctor] .
   op frozen : NatList -> Attr [ctor] .
   op special : HookList -> Attr [ctor] .
-
-*** backward compatibility hack for FullMaude - DO NOT USE
-  op frozen : -> Attr .
-  eq frozen = frozen(1) .  *** BAD SEMANTICS
 
 *** statement attributes
   op label : Qid -> Attr [ctor] .
   op metadata : String -> Attr [ctor] .
   op owise : -> Attr [ctor] .
+  op nonexec : -> Attr [ctor] .
 
 *** operator declarations
   sorts OpDecl OpDeclSet .
@@ -1108,10 +1108,16 @@ fmod META-LEVEL is
 	op-hook formatSymbol		(format : QidList ~> Attr)
 	op-hook ctorSymbol		(ctor : ~> Attr)
 	op-hook frozenSymbol		(frozen : NatList ~> Attr)
+	op-hook configSymbol		(config : ~> Attr)
+	op-hook objectSymbol		(object : ~> Attr)
+	op-hook msgSymbol		(msg : ~> Attr)
 	op-hook specialSymbol		(special : HookList ~> Attr)
+
 	op-hook labelSymbol		(label : Qid ~> Attr)
 	op-hook metadataSymbol		(metadata : String ~> Attr)
 	op-hook owiseSymbol		(owise : ~> Attr)
+	op-hook nonexecSymbol		(nonexec : ~> Attr)
+
 	op-hook emptyAttrSetSymbol	(none : ~> AttrSet)
 	op-hook attrSetSymbol		(__ : AttrSet AttrSet ~> AttrSet)
 
@@ -1322,9 +1328,9 @@ mod CONFIGURATION is
 
   sorts Oid Cid Object Msg Configuration .
   subsort Object Msg < Configuration .
-  op <_:_|_> : Oid Cid AttributeSet -> Object [ctor object].
+  op <_:_|_> : Oid Cid AttributeSet -> Object [ctor object] .
   op none : -> Configuration .
-  op __ : Configuration Configuration -> Configuration [ctor assoc comm id: none] .
+  op __ : Configuration Configuration -> Configuration [ctor config assoc comm id: none] .
 endm
 
 set omod include CONFIGURATION on .

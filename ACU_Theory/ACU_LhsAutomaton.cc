@@ -10,7 +10,7 @@
 //      forward declarations
 #include "interface.hh"
 #include "core.hh"
-#include "ACU_RedBlack.hh"
+#include "ACU_Persistent.hh"
 #include "ACU_Theory.hh"
 
 //      interface class definitions
@@ -49,7 +49,7 @@
 #include "ACU_ExtensionInfo.hh"
 
 //	our stuff
-#include "ACU_RedBlackMatcher.cc"
+#include "ACU_TreeMatcher.cc"
 #include "ACU_CollapseMatcher.cc"
 #include "ACU_Matcher.cc"
 #include "ACU_GreedyMatcher.cc"
@@ -69,7 +69,7 @@ ACU_LhsAutomaton::ACU_LhsAutomaton(ACU_Symbol* symbol,
   maxPatternMultiplicity = 0;
   totalNonGroundAliensMultiplicity = 0;
   uniqueCollapseAutomaton = 0;
-  redBlackOK = true;
+  treeMatchOK = true;
   collectorSeen = matchAtTop;
 } 
 
@@ -143,7 +143,7 @@ ACU_LhsAutomaton::addAbstractionVariable(int index,
   tv.abstracted = abstracted;
   updateTotals(takeIdentity ? 0 : multiplicity,
 	       (upperBound == UNBOUNDED) ? UNBOUNDED : (upperBound * multiplicity));
-  redBlackOK = false;
+  treeMatchOK = false;
 }
 
 void
@@ -165,7 +165,7 @@ ACU_LhsAutomaton::addGroundedOutAlien(Term* alien, LhsAutomaton* automaton, int 
   groundedOutAliens[nrGroundedOutAliens].term = alien->stable() ? alien : 0;
   groundedOutAliens[nrGroundedOutAliens].automaton = automaton;
   groundedOutAliens[nrGroundedOutAliens].multiplicity = multiplicity;
-  redBlackOK = redBlackOK && alien->stable();
+  treeMatchOK = treeMatchOK && alien->stable();
 }
 
 void
@@ -178,7 +178,7 @@ ACU_LhsAutomaton::addNonGroundAlien(Term* alien, LhsAutomaton* automaton, int mu
   nonGroundAliens[nrNonGroundAliens].term = alien->stable() ? alien : 0;
   nonGroundAliens[nrNonGroundAliens].automaton = automaton;
   nonGroundAliens[nrNonGroundAliens].multiplicity = multiplicity;
-  redBlackOK = redBlackOK && alien->stable();
+  treeMatchOK = treeMatchOK && alien->stable();
 }
 
 local_inline bool
@@ -205,7 +205,6 @@ ACU_LhsAutomaton::complete(MatchStrategy strategy,
   //	    aliens, in our context or in the condition;
   //	(3) there are no abstraction variables;
   //	(4) all groundout aliens and nonground aliens are stable; and
-  //	(5) the largest pattern multiplicity must be less than SAT_MULT.
   //
   //	For red-black greedy matching to be a win we require that
   //	(6) subproblems must be unlikely; and
@@ -215,12 +214,11 @@ ACU_LhsAutomaton::complete(MatchStrategy strategy,
   //	(1) and (2) are satisfied if strategy is LONE_VARIABLE or GREEDY.
   //	(6) is satisfied if strategy is  GREEDY or strategy is LONE_VARIABLE
   //	and (3) holds.
-  //	redBlackOK will have already been falsified if (3) or (4) fail to
+  //	treeMatchOK will have already been falsified if (3) or (4) fail to
   //	hold. We check (5). (7) is recorded by the collectorSeen flag.
   //
-  redBlackOK = redBlackOK &&
+  treeMatchOK = treeMatchOK &&
     (strategy == LONE_VARIABLE || strategy == GREEDY) &&
-    maxPatternMultiplicity <= ACU_RedBlackNode::SAT_MULT &&
     collectorSeen;
 
   matchStrategy = strategy;
@@ -238,7 +236,7 @@ ACU_LhsAutomaton::dump(ostream& s, const VariableInfo& variableInfo, int indentL
   s << Indent(indentLevel) << "topSymbol = \"" << topSymbol <<
     "\"\tmatchAtTop = " << static_cast<bool>(matchAtTop) <<
     "\tcollapsePossible = " << static_cast<bool>(collapsePossible) << '\n';
-  s << Indent(indentLevel) << "redBlackOK = " << static_cast<bool>(redBlackOK) <<
+  s << Indent(indentLevel) << "treeMatchOK = " << static_cast<bool>(treeMatchOK) <<
     "\tcollectorSeen = " << collectorSeen <<
     "\tmatchStrategy = " << static_cast<MatchStrategy>(matchStrategy) << '\n';
   if (uniqueCollapseAutomaton != 0)

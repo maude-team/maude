@@ -9,7 +9,7 @@
 //      forward declarations
 #include "interface.hh"
 #include "core.hh"
-#include "ACU_RedBlack.hh"
+#include "ACU_Persistent.hh"
 #include "ACU_Theory.hh"
 
 //      ACU theory class definitions
@@ -18,44 +18,124 @@
 #include "ACU_TreeDagNode.hh"
 #include "ACU_ExtensionInfo.hh"
 
+
 DagNode*
 ACU_ExtensionInfo::buildMatchedPortion() const
 {
   if (matchedWhole())
     return subject;
-  //
-  //	We don't try to handle ACU_TreeDagNodes in an efficient way.
-  //
+
   ACU_DagNode* s = getACU_DagNode(subject);
-  const_cast<ACU_ExtensionInfo*>(this)->useUnmatched();  // HACK
-  //
-  //	Count number of distinct arguments matched.
-  //
-  int nrArgs = s->argArray.length();
-  int size = 0;
-  for (int i = 0; i < nrArgs; i++)
+  ACU_DagNode* n =
+    new ACU_DagNode(s->symbol(), s->argArray.length(), ACU_DagNode::ASSIGNMENT);
+  ArgVec<ACU_Pair>::iterator dest = n->argArray.begin();
+
+  DagNode* d = unmatched.getNode();
+  if (d == 0)
     {
-      if (unmatchedMultiplicity[i] != s->argArray[i].multiplicity)
-	++size;
-    }
-  Assert(size >= 1, "no matched portion");
-  //
-  //	Build an ACU_DagNode for the matched portion.
-  //
-  ACU_DagNode* n = new ACU_DagNode(s->symbol(), size);
-  int p = 0;
-  for (int i = 0; i < nrArgs; i++)
-    {
-      int d = s->argArray[i].multiplicity - unmatchedMultiplicity[i];
-      Assert(d >= 0, "multiplicity subproblem");
-      if (d > 0)
+      //
+      //	Unmatched stuff is given by a multiplicity vector.
+      //
+      Vector<int>::const_iterator i = unmatchedMultiplicity.begin();
+      FOR_EACH_CONST(source, ArgVec<ACU_Pair>, s->argArray)
 	{
-	  Assert(d > 1 || size > 1, "at least 2 args must be matched");
-	  n->argArray[p].dagNode = s->argArray[i].dagNode;
-	  n->argArray[p].multiplicity = d;
-	  ++p;
+	  int m = source->multiplicity - *i;
+	  Assert(m >= 0, "bad unmatchedMultiplicity");
+	  if (m > 0)
+	    {
+	      dest->set(source->dagNode, m);
+	      ++dest;
+	    }
+	  ++i;
 	}
     }
+  else if (d->symbol() == s->symbol())
+    {
+      //
+      //	Unmatched stuff is given by a dag node in our theory.
+      //
+      ACU_DagNode* u = getACU_DagNode(d);
+      ArgVec<ACU_Pair>::const_iterator i = u->argArray.begin();
+      FOR_EACH_CONST(source, ArgVec<ACU_Pair>, s->argArray)
+	{
+	  int m = source->multiplicity;
+	  if (i->dagNode == source->dagNode)
+	    {
+	      m -= i->multiplicity;
+	      Assert(m >= 0, "bad unmatched");
+	      ++i;
+	      if (m == 0)
+		continue;
+	    }
+	  dest->set(source->dagNode, m);
+	  ++dest;
+	}
+    }
+  else
+    {
+      //
+      //	Unmatched stuff is given an alien dag node.
+      //
+      FOR_EACH_CONST(source, ArgVec<ACU_Pair>, s->argArray)
+	{
+	  int m = source->multiplicity;
+	  if (d == source->dagNode)
+	    {
+	      --m;
+	      if (m == 0)
+		continue;
+	    }
+	  dest->set(source->dagNode, m);
+	  ++dest;
+	}
+    }
+  int size = dest - n->argArray.begin();
+  Assert(size > 1 || n->argArray[0].multiplicity > 1,
+	 "must match more than one thing");
+  n->argArray.contractTo(size);
+  return n;
+}
+
+DagNode*
+ACU_ExtensionInfo::buildUnmatchedPortion() const
+{
+  if (DagNode* d = unmatched.getNode())
+    return d;
+  Assert(!(subject->isTree()), "tree form!");
+  
+  int size = 0;
+  Vector<int>::const_iterator last;
+  {
+    FOR_EACH_CONST(i, Vector<int>, unmatchedMultiplicity)
+      {
+	if (*i > 0)
+	  {
+	    ++size;
+	    last = i;
+	  }
+      }
+  }
+  Assert(size >= 1, "no unmatched portion");
+  
+  ACU_DagNode* s = safeCast(ACU_DagNode*, subject);
+  if (size == 1 && *last == 1)
+    return s->argArray[last - unmatchedMultiplicity.begin()].dagNode;
+  
+  ACU_DagNode* n = new ACU_DagNode(s->symbol(), size, ACU_DagNode::ASSIGNMENT);
+  ArgVec<ACU_Pair>::const_iterator source = s->argArray.begin();
+  ArgVec<ACU_Pair>::iterator dest = n->argArray.begin();
+  {
+    FOR_EACH_CONST(i, Vector<int>, unmatchedMultiplicity)
+      {
+	int t = *i;
+	if (t > 0)
+	  {
+	    dest->set(source->dagNode, t);
+	    ++dest;
+	  }
+	++source;
+      }
+  }
   return n;
 }
 
@@ -93,54 +173,4 @@ ACU_ExtensionInfo::copy(ExtensionInfo* extensionInfo)
 	unmatchedMultiplicity = e->unmatchedMultiplicity;  // deep copy
     }
   upperBound = e->upperBound;
-}
-
-void
-ACU_ExtensionInfo::convertToUnmatched()
-{
-  ArgVec<ACU_DagNode::Pair>& argArray = safeCast(ACU_DagNode*, subject)->argArray;
-  unmatchedMultiplicity.resize(argArray.length());
-  Vector<int>::iterator j = unmatchedMultiplicity.begin();
-  ArgVec<ACU_DagNode::Pair>::const_iterator i = argArray.begin();
-  const ArgVec<ACU_DagNode::Pair>::const_iterator e = argArray.end();
-
-  DagNode* d = unmatched.getNode();
-  if (d->symbol() == subject->symbol())
-    {
-      //
-      //	Unmatched stuff is an unmatched ACU_TreeDagNode.
-      //
-      ACU_FastIter k(safeCast(ACU_TreeDagNode*, d)->getRoot());
-      d = k.getDagNode();
-      for (; i != e; ++i, ++j)
-	{
-	  if (i->dagNode == d)
-	    {
-	      *j = k.getMultiplicity();
-	      k.next();
-	      d = k.valid() ? k.getDagNode() : 0;
-	    }
-	  else
-	    *j = 0;
-	}
-      Assert(d == 0, "didn't finish unmatched ACU_TreeDagNode");
-    }
-  else
-    {
-      //
-      //	Unmatched stuff is a single unmatched argument.
-      //
-      for (; i != e; ++i, ++j)
-	{
-	  if (i->dagNode == d)
-	    {
-	      *j = 1;
-	      d = 0;
-	    }
-	  else
-	    *j = 0;
-	}
-      Assert(d == 0, "didn't find single unmatched arg");
-    }
-  unmatched.setNode(0);
 }

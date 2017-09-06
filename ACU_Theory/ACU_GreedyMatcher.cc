@@ -227,8 +227,7 @@ ACU_LhsAutomaton::greedyPureMatch(ACU_DagNode* subject,
       else
 	{     
 	  int m = tv.multiplicity;
-	  ACU_DagNode* d = new ACU_DagNode(topSymbol, nrSubjects);
-	  d->setNormalizationStatus(ACU_DagNode::ASSIGNMENT);
+	  ACU_DagNode* d = new ACU_DagNode(topSymbol, nrSubjects, ACU_DagNode::ASSIGNMENT);
 	  int pos = 0;
 	  for (int j = 0; j < nrArgs; j++)
 	    {

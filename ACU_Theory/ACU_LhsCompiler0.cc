@@ -69,7 +69,6 @@ ACU_Term::tryToMakeNonLinearLhsAutomaton(const VariableInfo& variableInfo,
   //	(3) not occur elsewhere in lhs;
   //	(4) have unit, limit or pure sort w.r.t. top symbol;
   //	(5) not be able to take identity; and
-  //	(6) must have a multiplicity <= SAT_MULT
   //
   if (boundUniquely.contains(vi) ||
       variableInfo.getConditionVariables().contains(vi) ||
@@ -77,8 +76,7 @@ ACU_Term::tryToMakeNonLinearLhsAutomaton(const VariableInfo& variableInfo,
       (s->sortBound(vs) > 1 &&
        s->sortStructure(vs) != AssociativeSymbol::LIMIT_SORT &&
        s->sortStructure(vs) != AssociativeSymbol::PURE_SORT) ||
-      s->takeIdentity(vs) ||
-      multiplicity > ACU_RedBlackNode::SAT_MULT)
+      s->takeIdentity(vs))
     return 0;
   Assert(collapseSymbols().empty(), "shouldn't be able to collapse");
   return new ACU_NonLinearLhsAutomaton(s,

@@ -15,17 +15,6 @@ public:
     //
     FRESH,
     //
-    //	Node was produced by a partial replacement after matching:
-    //	(a) all arguments except the last are reduced up to strategy
-    //	    of our symbol (this only holds if it was true of subject
-    //	    before matching);
-    //	(b) all arguments except the last have the correct sort; and
-    //	(c) argument list except for last argument is in theory normal form.
-    //	There is no guarantee about our sort since extension could be in
-    //	the error sort.
-    //
-    EXTENSION,
-    //
     //	Node was produced by an assignment in ACU matcher:
     //	(a) all arguments are reduced up to strategy of our symbol
     //	   (this only holds if it was true of subject before matching);
@@ -47,6 +36,7 @@ public:
   NormalizationStatus getNormalizationStatus() const;
   void setNormalizationStatus(NormalizationStatus status);
   bool isTree() const;
+  bool isFresh() const;
   int getSize() const;
 };
 
@@ -72,6 +62,12 @@ inline bool
 ACU_BaseDagNode::isTree() const
 {
   return getTheoryByte() == TREE;
+}
+
+inline bool
+ACU_BaseDagNode::isFresh() const
+{
+  return getTheoryByte() == FRESH;
 }
 
 inline void

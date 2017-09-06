@@ -4,6 +4,7 @@
 #ifndef _ACU_LhsAutomaton_hh_
 #define _ACU_LhsAutomaton_hh_
 #include "lhsAutomaton.hh"
+#include "ACU_Tree.hh"
 
 class ACU_LhsAutomaton : public LhsAutomaton
 {
@@ -99,7 +100,7 @@ protected:
   //
   DagNode* makeHighMultiplicityAssignment(int multiplicity,
 					  Sort* sort,
-					  ACU_RedBlackNode*& current);
+					  ACU_Tree& current);
 
 private:
   struct TopVariable
@@ -162,12 +163,12 @@ private:
 			      ACU_Subproblem* subproblem);
   int computeTotalMultiplicity();
   //
-  //	Red-black matcher.
+  //	Tree matcher.
   //
-  int redBlackMatch(ACU_TreeDagNode* subject,
-		    Substitution& solution,
-		    Subproblem*& returnedSubproblem,
-		    ACU_ExtensionInfo* extensionInfo);
+  int treeMatch(ACU_TreeDagNode* subject,
+		Substitution& solution,
+		Subproblem*& returnedSubproblem,
+		ACU_ExtensionInfo* extensionInfo);
   int eliminateBoundVariables(Substitution& solution);
   bool eliminateGroundAliens();
   bool eliminateGroundedOutAliens(Substitution& solution);
@@ -223,7 +224,7 @@ private:
   ACU_Symbol* const topSymbol;
   const Bool matchAtTop;
   const Bool collapsePossible;
-  Bool redBlackOK;
+  Bool treeMatchOK;
   Bool collectorSeen;
   MatchStrategy matchStrategy;
   int totalLowerBound;  // must have at least this total mutiplicity of subjects
@@ -253,7 +254,7 @@ private:
   //
   int nrUnboundVariables;  // so we know when we are at the last unbound variable
   int matchedMultiplicity;  // so we know when we've matched at least 2 subjects
-  ACU_RedBlackNode* current;
+  ACU_Tree current;
   Vector<ACU_DagNode::Pair> matched;
 };
 

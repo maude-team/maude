@@ -1,18 +1,23 @@
 DagNode*
 MetaLevel::upMbs(bool flat, ImportModule* m, PointerMap& qidMap)
 {
-  static Vector<DagNode*> args;
-
   const Vector<SortConstraint*>& mbs = m->getSortConstraints();
   int nrMbs = flat ? mbs.length() : m->getNrOriginalMembershipAxioms();
-  if (nrMbs == 0)
-    return emptyMembAxSetSymbol->makeDagNode();
-  else if (nrMbs == 1)
-    return upMb(mbs[0], m, qidMap);
 
-  args.resize(nrMbs);
+  static Vector<DagNode*> args;
+  args.clear();
   for (int i = 0; i < nrMbs; i++)
-    args[i] = upMb(mbs[i], m, qidMap);
+    {
+      const SortConstraint* mb = mbs[i];
+      if (!(mb->isBad()))
+	args.append(upMb(mb, m, qidMap));
+    }
+
+  int nrMetaMbs = args.length();
+  if (nrMetaMbs == 0)
+    return emptyMembAxSetSymbol->makeDagNode();
+  else if (nrMetaMbs == 1)
+    return args[0];
   return membAxSetSymbol->makeDagNode(args);
 }
 
@@ -39,18 +44,23 @@ MetaLevel::upMb(const SortConstraint* mb, MixfixModule* m, PointerMap& qidMap)
 DagNode*
 MetaLevel::upEqs(bool flat, ImportModule* m, PointerMap& qidMap)
 {
-  static Vector<DagNode*> args;
-
   const Vector<Equation*>& equations = m->getEquations();
   int nrEquations = flat ? equations.length() : m->getNrOriginalEquations();
-  if (nrEquations == 0)
-    return emptyEquationSetSymbol->makeDagNode();
-  else if (nrEquations == 1)
-    return upEq(equations[0], m, qidMap);
 
-  args.resize(nrEquations);
+  static Vector<DagNode*> args;
+  args.clear();
   for (int i = 0; i < nrEquations; i++)
-    args[i] = upEq(equations[i], m, qidMap);
+    {
+      const Equation* eq = equations[i];
+      if (!(eq->isBad()))
+	args.append(upEq(eq, m, qidMap));
+    }
+
+  int nrMetaEquations = args.length();
+  if (nrMetaEquations == 0)
+    return emptyEquationSetSymbol->makeDagNode();
+  else if (nrMetaEquations == 1)
+    return args[0];
   return equationSetSymbol->makeDagNode(args);
 }
 
@@ -77,18 +87,23 @@ MetaLevel::upEq(const Equation* equation, MixfixModule* m, PointerMap& qidMap)
 DagNode*
 MetaLevel::upRls(bool flat, ImportModule* m, PointerMap& qidMap)
 {
-  static Vector<DagNode*> args;
-
   const Vector<Rule*>& rules = m->getRules();
   int nrRules = flat ? rules.length() : m->getNrOriginalRules();
-  if (nrRules == 0)
-    return emptyRuleSetSymbol->makeDagNode();
-  else if (nrRules == 1)
-    return upRl(rules[0], m, qidMap);
 
-  args.resize(nrRules);
+  static Vector<DagNode*> args;
+  args.clear();
   for (int i = 0; i < nrRules; i++)
-    args[i] = upRl(rules[i], m, qidMap);
+    {
+      const Rule* rl = rules[i];
+      if (!(rl->isBad()))
+	args.append(upRl(rl, m, qidMap));
+    }
+
+  int nrMetaRules = args.length();
+  if (nrMetaRules == 0)
+    return emptyRuleSetSymbol->makeDagNode();
+  else if (nrMetaRules == 1)
+    return args[0];
   return ruleSetSymbol->makeDagNode(args);
 }
 
@@ -134,13 +149,17 @@ MetaLevel::upStatementAttributes(MixfixModule* m,
       args2[0] = new StringDagNode(stringSymbol, Token::codeToRope(metadata));
       args.append(metadataSymbol->makeDagNode(args2));
     }
+  if (pe->isNonexec())
+    {
+      Vector<DagNode*> args2;
+      args.append(nonexecSymbol->makeDagNode(args2));
+    }
   const Equation* eq = dynamic_cast<const Equation*>(pe);
   if (eq != 0 && eq->isOwise())
     {
       Vector<DagNode*> args2;
       args.append(owiseSymbol->makeDagNode(args2));
     }
-
   switch (args.length())
     {
     case 0:

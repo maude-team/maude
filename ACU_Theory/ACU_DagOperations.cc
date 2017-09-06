@@ -31,7 +31,7 @@ ACU_DagNode::findFirstPotentialMatch(Term* key, const Substitution& partial) con
 	    upper = probe - 1;
 	    break;
 	  }
-	case UNDECIDED:
+	case Term::UNKNOWN:
 	  {
 	    first = probe;
 	    upper = probe - 1;

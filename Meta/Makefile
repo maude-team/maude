@@ -19,6 +19,7 @@ IFLAGS =        -I$(ROOT_DIR)/Core \
 		-I$(ROOT_DIR)/S_Theory \
 		-I$(ROOT_DIR)/NA_Theory \
 		-I$(ROOT_DIR)/Utility \
+		-I$(ROOT_DIR)/ObjectSystem \
 		-I$(ROOT_DIR)/Mixfix \
 		-I$(ROOT_DIR)/FullCompiler \
 		-I$(ROOT_DIR)/BuiltIn \

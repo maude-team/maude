@@ -3,13 +3,13 @@
 //
 #ifndef _userLevelRewritingContext_hh_
 #define _userLevelRewritingContext_hh_
-#include "rewritingContext.hh"
+#include "objectSystemRewritingContext.hh"
 #include "intSet.hh"
 #include "module.hh"
 #include "rule.hh"
 class Token;  // HACK
 
-class UserLevelRewritingContext : public RewritingContext
+class UserLevelRewritingContext : public ObjectSystemRewritingContext
 {
   NO_COPYING(UserLevelRewritingContext);
 

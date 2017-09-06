@@ -1,3 +1,39 @@
+2003-05-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ruleTable.cc (applyRules): use isNonexec()
+
+	* sortConstraint.cc (check): use isNonexec()
+
+	* rule.cc (check): use isNonexec()
+
+	* equation.cc (check): use isNonexec()
+
+	* module.cc (indexSortConstraints): use isNonexec()
+	(indexEquation): use isNonexec()
+	(insertLateSymbol): use isNonexec()
+
+	* preEquation.hh (class PreEquation): added NONEXEC to enum Flags
+	(isNonexec): added
+	(setNonexec): added
+
+	* equation.hh (class Equation): changed OWISE value
+
+2003-05-22  Steven Eker  <eker@goo.csl.sri.com>
+
+	* rootContainer.hh (class RootContainer): added decl for dump()
+
+	* rootContainer.cc (dump): added
+
+2003-05-21  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ruleTable.hh (class RuleTable): make resetRules() virtual
+
+2003-05-13  Steven Eker  <eker@goo.csl.sri.com>
+
+	* rewritingContext.hh (copyProblemBindings): deleted
+	
+===================================Maude80a===========================================
+
 2003-05-01  Steven Eker  <eker@goo.csl.sri.com>
 
 	* memoryCell.hh (copySetFlags): added

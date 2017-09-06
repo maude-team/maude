@@ -23,7 +23,7 @@ MODULES =	ACU_Symbol.o \
 IFLAGS =        -I$(ROOT_DIR)/Core \
                 -I$(ROOT_DIR)/Interface \
 		-I$(ROOT_DIR)/ACU_Theory \
-		-I$(ROOT_DIR)/ACU_RedBlack \
+		-I$(ROOT_DIR)/ACU_Persistent \
 		-I$(ROOT_DIR)/Utility \
 		-I$(ROOT_DIR)/Variable \
 		-I$(ROOT_DIR)/FullCompiler
@@ -37,11 +37,11 @@ ACU_Term.o : ACU_LhsCompiler0.cc ACU_LhsCompiler1.cc ACU_LhsCompiler2.cc \
 	ACU_LhsCompiler3.cc
 
 ACU_LhsAutomaton.o : ACU_Matcher.cc ACU_GreedyMatcher.cc \
-	ACU_CollapseMatcher.cc ACU_RedBlackMatcher.cc
+	ACU_CollapseMatcher.cc ACU_TreeMatcher.cc
 
-ACU_DagNode.o : ACU_DagNormalization.cc ACU_DagOperations.cc \
-	ACU_FastMerge.cc ACU_Normalize.cc ACU_Convert.cc \
-	ACU_MergeSort.cc ACU_Flatten.cc
+ACU_DagNode.o : ACU_DagOperations.cc \
+	ACU_FastMerge.cc ACU_Normalize.cc \
+	ACU_MergeSort.cc
 
 clean:
 	rm *.o *.a

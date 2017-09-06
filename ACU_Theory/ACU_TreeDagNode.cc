@@ -9,11 +9,10 @@
 //	forward declarations
 #include "interface.hh"
 #include "core.hh"
-#include "ACU_RedBlack.hh"
+#include "ACU_Persistent.hh"
 #include "ACU_Theory.hh"
 
-//	ACU Red-Black class definitions
-#include "ACU_RedBlackNode.hh"
+//	ACU Persistent class definitions
 #include "ACU_FastIter.hh"
 
 //      ACU theory class definitions
@@ -26,16 +25,20 @@
 RawDagArgumentIterator*
 ACU_TreeDagNode::arguments()
 {
-  return new ACU_TreeDagArgumentIterator(root);
+  return new ACU_TreeDagArgumentIterator(tree);
 }
 
 size_t
 ACU_TreeDagNode::getHashValue()
 {
+  if (isHashValid())
+    return hashCache;
   size_t hashValue = symbol()->getHashValue();
-  for (ACU_FastIter i(root); i.valid(); i.next())
+  for (ACU_FastIter i(tree); i.valid(); i.next())
     hashValue = hash(hashValue, i.getDagNode()->getHashValue(), i.getMultiplicity());
-  return hashValue;  // should cache this
+  hashCache = hashValue;
+  setHashValid();
+  return hashValue;
 }
 
 int 
@@ -45,11 +48,11 @@ ACU_TreeDagNode::compareArguments(const DagNode* other) const
   if (d->isTree())
     {
       const ACU_TreeDagNode* d2 = safeCast(const ACU_TreeDagNode*, d);
-      int r = root->getSize() - d2->root->getSize();
+      int r = tree.getSize() - d2->tree.getSize();
       if (r != 0)
 	return r;
-      ACU_FastIter i(root);
-      ACU_FastIter j(d2->root);
+      ACU_FastIter i(tree);
+      ACU_FastIter j(d2->tree);
       do
 	{
 	  r = i.getMultiplicity() - j.getMultiplicity();
@@ -70,7 +73,7 @@ ACU_TreeDagNode::compareArguments(const DagNode* other) const
 void
 ACU_TreeDagNode::overwriteWithClone(DagNode* old)
 {
-  ACU_TreeDagNode* d = new(old) ACU_TreeDagNode(symbol(), root);
+  ACU_TreeDagNode* d = new(old) ACU_TreeDagNode(symbol(), tree);
   d->copySetRewritingFlags(this);
   d->setTheoryByte(getTheoryByte());
   d->setSortIndex(getSortIndex());
@@ -79,7 +82,7 @@ ACU_TreeDagNode::overwriteWithClone(DagNode* old)
 DagNode* 
 ACU_TreeDagNode::makeClone()
 {
-  ACU_TreeDagNode* d = new ACU_TreeDagNode(symbol(), root);
+  ACU_TreeDagNode* d = new ACU_TreeDagNode(symbol(), tree);
   d->copySetRewritingFlags(this);
   d->setTheoryByte(getTheoryByte());
   d->setSortIndex(getSortIndex());
@@ -108,7 +111,7 @@ ACU_TreeDagNode::stackArguments(Vector<RedexPosition>& stack,
   if (respectFrozen && !(symbol()->getFrozen().empty()))
     return;
   int j = 0;
-  for (ACU_FastIter i(root); i.valid(); i.next(), ++j)
+  for (ACU_FastIter i(tree); i.valid(); i.next(), ++j)
     {
       DagNode* d = i.getDagNode();
       if (!(d->isUnstackable()))
@@ -155,88 +158,49 @@ ACU_TreeDagNode::partialConstruct(DagNode* replacement, ExtensionInfo* extension
 DagNode*
 ACU_TreeDagNode::markArguments()
 {
-  //
-  //	Preorder traversal of unmarked nodes in red-black tree.
-  //
-  ACU_Stack i;
-  ACU_RedBlackNode* n = root;
-  for(;;)
-    {
-      while (n != 0 && !(n->isMarked()))
-	{
-	  n->setMarked();
-	  n->getDagNode()->mark();
-	  i.push(n);
-	  n = n->getLeft();
-	}
-      if (i.empty())
-	break;
-      n = i.pop()->getRight();
-    }
+  tree.mark();
   return 0;
 }
 
 DagNode*
 ACU_TreeDagNode::copyEagerUptoReduced2()
 {
-  return treeToArgVec(this)->copyEagerUptoReduced2();
+  ACU_Symbol* s = symbol();
+  return (s->getPermuteStrategy() == BinarySymbol::EAGER) ?
+    treeToArgVec(this)->copyEagerUptoReduced2() :
+    new ACU_TreeDagNode(s, tree);
 }
 
 void
 ACU_TreeDagNode::clearCopyPointers2()
 {
-  CantHappen("Should not be copying on ACU_TreeDagNode");
-}
-
-int
-ACU_TreeDagNode::treeComputeBaseSort()
-{
-  return recComputeBaseSort(symbol(), root);
-}
-
-int
-ACU_TreeDagNode::recComputeBaseSort(ACU_Symbol* symbol, ACU_RedBlackNode* root)
-{
-  // CANDIDATE FOR RECURSION ELIMINATION
-  int index = root->getSortIndex();
-  if (index != Sort::SORT_UNKNOWN)
-    return index;
-
-  index = root->getDagNode()->getSortIndex();
-  Assert(index != Sort::SORT_UNKNOWN, "bad sort");
-  index = symbol->computeMultSortIndex(index, index, root->getMultiplicity() - 1);
-
-  if (ACU_RedBlackNode* l = root->getLeft())
-    index = symbol->computeSortIndex(index, recComputeBaseSort(symbol, l));
-  if (ACU_RedBlackNode* r = root->getRight())
-    index = symbol->computeSortIndex(index, recComputeBaseSort(symbol, r));
-
-  root->setSortIndex(index);
-  return index;
+  Assert(symbol()->getPermuteStrategy() != BinarySymbol::EAGER,
+	 "should not be copying ACU_TreeDagNode with eager symbol");
 }
 
 ACU_DagNode*
 ACU_TreeDagNode::treeToArgVec(ACU_TreeDagNode* original)
 {
-  //cerr << "in:  " << original << endl;
+  // cerr << "in: " << original << endl;
 
-  ACU_RedBlackNode* t = original->root;
   ACU_Symbol* s = original->symbol();
+  ACU_Tree t = original->tree;  // deep copy
+  int sortIndex = original->getSortIndex();
+  bool redFlag = original->isReduced();
   //
   //	Now we overwrite original.
   //
-  int sortIndex = original->getSortIndex();
-  bool redFlag = original->isReduced();
-  ACU_DagNode* d = new(original) ACU_DagNode(s, t->getSize());
+  ACU_DagNode* d = new(original) ACU_DagNode(s, t.getSize(), ASSIGNMENT);
   ArgVec<ACU_DagNode::Pair>::iterator j = d->argArray.begin();
-
+  
   for (ACU_FastIter i(t); i.valid(); i.next(), ++j)
     {
       j->dagNode = i.getDagNode();
       j->multiplicity = i.getMultiplicity();
     }
-
+  
   Assert(j == d->argArray.end(), "iterators inconsistant");
+  
   //cerr << "out: " << d << endl;
 
   d->setSortIndex(sortIndex);

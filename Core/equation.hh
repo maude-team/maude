@@ -28,7 +28,7 @@ public:
 private:
   enum Flags
   {
-    OWISE = 4
+    OWISE = 0x10
   };
 
   int traceBeginTrial(DagNode* subject, RewritingContext& context) const;

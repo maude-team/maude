@@ -4,6 +4,7 @@
 #ifndef _ACU_DagNode_hh_
 #define _ACU_DagNode_hh_
 #include "ACU_BaseDagNode.hh"
+#include "ACU_Pair.hh"
 #include "argVec.hh"
 #include "ACU_FastIter.hh"
 
@@ -15,7 +16,7 @@ extern int MERGE_THRESHOLD;
 class ACU_DagNode : public ACU_BaseDagNode
 {
 public:
-  ACU_DagNode(ACU_Symbol* symbol, int size);
+  ACU_DagNode(ACU_Symbol* symbol, int size, NormalizationStatus status = FRESH);
   //
   //	Member functions required by theory interface.
   //
@@ -66,16 +67,7 @@ private:
     INITIAL_RUNS_BUFFER_SIZE = 4	// must be > 0
   };
   
-  struct Pair
-  {
-    Pair(DagNode* d, int m);
-    Pair();
-
-    void set(DagNode* d, int m);
-
-    DagNode* dagNode;
-    int multiplicity;
-  };
+  typedef ACU_Pair Pair;
 
   //
   //	Theory interface functions.
@@ -93,8 +85,6 @@ private:
 					 ArgVec<Pair>::iterator d);
 
   bool normalizeAtTop();
-  bool extensionNormalizeAtTop();
-  void binaryInsert(DagNode* dagNode, int multiplicity);
   void copyAndBinaryInsert(const ACU_DagNode* source, DagNode* dagNode, int multiplicity);
   void fastMerge(const ACU_DagNode* source0, const ACU_DagNode* source1);
   void fastMerge(const ACU_DagNode* source0, const ACU_TreeDagNode* source1);
@@ -109,16 +99,6 @@ private:
 		   int nMult,
 		   DagNode* alien,
 		   int aMult);
-
-
-  ACU_RedBlackNode* makeTree();
-  static bool pow2min1(int i);
-  static ACU_RedBlackNode* makeTree(const ArgVec<Pair>& args,
-				    int first,
-				    int size,
-				    bool makeRed);
-
-
   //
   //	Functions for ACU specific operations.
   //
@@ -161,29 +141,10 @@ private:
 };
 
 inline
-ACU_DagNode::Pair::Pair()
-{
-}
-
-inline
-ACU_DagNode::Pair::Pair(DagNode* d, int m)
-{
-  dagNode = d;
-  multiplicity = m;
-}
-
-inline void
-ACU_DagNode::Pair::set(DagNode* d, int m)
-{
-  dagNode = d;
-  multiplicity = m;
-}
-
-inline
-ACU_DagNode::ACU_DagNode(ACU_Symbol* symbol, int size)
+ACU_DagNode::ACU_DagNode(ACU_Symbol* symbol, int size, NormalizationStatus status)
   : ACU_BaseDagNode(symbol), argArray(size)
 {
-  setTheoryByte(FRESH);
+  setNormalizationStatus(status);
 }
 
 inline int

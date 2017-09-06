@@ -50,7 +50,7 @@ Equation::check()
   NatSet unboundVariables(rhs->occursBelow());
   unboundVariables.subtract(boundVariables);
   addUnboundVariables(unboundVariables);
-  if (!getUnboundVariables().empty())
+  if (!isNonexec() && !getUnboundVariables().empty())
     {
       IssueWarning(*this << ": variable " <<
 		   QUOTE(index2Variable(getUnboundVariables().min())) <<

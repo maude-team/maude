@@ -35,7 +35,7 @@ SortConstraint::check()
 {
   NatSet boundVariables;
   PreEquation::check(boundVariables);
-  if (!getUnboundVariables().empty())
+  if (!isNonexec() && !getUnboundVariables().empty())
     {
       IssueWarning(*this << ": variable " <<
                    QUOTE(index2Variable(getUnboundVariables().min())) <<

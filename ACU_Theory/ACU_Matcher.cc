@@ -176,7 +176,7 @@ ACU_LhsAutomaton::forcedLoneVariableCase(ACU_DagNode* subject,
   //
   //	General case: need to assign everything.
   //
-  ACU_DagNode* d = new ACU_DagNode(topSymbol, nrSubterms);
+  ACU_DagNode* d = new ACU_DagNode(topSymbol, nrSubterms, ACU_DagNode::ASSIGNMENT);
   int pos = 0;
   for (int i = 0; i < nrArgs; i++)
     {
@@ -194,7 +194,6 @@ ACU_LhsAutomaton::forcedLoneVariableCase(ACU_DagNode* subject,
     return loneVariable.abstracted->match(d, solution, returnedSubproblem);
   if (d->checkSort(loneVariable.sort, returnedSubproblem))
     {
-      d->setNormalizationStatus(ACU_DagNode::ASSIGNMENT);
       if (subject->isReduced() && d->getSortIndex() != Sort::SORT_UNKNOWN)
 	d->setReduced();  // not worth checking if variable is useful
       return true;
@@ -303,12 +302,12 @@ ACU_LhsAutomaton::match(DagNode* subject,
   if (safeCast(ACU_BaseDagNode*, subject)->isTree())
     {
       ACU_TreeDagNode* t = safeCast(ACU_TreeDagNode*, subject);
-      if (redBlackOK)
+      if (treeMatchOK)
 	{
-	  int r = redBlackMatch(t,
-				solution,
-				returnedSubproblem,
-				safeCast(ACU_ExtensionInfo*, extensionInfo));
+	  int r = treeMatch(t,
+			    solution,
+			    returnedSubproblem,
+			    safeCast(ACU_ExtensionInfo*, extensionInfo));
 	  if (r == true || r == false)
 	    return r;
 	}

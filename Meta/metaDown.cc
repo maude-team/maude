@@ -570,6 +570,8 @@ MetaLevel::downStatementAttr(DagNode* metaAttr,
     }
   else if (ma == owiseSymbol)
     flags.setFlags(OWISE);
+  else if (ma == nonexecSymbol)
+    flags.setFlags(NONEXEC);
   else
     return false;
   return true;
@@ -614,6 +616,8 @@ MetaLevel::downMembAx(DagNode* metaMembAx, MixfixModule* m)
 		  downCondition(f->getArgument(2), m, condition))
 		{
 		  SortConstraint* mb = new SortConstraint(label, l, sort, condition);
+		  if (flags.getFlag(NONEXEC))
+		    mb->setNonexec();
 		  m->insertSortConstraint(mb);
 		  if (metadata != NONE)
 		    m->insertMetadata(MixfixModule::MEMB_AX, mb, metadata);
@@ -666,6 +670,8 @@ MetaLevel::downEquation(DagNode* metaEquation, MixfixModule* m)
 		{
 		  Equation* eq = new Equation(label, l, r,
 					      flags.getFlag(OWISE), condition);
+		  if (flags.getFlag(NONEXEC))
+		    eq->setNonexec();
 		  m->insertEquation(eq);
 		  if (metadata != NONE)
 		    m->insertMetadata(MixfixModule::EQUATION, eq, metadata);
@@ -718,6 +724,8 @@ MetaLevel::downRule(DagNode* metaRule, MixfixModule* m)
 		  downCondition(f->getArgument(2), m, condition))
 		{
 		  Rule* rl = new Rule(label, l, r, condition);
+		  if (flags.getFlag(NONEXEC))
+		    rl->setNonexec();
 		  m->insertRule(rl);
 		  if (metadata != NONE)
 		    m->insertMetadata(MixfixModule::RULE, rl, metadata);

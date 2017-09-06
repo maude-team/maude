@@ -9,7 +9,7 @@
 //      forward declarations
 #include "interface.hh"
 #include "core.hh"
-#include "ACU_RedBlack.hh"
+#include "ACU_Persistent.hh"
 
 //	ACU theory class definitions
 #include "ACU_TreeDagArgumentIterator.hh"

@@ -13,8 +13,8 @@
 #include "interface.hh"
 #include "core.hh"
 #include "variable.hh"
+#include "ACU_Persistent.hh"
 #include "ACU_Theory.hh"
-#include "ACU_RedBlack.hh"
 
 //      interface class definitions
 #include "argVec.hh"
@@ -297,10 +297,10 @@ ACU_Term::compareArguments(const DagNode* other) const
   if (d->isTree())
     {
       const ACU_TreeDagNode* d2 = safeCast(const ACU_TreeDagNode*, d);
-      int r = len - d2->getRoot()->getSize();
+      int r = len - d2->getTree().getSize();
       if (r != 0)
 	return r;
-      ACU_FastIter j(d2->getRoot());
+      ACU_FastIter j(d2->getTree());
       Vector<Pair>::const_iterator i = argArray.begin();
       const Vector<Pair>::const_iterator e = argArray.end();
       do

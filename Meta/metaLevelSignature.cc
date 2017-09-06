@@ -82,10 +82,16 @@
      MACRO(formatSymbol, FreeSymbol, 0, 1)
      MACRO(ctorSymbol, Symbol, 0, 0)
      MACRO(frozenSymbol, Symbol, 0, 1)
+     MACRO(configSymbol, Symbol, 0, 0)
+     MACRO(objectSymbol, Symbol, 0, 0)
+     MACRO(msgSymbol, Symbol, 0, 0)
      MACRO(specialSymbol, FreeSymbol, 0, 1)
+
      MACRO(labelSymbol, FreeSymbol, 0, 1)
      MACRO(metadataSymbol, FreeSymbol, 0, 1)
      MACRO(owiseSymbol, FreeSymbol, 0, 0)
+     MACRO(nonexecSymbol, FreeSymbol, 0, 0)
+
      MACRO(emptyAttrSetSymbol, Symbol, 0, 0)
      MACRO(attrSetSymbol, Symbol, SymbolType::ASSOC | SymbolType::COMM, 2)
      //

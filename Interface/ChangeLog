@@ -1,6 +1,29 @@
+2003-05-22  Steven Eker  <eker@goo.csl.sri.com>
+
+	* dagNode.hh (mark): tighten Assert()
+
+2003-05-13  Steven Eker  <eker@goo.csl.sri.com>
+
+	* term.cc (compileRhs): added DebugAdvisory() got CopyRhsAutomaton
+	use
+
+2003-05-06  Steven Eker  <eker@goo.csl.sri.com>
+
+	* term.hh (class Term): added UNKNOWN to enum ReturnValues
+	(partialCompare): simplified
+
+2003-05-05  Steven Eker  <eker@goo.csl.sri.com>
+
+	* binarySymbol.hh (computeSortIndex): added
+	(computeMultSortIndex): added
+	
+===================================Maude80a===========================================
+
 2003-05-01  Steven Eker  <eker@goo.csl.sri.com>
 
 	* dagNode.hh (copySetRewritingFlags): added
+	
+===================================Maude80===========================================
 
 2003-03-24  Steven Eker  <eker@goo.csl.sri.com>
 

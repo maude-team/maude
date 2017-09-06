@@ -1,3 +1,64 @@
+2003-05-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* importModule.cc (donateStatements): copy metadata (this fixes a
+	bug)
+
+	* prelude.maude: added config, object, message and nonexec ops to
+	META-MODULE; removed frozen hack
+
+	* mixfixParser.cc (makeStatementPart): use setNonexec()
+
+	* prettyPrint.cc (printAttributes): handle nonexec
+
+	* importModule.cc (donateStatements): copy nonexec status
+
+2003-05-21  Steven Eker  <eker@goo.csl.sri.com>
+
+	* execute.cc (fRewrite): call setObjectMode()
+
+	* entry.cc (addOpDeclaration): don't fill out configSymbols
+
+	* userLevelRewritingContext.cc (UserLevelRewritingContext): call
+	ObjectSystemRewritingContext() (both versions)
+
+	* userLevelRewritingContext.hh (class UserLevelRewritingContext):
+	derive from ObjectSystemRewritingContext rather than
+	RewritingContext
+
+	* mixfixModule.cc (setConfigMode): deleted
+	(closeSignature): reverted
+
+	* mixfixModule.hh (CommonTokens): deleted data member
+	configSymbols and decl for setConfigMode() - setting state info
+	like this would play havoc with re-entrancy
+
+	* execute.cc (fRewrite): call setConfigMode()
+
+	* mixfixModule.cc (closeSignature): use configSymbols
+
+	* mixfixModule.hh (CommonTokens): added data member configSymbols
+
+	* mixfixModule.cc (setConfigMode): rewritten to use configSymbols
+
+	* entry.cc (addOpDeclaration): put symbols with config attribute
+	in configSymbols
+
+2003-05-20  Steven Eker  <eker@goo.csl.sri.com>
+
+	* mixfixModule.hh (CommonTokens): added decl for setConfigMode()
+
+	* mixfixModule.cc (setConfigMode): added
+
+	* entry.cc (addOpDeclaration): warn about operators that have both
+	object and msg attributes or that have an object or msg attribute
+	and no arguments
+
+2003-05-05  Steven Eker  <eker@goo.csl.sri.com>
+
+	* banner.cc: removed SUNOS and LIBv3 #ifdefs
+	
+===================================Maude80a===========================================
+
 2003-05-03  Steven Eker  <eker@goo.csl.sri.com>
 
 	* prelude.maude: added

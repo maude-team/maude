@@ -1,3 +1,7 @@
+2003-05-06  Steven Eker  <eker@goo.csl.sri.com>
+
+	* variableTerm.cc (partialCompareUnstable): use Term::UNKNOWN
+
 2003-05-01  Steven Eker  <eker@goo.csl.sri.com>
 
 	* variableDagNode.cc (overwriteWithClone): use

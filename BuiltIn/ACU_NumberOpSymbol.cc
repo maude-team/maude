@@ -10,6 +10,7 @@
 #include "interface.hh"
 #include "core.hh"
 #include "freeTheory.hh"
+#include "ACU_Persistent.hh"
 #include "ACU_Theory.hh"
 #include "builtIn.hh"
 
@@ -23,7 +24,7 @@
 
 //      ACU theory class definitions
 #include "ACU_Symbol.hh"
-//#include "ACU_DagNode.hh"
+#include "ACU_DagNode.hh"
 
 //      built in stuff
 #include "bindingMacros.hh"
@@ -70,8 +71,14 @@ bool
 ACU_NumberOpSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
 {
   Assert(this == subject->symbol(), "bad symbol");
-  if (!reduceArgumentsAndNormalize(subject, context))
+  if (reduceArgumentsAndNormalize(subject, context))
     return false;  // collapsed under us
+  return eqRewrite2(subject, context);  // keep our stack frame small
+}
+
+bool
+ACU_NumberOpSymbol::eqRewrite2(DagNode* subject, RewritingContext& context)
+{
   //
   //	If we are aborting we don't want to eagerly compute with
   //	our numerical arguments and then throw the result away since
@@ -89,27 +96,27 @@ ACU_NumberOpSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
       mpz_class accumulator;
       NatSet unused;
       int usedMultiplicity = 0;
-      int k = 0;
-      for (DagArgumentIterator i(subject); i.valid(); i.next(), ++k)
+      ACU_DagNode* d = getACU_DagNode(subject);
+      int nrArgs = d->nrArgs();
+      for (int i = 0; i < nrArgs; i++)
 	{
-	  DagNode* a = i.argument();
-	  Symbol* s = a->symbol();
-	  if ((s == minusSymbol) ? minusSymbol->isNeg(a) : succSymbol->isNat(a))
-	    {
-	      mpz_class storage;
-	      const mpz_class& n = (s == minusSymbol) ? 
-		minusSymbol->getNeg(a, storage) : succSymbol->getNat(a);
-	      if (usedMultiplicity == 0)
-		{
-		  usedMultiplicity = 1;
-		  accumulator = n;
-		  continue;
-		}
-	      else
-		++usedMultiplicity;
-
-	      const int m = 1;  // might change if we ever support multiplicity again
-
+          DagNode* a = d->getArgument(i);
+          Symbol* s = a->symbol();
+          if ((s == minusSymbol) ? minusSymbol->isNeg(a) : succSymbol->isNat(a))
+            {
+              mpz_class storage;
+              const mpz_class& n = (s == minusSymbol) ?
+                minusSymbol->getNeg(a, storage) : succSymbol->getNat(a);
+              int m = d->getMultiplicity(i);
+              if (usedMultiplicity == 0)
+                {
+                  usedMultiplicity = m;
+                  accumulator = n;
+                  if (--m == 0)
+                    continue;
+                }
+              else
+                usedMultiplicity += m;
 	      switch (op)
 		{
 		case '+':
@@ -161,7 +168,7 @@ ACU_NumberOpSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
 		}
 	    }
 	  else
-	    unused.insert(k); 
+	    unused.insert(i); 
 	}
       if (usedMultiplicity >= 2)
 	{
@@ -176,20 +183,21 @@ ACU_NumberOpSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
 	  //	Not everything was a number - need to make a new dag node by
 	  //	copying unused arguments and including accumulated result.
 	  //
-	  Vector<DagNode*> args(unused.size() + 1);
-	  int j = 0;
-	  int k = 0;
-	  for (DagArgumentIterator i(subject); i.valid(); i.next(), ++k)
-	    {
-	      if (unused.contains(k))
-		{
-		  args[j] = i.argument();
-		  ++j;
-		}
-	    }
-	  args[j] = (accumulator >= 0) ? succSymbol->makeNatDag(accumulator) :
+          int nrNewArgs = unused.size() + 1;
+          Vector<DagNode*> dagNodes(nrNewArgs);
+          Vector<int> multiplicities(nrNewArgs);
+          int j = 0;
+	  FOR_EACH_CONST(i, NatSet, unused)
+            {
+              dagNodes[j] = d->getArgument(*i);
+              multiplicities[j] = d->getMultiplicity(*i);
+              ++j;
+            }
+          dagNodes[j] = (accumulator >= 0) ? succSymbol->makeNatDag(accumulator) :
 	    minusSymbol->makeNegDag(accumulator);
-	  return context.builtInReplace(subject, makeDagNode(args));
+          multiplicities[j] = 1;
+          return context.builtInReplace(subject,
+					makeDagNode(dagNodes, multiplicities));
 	}
     }
   return ACU_Symbol::eqRewrite(subject, context);

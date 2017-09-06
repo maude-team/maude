@@ -7,7 +7,7 @@ MODULES =       configSymbol.o
 IFLAGS =        -I$(ROOT_DIR)/Core \
                 -I$(ROOT_DIR)/Interface \
                 -I$(ROOT_DIR)/FreeTheory \
-                -I$(ROOT_DIR)/ACU_RedBlack \
+                -I$(ROOT_DIR)/ACU_Persistent \
                 -I$(ROOT_DIR)/ACU_Theory \
 		-I$(ROOT_DIR)/Utility \
 		-I$(ROOT_DIR)/Variable \
@@ -20,3 +20,5 @@ libobjectSystem.a : $(MODULES)
 
 clean:
 	rm *.o *.a
+
+configSymbol.o : objectMap.cc remainder.cc

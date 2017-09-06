@@ -641,6 +641,8 @@ MixfixParser::makeStatementPart(int node, int label, int metadata, FlagSet& flag
 	Term* lhs = makeTerm(parser.getChild(pairNode, 0));
 	Sort* sort = getSort(parser.getChild(pairNode, 1));
 	SortConstraint* sc = new SortConstraint(label, lhs, sort, condition);
+	if (flags.getFlag(NONEXEC))
+	  sc->setNonexec();
 	sc->setLineNumber(lineNumber);
 	client.insertSortConstraint(sc);
 	if (metadata != NONE)
@@ -653,6 +655,8 @@ MixfixParser::makeStatementPart(int node, int label, int metadata, FlagSet& flag
 	Term* lhs = makeTerm(parser.getChild(pairNode, 0));
 	Term* rhs = makeTerm(parser.getChild(pairNode, 1));
 	Equation* eq = new Equation(label, lhs, rhs, flags.getFlag(OWISE), condition);
+	if (flags.getFlag(NONEXEC))
+	  eq->setNonexec();
 	eq->setLineNumber(lineNumber);
 	client.insertEquation(eq);
 	if (metadata != NONE)
@@ -668,6 +672,8 @@ MixfixParser::makeStatementPart(int node, int label, int metadata, FlagSet& flag
 	Term* lhs = makeTerm(parser.getChild(pairNode, 0));
 	Term* rhs = makeTerm(parser.getChild(pairNode, 1));
 	Rule* rl = new Rule(label, lhs, rhs, condition);
+	if (flags.getFlag(NONEXEC))
+	  rl->setNonexec();
 	rl->setLineNumber(lineNumber);
 	client.insertRule(rl);
 	if (metadata != NONE)

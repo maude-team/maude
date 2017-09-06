@@ -54,6 +54,7 @@ Term::compileRhs(RhsBuilder& rhsBuilder,
 		 TermBag& availableTerms,
 		 bool eagerContext)
 {
+  //cerr << this << endl;
   if (Term* t = availableTerms.findTerm(this, eagerContext))
     {
       //
@@ -88,6 +89,7 @@ Term::compileRhs(RhsBuilder& rhsBuilder,
 	      //	Since we're using an unbound or lazy variable in
 	      //	an eager context we must arrange to copy its binding.
 	      //
+	      // DebugAdvisory("made CopyRhsAutomaton for " << this);
 	      int index = variableInfo.makeConstructionIndex();
 	      rhsBuilder.addRhsAutomaton(new CopyRhsAutomaton(varIndex, index));
 	      saveIndex = index;

@@ -11,7 +11,8 @@ public:
   ACU_Symbol(int id,
 	     const Vector<int>& strategy = standard,
 	     bool memoFlag = false,
-	     Term* identity = 0);
+	     Term* identity = 0,
+	     bool useTree = true);
   //
   //	Member functions required by theory interface.
   //
@@ -29,12 +30,10 @@ public:
   //
   void compileOpDeclarations();
   void postOpDeclarationPass();
-
   //
-  //	ACU_Symbol specific functions.
+  //	Member functions special to ACU_Symbol.
   //
-  int computeSortIndex(int index1, int index2);
-  int computeMultSortIndex(int index1, int index2, int multiplicity);
+  bool useTree() const;
 
 protected:
   //
@@ -50,29 +49,19 @@ protected:
 		       const Vector<int>& multiplicities);
 
 private:
+  static bool normalize(DagNode* subject, RewritingContext& context);
+  static bool copyReduceSubtermsAndNormalize(DagNode* subject, RewritingContext& context);
   bool rewriteAtTop(DagNode* subject, RewritingContext& context);
   bool complexStrategy(DagNode* subject, RewritingContext& context);
   bool memoStrategy(MemoTable::SourceSet& from, DagNode* subject, RewritingContext& context);
-  void copyAndReduceSubterms(ACU_DagNode* subject, RewritingContext& context);
+
+  bool useTreeFlag;
 };
 
-inline int
-ACU_Symbol::computeSortIndex(int index1, int index2)
+inline bool
+ACU_Symbol::useTree() const
 {
-  return traverse(traverse(0, index1), index2);
-}
-
-inline int
-ACU_Symbol::computeMultSortIndex(int index1, int index2, int multiplicity)
-{
-  while (multiplicity > 0)
-    {
-      if (multiplicity & 1)
-	index1 = computeSortIndex(index1, index2);
-      multiplicity >>= 1;
-      index2 = computeSortIndex(index2, index2);
-    }
-  return index1;
+  return useTreeFlag;
 }
 
 #endif

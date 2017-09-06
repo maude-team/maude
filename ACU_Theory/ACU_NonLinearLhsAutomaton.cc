@@ -10,7 +10,7 @@
 //      forward declarations
 #include "interface.hh"
 #include "core.hh"
-#include "ACU_RedBlack.hh"
+#include "ACU_Persistent.hh"
 #include "ACU_Theory.hh"
 
 //      interface class definitions
@@ -51,8 +51,7 @@ ACU_NonLinearLhsAutomaton::ACU_NonLinearLhsAutomaton(ACU_Symbol* symbol,
   Assert(unitSort || pureSort ||
 	 symbol->sortStructure(varSort) == AssociativeSymbol::LIMIT_SORT,
 	 "bad sort");
-  Assert(multiplicity >= 2 && multiplicity <= ACU_RedBlackNode::SAT_MULT,
-	 "bad multiplicity");
+  Assert(multiplicity >= 2, "bad multiplicity");
 }
 
 void
@@ -99,10 +98,10 @@ ACU_NonLinearLhsAutomaton::match(DagNode* subject,
       //
       //	Red-black case.
       //
-      ACU_RedBlackNode* r = safeCast(ACU_TreeDagNode*, subject)->getRoot();
-      if (r->getMaxMult() < multiplicity)
+      ACU_Tree t(safeCast(ACU_TreeDagNode*, subject)->getTree());
+      if (t.getMaxMult() < multiplicity)
 	return false;
-      DagNode* d = makeHighMultiplicityAssignment(multiplicity, varSort, r);
+      DagNode* d = makeHighMultiplicityAssignment(multiplicity, varSort, t);
       if (d == 0)
 	{
 	  //
@@ -115,15 +114,16 @@ ACU_NonLinearLhsAutomaton::match(DagNode* subject,
       solution.bind(varIndex, d);
       ACU_ExtensionInfo* e = safeCast(ACU_ExtensionInfo*, extensionInfo);
       e->setValidAfterMatch(true);
-      if (r == 0)
+      int size = t.getSize();
+      if (size == 0)
 	e->setMatchedWhole(true);
       else
 	{
 	  e->setMatchedWhole(false);
-	  if (r->getSize() == 1 && r->getMultiplicity() == 1)
-	    e->setUnmatched(r->getDagNode());
+	  if (size == 1 && t.getMaxMult() == 1)
+	    e->setUnmatched(t.getSoleDagNode());
 	  else
-	    e->setUnmatched(new ACU_TreeDagNode(getSymbol(), r));
+	    e->setUnmatched(new ACU_TreeDagNode(getSymbol(), t));
 	}
       return true;
     }
@@ -183,8 +183,7 @@ ACU_NonLinearLhsAutomaton::match(DagNode* subject,
 	    }
 	  else
 	    {
-	      ACU_DagNode* d = new ACU_DagNode(getSymbol(), size);
-	      d->setNormalizationStatus(ACU_DagNode::ASSIGNMENT);
+	      ACU_DagNode* d = new ACU_DagNode(getSymbol(), size, ACU_DagNode::ASSIGNMENT);
 	      ArgVec<ACU_DagNode::Pair>::iterator j = d->argArray.begin();
 	      e->reset();
 	      bool whole = true;

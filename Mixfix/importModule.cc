@@ -472,8 +472,11 @@ ImportModule::donateStatements(ImportModule* importer)
 	  Vector<ConditionFragment*> condition;
 	  deepCopyCondition(&importTranslation, ma->getCondition(), condition);
 	  SortConstraint* copy = new SortConstraint(ma->getLabel().id(), lhs, sort, condition);
+	  if (ma->isNonexec())
+	    copy->setNonexec();
 	  copy->setLineNumber(ma->getLineNumber());
 	  importer->insertSortConstraint(copy);
+	  importer->insertMetadata(MEMB_AX, copy, getMetadata(MEMB_AX, ma));
 	}
     }
   //
@@ -490,8 +493,11 @@ ImportModule::donateStatements(ImportModule* importer)
 	  Vector<ConditionFragment*> condition;
 	  deepCopyCondition(&importTranslation, e->getCondition(), condition);
 	  Equation* copy = new Equation(e->getLabel().id(), lhs, rhs, e->isOwise(), condition);
+	  if (e->isNonexec())
+	    copy->setNonexec();
 	  copy->setLineNumber(e->getLineNumber());
 	  importer->insertEquation(copy);
+	  importer->insertMetadata(EQUATION, copy, getMetadata(EQUATION, e));
 	}
     }
   //
@@ -508,8 +514,11 @@ ImportModule::donateStatements(ImportModule* importer)
 	  Vector<ConditionFragment*> condition;
 	  deepCopyCondition(&importTranslation, r->getCondition(), condition);
 	  Rule* copy = new Rule(r->getLabel().id(), lhs, rhs, condition);
+	  if (r->isNonexec())
+	    copy->setNonexec();
 	  copy->setLineNumber(r->getLineNumber());
 	  importer->insertRule(copy);
+	  importer->insertMetadata(RULE, copy, getMetadata(RULE, r));
 	}
     }
 }

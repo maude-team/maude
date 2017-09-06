@@ -133,6 +133,8 @@ UserLevelRewritingContext::commandLoop()
   ParseResult parseResult;
   for(;;)
     {
+
+      //cerr << "start of command\n"; RootContainer::dump(cerr);
       cout.flush();
       parseResult = NORMAL;
       ioManager.startCommand();

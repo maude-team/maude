@@ -3,6 +3,37 @@
 //
 
 void
+ACU_DagNode::copyAndBinaryInsert(const ACU_DagNode* source,
+				 DagNode* dagNode,
+				 int multiplicity)
+{
+  //
+  //	Copy source's argArray into our argArray, inserting dagNode
+  //	in the correct place.
+  //
+  int pos;
+  int nrSourceArgs = source->argArray.length();
+  if (source->binarySearch(dagNode, pos))
+    {
+      //DebugAdvisory("copyAndBinaryInsert() " << pos << " out of " << nrSourceArgs);
+      argArray.resizeWithoutPreservation(nrSourceArgs);
+      fastCopy(source->argArray.begin(), source->argArray.end(), argArray.begin());
+      argArray[pos].multiplicity += multiplicity;
+    }
+  else
+    {
+      //DebugAdvisory("copyAndBinaryInsert() " << pos << " out of " << nrSourceArgs);
+      argArray.resizeWithoutPreservation(nrSourceArgs + 1);
+      const ArgVec<Pair>::const_iterator i = source->argArray.begin();
+      const ArgVec<Pair>::const_iterator p = i + pos;
+      const ArgVec<Pair>::iterator j = fastCopy(i, p, argArray.begin());
+      j->dagNode = dagNode;
+      j->multiplicity = multiplicity;
+      fastCopy(p, source->argArray.end(), j + 1);
+    }
+}
+
+void
 ACU_DagNode::collapse(DagNode* arg)
 {
   DagNode* remaining = (symbol()->getPermuteStrategy() == BinarySymbol::EAGER) ?
@@ -18,18 +49,18 @@ ACU_DagNode::insertAlien(ACU_BaseDagNode* normalForm,
 {
   if (normalForm->isTree())
     {
-      ACU_RedBlackNode* r = safeCast(ACU_TreeDagNode*, normalForm)->getRoot();
+      ACU_Tree t = safeCast(ACU_TreeDagNode*, normalForm)->getTree();
       if (nMult == 1)
 	{
-	  r = ACU_RedBlackNode::consInsert(r, alien, aMult);
-	  (void) new (this) ACU_TreeDagNode(symbol(), r);
+	  t.insertMult(alien, aMult);
+	  (void) new (this) ACU_TreeDagNode(symbol(), t);
 	}
       else
 	{
 	  //
 	  //	Rare case - do slow thing.
 	  //
-	  flattenSortAndUniquize(r->getSize() - 1);
+	  flattenSortAndUniquize(t.getSize() - 1);
 	}
     }
   else
@@ -39,20 +70,21 @@ ACU_DagNode::insertAlien(ACU_BaseDagNode* normalForm,
 	{
 #if 0
 	  copyAndBinaryInsert(d, alien, aMult);
-	  if (argArray.length() >= CONVERT_THRESHOLD)
+	  if (symbol()->useTree() && argArray.length() >= CONVERT_THRESHOLD)
 	    {
 	      //
 	      //	This is the place ACU_TreeDagNodes are
 	      //	created where none previously exist.
 	      //
-	      (void) new (this) ACU_TreeDagNode(symbol(), d->makeTree());
+	      ACU_Tree t(d->argArray);
+	      (void) new (this) ACU_TreeDagNode(symbol(), t);
 	    }
 #else
-	  if (d->argArray.length() >= CONVERT_THRESHOLD)
+	  if (symbol()->useTree() && d->argArray.length() >= CONVERT_THRESHOLD)
 	    {
-	      ACU_RedBlackNode* r =
-		ACU_RedBlackNode::consInsert(d->makeTree(), alien, aMult);
-	      (void) new (this) ACU_TreeDagNode(symbol(), r);
+	      ACU_Tree t(d->argArray);
+	      t.insertMult(alien, aMult);
+	      (void) new (this) ACU_TreeDagNode(symbol(), t);
 	    }
 	  else
 	    copyAndBinaryInsert(d, alien, aMult);
@@ -230,8 +262,11 @@ ACU_DagNode::normalizeAtTop()
 			  //	size of merged argument lists exceeds
 			  //	a threshold.
 			  //
-			  if (argArray.length() >= MERGE_THRESHOLD)
-			    (void) new (this) ACU_TreeDagNode(symbol(), makeTree());
+			  if (symbol()->useTree() && argArray.length() >= MERGE_THRESHOLD)
+			    {
+			      ACU_Tree t(argArray);
+			      (void) new (this) ACU_TreeDagNode(symbol(), t);
+			    }
 			}
 		      else
 			{

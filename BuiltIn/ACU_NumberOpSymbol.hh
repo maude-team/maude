@@ -19,6 +19,8 @@ public:
   bool eqRewrite(DagNode* subject, RewritingContext& context);
 
 private:
+  bool eqRewrite2(DagNode* subject, RewritingContext& context);
+
   int op;
   SuccSymbol* succSymbol;
   MinusSymbol* minusSymbol;

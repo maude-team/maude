@@ -1,3 +1,35 @@
+2003-05-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaUpModule.cc (upMbs): only up non-bad mbs
+	(upEqs): only up non-bad eqs
+	(upRls): only up non-bad rls
+	(upStatementAttributes): handle nonexec
+
+	* metaDown.cc (downEquation): handle nonexec
+	(downRule): handle nonexec
+	(downStatementAttr): handle nonexec
+	(downMembAx): handle nonexec
+
+	* metaDownOps.cc (downAttr): handle configSymbol, objectSymbol,
+	msgSymbol
+
+	* metaLevelSignature.cc (MACRO): added configSymbol, objectSymbol,
+	msgSymbol, nonexecSymbol
+
+	* descentFunctions.cc (metaApply): pass ALLOW_NONEXEC to
+	RewriteSearchState() 
+	(metaXapply): pass ALLOW_NONEXEC to RewriteSearchState()
+
+2003-05-22  Steven Eker  <eker@goo.csl.sri.com>
+
+	* descentFunctions.cc (metaFrewrite): fixed nasty bug where
+	safeCast() macro was causing the creation of 3 subcontexts rather
+	than one
+
+2003-05-21  Steven Eker  <eker@goo.csl.sri.com>
+
+	* descentFunctions.cc (metaFrewrite): call setObjectMode()
+
 2003-04-18  Steven Eker  <eker@goo.csl.sri.com>
 
 	* metaDown.cc (downSimpleSortList): fixed != nilQidListSymbol bug

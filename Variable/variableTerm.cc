@@ -138,7 +138,7 @@ VariableTerm::partialCompareUnstable(const Substitution& partialSubstitution,
 {
   DagNode* d = partialSubstitution.value(index);
   if (d == 0)
-    return UNDECIDED;
+    return Term::UNKNOWN;
   int r = d->compare(other);
   if (r < 0)
     return LESS;

@@ -10,7 +10,7 @@
 #include "interface.hh"
 #include "core.hh"
 #include "ACU_Theory.hh"
-#include "ACU_RedBlack.hh"
+#include "ACU_Persistent.hh"
 
 //      interface class definitions
 #include "term.hh"
@@ -27,12 +27,9 @@
 #include "ACU_FastIter.hh"
 
 //	our stuff
-#include "ACU_Convert.cc"
 #include "ACU_Normalize.cc"
 #include "ACU_FastMerge.cc"
-#include "ACU_DagNormalization.cc"
 #include "ACU_MergeSort.cc"
-#include "ACU_Flatten.cc"
 #include "ACU_DagOperations.cc"
 
 Vector<int> ACU_DagNode::runsBuffer(INITIAL_RUNS_BUFFER_SIZE);
@@ -70,10 +67,10 @@ ACU_DagNode::compareArguments(const DagNode* other) const
   if (d->isTree())
     {
       const ACU_TreeDagNode* d2 = safeCast(const ACU_TreeDagNode*, d);
-      int r = len - d2->getRoot()->getSize();
+      int r = len - d2->getTree().getSize();
       if (r != 0)
 	return r;
-      ACU_FastIter j(d2->getRoot());
+      ACU_FastIter j(d2->getTree());
       ArgVec<Pair>::const_iterator i = argArray.begin();
       const ArgVec<Pair>::const_iterator e = argArray.end();
       do
@@ -141,6 +138,7 @@ ACU_DagNode::markArguments()
 DagNode*
 ACU_DagNode::copyEagerUptoReduced2()
 {
+  // cerr << "copyEagerUptoReduced2() " << this << endl;
   int nrArgs = argArray.length();
   ACU_Symbol* s = symbol();
   ACU_DagNode* n = new ACU_DagNode(s, nrArgs);
@@ -163,9 +161,12 @@ ACU_DagNode::copyEagerUptoReduced2()
 void
 ACU_DagNode::clearCopyPointers2()
 {
-  int nrArgs = argArray.length();
-  for (int i = 0; i < nrArgs; i++)
-    argArray[i].dagNode->clearCopyPointers();
+  if (symbol()->getPermuteStrategy() == BinarySymbol::EAGER)
+    {
+      int nrArgs = argArray.length();
+      for (int i = 0; i < nrArgs; i++)
+	argArray[i].dagNode->clearCopyPointers();
+    }
 }
 
 void
@@ -331,61 +332,21 @@ void
 ACU_DagNode::partialReplace(DagNode* replacement, ExtensionInfo* extensionInfo)
 {
   ACU_ExtensionInfo* e = safeCast(ACU_ExtensionInfo*, extensionInfo);
-  int nrArgs = argArray.length();
-  Assert(nrArgs > 0, "no arguments");
-
-  ArgVec<Pair>::const_iterator source = argArray.begin();
-  ArgVec<Pair>::iterator dest = argArray.begin();
-  int i = 0;
-  int p = 0;
-  do
-    {
-      int m = e->getUnmatched(i);
-      if (m > 0)
-	{
-	  dest->dagNode = source->dagNode;
-	  dest->multiplicity = m;
-	  ++dest;
-	  ++p;
-	}
-      ++source;
-      ++i;
-    }
-  while (i < nrArgs);
-  Assert(p >= 1, "no arguments left");
-  argArray.contractTo(p);
-  argArray.expandBy(1);
-  argArray[p].dagNode = replacement;
-  argArray[p].multiplicity = 1;
+  DagNode* unmatched = e->buildUnmatchedPortion();
+  argArray.resizeWithoutPreservation(2);
+  argArray[0].set(unmatched, 1);
+  argArray[1].set(replacement, 1);
+  setNormalizationStatus(FRESH);
   repudiateSortInfo();
-  setNormalizationStatus(EXTENSION);
 }
 
 DagNode*
 ACU_DagNode::partialConstruct(DagNode* replacement, ExtensionInfo* extensionInfo)
 {
+  ACU_DagNode* n = new ACU_DagNode(symbol(), 2);
   ACU_ExtensionInfo* e = safeCast(ACU_ExtensionInfo*, extensionInfo);
-  int nrArgs = argArray.length();
-  ACU_Symbol* s = symbol();
-  ACU_DagNode* n = new ACU_DagNode(s, nrArgs + 1);
-  ArgVec<ACU_DagNode::Pair>& args2 = n->argArray;
-
-  int p = 0;
-  for (int i = 0; i < nrArgs; i++)
-    {
-      int m = e->getUnmatched(i);
-      if (m > 0)
-	{
-	  args2[p].dagNode = argArray[i].dagNode;
-	  args2[p].multiplicity = m;
-	  ++p;
-	}
-    }
-  Assert(p >= 1, "no arguments left");
-  args2.contractTo(p);
-  args2.expandBy(1);
-  args2[p].dagNode = replacement;
-  args2[p].multiplicity = 1;
+  n->argArray[0].set(e->buildUnmatchedPortion(), 1);
+  n->argArray[1].set(replacement, 1);
   return n;
 }
 

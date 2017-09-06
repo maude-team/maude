@@ -37,6 +37,9 @@ public:
   bool takeIdentity(const Sort* sort);
   bool interSymbolPass();
   void reset();
+  int computeSortIndex(int index1, int index2);
+  int computeMultSortIndex(int index1, int index2, int multiplicity);
+
 
 protected:
   void commutativeSortCompletion();
@@ -90,5 +93,23 @@ BinarySymbol::getIdentityDag()
   return identityTerm.getDag();
 }
 
+inline int
+BinarySymbol::computeSortIndex(int index1, int index2)
+{
+  return traverse(traverse(0, index1), index2);
+}
+
+inline int
+BinarySymbol::computeMultSortIndex(int index1, int index2, int multiplicity)
+{
+  while (multiplicity > 0)
+    {
+      if (multiplicity & 1)
+	index1 = computeSortIndex(index1, index2);
+      multiplicity >>= 1;
+      index2 = computeSortIndex(index2, index2);
+    }
+  return index1;
+}
 
 #endif

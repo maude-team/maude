@@ -11,7 +11,7 @@
 //      forward declarations
 #include "interface.hh"
 #include "core.hh"
-#include "ACU_RedBlack.hh"
+#include "ACU_Persistent.hh"
 #include "ACU_Theory.hh"
 
 //      interface class definitions
@@ -224,13 +224,10 @@ ACU_Subproblem::solveVariables(bool findFirst, RewritingContext& solution)
 		{
 		  if (!(d->checkSort(tv.sort, solution)))
 		    goto fail;
-		  if (d->symbol() == topSymbol)
-		    {
-		      (getACU_DagNode(d))->
-			setNormalizationStatus(ACU_DagNode::ASSIGNMENT);
-		      if (buildReducedNodes && d->getSortIndex() != Sort::SORT_UNKNOWN)
-			d->setReduced();
-		    }
+		  if (d->symbol() == topSymbol &&
+		      buildReducedNodes &&
+		      d->getSortIndex() != Sort::SORT_UNKNOWN)
+		    d->setReduced();
 		}
 	      solution.bind(tv.index, d);
 	    }
@@ -323,7 +320,7 @@ ACU_Subproblem::oneVariableCase(const Vector<int>& multVec, RewritingContext& so
     }
   else
     {
-      ACU_DagNode* a = new ACU_DagNode(subject->symbol(), nrSubterms);
+      ACU_DagNode* a = new ACU_DagNode(subject->symbol(), nrSubterms, ACU_DagNode::ASSIGNMENT);
       ArgVec<ACU_DagNode::Pair>::const_iterator source = subject->argArray.begin();
       ArgVec<ACU_DagNode::Pair>::iterator dest = a->argArray.begin();
       for (int i = 0; i <= last; i++, ++source)
@@ -338,7 +335,6 @@ ACU_Subproblem::oneVariableCase(const Vector<int>& multVec, RewritingContext& so
 	}
       if (!(a->checkSort(tv.sort, solution)))
 	return false;
-      a->setNormalizationStatus(ACU_DagNode::ASSIGNMENT);
       if (subject->isReduced() && a->getSortIndex() != Sort::SORT_UNKNOWN)
 	a->setReduced();
       d = a;
@@ -490,7 +486,7 @@ ACU_Subproblem::computeAssignment(int row)
   if (totalMultiplicity == 0)
     return 0;  // identity case
   ACU_Symbol* s = subject->symbol();
-  ACU_DagNode* d = new ACU_DagNode(s, nrSubterms);
+  ACU_DagNode* d = new ACU_DagNode(s, nrSubterms, ACU_DagNode::ASSIGNMENT);
   int pos = 0;
   //
   //	Because subject is in normal form and subjectMap is monotonic, we will

@@ -1,5 +1,5 @@
 //
-//	Class for rewriting contexts
+//	Class for rewriting contexts.
 //
 //	A rewriting context keeps track of miscellaneous information needed
 //	while rewriting. An important perfomance trick is that we derive it
@@ -50,7 +50,6 @@ public:
   void ruleRewrite(Int64 limit = NONE);
   void fairRewrite(Int64 limit = NONE, Int64 gas = 1);
   void fairContinue(Int64 limit = NONE);
-  void copyProblemBindings(int destination, const Vector<int>& problemVariables);
   bool builtInReplace(DagNode* old, DagNode* replacement);
 
   virtual RewritingContext* makeSubcontext(DagNode* root, int purpose = OTHER);
@@ -204,19 +203,6 @@ RewritingContext::addInCount(RewritingContext& other)
   mbCount += other.mbCount;
   eqCount += other.eqCount;
   rlCount += other.rlCount;
-}
-
-inline void
-RewritingContext::copyProblemBindings(int destination, const Vector<int>& problemVariables)
-{
-  if (!problemVariables.isNull())
-    {
-      int nrProblemVariables = problemVariables.length();
-      for (int i = 0; i < nrProblemVariables; i++, destination++)
-	bind(destination, value(problemVariables[i])->copyEagerUptoReduced());
-      for (int i = 0; i < nrProblemVariables; i++)
-	value(problemVariables[i])->clearCopyPointers();
-    }
 }
 
 inline bool

@@ -12,8 +12,6 @@
 #include "variable.hh"
 
 //      interface class definitions
-//#include "symbol.hh"
-//#include "dagNode.hh"
 #include "term.hh"
 
 //      core class definitions
@@ -87,11 +85,18 @@ Module::~Module()
   //
   //	And finally it is safe to delete our symbols.
   //
-
   int nrSymbols = symbols.length();
+#if 1
   for (int i = 0; i < nrSymbols; i++)
     delete symbols[i];
-
+#else
+  for (int i = 0; i < nrSymbols; i++)
+    {
+      void* p = symbols[i];
+      cerr << "deleting " << symbols[i] << " at "<< p << endl;
+      memset(p, -1, sizeof(Symbol));
+    }
+#endif
 }
 
 void
@@ -240,18 +245,21 @@ Module::indexSortConstraints()
       SortConstraint* sc = sortConstraints[i];
       if (!(sc->isBad()))
 	{
-	  sc->preprocess();
-	  Term* lhs = sc->getLhs();
-	  bool noCollapse = lhs->collapseSymbols().empty();
-	  AdvisoryCheck(noCollapse,
-			*lhs << ": collapse at top of " << QUOTE(lhs) <<
-			" may cause it to match more than you expect.");
-	  if (noCollapse && dynamic_cast<VariableTerm*>(lhs) == 0)
-	    lhs->symbol()->offerSortConstraint(sc);
-	  else
+	  sc->preprocess();  // nonexec mbs need to be preprocessed
+	  if (!(sc->isNonexec()))
 	    {
-	      for(int j = 0; j < nrSymbols; j++)
-		symbols[j]->offerSortConstraint(sc);
+	      Term* lhs = sc->getLhs();
+	      bool noCollapse = lhs->collapseSymbols().empty();
+	      AdvisoryCheck(noCollapse,
+			*lhs << ": collapse at top of " << QUOTE(lhs) <<
+			    " may cause it to match more than you expect.");
+	      if (noCollapse && dynamic_cast<VariableTerm*>(lhs) == 0)
+		lhs->symbol()->offerSortConstraint(sc);
+	      else
+		{
+		  for(int j = 0; j < nrSymbols; j++)
+		    symbols[j]->offerSortConstraint(sc);
+		}
 	    }
 	}
     }
@@ -261,18 +269,21 @@ void
 Module::indexEquation(Equation* eq)
 {
   eq->preprocess();
-  Term* lhs = eq->getLhs();
-  bool noCollapse = lhs->collapseSymbols().empty();
-  AdvisoryCheck(noCollapse,
-		*lhs << ": collapse at top of " << QUOTE(lhs) <<
-		" may cause it to match more than you expect.");
-  if (noCollapse && dynamic_cast<VariableTerm*>(lhs) == 0)
-    lhs->symbol()->offerEquation(eq);
-  else
+  if (!(eq->isNonexec()))
     {
-      int nrSymbols = symbols.length();
-      for(int i = 0; i < nrSymbols; i++)
-	symbols[i]->offerEquation(eq);
+      Term* lhs = eq->getLhs();
+      bool noCollapse = lhs->collapseSymbols().empty();
+      AdvisoryCheck(noCollapse,
+		    *lhs << ": collapse at top of " << QUOTE(lhs) <<
+		    " may cause it to match more than you expect.");
+      if (noCollapse && dynamic_cast<VariableTerm*>(lhs) == 0)
+	lhs->symbol()->offerEquation(eq);
+      else
+	{
+	  int nrSymbols = symbols.length();
+	  for(int i = 0; i < nrSymbols; i++)
+	    symbols[i]->offerEquation(eq);
+	}
     }
 }
 
@@ -359,7 +370,7 @@ Module::insertLateSymbol(Symbol*s)
   for (int i = 0; i < nrSortConstraints; i++)
     {
       SortConstraint* sc = sortConstraints[i];
-      if (!(sc->isBad()))
+      if (!(sc->isBad() || sc->isNonexec()))
 	{
 	  Term* lhs = sc->getLhs();
 	  if (dynamic_cast<VariableTerm*>(lhs) != 0 || !(lhs->collapseSymbols().empty()))
@@ -375,7 +386,7 @@ Module::insertLateSymbol(Symbol*s)
   for (int i = 0; i < nrEquations; i++)
     {
       Equation* eq = equations[i];
-      if (!(eq->isBad()) && !(eq->isOwise()))
+      if (!(eq->isBad() || eq->isNonexec()) && !(eq->isOwise()))
 	{
 	  Term* lhs = eq->getLhs();
 	  if (dynamic_cast<VariableTerm*>(lhs) != 0 || !(lhs->collapseSymbols().empty()))
@@ -385,7 +396,7 @@ Module::insertLateSymbol(Symbol*s)
   for (int i = 0; i < nrEquations; i++)
     {
       Equation* eq = equations[i];
-      if (!(eq->isBad()) && eq->isOwise())
+      if (!(eq->isBad() || eq->isNonexec()) && eq->isOwise())
 	{
 	  Term* lhs = eq->getLhs();
 	  if (dynamic_cast<VariableTerm*>(lhs) != 0 || !(lhs->collapseSymbols().empty()))

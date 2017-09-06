@@ -372,7 +372,9 @@ inline void
 DagNode::mark()
 {
   Assert(this != 0, "bad dag node");
-  Assert(topSymbol->arity() >= 0, "bad symbol");
+  Assert(topSymbol->arity() >= 0 &&
+	 topSymbol->arity() <= 30,  // arbitrary - but helps catch bugs
+	 "bad symbol at " << static_cast<void*>(topSymbol));
   DagNode* d = this;
   while (!(d->getMemoryCell()->isMarked()))
     {

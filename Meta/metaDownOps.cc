@@ -280,6 +280,12 @@ MetaLevel::downAttr(DagNode* metaAttr, AttributeInfo& ai)
     }
   else if (ma == ctorSymbol)
     ai.symbolType.setFlags(SymbolType::CTOR);
+  else if (ma == configSymbol)
+    ai.symbolType.setFlags(SymbolType::CONFIG);
+  else if (ma == objectSymbol)
+    ai.symbolType.setFlags(SymbolType::OBJECT);
+  else if (ma == msgSymbol)
+    ai.symbolType.setFlags(SymbolType::MESSAGE);
   else if (ma == frozenSymbol)
     {
       Vector<int> frozenList;

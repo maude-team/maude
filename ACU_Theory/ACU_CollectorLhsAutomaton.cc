@@ -10,7 +10,7 @@
 //      forward declarations
 #include "interface.hh"
 #include "core.hh"
-#include "ACU_RedBlack.hh"
+#include "ACU_Persistent.hh"
 #include "ACU_Theory.hh"
 
 //      interface class definitions
@@ -97,7 +97,7 @@ ACU_CollectorLhsAutomaton::collect(int stripped,
   if (strippedMultiplicity == 0)
     --nrArgs;
   ACU_Symbol* topSymbol = subject->symbol();
-  ACU_DagNode* d = new ACU_DagNode(topSymbol, nrArgs);
+  ACU_DagNode* d = new ACU_DagNode(topSymbol, nrArgs, ACU_DagNode::ASSIGNMENT);
   ArgVec<ACU_DagNode::Pair>::iterator dest = d->argArray.begin();
   for (; source != victim; ++dest, ++source)
     *dest = *source;
@@ -137,7 +137,6 @@ ACU_CollectorLhsAutomaton::collect(int stripped,
 	  d->setReduced();
 	}
     }
-  d->setNormalizationStatus(ACU_DagNode::ASSIGNMENT);
   solution.bind(collectorVarIndex, d);
   return true;
 }
@@ -147,46 +146,47 @@ ACU_CollectorLhsAutomaton::collect(ACU_Stack& stripped,  // destroyed
 				   ACU_TreeDagNode* subject,
 				   Substitution& solution) const
 {
-  ACU_RedBlackNode* n = ACU_RedBlackNode::consDelete(stripped, 1);
+  ACU_Tree t(subject->getTree());
+  t.deleteMult(stripped, 1);
   DagNode* d;
   const Sort* cs = collectorSort;
-  if (n->getSize() == 1 && n->getMultiplicity() == 1)
+  if (t.getSize() == 1 && t.getMaxMult() == 1)
     {
       //
       //	Only one argument left for collector.
       //
-      d = n->getDagNode();
+      d = t.getSoleDagNode();
       if (cs != 0 && !leq(d->getSortIndex(), cs))
 	return false;
     }
   else
     {
       ACU_Symbol* topSymbol = subject->symbol();
-      ACU_TreeDagNode* t = new ACU_TreeDagNode(topSymbol, n);
       if (cs == 0)
 	{
+	  d = new ACU_TreeDagNode(topSymbol, t);
 	  if (subject->isReduced())
 	    {
 	      int index = topSymbol->getUniqueSortIndex();
 	      Assert(index != 0, "bad uniqueSortIndex");
 	      if (index < 0)
-		index = t->treeComputeBaseSort();
-	      t->setSortIndex(index);
-	      t->setReduced();
+		index = t.computeBaseSort(topSymbol);
+	      d->setSortIndex(index);
+	      d->setReduced();
 	    }
 	}
       else
 	{
-	  int index = t->treeComputeBaseSort();
+	  int index = t.computeBaseSort(topSymbol);
 	  if (!leq(index, cs))
 	    return false;
+	  d = new ACU_TreeDagNode(topSymbol, t);
 	  if (subject->isReduced())
 	    {
-	      t->setSortIndex(index);
-	      t->setReduced();
+	      d->setSortIndex(index);
+	      d->setReduced();
 	    }
 	}
-      d = t;
     }
   solution.bind(collectorVarIndex, d);
   return true;

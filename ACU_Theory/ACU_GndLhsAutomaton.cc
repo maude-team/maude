@@ -11,7 +11,7 @@
 #include "interface.hh"
 #include "core.hh"
 #include "variable.hh"
-#include "ACU_RedBlack.hh"
+#include "ACU_Persistent.hh"
 #include "ACU_Theory.hh"
 
 //      interface class definitions
@@ -68,7 +68,7 @@ ACU_GndLhsAutomaton::match(DagNode* subject,
 	      //
 	      ACU_TreeDagNode* s = safeCast(ACU_TreeDagNode*, subject);
 	      ACU_SlowIter i;
-	      if (!ACU_RedBlackNode::find(s->getRoot(), stripperTerm, i))
+	      if (!(s->getTree().find(stripperTerm, i)))
 		return false;
 	      if (collect(i, s, solution))
 		{

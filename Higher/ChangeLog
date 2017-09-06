@@ -1,3 +1,10 @@
+2003-05-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* rewriteSearchState.cc (findNextRewrite): use isNonexec()
+
+	* rewriteSearchState.hh (class RewriteSearchState): added enum
+	Flags containing ALLOW_NONEXEC
+
 2003-04-25  Steven Eker  <eker@goo.csl.sri.com>
 
 	* positionState.hh (getExtensionInfo): no longer const

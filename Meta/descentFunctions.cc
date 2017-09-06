@@ -362,14 +362,18 @@ MetaLevelOpSymbol::metaRewrite(FreeDagNode* subject, RewritingContext& context)
               t = t->normalize(false);
               DagNode* d = term2Dag(t);
               t->deepSelfDestruct();
+	      //cerr << "before create\n"; RootContainer::dump(cerr);
               RewritingContext* objectContext =
                 context.makeSubcontext(d, UserLevelRewritingContext::META_EVAL);
+	      //cerr << "after create\n"; RootContainer::dump(cerr);
               m->resetRules();
               m->protect();
               objectContext->ruleRewrite(limit);
+	      //cerr << "after run\n"; RootContainer::dump(cerr);
               context.addInCount(*objectContext);
               d = metaLevel->upResultPair(objectContext->root(), m);
               delete objectContext;
+	      //cerr << "after delete\n"; RootContainer::dump(cerr);
               (void) m->unprotect();
               return context.builtInReplace(subject, d);
             }
@@ -393,15 +397,22 @@ MetaLevelOpSymbol::metaFrewrite(FreeDagNode* subject, RewritingContext& context)
 	      t = t->normalize(false);
 	      DagNode* d = term2Dag(t);
 	      t->deepSelfDestruct();
+	      //cerr << "before create\n"; RootContainer::dump(cerr);
 	      RewritingContext* objectContext =
 		context.makeSubcontext(d, UserLevelRewritingContext::META_EVAL);
+	      safeCast(ObjectSystemRewritingContext*, objectContext)->
+		setObjectMode(ObjectSystemRewritingContext::FAIR);
+	      //cerr << "after create\n"; RootContainer::dump(cerr);
 	      m->resetRules();
 	      m->protect();
 	      objectContext->fairRewrite(limit, gas);
+	      //cerr << "after run\n"; RootContainer::dump(cerr);
 	      objectContext->root()->computeTrueSort(*objectContext);
+	      //cerr << "after sort\n"; RootContainer::dump(cerr);
 	      context.addInCount(*objectContext);
 	      d = metaLevel->upResultPair(objectContext->root(), m);
 	      delete objectContext;
+	      //cerr << "after delete\n"; RootContainer::dump(cerr);
 	      (void) m->unprotect();
 	      return context.builtInReplace(subject, d);
 	    }
@@ -512,7 +523,8 @@ MetaLevelOpSymbol::metaApply(FreeDagNode* subject, RewritingContext& context)
 			  state = new RewriteSearchState(subjectContext,
 							 label,
 							 RewriteSearchState::GC_CONTEXT |
-							 RewriteSearchState::GC_SUBSTITUTION);
+							 RewriteSearchState::GC_SUBSTITUTION |
+							 RewriteSearchState::ALLOW_NONEXEC);
 			  if (variables.length() > 0)
 			    state->setInitialSubstitution(variables, dags);
 			  for (int i = values.length() - 1; i >= 0; i--)
@@ -617,7 +629,8 @@ MetaLevelOpSymbol::metaXapply(FreeDagNode* subject, RewritingContext& context)
 			  state = new RewriteSearchState(subjectContext,
 							 label,
 							 RewriteSearchState::GC_CONTEXT |
-							 RewriteSearchState::GC_SUBSTITUTION,
+							 RewriteSearchState::GC_SUBSTITUTION |
+							 RewriteSearchState::ALLOW_NONEXEC,
 							 minDepth,
 							 maxDepth);
 			  if (variables.length() > 0)

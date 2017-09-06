@@ -1,3 +1,266 @@
+2003-05-19  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_Normalize.cc (normalizeAtTop): use useTree()
+	(insertAlien): use useTree()
+
+	* ACU_Symbol.hh (class ACU_Symbol): updated decl for ACU_Symbol()
+	(useTree): added
+
+	* ACU_Symbol.cc (ACU_Symbol): initialize useTreeFlag
+
+	* ACU_Symbol.hh (class ACU_Symbol): added data member useTreeFlag
+
+2003-05-16  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_Symbol.cc (stackArguments): rewritten; handle tree case; use
+	FOR_EACH_CONST() in ArgVec case
+	(ruleRewrite): use ruleFree(); don't use getACU_DagNode()
+
+2003-05-15  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_Symbol.cc (reduceArgumentsAndNormalize): rewritten; now
+	return true for collapse and false owise
+
+	* ACU_Symbol.hh (class ACU_Symbol): added decls for normalize()
+	and copyReduceSubtermsAndNormalize()
+
+	* ACU_Symbol.cc (memoStrategy): rewritten
+	(normalize): added
+	(complexStrategy): simplified using normalize()
+	(memoStrategy): simplified using normalize()
+	(normalizeAndComputeTrueSort): simplified using normalize()
+	(copyAndReduceSubterms): rewritten
+	(copyAndReduceSubterms): becomes copyReduceSubtermsAndNormalize()
+	(memoStrategy): simplified using copyReduceSubtermsAndNormalize()
+	(complexStrategy): simplified using
+	copyReduceSubtermsAndNormalize()
+
+	* ACU_TreeDagNode.cc (treeToArgVec): pass ASSIGNMENT to
+	ACU_DagNode()
+
+	* ACU_Symbol.cc (reduceArgumentsAndNormalize): use isFresh()
+	(eqRewrite): use isFresh()
+	(complexStrategy): use isFresh()
+	(memoStrategy): use isFresh() (2 places)
+	(normalizeAndComputeTrueSort): rewritten; only call
+	computeTrueSort() on args and normalize if our normalization
+	status is FRESH
+
+	* ACU_BaseDagNode.hh (isFresh): added
+
+	* ACU_Symbol.cc (computeBaseSort): use isTree()
+
+2003-05-14  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_ExtensionInfo.hh (useUnmatched): deleted
+	(class ACU_ExtensionInfo): deleted decls for convertToUnmatched(0
+	and useUnmatched()
+
+	* ACU_ExtensionInfo.cc (buildMatchedPortion): rewritten using
+	iterators
+	(convertToUnmatched): deleted
+
+	* ACU_DagNode.cc (partialReplace): need to set normalization
+	status to FRESH
+
+	* ACU_TreeMatcher.cc (makeHighMultiplicityAssignment): use new
+	ACU_DagNode() convention
+	(tryToBindLastVariable): use new ACU_DagNode() convention
+	(forcedLoneVariableCase): use new ACU_DagNode() convention
+
+	* ACU_Subproblem.cc (oneVariableCase): use new ACU_DagNode()
+	convention
+	(computeAssignment): use new ACU_DagNode() convention
+	(solveVariables): don't call setNormalizationStatus()
+
+	* ACU_NonLinearLhsAutomaton.cc (match): use new ACU_DagNode()
+	convention
+
+	* ACU_Matcher.cc (forcedLoneVariableCase): use new ACU_DagNode()
+	convention
+
+	* ACU_ExtensionInfo.cc (buildUnmatchedPortion): use new
+	ACU_DagNode() convention
+
+	* ACU_GreedyMatcher.cc (greedyPureMatch): use new ACU_DagNode()
+	convention
+
+	* ACU_CollectorLhsAutomaton.cc (collect): use new ACU_DagNode()
+	convention
+
+	* ACU_DagNode.hh (ACU_DagNode): take NormalizationStatus arg
+
+	* ACU_ExtensionInfo.cc (buildUnmatchedPortion): rewritten to
+	handle tree case and use iterators
+
+	* ACU_ExtensionInfo.hh (getUnmatched): deleted
+
+	* ACU_MergeSort.cc (flattenSortAndUniquize): moved here
+
+	* ACU_Normalize.cc (copyAndBinaryInsert): moved here
+
+	* ACU_DagNode.hh (class ACU_DagNode): deleted decls for
+	extensionNormalizeAtTop() and binaryInsert()
+
+	* ACU_DagNormalization.cc (extensionNormalizeAtTop): deleted
+	(binaryInsert): deleted
+
+	* ACU_Symbol.cc (reduceArgumentsAndNormalize): removed EXTENSION
+	case
+	(complexStrategy): test for ACU_BaseDagNode::FRESH
+	(memoStrategy): removed EXTENSION case
+
+	* ACU_BaseDagNode.hh (class ACU_BaseDagNode): deleted EXTENSION
+	from enum NormalizationStatus
+
+	* ACU_DagNode.cc (partialReplace): simplified using
+	buildUnmatchedPortion(); don't use EXTENSION normalization status
+	(partialConstruct): simplified using buildUnmatchedPortion()
+
+	* ACU_ExtensionInfo.hh (class ACU_ExtensionInfo): added decl for
+	buildUnmatchedPortion()
+
+	* ACU_ExtensionInfo.cc (buildUnmatchedPortion): added
+
+2003-05-13  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_TreeDagNode.cc (copyEagerUptoReduced2): avoid treeToArgVec()
+	in the case that our symbol is not eager
+	(clearCopyPointers2): changed CantHappen() to Assert() now that we
+	handle non-eager copies ourself
+
+	* ACU_DagNode.cc (clearCopyPointers2): only need to clear copy
+	pointer if we're eager - lazy argumnets don't get copied
+
+2003-05-12  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_Symbol.cc (eqRewrite): simplified
+	(complexStrategy): rewritten to avoid converting from tree to
+	argvec form unless we need to evaluate aour args
+
+	* ACU_TreeDagNode.cc (getHashValue): cache hash value
+
+	* ACU_TreeDagNode.hh (class ACU_TreeDagNode): deleted decl for
+	treeComputeBaseSort()
+	(class ACU_TreeDagNode): added data member hashCache
+
+	* ACU_TreeDagNode.cc (treeComputeBaseSort): deleted
+
+	* ACU_Symbol.cc (computeBaseSort): use ACU_Tree::computeBaseSort()
+
+	* ACU_TreeMatcher.cc (tryToBindLastVariable): use
+	ACU_Tree::computeBaseSort()
+
+	* ACU_CollectorLhsAutomaton.cc (collect): (ACU_Tree version)
+	simplified
+
+	* ACU_LhsAutomaton.cc (complete): removed SAT_MULT test and
+	comment
+
+	* ACU_LhsCompiler0.cc (tryToMakeNonLinearLhsAutomaton): removed
+	SAT_MULT test and comment
+
+	* ACU_NonLinearLhsAutomaton.cc (ACU_NonLinearLhsAutomaton):
+	removed SAT_MULT part of Assert()
+
+	* ACU_TreeMatcher.cc (treeMatch): deleted SAT_MULT Assert()
+
+2003-05-06  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_DagOperations.cc (findFirstPotentialMatch): use
+	Term::UNKNOWN
+
+2003-05-05  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_LhsAutomaton.hh (class ACU_LhsAutomaton): redBlackMatch() ->
+	treeMatch()
+
+	* ACU_TreeMatcher.cc (redBlackMatch): becomes treeMatch()
+
+	* ACU_Matcher.cc (match): redBlackOK -> treeMatchOK,
+	redBlackMatch() -> treeMatch()
+
+	* ACU_LhsAutomaton.cc: redBlackOK -> treeMatchOK
+
+	* ACU_LhsAutomaton.hh (class ACU_LhsAutomaton): redBlackOK ->
+	treeMatchOK
+
+	* ACU_TreeMatcher.cc: remamed from ACU_RedBlackMatcher.cc
+
+	* ACU_RedBlackMatcher.cc (eliminateBoundVariables): use deleteMult()
+	(makeHighMultiplicityAssignment): use class ACU_Tree
+	(redBlackMatch): use getTree()
+	(eliminateGroundAliens): use deleteMult()
+	(eliminateGroundedOutAliens): use deleteMult()
+	(greedyMatch): use deleteMult()
+	(tryToBindVariable): use deleteMult()
+	(tryToBindLastVariable): use deleteMult()
+	(eliminateBoundVariables): use ACU_Tree::find()
+	(eliminateGroundAliens): use ACU_Tree::find()
+	(eliminateGroundedOutAliens): use
+	ACU_Tree::findFirstPotentialMatch()
+	(greedyMatch): use ACU_Tree::findFirstPotentialMatch()
+	(tryToBindVariable): use ACU_Tree::findGeqMult()
+	(tryToBindLastVariable): use getSoleDagNode()
+
+	* ACU_LhsAutomaton.hh (class ACU_LhsAutomaton): current becomes an
+	ACU_Tree
+
+	* ACU_GndLhsAutomaton.cc (match): use getTree()
+
+	* ACU_ExtensionInfo.cc (convertToUnmatched): use getTree()
+
+	* ACU_Term.cc (compareArguments): use getTree()
+
+	* ACU_LhsAutomaton.hh (class ACU_LhsAutomaton): updated decl for
+	makeHighMultiplicityAssignment()
+
+	* ACU_NGA_LhsAutomaton.cc (match): use getTree()
+
+	* ACU_NonLinearLhsAutomaton.cc (match): use getTree()
+
+	* ACU_VarLhsAutomaton.cc (match): use getTree()
+
+	* ACU_Flatten.cc (flattenSortAndUniquize): use getTree()
+
+	* ACU_Normalize.cc (normalizeAtTop): use class ACU_Tree
+
+	* ACU_FastMerge.cc (fastMerge): use getTree() (2 versions)
+
+	* ACU_DagNode.hh (class ACU_DagNode): replace struct Pair with a
+	typedef from ACU_Pair
+
+	* ACU_Normalize.cc (insertAlien): use class ACU_Tree
+
+	* ACU_DagNode.cc (compareArguments): use getTree()
+
+	* ACU_Convert.cc: deleted
+
+	* ACU_DagNode.hh (class ACU_DagNode): deleted decls for
+	makeTree(), pow2min1(), makeTree()
+
+	* ACU_BaseDagNode.cc (getSize): use getTree()
+
+	* ACU_TreeDagNode.cc (recComputeBaseSort): deleted
+	(arguments): use tree data member
+	(getHashValue): use tree data member
+	(overwriteWithClone): use tree data member
+	(makeClone): use tree data member
+	(compareArguments): use tree data member
+	(stackArguments): use tree data member
+	(markArguments): use ACU_Tree::mark()
+	(treeToArgVec): use tree data member
+
+	* ACU_TreeDagNode.hh (class ACU_TreeDagNode): use ACU_Tree data
+	element
+	(getRoot): becomes getTree()
+	(class ACU_TreeDagNode): deleted decl for recComputeBaseSort()
+
+	* ACU_Symbol.hh (computeMultSortIndex): deleted
+	(computeSortIndex): deleted
+	
+===================================Maude80a===========================================
+
 2003-05-02  Steven Eker  <eker@goo.csl.sri.com>
 
 	* ACU_Symbol.hh (class ACU_Symbol): added decl for rewriteAtTop()
