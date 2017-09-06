@@ -1,3 +1,18 @@
+Overview of Changes in Maude alpha82
+====================================
+* fixed crash that occurred when printing redeclaration of sort error
+from the metalevel
+* extended quo/rem/gcd/lcm/divides to Rats
+* made constructor coloring work corectly for iter operators
+* changed operational semantics of owise equations wrt nondefault
+  operator stategies
+* fixed bugs in show module/show all commands
+* fixed metaPrettyPrint kind variable bug
+* fixed break point with builtin op seg fault
+* added upTerm() and downTerm()
+* Infinity/-Infinity now work on FreeBSD & MacOSX
+* building with Tecla is now optional
+
 Overview of Changes in Maude 2.0.1
 ==================================
 * switched build system to autoconf/automake

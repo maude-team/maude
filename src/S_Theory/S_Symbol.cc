@@ -70,16 +70,38 @@ S_Symbol::finalizeSortInfo()
 void 
 S_Symbol::computePath(int sortIndex, SortPath& path)
 {
+  path.nonCtorBound = NONE;
+  bool needToLookForNonCtor = false;
+  switch (getCtorStatus())
+    {
+    case SortTable::IS_NON_CTOR:
+      {
+	path.nonCtorBound = 0;
+	break;
+      }
+    case SortTable::IS_COMPLEX:
+      {
+	needToLookForNonCtor = true;
+	break;
+      }
+    }
+
   map<int, int> seen;
   Vector<int> indices;
   for (;;)
     {
+      if (needToLookForNonCtor && !(ctorTraverse(0, sortIndex)))
+	{
+	  path.nonCtorBound = indices.length();
+	  needToLookForNonCtor = false;
+	}
       sortIndex = traverse(0, sortIndex);
       if (seen.find(sortIndex) != seen.end())
 	{
 	  path.leadLength = seen[sortIndex];
 	  break;
 	}
+
       seen[sortIndex] = indices.length();
       indices.append(sortIndex);
     }
@@ -155,7 +177,9 @@ S_Symbol::eqRewrite(DagNode* subject, RewritingContext& context)
 	      seenZero = true;
 	    }
 	  s->normalizeAtTop();
-	  if (applyReplace(subject, context, &extensionInfo))
+	  if ((i + 1 == stratLen) ?
+	      applyReplace(subject, context, &extensionInfo) :
+	      applyReplaceNoOwise(subject, context, &extensionInfo))
 	      return true;
 	}
       else
@@ -201,7 +225,9 @@ S_Symbol::memoStrategy(MemoTable::SourceSet& from,
 	  if (memoRewrite(from, subject, context))
 	    return;
 	  S_ExtensionInfo extensionInfo(s);
-	  if (applyReplace(subject, context, &extensionInfo))
+	  if ((i + 1 == stratLen) ?
+	      applyReplace(subject, context, &extensionInfo) :
+	      applyReplaceNoOwise(subject, context, &extensionInfo))
 	    {
 	      subject->reduce(context);
 	      return;
@@ -250,6 +276,18 @@ S_Symbol::computeBaseSort(DagNode* subject)
       s->setSortIndex(path.sortIndices[path.leadLength + remainder]);
     }
   return;
+}
+
+bool
+S_Symbol::isConstructor(DagNode* subject)
+{
+  Assert(this == subject->symbol(), "bad symbol");
+  S_DagNode* s = safeCast(S_DagNode*, subject);
+  const SortPath& path = sortPathTable[s->arg->getSortIndex()];
+  if (path.nonCtorBound == NONE)
+    return true;
+  const mpz_class& number = *(s->number);
+  return number <= path.nonCtorBound;
 }
 
 void

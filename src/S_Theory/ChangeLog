@@ -1,3 +1,22 @@
+2003-08-29  Steven Eker  <eker@goo.csl.sri.com>
+
+	* S_Symbol.cc (memoStrategy): use applyReplaceNoOwise()
+	(eqRewrite): use applyReplaceNoOwise()
+
+2003-08-25  Steven Eker  <eker@goo.csl.sri.com>
+
+	* S_Symbol.cc (isConstructor): added
+	(computePath): compute nonCtorBound
+
+	* S_Symbol.hh (class S_Symbol): added decl for isConstructor()
+
+2003-08-22  Steven Eker  <eker@goo.csl.sri.com>
+
+	* S_Symbol.hh (class S_Symbol): added nonCTorBound field to struct
+	SortPath
+	
+===================================Maude82===========================================
+
 2003-05-30  Steven Eker  <eker@goo.csl.sri.com>
 
 	* S_Symbol.hh (class S_Symbol): added decl for finalizeSortInfo()

@@ -655,6 +655,7 @@ MixfixModule::addPolymorph(Token prefixName,
   p.name = prefixName.code();
   p.domainAndRange = domainAndRange;  // deep copy
   p.strategy = strategy;  // deep copy
+  p.shareWithSymbol = 0;
   int nrUnderscores = Token::extractMixfix(p.name, p.symbolInfo.mixfixSyntax);
   if (p.symbolInfo.mixfixSyntax.length() == 0)
     {

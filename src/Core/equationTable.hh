@@ -40,6 +40,9 @@ protected:
   bool applyReplace(DagNode* subject,
 		    RewritingContext& context,
 		    ExtensionInfo* extensionInfo = 0);
+  bool applyReplaceNoOwise(DagNode* subject,
+			   RewritingContext& context,
+			   ExtensionInfo* extensionInfo = 0);
 
 #ifdef DUMP
   virtual void dumpEquationTable(ostream& s, int indentLevel);

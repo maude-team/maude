@@ -38,21 +38,22 @@ PreModule::processImports()
   int nrImports = imports.length();
   for (int i = 0; i < nrImports; i++)
     {
-      Vector<Token>& import = imports[i];
-      if (import.length() != 2)
+      Import import = imports[i];
+      if (import.expr->getType() != ModuleExpression::MODULE)
 	{
-	  IssueWarning(LineNumber(import[0].lineNumber()) <<
-		       ": bad import: " << QUOTE(import));
+	  IssueWarning(LineNumber(*this) <<
+		       ": bad import: " << QUOTE(import.expr));
 	}
       else
 	{
-	  WarningCheck(import[0].code() != Token::encode("us") &&
-		       import[0].code() != Token::encode("using"), 
-		       LineNumber(import[0].lineNumber()) <<
+	 
+	  WarningCheck(import.mode.code() != Token::encode("us") &&
+		       import.mode.code() != Token::encode("using"), 
+		       LineNumber(import.mode.lineNumber()) <<
 		       ": importation mode " << QUOTE("using") <<
 		       " not supported - treating it like " <<
 		       QUOTE("including") << '.');
-	  importModule(import[1].code(), import[1].lineNumber());
+	  importModule(import.expr->getModuleName(), import.mode.lineNumber());
 	}
     }
 }

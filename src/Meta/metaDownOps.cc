@@ -42,6 +42,45 @@ MetaLevel::downOpDecls(DagNode* metaOpDecls, MetaModule* m)
 }
 
 bool
+MetaLevel::downPolymorphTypeList(DagNode* metaTypeList,
+				 MixfixModule* m,
+				 int wanted,
+				 Vector<Sort*>& typeList)
+{
+  typeList.clear();
+  Symbol* mt = metaTypeList->symbol();
+  Sort* t;
+  if (mt == qidListSymbol)
+    {
+      int pos = 0;
+      for (DagArgumentIterator i(metaTypeList); i.valid(); i.next(), pos++)
+	{
+	  if (pos == wanted)
+	    {
+	      if (!downType(i.argument(), m, t))
+		return false;
+	      typeList.append(t);
+	      wanted = NONE;
+	    }
+	  else
+	    typeList.append(0);
+	}
+    }
+  else if (mt == nilQidListSymbol)
+    ;
+  else if (wanted == 0)
+    {
+      if (!downType(metaTypeList, m, t))
+	return false;
+      typeList.append(t);
+      wanted = NONE;
+    }
+  else
+    typeList.append(0);
+  return wanted == NONE;
+}
+
+bool
 MetaLevel::downOpDecl(DagNode* metaOpDecl, MetaModule* m)
 {
   if (metaOpDecl->symbol() == opDeclSymbol)
@@ -57,33 +96,51 @@ MetaLevel::downOpDecl(DagNode* metaOpDecl, MetaModule* m)
 	  prefixName.tokenize(name, FileTable::META_LEVEL_CREATED);
 	  if (ai.symbolType.isPolymorph())
 	    {
-	      if (ai.symbolType.getBasicType() == SymbolType::EQUALITY_SYMBOL)
+	      switch (ai.symbolType.getBasicType())
 		{
-		  domainAndRange.resize(3);
-		  if (!downType(f->getArgument(2), m, domainAndRange[2]))
-		    goto fail;
-		  domainAndRange[0] = 0;
+		case SymbolType::EQUALITY_SYMBOL:
+		  {
+		    Sort* t;
+		    if (downPolymorphTypeList(f->getArgument(1), m, NONE, domainAndRange) &&
+			domainAndRange.length() == 2 &&
+			downType(f->getArgument(2), m, t))
+		      domainAndRange.append(t);
+		    else 
+		      goto fail;
+		    break;
+		  }
+		case SymbolType::BRANCH_SYMBOL:
+		  {
+		    if (downPolymorphTypeList(f->getArgument(1), m, 0, domainAndRange) &&
+			domainAndRange.length() >= 3)
+		      domainAndRange.append(0);
+		    else 
+		      goto fail;
+		    break;
+		  }
+		case SymbolType::UP_SYMBOL:
+		  {
+		    Sort* t;
+		    if (downPolymorphTypeList(f->getArgument(1), m, NONE, domainAndRange) &&
+			domainAndRange.length() == 1 &&
+			downType(f->getArgument(2), m, t))
+		      domainAndRange.append(t);
+		    else 
+		      goto fail;
+		    break;
+		  }
+		case SymbolType::DOWN_SYMBOL:
+		  {
+		    if (downPolymorphTypeList(f->getArgument(1), m, 0, domainAndRange) &&
+			domainAndRange.length() == 2)
+		      domainAndRange.append(0);
+		    else 
+		      goto fail;
+		    break;
+		  }
+		default:
+		  CantHappen("bad basic type for polymorph");
 		}
-	      else
-		{
-		  domainAndRange.resize(4);
-		  DagNode* metaTypeList = f->getArgument(1);
-		  if (metaTypeList->symbol() != qidListSymbol)
-		    goto fail;
-		  DagArgumentIterator i(metaTypeList);
-		  if (i.valid() &&
-		      downType(i.argument(), m, domainAndRange[0]) &&
-		      (i.next(), i.valid()) &&
-		      (i.next(), i.valid()) &&
-		      !(i.next(), i.valid()))
-		    {
-		      domainAndRange[2] = 0;
-		      domainAndRange[3] = 0;
-		    }
-		  else
-		    goto fail;
-		}
-	      domainAndRange[1] = 0;
 	      int polymorphIndex = m->addPolymorph(prefixName,
 						   domainAndRange,
 						   ai.symbolType,

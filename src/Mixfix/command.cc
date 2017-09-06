@@ -72,7 +72,7 @@ PreModule::showModule(ostream& s)
     {
       if (UserLevelRewritingContext::interrupted())
 	return;
-      s << "  " << imports[i] << " .\n";
+      s << "  " << imports[i].mode << ' ' << imports[i].expr << " .\n";
     }
 
   int nrSortDecls = sortDecls.length();
@@ -138,103 +138,148 @@ PreModule::printOpDef(ostream&s, int defIndex)
 	s << opDef.types[i] << ' ';
       s << "-> " << opDef.types[nrArgs] << ' ';
     }
-  if (int flags = opDef.symbolType.getFlags())
-    {
-      char c = '[';
-      if (flags & SymbolType::MESSAGE)
-	{
-	  s << c << "msg";
-	  c = ' ';
-	}
-      if (flags & SymbolType::OBJECT)
-	{
-	  s << c << "obj";
-	  c = ' ';
-	}
-      if (flags & SymbolType::CONFIG)
-	{
-	  s << c << "config";
-	  c = ' ';
-	}
-      if (flags & SymbolType::ASSOC)
-	{
-	  s << c << "assoc";
-	  c = ' ';
-	}
-      if (flags & SymbolType::COMM)
-	{
-	  s << c << "comm";
-	  c = ' ';
-	}
-      if (flags & (SymbolType::LEFT_ID | SymbolType::RIGHT_ID))
-	{
-	  s << c;
-	  c = ' ';
-	  if (!(flags & SymbolType::LEFT_ID))
-	    s << "left ";
-	  else if (!(flags & SymbolType::RIGHT_ID))
-	    s << "right ";
-	  s << "id: " << opDef.identity;
-	}
-      if (flags & SymbolType::IDEM)
-	{
-	  s << c << "idem";
-	  c = ' ';
-	}
-      if (flags & SymbolType::STRAT)
-	{
-	  s << c << "strat (";
-	  int stratLen = opDef.strategy.length();
-	  for (int i = 0; i < stratLen; i++)
-	    s << opDef.strategy[i] << ((i == stratLen - 1) ? ')' : ' ');
-	  c = ' ';
-	}
-      if (flags & SymbolType::MEMO)
-	{
-	  s << c << "memo";
-	  c = ' ';
-	}
-      if (flags & SymbolType::FROZEN)
-	{
-	  s << c << "frozen";
-	  if (!(opDef.frozen.empty()))
-	    {
-	      s << " (";
-	      const NatSet::const_iterator e = opDef.frozen.end();
-	      for (NatSet::const_iterator i = opDef.frozen.begin();;)
-		{
-		  s << *i + 1;
-		  if (++i == e)
-		    break;
-		  s << ' ';
-		}
-	      s << ')';
-	    }
-	  c = ' ';
-	}
-      if (flags & SymbolType::PREC)
-	{
-	  s << c << "prec " << opDef.prec;
-	  c = ' ';
-	}
-      if (flags & SymbolType::DITTO)
-	{
-	  s << c << "ditto";
-	  c = ' ';
-	}
-      if (flags & SymbolType::GATHER)
-	{
-	  static char gatherSymbols[] = {'e', 'E', '&'};
-	  s << c << "gather (";
-	  int gatherLen = opDef.gather.length();
-	  for (int i = 0; i < gatherLen; i++)
-	    {
-	      s << gatherSymbols[opDef.gather[i] - MixfixModule::GATHER_e] <<
-		((i == gatherLen - 1) ? ')' : ' ');
-	    }
-	  // c = ' ';
-	}
-      s << "] ";
-    }
+  printAttributes(s, opDef);
   s << ".\n";
+}
+
+
+void
+PreModule::printAttributes(ostream& s, const OpDef& opDef)
+{
+  SymbolType st = opDef.symbolType;
+  if (!(st.hasFlag(SymbolType::ATTRIBUTES | SymbolType::CTOR | SymbolType::DITTO)))
+    return;
+
+  const char* space = "";
+  s << '[';
+  //
+  //	Theory attributes.
+  //
+  if (st.hasFlag(SymbolType::ASSOC))
+    {
+      s << "assoc";
+      space = " ";
+    }
+  if (st.hasFlag(SymbolType::COMM))
+    {
+      s << space << "comm";
+      space = " ";
+    }
+  if (st.hasFlag(SymbolType::ITER))
+    {
+      s << space << "iter";
+      space = " ";
+    }
+  if (st.hasFlag(SymbolType::MESSAGE))
+    {
+      s << space << "msg";
+      space = " ";
+    }
+  if (st.hasFlag(SymbolType::OBJECT))
+    {
+      s << space << "obj";
+      space = " ";
+    }
+  if (st.hasFlag(SymbolType::CONFIG))
+    {
+      s << space << "config";
+      space = " ";
+    }
+  if (st.hasFlag(SymbolType::LEFT_ID | SymbolType::RIGHT_ID))
+    {
+      s << space;
+      space = " ";
+      if (!(st.hasFlag(SymbolType::LEFT_ID)))
+	s << "right ";
+      else if (!(st.hasFlag(SymbolType::RIGHT_ID)))
+	s << "left ";
+      s << "id: " << opDef.identity;
+    }
+  if (st.hasFlag(SymbolType::IDEM))
+    {
+      s << space << "idem";
+      space = " ";
+    }
+  //
+  //	Semantic attributes.
+  //
+  if (st.hasFlag(SymbolType::STRAT))
+    {
+      s << space << "strat (";
+      space = " ";
+      int stratLen = opDef.strategy.length();
+      for (int i = 0; i < stratLen; i++)
+	s << opDef.strategy[i] << ((i == stratLen - 1) ? ')' : ' ');
+    }
+  if (st.hasFlag(SymbolType::MEMO))
+    {
+      s << space << "memo";
+      space = " ";
+    }
+  if (st.hasFlag(SymbolType::FROZEN))
+    {
+      s << space << "frozen";
+      space = " ";
+      if (!(opDef.frozen.empty()))
+	{
+	  s << " (";
+	  const NatSet::const_iterator e = opDef.frozen.end();
+	  for (NatSet::const_iterator i = opDef.frozen.begin();;)
+	    {
+	      s << *i + 1;
+	      if (++i == e)
+		break;
+	      s << ' ';
+	    }
+	  s << ')';
+	}
+    }
+  if (st.hasFlag(SymbolType::CTOR))
+    {
+      s << space << "ctor";
+      space = " ";
+    }
+  //
+  //	Syntactic attributes.
+  //
+  if (st.hasFlag(SymbolType::PREC))
+    {
+      s << space << "prec " << opDef.prec;
+      space = " ";
+    }
+  if (st.hasFlag(SymbolType::GATHER))
+    {
+      static char gatherSymbols[] = {'e', 'E', '&'};
+      s << space << "gather (";
+      space = " ";
+      int gatherLen = opDef.gather.length();
+      for (int i = 0; i < gatherLen; i++)
+	{
+	  s << gatherSymbols[opDef.gather[i] - MixfixModule::GATHER_e] <<
+	    ((i == gatherLen - 1) ? ')' : ' ');
+	}
+    }
+  if (st.hasFlag(SymbolType::FORMAT))
+    {
+      s << space << "format (";
+      space = " ";
+      int formatLength = opDef.format.length();
+      for (int i = 0; i < formatLength; i++)
+	{
+	  if (i != 0)
+	    s << ' ';
+	  s << Token::name(opDef.format[i]);
+	}
+      s << ')';
+    }
+  //
+  //	Misc attributes.
+  //
+  if (st.hasFlag(SymbolType::DITTO))
+    {
+      s << space << "ditto";
+      space = " ";
+    }
+
+  s << "] ";
 }

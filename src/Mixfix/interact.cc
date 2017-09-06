@@ -233,7 +233,7 @@ UserLevelRewritingContext::handleDebug(const DagNode* subject, const PreEquation
 	}
       else
 	{
-	  if (breakSymbols.contains(pe->getLabel().id()))
+	  if (pe != 0 && breakSymbols.contains(pe->getLabel().id()))
 	    broken = true;
 	}
     }

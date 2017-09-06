@@ -42,6 +42,7 @@
 
 //	front end class definitions
 #include "token.hh"
+#include "moduleExpression.hh"
 #include "fileTable.hh"
 #include "directoryManager.hh"
 #include "preModule.hh"
@@ -85,6 +86,8 @@ void cleanUpParser();
   Int64 yyInt64;
   const char* yyString;
   Token yyToken;
+  ModuleExpression* yyModuleExpression;
+  Renaming* yyRenaming;
 }
 
 %{
@@ -129,6 +132,12 @@ int yylex(YYSTYPE* lvalp);
 %type <yyToken> ':' '=' '(' ')' '.' '<' '[' ']' ',' '|'
 
 /*
+ *	Module expression keywords.
+ */
+%token <yyToken> KW_LABEL KW_TO
+%left <yyToken> '+' '*'
+
+/*
  *	Attribute keywords need to be recognized when parsing attributes.
  */
 %token <yyToken> KW_ASSOC KW_COMM KW_ID KW_IDEM KW_ITER
@@ -169,6 +178,11 @@ int yylex(YYSTYPE* lvalp);
  *	Nonterminals that return int.
  */
 %type <yyInt64> optNumber
+/*
+ *	Nonterminals that return ModuleExpression*.
+ */
+%type <yyModuleExpression> moduleExpr
+%type <yyRenaming> renaming
 
 %start top
 

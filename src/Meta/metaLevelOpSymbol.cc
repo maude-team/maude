@@ -35,8 +35,6 @@
 #include "variable.hh"
 #include "higher.hh"
 #include "freeTheory.hh"
-//#include "AU_Theory.hh"
-//#include "ACU_Theory.hh"
 #include "NA_Theory.hh"
 #include "builtIn.hh"
 #include "mixfix.hh"
@@ -95,6 +93,7 @@
 //	our stuff
 #include "descentFunctions.cc"
 #include "ascentFunctions.cc"
+#include "metaApply.cc"
 #include "metaMatch.cc"
 #include "metaSearch.cc"
 
@@ -165,7 +164,7 @@ MetaLevelOpSymbol::copyAttachments(Symbol* original, SymbolMap* map)
       if (sw != 0)
 	{
 	  metaLevel = 0;
-	  shareWith = (map == 0) ? sw : static_cast<MetaLevelOpSymbol*>(map->translate(sw));
+	  shareWith = (map == 0) ? sw : safeCast(MetaLevelOpSymbol*, map->translate(sw));
 	}
       else
 	{
@@ -207,7 +206,7 @@ MetaLevelOpSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
   Assert(this == subject->symbol(), "Bad symbol");
   if (metaLevel == 0)
     metaLevel = shareWith->metaLevel;
-  FreeDagNode* d = static_cast<FreeDagNode*>(subject);
+  FreeDagNode* d = safeCast(FreeDagNode*, subject);
   int nrArgs = arity();
   for (int i = 0; i < nrArgs; i++)
     d->getArgument(i)->reduce(context);

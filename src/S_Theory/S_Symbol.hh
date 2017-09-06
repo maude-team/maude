@@ -48,6 +48,7 @@ public:
   //
   void compileOpDeclarations();
   void finalizeSortInfo();
+  bool isConstructor(DagNode* subject);
   //
   //	Member function specific to S_Symbol.
   //
@@ -58,6 +59,12 @@ private:
   {
     Vector<int> sortIndices;
     int leadLength;
+    //
+    //	If we have a number greater than nonCtorBound we have at least
+    //  one non-constructor and treat the whole thing as a non-constructor.
+    //  If nonCtorBound is NONE	we have a pure ctor.
+    //
+    int nonCtorBound;
   };
 
   void computePath(int sortIndex, SortPath& path);

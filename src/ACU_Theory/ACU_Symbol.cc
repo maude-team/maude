@@ -92,6 +92,16 @@ ACU_Symbol::rewriteAtTop(DagNode* subject, RewritingContext& context)
 }
 
 bool
+ACU_Symbol::rewriteAtTopNoOwise(DagNode* subject, RewritingContext& context)
+{
+  //
+  //	Same idea as above.
+  //	
+  ACU_ExtensionInfo extensionInfo(safeCast(ACU_BaseDagNode*, subject));
+  return applyReplaceNoOwise(subject, context, &extensionInfo);
+}
+
+bool
 ACU_Symbol::normalize(DagNode* subject, RewritingContext& context)
 {
   if (safeCast(ACU_BaseDagNode*, subject)->isFresh())
@@ -219,13 +229,20 @@ ACU_Symbol::complexStrategy(DagNode* subject, RewritingContext& context)
   if (normalize(subject, context))
     return !(subject->isReduced());
   
-  if (!equationFree() && rewriteAtTop(subject, context))
-    return true;
   if (getPermuteStrategy() == LAZY)
-    return false;
+    {
+      if (rewriteAtTop(subject, context))
+	return true;
+      return false;
+    }
+  //
+  //	Semi-eager case.
+  //
+  if (rewriteAtTopNoOwise(subject, context))
+    return true;
   if (copyReduceSubtermsAndNormalize(subject, context))
     return false;
-  subject->repudiateSortInfo();  // 1st rewriteAtTop() might have left sort behind
+  subject->repudiateSortInfo();  // rewriteAtTopNoOwise() might have left sort behind
   return rewriteAtTop(subject, context);
 }
 
@@ -262,16 +279,24 @@ ACU_Symbol::memoStrategy(MemoTable::SourceSet& from,
 
       if (memoRewrite(from, subject, context))
 	return false;
-      if (rewriteAtTop(subject, context))
+
+      if (getPermuteStrategy() == LAZY)
+	{
+	  if (rewriteAtTop(subject, context))
+	    subject->reduce(context);
+	  return false;
+	}
+      //
+      //	Semi-eager case.
+      //
+      if (rewriteAtTopNoOwise(subject, context))
 	{
 	  subject->reduce(context);
 	  return false;
 	}
-      if (getPermuteStrategy() == LAZY)
-	return false;
       if (copyReduceSubtermsAndNormalize(subject, context))
 	return false;
-      subject->repudiateSortInfo();  // 1st rewriteAtTop() might have left sort behind
+      subject->repudiateSortInfo();  // rewriteAtTopNoOwise() might have left sort behind
     }
   if (!memoRewrite(from, subject, context) && rewriteAtTop(subject, context))
     subject->reduce(context);

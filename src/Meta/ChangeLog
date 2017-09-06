@@ -1,3 +1,33 @@
+2003-09-30  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaDownFixUps.cc (fixUpPolymorph): handle shareWith hook
+
+	* metaLevel.hh (class MetaLevel): added decl for
+	downPolymorphTypeList()
+
+	* metaDownOps.cc (downPolymorphTypeList): added
+	(downOpDecl): rewritten using downPolymorphTypeList() and handling
+	UP_SYMBOL and DOWN_SYMBOL
+
+2003-09-29  Steven Eker  <eker@goo.csl.sri.com>
+
+	* descentFunctions.cc (metaUpTerm): added
+	(metaDownTerm): added
+
+	* metaLevel.hh: made upDagNode() public
+
+	* metaApply.cc (getCachedRewriteSearchState): moved here
+	(metaApply): moved here
+	(metaXapply): moved here
+
+	* descentSignature.cc: added entries for metaUpTerm() and
+	metaDownTerm()
+
+	* metaLevelOpSymbol.cc (eqRewrite): use safeCast()
+	(copyAttachments): use safeCast()
+
+===================================Maude82===========================================
+
 2003-05-27  Steven Eker  <eker@goo.csl.sri.com>
 
 	* metaDown.cc (downImport): handle extendingSymbol

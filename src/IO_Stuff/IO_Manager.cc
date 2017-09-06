@@ -33,10 +33,12 @@
 #include "macros.hh"
 
 //	line editing stuff
+#ifdef USE_TECLA
 #if HAVE_SYS_TERMIOS_H
 #include <sys/termios.h>
 #endif
 #include "libtecla.h"
+#endif
 
 //	IO Stuff class definitions
 #include "autoWrapBuffer.hh"
@@ -54,8 +56,10 @@ IO_Manager::IO_Manager()
 void
 IO_Manager::setCommandLineEditing(size_t lineLength, size_t historyLength)
 {
+#ifdef USE_TECLA
   gl = new_GetLine(lineLength, historyLength);
   gl_trap_signal(gl, SIGINT, 0, GLS_ABORT, EINTR);
+#endif
 }
 
 void
@@ -94,58 +98,53 @@ IO_Manager::getInput(char* buf, int maxSize, FILE* stream)
       return read(fileno(stream), buf, maxSize);
     }
 
-  if (gl == 0)
+#ifdef USE_TECLA
+  if (gl != 0)
     {
-      //
-      //	Reading from stdin without using tecla.
-      //
-      if (!contFlag)
+      if (line == 0)
 	{
 	  
-	  fputs(prompt.c_str(), stdout);  // HACK: bypass line wrapper
-	  fflush(stdout);
+	  line = gl_get_line(gl,
+			     contFlag ? contPrompt.c_str() : prompt.c_str(),
+			     NULL,
+			     -1);
+	  GlTerminalSize ts = gl_terminal_size(gl, DEFAULT_COLUMNS, DEFAULT_LINES);
+	  if (wrapOut != 0)
+	    wrapOut->setLineWidth(ts.ncolumn);
+	  if (wrapErr != 0)
+	    wrapErr->setLineWidth(ts.ncolumn);
+	  contFlag = true;
+	  if (line == 0)
+	    return 0;
 	}
-      contFlag = true;
-      return read(fileno(stream), buf, maxSize);
-    }
-
-  if (line == 0)
-    {
-    
-      line = gl_get_line(gl,
-			 contFlag ? contPrompt.c_str() : prompt.c_str(),
-			 NULL,
-			 -1);
-      GlTerminalSize ts = gl_terminal_size(gl, DEFAULT_COLUMNS, DEFAULT_LINES);
-      if (wrapOut != 0)
-	wrapOut->setLineWidth(ts.ncolumn);
-      if (wrapErr != 0)
-	wrapErr->setLineWidth(ts.ncolumn);
-#ifdef TECLA_DEBUG
-      // use printf() to avoid line wrapping
-      if (line == 0)
-	printf("returned 0\n");
-      else
-	printf("returned(%s)\n", line);
-#endif
-      contFlag = true;
-      if (line == 0)
-	return 0;
-    }
-
-  int n;
-  for (n = 0;; n++)
-    {
-      char c = *line;
-      if (c == '\0')
+      
+      int n;
+      for (n = 0;; n++)
 	{
-	  line = 0;
-	  break;
+	  char c = *line;
+	  if (c == '\0')
+	    {
+	      line = 0;
+	      break;
+	    }
+	  if (n == maxSize)
+	    break;
+	  *buf++ = c;
+	  ++line;
 	}
-      if (n == maxSize)
-	break;
-      *buf++ = c;
-      ++line;
+      return n;
     }
-  return n;
+#endif
+
+  //
+  //	Read from stdin without using tecla.
+  //
+  if (!contFlag)
+    {
+      
+      fputs(prompt.c_str(), stdout);  // HACK: bypass line wrapper
+      fflush(stdout);
+    }
+  contFlag = true;
+  return read(fileno(stream), buf, maxSize);
 }

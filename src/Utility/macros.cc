@@ -24,6 +24,7 @@
 //	Now a mismomer - contains random stuff that doesn't fit
 //	anywhere else.
 //
+#include <float.h>  // for DBL_MAX
 #include "macros.hh"
 #include "vector.hh"
 #include "mathStuff.hh"
@@ -227,6 +228,15 @@ stringToDouble(const char* s, bool& error)
   if (looksLikeFloat(s))
     {
       error = false;
+      //
+      //	Some versions of atof() don't handle Infinity.
+      //
+      char c = s[0];
+      if (c == 'I' || ((c == '+' || c == '-') && s[1] == 'I'))
+	{
+	  double inf = DBL_MAX * DBL_MAX;
+	  return (c == '-') ? (- inf) : inf;
+	}
       return atof(s);
     }
   else

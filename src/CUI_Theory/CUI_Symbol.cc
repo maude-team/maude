@@ -150,7 +150,8 @@ CUI_Symbol::eqRewrite(DagNode* subject, RewritingContext& context)
 	      //
 	      if (s->normalizeAtTop())
 		return !(s->isReduced());
-              if (applyReplace(s, context))
+              if ((i + 1 == stratLen) ? applyReplace(s, context) :
+		  applyReplaceNoOwise(s, context))
                 return true;
             }
           else
@@ -206,7 +207,8 @@ CUI_Symbol::memoStrategy(MemoTable::SourceSet& from,
 	    return !(s->isReduced());
 	  if (memoRewrite(from, subject, context))
 	    return false;
-	  if (applyReplace(s, context))
+	  if ((i + 1 == stratLen) ? applyReplace(s, context) :
+	      applyReplaceNoOwise(s, context))
 	    {
 	      subject->reduce(context);
 	      return false;

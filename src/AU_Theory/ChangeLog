@@ -1,3 +1,14 @@
+2003-08-29  Steven Eker  <eker@goo.csl.sri.com>
+
+	* AU_Symbol.hh (class AU_Symbol): added decl for
+	rewriteAtTopNoOwise()
+
+	* AU_Symbol.cc (rewriteAtTopNoOwise): added
+	(complexStrategy): rewritten using rewriteAtTopNoOwise()
+	(memoStrategy): rewritten using rewriteAtTopNoOwise()
+
+===================================Maude82===========================================
+
 2003-05-28  Steven Eker  <eker@goo.csl.sri.com>
 
 	* AU_Layer.cc (solveVariables): use

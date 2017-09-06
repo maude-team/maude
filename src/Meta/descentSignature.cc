@@ -54,3 +54,5 @@
   MACRO(metaUpMbs, 2)
   MACRO(metaUpEqs, 2)
   MACRO(metaUpRls, 2)
+  MACRO(metaUpTerm, 1)
+  MACRO(metaDownTerm, 2)

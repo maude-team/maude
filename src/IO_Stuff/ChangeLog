@@ -1,3 +1,10 @@
+2003-10-08  Steven Eker  <eker@goo.csl.sri.com>
+
+	* IO_Manager.cc (getInput): rewritten to allow building without
+	Tecla
+	
+===================================Maude82===========================================
+
 2003-07-28  Steven Eker  <eker@goo.csl.sri.com>
 
 	* IO_Manager.cc: test HAVE_SYS_TERMIOS_H

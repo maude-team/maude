@@ -83,6 +83,10 @@ public:
   DagNode* upMbs(bool flat, ImportModule* m, PointerMap& qidMap);
   DagNode* upEqs(bool flat, ImportModule* m, PointerMap& qidMap);
   DagNode* upRls(bool flat, ImportModule* m, PointerMap& qidMap);
+  DagNode* upDagNode(DagNode* dagNode,
+		     MixfixModule* m,
+		     PointerMap& qidMap,
+		     PointerMap& dagNodeMap);
 
   bool downBound(DagNode* metaBound, int& bound) const;
   bool downSaturate(DagNode* metaBound, int& bound) const;
@@ -159,10 +163,6 @@ private:
   DagNode* upJoin(int id, Sort* sort, char sep, PointerMap& qidMap);
   DagNode* upConstant(int id, Sort* sort, PointerMap& qidMap);
   DagNode* upVariable(int id, Sort* sort, PointerMap& qidMap);
-  DagNode* upDagNode(DagNode* dagNode,
-		     MixfixModule* m,
-		     PointerMap& qidMap,
-		     PointerMap& dagNodeMap);
   DagNode* upTerm(const Term* term, MixfixModule* m, PointerMap& qidMap);
 
   DagNode* upAssignment(const Term* variable,
@@ -188,6 +188,10 @@ private:
 
   bool downVariable(DagNode* metaVariable, MixfixModule* m, Symbol*& vs);
   bool downTypeList(DagNode* metaTypeList, MixfixModule* m, Vector<Sort*>& typeList);
+  bool downPolymorphTypeList(DagNode* metaTypeList,
+			     MixfixModule* m,
+			     int wanted,
+			     Vector<Sort*>& typeList);
   bool downType2(int id, MixfixModule* m, Sort*& type);
   bool downSimpleSortList(DagNode* metaSortList, MixfixModule* m, Vector<Sort*>& sortList);
   bool downNatList(DagNode* metaNatList, Vector<int>& intList);

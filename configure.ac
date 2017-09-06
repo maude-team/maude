@@ -3,7 +3,7 @@
 #
 #	Initialize autoconf stuff.
 #
-AC_INIT(Maude, 2.0.1, [maude-bugs@maude.cs.uiuc.edu])
+AC_INIT(Maude, alpha82, [maude-bugs@maude.cs.uiuc.edu])
 #
 #	Allow directory names that look like macros.
 #
@@ -16,7 +16,7 @@ AC_CANONICAL_HOST
 #
 #	Initialize automake stuff.
 #
-AM_INIT_AUTOMAKE(Maude, 2.0.1)
+AM_INIT_AUTOMAKE(Maude, alpha82)
 #
 #	Cause defines to be put in a header file rather than passed as
 #	compiler flags.
@@ -68,11 +68,24 @@ if (test -z "$BUDDY_LIB") then
 fi
 AC_SUBST(BUDDY_LIB)
 #
+#	Check to see if we should use Tecla for command line editing.
+#
+AC_ARG_WITH(tecla,
+	    AC_HELP_STRING([--with-tecla],
+                           [use Tecla command line editing library [default=yes]]),
+			   [WITH_TECLA=$withval],
+			   [WITH_TECLA=yes])
+if (test $WITH_TECLA = yes) then
+#
 #	Check if user set particular Tecla libraries to use and if
 #	not set defaults.
 #
-if (test -z "$TECLA_LIBS") then
-  TECLA_LIBS="-ltecla -lcurses"
+  AC_DEFINE([USE_TECLA], [], [use Tecla command line editing library])
+  if (test -z "$TECLA_LIBS") then
+    TECLA_LIBS="-ltecla -lcurses"
+  fi
+else
+  TECLA_LIBS=""
 fi
 AC_SUBST(TECLA_LIBS)
 #
@@ -116,7 +129,6 @@ if (test "$DEBUGGING" = yes) then
   AC_DEFINE([DUMP], [], [include dump code])
 else
   AC_DEFINE([NO_ASSERT], [], [don't do runtime checks])
-  AC_DEFINE([SPEED_HACKS], [], [various performance hacks])
   AC_DEFINE([LOCAL_INLINES], [], [inline and discard selected local functions])
 #
 #	Set compiler optimization flags if user didn't set CXXFLAGS.

@@ -20,6 +20,10 @@ libruntime_a_SOURCES = \
 
 endif
 
+EXTRA_DIST = \
+	compilationContext.cc \
+	runtime.cc
+
 noinst_HEADERS = \
 	compilationContext.hh \
 	fullCompiler.hh \

@@ -1,3 +1,10 @@
+2003-08-29  Steven Eker  <eker@goo.csl.sri.com>
+
+	* CUI_Symbol.cc (eqRewrite): use applyReplaceNoOwise()
+	(memoStrategy): use applyReplaceNoOwise()
+
+===================================Maude82===========================================
+
 2003-05-01  Steven Eker  <eker@goo.csl.sri.com>
 
 	* CUI_DagNode.cc (overwriteWithClone): use copySetRewritingFlags()

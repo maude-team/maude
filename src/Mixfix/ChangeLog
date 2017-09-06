@@ -1,3 +1,136 @@
+2003-10-09  Steven Eker  <eker@goo.csl.sri.com>
+
+	* command.cc (printAttributes): need to check for DITTO in first if
+	(printAttributes): fix spacing before [
+
+2003-10-08  Steven Eker  <eker@goo.csl.sri.com>
+
+	* import.cc (processImports): handle struct Import
+
+	* command.cc (showModule): handle struct Import
+
+	* preModule.hh (Parent): updated decl for addImport()
+
+	* preModule.cc (addImport): moved here; now handle mode
+
+	* preModule.hh (Parent): added struct Import
+
+	* moduleExpression.cc (operator<<): added
+
+	* command.cc (printAttributes): handle format properly
+
+2003-09-29  Steven Eker  <eker@goo.csl.sri.com>
+
+	* mixfixModule.hh (CommonTokens): added decl for Symbol* version
+	of fixUpPolymorph()
+
+	* mixfixModule.cc (fixUpPolymorph): added Symbol* version
+
+	* fixUp.cc (fixUpSymbols): handle UP_SYMBOL and DOWN_SYMBOL
+
+	* makeGrammar.cc (makePolymorphProductions): handle UP_SYMBOL and
+	DOWN_SYMBOL
+
+	* mixfixModule.hh (CommonTokens): added shareWithSymbol to struct
+	Polymorph
+
+	* mixfixModule.cc (copyPolymorph): clear shareWithSymbol
+
+	* entry.cc (addPolymorph): clear shareWithSymbol
+
+	* mixfixModule.cc (findSymbol): handle UP_SYMBOL and DOWN_SYMBOL
+	(instantiatePolymorph): handle UP_SYMBOL and DOWN_SYMBOL
+	(copyFixUpPolymorph): handle shareWithSymbol
+	(copyPolymorph): handle UP_SYMBOL and DOWN_SYMBOL
+
+	* process.cc (checkOpTypes): handle UP_SYMBOL and DOWN_SYMBOL
+	(computeOpTypes): handle UP_SYMBOL and DOWN_SYMBOL
+
+	* symbolType.hh (isPolymorph): rewritten
+	(isCreatedOnTheFly): rewritten
+
+	* specialSymbolTypes.cc (MACRO): added UpSymbol and DownSymbol
+
+	* symbolType.hh (class SymbolType): added UP_SYMBOL and
+	DOWN_SYMBOL
+
+2003-09-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* interact.cc (handleDebug): check to see if pe is 0 before
+	checking its label
+
+2003-09-17  Steven Eker  <eker@goo.csl.sri.com>
+
+	* termPrint.cc (prefix): deleted (this was commented out before)
+
+	* mixfixModule.hh (CommonTokens): added decl for handleVariable()
+
+	* bufferPrint.cc (handleVariable): added
+	(prettyPrint): use handleVariable()
+
+	* mixfixModule.hh (CommonTokens): added decl for printKind()
+
+	* bufferPrint.cc (printKind): replaces printSort()
+	(prettyPrint): use printKind in variable case
+
+2003-09-15  Steven Eker  <eker@goo.csl.sri.com>
+
+	* bufferPrint.cc (printSort): added
+
+2003-09-09  Steven Eker  <eker@goo.csl.sri.com>
+
+	* modules.yy (listBarDot): added
+	(endTokens2): deleted
+	(noTrailingDot2): deleted
+	(oDeclaration): listBarDot replaces endTokens2 (3 places)
+
+2003-09-08  Steven Eker  <eker@goo.csl.sri.com>
+
+	* visibleModule.cc (showAttributes): print space after left/right
+	when printing identity
+
+2003-09-05  Steven Eker  <eker@goo.csl.sri.com>
+
+	* command.cc (printAttributes): added
+	(printOpDef): rewritten to use printAttributes(
+
+2003-09-04  Steven Eker  <eker@goo.csl.sri.com>
+
+	* mixfix.hh: added class Renaming
+
+	* top.yy: added yyModuleExpression to union
+
+	* modules.yy (fDeclaration): use moduleExpr
+
+	* import.cc (processImports): quick hack to use ModuleExpression
+
+	* preModule.hh (addImport): updated
+	(Parent): imports is now a Vector<ModuleExpression*>
+
+	* moduleExpression.cc: created
+
+	* moduleExpression.hh: created
+
+	* mixfix.hh: added class ModuleExpression
+
+2003-09-03  Steven Eker  <eker@goo.csl.sri.com>
+
+	* top.yy: added KW_TO, KW_LABEL, '+', '*'
+
+	* lexer.ll: added KW_TO, KW_LABEL, '+', '*'
+
+	* modules.yy (identifier): added KW_TO, KW_LABEL, '+', '*'
+
+2003-08-20  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prettyPrint.cc (operator<<): added Assert() to check for null
+	component
+	(operator<<): decided to make sort print function bullet proof
+	instead; it can now be called before connnected components are
+	calculated and sort indices are assigned
+	
+===================================Maude82===========================================
+
 2003-07-22  Steven Eker  <eker@goo.csl.sri.com>
 
 	* main.cc (printHelp): added

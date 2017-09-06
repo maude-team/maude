@@ -31,6 +31,8 @@
   MACRO(SystemTrue, SymbolType::SYSTEM_TRUE)
   MACRO(SystemFalse, SymbolType::SYSTEM_FALSE)
   MACRO(BranchSymbol, SymbolType::BRANCH_SYMBOL)
+  MACRO(UpSymbol, SymbolType::UP_SYMBOL)
+  MACRO(DownSymbol, SymbolType::DOWN_SYMBOL)
   MACRO(EqualitySymbol, SymbolType::EQUALITY_SYMBOL)
   MACRO(FloatSymbol, SymbolType::FLOAT)
   MACRO(FloatOpSymbol, SymbolType::FLOAT_OP)

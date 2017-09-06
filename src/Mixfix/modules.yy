@@ -21,6 +21,39 @@
 */
 
 /*
+ *	Module expressions.
+ */
+moduleExpr	:	token
+			{
+			  $$ = new ModuleExpression($1.code());
+			}
+		|	moduleExpr '+' moduleExpr
+			{
+			  $$ = new ModuleExpression($1, $3);
+			}
+		|	moduleExpr '*' renaming
+			{
+			  $$ = new ModuleExpression($1, $3);
+			}
+		|	'(' moduleExpr ')'
+			{
+			  $$ = $2;
+			}
+		;
+
+renaming	:	'(' mapList ')' { return 0; }
+		;
+
+mapList		:	mapList ',' map
+		|	map
+		;
+
+map		:	KW_SORT token KW_TO token {}
+		|	KW_LABEL identifier KW_TO identifier {}
+		|	KW_OP identifier KW_TO identifier {}
+		;	
+
+/*
  *	Modules.
  */
 module		:	KW_FMOD			{ lexerIdMode(); }
@@ -110,18 +143,14 @@ oDecList	:	oDecList oDeclaration
 		;
 
 fDeclaration	:	KW_IMPORT		{ clear(); store($1); }
-			endTokens '.'		{ CM->addImport(bubble); }
+			moduleExpr '.'		{ CM->addImport(bubble[0], $3); }
 
-/*
- *	Now that '.' is not a valid sort name we can probably get rid of
- *	endTokens2 and noTrailingDot2
- */
 		|	KW_SORT			{ clear(); }
-			endTokens2 '.'		{ CM->addSortDecl(bubble); }
+			listBarDot '.'		{ CM->addSortDecl(bubble); }
 
 		|	KW_SUBSORT token	{ clear(); store($2); }
 			listBarLt '<'		{ store($5); }
-			endTokens2 '.'		{ CM->addSubsortDecl(bubble); }
+			listBarDot '.'		{ CM->addSubsortDecl(bubble); }
 
 		|	KW_OP opName domainRangeAttr {}
 
@@ -178,7 +207,7 @@ oDeclaration	:	declaration
 			}
 		|	KW_SUBCLASS token	{ clear(); store($2); }
 			listBarLt '<'		{ store($5); }
-			endTokens2 '.'		{ CM->addSubsortDecl(bubble); }
+			listBarDot '.'		{ CM->addSubsortDecl(bubble); }
 		;
 
 classDef	:	'|' {}
@@ -370,14 +399,8 @@ listBarLt	:	listBarLt tokenBarLt	{ store($2); }
 		|
 		;
 
-endTokens2	:	noTrailingDot2
-		|	endTokens2 '.'		{ store($2); }
-		|	'.'			{ store($1); }
-		;
-
-noTrailingDot2	:	noTrailingDot2 startKeyword	{ store($2); }
-		|	endTokens2 endToken	{ store($2); }
-		|	tokenBarDot		{ store($1); }
+listBarDot	:	listBarDot tokenBarDot	{ store($2); }
+		|
 		;
 
 /*
@@ -474,7 +497,7 @@ sortToken	:	identifier | startKeyword | attrKeyword2 | '='
 /*
  *	Keywords (in id mode).
  */
-identifier	:	IDENTIFIER | ',' | '|'
+identifier	:	IDENTIFIER | ',' | '|' | KW_LABEL | KW_TO | '+' | '*'
 		;
 
 startKeyword	:	KW_MSG | startKeyword2

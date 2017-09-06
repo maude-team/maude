@@ -67,6 +67,7 @@ public:
 
 private:
   bool rewriteAtTop(AU_DagNode* subject, RewritingContext& context);
+  bool rewriteAtTopNoOwise(AU_DagNode* subject, RewritingContext& context);
   bool complexStrategy(AU_DagNode* subject, RewritingContext& context);
   bool memoStrategy(MemoTable::SourceSet& from,
 		    DagNode* subject,
