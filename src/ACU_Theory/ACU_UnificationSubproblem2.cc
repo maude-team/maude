@@ -135,7 +135,7 @@ ACU_UnificationSubproblem2::addUnification(DagNode* lhs, DagNode* rhs, bool mark
       else
 	{
 	  int subtermIndex = setMultiplicity(rhs, -1, solution);
-	  if (marked)
+	  if (marked && subtermIndex != NONE)
 	    markedSubterms.insert(subtermIndex);  // cannot be assigned multiple things
 	}
     }
@@ -176,7 +176,26 @@ ACU_UnificationSubproblem2::setMultiplicity(DagNode* dagNode, int multiplicity, 
   //	do this for variables within aliens as well.
   //
   if (VariableDagNode* varDagNode = dynamic_cast<VariableDagNode*>(dagNode))
-    dagNode = varDagNode->lastVariableInChain(solution);
+    {
+      varDagNode = varDagNode->lastVariableInChain(solution);
+      //
+      //	Normally we don't care about variables bound into our theory since they
+      //	will be unsolved as part of the AC/ACU unification procedure to ensure
+      //	termination. The exception is variables bound to our identity.
+      //
+      if (Term* identity = topSymbol->getIdentity())
+	{
+	  if (DagNode* subject = solution.value(varDagNode->getIndex()))
+	    {
+	      if (identity->equal(subject))
+		return NONE;  // identity elements are just eliminated
+	    }
+	}
+      //
+      //	Otherwise we work with the representative variable.
+      //
+      dagNode = varDagNode;
+    }
   //
   //	Now look for dag in list of nominally abstracted dags.
   //
