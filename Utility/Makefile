@@ -22,11 +22,14 @@ MODULES =	macros.o \
 		bdd.o \
 		timer.o
 
-IFLAGS =	-I$(GMP_INCLUDE) \
-		-I$(ROOT_DIR)/Utility
+IFLAGS =	-I$(ROOT_DIR)/Utility
+
+#IFLAGS =	-I$(GMP_INCLUDE) \
+#		-I$(ROOT_DIR)/Utility
 
 CXXFLAGS =	$(DFLAGS) $(IFLAGS)
 
+# -DDIO_STATS
 
 libutility.a : $(MODULES)
 	$(AR) $(ARFLAGS) libutility.a $(MODULES)

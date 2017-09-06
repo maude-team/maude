@@ -12,8 +12,10 @@ MODULES =	logicFormula.o \
 
 #		parityGame.o
 
-IFLAGS =	-I$(GMP_INCLUDE) \
-		-I$(ROOT_DIR)/Utility
+IFLAGS =	-I$(ROOT_DIR)/Utility
+
+#IFLAGS =	-I$(GMP_INCLUDE) \
+#		-I$(ROOT_DIR)/Utility
 
 CXXFLAGS =	$(DFLAGS) $(IFLAGS)
 

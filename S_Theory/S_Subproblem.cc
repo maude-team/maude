@@ -38,9 +38,9 @@ S_Subproblem::S_Subproblem(S_DagNode* subject,
 			   S_ExtensionInfo* extensionInfo)
   : subject(subject),
     leftOver(leftOver),
+    extensionInfo(extensionInfo),
     varIndex(varIndex),
-    varSort(varSort),
-    extensionInfo(extensionInfo)
+    varSort(varSort)
 {
   Assert(leftOver > 0, cerr << "only makes sense with leftOver > 0");
   Assert(extensionInfo != 0, cerr << "only makes sense with extensionInfo");

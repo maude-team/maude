@@ -1,3 +1,8 @@
+2002-11-25  Steven Eker  <eker@goo.csl.sri.com>
+
+	* S_Subproblem.cc (S_Subproblem): switched initializer order to
+	placate g++3.2
+
 2002-10-04  Steven Eker  <eker@goo.csl.sri.com>
 
 	* S_DagNode.hh (class S_DagNode): updated decl for complex version

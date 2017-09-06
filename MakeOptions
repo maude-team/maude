@@ -1,5 +1,5 @@
-include $(ROOT_DIR)/MakeLinuxOpt
-#include $(ROOT_DIR)/MakeSolarisDebug
+#include $(ROOT_DIR)/MakeLinuxOpt
+include $(ROOT_DIR)/MakeSolarisDebug
 #include $(ROOT_DIR)/MakeSolarisOpt
 
 GMP_INCLUDE =	/csl/include

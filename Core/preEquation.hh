@@ -60,6 +60,8 @@ protected:
   void setCompiled();
 
 private:
+  static void cleanStack(stack<ConditionState*>& conditionStack);
+
   enum Flags
   {
     COMPILED = 2

@@ -100,6 +100,9 @@ private:
   //
   //	Normalization functions.
   //
+  static ArgVec<Pair>::iterator fastCopy(ArgVec<Pair>::const_iterator i,
+					 ArgVec<Pair>::const_iterator e,
+					 ArgVec<Pair>::iterator d);
   bool normalizeAtTop();
   bool extensionNormalizeAtTop();
   void binaryInsert(DagNode* dagNode, int multiplicity);

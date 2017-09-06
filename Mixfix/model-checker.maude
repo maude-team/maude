@@ -1,7 +1,7 @@
 ***
 ***	Maude LTL satisfiability solver and model checker.
-***	Version alpha 75a.
-***	Copyright 2001-2002 SRI International.
+***	Version alpha 77.
+***	Copyright 2001-2003 SRI International.
 ***
 
 fmod LTL is
@@ -115,7 +115,7 @@ fmod LTL-SIMPLIFIER is
   eq (False R (True U p)) \/ (False R (True U q)) = False R (True U (p \/ q)) .
   eq (True U (False R p)) /\ (True U (False R q)) = True U (False R (p /\ q)) .
 
-*** <= relation on formula
+  *** <= relation on formula
   op _<=_ : Formula Formula -> Bool [prec 75] .
 
   eq p <= p = true .
@@ -134,7 +134,7 @@ fmod LTL-SIMPLIFIER is
   ceq (p U q) <= (r U s) = true if (p <= r) /\ (q <= s) .
   ceq (p R q) <= (r R s) = true if (p <= r) /\ (q <= s) .
 
-*** condition rules depending on <= relation
+  *** condition rules depending on <= relation
   ceq p /\ q = p if p <= q .
   ceq p \/ q = q if p <= q .
   ceq p /\ q = False if p <= ~ q .

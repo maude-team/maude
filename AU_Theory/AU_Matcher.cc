@@ -351,19 +351,13 @@ AU_LhsAutomaton::forcedLoneVariableCase(AU_DagNode* subject,
     {
       AU_DagNode* d = new AU_DagNode(topSymbol, nrSubjectsRemaining);
       d->setProducedByAssignment();
-#ifdef SPEED_HACKS
-      DagNode** source = args.rawBasePointer();
-      DagNode** dest = d->argArray.rawBasePointer();
-#else
-      ArgVec<DagNode*>& source = args;
-      ArgVec<DagNode*>& dest = d->argArray;
-#endif
       int lastIndex = Sort::SORT_UNKNOWN;
       const Sort* cs = loneVariable.sort;
-      int pos = 0;
-      for (int i = leftPos; i <= rightPos; i++)
+      ArgVec<DagNode*>::iterator j = d->argArray.begin();
+      const ArgVec<DagNode*>::const_iterator e = args.begin() + rightPos + 1;
+      for (ArgVec<DagNode*>::const_iterator i = args.begin() + leftPos; i != e; ++i, ++j)
 	{
-	  DagNode* sd = source[i];
+	  DagNode* sd = *i;
 	  int index = sd->getSortIndex();
 	  Assert(index != Sort::SORT_UNKNOWN, cerr << "bad sort");
 	  if (index != lastIndex)
@@ -372,8 +366,9 @@ AU_LhsAutomaton::forcedLoneVariableCase(AU_DagNode* subject,
 		return false;
 	      lastIndex = index;
 	    }
-	  dest[pos++] = sd;
+	  *j = sd;
 	}
+      Assert(j == d->argArray.end(), cerr << "iterator problem");
       if (subject->isReduced() && topSymbol->sortConstraintFree())
 	{
 	  topSymbol->computeBaseSort(d);

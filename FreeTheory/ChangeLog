@@ -1,3 +1,20 @@
+2002-11-25  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeDagNode.hh (class FreeDagNode): added hack to get around the
+	invisibility of MemoryCell::Word
+
+2002-11-20  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeNet.cc (dump): use &(stack[0]) in place of
+	stack.rawBasePointer()
+
+	* freeNetExec.cc: replaced rawBasePointer() call with
+	const_iterators
+	(applyReplace2): reordering the initial assignments restored
+	performance accounding to quantify
+	
+===================================Maude77==================================================
+
 2002-11-13  Steven Eker  <eker@goo.csl.sri.com>
 
 	* freeSymbol.cc (compileEquations): pass false to FreePreNet ctor

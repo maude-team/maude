@@ -10,27 +10,28 @@ ACU_LhsAutomaton::multiplicityChecks(ACU_DagNode* subject)
   //	Because this turns out to be one of the most expensive steps for
   //	AC/ACU rewriting we use hacks.
   //
-  int nrArgs = subject->argArray.length();
-  CONST_ARG_VEC_HACK(ACU_DagNode::Pair, args, subject->argArray);
+  const ArgVec<ACU_DagNode::Pair>::const_iterator e = subject->argArray.end();
   if (maxPatternMultiplicity > 1)
     {
       //
       //	Because failure here is common we check this first.
       //
-      for (int i = 0; i < nrArgs; i++)
+      for (ArgVec<ACU_DagNode::Pair>::const_iterator i = subject->argArray.begin();
+	   i != e; ++i)
 	{
-	  if (args[i].multiplicity >= maxPatternMultiplicity)
+	  if (i->multiplicity >= maxPatternMultiplicity)
 	    goto okay;
 	}
       return false;
     }
 okay:
-  currentMultiplicity.resize(nrArgs);
+  currentMultiplicity.resize(subject->argArray.length());
   Vector<int>::iterator cm = currentMultiplicity.begin();
   int totalSubjectMultiplicity = 0;
-  for (int i = 0; i < nrArgs; i++, ++cm)
+  for (ArgVec<ACU_DagNode::Pair>::const_iterator i = subject->argArray.begin();
+       i != e; ++i, ++cm)
     {
-      int m = args[i].multiplicity;
+      int m = i->multiplicity;
       *cm = m;
       totalSubjectMultiplicity += m;
     }
@@ -368,6 +369,11 @@ ACU_LhsAutomaton::fullMatch(ACU_DagNode* subject,
   ACU_Subproblem* subproblem = buildBipartiteGraph(subject, solution, extensionInfo, 0);
   if (subproblem == 0)
     return false;
+  if (!handleElementVariables(subject, solution, subproblem))
+    {
+      delete subproblem;
+      return false;
+    }
   SubproblemAccumulator subproblems;
   subproblems.add(subproblem);
   int nrVariables = solution.nrFragileBindings();
@@ -375,10 +381,9 @@ ACU_LhsAutomaton::fullMatch(ACU_DagNode* subject,
   for (int i = 0; i < nrTopVariables; i++)
     {
       TopVariable& tv = topVariables[i];
-      int index = tv.index;
-      if (solution.value(index) == 0)
+      if ((tv.upperBound != 1 || tv.takeIdentity) && solution.value(tv.index) == 0)
 	{
-	  subproblem->addTopVariable(index,
+	  subproblem->addTopVariable(tv.index,
 				     tv.multiplicity,
 				     tv.takeIdentity ? 0 : 1,
 				     tv.upperBound,
@@ -386,7 +391,7 @@ ACU_LhsAutomaton::fullMatch(ACU_DagNode* subject,
 	  if (tv.abstracted != 0)
 	    {
 	      subproblems.add(new VariableAbstractionSubproblem(tv.abstracted,
-								index,
+								tv.index,
 								nrVariables));
 	    }
 	}
@@ -415,7 +420,7 @@ ACU_LhsAutomaton::buildBipartiteGraph(ACU_DagNode* subject,
       Symbol* s = nga.topSymbol;
       LhsAutomaton* a = nga.automaton;
       int m = nga.multiplicity;
-      subproblem->addPatternNode(m);
+      int pn = subproblem->addPatternNode(m);
       for (int j = (s == 0) ? 0 : subject->findFirstOccurrence(s); j < nrArgs; j++)
         {
 	  DagNode* d = args[j].dagNode;
@@ -427,7 +432,7 @@ ACU_LhsAutomaton::buildBipartiteGraph(ACU_DagNode* subject,
               Subproblem* sp;
               if (a->match(d, local, sp))
                 {
-                  subproblem->addEdge(i - firstAlien, j, solution, local, sp);
+                  subproblem->addEdge(pn, j, local - solution, sp);
                   matchable = true;
                 }
             }
@@ -439,4 +444,44 @@ ACU_LhsAutomaton::buildBipartiteGraph(ACU_DagNode* subject,
         }
     }
   return subproblem;
+}
+
+bool
+ACU_LhsAutomaton::handleElementVariables(ACU_DagNode* subject,
+					 Substitution& solution,
+					 ACU_Subproblem* subproblem)
+{
+  ArgVec<ACU_DagNode::Pair>& args = subject->argArray;
+  int nrArgs = args.length();
+  //
+  //	Treat unbound variables that take exactly 1 subject like non-ground aliens.
+  //
+  int nrTopVariables = topVariables.length();
+  for (int i = 0; i < nrTopVariables; i++)
+    {
+      TopVariable& tv = topVariables[i];
+      if (tv.upperBound == 1 && !tv.takeIdentity && solution.value(tv.index) == 0)
+	{
+	  bool matchable = false;
+	  int m = tv.multiplicity;
+	  int pn = subproblem->addPatternNode(m); 
+	  for (int j = 0; j < nrArgs; j++)
+	    {
+	      if (currentMultiplicity[j] >= m)
+		{
+		  DagNode* d = args[j].dagNode;
+		  if(d->leq(tv.sort))
+		    {
+		      LocalBinding* b = new LocalBinding(1);
+		      b->addBinding(tv.index, d);
+		      subproblem->addEdge(pn, j, b, 0);
+		      matchable = true;
+		    }
+		}
+	    }
+	  if (!matchable)
+	    return false;
+	}
+    }
+  return true;
 }

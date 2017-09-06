@@ -1,3 +1,12 @@
+2002-11-25  Steven Eker  <eker@goo.csl.sri.com>
+
+	* stringDagNode.cc (StringDagNode): commented out Assert() to
+	avoid accessing MemoryCell::Word
+
+	* stringTerm.hh: added using namespace __gnu_cxx to for g++3.2
+
+	* stringDagNode.hh: added using namespace __gnu_cxx to for g++3.2
+
 2002-11-05  Steven Eker  <eker@goo.csl.sri.com>
 
 	* stringOpSymbol.cc (fwdFind): changed semantics for empty pattern

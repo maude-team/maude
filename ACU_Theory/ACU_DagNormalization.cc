@@ -306,93 +306,142 @@ ACU_DagNode::normalizeAtTop()
   return needToFlatten;
 }
 
-void
-ACU_DagNode::copyAndBinaryInsert(const ACU_DagNode* source, DagNode* dagNode, int multiplicity)
+
+inline ArgVec<ACU_DagNode::Pair>::iterator
+ACU_DagNode::fastCopy(ArgVec<Pair>::const_iterator i,
+		      ArgVec<Pair>::const_iterator e,
+		      ArgVec<Pair>::iterator d)
 {
+  //
+  //	This beats the STL copy() algorithm because the latter maintains
+  //	a counter.
+  //
+  while (i != e)
+    {
+      *d = *i;
+      ++d;
+      ++i;
+    }
+  return d;
+}
+
+/*
+void
+check(int pos, int end)
+{
+  if (pos == 0)
+    cerr << "left\n";
+  else if (pos == end)
+    cerr << "right\n";
+  else
+    cerr << "middle\n";
+}
+*/
+
+void
+ACU_DagNode::copyAndBinaryInsert(const ACU_DagNode* source,
+				 DagNode* dagNode,
+				 int multiplicity)
+{
+  //
+  //	Copy source's argArray into our argArray, inserting dagNode
+  //	in the correct place.
+  //
   int pos;
   int nrSourceArgs = source->argArray.length();
   if (source->binarySearch(dagNode, pos))
     {
+      //check(pos, nrSourceArgs);
+      //DebugAdvisory("copyAndBinaryInsert() " << pos << " out of " << nrSourceArgs);
+      argArray.resizeWithoutPreservation(nrSourceArgs);
       if (nrSourceArgs > 1)
 	{
-	  argArray.expandBy(nrSourceArgs - 2);
-	  CONST_ARG_VEC_HACK(Pair, sourceArgs, source->argArray);
-	  ARG_VEC_HACK(Pair, args, argArray);
-	  for (int i = 0; i < nrSourceArgs; i++)
-	    args[i] = sourceArgs[i];
-	  args[pos].multiplicity += multiplicity;
+	  fastCopy(source->argArray.begin(), source->argArray.end(), argArray.begin());
+	  argArray[pos].multiplicity += multiplicity;
 	}
       else
 	{
-	  argArray.contractTo(1);
-	  argArray[0].multiplicity = multiplicity + source->argArray[0].multiplicity;
 	  argArray[0].dagNode = dagNode;
+	  argArray[0].multiplicity = multiplicity + source->argArray[0].multiplicity;
 	}
     }
   else
     {
-      argArray.expandBy(nrSourceArgs - 1);
-      CONST_ARG_VEC_HACK(Pair, sourceArgs, source->argArray);
-      ARG_VEC_HACK(Pair, args, argArray);
-      int i = 0;
-      for (; i < pos; i++)
-	args[i] = sourceArgs[i];
-      args[i].dagNode = dagNode;
-      args[i].multiplicity = multiplicity;
-      for (int p = i + 1; i < nrSourceArgs; i++, p++)
-	args[p] = sourceArgs[i];
+      //check(pos, nrSourceArgs);
+      //DebugAdvisory("copyAndBinaryInsert() " << pos << " out of " << nrSourceArgs);
+      argArray.resizeWithoutPreservation(nrSourceArgs + 1);
+      const ArgVec<Pair>::const_iterator i = source->argArray.begin();
+      const ArgVec<Pair>::const_iterator p = i + pos;
+      const ArgVec<Pair>::iterator j = fastCopy(i, p, argArray.begin());
+      j->dagNode = dagNode;
+      j->multiplicity = multiplicity;
+      fastCopy(p, source->argArray.end(), j + 1);
     }
 }
 
 void
 ACU_DagNode::fastMerge(const ACU_DagNode* source0, const ACU_DagNode* source1)
 {
-  int nrSourceArgs0 = source0->argArray.length();
-  int nrSourceArgs1 = source1->argArray.length();
-  argArray.expandBy(nrSourceArgs0 + nrSourceArgs1 - 2);
-  CONST_ARG_VEC_HACK(Pair, sourceArgs0, source0->argArray);
-  CONST_ARG_VEC_HACK(Pair, sourceArgs1, source1->argArray);
-  ARG_VEC_HACK(Pair, args, argArray);
-  int p0 = 0;
-  int p1 = 0;
-  int p = 0;
+  //
+  //	Merge the argArrays from source0 and source1 into our argArray.
+  //
+  argArray.resizeWithoutPreservation(source0->argArray.length() +
+				     source1->argArray.length());
+  
+  ArgVec<Pair>::const_iterator s0 = source0->argArray.begin();
+  const ArgVec<Pair>::const_iterator e0 = source0->argArray.end();
+  ArgVec<Pair>::const_iterator s1 = source1->argArray.begin();
+  const ArgVec<Pair>::const_iterator e1 = source1->argArray.end();
+  ArgVec<Pair>::iterator d = argArray.begin();
   for(;;)
     {
-      int r = sourceArgs0[p0].dagNode->compare(sourceArgs1[p1].dagNode);
+      int r = s0->dagNode->compare(s1->dagNode);
       if (r < 0)
 	{
-	  args[p++] = sourceArgs0[p0++];
-	  if (p0 == nrSourceArgs0)
-	    break;
+	  *d = *s0;
+	  ++d;
+	  ++s0;
+	  if (s0 == e0)
+	    goto source0Exhausted;
 	}
       else if (r > 0)
 	{
-	  args[p++] = sourceArgs1[p1++];
-	  if (p1 == nrSourceArgs1)
-	    break;
+	  *d = *s1;
+	  ++d;
+	  ++s1;
+	  if (s1 == e1)
+	    goto source1Exhausted;
 	}
       else
 	{
-	  args[p].dagNode = sourceArgs0[p0].dagNode;
-	  args[p++].multiplicity = sourceArgs0[p0++].multiplicity +
-	    sourceArgs1[p1++].multiplicity;
-	  if (p0 == nrSourceArgs0 || p1 == nrSourceArgs1)
-	    break;
+	  d->dagNode = s0->dagNode;
+	  d->multiplicity = s0->multiplicity + s1->multiplicity;
+	  ++d;
+	  ++s0;
+	  ++s1;
+	  if (s0 == e0)
+	    {
+	    source0Exhausted:
+	      d = fastCopy(s1, e1, d);
+	      break;
+	    }
+	  if (s1 == e1)
+	    {
+	    source1Exhausted:
+	      d = fastCopy(s0, e0, d);
+	      break;
+	    }
 	}
     }
-  while (p0 < nrSourceArgs0)
-    args[p++] = sourceArgs0[p0++];
-  while (p1 < nrSourceArgs1)
-    args[p++] = sourceArgs1[p1++];
-  argArray.contractTo(p);
-  return;
+  argArray.contractTo(d - argArray.begin());
 }
 
 bool
 ACU_DagNode::extensionNormalizeAtTop()
 {
   int last = argArray.length() - 1;
-  Assert(argArray[last].multiplicity == 1, cerr << "bad multiplicity for replacement term");
+  Assert(argArray[last].multiplicity == 1,
+	 cerr << "bad multiplicity for replacement term");
   DagNode* replacement = argArray[last].dagNode;
   if (replacement->symbol() == symbol())
     {
@@ -421,9 +470,15 @@ ACU_DagNode::binaryInsert(DagNode* dagNode, int multiplicity)
 {
   int pos;
   if (binarySearch(dagNode, pos))
-    argArray[pos].multiplicity += multiplicity;
+    {
+      //check(pos, argArray.length());
+      //DebugAdvisory("binaryInsert() " << pos << " out of " << argArray.length());
+      argArray[pos].multiplicity += multiplicity;
+    }
   else
     {
+      //check(pos, argArray.length());
+      //DebugAdvisory("binaryInsert() " << pos << " out of " << argArray.length());
       int p = argArray.length();
       argArray.expandBy(1);
       for (; p > pos; p--)

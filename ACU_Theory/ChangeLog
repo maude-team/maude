@@ -1,3 +1,144 @@
+2003-01-02  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_Term.hh (class ACU_Term): updated decl for
+	tryToMakeCollectorLhsAutomaton()
+
+	* ACU_LhsCompiler0.cc (compileLhs2): use new
+	tryToMakeCollectorLhsAutomaton() calling convention
+	(tryToMakeCollectorLhsAutomaton): Allow collector variable to
+	occur in context and/or condition as long as stripper is a ground
+	term and we have no extension. This is ok because the ground term
+	must strip exactly one occurence of itself from subject with the
+	rest of the subject providing a unique binding for the collector
+
+2002-12-20  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_CollectorLhsAutomaton.cc (collect): optimized no sort check
+	case
+	(collect): optimized sort check case
+
+2002-12-19  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_DagOperations.cc (binarySearch): (Term* version): use
+	setOnLs(), setOnGeq()
+
+2002-12-17  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_LhsAutomaton.hh (class ACU_LhsAutomaton): added decl for
+	handleElementVariables()
+
+	* ACU_Matcher.cc (handleElementVariables): added
+	(fullMatch): use handleElementVariables()
+	(buildBipartiteGraph): don't handle element variables here
+
+	* ACU_DagNormalization.cc (copyAndBinaryInsert): rewritten using
+	resizeWithoutPreservation()
+	(fastMerge): rewritten using resizeWithoutPreservation()
+
+2002-12-16  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_DagNormalization.cc (copyAndBinaryInsert): use fastCopy() in
+	place of STL copy() (3 places)
+	(fastMerge): use use fastCopy() in place of STL copy() (2 places)
+
+	* ACU_DagNode.hh (class ACU_DagNode): added decl for fastCopy()
+
+	* ACU_DagNormalization.cc (fastCopy): added
+
+	* ACU_DagNode.cc (markArguments): rewritten to avoid seperate
+	iteration count
+
+2002-11-22  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_Subproblem.hh (class ACU_Subproblem): added decl for
+	noVariableCase(); updated decl for oneVariableCase()
+
+	* ACU_Subproblem.cc (noVariableCase): added
+	(oneVariableCase): generalized to handle the case where there may
+	be multiple varibales but only one is unbound
+	(extractDiophantineSystem): rewritten to handle a number of
+	special cases efficiently
+
+	* ACU_Matcher.cc (buildBipartiteGraph): use new addEdge() calling
+	convention
+	(buildBipartiteGraph): use new addEdge() calling convention
+
+	* ACU_Subproblem.hh (class ACU_Subproblem): updated decl for
+	addEdge()
+
+	* ACU_Subproblem.cc (addEdge): take difference rather than global
+	and local bindings
+
+2002-11-21  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_Matcher.cc (buildBipartiteGraph): fixed bug we introduced by
+	checking for matchable outside of the right scope
+
+	* ACU_Subproblem.hh (class ACU_Subproblem): updated decl for
+	addPatternNode()
+
+	* ACU_Subproblem.cc (addPatternNode): return index to created
+	pattern node
+
+	* ACU_Matcher.cc (buildBipartiteGraph): treat unbound variables
+	that take exactly one subject as non-ground aliens
+	(fullMatch): don't treat unbound variables that take exactly one
+	subject as top variables
+
+2002-11-20  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_DagNode.cc (matchVariableWithExtension): now check & use
+	sort bound
+
+2002-11-19  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_Subproblem.cc (oneVariableCase): partly optimized using
+	iterators
+
+	* ACU_DagNormalization.cc (copyAndBinaryInsert): rewritten using
+	iterators and copy() algorithm template
+	(copyAndBinaryInsert): put back missing expandBy()
+	(fastMerge):rewritten using iterators and copy() algorithm
+	template
+
+	* ACU_NonLinearLhsAutomaton.hh (class ACU_NonLinearLhsAutomaton):
+	updated decl for fillOutExtensionInfo()
+
+	* ACU_NonLinearLhsAutomaton.cc (match): rewritten using iterators
+	to replace CONST_ARG_VEC_HACK()
+	(fillOutExtensionInfo): pass chosen as a const
+	ArgVec<ACU_DagNode::Pair>::const_iterator
+	(match): new fillOutExtensionInfo() calling convention
+
+2002-11-18  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_DagOperations.cc (findFirstOccurrence): replaced
+	CONST_ARG_VEC_HACK() with const_iterator 
+	(binarySearch): (both versions) replaced CONST_ARG_VEC_HACK() with
+	const_iterator
+
+	* ACU_Matcher.cc (multiplicityChecks): rewritten using
+	const_iterator in place of CONST_ARG_VEC_HACK()
+
+	* ACU_NonLinearLhsAutomaton.cc (fillOutExtensionInfo): rewritten
+	using const_iterator in place of CONST_ARG_VEC_HACK()
+
+	* ACU_DagNode.cc (compareArguments): need to iterate backwards for
+	consistancy
+
+	* ACU_RhsAutomaton.cc (buildArguments): rewritten using iterator
+	in place of ARG_VEC_HACK()
+
+	* ACU_DagNode.cc (compareArguments): rewritten using
+	iterators in place of CONST_ARG_VEC_HACK()s
+	(partialReplace): rewritten using
+	CONST_ARG_VEC_HACK()/ARG_VEC_HACK()
+
+	* ACU_CollectorLhsAutomaton.cc (collect): rewritten using
+	itterators in place of CONST_ARG_VEC_HACK()/ARG_VEC_HACK()
+	
+===================================Maude77==================================================
+
 2002-11-07  Steven Eker  <eker@goo.csl.sri.com>
 
 	* ACU_Subproblem.cc (solveVariables):

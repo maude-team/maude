@@ -12,7 +12,7 @@
 #include "scp_parser.hh"
 
 
-int ScpParser::parseSentence(Vector<int>& term,int root,int errorRecover=0)
+int ScpParser::parseSentence(Vector<int>& term,int root,int errorRecover)
 {
   // Control: compile grammar
   if (!compiled)
@@ -1002,7 +1002,7 @@ void ScpParser::runBubble(int evprod,int dot,int evfpos,
     tryNode(bprod,fpos,poslpos,0,0);
 }
 
-void ScpParser::errorDetect(int pos,int symbol,int type=0,int bubbleabslnt=0)
+void ScpParser::errorDetect(int pos,int symbol,int type,int bubbleabslnt)
 {
   if (pos > lasttokendetect) {
     if (!lendetect) {
@@ -1062,7 +1062,7 @@ void ScpParser::errorDetect(int pos,int symbol,int type=0,int bubbleabslnt=0)
   }
 }
 
-void ScpParser::errorRecovery(int bubblerecovery=0)
+void ScpParser::errorRecovery(int bubblerecovery)
 {
   int erlevel;
 

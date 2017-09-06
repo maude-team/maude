@@ -5,7 +5,7 @@
 int
 ACU_DagNode::findFirstOccurrence(Symbol* key) const
 {
-  CONST_ARG_VEC_HACK(Pair, args, argArray);
+  const ArgVec<Pair>::const_iterator args = argArray.begin();  // for speed
   int first = argArray.length();  // return index beyond arg array if no occurrence
   Assert(first > 0, cerr << "no args");
   int upper = first - 1;
@@ -30,7 +30,7 @@ ACU_DagNode::findFirstOccurrence(Symbol* key) const
 bool
 ACU_DagNode::binarySearch(DagNode* key, int& pos) const
 {
-  CONST_ARG_VEC_HACK(Pair, args, argArray);
+  const ArgVec<Pair>::const_iterator args = argArray.begin();  // for speed
   int upper = argArray.length() - 1;
   Assert(upper >= 0, cerr << "no args");
   int lower = 0;
@@ -43,10 +43,14 @@ ACU_DagNode::binarySearch(DagNode* key, int& pos) const
 	  pos = probe;
 	  return true;
 	}
+      /*
       if (r < 0)
 	upper = probe - 1;
       else
 	lower = probe + 1;
+      */
+      setOnLs(upper, probe - 1, r);
+      setOnGeq(lower, probe + 1, r);
     }
   while (lower <= upper);
   pos = lower;
@@ -56,7 +60,7 @@ ACU_DagNode::binarySearch(DagNode* key, int& pos) const
 bool
 ACU_DagNode::binarySearch(Term* key, int& pos) const
 {
-  CONST_ARG_VEC_HACK(Pair, args, argArray);
+  const ArgVec<Pair>::const_iterator args = argArray.begin();  // for speed
   int upper = argArray.length() - 1;
   Assert(upper >= 0, cerr << "no args");
   int lower = 0;
@@ -69,10 +73,14 @@ ACU_DagNode::binarySearch(Term* key, int& pos) const
 	  pos = probe;
 	  return true;
 	}
+      /*
       if (r < 0)
 	upper = probe - 1;
       else
 	lower = probe + 1;
+      */
+      setOnLs(upper, probe - 1, r);
+      setOnGeq(lower, probe + 1, r);
     }
   while (lower <= upper);
   pos = lower;

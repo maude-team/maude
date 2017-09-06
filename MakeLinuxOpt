@@ -7,19 +7,34 @@
 #
 BISON =	bison
 FLEX =	flex
-CC =	gcc
-CXX =	g++
 AR =	ar
+CC =   gcc-3.2
+CXX =  g++-3.2
 
-DFLAGS =	-DLINUX -DNO_ASSERT -DSPEED_HACKS \
-		-DCOMPILER -DANNOTATE -fno-exceptions \
-		-DNO_IMPLEMENT_INLINES -DLOCAL_INLINES \
-		-Wall -Winline -Wno-non-virtual-dtor -Wno-reorder \
-		-O2 -mpreferred-stack-boundary=2 \
-		-mcpu=pentiumpro -fomit-frame-pointer \
-		-I/csl/include \
+WFLAGS =	-Wall \
+		-Winline \
+		-Wno-non-virtual-dtor
+
+OFLAGS =	-fno-exceptions \
+		-fomit-frame-pointer \
+		-fforce-addr \
+		-finline-limit=10000 \
+		-O2 \
+		-mpreferred-stack-boundary=2 \
+		-mcpu=pentium4
+
+DFLAGS =	-DLINUX \
+		-DLIBv3 \
+		-DNO_ASSERT \
+		-DSPEED_HACKS \
+		-DCOMPILER \
+		-DANNOTATE \
+		-DLOCAL_INLINES \
 		-I/homes/eker/include \
-		-L/homes/eker/Linux/lib
+		-L/homes/eker/Linux/3.2/lib \
+		$(OFLAGS) $(WFLAGS)
+
+GMP_LIB_DIR =	/homes/eker/Linux/3.2/lib
 
 LINKAGE =	-static
 

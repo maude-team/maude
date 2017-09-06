@@ -2,15 +2,21 @@
 //	Class for garbage collected argument vectors.
 //
 //	For efficiency we assume that the parameter class T is very simple:
-//	(1) no constructor
-//	(2) no destructor
-//	(3) can be copied efficiently and correctly by default assignment operator
+//	(1) no constructor;
+//	(2) no destructor;
+//	(3) can be copied efficiently and correctly by assignment operator.
+//
+//	Resizing ArgVecs is expensive so correct length should be supplied
+//	to constructor (there is no default constructor).
 //
 //	Typically T will be a DagNode* or a small struct containing a DagNode*
 //	and other simple data types (ints, ptrs).
-//	Garbage collection sweep phase will invalidate all ArgVec objects that
+//
+//	Garbage collection sweep phase invalidates all ArgVec objects that
 //	have not had their evacuate() member function called during the mark phase.
-// 
+//	Calling evacuate() invalidates all pointers/references/interators
+//	into the ArgVec.
+//
 #ifndef _argVec_hh_
 #define _argVec_hh_
 #ifdef __GNUG__
@@ -21,67 +27,177 @@ template<class T>
 class ArgVec
 {
 public:
-  ArgVec(int length);
+  typedef T value_type;
+  typedef value_type* pointer;
+  typedef const value_type* const_pointer;
+  typedef value_type& reference;
+  typedef const value_type& const_reference;
+  typedef size_t size_type;
+  typedef ptrdiff_t difference_type;
 
-  void evacuate();			// move vector to safe location (during GC)
-  const T& operator[](int i) const;	// access for reading
-  T& operator[](int i);			// access for writing
-  void expandBy(int extra);
-  void contractTo(int length);
+#ifdef NO_ASSERT
+  typedef pointer iterator;
+  typedef const_pointer const_iterator;
+#else
+  class iterator;
+  friend class iterator;
+  class const_iterator;
+  friend class const_iterator;
+#endif
+
+  ArgVec(size_type length);
+
+  iterator begin();
+  iterator end();
+  const_iterator begin() const;
+  const_iterator end() const;
+
+  const_reference operator[](size_type i) const;	// access for reading
+  reference operator[](size_type i);			// access for writing
+  void expandBy(size_type extra);
+  void resizeWithoutPreservation(size_type newSize);
+  void contractTo(size_type length);
+  size_type size() const;
   int length() const;
   void swap(ArgVec& other);
-  const T* rawBasePointer() const;	// access for gross performance hacks
-  T* rawBasePointer();			// access for even uglier stuff
+  //
+  //	Move contents of ArgVec to a safe place during mark phase.
+  //	Invalidates all pointers/references/interators into ArgVec.
+  //
+  void evacuate();
 
 private:
 
-  int len;			// number of objects that are properly initialized
+  size_type len;		// number of objects in ArgVec
   size_t allocatedBytes;	// space allocated in bytes
-  T* vector;
+  pointer basePtr;
 };
 
 template<class T>
 inline
-ArgVec<T>::ArgVec(int length)
+ArgVec<T>::ArgVec(size_type length)
 {
   Assert(length >= 0, cerr << "-ve length");
   len = length;
   allocatedBytes = length * sizeof(T);
-  vector = static_cast<T*>(MemoryCell::allocateStorage(allocatedBytes));
+  basePtr = static_cast<pointer>(MemoryCell::allocateStorage(allocatedBytes));
+}
+
+#ifdef NO_ASSERT
+//
+//	Fast, with no runtime checking.
+//
+template<class T>
+inline typename ArgVec<T>::iterator
+ArgVec<T>::begin()
+{
+  return basePtr;
 }
 
 template<class T>
-inline const T& 
-ArgVec<T>::operator[](int i) const
+inline typename ArgVec<T>::iterator
+ArgVec<T>::end()
 {
-  Assert(i >= 0, cerr << "-ve index");
+  return basePtr + len;
+}
+
+template<class T>
+inline typename ArgVec<T>::const_iterator
+ArgVec<T>::begin() const
+{
+  return basePtr;
+}
+
+template<class T>
+inline typename ArgVec<T>::const_iterator
+ArgVec<T>::end() const
+{
+  return basePtr + len;
+}
+
+#else
+//
+//	Slow, with extensive runtime checking.
+//
+#include <checkedArgVecIterator.hh>
+
+template<class T>
+inline typename ArgVec<T>::iterator
+ArgVec<T>::begin()
+{
+  return iterator(this, 0);
+}
+
+template<class T>
+inline typename ArgVec<T>::iterator
+ArgVec<T>::end()
+{
+  return iterator(this, len);
+}
+
+#include <checkedArgVecConstIterator.hh>
+
+template<class T>
+inline typename ArgVec<T>::const_iterator
+ArgVec<T>::begin() const
+{
+  return const_iterator(this, 0);
+}
+
+template<class T>
+inline typename ArgVec<T>::const_iterator
+ArgVec<T>::end() const
+{
+  return const_iterator(this, len);
+}
+
+#endif
+
+template<class T>
+inline typename ArgVec<T>::const_reference
+ArgVec<T>::operator[](size_type i) const
+{
   Assert(i < len, cerr << "index too big");
-  return vector[i];
+  return basePtr[i];
 }
 
 template<class T>
-inline T& 
-ArgVec<T>::operator[](int i)
+inline typename ArgVec<T>::reference
+ArgVec<T>::operator[](size_type i)
 {
-  Assert(i >= 0, cerr << "-ve index");
   Assert(i < len, cerr <<  "index too big");
-  return vector[i];
+  return basePtr[i];
 }
 
 template<class T>
 inline void
-ArgVec<T>::expandBy(int extra)
+ArgVec<T>::expandBy(size_type extra)
 {
-  Assert(extra >= 0, cerr << "extra < 0");
-  int oldLen = len;
+  size_type oldLen = len;
   len += extra;
   size_t neededBytes = len * sizeof(T);
   if (neededBytes > allocatedBytes)
     {
-      T* oldVector = vector;
-      vector = static_cast<T*>(MemoryCell::allocateStorage(neededBytes));
-      for (T* n = vector; oldLen > 0; oldLen--)
-	*n++ = *oldVector++;
+      pointer oldBasePtr = basePtr;
+      basePtr = static_cast<pointer>(MemoryCell::allocateStorage(neededBytes));
+      for (pointer n = basePtr; oldLen > 0; oldLen--)
+	*n++ = *oldBasePtr++;
+      allocatedBytes = neededBytes;
+    }
+}
+
+template<class T>
+inline void
+ArgVec<T>::resizeWithoutPreservation(size_type newSize)
+{
+  //
+  //	Fast but original contents of ArgVec are lost.
+  //
+  len = newSize;
+  size_t neededBytes = newSize * sizeof(T);
+  if (neededBytes > allocatedBytes)
+    {
+      basePtr = static_cast<pointer>(MemoryCell::allocateStorage(neededBytes));
       allocatedBytes = neededBytes;
     }
 }
@@ -90,20 +206,27 @@ template<class T>
 inline void
 ArgVec<T>::evacuate()
 {
-  int l = len;
+  size_type l = len;
   allocatedBytes = l * sizeof(T);
-  T* v = vector;
-  vector = static_cast<T*>(MemoryCell::allocateStorage(allocatedBytes));
-  for (T* n = vector; l > 0; l--)
+  pointer v = basePtr;
+  basePtr = static_cast<pointer>(MemoryCell::allocateStorage(allocatedBytes));
+  for (pointer n = basePtr; l > 0; l--)
     *n++ = *v++;
 }
-  
+
 template<class T>
 inline void
-ArgVec<T>::contractTo(int length)
+ArgVec<T>::contractTo(size_type length)
 {
   Assert(length <= len, cerr << "new length > old length");
   len = length;
+}
+
+template<class T>
+inline typename ArgVec<T>::size_type
+ArgVec<T>::size() const
+{
+  return len;
 }
 
 template<class T>
@@ -123,31 +246,9 @@ ArgVec<T>::swap(ArgVec& other)
   t = allocatedBytes;
   allocatedBytes = other.allocatedBytes;
   other.allocatedBytes = t;
-  T* p = vector;
-  vector = other.vector;
-  other.vector = p;
+  pointer p = basePtr;
+  basePtr = other.basePtr;
+  other.basePtr = p;
 }
-
-template<class T>
-inline const T* 
-ArgVec<T>::rawBasePointer() const
-{
-  return vector;
-}
-
-template<class T>
-inline T* 
-ArgVec<T>::rawBasePointer()
-{
-  return vector;
-}
-
-#ifdef SPEED_HACKS
-#define ARG_VEC_HACK(type, fast, orig)		type* fast = (orig).rawBasePointer()
-#define CONST_ARG_VEC_HACK(type, fast, orig)	type const * fast = (orig).rawBasePointer()
-#else
-#define ARG_VEC_HACK(type, fast, orig)		ArgVec<type>& fast = (orig)
-#define CONST_ARG_VEC_HACK(type, fast, orig)	const ArgVec<type>& fast = (orig)
-#endif
 
 #endif

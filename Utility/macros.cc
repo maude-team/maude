@@ -11,7 +11,6 @@
 #ifdef SOLARIS
 #include <ieeefp.h>
 #endif
-#include <strstream>
 
 #include "macros.hh"
 #include "vector.hh"
@@ -162,44 +161,41 @@ doubleToString(double d)
       else
 	return (d < 0) ? "-Infinity" : "Infinity";
     }
-  static char buffer[DOUBLE_TEXT_SIZE + 1];
-  ostrstream s(buffer, DOUBLE_TEXT_SIZE + 1);
-  s.setf(ios::scientific);
-  s.precision(16);
-  s << d << '\0';
+  if (d == 0.0)
+    return "0.0";
+  static char buffer[DOUBLE_TEXT_SIZE + 1] = "-";
+  int decPt;
+  int sign;
   //
-  //	Now clean number up by removing extraneous trailing 0s from mantissa
-  //	and leading 0s from exponent. If exponent is zero remove it altogether.
+  //	Get 17 significant digits.
   //
-  int dp = 1;
-  if (buffer[dp] != '.')
+  const int significantDigits = 17;
+  correctEcvt(d, significantDigits, buffer + 2, decPt, sign);
+  //
+  //	Insert decimal point.
+  //
+  buffer[1] = buffer[2];
+  buffer[2] = '.';
+  //
+  //	Strip trailing zeros.
+  //
+  int next = 2 + significantDigits;
+  while (next > 4 && buffer[next - 1] == '0')
+    --next;
+  //
+  //	 Add exponent if needed.
+  //
+  int exponent = decPt - 1;
+  if (exponent != 0)
     {
-      ++dp;
-      if (buffer[dp] != '.')
-	return buffer;  // must be special representation
+      buffer[next++] = 'e';
+      if (exponent > 0)
+	buffer[next++] = '+';
+      strcpy(buffer + next, int64ToString(exponent, 10));
     }
-  int lastNonzero = dp + 16;
-  while (lastNonzero > dp + 1 && buffer[lastNonzero] == '0')
-    --lastNonzero;
-  int exponentStart = dp + 17;
-  Assert(buffer[exponentStart] == 'e', cerr << "misplaced exponent");
-  int exponentFirstDigit = exponentStart + 1;
-  if (!isdigit(buffer[exponentFirstDigit]))
-    ++exponentFirstDigit;  // skip sign
-  int firstNonzero = exponentFirstDigit;
-  while (buffer[firstNonzero] == '0')
-    ++firstNonzero;
-  if (buffer[firstNonzero] == '\0')
-    buffer[lastNonzero + 1] = '\0';  // lose exponent
   else
-    {
-      char* p = buffer + lastNonzero + 1;
-      for (int i = exponentStart; i < exponentFirstDigit; i++)
-	*p++ = buffer[i];
-      for (int i = firstNonzero; (*p++ = buffer[i]); i++)
-	;
-    }
-  return buffer;
+    buffer[next] = '\0';
+  return (sign < 0) ? buffer : (buffer + 1);
 }
 
 double

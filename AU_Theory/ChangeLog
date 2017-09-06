@@ -1,3 +1,15 @@
+2002-11-20  Steven Eker  <eker@goo.csl.sri.com>
+
+	* AU_Matcher.cc (forcedLoneVariableCase): replaced
+	rawBasePointer() calls with iterators
+
+2002-11-18  Steven Eker  <eker@goo.csl.sri.com>
+
+	* AU_DagNode.cc (compareArguments): use const_iterators in place
+	of CONST_ARG_VEC_HACK()s
+	(markArguments): use const_iterators in place of
+	CONST_ARG_VEC_HACK()s
+
 2002-10-16  Steven Eker  <eker@goo.csl.sri.com>
 
 	* AU_Symbol.hh (class AU_Symbol): postInterSymbolPass() ->

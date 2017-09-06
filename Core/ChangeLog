@@ -1,3 +1,63 @@
+2002-12-17  Steven Eker  <eker@goo.csl.sri.com>
+
+	* argVec.hh (expandWithoutPreservationBy): added
+	(expandWithoutPreservationBy): becomes resizeWithoutPreservation
+
+2002-11-26  Steven Eker  <eker@goo.csl.sri.com>
+
+	* memoryCell.cc (slowNew): now return MemoryCell*
+
+	* memoryCell.hh: redesigned to remove the flaw that we were
+	depending on the property that if Bar is derived from Foo, the Foo
+	subobject starts at the beginning of Bar. This is not guaranteed by
+	the ANSI C++ standard at does not hold for g++ 3.2 which puts
+	Bars virtual function table pointer at the beginning of Bar.
+	(allocateStorage): use MachineWord
+
+2002-11-21  Steven Eker  <eker@goo.csl.sri.com>
+
+	* preEquation.hh (class PreEquation): added decl for cleanStack()
+
+	* preEquation.cc (cleanStack): created
+	(checkCondition): call cleanStack() before returning to to an
+	abort
+
+2002-11-20  Steven Eker  <eker@goo.csl.sri.com>
+
+	* checkedArgVecConstIterator.hh (operator->): made const
+	(operator*): made const
+	(class const_iterator): updated decls for operator*() and
+	operator->() 
+
+	* checkedArgVecIterator.hh (class iterator): make const_iterator a
+	friend
+	(class iterator): declare operator*() and operator->() to be const
+	(operator*): made const
+	(operator->): made const
+
+	* checkedArgVecConstIterator.hh (const_iterator): added conversion
+	ctor from iterator
+
+	* argVec.hh: added support for checked iterators
+
+	* checkedArgVecConstIterator.hh: created
+
+	* checkedArgVecIterator.hh: created
+
+	* argVec.hh (rawBasePointer): deleted both versions
+
+2002-11-19  Steven Eker  <eker@goo.csl.sri.com>
+
+	* argVec.hh (CONST_ARG_VEC_HACK): deleted
+	(ARG_VEC_HACK): deleted
+
+2002-11-18  Steven Eker  <eker@goo.csl.sri.com>
+
+	* argVec.hh: major rewrite to make it look more STL like and
+	support iterators
+	
+===================================Maude77==================================================
+
 2002-11-15  Steven Eker  <eker@goo.csl.sri.com>
 
 	* module.cc (indexSortConstraints): use new style AdvisoryCheck()

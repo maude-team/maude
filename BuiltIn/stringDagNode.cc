@@ -26,8 +26,8 @@ StringDagNode::StringDagNode(StringSymbol* symbol, const crope& value)
   : NA_DagNode(symbol),
     value(value)
 {
-  Assert(sizeof(crope) <= DagNode::nrWords * sizeof(DagNode::Word),
-	 cerr << "crope too big for internal storage");
+  //Assert(sizeof(crope) <= DagNode::nrWords * sizeof(DagNode::Word),
+  // cerr << "crope too big for internal storage");  // HACK
   setCallDtor();  // need our dtor called when garbage collected to destruct crope
 }
 

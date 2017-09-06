@@ -141,13 +141,19 @@ PreEquation::checkCondition(bool findFirst,
 	  if (findFirst)
 	    trialRef = traceBeginTrial(subject, context);
 	  if (context.traceAbort())
-	    return false;  // return false since condition variables may be unbound
+	    {
+	      cleanStack(state);
+	      return false;  // return false since condition variables may be unbound
+	    }
 	}
       bool success = solveCondition(findFirst, trialRef, context, state);
       if (RewritingContext::getTraceStatus())
 	{
 	  if (context.traceAbort())
-	    return false;  // return false since condition variables may be unbound
+	    {
+	      cleanStack(state);
+	      return false;  // return false since condition variables may be unbound
+	    }
 	  if (trialRef != UNDEFINED)
 	    context.traceEndTrial(trialRef, success);
 	}
@@ -202,4 +208,16 @@ PreEquation::solveCondition(bool findFirst,
 	}
     }
   return findFirst;
+}
+
+void
+PreEquation::cleanStack(stack<ConditionState*>& conditionStack)
+{
+  DebugAdvisoryCheck(conditionStack.empty(),
+		     cerr << "cleaning condition stack because of abort");
+  while (!conditionStack.empty())
+    {
+      delete conditionStack.top();
+      conditionStack.pop();
+    }
 }

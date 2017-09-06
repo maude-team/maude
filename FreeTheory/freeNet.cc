@@ -247,14 +247,14 @@ FreeNet::dump(ostream& s, int indentLevel)
 #ifndef SPEED_HACKS
 	": position " << net[i].position <<
 #else
-	": position " << net[i].positionPtr - stack.rawBasePointer() <<
+	": position " << net[i].positionPtr - &(stack[0]) <<
 #endif
 	", argIndex " << net[i].argIndex <<
 	", symbol \"" << net[i].symbol <<
 #ifndef SPEED_HACKS
 	"\", slot " << net[i].slot <<
 #else
-	"\", slot " << net[i].slotPtr - stack.rawBasePointer() <<
+	"\", slot " << net[i].slotPtr - &(stack[0]) <<
 #endif
 	", equal " << net[i].equal <<
 	", less " << net[i].less <<

@@ -32,7 +32,9 @@ public:
 #endif
 
 private:
-  void fillOutExtensionInfo(ACU_DagNode* subject, int chosen, ACU_ExtensionInfo* extensionInfo);
+  void fillOutExtensionInfo(ACU_DagNode* subject,
+			    const ArgVec<ACU_DagNode::Pair>::const_iterator chosen,
+			    ACU_ExtensionInfo* extensionInfo);
 
   ACU_Symbol* const topSymbol;
   const int varIndex;

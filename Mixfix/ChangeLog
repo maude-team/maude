@@ -1,3 +1,30 @@
+2003-01-06  Steven Eker  <eker@goo.csl.sri.com>
+
+	* main.cc (main): removed various commented out crap
+
+2003-01-03  Steven Eker  <eker@goo.csl.sri.com>
+
+	* lexerAux.cc (includeFile): save fakeNewline status
+	(handleEof): restore fakeNewline status
+	(cleanUpLexer): clear fakeNewline flag
+
+2003-01-02  Steven Eker  <eker@goo.csl.sri.com>
+
+	* lexerAux.cc (getInput): set result = YY_NULL if there are no
+	more characters available from file (rather than , for
+	portability).
+
+2002-11-27  Steven Eker  <eker@goo.csl.sri.com>
+
+	* main.cc (findPrelude): removed extraneous quote from
+	IssueWarning()
+
+	* banner.cc: fixed #include for LIBv3
+
+2002-11-25  Steven Eker  <eker@goo.csl.sri.com>
+
+	* interpreter.cc (setCurrentModule): removed default arg
+
 2002-11-15  Steven Eker  <eker@goo.csl.sri.com>
 
 	* entry.cc (addOpDeclaration): use new style

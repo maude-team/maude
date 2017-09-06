@@ -1,6 +1,64 @@
+2003-01-06  Steven Eker  <eker@goo.csl.sri.com>
+
+	* macros.cc (doubleToString): special case for 0.0
+
+2003-01-02  Steven Eker  <eker@goo.csl.sri.com>
+
+	* macros.hh (SpecialConstants): added BITS_PER_BYTE and BITS_PER_INT
+	(setOnLs): use BITS_PER_INT
+	(setOnGeq): use BITS_PER_INT
+
+2002-12-19  Steven Eker  <eker@goo.csl.sri.com>
+
+	* macros.hh (setOnLs): added
+	(setOnGeq): added
+
+2002-12-03  Steven Eker  <eker@goo.csl.sri.com>
+
+	* vector.hh: removed #pragma interface since it causes g++3.2 not
+	to emit default and copy contructors for nested classes in certain
+	complex situations
+
+2002-11-27  Steven Eker  <eker@goo.csl.sri.com>
+
+	* macros.cc (doubleToString): rewritten using correctEcvt() since
+	ostrstreams don't get precision right with version 3 of stdc++
+	library
+
+2002-11-26  Steven Eker  <eker@goo.csl.sri.com>
+
+	* macros.hh (union MachineWord): added
+
+2002-11-25  Steven Eker  <eker@goo.csl.sri.com>
+
+	* macros.cc (doubleToString): made "misplaced exponent" Assert
+	more detailed since it is failing
+	(doubleToString): don't clean number up because new libc++ is not
+	returning number in requested format
+
+	* indexedSet.hh: added many typenames to placate g++3.2
+
+2002-11-20  Steven Eker  <eker@goo.csl.sri.com>
+
+	* checkedConstIterator.hh (checkDereferenceable): fixed Assert()
+	message
+
+	* checkedIterator.hh (checkDereferenceable): fixed Assert()
+	message
+
+	* vector.hh (rawBasePointer): (both versions) deleted
+
+2002-11-18  Steven Eker  <eker@goo.csl.sri.com>
+
+	* checkedConstIterator.hh: added many typenames to placate g++3.2
+
+	* checkedIterator.hh: added many typenames to placate g++3.2
+	
+===================================Maude77==================================================
+
 2002-11-14  Steven Eker  <eker@goo.csl.sri.com>
 
-	* macros.hh: rewrite Advisory/Warning macros
+	* macros.hh: rewrote Advisory/Warning macros
 
 2002-11-11  Steven Eker  <eker@goo.csl.sri.com>
 

@@ -1,3 +1,7 @@
+2002-11-26  Steven Eker  <eker@goo.csl.sri.com>
+
+	* dagNode.hh: major rewrite, using new MemoryCell semantics
+
 2002-11-14  Steven Eker  <eker@goo.csl.sri.com>
 
 	* associativeSymbol.cc (processIdentity): use new style

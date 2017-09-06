@@ -21,12 +21,12 @@ ACU_Term::compileLhs2(bool matchAtTop,
   else if (argArray.length() == 2 &&
 	   argArray[0].multiplicity == 1 &&
 	   argArray[1].multiplicity == 1 &&
-	   (!matchAtTop || collapseSymbols().empty()))
+	   (!matchAtTop || collapseSymbols().empty()))  // don't handle collapses at the top
     {
-      h = tryToMakeCollectorLhsAutomaton(variableInfo, boundUniquely, 0);
+      h = tryToMakeCollectorLhsAutomaton(matchAtTop, variableInfo, boundUniquely, 0);
       if (h == 0)
 	{
-	  h = tryToMakeCollectorLhsAutomaton(variableInfo, boundUniquely, 1);
+	  h = tryToMakeCollectorLhsAutomaton(matchAtTop, variableInfo, boundUniquely, 1);
 	  if (h == 0)
 	    h = tryToMakeAlienAlienLhsAutomaton(variableInfo, boundUniquely);
 	}
@@ -126,9 +126,10 @@ ACU_Term::tryToMakeAlienAlienLhsAutomaton(const VariableInfo& variableInfo,
 }
   
 ACU_CollectorLhsAutomaton*
-ACU_Term::tryToMakeCollectorLhsAutomaton(const VariableInfo& variableInfo,
-					  NatSet& boundUniquely,
-					  int collectorCandidate)
+ACU_Term::tryToMakeCollectorLhsAutomaton(bool matchAtTop,
+					 const VariableInfo& variableInfo,
+					 NatSet& boundUniquely,
+					 int collectorCandidate)
 {
   //
   //	First check collector.
@@ -139,20 +140,30 @@ ACU_Term::tryToMakeCollectorLhsAutomaton(const VariableInfo& variableInfo,
   int ci = c->getIndex();
   //
   //	Collector variable should:
-  //	(1) be unbound at match time (can't guarantee this of course);
-  //	(2) not occur in condition;
-  //	(3) not occur elsewhere in lhs; and
-  //	(4) have limit or pure sort w.r.t. top symbol.
+  //	(1) be unbound at match time (can't guarantee this of course); and
+  //	(2) have limit or pure sort w.r.t. top symbol.
+  //	Unless stripper is a ground term and there is no extension (i.e.
+  //	there will be a unique match we also require that variable should:
+  //	(3) not occur in condition; and
+  //	(4) not occur elsewhere in lhs.
   //
   if (boundUniquely.contains(ci) ||
-      variableInfo.getConditionVariables().contains(ci) ||
-      c->occursInContext().contains(ci) ||
       symbol()->sortStructure(c->getSort()) < AssociativeSymbol::LIMIT_SORT)
+    return 0;
+  bool needAllCollectorSolutions =
+    variableInfo.getConditionVariables().contains(ci) ||
+    c->occursInContext().contains(ci);
+  if (matchAtTop && needAllCollectorSolutions)
     return 0;
   //
   //	Then check stripper.
   //
   Term* t = argArray[1 - collectorCandidate].term;
+  if (t->ground())
+    return new ACU_GndLhsAutomaton(symbol(), !(collapseSymbols().empty()), t, c);
+  if (needAllCollectorSolutions)
+    return 0;
+
   VariableTerm* v = dynamic_cast<VariableTerm*>(t);
   if (v != 0)
     {
@@ -176,8 +187,6 @@ ACU_Term::tryToMakeCollectorLhsAutomaton(const VariableInfo& variableInfo,
 	return 0;
       return new ACU_VarLhsAutomaton(symbol(), !(collapseSymbols().empty()), v, c);
     }
-  else if (t->ground())
-    return new ACU_GndLhsAutomaton(symbol(), !(collapseSymbols().empty()), t, c);
   //
   //	Non ground stripper term should:
   //	(1) be stable;

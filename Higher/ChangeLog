@@ -1,3 +1,8 @@
+2002-11-25  Steven Eker  <eker@goo.csl.sri.com>
+
+	* positionState.cc (PositionState): switch initializer order to
+	placate g++3.2
+
 2002-11-15  Steven Eker  <eker@goo.csl.sri.com>
 
 	* modelCheckerSymbol.cc (eqRewrite): use new style IssueAdvisory()

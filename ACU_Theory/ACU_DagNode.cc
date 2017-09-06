@@ -54,25 +54,30 @@ ACU_DagNode::compareArguments(const DagNode* other) const
 {
   const ArgVec<Pair>& argArray2 = static_cast<const ACU_DagNode*>(other)->argArray;
   Assert(argArray.length() > 0 && argArray2.length() > 0, cerr << "no arguments");
-  int i = argArray.length();
-  int r = i - argArray2.length();
+  int r = argArray.length() - argArray2.length();
   if (r != 0)
     return r;
-  CONST_ARG_VEC_HACK(Pair, args, argArray);
-  CONST_ARG_VEC_HACK(Pair, args2, argArray2);
+  //
+  //	HACK: We should change over to doing this forwards.
+  //
+  ArgVec<Pair>::const_iterator i = argArray.end();
+  const ArgVec<Pair>::const_iterator b = argArray.begin();
+  ArgVec<Pair>::const_iterator j = argArray2.end();
+
   do
     {
+      Assert(j != argArray2.begin(), cerr << "iterator inconsistancy");
       --i;
-      const Pair& p1 = args[i];
-      const Pair& p2 = args2[i];
-      r = p1.multiplicity - p2.multiplicity;
+      --j;
+      r = i->multiplicity - j->multiplicity;
       if (r != 0)
 	return r;
-      r = p1.dagNode->compare(p2.dagNode);
+      r = i->dagNode->compare(j->dagNode);
       if (r != 0)
 	return r;
     }
-  while (i > 0);
+  while (i != b);
+  Assert(j == argArray2.begin(), cerr << "iterator inconsistancy");
   return 0;
 }
 
@@ -80,14 +85,13 @@ DagNode*
 ACU_DagNode::markArguments()
 {
   argArray.evacuate();
-  int nrArgs = argArray.length();
-  Assert(nrArgs > 0, cerr << "no arguments");
-  CONST_ARG_VEC_HACK(Pair, args, argArray);
-  --nrArgs;
-  int i = 0;
-  for (; i < nrArgs; i++)
-    args[i].dagNode->mark();
-  return args[i].dagNode;
+  Assert(argArray.length() > 0, cerr << "no arguments");
+  
+  const ArgVec<Pair>::const_iterator e = argArray.end() - 1;
+  for (ArgVec<Pair>::const_iterator i = argArray.begin(); i != e; ++i)
+    i->dagNode->mark();
+
+  return e->dagNode;
 }
 
 DagNode*
@@ -289,21 +293,25 @@ ACU_DagNode::partialReplace(DagNode* replacement, ExtensionInfo* extensionInfo)
   ACU_ExtensionInfo* e = static_cast<ACU_ExtensionInfo*>(extensionInfo);
   int nrArgs = argArray.length();
   Assert(nrArgs > 0, cerr << "no arguments");
-  ARG_VEC_HACK(Pair, args, argArray);
 
-  int p = 0;
+  ArgVec<Pair>::const_iterator source = argArray.begin();
+  ArgVec<Pair>::iterator dest = argArray.begin();
   int i = 0;
+  int p = 0;
   do
     {
       int m = e->getUnmatched(i);
       if (m > 0)
 	{
-	  args[p].dagNode = args[i].dagNode;
-	  args[p].multiplicity = m;
+	  dest->dagNode = source->dagNode;
+	  dest->multiplicity = m;
+	  ++dest;
 	  ++p;
 	}
+      ++source;
+      ++i;
     }
-  while (++i < nrArgs);
+  while (i < nrArgs);
   Assert(p >= 1, cerr << "no arguments left");
   argArray.contractTo(p);
   argArray.expandBy(1);
@@ -354,10 +362,12 @@ ACU_DagNode::matchVariableWithExtension(int index,
 					Subproblem*& returnedSubproblem,
 					ExtensionInfo* extensionInfo)
 {
+  int bound = symbol()->sortBound(sort);
+  if (bound == 1)
+    return false;
   //
   //	This code could be much more sophisticated: in particular we look for
-  //	the variable having too smaller sort and return false; the subject having
-  //	total subterm multiplicity of 2 and return unique solution.
+  //	the subject having total subterm multiplicity of 2 and return unique solution.
   //
   //	There is also the possibility that our variable could be bound; in this case
   //	we could avoid generating and solving the subproblem. But this case is so
@@ -381,7 +391,7 @@ ACU_DagNode::matchVariableWithExtension(int index,
   e->setUpperBound(totalSubjectMultiplicity - 2);
 
   ACU_Subproblem* subproblem = new ACU_Subproblem(this, currentMultiplicity, e);
-  subproblem->addTopVariable(index, 1, 2, UNBOUNDED, sort);
+  subproblem->addTopVariable(index, 1, 2, bound, sort);
   returnedSubproblem = subproblem;
   extensionInfo->setValidAfterMatch(false);
   return true;

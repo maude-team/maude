@@ -75,42 +75,48 @@ ACU_CollectorLhsAutomaton::collect(int stripped,
 	    return false;
 	}
     }
-  int nrArgs2 = nrArgs;
-  int strippedMultiplicity = subject->argArray[stripped].multiplicity - 1;
+
+  ArgVec<ACU_DagNode::Pair>::const_iterator source = subject->argArray.begin();
+  const ArgVec<ACU_DagNode::Pair>::const_iterator e = subject->argArray.end();
+  const ArgVec<ACU_DagNode::Pair>::const_iterator victim = source + stripped;
+  int strippedMultiplicity = victim->multiplicity - 1;
   if (strippedMultiplicity == 0)
-    --nrArgs2;
+    --nrArgs;
   ACU_Symbol* topSymbol = subject->symbol();
 
-  //cout << nrArgs2 << ' ';
+  //cout << nrArgs << ' ';
 
-  ACU_DagNode* d = new ACU_DagNode(topSymbol, nrArgs2);
+  ACU_DagNode* d = new ACU_DagNode(topSymbol, nrArgs);
   d->setNormalizationStatus(ACU_DagNode::ASSIGNMENT);
-  CONST_ARG_VEC_HACK(ACU_DagNode::Pair, source, subject->argArray);
-  ARG_VEC_HACK(ACU_DagNode::Pair, dest, d->argArray);
-  int i = 0;
+
+  ArgVec<ACU_DagNode::Pair>::iterator dest = d->argArray.begin();
   const Sort* cs = collectorSort;
   if (cs == 0)
     {
-      for (; i < stripped; i++)
-	dest[i] = source[i];
-      int j = i;
+      //
+      //	No sort check case.
+      //
+      for (; source != victim; ++dest, ++source)
+	*dest = *source;
       if (strippedMultiplicity > 0)
 	{
-	  dest[i].dagNode = source[i].dagNode;
-	  dest[i].multiplicity = strippedMultiplicity;
-	  ++j;
+	  dest->dagNode = source->dagNode;
+	  dest->multiplicity = strippedMultiplicity;
+	  ++dest;
 	}
-      for (i++; i < nrArgs; i++, j++)
-	dest[j] = source[i];
-      Assert(j == nrArgs2, cerr << "bad number of arguments");
+      for (++source; source != e; ++dest, ++source)
+	*dest = *source;
+      Assert(dest == d->argArray.end(), cerr << "iterators inconsistant");
     }
   else
     {
+      //
+      //	Check each sort to see that it is lower than collector sort.
+      //
       int lastIndex = Sort::SORT_UNKNOWN;
-      for (; i < stripped; i++)
+      for (; source != victim; ++dest, ++source)
 	{
-	  DagNode* sd = source[i].dagNode;
-	  int sm = source[i].multiplicity;
+	  DagNode* sd = source->dagNode;
 	  int index = sd->getSortIndex();
 	  Assert(index != Sort::SORT_UNKNOWN, cerr << "bad sort");
 	  if (index != lastIndex)
@@ -119,13 +125,12 @@ ACU_CollectorLhsAutomaton::collect(int stripped,
 		return false;
 	      lastIndex = index;
 	    }
-	  dest[i].dagNode = sd;
-	  dest[i].multiplicity = sm;
+	  dest->dagNode = sd;
+	  dest->multiplicity = source->multiplicity;
 	}
-      int j = i;
       if (strippedMultiplicity > 0)
 	{
-	  DagNode* sd = source[i].dagNode;
+	  DagNode* sd = source->dagNode;
 	  int index = sd->getSortIndex();
 	  Assert(index != Sort::SORT_UNKNOWN, cerr << "bad sort");
 	  if (index != lastIndex)
@@ -134,14 +139,13 @@ ACU_CollectorLhsAutomaton::collect(int stripped,
 		return false;
 	      lastIndex = index;
 	    }
-	  dest[i].dagNode = sd;
-	  dest[i].multiplicity = strippedMultiplicity;
-	  ++j;
+	  dest->dagNode = sd;
+	  dest->multiplicity = strippedMultiplicity;
+	  ++dest;
 	}
-      for (i++; i < nrArgs; i++, j++)
+      for (++source; source != e; ++dest, ++source)
 	{
-	  DagNode* sd = source[i].dagNode;
-	  int sm = source[i].multiplicity;
+	  DagNode* sd = source->dagNode;
 	  int index = sd->getSortIndex();
 	  Assert(index != Sort::SORT_UNKNOWN, cerr << "bad sort");
 	  if (index != lastIndex)
@@ -150,12 +154,12 @@ ACU_CollectorLhsAutomaton::collect(int stripped,
 		return false;
 	      lastIndex = index;
 	    }
-	  dest[j].dagNode = sd;
-	  dest[j].multiplicity = sm;
+	  dest->dagNode = sd;
+	  dest->multiplicity = source->multiplicity;
 	}
-      Assert(j == nrArgs2, cerr << "bad number of arguments");
+      Assert(dest == d->argArray.end(), cerr << "iterators inconsistant");
     }
-  
+
   if (subject->isReduced() && topSymbol->sortConstraintFree())
     {
       topSymbol->computeBaseSort(d);

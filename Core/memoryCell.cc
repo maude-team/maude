@@ -2,8 +2,7 @@
 //      Implementation for base class MemoryCell
 //
 #ifdef __GNUG__
-#pragma implementation "memoryCell.hh"
-#pragma implementation "memoryCellNew.hh"
+#pragma implementation
 #endif
 
 //	utility stuff
@@ -14,23 +13,25 @@
 #include "interface.hh"
 #include "core.hh"
 
-#include "memoryCell.hh"
-
 #include "symbol.hh"
 #include "dagNode.hh"
-#include "memoryCellNew.hh"
+#include "rootContainer.hh"
+
+#include "memoryCell.hh"
+//#include "memoryCellNew.hh"
 
 const int
-MemoryCell::dagNodeSize = sizeof(MemoryCell::FullSizeMemoryCell) / sizeof(MemoryCell::Word);
+MemoryCell::dagNodeSize =
+sizeof(MemoryCell::FullSizeMemoryCell) / sizeof(MachineWord);
 
 struct MemoryCell::Arena
 {
   union
   {
     Arena* nextArena;
-    Int64 alignmentDummy;  // force 8 byte alignment for MemoryCell objects
+    Int64 alignmentDummy;  // force 8 byte alignment for FullSizeMemoryCell objects
   };
-  Word storage[ARENA_SIZE * dagNodeSize];
+  MachineWord storage[ARENA_SIZE * dagNodeSize];
   FullSizeMemoryCell* firstNode();
 };
 
@@ -86,7 +87,7 @@ MemoryCell::allocateNewArena()
   return a;
 }
 
-void*
+MemoryCell*
 MemoryCell::slowNew()
 {
 #ifdef GC_DEBUG
@@ -162,14 +163,14 @@ MemoryCell::slowNew()
 	    {
 	      nextNode = d + 1;
 	      d->initialize();
-	      return static_cast<void*>(d);
+	      return d;
 	    }
 	  if ((d->h.flags & MARKED) == 0)
 	    {
 	      d->callDtor();
 	      nextNode = d + 1;
 	      d->initialize();
-	      return static_cast<void*>(d);
+	      return d;
 	    }
 	  d->h.flags &= ~MARKED;
 	}

@@ -3,8 +3,12 @@
 //
 #include <time.h>
 #include <sys/time.h>
-//#include <ostream>
+#ifdef LIBv3
+#include <ostream>
+using namespace std;
+#else
 #include <ostream.h>
+#endif
 #include "tty.hh"
 
 #ifdef SUNOS
@@ -27,8 +31,8 @@ printBanner(std::ostream& s)
     Tty(Tty::GREEN) << 'e' <<
     Tty(Tty::RESET) << " ---\n";
   s << "\t\t     /||||||||||||||||||\\\n";
-  s << "\tMaude alpha 76 built: " <<
+  s << "\tMaude alpha 77 built: " <<
     __DATE__ << ' ' << __TIME__ << '\n';
-  s << "\t     Copyright 1997-2002 SRI International\n";
+  s << "\t     Copyright 1997-2003 SRI International\n";
   s << "\t\t   " << ctime(&secs);
 }

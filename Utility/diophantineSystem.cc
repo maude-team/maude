@@ -53,7 +53,13 @@ DiophantineSystem::solve()
   if (findFirst && !precompute())
     return false;
   Assert(!failed, cerr << "attempt to solve failed system");
+#ifdef DIO_STATS
+  bool r = complex ? solveComplex(findFirst) : solveSimple(findFirst);
+  cout << (r ? "success\t" : "failure\n");
+  return r;
+#else
   return complex ? solveComplex(findFirst) : solveSimple(findFirst);
+#endif
 }
 
 //
@@ -81,6 +87,18 @@ DiophantineSystem::precompute()
   int nrColumns = columns.length();
   Assert(nrColumns > 0, cerr << "no columns");
   closed = true;
+
+#ifdef DIO_STATS
+  for (int i = 0; i < nrRows; i++)
+    {
+      Row& r = rows[i];
+      cout << "row " << i << ' ' << r.coeff << ' ' << r.minSize << ' ' << r.maxSize << '\n';
+    }
+  cout << "columns: ";
+  for (int i = 0; i < nrColumns; i++)
+    cout << columns[i] << ' ';
+  cout << endl;
+#endif
 
   int sumOfMinProducts = 0;
   int sumOfMaxProducts = 0;

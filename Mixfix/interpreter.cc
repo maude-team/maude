@@ -97,7 +97,7 @@ Interpreter::endXmlLog()
 }
 
 bool
-Interpreter::setCurrentModule(const Vector<Token>& moduleExpr, int start = 0)
+Interpreter::setCurrentModule(const Vector<Token>& moduleExpr, int start)
 {
   PreModule* m;
   int nrTokens = moduleExpr.length() - start;

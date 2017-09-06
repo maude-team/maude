@@ -116,13 +116,21 @@ enum SpecialConstants
   DOUBLE_TEXT_SIZE = 24,	// max chars for text representation of a double in
   				// in scientific format with 17 significant figures
   				// -1.2345678901234567e-123
+  //
+  //	-1 get used for lots of "out-of-band" purposes.
+  //
   UNDEFINED = -1,
-  UNDECIDED = -1,
+  UNDECIDED = -1,		// for true, false, dunno situtations
   UNUSED = -1,
   NONE = -1,
   DEFAULT = -1,
-
-  BITS_PER_UINT = 8 * sizeof(unsigned int)
+  //
+  //	For bit twiddling; things will probably break if bytes are ever
+  //	longer or shorter than 8 bits.
+  //
+  BITS_PER_BYTE = 8,
+  BITS_PER_INT = BITS_PER_BYTE * sizeof(int),
+  BITS_PER_UINT = BITS_PER_BYTE * sizeof(unsigned int)
 };
 
 #ifdef NO_IMPLEMENT_INLINES
@@ -152,7 +160,7 @@ abort())
 #define \
 DebugAdvisoryCheck(condition, action)\
 if (!(condition)) \
-((cerr << "DEBUG ADVISORY: "), (action), (cerr << '\n'))
+((cerr << "DEBUG ADVISORY: "), (action), (cerr << endl))
 
 #define \
 DebugAdvisory(message) \
@@ -200,6 +208,17 @@ if (globalVerboseFlag) \
 
 extern bool globalAdvisoryFlag;
 extern bool globalVerboseFlag;
+
+//
+//	A machine word should be about to hold any pointer, int or size
+//	(but not necessarily an Int64)
+//
+union MachineWord
+{
+  void* pointer;
+  int integer;
+  size_t size;
+};
 
 inline void
 swap(int& a, int& b)
@@ -263,6 +282,32 @@ inline const char*
 pluralize(int quantity)
 {
   return (quantity == 1) ? "" : "s";
+}
+
+//
+//	Branch free conditional assignments. These use bit twiddling rather
+//	than branches and are intended for performance critical loops
+//	where the branch would be unpredicatable. Executing a couple of extra
+//	instructions is better than having a high rate of mispredicts on
+//	modern superpipelined architectures.
+//
+
+inline void
+setOnLs(int& d, int v, int t)
+{
+  //
+  //	set d to v iff t < 0
+  //
+  d += (t >> (BITS_PER_INT - 1)) & (v - d);
+}
+
+inline void
+setOnGeq(int& d, int v, int t)
+{
+  //
+  //	set d to v iff t >= 0
+  //
+  d += (~(t >> (BITS_PER_INT - 1))) & (v - d);
 }
 
 const char* int64ToString(Int64 i, int base = 10);

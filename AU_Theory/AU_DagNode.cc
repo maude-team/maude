@@ -55,15 +55,15 @@ AU_DagNode::compareArguments(const DagNode* other) const
   int limit = min(nrArgs, nrArgs2);
   Assert(limit >= 1, cerr << "no arguments");
   
-  CONST_ARG_VEC_HACK(DagNode*, args, argArray);
-  CONST_ARG_VEC_HACK(DagNode*, args2, argArray2);
-  int i = 0;
+  ArgVec<DagNode*>::const_iterator i = argArray.begin();
+  ArgVec<DagNode*>::const_iterator j = argArray2.begin();
   do
     {
-      int r = args[i]->compare(args2[i]);
+      int r = (*i)->compare(*j);
       if (r != 0)
 	return r;
       ++i;
+      ++j;
     }
   while (--limit > 0);
   return nrArgs - nrArgs2;
@@ -75,12 +75,14 @@ AU_DagNode::markArguments()
   argArray.evacuate();
   int nrArgs = argArray.length();
   Assert(nrArgs > 0, cerr << "no arguments");
-  CONST_ARG_VEC_HACK(DagNode*, args, argArray);
-  --nrArgs;
-  int i = 0;
-  for (; i < nrArgs; i++)
-    args[i]->mark();
-  return args[i];
+
+  ArgVec<DagNode*>::const_iterator i = argArray.begin();
+  while (--nrArgs > 0)
+    {
+      (*i)->mark();
+      ++i;
+    }
+  return *i;
 }
 
 DagNode*

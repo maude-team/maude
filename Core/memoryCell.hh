@@ -6,35 +6,25 @@
 #ifdef __GNUG__
 #pragma interface
 #endif
+#include "sort.hh"
 
 class MemoryCell
 {
   NO_COPYING(MemoryCell);
+  //
+  //	MemoryCells can only be made via allocateMemoryCell().
+  //
+  MemoryCell(){};
 
 public:
   //
   //	This is the raison d'etre for MemoryCell - fast allocation
   //	of small garbage collected chunks of memory.
   //
-  void* operator new(size_t size);
+  static MemoryCell* allocateMemoryCell();
   static void* allocateStorage(size_t bytesNeeded);
   static void okToCollectGarbage();
   static void setShowGC(bool polarity);
-
-protected:
-  enum Sizes
-  {
-    //
-    //	Memory cells have this much extra memory allocated for
-    //	derived classes to use. Some uses require at least room
-    //	for 5 pointers so this is the minimum value.
-    //
-    NR_EXTRA_WORDS = 5  // minimum value seems best on average
-  };
-  //
-  //	MemoryCell can only be used by inheritance.
-  //
-  MemoryCell(){}
   //
   //	Access to the unused byte and half word in a raw memory cell.
   //
@@ -65,6 +55,16 @@ protected:
   void clearAllExceptMarked();
 
 private:
+  enum Sizes
+  {
+    //
+    //	Memory cells have this much extra memory allocated for
+    //	derived classes to use. Some uses require at least room
+    //	for 5 pointers so this is the minimum value.
+    //
+    NR_EXTRA_WORDS = 5  // minimum value seems best on average
+  };
+
   enum Flags
   {
     MARKED = 64,	// marked in most recent mark phase
@@ -81,20 +81,9 @@ private:
     INITIAL_TARGET = 220 * 1024,	// just under 8/9 of MIN_BUCKET_SIZE
     TARGET_MULTIPLIER = 8	// to determine bucket usage target
   };
-  //
-  //	Header occupies one machine word, but actually we only need
-  //	two flag bits for memory management. The remaining storage
-  //	is available to derived classes.
-  //
-  struct Header
-  {
-    short halfWord;
-    Byte byte;
-    Ubyte flags;
-  };
 
-  union Word;			// machine word
-  struct FullSizeMemoryCell;	// for size calculations
+  struct Header;
+  struct FullSizeMemoryCell;	// this is what we allocate internally
   struct Arena;			// arena of fixed size nodes
   struct Bucket;		// bucket of variable length allocations
 
@@ -125,12 +114,11 @@ private:
 
   static Arena* allocateNewArena();
   static void tidyArenas();
-  static void* slowNew();
+  static MemoryCell* slowNew();
   static void* slowAllocateStorage(size_t bytesNeeded);
   static void collectGarbage();
 
   void callDtor();
-  void initialize();
 
 #ifdef GC_DEBUG
   static void stompArenas();
@@ -139,22 +127,40 @@ private:
   static void dumpMemoryVariables(ostream& s);
 #endif
 
-  Header h;
-
+  MachineWord filler[NR_EXTRA_WORDS];
   static const int dagNodeSize;
 };
 
-union MemoryCell::Word
+//
+//	Header info associated to but not in each MemoryCell.
+//	Header occupies one machine word, but actually we only need
+//	two flag bits for memory management. The remaining storage
+//	is made available to the MemoryCell.
+//
+struct MemoryCell::Header
 {
-  Word* pointer;
-  int integer;
-  size_t size;
+  short halfWord;
+  Byte byte;
+  Ubyte flags;
 };
 
+//
+//	A FullSizeMemoryCell is a MemoryCell with associated
+//	header info.
+//
 struct MemoryCell::FullSizeMemoryCell : MemoryCell
 {
-  Word filler[NR_EXTRA_WORDS];
+  void initialize();
+
+  Header h;
 };
+
+inline void
+MemoryCell::FullSizeMemoryCell::initialize()
+{
+  h.flags = 0;
+  h.halfWord = Sort::SORT_UNKNOWN;
+}
 
 struct MemoryCell::Bucket
 {
@@ -164,47 +170,46 @@ struct MemoryCell::Bucket
   Bucket* nextBucket;
 }; 
 
-
 inline int
 MemoryCell::getHalfWord() const
 {
-  return h.halfWord;
+  return (static_cast<const FullSizeMemoryCell*>(this))->h.halfWord;
 }
 
 inline void
 MemoryCell::setHalfWord(int hw)
 {
-  h.halfWord = hw;
+  (static_cast<FullSizeMemoryCell*>(this))->h.halfWord = hw;
 }
 
 inline int
 MemoryCell::getByte() const
 {
-  return h.byte;
+  return (static_cast<const FullSizeMemoryCell*>(this))->h.byte;
 }
 
 inline void
 MemoryCell::setByte(int bt)
 {
-  h.byte = bt;
+  (static_cast<FullSizeMemoryCell*>(this))->h.byte = bt;
 }
 
 inline bool
 MemoryCell::getFlag(int flag) const
 {
-  return h.flags & flag;
+  return (static_cast<const FullSizeMemoryCell*>(this))->h.flags & flag;
 }
 
 inline void
 MemoryCell::setFlag(int flag)
 {
-  h.flags |= flag;
+  (static_cast<FullSizeMemoryCell*>(this))->h.flags |= flag;
 }
 
 inline void
 MemoryCell::clearFlag(int flag)
 {
-  h.flags &= ~flag;
+  (static_cast<FullSizeMemoryCell*>(this))->h.flags &= ~flag;
 }
 
 inline bool
@@ -248,7 +253,7 @@ MemoryCell::okToCollectGarbage()
 inline void*
 MemoryCell::allocateStorage(size_t bytesNeeded)
 {
-  Assert(bytesNeeded % sizeof(Word) == 0,
+  Assert(bytesNeeded % sizeof(MachineWord) == 0,
 	 cerr << "only whole machine words can be allocated");
   storageInUse += bytesNeeded;
   for (Bucket* b = bucketList; b; b = b->nextBucket)
@@ -268,6 +273,49 @@ inline void
 MemoryCell::setShowGC(bool polarity)
 {
   showGC = polarity;
+}
+
+inline void
+MemoryCell::callDtor()
+{
+  //
+  //	MemoryCell cannot have a virtual destructor since we want to
+  //	avoid a virtual function table pointer. Instead we assume
+  //	it is a DagNode and crosscast it. This means that only classes
+  //	derived from DagNode can use the call dtor flag.
+  //
+  (static_cast<DagNode*>(static_cast<void*>(this)))->~DagNode();
+}
+
+inline MemoryCell*
+MemoryCell::allocateMemoryCell()
+{
+#ifdef GC_DEBUG
+  checkInvariant();
+#endif
+  FullSizeMemoryCell* e = endPointer;
+  for (FullSizeMemoryCell* c = nextNode; c != e; c++)
+    {
+      if ((c->h.flags & (MARKED | CALL_DTOR)) == 0)
+	{
+	  c->initialize();
+	  nextNode = c + 1;
+	  //DebugAdvisory("gc new nondtor case at "<< (void*)(c));
+	  Assert(c->h.halfWord == Sort::SORT_UNKNOWN, cerr << "bad sort init");
+	  return c;
+	}
+      if ((c->h.flags & MARKED) == 0)
+	{
+	  c->callDtor();
+	  c->initialize();
+	  nextNode = c + 1;
+	  //DebugAdvisory("gc new dtor case at " << (void*)(c));
+	  Assert(c->h.halfWord == Sort::SORT_UNKNOWN, cerr << "bad sort init");
+	  return c;
+	}
+      c->clearFlag(MARKED);
+    }
+  return slowNew();
 }
 
 #endif

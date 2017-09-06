@@ -61,22 +61,13 @@ main(int argc, char* argv[])
   extern Vector<char*> pendingFiles;
   const char* isFlag(const char* arg, const char* flag);
 
-  //ios::sync_with_stdio(false);
   ioManager.setAutoWrap();
-  /*
-  for (int i = 0; i < 100; i++)
-    {
-      cerr << i * i * i << ' ';
-      cerr << "aaaaaaaaaa";
-      //for (int j = 0; j < 10; j++)
-      //cerr << 'a';
-    }
-  */
 
   bool handleCtrlC = true;
   bool readPrelude = true;
   bool forceInteractive = false;
   int ansiColor = UNDECIDED;
+  int useTecla = UNDECIDED;
 
   for (int i = 1; i < argc; i++)
     {
@@ -91,6 +82,10 @@ main(int argc, char* argv[])
 	    ansiColor = true;
 	  else if (strcmp(arg, "-no-ansi-color") == 0)
 	    ansiColor = false;
+	  else if (strcmp(arg, "-tecla") == 0)
+	    useTecla = true;
+	  else if (strcmp(arg, "-no-tecla") == 0)
+	    useTecla = false;
 	  else if (strcmp(arg, "-no-prelude") == 0)
 	    readPrelude = false;
 	  else if (strcmp(arg, "-batch") == 0)
@@ -110,7 +105,7 @@ main(int argc, char* argv[])
   if (ansiColor == UNDECIDED)
     {
       //
-      //	By default we allow ANSI escape code unless
+      //	By default we allow ANSI escape codes unless
       //	environment variable TERM is set to dumb; or
       //	our standard output is not a terminal.
       //
@@ -122,10 +117,26 @@ main(int argc, char* argv[])
     }
   Tty::setEscapeSequencesAllowed(ansiColor);
 
+  if (useTecla == UNDECIDED)
+    {
+      //
+      //	By default we use tecla for input unless
+      //	environment variable TERM is set to emacs or dumb;
+      //	or our standard input is not a terminal.
+      //
+      useTecla = true;
+      const char* term = getenv("TERM");
+      if ((term != 0 && (strcmp("emacs", term) == 0 ||
+			 strcmp("dumb", term) == 0)) ||
+	  isatty(STDIN_FILENO) == 0)
+	useTecla = false;
+    }
+
   printBanner(cout);
   createRootBuffer(stdin, forceInteractive);
   UserLevelRewritingContext::setHandlers(handleCtrlC);
-  ioManager.setCommandLineEditing();
+  if (useTecla)
+    ioManager.setCommandLineEditing();
   directoryManager.initialize();
   string executable(argv[0]);
   findExecutableDirectory(executableDirectory, executable);
@@ -190,7 +201,7 @@ findPrelude(string& directory, string& fileName)
       return true;
     }
   IssueWarning(LineNumber(FileTable::AUTOMATIC) <<
-	       ": unable to locate file: \"" << QUOTE(fileName));
+	       ": unable to locate file: " << QUOTE(fileName));
   return false;
 }
 

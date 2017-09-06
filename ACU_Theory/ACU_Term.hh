@@ -70,7 +70,8 @@ private:
 							    NatSet& boundUniquely);
   ACU_AlienAlienLhsAutomaton* tryToMakeAlienAlienLhsAutomaton(const VariableInfo& variableInfo,
 							      NatSet& boundUniquely);
-  ACU_CollectorLhsAutomaton* tryToMakeCollectorLhsAutomaton(const VariableInfo& variableInfo,
+  ACU_CollectorLhsAutomaton* tryToMakeCollectorLhsAutomaton(bool matchAtTop,
+							    const VariableInfo& variableInfo,
 							    NatSet& boundUniquely,
 							    int collectorCandidate);
   static bool pairLt(const Pair& p1, const Pair& p2);

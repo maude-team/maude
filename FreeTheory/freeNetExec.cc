@@ -15,22 +15,23 @@ FreeNet::applyReplace2(DagNode* subject, RewritingContext& context)
   //	subject.
   //
   int i;
-  TestNode* netBase = net.rawBasePointer();
-  if (netBase != 0)  // at least one pattern has free symbols
+  if (!(net.isNull()))  // at least one pattern has free symbols
     {
       DagNode** topArgArray = static_cast<FreeDagNode*>(subject)->argArray();
-      stack[0] = topArgArray;
-      TestNode* n = &(netBase[0]);
+      Vector<TestNode>::const_iterator netBase = net.begin();
+      Vector<TestNode>::const_iterator n = netBase;
       DagNode* d = topArgArray[n->argIndex];
       Symbol* ds = d->symbol();
+      stack[0] = topArgArray;
       for (;;)
 	{
 	  DagNode*** p;
 	  if (ds != n->symbol)
 	    {
 	      //	
-	      //	Comparing pointers that don't point into the same array is undefined
-	      //	according to the C++ standard, but works on any reasonable architecture.
+	      //	Comparing pointers that don't point into the same array
+	      //	is undefined according to the C++ standard, but provides
+	      //	a total ordering on any reasonable architecture.
 	      //
 	      i = (ds < n->symbol) ? n->less : n->greater;
 	      if (i <= 0)
@@ -40,7 +41,7 @@ FreeNet::applyReplace2(DagNode* subject, RewritingContext& context)
 		  i = (-1) - i;
 		  break;
 		}
-	      n = &(netBase[i]);
+	      n = netBase + i;
 	      p = n->positionPtr;
 	      if (p == 0)
 		continue;
@@ -55,7 +56,7 @@ FreeNet::applyReplace2(DagNode* subject, RewritingContext& context)
 		  i = (-1) - i;
 		  break;
 		}
-	      n = &(netBase[i]);
+	      n = netBase + i;
 	      p = n->positionPtr;
 	    }
 	  d = (*p)[n->argIndex];
@@ -72,7 +73,7 @@ FreeNet::applyReplace2(DagNode* subject, RewritingContext& context)
   //	Now go through the sequence of remainders, trying to finish the
   //	matching process for each one in turn.
   //
-  FreeRemainder* const* p = fastApplicable[i].rawBasePointer();
+  Vector<FreeRemainder*>::const_iterator p = fastApplicable[i].begin();
   const FreeRemainder* r = *p;
   do
     {

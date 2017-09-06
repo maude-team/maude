@@ -12,13 +12,12 @@ int dirMarkerStack[MAX_IN_DEPTH];
 Vector<char*> pendingFiles;
 int nrPendingRead = 0;
 bool rootInteractive = false;
-
+bool fakeNewline = false;  // fake \n for files that don't end with \n
+bool fakeNewlineStack[MAX_IN_DEPTH];
 void
 getInput(char* buf, int& result, int max_size)
 {
-  static bool fakeNewline = false;  // fake \n for files that don't end with \n
-
-  result = 0;
+  result = YY_NULL;
   if (UserLevelRewritingContext::interrupted())
     fakeNewline = false;
   else
@@ -60,6 +59,7 @@ cleanUpLexer()
 	  yy_switch_to_buffer(inStack[inStackPtr]);
 	}
       directoryManager.popd(dirMarkerStack[0]);
+      fakeNewline = false;
       UserLevelRewritingContext::setInteractive(rootInteractive);
     }
   fileTable.abortEverything(lineNumber);
@@ -141,6 +141,8 @@ includeFile(const string& directory, const string& fileName, bool silent, int li
     }
   dirMarkerStack[inStackPtr] = dirMarker;
   inStack[inStackPtr] = YY_CURRENT_BUFFER;
+  fakeNewlineStack[inStackPtr] = fakeNewline;
+  fakeNewline = false;
   ++inStackPtr;
   yyin = fp;
   fileTable.openFile(lineNumber, fileName.c_str(), silent);
@@ -160,6 +162,7 @@ handleEof()
   yy_delete_buffer(YY_CURRENT_BUFFER);
   yy_switch_to_buffer(inStack[inStackPtr]);
   directoryManager.popd(dirMarkerStack[inStackPtr]);
+  fakeNewline = fakeNewlineStack[inStackPtr];
   if (inStackPtr == 0)
     {
       if (nrPendingRead < pendingFiles.length())

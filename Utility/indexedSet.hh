@@ -33,7 +33,7 @@ public:
 
 private:
   typedef map<T, int> EltMap;
-  typedef vector<EltMap::const_iterator> IndexMap;
+  typedef vector<typename EltMap::const_iterator> IndexMap;
 
   EltMap eltMap;
   IndexMap indexMap;
@@ -59,7 +59,7 @@ template<class T>
 inline int
 IndexedSet<T>::insert(const T& element)
 {
-  pair<EltMap::iterator, bool> p =
+  pair<typename EltMap::iterator, bool> p =
     eltMap.insert(EltMap::value_type(element, indexMap.size()));
   if (p.second)
     indexMap.push_back(p.first);
@@ -70,7 +70,7 @@ template<class T>
 inline int
 IndexedSet<T>::insert(const FastPair& fastPair)
 {
-  pair<EltMap::iterator, bool> p = eltMap.insert(fastPair);
+  pair<typename EltMap::iterator, bool> p = eltMap.insert(fastPair);
   if (p.second)
     {
       p.first->second = indexMap.size();
@@ -83,7 +83,7 @@ template<class T>
 inline int
 IndexedSet<T>::find(const T& element) const
 {
-  EltMap::const_iterator i = eltMap.find(element);
+  typename EltMap::const_iterator i = eltMap.find(element);
   return (i == eltMap.end()) ? -1 : i->second;
 }
 

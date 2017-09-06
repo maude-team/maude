@@ -3,9 +3,6 @@
 //
 #ifndef _vector_hh_
 #define _vector_hh_
-#ifdef __GNUG__
-#pragma interface
-#endif
 #include "preVector.hh"
 
 template<class T>
@@ -52,8 +49,6 @@ public:
   Vector& operator=(const Vector& original);
   void swap(Vector& other);
   size_t bytesAllocated() const;
-  const T* rawBasePointer() const;	// access for gross performance hacks
-  T* rawBasePointer();			// access for even uglier stuff
   bool isNull() const;			// superfast test for capacity() == 0
   bool empty() const;			// significantly slower than isNull()
   void clear();
@@ -396,20 +391,6 @@ Vector<T>::swap(Vector& other)
   PreVector t(pv);  // default copy ctor
   pv = other.pv;
   other.pv = t;
-}
-
-template<class T>
-inline const T* 
-Vector<T>::rawBasePointer() const
-{
-  return static_cast<const T*>(pv.getBase());
-}
-
-template<class T>
-inline T* 
-Vector<T>::rawBasePointer()
-{
-  return static_cast<T*>(pv.getBase());
 }
 
 template<class T>

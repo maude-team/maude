@@ -32,11 +32,18 @@ public:
   DagNode* getArgument(int i) const;
 
 private:
+  union Word  // HACK - should make MemoryCell::Word visible
+  {
+    void* pointer;
+    int integer;
+    size_t size;
+  };
+
   union
     {
       DagNode* internal[nrWords];
       DagNode** external;
-      DagNode::Word hashCache[nrWords];
+      Word hashCache[nrWords];
     };
 
   DagNode** argArray() const;

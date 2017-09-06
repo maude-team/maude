@@ -52,6 +52,7 @@ ACU_Term::analyseConstraintPropagation(NatSet& boundUniquely) const
     }
 }
 
+#include "rule.hh" // HACK
 ACU_LhsAutomaton*
 ACU_Term::compileLhs3(bool matchAtTop,
 		      const VariableInfo& variableInfo,
@@ -85,6 +86,7 @@ ACU_Term::compileLhs3(bool matchAtTop,
   int nrUnboundVariables = 0;
   int nrAbstractionVariables = 0;
   int nrArgs = argArray.length();
+  //int V_COUNT = 0; // HACK
   for (int i = 0; i < nrArgs; i++)
     {
       Pair& p = argArray[i];
@@ -102,6 +104,7 @@ ACU_Term::compileLhs3(bool matchAtTop,
 	      if (t->occursInContext().contains(index) ||
 		  variableInfo.getConditionVariables().contains(index))
 		greedy = false;
+	      //++V_COUNT; // HACK
 	    }
 	}
       else if (p.abstractionVariableIndex != NONE)
@@ -133,6 +136,15 @@ ACU_Term::compileLhs3(bool matchAtTop,
 	  nonGroundAliens.append(argArray[i]);
 	} 
     }
+  /*
+  if (V_COUNT > 2 || matchAtTop && V_COUNT > 1) // HACK
+    {
+      cout << Tty(Tty::RED) << "Nasty : " << this << Tty(Tty::RESET) << endl;
+      const PreEquation* pe = static_cast<const PreEquation*>(&variableInfo);
+      if (const Rule* rl = dynamic_cast<const Rule*>(pe))
+	cout << rl;
+    }
+  */
   //
   //	Now decide on a matching strategy
   //

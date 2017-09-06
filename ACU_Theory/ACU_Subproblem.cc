@@ -61,19 +61,19 @@ ACU_Subproblem::~ACU_Subproblem()
   delete system;
 }
 
-void
+int
 ACU_Subproblem::addPatternNode(int multiplicity)
 {
   int nrPatternNodes = patternNodes.length();
   patternNodes.expandBy(1);
   patternNodes[nrPatternNodes].multiplicity = multiplicity;
+  return nrPatternNodes;
 }
 
 void
 ACU_Subproblem::addEdge(int pattern,
 			int target,
-			const Substitution& global,
-			const Substitution& local,
+			LocalBinding* difference,
 			Subproblem* subproblem)
 {
   PatternNode& p = patternNodes[pattern];
@@ -81,7 +81,7 @@ ACU_Subproblem::addEdge(int pattern,
   p.edges.expandBy(1);
   Edge& edge = p.edges[nrEdges];
   edge.target = target;
-  edge.difference = local - global;
+  edge.difference = difference;
   edge.subproblem = subproblem;
 }
 
@@ -241,26 +241,60 @@ ACU_Subproblem::solveVariables(bool findFirst, RewritingContext& solution)
 }
 
 bool
-ACU_Subproblem::oneVariableCase(TopVariable& tv, RewritingContext& solution)
+ACU_Subproblem::noVariableCase(const Vector<int>& multVec)
+{
+  int nrSubjects = multVec.length();
+  if (extensionInfo == 0)
+    {
+      for (int i = 0; i < nrSubjects; i++)
+	{
+	  if (multVec[i] > 0)
+	    return false;
+	}
+      return true;
+    }
+  //
+  //	Extension takes everything.
+  //
+  extensionInfo->clear();
+  int total = 0;
+  for (int i = 0; i < nrSubjects; i++)
+    {
+      int t = multVec[i];
+      if (t > 0)
+	{
+	  extensionInfo->setUnmatched(i, t);
+	  total += t;
+	}
+    }
+  if (total > extensionInfo->getUpperBound())
+    return false;  // would give extension too much
+  extensionInfo->setMatchedWhole(total == 0);
+  return true;
+}
+
+bool
+ACU_Subproblem::oneVariableCase(const Vector<int>& multVec, RewritingContext& solution)
 {
   //
-  //	The case where we have a single top variable, which is
-  //	unbound and has multiplicity 1 and there is no extension
+  //	The case where we have a single unbound top variable
+  //	left which has multiplicity 1 and there is no extension
   //	is common enough that we handle it with custom code that
   //	avoids the Diophantine system setup and tear-down costs.
   //
-  int nrSubjects = currentMultiplicity.length();
+  int nrSubjects = multVec.length();
   int nrSubterms = 0;
   int last = NONE;
   for (int i = 0; i < nrSubjects; i++)
     {
-      if (currentMultiplicity[i] > 0)
+      if (multVec[i] > 0)
 	{
 	  ++nrSubterms;
 	  last = i;
 	}
     }
-  
+
+  TopVariable& tv = topVariables[variableMap[0]];
   DagNode* d;
   if (nrSubterms == 0)
     {
@@ -268,7 +302,7 @@ ACU_Subproblem::oneVariableCase(TopVariable& tv, RewritingContext& solution)
 	return false;
       d = subject->symbol()->getIdentityDag();
     }
-  else if (nrSubterms == 1 && currentMultiplicity[last] == 1)
+  else if (nrSubterms == 1 && multVec[last] == 1)
     {
       d = (subject->argArray[last]).dagNode;
       if (!(d->leq(tv.sort)))  // d's sort must be known
@@ -277,16 +311,16 @@ ACU_Subproblem::oneVariableCase(TopVariable& tv, RewritingContext& solution)
   else
     {
       ACU_DagNode* a = new ACU_DagNode(subject->symbol(), nrSubterms);
-      int pos = 0;
-      for (int i = 0; i <= last; i++)
+      ArgVec<ACU_DagNode::Pair>::const_iterator source = subject->argArray.begin();
+      ArgVec<ACU_DagNode::Pair>::iterator dest = a->argArray.begin();
+      for (int i = 0; i <= last; i++, ++source)
 	{
-	  int m = currentMultiplicity[i];
+	  int m = multVec[i];
 	  if (m > 0)
 	    {
-	      (a->argArray[pos]).set((subject->argArray[i]).dagNode, m);
-	      //a->argArray[pos].dagNode = (subject->argArray[i]).dagNode;
-	      //a->argArray[pos].multiplicity = m;
-	      ++pos;
+	      dest->dagNode = source->dagNode;
+	      dest->multiplicity = m;
+	      ++dest;
 	    }
 	}
       if (!(a->checkSort(tv.sort, solution)))
@@ -297,7 +331,6 @@ ACU_Subproblem::oneVariableCase(TopVariable& tv, RewritingContext& solution)
       d = a;
     }
   solution.bind(tv.index, d);
-  variableMap.append(0);  // so binding will be undone properly
   return true;
 }
 
@@ -308,39 +341,29 @@ ACU_Subproblem::extractDiophantineSystem(RewritingContext& solution)
   //	Initialize data structures
   //
   delete system;
+  system = 0;
   variableMap.clear();
+  //
+  //	Check for easy special cases.
+  //
   int nrTopVariables = topVariables.length();
-  //
-  //	Check for optimized special case:
-  //	(1) single top variable;
-  //	(2) top variable has multiplicity 1;
-  //	(3) top variable is not bound; and
-  //	(4) no extension.
-  //	In this case the top variable must take exactly those subjects
-  //	that are left so no searching is needed.
-  //
-  if  (nrTopVariables == 1 && extensionInfo == 0)
+  if (nrTopVariables == 1)
     {
-      TopVariable& tv = topVariables[0];
-      if (tv.multiplicity == 1 && solution.value(tv.index) == 0)
+      if (extensionInfo == 0)
 	{
-	  system = 0;
-	  return oneVariableCase(tv, solution);
+	  TopVariable& tv = topVariables[0];
+	  if (tv.multiplicity == 1 && solution.value(tv.index) == 0)
+	    {
+	      variableMap.append(0);
+	      return oneVariableCase(currentMultiplicity, solution);
+	    }
 	}
     }
-
-  //cerr << "failed #top=" << nrTopVariables <<
-  //  "\t extensionInfo=" << extensionInfo << endl;
-  //if (nrTopVariables == 1)
-  //  {
-  //    cerr << "mult=" << topVariables[0].multiplicity <<
-  //"\t binding=" << (void*) (solution.value(topVariables[0].index)) << endl;
-  //  }
-
+  else if (nrTopVariables == 0)
+    return noVariableCase(currentMultiplicity);
   //
-  //	General case requires that we build the diophantine system.
+  //	General case requires that we build the Diophantine system.
   //
-  subjectMap.clear();
   int nrSubjects = currentMultiplicity.length();
   system = new DiophantineSystem(nrTopVariables, nrSubjects);
   afterMultiplicity = currentMultiplicity;  // deep copy
@@ -366,8 +389,28 @@ ACU_Subproblem::extractDiophantineSystem(RewritingContext& solution)
 	}
     }
   //
+  //	Check if after handing bound variables we have reached an easy special case.
+  //
+  int nrVariables = variableMap.length();
+  if (nrVariables == 1)
+    {
+      if (extensionInfo == 0 && topVariables[variableMap[0]].multiplicity == 1)
+	{
+	  delete system;
+	  system = 0;
+	  return oneVariableCase(afterMultiplicity, solution);
+	}
+    }
+  else if (nrVariables == 0)
+    {
+      delete system;
+      system = 0;
+      return noVariableCase(afterMultiplicity);
+    }
+  //
   //	Find unused subjects (= columns in Diophantine system)
   //
+  subjectMap.clear();
   for (int i = 0; i < nrSubjects; i++)
     {
       int t = afterMultiplicity[i];
@@ -380,7 +423,7 @@ ACU_Subproblem::extractDiophantineSystem(RewritingContext& solution)
   //
   //	Check for trivial system.
   //
-  if (system->columnCount() == 0)
+  if (subjectMap.empty())
     {
       //
       //	No subjects.
@@ -404,20 +447,10 @@ ACU_Subproblem::extractDiophantineSystem(RewritingContext& solution)
 	}
       return true;
     }
-  if (extensionInfo == 0)
-    {
-      if (system->rowCount() == 0)
-	{
-	  //
-	  //	No variables or extension to take subjects -
-	  //	trivial failure.
-	  //
-	  delete system;
-	  system = 0;
-	  return false;
-	}
-    }
-  else
+  //
+  //	Extra row to account for extension.
+  //
+  if (extensionInfo != 0)
     system->insertRow(1, 0, extensionInfo->getUpperBound());
   return true;
 }

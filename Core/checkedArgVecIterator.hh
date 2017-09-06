@@ -1,15 +1,15 @@
 //
-//	Nested class within Vector<T> for checked iterators.
+//	Nested class within ArgVec<T> for checked iterators.
 //
 //	Note that in this implementation we assume that swap()ing a pair of
-//	Vectors invalidates all iterators that point to their elements.
+//	ArgVecs invalidates all iterators that point to their elements.
 //	This is stricter but safer than other possibilities.
 //
 
 template<class T>
-class Vector<T>::iterator
+class ArgVec<T>::iterator
 // Can't do this because of g++ bug.
-//  : public random_access_iterator<T, Vector<T>::difference_type>
+//  : public random_access_iterator<T, ArgVec<T>::difference_type>
 {
 public:
   //
@@ -29,8 +29,8 @@ public:
   iterator& operator=(const iterator& other);
   bool operator==(const iterator& other) const;
   bool operator!=(const iterator& other) const;
-  reference operator*();
-  pointer operator->();
+  reference operator*() const;
+  pointer operator->() const;
   //
   //	Forward iterator stuff.
   //
@@ -53,51 +53,48 @@ public:
   bool operator<(const iterator& other) const;
   
 private:
-  iterator(Vector* parent, size_type index);
+  iterator(ArgVec* parent, size_type index);
   void checkValid() const;
   void checkDereferenceable() const;
   
   pointer ptr;
-  Vector* parent;
+  ArgVec* parent;
   size_type index;
   
-  friend class Vector;
+  friend class ArgVec;
+  friend class const_iterator;
 };
 
 template<class T>
 inline void
-Vector<T>::iterator::checkValid() const
+ArgVec<T>::iterator::checkValid() const
 {
   Assert(parent != 0, cerr << "uninitialized iterator");
-  Assert(index <= parent->pv.getLength(),
-	 cerr << "index > length (" << index << " > " <<
-	 parent->pv.getLength() << ')');
-  Assert(ptr == static_cast<pointer>(parent->pv.getBase()) + index,
-	 cerr << "bad pointer");
+  Assert(index <= parent->len,
+	 cerr << "index > len (" << index << " > " << parent->len << ')');
+  Assert(ptr == parent->basePtr + index, cerr << "bad pointer");
 }
 
 template<class T>
 inline void
-Vector<T>::iterator::checkDereferenceable() const
+ArgVec<T>::iterator::checkDereferenceable() const
 {
   Assert(parent != 0, cerr << "uninitialized iterator");
-  Assert(index < parent->pv.getLength(),
-	 cerr << "index >= length (" << index << " >= " <<
-	 parent->pv.getLength() << ')');
-  Assert(ptr == static_cast<pointer>(parent->pv.getBase()) + index,
-	 cerr << "bad pointer");
+  Assert(index < parent->len,
+	 cerr << "index >= len (" << index << " >= " << parent->len << ')');
+  Assert(ptr == parent->basePtr + index, cerr << "bad pointer");
 }
 
 template<class T>
 inline
-Vector<T>::iterator::iterator()
+ArgVec<T>::iterator::iterator()
 {
   parent = 0;
 }
 
 template<class T>
 inline
-Vector<T>::iterator::iterator(const iterator& other)
+ArgVec<T>::iterator::iterator(const iterator& other)
 {
   if (other.parent != 0)
     other.checkValid();
@@ -108,16 +105,16 @@ Vector<T>::iterator::iterator(const iterator& other)
 
 template<class T>
 inline
-Vector<T>::iterator::iterator(Vector* parent, size_type index)
-  : ptr(static_cast<pointer>(parent->pv.getBase()) + index),
+ArgVec<T>::iterator::iterator(ArgVec* parent, size_type index)
+  : ptr(parent->basePtr + index),
     parent(parent),
     index(index)
 {
 }
 
 template<class T>
-inline typename Vector<T>::iterator&
-Vector<T>::iterator::operator=(const iterator& other)
+inline typename ArgVec<T>::iterator&
+ArgVec<T>::iterator::operator=(const iterator& other)
 {
   if (other.parent != 0)
     other.checkValid();
@@ -129,7 +126,7 @@ Vector<T>::iterator::operator=(const iterator& other)
 
 template<class T>
 inline bool
-Vector<T>::iterator::operator==(const iterator& other) const
+ArgVec<T>::iterator::operator==(const iterator& other) const
 {
   checkValid();
   other.checkValid();
@@ -138,7 +135,7 @@ Vector<T>::iterator::operator==(const iterator& other) const
 
 template<class T>
 inline bool
-Vector<T>::iterator::operator!=(const iterator& other) const
+ArgVec<T>::iterator::operator!=(const iterator& other) const
 {
   checkValid();
   other.checkValid();
@@ -146,24 +143,24 @@ Vector<T>::iterator::operator!=(const iterator& other) const
 }
 
 template<class T>
-inline typename Vector<T>::reference
-Vector<T>::iterator::operator*()
+inline typename ArgVec<T>::reference
+ArgVec<T>::iterator::operator*() const
 {
   checkDereferenceable();
   return *ptr;
 }
 
 template<class T>
-inline typename Vector<T>::pointer
-Vector<T>::iterator::operator->()
+inline typename ArgVec<T>::pointer
+ArgVec<T>::iterator::operator->() const
 {
   checkDereferenceable();
   return ptr;
 }
 
 template<class T>
-inline typename Vector<T>::iterator&
-Vector<T>::iterator::operator++()
+inline typename ArgVec<T>::iterator&
+ArgVec<T>::iterator::operator++()
 {
   checkDereferenceable();
   ++ptr;
@@ -172,17 +169,17 @@ Vector<T>::iterator::operator++()
 }
 
 template<class T>
-inline typename Vector<T>::iterator
-Vector<T>::iterator::operator++(int)
+inline typename ArgVec<T>::iterator
+ArgVec<T>::iterator::operator++(int)
 {
-  Vector::iterator tmp(*this);
+  ArgVec::iterator tmp(*this);
   operator++();
   return tmp;
 }
 
 template<class T>
-inline typename Vector<T>::iterator&
-Vector<T>::iterator::operator--()
+inline typename ArgVec<T>::iterator&
+ArgVec<T>::iterator::operator--()
 {
   checkValid();
   Assert(index > 0, cerr << "decrementing past start");
@@ -192,64 +189,64 @@ Vector<T>::iterator::operator--()
 }
 
 template<class T>
-inline typename Vector<T>::iterator
-Vector<T>::iterator::operator--(int)
+inline typename ArgVec<T>::iterator
+ArgVec<T>::iterator::operator--(int)
 {
-  Vector::iterator tmp(*this);
+  ArgVec::iterator tmp(*this);
   operator--();
   return tmp;
 }
 
 template<class T>
-inline typename Vector<T>::iterator&
-Vector<T>::iterator::operator+=(difference_type delta)
+inline typename ArgVec<T>::iterator&
+ArgVec<T>::iterator::operator+=(difference_type delta)
 {
   checkValid();
-  Assert(index + delta <= parent->pv.getLength(), cerr << "past end");
+  Assert(index + delta <= parent->len, cerr << "past end");
   ptr += delta;
   index += delta;
   return *this;
 }
 
 template<class T>
-inline typename Vector<T>::iterator
-Vector<T>::iterator::operator+(difference_type delta) const
+inline typename ArgVec<T>::iterator
+ArgVec<T>::iterator::operator+(difference_type delta) const
 {
-  Vector::iterator tmp(*this);
+  ArgVec::iterator tmp(*this);
   return tmp += delta;
 }
 
 template<class T>
-inline typename Vector<T>::iterator&
-Vector<T>::iterator::operator-=(difference_type delta)
+inline typename ArgVec<T>::iterator&
+ArgVec<T>::iterator::operator-=(difference_type delta)
 {
   checkValid();
-  Assert(index - delta <= parent->pv.getLength(), cerr << "past end");
+  Assert(index - delta <= parent->len, cerr << "past end");
   ptr -= delta;
   index -= delta;
   return *this;
 }
 
 template<class T>
-inline typename Vector<T>::iterator
-Vector<T>::iterator::operator-(difference_type delta) const
+inline typename ArgVec<T>::iterator
+ArgVec<T>::iterator::operator-(difference_type delta) const
 {
-  Vector::iterator tmp(*this);
+  ArgVec::iterator tmp(*this);
   return tmp -= delta;
 }
 
 template<class T>
-inline typename Vector<T>::reference
-Vector<T>::iterator::operator[](difference_type i) const
+inline typename ArgVec<T>::reference
+ArgVec<T>::iterator::operator[](difference_type i) const
 {
   checkValid();
-  Assert(index + i <= parent->pv.getLength(), cerr << "past end");
+  Assert(index + i <= parent->len, cerr << "past end");
   return ptr[i];
 }
 
 template<class T>
 inline bool
-Vector<T>::iterator::operator<(const iterator& other) const
+ArgVec<T>::iterator::operator<(const iterator& other) const
 {
   checkValid();
   other.checkValid();
@@ -258,8 +255,8 @@ Vector<T>::iterator::operator<(const iterator& other) const
 }
 
 template<class T>
-inline typename Vector<T>::difference_type
-Vector<T>::iterator::operator-(const iterator& other) const
+inline typename ArgVec<T>::difference_type
+ArgVec<T>::iterator::operator-(const iterator& other) const
 {
   checkValid();
   other.checkValid();

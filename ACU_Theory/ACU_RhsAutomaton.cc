@@ -57,18 +57,19 @@ ACU_RhsAutomaton::remapIndices(VariableInfo& variableInfo)
 local_inline void
 ACU_RhsAutomaton::buildArguments(ArgVec<ACU_DagNode::Pair>& argArray, Substitution& matcher) const
 {
-  ARG_VEC_HACK(ACU_DagNode::Pair, dest, argArray);
   Vector<Argument>::const_iterator j = arguments.begin();
   const Vector<Argument>::const_iterator e = arguments.end();
   Assert(j != e, cerr << "no args");
-  int i = 0;
+  ArgVec<ACU_DagNode::Pair>::iterator i = argArray.begin();
   do
     {
-      dest[i].dagNode = matcher.value(j->index);
-      dest[i].multiplicity = j->multiplicity;
+      i->dagNode = matcher.value(j->index);
+      i->multiplicity = j->multiplicity;
       ++i;
+      ++j;
     }
-  while (++j != e);
+  while (j != e);
+  Assert(i == argArray.end(), cerr << "iterator inconsistent");
 }
 
 DagNode*

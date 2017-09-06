@@ -9,6 +9,7 @@
 #include <gmpxx.h>
 #ifdef LIBv3
 #include <ext/rope>
+using namespace __gnu_cxx;
 #else
 #include <rope>
 #endif

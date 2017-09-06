@@ -8,8 +8,7 @@ MODULES =       metaModuleCache.o \
 		metaModule.o \
 		metaLevelOpSymbol.o
 
-IFLAGS =        -I$(GMP_INCLUDE) \
-		-I$(ROOT_DIR)/Core \
+IFLAGS =        -I$(ROOT_DIR)/Core \
                 -I$(ROOT_DIR)/Interface \
 		-I$(ROOT_DIR)/Variable \
 		-I$(ROOT_DIR)/Higher \

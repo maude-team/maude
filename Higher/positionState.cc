@@ -23,8 +23,8 @@
 
 PositionState::PositionState(DagNode* top, int flags, int minDepth, int maxDepth)
   : flags(flags),
-    maxDepth(maxDepth),
-    minDepth(minDepth)
+    minDepth(minDepth),
+    maxDepth(maxDepth)
 {
   positionQueue.append(RedexPosition(top, UNDEFINED, UNDEFINED));
   depth.append(0);

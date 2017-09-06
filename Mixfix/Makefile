@@ -30,8 +30,7 @@ MODULES =       importModule.o \
 		metadataStore.o
 
 
-IFLAGS =        -I$(GMP_INCLUDE) \
-		-I$(ROOT_DIR)/Core \
+IFLAGS =        -I$(ROOT_DIR)/Core \
                 -I$(ROOT_DIR)/Interface \
 		-I$(ROOT_DIR)/Variable \
 		-I$(ROOT_DIR)/Higher \
@@ -93,6 +92,7 @@ OUR_LIBS =	-lmeta \
 		-lsystem \
 		-lutility
 
+
 #  We need the following 3rd party libraries
 #  (in addition to those normally linked in by g++):
 #	dlmalloc	Doug Lea's malloc (ftp://g.oswego.edu/pub/misc/malloc.c)
@@ -113,18 +113,25 @@ LIBRARIES =	$(OUR_LIBS) $(OTHER_LIBS)
 #		-lgmp
 
 #  Force static linking for GNU GMP.
-GMP_LIBS =	/csl/lib/libgmpxx.a \
-		/csl/lib/libgmp.a
+GMP_LIBS =	$(GMP_LIB_DIR)/libgmpxx.a \
+		$(GMP_LIB_DIR)/libgmp.a
 
 #  Compiled without optimized asm. Slow but safe for Purify.
-SAFE_GMP_LIBS =	/csl/sparc_gmp/lib/libgmpxx.a \
-		/csl/sparc_gmp/lib/libgmp.a
+SAFE_GMP_LIBS =	/homes/eker/Solaris/3.2/Safer/lib/libgmpxx.a \
+		/homes/eker/Solaris/3.2/Safer/lib/libgmp.a
+
+
+#SAFE_GMP_LIBS =	/csl/sparc_gmp/lib/libgmpxx.a \
+#		/csl/sparc_gmp/lib/libgmp.a
 
 CXXFLAGS =      $(DFLAGS) $(IFLAGS)  -DMOS -DBUBBLES -DSCP
 #CXXFLAGS =      $(DFLAGS) $(IFLAGS) -DBUBBLES -DSCP -DPARSER_DEBUG
 
-PURIFY_FLAGS =	-free-queue-length=10000 -free-queue-threshold=1000000 \
-		-chain-length="20" -cache-dir=$(CACHE_DIR)
+PURIFY_FLAGS =	-free-queue-length=10000 \
+		-free-queue-threshold=1000000 \
+		-chain-length="20" \
+		-cache-dir=$(CACHE_DIR) \
+		-always-use-cache-dir
 
 PURECOV_FLAGS =
 

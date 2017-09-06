@@ -140,6 +140,9 @@ private:
 				     Substitution& solution,
 				     ACU_ExtensionInfo* extensionInfo,
 				     int firstAlien);
+  bool handleElementVariables(ACU_DagNode* subject,
+			      Substitution& solution,
+			      ACU_Subproblem* subproblem);
   void copyMultiplicity();
   int computeTotalMultiplicity();
   int greedyMatch(ACU_DagNode* subject,

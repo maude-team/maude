@@ -1,3 +1,8 @@
+2002-11-19  Steven Eker  <eker@goo.csl.sri.com>
+
+	* IO_Manager.cc (getInput): output a prompt if we are reading from
+	stdin but not using tecla
+
 2002-10-02  Steven Eker  <eker@goo.csl.sri.com>
 
 	* IO_Manager.hh (class IO_Manager): added DEFAULT_LINES to enum

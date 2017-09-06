@@ -9,10 +9,10 @@
 #ifdef __GNUG__
 #pragma interface
 #endif
-#include "memoryCell.hh"
+//#include "memoryCell.hh"
 #include "redexPosition.hh"
 
-class DagNode : private MemoryCell
+class DagNode
 {
   NO_COPYING(DagNode);
 
@@ -22,8 +22,13 @@ public:
   //
   //	HACK we need to pass this stuff thru for the moment.
   //
-  MemoryCell::okToCollectGarbage;
-  MemoryCell::setCallDtor;
+  static void okToCollectGarbage();
+  void setCallDtor();
+  //
+  //	Nasty cross casting stuff.
+  //
+  MemoryCell* getMemoryCell();
+  const MemoryCell* getMemoryCell() const;
   //
   //	Static members (for memory management).
   //
@@ -113,7 +118,7 @@ protected:
     //	It would be nice to do this in a cleaner way, rather than assume
     //	the existence/size of our virtual function table pointer.
     //
-    nrWords = NR_EXTRA_WORDS - 2
+    nrWords = 3 // HACK
   };
 
   static size_t hash(size_t v1, size_t v2);
@@ -163,16 +168,42 @@ private:
 //
 ostream& operator<<(ostream& s, DagNode* dagNode);
 
+#include "memoryCell.hh"
+
+inline MemoryCell*
+DagNode::getMemoryCell()
+{
+  return static_cast<MemoryCell*>(static_cast<void*>(this));
+}
+
+inline const MemoryCell*
+DagNode::getMemoryCell() const
+{
+  return static_cast<const MemoryCell*>(static_cast<const void*>(this));
+}
+
+inline void
+DagNode::okToCollectGarbage()
+{
+  MemoryCell::okToCollectGarbage();
+}
+
+inline void
+DagNode::setCallDtor()
+{
+  getMemoryCell()->setCallDtor();
+}
+
 inline int
 DagNode::getSortIndex() const
 {
-  return getHalfWord();
+  return getMemoryCell()->getHalfWord();
 }
 
 inline void
 DagNode::setSortIndex(int index)
 {
-  setHalfWord(index);
+  getMemoryCell()->setHalfWord(index);
 }
 
 inline void
@@ -181,25 +212,28 @@ DagNode::repudiateSortInfo()
   setSortIndex(Sort::SORT_UNKNOWN);
 }
 
-#include "memoryCellNew.hh"
+//#include "memoryCellNew.hh"
 
 inline void*
-DagNode::operator new(size_t  size)
+DagNode::operator new(size_t size)
 {
   //
-  //	We rely on the MemoryCell new() setting the half word to
+  //	We rely on MemoryCell::allocateMemoryCell() setting the half word to
   //	Sort::SORT_UNKNOWN.
   //
-  return MemoryCell::operator new(size);
+  Assert(size <= sizeof(MemoryCell), cerr << "dag node too big");
+  return MemoryCell::allocateMemoryCell();
 }
 
 inline void*
 DagNode::operator new(size_t /* size */, DagNode* old)
 {
-  if (old->needToCallDtor())
+  if (old->getMemoryCell()->needToCallDtor())
     old->~DagNode();	// explicitly call virtual destructor
-  old->clearAllExceptMarked();
+  old->getMemoryCell()->clearAllExceptMarked();
   old->repudiateSortInfo();
+  //DebugAdvisory("in place new called, old = " << (void*)(old));
+  Assert(old->getSortIndex() == Sort::SORT_UNKNOWN, cerr << "bad sort init");
   return static_cast<void*>(old);
 }
 
@@ -207,6 +241,9 @@ inline
 DagNode::DagNode(Symbol* symbol)
 {
   topSymbol = symbol;
+  //DebugAdvisory("created dag node for " << symbol << " at " << (void*)(this));
+  //DebugAdvisoryCheck(getSortIndex() == Sort::SORT_UNKNOWN,
+  //	     cerr << "bad sort in dagnode");
 }
 
 inline Symbol*
@@ -233,79 +270,79 @@ DagNode::equal(const DagNode* other) const
 inline bool
 DagNode::isReduced() const
 {
-  return getFlag(REDUCED);
+  return getMemoryCell()->getFlag(REDUCED);
 }
 
 inline void
 DagNode::setReduced()
 {
-  setFlag(REDUCED);
+  getMemoryCell()->setFlag(REDUCED);
 }
 
 inline bool
 DagNode::isCopied() const
 {
-  return getFlag(COPIED);
+  return getMemoryCell()->getFlag(COPIED);
 }
 
 inline void
 DagNode::setCopied()
 {
-  setFlag(COPIED);
+  getMemoryCell()->setFlag(COPIED);
 }
 
 inline void
 DagNode::clearCopied()
 {
-  clearFlag(COPIED);
+  getMemoryCell()->clearFlag(COPIED);
 }
 
 inline void
 DagNode::setUnrewritable()
 {
-  setFlag(UNREWRITABLE);
+  getMemoryCell()->setFlag(UNREWRITABLE);
 }
 
 inline bool
 DagNode::isUnrewritable() const
 {
-  return getFlag(UNREWRITABLE);
+  return getMemoryCell()->getFlag(UNREWRITABLE);
 }
 
 inline void
 DagNode::setUnstackable()
 {
-  setFlag(UNSTACKABLE);
+  getMemoryCell()->setFlag(UNSTACKABLE);
 }
 
 inline bool
 DagNode::isUnstackable() const
 {
-  return getFlag(UNSTACKABLE);
+  return getMemoryCell()->getFlag(UNSTACKABLE);
 }
 
 inline void
 DagNode::setHashValid()
 {
-  setFlag(HASH_VALID);
+  getMemoryCell()->setFlag(HASH_VALID);
 }
 
 inline bool
 DagNode::isHashValid() const
 {
-  return getFlag(HASH_VALID);
+  return getMemoryCell()->getFlag(HASH_VALID);
 }
 
 inline Byte
 DagNode::getTheoryByte() const
 {
-  return getByte();
+  return getMemoryCell()->getByte();
 }
 
 inline void
 DagNode::setTheoryByte(Byte value)
 {
-  setByte(value);
+  getMemoryCell()->setByte(value);
 }
 
 //
@@ -333,9 +370,9 @@ DagNode::mark()
   Assert(this != 0, cerr << "bad dag node");
   Assert(topSymbol->arity() >= 0, cerr << "bad symbol");
   DagNode* d = this;
-  while (!(d->isMarked()))
+  while (!(d->getMemoryCell()->isMarked()))
     {
-      d->setMarked();
+      d->getMemoryCell()->setMarked();
       //
       //	markArguments() returns a pointer our the last argument
       //	rather than calling mark() on it. This allows us to

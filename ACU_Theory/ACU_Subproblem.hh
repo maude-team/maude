@@ -20,11 +20,10 @@ public:
 		 ACU_ExtensionInfo* extension);
   ~ACU_Subproblem();
 
-  void addPatternNode(int multiplicity);
+  int addPatternNode(int multiplicity);
   void addEdge(int pattern,
 	       int target,
-	       const Substitution& global,
-	       const Substitution& local,
+	       LocalBinding* difference,
 	       Subproblem* subproblem);
   void addTopVariable(int index,
 		      int multiplicity,
@@ -67,7 +66,8 @@ private:
 
   bool solvePatterns(bool findFirst, RewritingContext& solution);
   bool solveVariables(bool findFirst, RewritingContext& solution);
-  bool oneVariableCase(TopVariable& tv, RewritingContext& solution);
+  bool noVariableCase(const Vector<int>& multVec);
+  bool oneVariableCase(const Vector<int>& multVec, RewritingContext& solution);
   bool extractDiophantineSystem(RewritingContext& solution);
   DagNode* computeAssignment(int row);
   void fillOutExtensionInfo();

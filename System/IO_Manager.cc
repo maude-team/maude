@@ -59,13 +59,28 @@ IO_Manager::setAutoWrap()
 int
 IO_Manager::getInput(char* buf, int maxSize, FILE* stream)
 {
-  if (gl == 0 || stream != stdin)
+  if (stream != stdin)
     {
       //
       //	Some stdio libraries (notably that of linux) have a nasty habit
       //	of restarting slow system calls aborted by signals. We avoid
       //	this behaviour by doing input directly from the OS.
       //
+      return read(fileno(stream), buf, maxSize);
+    }
+
+  if (gl == 0)
+    {
+      //
+      //	Reading from stdin without using tecla.
+      //
+      if (!contFlag)
+	{
+	  
+	  fputs(prompt.c_str(), stdout);  // HACK: bypass line wrapper
+	  fflush(stdout);
+	}
+      contFlag = true;
       return read(fileno(stream), buf, maxSize);
     }
 
