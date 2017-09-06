@@ -48,6 +48,7 @@
 #include "rewritingContext.hh"
 #include "equation.hh"
 #include "sortBdds.hh"
+#include "hashConsSet.hh"
 
 //	full compiler class definitions
 #include "compilationContext.hh"
@@ -345,6 +346,41 @@ FreeSymbol::computeGeneralizedSort(const SortBdds& sortBdds,
   for (int i = 0; i < nrBdds; ++i)
     generalizedSort[i] = bdd_veccompose(sortFunction[i], argMap);
   bdd_freepair(argMap);
+}
+
+//
+//	Hash cons code.
+//
+
+DagNode*
+FreeSymbol::makeCanonical(DagNode* original, HashConsSet* hcs)
+{
+  int nrArgs = arity();
+  DagNode** p = safeCast(FreeDagNode*, original)->argArray();
+  for (int i = 0; i < nrArgs; i++)
+    {
+      DagNode* d = p[i];
+      DagNode* c = hcs->getCanonical(hcs->insert(d));
+      if (c != d)
+        {
+	  //
+	  //	Detected a non-canonical argument so need to make a new node.
+	  //
+	  FreeDagNode* n = new FreeDagNode(this);
+	  n->copySetRewritingFlags(original);
+	  n->setSortIndex(original->getSortIndex());
+	  DagNode** q = n->argArray();
+	  for (int j = 0; j < i; ++j, ++p, ++q)
+            *q = *p;
+	  *q = c;
+	  ++p;
+	  ++q;
+	  for (int j = i + 1; j < nrArgs;  ++j, ++p, ++q)
+	    *q = hcs->getCanonical(hcs->insert(*p));
+	  return n;
+        }
+    }
+  return original;  // can use the original dag node as the canonical version
 }
 
 #ifdef COMPILER

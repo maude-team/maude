@@ -1,3 +1,14 @@
+2009-12-02  Steven Eker  <eker@goo.csl.sri.com>
+
+	* pointerSet.cc (findEntry): move call to collision() inside loop
+
+2009-11-30  Steven Eker  <eker@goo.csl.sri.com>
+
+	* pointerSet.hh (class PointerSet): added decl for collision() in
+	debug mode
+
+===================================Maude92b===========================================
+
 2009-09-23  Steven Eker  <eker@goo.csl.sri.com>
 
 	* bddUser.cc (err_handler): check and call errorHandler if set

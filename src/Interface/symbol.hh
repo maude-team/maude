@@ -132,6 +132,10 @@ public:
   //
   virtual UnificationSubproblem* makeUnificationSubproblem() { CantHappen("Not implemented"); return 0; }
   virtual int unificationPriority() const;
+  //
+  //	Interface for hash consing.
+  //
+  virtual DagNode* makeCanonical(DagNode* original, HashConsSet* hcs) { CantHappen("Not implemented"); return 0; };
 
 #ifdef COMPILER
   void fullCompile(CompilationContext& context, bool inLine) const;
@@ -141,7 +145,6 @@ public:
 #ifdef DUMP
   virtual void dump(ostream& s, int indentLevel = 0);
 #endif
-
 
 protected:
   bool acceptSortConstraint(SortConstraint* sortConstraint);

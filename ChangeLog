@@ -1,3 +1,8 @@
+2009-12-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* tests/ResolvedBugs/CUIbug12-22-09 (MAUDE_LIB): added; removed
+	previous tests
+
 2009-11-12  Steven Eker  <eker@goo.csl.sri.com>
 
 	* tests/ResolvedBugs/Makefile.am (RESULT_FILES): added 6 tests

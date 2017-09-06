@@ -81,5 +81,6 @@ class NarrowingVariableInfo;
 class ProtectedDagNodeSet;
 class PendingUnificationStack;
 class Environment;
+class HashConsSet;
 
 #endif

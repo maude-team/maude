@@ -1,3 +1,21 @@
+2009-12-09  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_TreeDagNode.cc (makeCanonical): added
+
+	* ACU_Symbol.cc (makeCanonical): use
+	ACU_TreeDagNode::makeCanonical()
+
+2009-12-03  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_Symbol.hh (class ACU_Symbol): added decl for makeCanonical()
+
+	* ACU_TreeDagNode.hh (class ACU_TreeDagNode): make ACU_Symbol a
+	friend
+
+	* ACU_Symbol.cc (makeCanonical): added
+
+===================================Maude92b===========================================
+
 2008-12-22  Steven Eker  <eker@goo.csl.sri.com>
 
 	* ACU_Symbol.cc (computeGeneralizedSort): new getSortFunction()

@@ -1,3 +1,10 @@
+Overview of Changes in Maude alpha92b
+=====================================
+* fixed failure to GC in rules only search
+* fixed unstackable flag bug in CUI theory
+* first attempt at hash consing for search/model checking
+* unrewritable/unstackable optimization for search/model checking
+
 Overview of Changes in Maude alpha92a
 =====================================
 * fixed BDD variable bug introduced by lazy computation of symbol sort
