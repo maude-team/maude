@@ -101,7 +101,7 @@ command		:	KW_SELECT		{ lexerCmdMode(); clear(); }
 			{
 			  lexerInitialMode();
 			  if (interpreter.setCurrentModule(moduleExpr, 1))
-			    ;
+			    interpreter.eRewrite(bubble, number, number2, $1);
 			}
 		|	optDebug KW_FREWRITE
 			{
@@ -285,6 +285,10 @@ command		:	KW_SELECT		{ lexerCmdMode(); clear(); }
 			{
 			  interpreter.showSearchPath($3);
 			}
+		|	KW_SHOW KW_PATH KW_LABEL SIMPLE_NUMBER '.'
+			{
+			  interpreter.showSearchPathLabels($4);
+			}
 		|	KW_SHOW KW_SEARCH KW_GRAPH '.'
 			{
 			  interpreter.showSearchGraph();
@@ -430,6 +434,10 @@ command		:	KW_SELECT		{ lexerCmdMode(); clear(); }
 		|	KW_SET KW_CLEAR KW_MEMO polarity '.'
 			{
 			  interpreter.setFlag(Interpreter::AUTO_CLEAR_MEMO, $4);
+			}
+		|	KW_SET KW_CLEAR KW_RLS polarity '.'
+			{
+			  interpreter.setFlag(Interpreter::AUTO_CLEAR_RULES, $4);
 			}
 		|	KW_SET KW_COMPILE KW_COUNT polarity '.'
 			{

@@ -1,3 +1,7 @@
+2004-10-07  Steven Eker  <eker@goo.csl.sri.com>
+
+	* dagNode.hh: added #include "symbol.hh" to appease g++ 2.4.2
+
 2004-02-05  Steven Eker  <eker@goo.csl.sri.com>
 
 	* dagNode.hh (copyEagerUptoReduced): set the copy flag after

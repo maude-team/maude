@@ -33,7 +33,11 @@ libbuiltIn_a_SOURCES = \
 	CUI_NumberOpSymbol.cc \
 	divisionSymbol.cc \
 	randomOpSymbol.cc \
-	counterSymbol.cc
+	counterSymbol.cc \
+	matrixOpSymbol.cc
+
+EXTRA_DIST = \
+	matrixOpSignature.cc
 
 noinst_HEADERS = \
 	ACU_NumberOpSymbol.hh \
@@ -56,4 +60,5 @@ noinst_HEADERS = \
 	stringTerm.hh \
 	succSymbol.hh \
 	randomOpSymbol.hh \
-	counterSymbol.hh
+	counterSymbol.hh \
+	matrixOpSymbol.hh

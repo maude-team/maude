@@ -1,3 +1,45 @@
+2004-12-02  Steven Eker  <eker@goo.csl.sri.com>
+
+	* sortTable.hh (class SortTable): added decls for
+	computeMaximalOpDeclSetTable() and domainSubsumes()
+
+	* sortTable.cc (computeMaximalOpDeclSetTable): added
+	(domainSubsumes): added
+
+	* sortTable.hh (class SortTable): added data member
+	maximalOpDeclSetTable
+	(getMaximalOpDeclSet): added
+
+2004-10-08  Steven Eker  <eker@goo.csl.sri.com>
+
+	* checkedArgVecIterator.hh (operator-, operator+, operator--) 
+	(operator++): added typename to pacify g++ 3.4.2
+
+	* checkedArgVecConstIterator.hh (operator++, operator--) 
+	(operator+, operator-): added typename to pacify g++ 3.4.2
+
+2004-10-07  Steven Eker  <eker@goo.csl.sri.com>
+
+	* argVec.hh: added #include <dagNode.hh> to pacify 3.4.2
+
+2004-09-10  Steven Eker  <eker@goo.csl.sri.com>
+
+	* connectedComponent.hh (class ConnectedComponent): updated decl
+	for findMaximalSorts()
+
+	* connectedComponent.cc (findMaximalSorts): rewritten in a more
+	efficient and robust manner; pass back Vector<Sort*> rather than
+	Vector<int>
+	
+===================================Maude85===========================================
+
+2004-07-29  Steven Eker  <eker@goo.csl.sri.com>
+
+	* rewritingContext.hh (class RewritingContext): made
+	markReachableNodes() protected rather than private
+	
+===================================Maude84d===========================================
+
 2004-06-07  Steven Eker  <eker@goo.csl.sri.com>
 
 	* ruleTable.cc (resetRules): moved here

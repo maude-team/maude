@@ -25,6 +25,10 @@ Warning: membership axioms are not guaranteed to work correctly for associative
 Warning: membership axioms are not guaranteed to work correctly for associative
     symbol lcm as it has declarations that are not at the kind level.
 Warning: membership axioms are not guaranteed to work correctly for associative
+    symbol min as it has declarations that are not at the kind level.
+Warning: membership axioms are not guaranteed to work correctly for associative
+    symbol max as it has declarations that are not at the kind level.
+Warning: membership axioms are not guaranteed to work correctly for associative
     symbol _xor_ as it has declarations that are not at the kind level.
 Warning: membership axioms are not guaranteed to work correctly for associative
     symbol _&_ as it has declarations that are not at the kind level.
@@ -162,6 +166,46 @@ mod FOO is
     op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
   op lcm : Int Int -> Nat [assoc comm special (
     id-hook ACU_NumberOpSymbol (lcm)
+    op-hook succSymbol (s_ : Nat ~> NzNat)
+    op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
+  op min : NzNat NzNat -> NzNat [assoc comm special (
+    id-hook ACU_NumberOpSymbol (min)
+    op-hook succSymbol (s_ : Nat ~> NzNat)
+    op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
+  op min : Nat Nat -> Nat [assoc comm special (
+    id-hook ACU_NumberOpSymbol (min)
+    op-hook succSymbol (s_ : Nat ~> NzNat)
+    op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
+  op min : NzInt NzInt -> NzInt [assoc comm special (
+    id-hook ACU_NumberOpSymbol (min)
+    op-hook succSymbol (s_ : Nat ~> NzNat)
+    op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
+  op min : Int Int -> Int [assoc comm special (
+    id-hook ACU_NumberOpSymbol (min)
+    op-hook succSymbol (s_ : Nat ~> NzNat)
+    op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
+  op max : NzNat Nat -> NzNat [assoc comm special (
+    id-hook ACU_NumberOpSymbol (max)
+    op-hook succSymbol (s_ : Nat ~> NzNat)
+    op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
+  op max : Nat Nat -> Nat [assoc comm special (
+    id-hook ACU_NumberOpSymbol (max)
+    op-hook succSymbol (s_ : Nat ~> NzNat)
+    op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
+  op max : NzInt NzInt -> NzInt [assoc comm special (
+    id-hook ACU_NumberOpSymbol (max)
+    op-hook succSymbol (s_ : Nat ~> NzNat)
+    op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
+  op max : Int Int -> Int [assoc comm special (
+    id-hook ACU_NumberOpSymbol (max)
+    op-hook succSymbol (s_ : Nat ~> NzNat)
+    op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
+  op max : NzNat Int -> NzNat [assoc comm special (
+    id-hook ACU_NumberOpSymbol (max)
+    op-hook succSymbol (s_ : Nat ~> NzNat)
+    op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
+  op max : Nat Int -> Nat [assoc comm special (
+    id-hook ACU_NumberOpSymbol (max)
     op-hook succSymbol (s_ : Nat ~> NzNat)
     op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
   op _xor_ : Nat Nat -> Nat [assoc comm prec 55 gather (e E) special (
@@ -357,14 +401,14 @@ var X : Int .
 var Y : Int .
 Grammar:
 	nonterminals: 39
-	terminals: 121
-	productions: 178
+	terminals: 123
+	productions: 180
 
 Term rewriting system:
 	kinds: 2
 	sorts: 7
-	user symbols: 33
-	total symbols: 36
+	user symbols: 35
+	total symbols: 38
 	polymorphic operators: 3
 	membership axioms: 2
 	equations: 11
@@ -420,6 +464,18 @@ fmod INT is
     op-hook succSymbol (s_ : Nat ~> NzNat)
     op-hook minusSymbol (-_ : NzNat ~> Int))] .
   op lcm : Int Int -> Nat [ditto] .
+  op min : NzInt NzInt -> NzInt [assoc comm special (
+    id-hook ACU_NumberOpSymbol (min)
+    op-hook succSymbol (s_ : Nat ~> NzNat)
+    op-hook minusSymbol (-_ : NzNat ~> Int))] .
+  op min : Int Int -> Int [ditto] .
+  op max : NzInt NzInt -> NzInt [assoc comm special (
+    id-hook ACU_NumberOpSymbol (max)
+    op-hook succSymbol (s_ : Nat ~> NzNat)
+    op-hook minusSymbol (-_ : NzNat ~> Int))] .
+  op max : Int Int -> Int [ditto] .
+  op max : NzNat Int -> NzNat [ditto] .
+  op max : Nat Int -> Nat [ditto] .
   op ~_ : Int -> Int [special (
     id-hook NumberOpSymbol (~)
     op-hook succSymbol (s_ : Nat ~> NzNat)
@@ -631,6 +687,46 @@ mod FOO is
     op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
   op lcm : Int Int -> Nat [assoc comm special (
     id-hook ACU_NumberOpSymbol (lcm)
+    op-hook succSymbol (s_ : Nat ~> NzNat)
+    op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
+  op min : NzNat NzNat -> NzNat [assoc comm special (
+    id-hook ACU_NumberOpSymbol (min)
+    op-hook succSymbol (s_ : Nat ~> NzNat)
+    op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
+  op min : Nat Nat -> Nat [assoc comm special (
+    id-hook ACU_NumberOpSymbol (min)
+    op-hook succSymbol (s_ : Nat ~> NzNat)
+    op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
+  op min : NzInt NzInt -> NzInt [assoc comm special (
+    id-hook ACU_NumberOpSymbol (min)
+    op-hook succSymbol (s_ : Nat ~> NzNat)
+    op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
+  op min : Int Int -> Int [assoc comm special (
+    id-hook ACU_NumberOpSymbol (min)
+    op-hook succSymbol (s_ : Nat ~> NzNat)
+    op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
+  op max : NzNat Nat -> NzNat [assoc comm special (
+    id-hook ACU_NumberOpSymbol (max)
+    op-hook succSymbol (s_ : Nat ~> NzNat)
+    op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
+  op max : Nat Nat -> Nat [assoc comm special (
+    id-hook ACU_NumberOpSymbol (max)
+    op-hook succSymbol (s_ : Nat ~> NzNat)
+    op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
+  op max : NzInt NzInt -> NzInt [assoc comm special (
+    id-hook ACU_NumberOpSymbol (max)
+    op-hook succSymbol (s_ : Nat ~> NzNat)
+    op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
+  op max : Int Int -> Int [assoc comm special (
+    id-hook ACU_NumberOpSymbol (max)
+    op-hook succSymbol (s_ : Nat ~> NzNat)
+    op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
+  op max : NzNat Int -> NzNat [assoc comm special (
+    id-hook ACU_NumberOpSymbol (max)
+    op-hook succSymbol (s_ : Nat ~> NzNat)
+    op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
+  op max : Nat Int -> Nat [assoc comm special (
+    id-hook ACU_NumberOpSymbol (max)
     op-hook succSymbol (s_ : Nat ~> NzNat)
     op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
   op _xor_ : Nat Nat -> Nat [assoc comm prec 55 gather (e E) special (
@@ -921,6 +1017,46 @@ mod FOO is
     op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
   op lcm : Int Int -> Nat [assoc comm special (
     id-hook ACU_NumberOpSymbol (lcm)
+    op-hook succSymbol (s_ : Nat ~> NzNat)
+    op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
+  op min : NzNat NzNat -> NzNat [assoc comm special (
+    id-hook ACU_NumberOpSymbol (min)
+    op-hook succSymbol (s_ : Nat ~> NzNat)
+    op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
+  op min : Nat Nat -> Nat [assoc comm special (
+    id-hook ACU_NumberOpSymbol (min)
+    op-hook succSymbol (s_ : Nat ~> NzNat)
+    op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
+  op min : NzInt NzInt -> NzInt [assoc comm special (
+    id-hook ACU_NumberOpSymbol (min)
+    op-hook succSymbol (s_ : Nat ~> NzNat)
+    op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
+  op min : Int Int -> Int [assoc comm special (
+    id-hook ACU_NumberOpSymbol (min)
+    op-hook succSymbol (s_ : Nat ~> NzNat)
+    op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
+  op max : NzNat Nat -> NzNat [assoc comm special (
+    id-hook ACU_NumberOpSymbol (max)
+    op-hook succSymbol (s_ : Nat ~> NzNat)
+    op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
+  op max : Nat Nat -> Nat [assoc comm special (
+    id-hook ACU_NumberOpSymbol (max)
+    op-hook succSymbol (s_ : Nat ~> NzNat)
+    op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
+  op max : NzInt NzInt -> NzInt [assoc comm special (
+    id-hook ACU_NumberOpSymbol (max)
+    op-hook succSymbol (s_ : Nat ~> NzNat)
+    op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
+  op max : Int Int -> Int [assoc comm special (
+    id-hook ACU_NumberOpSymbol (max)
+    op-hook succSymbol (s_ : Nat ~> NzNat)
+    op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
+  op max : NzNat Int -> NzNat [assoc comm special (
+    id-hook ACU_NumberOpSymbol (max)
+    op-hook succSymbol (s_ : Nat ~> NzNat)
+    op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
+  op max : Nat Int -> Nat [assoc comm special (
+    id-hook ACU_NumberOpSymbol (max)
     op-hook succSymbol (s_ : Nat ~> NzNat)
     op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
   op _xor_ : Nat Nat -> Nat [assoc comm prec 55 gather (e E) special (

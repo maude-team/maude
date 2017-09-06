@@ -1,3 +1,143 @@
+2004-12-02  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: lift idempotence equation to TypeListSet
+	combined kind sets with sort sets and type sets
+	deleted kindSetSymbol and emptyKindSetSymbol op hooks
+	added EmptyTypeSet to avoid the issue of whether none belongs to
+	SortSet or KindSet
+	use ditto for TermList ctor
+
+2004-12-01  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: added TypeListSets, maximalAritySet; change prec
+	of _;_ : SortSet SortSet-> SortSetto 43 to avoid interaction with
+	__ : TypeList TypeList -> TypeList
+
+	* execute.cc (rewrite): make calling resetRules() conditional on
+	AUTO_CLEAR_RULES
+	(fRewrite, eRewrite): make calling resetRules() conditional on
+	AUTO_CLEAR_RULES
+
+	* commands.yy (command): set clear counters -> set clear rls
+
+	* top.yy: removed KW_COUNTERS
+
+	* lexer.ll: removed counters; rule|rules synonym for rls
+
+	* interpreter.hh (endif): AUTO_CLEAR_COUNTERS -> AUTO_CLEAR_RULES
+
+2004-11-30  Steven Eker  <eker@goo.csl.sri.com>
+
+	* top.yy: added KW_COUNTERS
+
+	* lexer.ll: added counters
+
+	* commands.yy (command): added set clear counters on/off
+
+	* interpreter.hh (endif): added AUTO_CLEAR_COUNTERS to enum Flags;
+	added to DEFAULT_FLAGS
+
+2004-11-22  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: added format attr to trace ctor
+
+2004-11-17  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: added trace ctors; added metaSearchPath()
+
+2004-11-16  Steven Eker  <eker@goo.csl.sri.com>
+
+	* profileModule.cc: output a percentage for number of rewrites
+
+	* commands.yy (command): added show search path labels <nat> .
+
+	* interpreter.hh (endif): added decl for showSearchPathLabels()
+
+	* lexer.ll: recognize label in initial mode
+
+	* search.cc (showSearchPathLabels): added
+
+2004-10-14  Steven Eker  <eker@goo.csl.sri.com>
+
+	* diophantine.maude: diophantineSystemSolve -> natSystemSolve
+
+2004-09-16  Steven Eker  <eker@goo.csl.sri.com>
+
+	* dagNodePrint.cc (prettyPrint): added handling for null pointer
+	in debugging case
+
+2004-09-14  Steven Eker  <eker@goo.csl.sri.com>
+
+	* entry.cc (newFancySymbol): handle MATRIX_OP_SYMBOL
+
+	* specialSymbolTypes.cc (MACRO): added MatrixOpSymbol
+
+	* symbolType.hh (class SymbolType): added MATRIX_OP_SYMBOL
+
+2004-09-10  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: glbSorts now defined on types
+
+2004-09-09  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: made notFound and unbounded into ctors; added
+	TypeSet
+
+2004-08-26  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: added extra decl for _/_ to solve ctor problem
+
+2004-08-25  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: added PosRat to RAT to solve assoc problems with
+	max op decls
+
+2004-08-24  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: added min and max to NAT, INT and RAT
+	
+===================================Maude85===========================================
+
+2004-08-03  Steven Eker  <eker@goo.csl.sri.com>
+
+	* commands.yy (command): handle erewrite
+
+	* interpreter.hh (endif): added decls for eRewrite() and
+	eRewriteCont()
+
+	* maudemlBuffer.hh (class MaudemlBuffer): added decl for
+	generateErewrite()
+
+	* maudemlBuffer.cc (generateErewrite): added
+
+	* execute.cc (eRewrite): added
+	(eRewriteCont): added
+
+2004-07-12  Steven Eker  <eker@goo.csl.sri.com>
+
+	* entry.cc (newFancySymbol): handle SocketManagerSymbol rather
+	than SystemSymbol
+
+	* symbolType.hh (class SymbolType): SYSTEM_SYMBOL replaced by
+	SOCKET_MANAGER_SYMBOL
+
+	* specialSymbolTypes.cc (MACRO): SystemSymbol replaced by
+	SocketManagerSymbol
+
+2004-07-09  Steven Eker  <eker@goo.csl.sri.com>
+
+	* entry.cc (newFancySymbol): handle SYSTEM_SYMBOL
+
+	* specialSymbolTypes.cc (MACRO): added SYSTEM_SYMBOL
+
+	* symbolType.hh (class SymbolType): added SYSTEM_SYMBOL
+
+2004-06-29  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: make module selectors work on theories
+	
+===================================Maude84d===========================================
+
 2004-06-15  Steven Eker  <eker@goo.csl.sri.com>
 
 	* renaming.cc (typeMatch): fixed bug where we weren't catching the

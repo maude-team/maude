@@ -158,6 +158,18 @@ result FModule: fmod 'BAZ is
   op 'lcm : 'NzNat 'NzNat -> 'NzNat [assoc comm special(
     id-hook('ACU_NumberOpSymbol, 'lcm) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
+  op 'max : 'Nat 'Nat -> 'Nat [assoc comm special(
+    id-hook('ACU_NumberOpSymbol, 'max) 
+    op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
+  op 'max : 'NzNat 'Nat -> 'NzNat [assoc comm special(
+    id-hook('ACU_NumberOpSymbol, 'max) 
+    op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
+  op 'min : 'Nat 'Nat -> 'Nat [assoc comm special(
+    id-hook('ACU_NumberOpSymbol, 'min) 
+    op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
+  op 'min : 'NzNat 'NzNat -> 'NzNat [assoc comm special(
+    id-hook('ACU_NumberOpSymbol, 'min) 
+    op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
   op 'modExp : '`[Nat`] '`[Nat`] '`[Nat`] -> '`[Nat`] [special(
     id-hook('NumberOpSymbol, 'modExp) 
     op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .

@@ -189,6 +189,38 @@ MetaLevelOpSymbol::metaLeastSort(FreeDagNode* subject, RewritingContext& context
 }
 
 bool
+MetaLevelOpSymbol::metaMaximalAritySet(FreeDagNode* subject, RewritingContext& context)
+{
+  //
+  //  maximalAritySet : Module Qid TypeList Sort ~> TypeListSet
+  //
+  if (ImportModule* m = metaLevel->downModule(subject->getArgument(0)))
+    {
+      int id;
+      Vector<Sort*> arity;
+      Sort *target;
+      if (metaLevel->downQid(subject->getArgument(1), id) &&
+	  metaLevel->downTypeList(subject->getArgument(2), m, arity) &&
+	  metaLevel->downSimpleSort(subject->getArgument(3), m, target))
+	{
+	  int nrArgs = arity.size();
+	  Vector<ConnectedComponent*> domain(nrArgs);
+	  for (int i = 0; i < nrArgs; i++)
+	    domain[i] = arity[i]->component();
+	  if (Symbol* s = m->findSymbol(id, domain, target->component()))
+	    {
+	      PointerMap qidMap;
+	      return context.builtInReplace(subject,
+					    metaLevel->upTypeListSet(s->getOpDeclarations(),
+								     s->getMaximalOpDeclSet(target),
+								     qidMap));
+	    }
+	}
+    }
+  return false;
+}
+
+bool
 MetaLevelOpSymbol::metaCompleteName(FreeDagNode* subject, RewritingContext& context)
 {
   if (MixfixModule* m = metaLevel->downModule(subject->getArgument(0)))
@@ -233,7 +265,7 @@ MetaLevelOpSymbol::metaMaximalSorts(FreeDagNode* subject, RewritingContext& cont
     {
       Sort* k;
       if (metaLevel->downType(subject->getArgument(1), m, k) &&
-	  k->index() == Sort::ERROR_SORT)
+	  k->index() == Sort::KIND)
 	{
 	  ConnectedComponent* component = k->component();
 	  int nrMaximalSorts = component->nrMaximalSorts();
@@ -253,7 +285,7 @@ MetaLevelOpSymbol::metaMinimalSorts(FreeDagNode* subject, RewritingContext& cont
     {
       Sort* k;
       if (metaLevel->downType(subject->getArgument(1), m, k) &&
-	  k->index() == Sort::ERROR_SORT)
+	  k->index() == Sort::KIND)
 	{
 	  ConnectedComponent* component = k->component();
 	  int nrSorts = component->nrSorts();
@@ -277,8 +309,8 @@ MetaLevelOpSymbol::metaGlbSorts(FreeDagNode* subject, RewritingContext& context)
     {
       Sort* s1;
       Sort* s2;
-      if (metaLevel->downSimpleSort(subject->getArgument(1), m, s1) &&
-	  metaLevel->downSimpleSort(subject->getArgument(2), m, s2))
+      if (metaLevel->downType(subject->getArgument(1), m, s1) &&
+	  metaLevel->downType(subject->getArgument(2), m, s2))
 	{
 	  Vector<Sort*> glbSorts;
 	  ConnectedComponent* component = s1->component();
@@ -286,12 +318,7 @@ MetaLevelOpSymbol::metaGlbSorts(FreeDagNode* subject, RewritingContext& context)
 	    {
 	      NatSet leqSorts(s1->getLeqSorts());
 	      leqSorts.intersect(s2->getLeqSorts());
-	      Vector<int> glbIndices;
-	      component->findMaximalSorts(leqSorts, glbIndices);
-	      int nrSorts = glbIndices.length();
-	      glbSorts.expandTo(nrSorts);
-	      for (int i = 0; i < nrSorts; i++)
-		glbSorts[i] = component->sort(glbIndices[i]);
+	      component->findMaximalSorts(leqSorts, glbSorts);
 	    }
 	  return context.builtInReplace(subject, metaLevel->upSortSet(glbSorts));
 	}

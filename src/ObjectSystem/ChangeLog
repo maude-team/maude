@@ -1,3 +1,228 @@
+2004-10-08  Steven Eker  <eker@goo.csl.sri.com>
+
+	* pseudoThread.cc: added #include <errno.h>
+
+2004-08-03  Steven Eker  <eker@goo.csl.sri.com>
+
+	* configSymbol.cc (ruleRewrite): only do external stuff if mode is
+	external; put check for incomming external messages in second loop
+	rather than first
+
+	* socketManagerSymbol.hh (class SocketManagerSymbol): added decl
+	for 2nd closeSocket()
+
+	* socketStuff.cc (closeSocket): added 2nd version
+	(closeSocket): use other closeSocket()
+	(receive): handle far end closed
+
+2004-08-02  Steven Eker  <eker@goo.csl.sri.com>
+
+	* objectSystemRewritingContext.cc (~ObjectSystemRewritingContext):
+	added
+
+	* objectSystemRewritingContext.hh (class
+	ObjectSystemRewritingContext): adde decl for dtor
+
+	* socketManagerSymbol.hh (class SocketManagerSymbol): added decl
+	for cleanUp()
+
+	* socketStuff.cc (closeSocket): erase closed socket from
+	activeSockets
+
+	* externalObjectManagerSymbol.hh (class
+	ExternalObjectManagerSymbol): added decl for cleanUp()
+
+	* socketStuff.cc (closeSocket): fixed bug where we were sending
+	back sentMsg
+
+2004-07-30  Steven Eker  <eker@goo.csl.sri.com>
+
+	* objectSystemRewritingContext.cc (getExternalMessages): added
+	(offerMessageExternally): added
+
+	* objectSystemRewritingContext.hh (class
+	ObjectSystemRewritingContext): added decls for
+	getExternalMessages() and offerMessageExternally()
+
+	* configSymbol.cc (ruleRewrite): call getExternalMessages() and
+	offerMessageExternally()
+
+	* objectSystem.hh: added ExternalObjectManagerSymbol
+
+	* socketStuff.cc (closeSocket): use deleteExternalObject()
+	(createClientTcpSocket): use addExternalObject()
+
+	* objectSystemRewritingContext.hh (class
+	ObjectSystemRewritingContext): added decls for
+	addExternalObject(), deleteExternalObject()
+
+	* objectSystemRewritingContext.cc (markReachableNodes): rewritten
+	(addExternalObject): added
+	(deleteExternalObject): added
+
+	* objectSystemRewritingContext.hh (class
+	ObjectSystemRewritingContext): turned class MessageMap into a typedef
+	(class ObjectSystemRewritingContext): added typedef for ObjectSet
+	and data member externalObjects; added decl for
+	markReachableNodes(); messageMap becomes incomingMessages
+
+2004-07-29  Steven Eker  <eker@goo.csl.sri.com>
+
+	* objectSystemRewritingContext.cc (markReachableNodes): added
+
+	* objectSystemRewritingContext.hh (class
+	ObjectSystemRewritingContext): added class MessageMap and
+	dagNodeLt()
+
+	* objectSystemRewritingContext.cc: created
+
+	* externalObjectManagerSymbol.hh (class
+	ExternalObjectManagerSymbol): updated decls for use
+	ObjectSystemRewritingContext&
+
+	* socketStuff.cc (errorReply): implemented
+
+	* objectSystemRewritingContext.hh (class
+	ObjectSystemRewritingContext): added deck for bufferMessage()
+	(bufferMessage): added stub
+
+	* socketManagerSymbol.hh (class SocketManagerSymbol): updated many
+	declarations
+
+	* socketStuff.cc (createClientTcpSocket): take
+	ObjectSystemRewritingContext&
+	(createServerTcpSocket): take ObjectSystemRewritingContext&
+	(acceptClient): take ObjectSystemRewritingContext&
+	(send): take ObjectSystemRewritingContext&
+	(receive): take ObjectSystemRewritingContext&
+	(closeSocket): take ObjectSystemRewritingContext&
+
+	* socketManagerSymbol.cc (handleManagerMessage): take
+	ObjectSystemRewritingContext&
+	(handleMessage): take ObjectSystemRewritingContext&
+
+2004-07-28  Steven Eker  <eker@goo.csl.sri.com>
+
+	* socketManagerSymbol.hh (class SocketManagerSymbol): added decls
+	for getText() and getActiveSocket()
+
+	* socketStuff.cc (getActiveSocket): added
+	(getText): added
+
+2004-07-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* pseudoThread.cc (doCallBack): added
+
+	* socketManagerSymbol.hh (class SocketManagerSymbol): derive from
+	PseudoThread
+	(class SocketManagerSymbol): added enum SocketState, struct
+	ActiveSocket, typedef SocketMap, data member activeSockets
+
+	* socketStuff.cc (getDomain): added
+
+	* pseudoThread.cc (processCallBacks): rewritten
+
+	* pseudoThread.hh (class PseudoThread): updated decls for
+	processCallBacks() and processFds()
+
+	* pseudoThread.cc (eventLoop): rewritten
+	(processFds): rewritten
+
+	* pseudoThread.hh (class PseudoThread): added enum ReturnStatus;
+	updated decl for eventLoop()
+
+2004-07-21  Steven Eker  <eker@goo.csl.sri.com>
+
+	* pseudoThread.hh: created
+
+	* pseudoThread.cc: created
+
+2004-07-14  Steven Eker  <eker@goo.csl.sri.com>
+
+	* socketManagerSymbol.hh (class SocketManagerSymbol): added decls
+	for getProtocol(), getPort(), errorReply()
+
+	* socketManagerSymbol.cc (handleManagerMessage): added
+
+	* externalObjectManagerSymbol.hh (class
+	ExternalObjectManagerSymbol): added decl for handleManangerMessage()
+
+	* socketManagerSymbol.hh (class SocketManagerSymbol): added decls
+	for createClientTcpSocket(), createServerTcpSocket(),
+	acceptClient(), send(), receive(), closeSocket()
+
+	* socketStuff.cc: created
+
+	* socketManagerSymbol.cc (handleMessage): added
+
+	* socketManagerSymbol.hh (class SocketManagerSymbol): derive from
+	ExternalObjectManagerSymbol
+
+	* socketManagerSymbol.cc (SocketManagerSymbol): call
+	ExternalObjectManagerSymbol()
+
+	* externalObjectManagerSymbol.cc: created
+
+	* externalObjectManagerSymbol.hh: created
+
+2004-07-13  Steven Eker  <eker@goo.csl.sri.com>
+
+	* socketManagerSymbol.hh (class SocketManagerSymbol): added decls
+	for getDataAttachments() and getSymbolAttachments()
+
+	* socketManagerSymbol.cc (getDataAttachments): added
+	(getSymbolAttachments): added
+
+2004-07-12  Steven Eker  <eker@goo.csl.sri.com>
+
+	* socketManagerSymbol.cc (attachTerm): deleted
+	(copyAttachments): added
+
+	* socketManagerSymbol.hh (class SocketManagerSymbol): deleted decl
+	for attachTerm(); added decl for copyAttachments()
+
+	* socketManagerSymbol.cc (SocketManagerSymbol): use
+	socketSignature.cc
+	(attachSymbol): use socketSignature.cc
+	(attachData): use NULL_DATA()
+	(attachSymbol): use BIND_SYMBOL()
+
+	* socketManagerSymbol.hh (MACRO): use socketSignature.cc
+
+	* socketSignature.cc: created
+
+	* objectSystem.hh: deleted class ExternalObjectManager
+
+	* socketManager.cc: deleted
+
+	* socketManager.hh: deleted
+
+	* externalObjectManager.cc: deleted
+
+	* externalObjectManager.hh: deleted
+
+2004-07-09  Steven Eker  <eker@goo.csl.sri.com>
+
+	* socketManagerSymbol.cc: created
+
+	* socketManagerSymbol.hh: created
+
+2004-07-07  Steven Eker  <eker@goo.csl.sri.com>
+
+	* socketManager.cc: created
+
+	* socketManager.hh: created
+
+	* objectSystem.hh: added class ExternalObjectManager
+
+2004-06-30  Steven Eker  <eker@goo.csl.sri.com>
+
+	* externalObjectManager.cc: created
+
+	* externalObjectManager.hh: created
+	
+===================================Maude84d===========================================
+
 2003-05-23  Steven Eker  <eker@goo.csl.sri.com>
 
 	* configSymbol.cc (compileRules): use isNonexec(); no longer check

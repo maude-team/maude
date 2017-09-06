@@ -66,6 +66,11 @@ public:
 			  DagNode* metaContext,
 			  MixfixModule* m);
   DagNode* upFailure4Tuple();
+
+  DagNode* upTrace(const RewriteSequenceSearch& state, MixfixModule* m);
+  DagNode* upFailureTrace();
+
+
   DagNode* upContext(DagNode* dagNode,
 		     MixfixModule* m,
 		     DagNode* hole,
@@ -96,6 +101,9 @@ public:
 		     MixfixModule* m,
 		     PointerMap& qidMap,
 		     PointerMap& dagNodeMap);
+  DagNode* upTypeListSet(const Vector<OpDeclaration>& opDecls,
+			 const NatSet& chosenDecls,
+			 PointerMap& qidMap);
 
   bool downBound(DagNode* metaBound, int& bound) const;
   bool downSaturate(DagNode* metaBound, int& bound) const;
@@ -122,6 +130,7 @@ public:
   bool downSimpleSort(DagNode* metaSort, MixfixModule* m, Sort*& sort);
   bool downType(DagNode* metaType, MixfixModule* m, Sort*& type);
   bool downQidList(DagNode* metaQidList, Vector<int>& ids);
+  bool downTypeList(DagNode* metaTypeList, MixfixModule* m, Vector<Sort*>& typeList);
   bool downComponent(DagNode* metaComponent,
 		     MixfixModule* m,
 		     ConnectedComponent*& component);
@@ -228,6 +237,16 @@ private:
   DagNode* upTypeSorts(const set<int>& sorts, PointerMap& qidMap);
   DagNode* upRenamingAttributeSet(const Renaming* r, int index, PointerMap& qidMap);
 
+  DagNode* upTraceStep(const RewriteSequenceSearch& state,
+		       int stateNr,
+		       MixfixModule* m,
+		       PointerMap& qidMap,
+		       PointerMap& dagNodeMap);
+
+  DagNode* upTypeList(const Vector<Sort*>& types,
+		      bool omitLast,
+		      PointerMap& qidMap);
+
   bool downModuleExpression(DagNode* metaExpr, ImportModule*& m);
   bool downRenamings(DagNode* metaRenamings, Renaming* renaming);
   bool downRenaming(DagNode* metaRenaming, Renaming* renaming);
@@ -237,7 +256,6 @@ private:
   bool downRenamingAttribute(DagNode* metaRenamingAttribute, Renaming* renaming);
   
   bool downVariable(DagNode* metaVariable, MixfixModule* m, Symbol*& vs);
-  bool downTypeList(DagNode* metaTypeList, MixfixModule* m, Vector<Sort*>& typeList);
   bool downPolymorphTypeList(DagNode* metaTypeList,
 			     MixfixModule* m,
 			     const NatSet& polyArgs,

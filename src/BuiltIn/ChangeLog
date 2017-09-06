@@ -1,3 +1,65 @@
+2004-10-28  Steven Eker  <eker@goo.csl.sri.com>
+
+	* matrixOpSymbol.cc (eqRewrite): quick hack to test DiophantineSystem3 
+
+2004-10-14  Steven Eker  <eker@goo.csl.sri.com>
+
+	* matrixOpSymbol.cc (getDataAttachments): return natSystemSolve as data
+	(eqRewrite): return nonempty homogenous solution set only if
+	inhomogenous nonempty
+
+2004-09-16  Steven Eker  <eker@goo.csl.sri.com>
+
+	* matrixOpSymbol.cc (downMatrixEntry): fixed bug where we were
+	returning true even after failing
+	(upVector): fixed bug where we were generating null pointer vector
+	entries
+
+2004-09-15  Steven Eker  <eker@goo.csl.sri.com>
+
+	* matrixOpSymbol.hh (class MatrixOpSymbol): added decls for new
+	member functions
+
+	* matrixOpSymbol.cc (downVector): added
+	(downVectorEntry): added
+	(downCoeff): added
+	(downMatrixEntry): added
+	(downMatrix): added
+
+	* numberOpSymbol.hh (class NumberOpSymbol): commented out
+	declarations for makeNegDag(), isNeg(), getNeg()
+	(getMinusSymbol): added
+
+	* matrixOpSymbol.cc (upSet): added
+	(upVector): added
+
+2004-09-14  Steven Eker  <eker@goo.csl.sri.com>
+
+	* matrixOpSymbol.cc: created
+
+	* matrixOpSymbol.hh: created
+
+	* matrixOpSignature.cc: created
+
+2004-09-09  Steven Eker  <eker@goo.csl.sri.com>
+
+	* floatOpSymbol.cc (getDataAttachments): fixed bug where we were
+	returning NumberSymbol rather than FloatOpSymbol
+
+2004-08-24  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_NumberOpSymbol.cc (getDataAttachments): handle min and max
+	(eqRewrite2): added min and max
+
+===================================Maude85===========================================
+
+2004-06-29  Steven Eker  <eker@goo.csl.sri.com>
+
+	* floatOpSymbol.cc (safePow): fixed 0.0 ^ -1.0 = Infinity issue on
+	certain plaforms
+	
+===================================Maude84d===========================================
+
 2004-06-14  Steven Eker  <eker@goo.csl.sri.com>
 
 	* randomOpSymbol.cc (attachData): call

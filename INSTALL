@@ -17,7 +17,7 @@ Maude requires the following packages:
 
 GNU gmp		http://www.swox.com/gmp/
 Tecla		http://www.astro.caltech.edu/~mcs/tecla/
-BuDDY		http://www.it-c.dk/research/buddy/
+BuDDY		http://sourceforge.net/projects/buddy
 
 
 Configuring the 3rd party packages

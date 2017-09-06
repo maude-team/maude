@@ -22,7 +22,7 @@
 
 ***
 ***	Maude interpreter standard prelude.
-***	Version Alpha 84c
+***	Version Alpha 85
 ***
 ***	Some of the overall structure is taken from the OBJ3
 ***	interpreter standard prelude.
@@ -161,6 +161,18 @@ fmod NAT is
 		  op-hook succSymbol (s_ : Nat ~> NzNat))] .
   op lcm : Nat Nat -> Nat [ditto] .
 
+  op min : NzNat NzNat -> NzNat
+	[assoc comm
+	 special (id-hook ACU_NumberOpSymbol (min)
+		  op-hook succSymbol (s_ : Nat ~> NzNat))] .
+  op min : Nat Nat -> Nat [ditto] .
+
+  op max : NzNat Nat -> NzNat
+	[assoc comm
+	 special (id-hook ACU_NumberOpSymbol (max)
+		  op-hook succSymbol (s_ : Nat ~> NzNat))] .
+  op max : Nat Nat -> Nat [ditto] .
+
   op _xor_ : Nat Nat -> Nat
 	[assoc comm prec 55
 	 special (id-hook ACU_NumberOpSymbol (xor)
@@ -294,6 +306,22 @@ fmod INT is
 		  op-hook minusSymbol (-_ : NzNat ~> Int))] .
   op lcm : Int Int -> Nat [ditto] .
 
+  op min : NzInt NzInt -> NzInt
+	[assoc comm
+	 special (id-hook ACU_NumberOpSymbol (min)
+		  op-hook succSymbol (s_ : Nat ~> NzNat)
+		  op-hook minusSymbol (-_ : NzNat ~> Int))] .
+  op min : Int Int -> Int [ditto] .
+
+  op max : NzInt NzInt -> NzInt
+	[assoc comm
+	 special (id-hook ACU_NumberOpSymbol (max)
+		  op-hook succSymbol (s_ : Nat ~> NzNat)
+		  op-hook minusSymbol (-_ : NzNat ~> Int))] .
+  op max : Int Int -> Int [ditto] .
+  op max : NzNat Int -> NzNat [ditto] .
+  op max : Nat Int -> Nat [ditto] .
+
   op ~_ : Int -> Int
 	[special (id-hook NumberOpSymbol (~)
 		  op-hook succSymbol (s_ : Nat ~> NzNat)
@@ -373,8 +401,9 @@ endfm
 
 fmod RAT is
   protecting INT .
-  sorts NzRat Rat .
+  sorts PosRat NzRat Rat .
   subsorts NzInt < NzRat Int < Rat .
+  subsorts NzNat < PosRat < NzRat .
 
   op _/_ : NzInt NzNat -> NzRat
 	[ctor prec 31 gather (E e)
@@ -389,6 +418,8 @@ fmod RAT is
   var Q : NzRat .
   var R : Rat .
 
+  op _/_ : NzNat NzNat -> PosRat [ctor ditto] .
+  op _/_ : PosRat PosRat -> PosRat [ditto] .
   op _/_ : NzRat NzRat -> NzRat [ditto] .
   op _/_ : Rat NzRat -> Rat [ditto] .
   eq 0 / Q = 0 .
@@ -401,6 +432,8 @@ fmod RAT is
   op -_ : Rat -> Rat [ditto] .
   eq - (I / N) = - I / N .
 
+  op _+_ : PosRat PosRat -> PosRat [ditto] .
+  op _+_ : PosRat Nat -> PosRat [ditto] .
   op _+_ : Rat Rat -> Rat [ditto] .
   eq I / N + J / M = (I * M + J * N) / (N * M) .
   eq I / N + K = (I + K * N) / N .
@@ -410,12 +443,14 @@ fmod RAT is
   eq I / N - K = (I - K * N) / N .
   eq K - J / M = (K * M - J ) / M .
 
+  op _*_ : PosRat PosRat -> PosRat [ditto] .
   op _*_ : NzRat NzRat -> NzRat [ditto] .
   op _*_ : Rat Rat -> Rat [ditto] .
   eq Q * 0 = 0 .
   eq (I / N) * (J / M) = (I * J) / (N * M).
   eq (I / N) * K = (I * K) / N .
 
+  op _quo_ : PosRat PosRat -> Nat [ditto] .
   op _quo_ : Rat NzRat -> Int [ditto] .
   eq (I / N) quo Q = I quo (N * Q) .
   eq K quo (J / M) = (K * M) quo J .
@@ -425,21 +460,32 @@ fmod RAT is
   eq K rem (J / M) = ((K * M) rem J) / M .
   eq (I / N) rem J = (I rem (J * N)) / N .
 
-  op _^_ : Rat Nat -> Rat [ditto] .
+  op _^_ : PosRat Nat -> PosRat [ditto] .
   op _^_ : NzRat Nat -> NzRat [ditto] .
+  op _^_ : Rat Nat -> Rat [ditto] .
   eq (I / N) ^ Z = (I ^ Z) / (N ^ Z) .
 
-  op abs : NzRat -> NzRat [ditto] .
+  op abs : NzRat -> PosRat [ditto] .
   op abs : Rat -> Rat [ditto] .
   eq abs(I / N) = abs(I) / N .
 
-  op gcd : NzRat Rat -> NzRat [ditto] .
+  op gcd : NzRat Rat -> PosRat [ditto] .
   op gcd : Rat Rat -> Rat [ditto] .
   eq gcd(I / N, R) = gcd(I, N * R) / N .
 
-  op lcm : NzRat NzRat -> NzRat [ditto] .
+  op lcm : NzRat NzRat -> PosRat [ditto] .
   op lcm : Rat Rat -> Rat [ditto] .
   eq lcm(I / N, R) = lcm(I, N * R) / N .
+
+  op min : PosRat PosRat -> PosRat [ditto] .
+  op min : NzRat NzRat -> NzRat [ditto] .
+  op min : Rat Rat -> Rat [ditto] .
+  eq min(I / N, R) = min(I, N * R) / N .
+
+  op max : PosRat Rat -> PosRat [ditto] .
+  op max : NzRat NzRat -> NzRat [ditto] .
+  op max : Rat Rat -> Rat [ditto] .
+  eq max(I / N, R) = max(I, N * R) / N .
 
   op _<_ : Rat Rat -> Bool [ditto] .
   eq (I / N) < (J / M) = (I * M) < (J * N) .
@@ -465,6 +511,7 @@ fmod RAT is
   eq (I / N) divides K = I divides N * K .
   eq Q divides (J / M) = Q * M divides J .
 
+  op trunc : PosRat -> Nat .
   op trunc : Rat -> Int .
   eq trunc(K) = K .
   eq trunc(I / N) = I quo N .
@@ -473,7 +520,9 @@ fmod RAT is
   eq frac(K) = 0 .
   eq frac(I / N) = (I rem N) / N .
 
+  op floor : PosRat -> Nat .
   op floor : Rat -> Int .
+  op ceiling : PosRat -> NzNat .
   op ceiling : Rat -> Int .
   eq floor(K) = K .
   eq ceiling(K) = K .
@@ -624,7 +673,7 @@ fmod STRING is
   subsort Nat < FindResult .
   op <Strings> : -> Char [special (id-hook StringSymbol)] .
   op <Strings> : -> String [ditto] .
-  op notFound : -> FindResult .
+  op notFound : -> FindResult [ctor] .
 
   op ascii : Char -> Nat
 	[special (id-hook StringOpSymbol (ascii)
@@ -756,7 +805,7 @@ endfm
 
 mod COUNTER is
   protecting NAT .
-  op counter : -> Nat
+  op counter : -> [Nat]
 	[special (id-hook CounterSymbol
 		  op-hook succSymbol (s_ : Nat ~> NzNat))] .
 endm
@@ -801,7 +850,7 @@ fmod META-TERM is
   op <Qids> : -> Constant [special (id-hook QuotedIdentifierSymbol (constantQid))] .
   op <Qids> : -> Variable [special (id-hook QuotedIdentifierSymbol (variableQid))] .
   op _,_ : GroundTermList GroundTermList -> GroundTermList [ctor assoc gather (e E) prec 120] .
-  op _,_ : TermList TermList -> TermList [ctor assoc gather (e E) prec 120] .
+  op _,_ : TermList TermList -> TermList [ctor ditto] .
   op _[_] : Qid GroundTermList -> GroundTerm [ctor] .
   op _[_] : Qid TermList -> Term [ctor] .
 
@@ -841,14 +890,46 @@ fmod META-TERM is
   subsorts TermList CTermList < GTermList .
 
   op [] : -> Context [ctor] .
-  op _,_ : TermList CTermList -> CTermList [ctor assoc gather (e E) prec 120] .
-  op _,_ : CTermList TermList -> CTermList [ctor assoc gather (e E) prec 120] .
+  op _,_ : TermList CTermList -> CTermList [ctor ditto] .
+  op _,_ : CTermList TermList -> CTermList [ctor ditto] .
   op _[_] : Qid CTermList -> Context [ctor] .
 endfm
 
 fmod META-MODULE is
   protecting META-TERM .
   protecting QID-LIST .
+
+*** subsort declarations
+  sorts SubsortDecl SubsortDeclSet .
+  subsort SubsortDecl < SubsortDeclSet .
+  op subsort_<_. : Sort Sort -> SubsortDecl [ctor] .
+  op none : -> SubsortDeclSet [ctor] .
+  op __ : SubsortDeclSet SubsortDeclSet -> SubsortDeclSet
+    [ctor assoc comm id: none format (d ni d)] .
+  eq S:SubsortDecl S:SubsortDecl = S:SubsortDecl .
+
+*** sort, kind and type sets
+  sorts EmptyTypeSet SortSet KindSet TypeSet .
+  subsort Sort EmptyTypeSet < SortSet .
+  subsort Kind EmptyTypeSet < KindSet .
+  subsort Type SortSet KindSet < TypeSet .
+  op none : -> EmptyTypeSet [ctor] .
+  op _;_ : TypeSet TypeSet -> TypeSet [ctor assoc comm id: none prec 43] .
+  op _;_ : SortSet SortSet -> SortSet [ctor ditto] .
+  op _;_ : KindSet KindSet -> KindSet [ctor ditto] .
+  op _;_ : EmptyTypeSet EmptyTypeSet -> EmptyTypeSet [ctor ditto] .
+
+*** type lists
+  sort TypeList .
+  subsort Type < TypeList < QidList .
+  op nil : -> TypeList [ctor] .
+  op __ : TypeList TypeList -> TypeList [ditto] .
+  eq T:TypeList ; T:TypeList = T:TypeList .
+
+*** sets of type lists
+  sort TypeListSet .
+  subsort TypeList TypeSet < TypeListSet .
+  op _;_ : TypeListSet TypeListSet -> TypeListSet [ctor ditto] .
 
 *** attribute sets
   sorts Attr AttrSet .
@@ -886,28 +967,6 @@ fmod META-MODULE is
   op nil : -> ImportList [ctor] .
   op __ : ImportList ImportList -> ImportList
     [ctor assoc id: nil format (d ni d)] .
-
-*** sort sets
-  sort SortSet .
-  subsort Sort < SortSet .
-  op none : -> SortSet [ctor] .
-  op _;_ : SortSet SortSet -> SortSet [ctor assoc comm id: none] .
-  eq S:Sort ; S:Sort = S:Sort .
-
-*** subsort declarations
-  sorts SubsortDecl SubsortDeclSet .
-  subsort SubsortDecl < SubsortDeclSet .
-  op subsort_<_. : Sort Sort -> SubsortDecl [ctor] .
-  op none : -> SubsortDeclSet [ctor] .
-  op __ : SubsortDeclSet SubsortDeclSet -> SubsortDeclSet
-    [ctor assoc comm id: none format (d ni d)] .
-  eq S:SubsortDecl S:SubsortDecl = S:SubsortDecl .
-
-*** type lists
-  sort TypeList .
-  subsort Type < TypeList < QidList .
-  op nil : -> TypeList [ctor] .
-  op __ : TypeList TypeList -> TypeList [ditto] .
 
 *** Nat lists
   sort NatList .
@@ -1041,34 +1100,50 @@ fmod META-MODULE is
   op getName : Module -> Qid .
   eq getName(fmod Q is IL sorts SS . SSDS OPDS MAS EQS endfm) = Q .
   eq getName(mod Q is IL sorts SS . SSDS OPDS MAS EQS RLS endm) = Q .
+  eq getName(fth Q is IL sorts SS . SSDS OPDS MAS EQS endfth) = Q .
+  eq getName(th Q is IL sorts SS . SSDS OPDS MAS EQS RLS endth) = Q .
 
   op getImports : Module -> ImportList .
   eq getImports(fmod Q is IL sorts SS . SSDS OPDS MAS EQS endfm) = IL .
   eq getImports(mod Q is IL sorts SS . SSDS OPDS MAS EQS RLS endm) = IL .
+  eq getImports(fth Q is IL sorts SS . SSDS OPDS MAS EQS endfth) = IL .
+  eq getImports(th Q is IL sorts SS . SSDS OPDS MAS EQS RLS endth) = IL .
 
   op getSorts : Module -> SortSet .
   eq getSorts(fmod Q is IL sorts SS . SSDS OPDS MAS EQS endfm) = SS .
   eq getSorts(mod Q is IL sorts SS . SSDS OPDS MAS EQS RLS endm) = SS .
+  eq getSorts(fth Q is IL sorts SS . SSDS OPDS MAS EQS endfth) = SS .
+  eq getSorts(th Q is IL sorts SS . SSDS OPDS MAS EQS RLS endth) = SS .
 
   op getSubsorts : Module -> SubsortDeclSet .
   eq getSubsorts(fmod Q is IL sorts SS . SSDS OPDS MAS EQS endfm) = SSDS .
   eq getSubsorts(mod Q is IL sorts SS . SSDS OPDS MAS EQS RLS endm) = SSDS .
+  eq getSubsorts(fth Q is IL sorts SS . SSDS OPDS MAS EQS endfth) = SSDS .
+  eq getSubsorts(th Q is IL sorts SS . SSDS OPDS MAS EQS RLS endth) = SSDS .
 
   op getOps : Module -> OpDeclSet .
   eq getOps(fmod Q is IL sorts SS . SSDS OPDS MAS EQS endfm) = OPDS .
   eq getOps(mod Q is IL sorts SS . SSDS OPDS MAS EQS RLS endm) = OPDS .
+  eq getOps(fth Q is IL sorts SS . SSDS OPDS MAS EQS endfth) = OPDS .
+  eq getOps(th Q is IL sorts SS . SSDS OPDS MAS EQS RLS endth) = OPDS .
 
   op getMbs : Module -> MembAxSet .
   eq getMbs(fmod Q is IL sorts SS . SSDS OPDS MAS EQS endfm) = MAS .
   eq getMbs(mod Q is IL sorts SS . SSDS OPDS MAS EQS RLS endm) = MAS .
+  eq getMbs(fth Q is IL sorts SS . SSDS OPDS MAS EQS endfth) = MAS .
+  eq getMbs(th Q is IL sorts SS . SSDS OPDS MAS EQS RLS endth) = MAS .
 
   op getEqs : Module -> EquationSet .
   eq getEqs(fmod Q is IL sorts SS . SSDS OPDS MAS EQS endfm) = EQS .
   eq getEqs(mod Q is IL sorts SS . SSDS OPDS MAS EQS RLS endm) = EQS .
+  eq getEqs(fth Q is IL sorts SS . SSDS OPDS MAS EQS endfth) = EQS .
+  eq getEqs(th Q is IL sorts SS . SSDS OPDS MAS EQS RLS endth) = EQS .
 
   op getRls : Module -> RuleSet .
   eq getRls(fmod Q is IL sorts SS . SSDS OPDS MAS EQS endfm) = none .
   eq getRls(mod Q is IL sorts SS . SSDS OPDS MAS EQS RLS endm) = RLS .
+  eq getRls(fth Q is IL sorts SS . SSDS OPDS MAS EQS endfth) = none .
+  eq getRls(th Q is IL sorts SS . SSDS OPDS MAS EQS RLS endth) = RLS .
 endfm
 
 fmod META-LEVEL is
@@ -1077,14 +1152,7 @@ fmod META-LEVEL is
 *** bounds
   sort Bound .
   subsort Nat < Bound .
-  op unbounded : -> Bound .
-
-*** kind sets
-  sort KindSet .
-  subsort Kind < KindSet .
-  op empty : -> KindSet [ctor] .
-  op _&_ : KindSet KindSet -> KindSet [ctor assoc comm id: empty] .
-  eq K:Kind & K:Kind = K:Kind .
+  op unbounded : -> Bound [ctor] .
 
 *** argument values
   sort Type? .
@@ -1092,19 +1160,24 @@ fmod META-LEVEL is
   op anyType : -> Type? [ctor] .
 
 *** success results
-  sorts ResultPair ResultTriple Result4Tuple MatchPair .
+  sorts ResultPair ResultTriple Result4Tuple MatchPair TraceStep Trace .
+  subsort TraceStep < Trace .
   op {_,_} : Term Type -> ResultPair [ctor] .
   op {_,_,_} : Term Type Substitution -> ResultTriple [ctor] .
   op {_,_,_,_} : Term Type Substitution Context -> Result4Tuple [ctor] .
   op {_,_} : Substitution Context -> MatchPair [ctor] .
+  op {_,_,_} : Term Type Rule -> TraceStep [ctor] .
+  op nil : -> Trace [ctor] .
+  op __ : Trace Trace -> Trace [ctor assoc id: nil format (d n d)] .
 
 *** failure results
-  sorts ResultPair? ResultTriple? Result4Tuple? MatchPair? Substitution? .
+  sorts ResultPair? ResultTriple? Result4Tuple? MatchPair? Substitution? Trace? .
   subsort ResultPair < ResultPair? .
   subsort ResultTriple < ResultTriple? .
   subsort Result4Tuple < Result4Tuple? .
   subsort MatchPair < MatchPair? .
   subsort Substitution < Substitution? .
+  subsort Trace < Trace? .
   op noParse : Nat -> ResultPair? [ctor] .
   op ambiguity : ResultPair ResultPair -> ResultPair? [ctor] .
 
@@ -1112,6 +1185,7 @@ fmod META-LEVEL is
   op failure : -> Result4Tuple? [ctor] .
   op noMatch : -> Substitution? [ctor] .
   op noMatch : -> MatchPair? [ctor] .
+  op failure : -> Trace? [ctor] .
 
 *** projection functions
   op getTerm : ResultPair -> Term .
@@ -1270,9 +1344,6 @@ fmod META-LEVEL is
 			Qid ImportList SortSet SubsortDeclSet OpDeclSet 
 			MembAxSet EquationSet RuleSet ~> Module)
 
-	op-hook kindSetSymbol		(_&_ : KindSet KindSet ~> KindSet)
-	op-hook emptyKindSetSymbol	(empty : ~> KindSet)
-
 	op-hook anyTypeSymbol		(anyType : ~> Type?)
 
 	op-hook resultPairSymbol	({_,_} : Term Type ~> ResultPair)
@@ -1282,12 +1353,17 @@ fmod META-LEVEL is
 		({_,_,_,_} : Term Type Substitution Context ~> Result4Tuple)
 	op-hook matchPairSymbol		({_,_} : Substitution Context ~> MatchPair)
 
+	op-hook traceStepSymbol		({_,_,_} : Term Type Rule ~> TraceStep)
+	op-hook nilTraceSymbol		(nil : ~> Trace)
+	op-hook traceSymbol		(__ : Trace Trace ~> Trace)
+
 	op-hook noParseSymbol		(noParse : Nat ~> ResultPair?)
 	op-hook ambiguitySymbol		(ambiguity : ResultPair ResultPair ~> ResultPair?)
 	op-hook failure3Symbol		(failure : ~> ResultTriple?)
 	op-hook failure4Symbol		(failure : ~> Result4Tuple?)
 	op-hook noMatchSubstSymbol	(noMatch : ~> Substitution?)
 	op-hook noMatchPairSymbol	(noMatch : ~> MatchPair?)
+ 	op-hook failureTraceSymbol	(failure : ~> Trace?)
 
 	term-hook trueTerm		(true)
 	term-hook falseTerm		(false))] .
@@ -1327,6 +1403,11 @@ fmod META-LEVEL is
 	   id-hook MetaLevelOpSymbol	(metaSearch)
 	   op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .
 
+  op metaSearchPath : Module Term Term Condition Qid Bound Nat ~> Trace?
+	[special (
+	   id-hook MetaLevelOpSymbol	(metaSearchPath)
+	   op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .
+
   op sortLeq : Module Sort Sort ~> Bool
 	[special (
 	   id-hook MetaLevelOpSymbol	(metaSortLeq)
@@ -1342,7 +1423,7 @@ fmod META-LEVEL is
 	   id-hook MetaLevelOpSymbol	(metaLesserSorts)
 	   op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .
 
-  op glbSorts : Module Sort Sort ~> SortSet
+  op glbSorts : Module Type Type ~> TypeSet
 	[special (
 	   id-hook MetaLevelOpSymbol	(metaGlbSorts)
 	   op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .
@@ -1400,6 +1481,11 @@ fmod META-LEVEL is
   op minimalSorts : Module Kind ~> SortSet
 	[special (
 	   id-hook MetaLevelOpSymbol	(metaMinimalSorts)
+	   op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .
+
+  op maximalAritySet : Module Qid TypeList Sort ~> TypeListSet
+	[special (
+	   id-hook MetaLevelOpSymbol	(metaMaximalAritySet)
 	   op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .
 
   op upModule : Qid Bool ~> Module
@@ -1472,11 +1558,18 @@ mod CONFIGURATION is
   op none : -> AttributeSet .
   op _,_ : AttributeSet AttributeSet -> AttributeSet [ctor assoc comm id: none] .
 
-  sorts Oid Cid Object Msg Configuration .
+  sorts Oid Cid Object Msg Configuration Portal .
   subsort Object Msg < Configuration .
   op <_:_|_> : Oid Cid AttributeSet -> Object [ctor object] .
-  op none : -> Configuration .
+  op none : -> Configuration [ctor] .
   op __ : Configuration Configuration -> Configuration [ctor config assoc comm id: none] .
+***(
+  op {_} : Configuration -> Portal
+        [ctor special (
+           id-hook PortalSymbol
+           op-hook configurationSymbol		(__ : Configuration Configuration ~> Configuration)
+           op-hook emptyConfigurationSymbol	(none : ~> Configuration))].
+)
 endm
 
 set omod include CONFIGURATION on .

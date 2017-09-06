@@ -106,6 +106,7 @@
 #include "CUI_NumberOpSymbol.hh"
 #include "divisionSymbol.hh"
 #include "randomOpSymbol.hh"
+#include "matrixOpSymbol.hh"
 #include "counterSymbol.hh"
 
 //	higher class definitions
@@ -119,6 +120,7 @@
 
 //	object system class definitions
 #include "configSymbol.hh"
+#include "socketManagerSymbol.hh"
 
 //	front end class definitions
 #include "mixfixParser.hh"

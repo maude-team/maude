@@ -179,11 +179,6 @@
      //	META-LEVEL stuff:
      //
      //
-     //	Kind set constructors.
-     //
-     MACRO(emptyKindSetSymbol, Symbol, 0, 0)
-     MACRO(kindSetSymbol, Symbol, SymbolType::ASSOC | SymbolType::COMM, 2)
-     //
      //	Argument values.
      //  
      MACRO(anyTypeSymbol, Symbol, 0, 0)
@@ -194,6 +189,9 @@
      MACRO(resultTripleSymbol, FreeSymbol, 0, 3)
      MACRO(result4TupleSymbol, FreeSymbol, 0, 4)
      MACRO(matchPairSymbol, FreeSymbol, 0, 2)
+     MACRO(traceStepSymbol, FreeSymbol, 0, 3)
+     MACRO(nilTraceSymbol, Symbol, 0, 0)
+     MACRO(traceSymbol, Symbol, SymbolType::ASSOC, 2)
      //
      //	Failure constructors.
      //
@@ -203,3 +201,4 @@
      MACRO(failure4Symbol, Symbol, 0, 0)
      MACRO(noMatchSubstSymbol, Symbol, 0, 0)
      MACRO(noMatchPairSymbol, Symbol, 0, 0)
+     MACRO(failureTraceSymbol, Symbol, 0, 0)

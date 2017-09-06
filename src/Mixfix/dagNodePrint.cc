@@ -249,6 +249,14 @@ MixfixModule::prettyPrint(ostream& s,
   if (UserLevelRewritingContext::interrupted())
     return;
 
+#ifndef NO_ASSERT
+  if (dagNode == 0)
+    {
+      s << "!!! NULL POINTER !!!";
+      return;
+    }
+#endif
+
   const char* color = computeColor(coloringInfo, dagNode);
   Symbol* symbol = dagNode->symbol();
   SymbolInfo& si = symbolInfo[symbol->getIndexWithinModule()];

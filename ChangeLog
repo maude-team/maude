@@ -1,3 +1,36 @@
+2004-12-03  Steven Eker  <eker@goo.csl.sri.com>
+
+	* tests/Meta/metaSort.maude: added maximalAritySet() test; added
+	test for glbSorts() on a kind
+	
+
+2004-12-01  Steven Eker  <eker@goo.csl.sri.com>
+
+	* tests/Meta/metaSearch.maude: added tests for metaSearchPath()
+
+	* tests/BuiltIn/Makefile.am: added counters
+
+	* tests/BuiltIn/counters: created
+
+	* tests/BuiltIn/counters.expected: created
+
+	* tests/BuiltIn/counters.maude: created
+
+2004-11-30  Steven Eker  <eker@goo.csl.sri.com>
+
+	* configure.ac: CCFLAGS -> CFLAGS
+	replaced ETR_SOCKET_NSL with AC_CHECK_LIB() calls for nsl and
+	socket libraries
+
+2004-11-29  Steven Eker  <eker@goo.csl.sri.com>
+
+	* configure.ac: changed -mcpu=v8 to -march=v8 since -mcpu= is
+	deprecated in gcc versions >= 3.1; added ETR_SOCKET_NSL
+
+2004-10-05  Steven Eker  <eker@goo.csl.sri.com>
+
+	* configure.ac: added --enable-mos option to support legacy apps
+
 2003-09-02  Steven Eker  <eker@goo.csl.sri.com>
 
 	* configure.ac: deleted  AC_DEFINE([SPEED_HACKS])

@@ -109,6 +109,8 @@ ACU_NumberOpSymbol::getDataAttachments(const Vector<Sort*>& opDeclaration,
     CODE_CASE(d, 'x', 'o', "xor")
     CODE_CASE(d, 'g', 'c', "gcd")
     CODE_CASE(d, 'l', 'c', "lcm")
+    CODE_CASE(d, 'm', 'i', "min")
+    CODE_CASE(d, 'm', 'a', "max")
     default:
       CantHappen("bad number op");
     }
@@ -220,6 +222,18 @@ ACU_NumberOpSymbol::eqRewrite2(DagNode* subject, RewritingContext& context)
 		case CODE('l', 'c'):
 		  {
 		    mpz_lcm(accumulator.get_mpz_t(), accumulator.get_mpz_t(), n.get_mpz_t());
+		    break;
+		  }
+		case CODE('m', 'i'):
+		  {
+		    if (n < accumulator)
+		      accumulator = n;
+		    break;
+		  }
+		case CODE('m', 'a'):
+		  {
+		    if (n > accumulator)
+		      accumulator = n;
 		    break;
 		  }
 		}

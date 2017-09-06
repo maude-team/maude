@@ -10,6 +10,8 @@ libutility_a_SOURCES = \
 	digraph.cc \
 	unionFind.cc \
 	diophantineSystem.cc \
+	diophantineSystem2.cc \
+	diophantineSystem3.cc \
 	natSet.cc \
 	pointerMap.cc \
 	sequencePartition.cc \
@@ -30,6 +32,8 @@ noinst_HEADERS = \
 	decBuf.hh \
 	digraph.hh \
 	diophantineSystem.hh \
+	diophantineSystem2.hh \
+	diophantineSystem3.hh \
 	flagSet.hh \
 	graph.hh \
 	indent.hh \
@@ -50,3 +54,6 @@ noinst_HEADERS = \
 	timeStuff.hh \
 	mathStuff.hh \
 	ropeStuff.hh
+
+EXTRA_DIST = \
+	diophantineSolve.cc
