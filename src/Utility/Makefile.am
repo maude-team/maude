@@ -75,4 +75,5 @@ EXTRA_DIST = \
 	mpzGcdTrivial.cc \
 	mpzGcdBasedSolver.cc \
 	wordLevel-simplifyAssignments.cc \
-	wordLevel-simplifyEquations.cc
+	wordLevel-simplifyEquations.cc \
+	pigPug-cycleDetection.cc

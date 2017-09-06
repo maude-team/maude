@@ -2,7 +2,7 @@
 
     This file is part of the Maude 2 interpreter.
 
-    Copyright 1997-2014 SRI International, Menlo Park, CA 94025, USA.
+    Copyright 1997-2016 SRI International, Menlo Park, CA 94025, USA.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -27,14 +27,18 @@
 #include "vector.hh"
 #include "pigPug.hh"
 
+#include "pigPug-cycleDetection.cc"
+
 PigPug::PigPug(const Word& lhs,
 	       const Word& rhs,
 	       const ConstraintMap& constraintMap,
 	       int lastOriginalVariable,
-	       int freshVariableStart)
+	       int freshVariableStart,
+	       bool strictLeftLinear)
   : constraintMap(constraintMap),
     lastOriginalVariable(lastOriginalVariable),
-    freshVariableStart(freshVariableStart)
+    freshVariableStart(freshVariableStart),
+    strictLeftLinear(strictLeftLinear)
 {
   lhsStack.push_back(Unificand());
   lhsStack.back().index = 0;
@@ -42,33 +46,72 @@ PigPug::PigPug(const Word& lhs,
   rhsStack.push_back(Unificand());
   rhsStack.back().index = 0;
   rhsStack.back().word = rhs;  // deep copy
-  /*
-  cout << "Pig Pug created" << endl;
-  dumpWord(cout, lhs);
-  cout << " =? ";
-  dumpWord(cout, rhs);
-  cout << endl;
-  */
+
+  incompletenessFlag = 0;
+  depthBound = NONE;
+  cycleDetection = false;
+  if (!strictLeftLinear)
+    {
+      //
+      //	If we are not strictly left linear then we need either cycle detection
+      //	or depth bounded to ensure termination.
+      //	Both of these measures introduce the possibility of incompleteness.
+      //
+      if (variableOccurrencesBoundedBy2(lhs, rhs, lastOriginalVariable))
+	{
+	  cycleDetection = true;
+	  Verbose("Associative unfication using cycle detection.");
+	}
+      else
+	{
+	  depthBound =  lhs.size() + rhs.size();
+	  Verbose("Associative unfication using depth bound of " << depthBound << ".");
+	}
+    }
 }
 
-void
-PigPug::dumpWord(ostream& s, const Word& word)
+bool
+PigPug::variableOccurrencesBoundedBy2(const Word& lhs, const Word& rhs, int maxVarNumber)
 {
-  FOR_EACH_CONST(i, Word, word)
-    s << "x" << *i << " ";
+  //
+  //	We are only concerned with unconstrained variables.
+  //
+  Vector<int> varCount(maxVarNumber + 1);
+  for (int i = 0; i <= maxVarNumber; ++i)
+    varCount[i] = 0;
+  {
+    FOR_EACH_CONST(i, Word, lhs)
+      {
+	int var = *i;
+	if (++(varCount[var]) > 2 && constraintMap[var] == NONE)
+	  return false;
+      }
+  }
+  {
+    FOR_EACH_CONST(i, Word, rhs)
+      {
+	int var = *i;
+	if (++(varCount[var]) > 2 && constraintMap[var] == NONE)
+	  return false;
+      }
+  }
+  return true;
 }
 
-int
+PigPug::ResultPair
 PigPug::getNextUnifier(Subst& unifier)
 {
   //
   //	Returns NONE or index of next unused variable.
   //
-  int result = run(path.empty() ? OK : FAIL);
+  int result = cycleDetection ?
+    runWithCycleDetection(path.empty() ? OK : FAIL) :
+    run(path.empty() ? OK : FAIL);
   if (result == FAIL)
-    return NONE;  // no more solutions
+    return ResultPair(FAILURE | incompletenessFlag, NONE);
 
-  return extractUnifier(unifier);
+  int nextFreshVariable = extractUnifier(unifier);
+  return ResultPair(SUCCESS | incompletenessFlag, nextFreshVariable);
 }
 
 PigPug::Result
@@ -153,11 +196,21 @@ PigPug::equate()
       //
       //	lhsVar |-> rhsVar
       //
-      //	lhsVar is unconstrained so must be linear and disappears,
+      //	lhsVar is unconstrained so in the linear case it disappears,
       //	taking rhsVar with it.
       //
       ++(lhs.index);
       ++(rhs.index);
+      if (!strictLeftLinear)
+	{
+	  //
+	  //	General case: lhsVar might appear anywhere in remaining equation.
+	  //
+	  if (checkUnificand(lhsStack, lhsVar, rhsVar))
+	    move |= PUSH_LHS;
+	  if (checkUnificand(rhsStack, lhsVar, rhsVar))
+	    move |= PUSH_RHS;
+	}
     }
   else if ((lhsConstraint == ELEMENT && rhsConstraint != NONE) ||
 	   lhsConstraint == rhsConstraint)
@@ -194,9 +247,9 @@ PigPug::equate()
       if (checkUnificand(rhsStack, rhsVar, lhsVar))
 	move |= PUSH_RHS;
       //
-      //	If rhsVar is constrained, it might appear in lhs.
+      //	If rhsVar is constrained or we are in general case, it might appear in lhs.
       //
-      if (rhsConstraint != NONE)
+      if (rhsConstraint != NONE || !strictLeftLinear)
 	{
 	  if (checkUnificand(lhsStack, rhsVar, lhsVar))
 	    move |= PUSH_LHS;
@@ -219,18 +272,17 @@ PigPug::equate()
 }
 
 bool
-PigPug::checkUnificand2(UnificandStack& unificandStack, int oldVar, int newVar)
+PigPug::checkUnificand2(UnificandStack& unificandStack, int oldVar, int newVar, int offset)
 {
   //
-  //	Check unificand for occurrences of oldVar _after_ current position, and
+  //	Check unificand for occurrences of oldVar from current position + offset, and
   //	if necessary push a modified unificand (oldVar |-> newVar oldVar) on the stack.
   //	Returns true if a modified unificand is pushed, false if the unificand is unmodified.
   //
   Unificand& unificand = unificandStack.back();
   int index = unificand.index;
   int unificandLength = unificand.word.size();
-  Assert(unificand.word[index] == oldVar, "didn't see oldVar at index " << index);
-  for (int i = index + 1; i < unificandLength; ++i)
+  for (int i = index + offset; i < unificandLength; ++i)
     {
       if (unificand.word[i] == oldVar)
 	{
@@ -267,7 +319,6 @@ PigPug::lhsPeel()
   //	Since y may be nonlinear we need to check rhs for more occurences of y and push
   //	a modified rhs if so. Either way we consume one lhs variable.
   //
-
   Unificand& rhs = rhsStack.back();
   int rhsVar = rhs.word[rhs.index];
   if (constraintMap[rhsVar] != NONE)
@@ -276,12 +327,76 @@ PigPug::lhsPeel()
   int move = INC_LHS;
   Unificand& lhs = lhsStack.back();
   int lhsVar = lhs.word[lhs.index];
-  if (checkUnificand2(rhsStack, rhsVar, lhsVar))
+  if (checkUnificand2(rhsStack, rhsVar, lhsVar, 1))
     move |= PUSH_RHS;
 
   path.append(move);  // move will be either INC_LHS or INC_LHS | STACK_RHS
   int newLhsIndex = ++(lhs.index);
   return (newLhsIndex + 1 == lhs.word.length()) ? LHS_DONE : OK;
+}
+
+PigPug::Result
+PigPug::lhsPeelGeneralCase()
+{
+  //
+  //	Given
+  //	  x... =? y...
+  //	if y is unconstrained we make the step y |-> xy and then cancel leading x instances.
+  //	This is the general case where y may have arbitrary occurences in both lhs and rhs,
+  //	so we may need to push modified lhs/rhs. Either way we consume one lhs variable.
+  //
+  Unificand& rhs = rhsStack.back();
+  int rhsVar = rhs.word[rhs.index];
+  if (constraintMap[rhsVar] != NONE)
+    return FAIL;  // rhs variable is constrained
+
+  int move = INC_LHS;
+  Unificand& lhs = lhsStack.back();
+  int lhsVar = lhs.word[lhs.index];
+  ++(lhs.index);  // consume lhs variable
+  if (checkUnificand2(lhsStack, rhsVar, lhsVar, 0))  // look for occurances of rhs variable from new index
+    move |= PUSH_LHS;
+  if (checkUnificand2(rhsStack, rhsVar, lhsVar, 1))  // look for occurances of rhs variable from index + 1
+    move |= PUSH_RHS;
+
+  path.append(move);  // move INC_LHS with any of PUSH_LHS, PUSH_RHS
+  //
+  //	Did we get lhs down to one variable?
+  //
+  Unificand& newLhs = lhsStack.back();
+  return (newLhs.index + 1 == newLhs.word.length()) ? LHS_DONE : OK;
+}
+
+PigPug::Result
+PigPug::rhsPeelGeneralCase()
+{
+  //
+  //	Given
+  //	  x... =? y...
+  //	if x is unconstrained we make the step x |-> yx and then cancel leading y instances.
+  //	This is the general case where x may have arbitrary occurences in both lhs and rhs,
+  //	so we may need to push modified lhs/rhs. Either way we consume one rhs variable.
+  //
+  Unificand& lhs = lhsStack.back();
+  int lhsVar = lhs.word[lhs.index];
+  if (constraintMap[lhsVar] != NONE)
+    return FAIL;  // lhs variable is constrained
+
+  int move = INC_RHS;
+  Unificand& rhs = rhsStack.back();
+  int rhsVar = rhs.word[rhs.index];
+  ++(rhs.index);  // consume rhs variable
+  if (checkUnificand2(rhsStack, lhsVar, rhsVar, 0))  // look for occurances of lhs variable from new index; BAD HERE
+    move |= PUSH_RHS;
+  if (checkUnificand2(lhsStack, lhsVar, rhsVar, 1))  // look for occurances of lhs variable from index + 1
+    move |= PUSH_LHS;
+
+  path.append(move);  // move INC_RHS with any of PUSH_LHS, PUSH_RHS
+  //
+  //	Did we get rhs down to one variable?
+  //
+  Unificand& newRhs = rhsStack.back();
+  return (newRhs.index + 1 == newRhs.word.length()) ? RHS_DONE : OK;
 }
 
 int
@@ -294,11 +409,15 @@ PigPug::undoMove()
   int move = path[pos];
   path.resize(pos);
   //
-  //	Possible moves:
+  //	Possible moves in left linear case:
   //	  INC_RHS
   //	  INC_LHS
   //	  INC_LHS | PUSH_RHS
   //	  INC_LHS | INC_RHS with any combination of RHS_ASSIGN, PUSH_LHS, PUSH_RHS
+  //
+  //	In the general case the following is also possible:
+  //	  INC_RHS with any combination of PUSH_LHS, PUSH_RHS
+  //	  INC_LHS with any combination of PUSH_LHS, PUSH_RHS
   //
   //	In the case that LHS (RHS) is both incremented and pushed, the incrementing
   //	happens before the push, and thus for undo the decrementing must happen after
@@ -314,7 +433,7 @@ PigPug::undoMove()
   if (move & INC_RHS)
     --(rhsStack.back().index);
 
-  return move & MOVES;
+  return move;
 }
 
 PigPug::Result
@@ -331,7 +450,7 @@ PigPug::cancel()
   ++(lhs.index);
   ++(rhs.index);
 
-  path.append(INC_RHS | INC_LHS);
+  path.append(INC_RHS | INC_LHS | CANCEL);
 
   if (lhs.index + 1 == lhs.word.length())
     return LHS_DONE;
@@ -371,6 +490,63 @@ PigPug::feasible()
   return true;
 }
 
+bool
+PigPug::canCancelUnconstrained(const Unificand& big, const Unificand& small)
+{
+  //
+  //	Check if big can cancel all unconstrained variables in small, under
+  //	commutativity. This guarantees unification failure.
+  //	Degenerate case is if small has no unconstrained variables.
+  //
+  Vector<int> counts(lastOriginalVariable + 1);
+  for (int i = 0; i <= lastOriginalVariable; ++i)
+    counts[i] = 0;
+  {
+    //
+    //	First we make a negative count of the unconstrained variables in big.
+    //
+    int length = big.word.size();
+    for (int i = big.index; i < length; ++i)
+      {
+	int var = big.word[i];
+	if (constraintMap[var] == NONE)
+	  --(counts[var]);
+      }
+  }
+  {
+    //
+    //	Now we check if there is any unconstrained variable in small that is not
+    //	cancelled by these negative counts.
+    //
+    int length = small.word.size();
+    for (int i = small.index; i < length; ++i)
+      {
+	int var = small.word[i];
+	if (constraintMap[var] == NONE)
+	  {
+	    ++(counts[var]);
+	    if (counts[var] > 0)
+	      return false;  // var is not cancelled
+	  }     
+      }
+  }
+  return true;
+}
+
+bool
+PigPug::feasibleGeneralCase()
+{
+  Unificand& lhs = lhsStack.back();
+  Unificand& rhs = rhsStack.back();
+  int lhsSize = lhs.word.size() - lhs.index;
+  int rhsSize = rhs.word.size() - rhs.index;
+  if (lhsSize > rhsSize)
+    return !canCancelUnconstrained(lhs, rhs);
+  if (lhsSize < rhsSize)
+    return !canCancelUnconstrained(rhs, lhs);
+  return true;
+}
+
 int
 PigPug::firstMove()
 {
@@ -388,15 +564,33 @@ PigPug::firstMove()
   //
   //	Now we check feasibility of remaining equation.
   //
-  if (!feasible())
+  bool ok = strictLeftLinear ? feasible() : feasibleGeneralCase();
+  if (!ok)
     return FAIL;
+  if (depthBound != NONE && path.length() >= depthBound)
+    {
+      //
+      //	We cut off the seach to ensure termination but
+      //	this means that the set of solutions we return
+      //	may be incomplete.
+      //
+      if (incompletenessFlag != INCOMPLETE)
+	{
+	  incompletenessFlag = INCOMPLETE;
+	  Verbose("Associative unfication algorithm hit depth bound.");
+	}
+      return FAIL;
+    }
   //
   //	Try all three moves until we get success.
+  //	It is critcal that equate comes last; i.e. that it has no successor moves.
+  //	This is because cancellation generates the equivalent of equate moves and
+  //	we do not want these to have successors.
   //
-  int result = rhsPeel();
+  int result = strictLeftLinear ? rhsPeel() : rhsPeelGeneralCase();
   if (result != FAIL)
     return result;
-  result = lhsPeel();
+  result = strictLeftLinear ? lhsPeel() : lhsPeelGeneralCase();
   if (result != FAIL)
     return result;
   return equate();
@@ -405,24 +599,43 @@ PigPug::firstMove()
 int
 PigPug::nextMove()
 {
-  int previousMove = undoMove();
-  if (previousMove == (INC_LHS | INC_RHS))
-    return FAIL;  // no more moves for this state
+  int previousMove = undoMove() & MOVES;
+  if (previousMove == BOTH)
+    return FAIL;  // last move was cancel or equate - no more moves for this state
   //
   //	Try the one or two remaining moves.
   //
   if (previousMove == INC_RHS)
     {
-      int result = lhsPeel();
+      //
+      //	Last move was rhs peel so we can try lhs peel.
+      //
+      int result = strictLeftLinear ? lhsPeel() : lhsPeelGeneralCase();
       if (result != FAIL)
 	return result;
     }
-  return equate();
+  return equate(); // always final thing to try
+}
+
+bool
+PigPug::occurs(int variable, const Unificand& unificand)
+{
+  int length = unificand.word.size();
+  for (int i = unificand.index; i < length; ++i)
+    {
+      if (unificand.word[i] == variable)
+	return true;
+    }
+  return false;
 }
 
 int
 PigPug::completed(int status)
 {
+  //
+  //	At least side of current equation is down to a single variable; see
+  //	if we can make a solution.
+  //
   if (status == LHS_DONE)
     {
       Unificand& lhs = lhsStack.back();
@@ -431,9 +644,16 @@ PigPug::completed(int status)
       if (lhsConstraint == NONE)
 	{
 	  //
-	  //	Last lhs variable can take anything. Since this variable must be
-	  //	linear we don't need to do an occurs check.
+	  //	Last lhs variable can take anything. If we are in general case,
+	  //	do an occurs check.
 	  //
+	  if (!strictLeftLinear)
+	    {
+	      Unificand& rhs = rhsStack.back();
+	      int remaining = rhs.word.size() - rhs.index;
+	      if (remaining > 1 && occurs(lhsVar, rhs))
+		return FAIL;
+	    }
 	  return status;
 	}
       //
@@ -463,11 +683,14 @@ PigPug::completed(int status)
   int rhsVar = rhs.word[rhs.index];
   //
   //	We fail unless the rhs variable is unconstrained since the lhs
-  //	has more that one variable left. Furthermore since unconstrained
-  //	rhs variables cannot appear in the lhs we don't have to worry
-  //	about an occurs check.
+  //	has more that one variable left. If we are in general case we
+  //	need to do an occurs check.
   //
-  return (constraintMap[rhsVar] != NONE) ? FAIL : status;
+  if (constraintMap[rhsVar] != NONE)
+    return FAIL;
+  if (!strictLeftLinear && occurs(rhsVar, lhsStack.back()))
+    return FAIL;
+  return status;
 }
 
 int
@@ -570,7 +793,6 @@ PigPug::compose(Subst& subst, int oldVar, const Word& replacement, int index)
 		  int var = word[k];
 		  if (var == oldVar)
 		    {
-		      //cout << "instantiating #" << oldVar << endl;
 		      for (int l = index; l < replacementLength; ++l)
 			newWord.append(replacement[l]);
 		    }
@@ -637,7 +859,6 @@ PigPug::extractUnifier(Subst& unifier)
       int lhsVar = lhs->word[lhsIndex];
       int rhsVar = rhs->word[rhsIndex];
       int move = *i;
-      //cout << "move = " << move << endl;
 
       switch (move & MOVES)
 	{
@@ -656,11 +877,6 @@ PigPug::extractUnifier(Subst& unifier)
 	    //	rhsVar |-> lhsVar rhsVar
 	    //
 	    compose2(unifier, rhsVar, lhsVar);
-	    if (move & PUSH_RHS)
-	      {
-		++rhs;
-		rhsIndex = 0;
-	      }
 	    ++lhsIndex;
 	    break;
 	  }
@@ -681,26 +897,23 @@ PigPug::extractUnifier(Subst& unifier)
 		if (lhsVar != rhsVar)
 		  compose(unifier, lhsVar, rhsVar);
 	      }
-	    if (move & PUSH_LHS)
-	      {
-		++lhs;
-		lhsIndex = 0;
-	      }
-	    else
-	      ++lhsIndex;
-	    if (move & PUSH_RHS)
-	      {
-		++rhs;
-		rhsIndex = 0;
-	      }
-	    else
-	      ++rhsIndex;
+	    ++lhsIndex;
+	    ++rhsIndex;
 	    break;
 	  }
 	default:
 	  CantHappen("unknown move " << move);
 	}
-      //dump(unifier);
+      if (move & PUSH_LHS)
+	{
+	  ++lhs;
+	  lhsIndex = 0;
+	}
+      if (move & PUSH_RHS)
+	{
+	  ++rhs;
+	  rhsIndex = 0;
+	}
     }
 
   //
@@ -710,7 +923,6 @@ PigPug::extractUnifier(Subst& unifier)
   int rhsVar = rhs->word[rhsIndex];
   if (lhsIndex + 1 == lhs->word.length())
     {
-      //cout << "lhs done" << endl;
       if (rhsIndex + 1 == rhs->word.length())
 	{
 	  //
@@ -743,7 +955,6 @@ PigPug::extractUnifier(Subst& unifier)
     }
   else
     {
-      //cout << "rhs done" << endl;
       Assert(rhsIndex + 1 == rhs->word.length(), "path ended with neither side reduced to a single variable");
       Assert(constraintMap[rhsVar] == NONE, "unexpected rhs constrained variable");
       compose(unifier, rhsVar, lhs->word, lhsIndex);
@@ -771,19 +982,27 @@ PigPug::extractUnifier(Subst& unifier)
 	}
     }
   renameVariables(unifier, variableRenaming);
-  //dump(unifier);
   return nextVariableName;
 }
 
+#ifdef DUMP
 void
-PigPug::dump(Subst& s)
+PigPug::dumpWord(ostream& s, const Word& word)
 {
-  int nrVariables = s.size();
+  FOR_EACH_CONST(i, Word, word)
+    s << "x" << *i << " ";
+}
+
+void
+PigPug::dump(ostream& s, Subst& subst)
+{
+  int nrVariables = subst.size();
   for (int i = 0; i < nrVariables; ++i)
     {
-      cout << "  #" << i << " |->";
-      FOR_EACH_CONST(j, PigPug::Word, s[i])
+      s << "  #" << i << " |->";
+      FOR_EACH_CONST(j, PigPug::Word, subst[i])
 	cout << " #" << *j;
-      cout << endl;
+      s << endl;
     }
 }
+#endif

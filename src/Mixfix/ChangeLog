@@ -1,3 +1,21 @@
+2016-05-17  Steven Eker  <eker@install.csl.sri.com>
+
+	* execute.cc (check): use normalize() and markEager() on term before
+	dagifying it.
+	(check): don't bother with markEager()
+
+2016-04-27  Steven Eker  <eker@install.csl.sri.com>
+
+	* userLevelRewritingContext.cc (checkForPrintAttribute): use
+	printAttrStream
+	added definition for printAttrStream
+
+	* userLevelRewritingContext.hh (ObjectSystemRewritingContext): added
+	decl for data member printAttrStream
+	(setPrintAttributeStream): added
+
+===================================Maude110===========================================
+
 2016-02-04  Steven Eker  <eker@install.csl.sri.com>
 
 	* search.cc (getVariants): use new getNextVariant() interface

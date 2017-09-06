@@ -80,8 +80,7 @@ private:
   Sort* variableIndexToSort(int index);
   void bindFreeVariables();
   bool findOrderSortedUnifiers();
-  bool extractUnifier();
-  bool explore(int index);
+  void classifyVariables();
 
   PreEquation* const preEquation;
   const int nrPreEquationVariables;
@@ -89,8 +88,8 @@ private:
   FreshVariableGenerator* const freshVariableGenerator;
   const bool odd;
 
-  int firstTargetSlot;
-  int substitutionSize;
+  int firstTargetSlot;			// start of slots for variables in target
+  int substitutionSize;			// initial substitution size (before any fresh variables are added)
   const SortBdds* sortBdds;		// sort computation BDDs for our module
 
   UnificationContext* unsortedSolution;	// for accumulating solved forms and constructing unsorted unifiers
@@ -100,12 +99,6 @@ private:
   NatSet sortConstrainedVariables;	// subset of the above whose sorts are constrained by their appearence in bindings of other variables
   AllSat* orderSortedUnifiers;		// satisfiability problem encoding sorts for order-sorted unifiers
   Substitution* sortedSolution;		// for construction order-sorted unifiers
-  //
-  //	Data for resolving dependencies in solved form.
-  //
-  Vector<int> order;			// we build an order in which to instantiate the solved forms
-  NatSet done;				// a variable is done when every variable it (indirectly) depends on is in the order
-  NatSet pending;			// variables on the current path though the dependency digraph
 };
 
 inline Substitution&

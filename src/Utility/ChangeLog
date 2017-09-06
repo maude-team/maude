@@ -1,3 +1,174 @@
+2016-05-16  Steven Eker  <eker@install.csl.sri.com>
+
+	* pigPug.cc (firstMove): only print one message per unification
+	subproblem about hitting depth bound
+
+2016-05-11  Steven Eker  <eker@install.csl.sri.com>
+
+	* wordLevel.cc (chooseEquation): prefer an equation with disjoint lhs/rhs
+	variable sets
+
+	* pigPug.cc (dump): conditional compile
+	(dumpWord): conditional compile
+	(dump): take stream argument
+
+	* pigPug.hh (P): added declarations for arrive(), depart(),
+	confirmedLive()
+	(P): added typedefs CombinedWord, WordMap, StateStack and
+	struct StateInfo
+	(P): added data members wordMap, stateInfo and traversalStack
+
+	* wordDigraph.cc: deleted
+
+	* wordDigraph.hh: deleted
+
+	* pigPug-cycleDetection.cc (arrive, depart, confirmedLive): 
+	moved here from wordDiagraph.cc
+
+	* macros.hh: Verbose now prints its output in cyan
+
+2016-05-10  Steven Eker  <eker@install.csl.sri.com>
+
+	* pigPug.cc (canCancelUnconstrained): use lastOriginalVariable + 1
+	rather than constraintMap.size()
+
+2016-05-09  Steven Eker  <eker@install.csl.sri.com>
+
+	* wordDigraph.cc: rewritten
+
+	* wordDigraph.hh: rewritten
+
+	* pigPug.cc (undoMove): don't mask off flags
+	(cancel): use cancel flag
+	(nextMove): mask flags
+
+2016-05-06  Steven Eker  <eker@install.csl.sri.com>
+
+	* pigPug.cc (variableOccurrencesBoundedBy2): fixed bug where we were zeroing
+	to vector pointer rather than vector entries
+
+	* pigPug.hh (P): added decls for firstMoveWithCycleDetection(),
+	nextMoveWithCycleDetection(), runWithCycleDetection()
+	(P): added data member wordDigraph
+
+	* pigPug-cycleDetection.cc (runWithCycleDetection): added
+	(firstMoveWithCycleDetection, nextMoveWithCycleDetection): added
+
+	* pigPug.hh (P): updated decl for makeStateKey(); deleted typedefs
+	StateKey, StateMap; deleted struct StateValue
+
+	* pigPug-cycleDetection.cc (makeStateKey): moved here; use WordDigraph::Word
+
+	* pigPug.cc (getNextUnifier): use runWithCycleDetection()
+	(variableOccurrencesBoundedBy2): don't care about constrained variables
+
+	* wordDigraph.hh: created
+
+	* wordDiagraph.cc: created
+
+2016-05-05  Steven Eker  <eker@install.csl.sri.com>
+
+	* pigPug.hh (P): added decl for variableOccurrencesBoundedBy2()
+
+	* pigPug.cc (variableOccurrencesBoundedBy2): added
+	(PigPug): use variableOccurrencesBoundedBy2()
+
+	* pigPug.hh (P): added decl for makeStateKey()
+	(P): added data member cycleDetection
+
+	* pigPug.cc (makeStateKey): added
+
+	* pigPug.hh (P): added struct StateValue, typedefs StateKey, StateMap
+
+	* pigPug.cc (run): don't do depthBound check here
+	(firstMove): do depthBound check here
+	(firstMove, nextMove): change order of branching so equate steps
+	are done first
+	(checkUnificand2): delete Assert() that is no longer true in the
+	general case
+	(firstMove, nextMove): reverted order of branching; it's currently
+	important to have equate come last since it has the same move
+	code as cancel, and cancel must not have successors
+
+2016-05-04  Steven Eker  <eker@install.csl.sri.com>
+
+	* pigPug.hh (P): updated decl for getNextUnifier()
+
+	* wordLevel.cc (findNextPartialSolution): handle ReturnPair from
+	getNextUnifier()
+
+	* pigPug.cc (PigPug): initialize incompletenessFlag
+	(getNextUnifier): return ResultPair rather than int
+	(run): set incompletenessFlag if we hit depthBound
+
+	* pigPug.hh (P): added data member incompletenessFlag; added enum
+	OutcomeFlags; added typedef ResultPair
+
+	* wordLevel.cc (chooseEquation): clean up
+
+2016-04-27  Steven Eker  <eker@install.csl.sri.com>
+
+	* wordLevel.cc (chooseEquation): return flag to say if chosen equation
+	is strict left linear
+	(findNextPartialSolution): pass strictLeftLinear flag to makePigPug()
+
+	* wordLevel.hh (W): updated decls for chooseEquation() and makePigPug()
+
+	* wordLevel.cc (makePigPug): take and pass strictLeftLinear flag
+
+	* pigPug.cc: use strictLeftLinear flag rather than using depthBound
+	as a proxy throughout code
+	(run): check depthBound
+
+	* pigPug.hh (P): made lastOriginalVariable and freshVariableStart
+	const; made depthBound non-const; added strictLeftLinear; updated
+	decl for ctor
+
+2016-04-22  Steven Eker  <eker@install.csl.sri.com>
+
+	* pigPug.cc (extractUnifier): handle the general case
+	(completed): do occur checks in general case
+	(completed): X =? X should not be an occur check fail
+
+2016-04-20  Steven Eker  <eker@install.csl.sri.com>
+
+	* pigPug.cc (firstMove, nextMove): rewritten to handle general case
+
+2016-04-15  Steven Eker  <eker@install.csl.sri.com>
+
+	* pigPug.hh (P): added decls for canCancelUnconstrained() and
+	feasibleGeneralCase()
+
+	* pigPug.cc (equate): check for and handle the general case
+	(canCancelUnconstrained, feasibleGeneralCase): added
+
+	* pigPug.hh (P): updated decl for ctor
+	(P): added data member depthBound; made lastOriginalVariable and
+	freshVariableStart const
+
+	* pigPug.cc (rhsPeelGeneralCase): added
+	(PigPug): take and initialize depthBound
+
+	* pigPug.hh (P): added decl for lhsPeelGeneralCase(); updated decl for
+	checkUnificand2()
+
+	* pigPug.cc (undoMove): updated comment to mention general case
+	(checkUnificand2): now take offset argument rather than implicitly
+	assuming an offset of 1
+	(lhsPeelGeneralCase): added
+
+2016-03-11  Steven Eker  <eker@install.csl.sri.com>
+
+	* bddUser.cc (~BddUser): free and clear cachedPairing
+	if allocated
+
+	* bddUser.hh (getCachedPairing): added
+	(setNrVariables): free and clear cachedPairing if number of
+	variables increases
+	(B): added data member cachedPairing
+
+===================================Maude110===========================================
+
 2015-12-18  Steven Eker  <eker@ape.csl.sri.com>
 
 	* rope.hh (empty): added

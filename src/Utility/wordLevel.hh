@@ -98,9 +98,9 @@ private:
   typedef Vector<Equation> EquationVec;
 
   WordLevel* makeNewLevel(const Subst& unifier, int nextFreshVariable);
-  void chooseEquation();
+  bool chooseEquation();
   void checkUnconstrainedVariables(const Word& word, NatSet& occurs, NatSet& nonlinear);
-  void makePigPug();
+  void makePigPug(bool strictLeftLinear);
   //
   //	Functions for simplifying partial solution.
   //

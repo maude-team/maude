@@ -1,3 +1,10 @@
+2016-05-05  Steven Eker  <eker@install.csl.sri.com>
+
+	* configure.ac: changed bug report address from maude-bugs@maude.cs.uiuc.edu
+	to maude-bugs@lists.cs.illinois.edu
+
+===================================Maude110===========================================
+
 2016-02-26  Steven Eker  <eker@install.csl.sri.com>
 
 	* tests/Misc/meseguerFiniteVariant.maude: created

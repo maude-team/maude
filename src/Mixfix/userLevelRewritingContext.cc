@@ -73,6 +73,7 @@
 
 bool UserLevelRewritingContext::tracePostFlag = false;
 const char UserLevelRewritingContext::header[] = "*********** ";
+ostream* UserLevelRewritingContext::printAttrStream = &cout;
 
 UserLevelRewritingContext::UserLevelRewritingContext(DagNode* root)
   : ObjectSystemRewritingContext(root),
@@ -121,10 +122,10 @@ UserLevelRewritingContext::checkForPrintAttribute(MixfixModule::ItemType itemTyp
       const PrintAttribute* pa = m->getPrintAttribute(itemType, item);
       if (pa != 0)
 	{
-	  pa->print(cout, *this);
+	  pa->print(*printAttrStream, *this);
 	  if (interpreter.getFlag(Interpreter::PRINT_ATTRIBUTE_NEWLINE))
-	    cout << '\n';
-	  cout.flush();
+	    *printAttrStream << '\n';
+	  printAttrStream->flush();
 	}
     }
 }

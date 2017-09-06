@@ -1,3 +1,75 @@
+2016-05-17  Steven Eker  <eker@install.csl.sri.com>
+
+	* equalityConditionFragment.hh (normalize): added
+
+2016-04-08  Steven Eker  <eker@install.csl.sri.com>
+
+	* unificationProblem.cc (findOrderSortedUnifiers): use
+	getCachedPairing()
+
+	* narrowingUnificationProblem.hh (SimpleRootContainer): deleted
+	data members order, done, pending; deleted decls for explore(),
+	extractUnifier()
+
+	* narrowingUnificationProblem.cc (explore, extractUnifier): deleted
+
+	* narrowingUnificationProblem.hh (SimpleRootContainer): added
+	decl for classifyVariables()
+
+	* narrowingUnificationProblem.cc (classifyVariables): added
+	(findNextUnifier): use classifyVariables()
+
+	* unificationProblem.cc (bindFreeVariables): added
+
+	* unificationProblem.hh (SimpleRootContainer): added decl for
+	bindFredVariables()
+
+	* unificationProblem.cc (findNextUnifier): code cleaning
+	(findNextUnifier): re-organization
+
+2016-04-07  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingUnificationProblem.hh (SimpleRootContainer): updated comments
+
+	* narrowingUnificationProblem.cc (NarrowingUnificationProblem): code
+	cleaning
+
+2016-04-06  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingUnificationProblem.cc (findOrderSortedUnifiers): code
+	cleaning
+
+	* unificationProblem.cc (findOrderSortedUnifiers): code
+	cleaning
+
+2016-04-01  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingUnificationProblem.cc (findOrderSortedUnifiers): deleted
+	commented out code
+
+2016-03-31  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingUnificationProblem.cc (findOrderSortedUnifiers): undo
+	last change as it introduced a bug where we were expecting
+	identities mappings on other BDD variables
+	(findOrderSortedUnifiers): use cached pairing for secondArgToReal
+	and explicitly add needed identity mappings
+
+2016-03-30  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingUnificationProblem.cc (findOrderSortedUnifiers): use
+	cached pairing for realTofirstArg
+
+2016-03-25  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingUnificationProblem.cc (findOrderSortedUnifiers):
+	use computeGeneralizedSort2()
+
+	* unificationProblem.cc (findOrderSortedUnifiers): use
+	computeGeneralizedSort2()
+
+===================================Maude110===========================================
+
 2016-02-05  Steven Eker  <eker@install.csl.sri.com>
 
 	* variantSearch.cc (getLastReturnedVariant): pass pointers

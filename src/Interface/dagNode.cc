@@ -274,6 +274,27 @@ DagNode::computeGeneralizedSort(const SortBdds& sortBdds,
     symbol()->computeGeneralizedSort(sortBdds, realToBdd, this, generalizedSort);
 }
 
+// experimental code
+
+void
+DagNode::computeGeneralizedSort2(const SortBdds& sortBdds,
+				 const Vector<int>& realToBdd,
+				 Vector<Bdd>& outputBdds)
+{
+    if (isGround())
+    {
+      //
+      //	We assume that any code setting the ground flag will also ensure a sort index is set.
+      //	FIXME: this may not be true if the node is unreduced.
+      //
+      Assert(getSortIndex() != Sort::SORT_UNKNOWN, "unknown sort in node flagged as ground");
+      int nrBdds = sortBdds.getNrVariables(symbol()->rangeComponent()->getIndexWithinModule());
+      sortBdds.appendIndexVector(nrBdds, getSortIndex(), outputBdds);
+    }
+  else
+    symbol()->computeGeneralizedSort2(sortBdds, realToBdd, this, outputBdds);
+}
+
 //
 //	Narrowing code.
 //

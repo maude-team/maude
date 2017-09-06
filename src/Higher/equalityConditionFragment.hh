@@ -46,6 +46,8 @@ public:
 
   Term* getLhs() const;
   Term* getRhs() const;
+
+  void normalize(bool full);
   //
   //	This function exists to enable equality condition fragments to have
   //	a special operational semantics under rewriting modulo SMT.
@@ -74,6 +76,13 @@ inline Term*
 EqualityConditionFragment::getRhs() const
 {
   return rhs;
+}
+
+inline void
+EqualityConditionFragment::normalize(bool full)
+{
+  lhs = lhs->normalize(full);
+  rhs = rhs->normalize(full);
 }
 
 #endif

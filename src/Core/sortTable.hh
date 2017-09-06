@@ -69,6 +69,11 @@ public:
 				      DagNode* subject,
 				      Vector<Bdd>& generalizedSort) { CantHappen("not implemented"); }
 
+  virtual void computeGeneralizedSort2(const SortBdds& sortBdds,
+				       const Vector<int>& realToBdd,  // first BDD variable for each free real variable
+				       DagNode* subject,
+				       Vector<Bdd>& generalizedSort) { CantHappen("not implemented"); }
+
 #ifdef COMPILER
   void generateSortDiagram(CompilationContext& context) const;
 #endif

@@ -51,6 +51,7 @@ public:
 private:
   void markReachableNodes();
   void findOrderSortedUnifiers();
+  void bindFreeVariables();
 
   Vector<Term*> leftHandSides;
   Vector<Term*> rightHandSides;

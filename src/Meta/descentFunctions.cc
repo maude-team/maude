@@ -591,6 +591,7 @@ MetaLevelOpSymbol::metaCheck(FreeDagNode* subject, RewritingContext& context)
       if (Term* term = metaLevel->downTerm(subject->getArgument(1), m))
 	{
 	  m->protect();
+	  term = term->normalize(false);
 	  DagNode* d = term->term2Dag();
 
 	  const SMT_Info& smtInfo = m->getSMT_Info();
