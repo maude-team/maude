@@ -2,7 +2,7 @@
 
     This file is part of the Maude 2 interpreter.
 
-    Copyright 1997-2007 SRI International, Menlo Park, CA 94025, USA.
+    Copyright 1997-2006 SRI International, Menlo Park, CA 94025, USA.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,26 +21,18 @@
 */
 
 //
-//      Class for creating fresh variables for unification.
+//	Base class for large chunks of state that can be cached.
 //
-#ifndef _freshVariableSource_hh_
-#define _freshVariableSource_hh_
-#include <gmpxx.h>
-#include "freshVariableGenerator.hh"
+#ifndef _cacheableState_hh_
+#define _cacheableState_hh_
 
-class FreshVariableSource : public FreshVariableGenerator
+class CacheableState
 {
 public:
-  FreshVariableSource(MixfixModule* module);
-  FreshVariableSource(MixfixModule* module, const mpz_class& baseNumber);
-  int getFreshVariableName(int index);
-  Symbol* getBaseVariableSymbol(Sort* sort);
-  bool variableNameConflict(int id);
-
-private:
-  MixfixModule* const module;
-  mpz_class baseNumber;
-  Vector<int> cache;
+  //
+  //	The only thing a cache needs to be able to do with a state is delete it.
+  //
+  virtual ~CacheableState() {};
 };
 
 #endif

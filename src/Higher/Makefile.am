@@ -56,4 +56,5 @@ noinst_HEADERS = \
 	narrowingSearchState.hh \
 	narrowingUnificationProblem.hh \
 	narrowingSequenceSearch.hh \
-	sequenceSearch.hh
+	sequenceSearch.hh \
+	cacheableState.hh

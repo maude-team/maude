@@ -211,6 +211,7 @@
      //
      MACRO(noParseSymbol, Symbol, 0, 1)
      MACRO(ambiguitySymbol, Symbol, 0, 2)
+     MACRO(failure2Symbol, Symbol, 0, 0)
      MACRO(failure3Symbol, Symbol, 0, 0)
      MACRO(failure4Symbol, Symbol, 0, 0)
      MACRO(noUnifierPairSymbol, Symbol, 0, 0)

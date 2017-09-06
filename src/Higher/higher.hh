@@ -32,6 +32,7 @@ class SearchState;
 class RewriteSearchState;
 class MatchSearchState;
 
+class CacheableState;
 class SequenceSearch;
 class RewriteSequenceSearch;
 

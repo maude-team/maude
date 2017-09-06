@@ -1,3 +1,10 @@
+Overview of Changes in Maude alpha89i
+=====================================
+* fixed two bugs which caused narrowing structures not to be deleted
+* allow multiple calls to cached desent functions with same arguments
+  to be efficient in most cases
+* added another narrowing descent function
+
 Overview of Changes in Maude alpha89h
 =====================================
 * crude support for narrowing

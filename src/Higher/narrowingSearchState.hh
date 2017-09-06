@@ -56,12 +56,15 @@ public:
 		       int maxDepth = UNBOUNDED);
   ~NarrowingSearchState();
 
+  RewritingContext* getContext() const;
   Rule* getRule() const;
   DagNode* getNarrowedDag() const;
   bool findNextNarrowing();
   const Substitution& getSubstitution() const;
+  int getNrOfVariablesInSubject() const;
 
 private:
+  RewritingContext* context;
   FreshVariableGenerator* freshVariableGenerator;
   const int label;
   const bool withExtension;
@@ -72,5 +75,17 @@ private:
 
   NarrowingUnificationProblem* unificationProblem;
 };
+
+inline RewritingContext*
+NarrowingSearchState::getContext() const
+{
+  return context;
+}
+
+inline int
+NarrowingSearchState::getNrOfVariablesInSubject() const
+{
+  return variableInfo.getNrVariables();
+}
 
 #endif

@@ -152,7 +152,9 @@ MetaLevel::upDagNode(DagNode* dagNode,
       }
     case SymbolType::VARIABLE:
       {
-	int id = safeCast(VariableDagNode*, dagNode)->id();
+	VariableDagNode* v = safeCast(VariableDagNode*, dagNode);
+	int id = (variableGenerator == 0) ? v->id() :
+	  variableGenerator->getFreshVariableName(variableBase + v->getIndex());
 	Sort* sort = safeCast(VariableSymbol*, dagNode->symbol())->getSort();
 	d = upVariable(id, sort, qidMap);
 	break;
@@ -533,6 +535,12 @@ MetaLevel::upAssignment(const Term* variable,
   args[0] = upTerm(variable, m, qidMap);
   args[1] = upDagNode(value, m, qidMap, dagNodeMap);
   return assignmentSymbol->makeDagNode(args);
+}
+
+DagNode*
+MetaLevel::upFailurePair()
+{
+  return failure2Symbol->makeDagNode();
 }
 
 DagNode*

@@ -64,6 +64,16 @@ int
 FreshVariableSource::getFreshVariableName(int index)
 {
   //
+  //	Check to see if we've aready computed a variable name for this index.
+  //
+  int nrCached = cache.size();
+  if (index < nrCached)
+    {
+      int t = cache[index];
+      if (t >= 0)
+	return t;
+    }
+  //
   //	In order to avoid allocating the name twice we convert the negative index to a
   //	string and replace the minus sign with a '#'.
   //
@@ -73,6 +83,16 @@ FreshVariableSource::getFreshVariableName(int index)
   name[0] = '#';
   int code = Token::encode(name);
   free(name);
+  //
+  //	Cache newly computed name index.
+  //
+  if (index >= nrCached)
+    {
+      cache.resize(index + 1);
+      for (int i = nrCached; i < index; ++i)
+	cache[i] = -1;
+    }
+  cache[index] = code;
   return code;
 }
 

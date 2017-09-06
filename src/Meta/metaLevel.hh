@@ -49,6 +49,9 @@ public:
   bool isNat(const DagNode* dagNode) const;
   const mpz_class& getNat(const DagNode* dagNode) const;
 
+  void startVariableMapping(int varCounter, FreshVariableGenerator* varGenerator);
+  void stopVariableMapping();
+
   DagNode* upResultPair(DagNode* dagNode, MixfixModule* m);
   DagNode* upResultPair(Term* term, MixfixModule* m);
   DagNode* upNoParse(int badTokenIndex);
@@ -62,6 +65,7 @@ public:
 			  const Substitution& substitution,
 			  const VariableInfo& variableInfo,
 			  MixfixModule* m);
+  DagNode* upFailurePair();
   DagNode* upFailureTriple();
   DagNode* upResult4Tuple(DagNode* dagNode,
 			  const Substitution& substitution,
@@ -397,6 +401,8 @@ private:
   //	Settings to modify behavior of methods.
   //
   bool flagVariables;
+  int variableBase;
+  FreshVariableGenerator* variableGenerator;
 };
 
 inline
@@ -431,6 +437,19 @@ inline const mpz_class&
 MetaLevel::getNat(const DagNode* dagNode) const
 {
   return succSymbol->getNat(dagNode);
+}
+
+inline void
+MetaLevel::startVariableMapping(int varBase, FreshVariableGenerator* varGenerator)
+{
+  variableBase = varBase;
+  variableGenerator = varGenerator;
+}
+
+inline void
+MetaLevel::stopVariableMapping()
+{
+  variableGenerator = 0;
 }
 
 #endif

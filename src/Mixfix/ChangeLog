@@ -1,3 +1,11 @@
+2007-11-27  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freshVariableSource.hh (class FreshVariableSource): added cache
+	data member
+
+	* freshVariableSource.cc (getFreshVariableName): cache computed
+	codes and check cache before computing a new code
+
 2007-11-21  Steven Eker  <eker@goo.csl.sri.com>
 
 	* token.cc (bubbleToPrefixNameCode): commented out problematic

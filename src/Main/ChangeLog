@@ -1,3 +1,8 @@
+2007-12-04  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: added a failure operator for ResultPair?
+	added 5 arg version of metaNarrow
+
 2007-11-19  Steven Eker  <eker@goo.csl.sri.com>
 
 	* prelude.maude: metaXunify()/metaDisjointXunify() deleted;

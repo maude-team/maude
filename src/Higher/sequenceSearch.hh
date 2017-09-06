@@ -21,12 +21,13 @@
 */
 
 //
-//	Abstract base class for rewrite and narrowing sequence searches.
+//	Base class for rewrite and narrowing sequence searches.
 //
 #ifndef _sequenceSearch_hh_
 #define _sequenceSearch_hh_
+#include "cacheableState.hh"
 
-class SequenceSearch
+class SequenceSearch : public CacheableState
 {
 public:
   enum SearchType

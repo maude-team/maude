@@ -33,11 +33,15 @@ MetaLevelOpSymbol::getCachedUnificationProblem(MetaModule* m,
 {
   if (solutionNr > 0)
     {
-      if (m->remove(subject, unification, lastSolutionNr))
+      CacheableState* cachedState;
+      if (m->remove(subject, cachedState, lastSolutionNr))
 	{
-	  if (lastSolutionNr < solutionNr)
-	    return true;
-	  delete unification;
+	  if (lastSolutionNr <= solutionNr)
+	    {
+	      unification = safeCast(UnificationProblem*, cachedState);
+	      return true;
+	    }
+	  delete cachedState;
 	}
     }
   return false;
@@ -76,6 +80,8 @@ MetaLevelOpSymbol::metaUnify2(FreeDagNode* subject, RewritingContext& context, b
 
 	  DagNode* result;
 	  m->protect();
+	  DebugAdvisoryCheck(solutionNr - lastSolutionNr == 1,
+			     "unification jump from " <<  lastSolutionNr << " to " << solutionNr);
 	  for (; lastSolutionNr < solutionNr; ++lastSolutionNr)
 	    {
 	      if (!(unification->findNextUnifier()))

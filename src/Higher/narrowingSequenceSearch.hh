@@ -28,12 +28,19 @@
 #include "sequenceSearch.hh"
 #include "matchSearchState.hh"
 #include "protectedDagNodeSet.hh"
+#include "narrowingSearchState.hh"
 
 class NarrowingSequenceSearch : public SequenceSearch
 {
   NO_COPYING(NarrowingSequenceSearch);
 
 public:
+  //
+  //	We take responsibility for deleting initial, goal and freshVariableGenerator.
+  //	A null goal can be passed to accept all states whose reachability is consistent with searchType and maxDepth.
+  //	In the null goal case a count is available of the number of variables in all the previously returned states.
+  //	This number is needed by the metalevel.
+  //
   NarrowingSequenceSearch(RewritingContext* initial,
 			  SearchType searchType,
 			  Pattern* goal,
@@ -43,10 +50,12 @@ public:
 
   bool findNextMatch();
   const Pattern* getGoal() const;
+  FreshVariableGenerator* getFreshVariableGenerator() const;
   NarrowingSearchState* getState() const;
   const Substitution* getSubstitution() const;
   RewritingContext* getContext() const;
   DagNode* getStateDag() const;
+  int getVariableTotalForPreviouslyReturnedStates() const;
 
 private:
   bool findNextInterestingState();
@@ -63,16 +72,24 @@ private:
   bool topOfStackFresh;
 
   Vector<NarrowingSearchState*> stateStack;
-  Vector<RewritingContext*> contextStack;
   MatchSearchState* matchState;
 
   ProtectedDagNodeSet seenSet;
+
+  int variableTotalForPreviouslyReturnedStates;
+  int variableTotalForAllReturnedStates;
 };
 
 inline const Pattern*
 NarrowingSequenceSearch::getGoal() const
 {
   return goal;
+}
+
+inline FreshVariableGenerator* 
+NarrowingSequenceSearch::getFreshVariableGenerator() const
+{
+  return freshVariableGenerator;
 }
 
 inline const Substitution*
@@ -90,13 +107,20 @@ NarrowingSequenceSearch::getState() const
 inline RewritingContext*
 NarrowingSequenceSearch::getContext() const
 {
+  Assert(stateStack.size() > 0, "once stack is empty initial has been deleted");
   return initial;
 }
 
 inline DagNode*
 NarrowingSequenceSearch::getStateDag() const
 {
-  return contextStack[contextStack.size() - 1]->root();
+  return stateStack[stateStack.size() - 1]->getContext()->root();
+}
+
+inline int
+NarrowingSequenceSearch::getVariableTotalForPreviouslyReturnedStates() const
+{
+  return variableTotalForPreviouslyReturnedStates;
 }
 
 #endif

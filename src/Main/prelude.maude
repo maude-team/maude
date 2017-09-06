@@ -22,7 +22,7 @@
 
 ***
 ***	Maude interpreter standard prelude.
-***	Version alpha89h.
+***	Version alpha89i.
 ***
 ***	Some of the overall structure is taken from the OBJ3
 ***	interpreter standard prelude.
@@ -1923,6 +1923,7 @@ fmod META-LEVEL is
   subsort Trace < Trace? .
   op noParse : Nat -> ResultPair? [ctor] .
   op ambiguity : ResultPair ResultPair -> ResultPair? [ctor] .
+  op failure : -> ResultPair? [ctor] .
 
   op failure : -> ResultTriple? [ctor] .
   op failure : -> Result4Tuple? [ctor] .
@@ -2115,6 +2116,7 @@ fmod META-LEVEL is
 
         op-hook noParseSymbol		(noParse : Nat ~> ResultPair?)
         op-hook ambiguitySymbol		(ambiguity : ResultPair ResultPair ~> ResultPair?)
+        op-hook failure2Symbol		(failure : ~> ResultPair?)
         op-hook failure3Symbol		(failure : ~> ResultTriple?)
         op-hook failure4Symbol		(failure : ~> Result4Tuple?)
         op-hook noUnifierPairSymbol	(noUnifier : ~> UnificationPair?)
@@ -2193,6 +2195,11 @@ fmod META-LEVEL is
   op metaNarrow : Module Term Term Qid Bound Nat ~> ResultTriple?
         [special (
            id-hook MetaLevelOpSymbol	(metaNarrow)
+           op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .
+
+  op metaNarrow : Module Term Qid Bound Nat ~> ResultPair?
+        [special (
+           id-hook MetaLevelOpSymbol	(metaNarrow2)
            op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .
 
   op sortLeq : Module Type Type ~> Bool

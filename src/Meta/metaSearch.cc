@@ -53,11 +53,21 @@ MetaLevelOpSymbol::getCachedRewriteSequenceSearch(MetaModule* m,
 {
   if (solutionNr > 0)
     {
-      if (m->remove(subject, context, search, lastSolutionNr))
+      CacheableState* cachedState;
+      if (m->remove(subject, cachedState, lastSolutionNr))
 	{
 	  if (lastSolutionNr < solutionNr)
-	    return true;
-	  delete search;
+	    {
+	      search = safeCast(RewriteSequenceSearch*, cachedState);
+	      //
+	      //	The parent context pointer of the root context in the
+	      //	NarrowingSequenceSearch is possibly stale.
+	      //
+	      safeCast(UserLevelRewritingContext*, search->getContext())->
+		beAdoptedBy(safeCast(UserLevelRewritingContext*, &context));
+	      return true;
+	    }
+	  delete cachedState;
 	}
     }
   return false;
