@@ -24,6 +24,12 @@
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
+/* Define to 1 if you have the `nsl' library (-lnsl). */
+#undef HAVE_LIBNSL
+
+/* Define to 1 if you have the `socket' library (-lsocket). */
+#undef HAVE_LIBSOCKET
+
 /* Define to 1 if you have the <math.h> header file. */
 #undef HAVE_MATH_H
 
@@ -65,6 +71,9 @@
 
 /* inline and discard selected local functions */
 #undef LOCAL_INLINES
+
+/* support MOS oracles */
+#undef MOS
 
 /* don't do runtime checks */
 #undef NO_ASSERT

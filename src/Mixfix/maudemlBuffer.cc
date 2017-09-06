@@ -146,6 +146,19 @@ MaudemlBuffer::generateFrewrite(DagNode* subject, Int64 limit, Int64 gas)
 }
 
 void
+MaudemlBuffer::generateErewrite(DagNode* subject, Int64 limit, Int64 gas)
+{
+  beginElement("erewrite");
+  attributePair("module", Token::name(subject->symbol()->getModule()->id()));
+  if (limit != NONE)
+    attributePair("limit", int64ToString(limit));
+  if (limit != NONE)
+    attributePair("gas", int64ToString(gas));
+  generate(subject);
+  endElement();
+}
+
+void
 MaudemlBuffer::generateSearch(DagNode* subject,
 			      PreEquation* pattern,
 			      const string& searchType,

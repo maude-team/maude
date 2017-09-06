@@ -91,6 +91,7 @@
 #include "sortTestConditionFragment.hh"
 #include "assignmentConditionFragment.hh"
 #include "rewriteConditionFragment.hh"
+#include "rewriteSequenceSearch.hh"
 
 //	front end class definitions
 #include "fileTable.hh"

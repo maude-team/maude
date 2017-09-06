@@ -1,3 +1,75 @@
+2004-12-03  Steven Eker  <eker@goo.csl.sri.com>
+
+	* descentFunctions.cc (metaMaximalAritySet): use upTypeListSet()
+	and getMaximalOpDeclSet()
+
+	* metaLevel.hh (class MetaLevel): added decls for upTypeListSet()
+	and upTypeList()
+
+	* metaUp.cc (upTypeListSet): added
+	(upTypeList): added
+
+2004-12-02  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaUp.cc (upKindSet): use SortSet ctors rather than KindSet
+	ctors
+
+	* metaLevelSignature.cc (MACRO): deleted KindSet ctors (we have
+	combined these with SortSet,TypeSet ctors)
+
+2004-12-01  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaLevel.hh (class MetaLevel): made downTypeList() public
+
+	* descentFunctions.cc (metaMaximalAritySet): added
+
+	* descentSignature.cc (MACRO): added metaMaximalAritySet
+
+2004-11-17  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaLevel.hh (class MetaLevel): added decls for upTrace() and
+	upTraceStep()
+
+	* metaUp.cc (upTraceStep): added
+	(upTrace): added
+
+	* metaSearch.cc (metaSearchPath): added
+
+	* metaLevel.hh (class MetaLevel): added decl for upFailureTrace()
+
+	* metaUp.cc (upFailureTrace): added
+
+	* descentSignature.cc (MACRO): added metaSearchPath
+
+	* metaLevelSignature.cc (MACRO): added traceStepSymbol,
+	nilTraceSymbol, traceSymbol. failureTraceSymbol
+
+	* metaSearch.cc (makeRewriteSequenceSearch): removed local inline
+
+2004-09-10  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaUp.cc (upJoin): use KIND
+	(upTerm): fix bug by using the exact sort for VARIABLE case rather
+	than relying on MixfixModule::disambiguatorSort()
+	(upType): use KIND
+	(upSortSet): use upType() in place of upQid() so we can handle
+	kinds
+
+	* descentFunctions.cc (metaGlbSorts): use downType() rather than
+	downSimpleSort()
+	(metaGlbSorts): simplified using new findMaximalSorts() interface
+	(metaMinimalSorts): use KIND
+	(metaMaximalSorts): use KIND
+
+===================================Maude85===========================================
+
+2004-06-21  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaDown.cc: print the metaterm in the "could not find an
+	operator" advisory
+	
+===================================Maude84d===========================================
+
 2004-06-14  Steven Eker  <eker@goo.csl.sri.com>
 
 	* metaApply.cc (metaApply): support tracing of meta applications

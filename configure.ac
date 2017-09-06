@@ -3,7 +3,7 @@
 #
 #	Initialize autoconf stuff.
 #
-AC_INIT(Maude, alpha84c, [maude-bugs@maude.cs.uiuc.edu])
+AC_INIT(Maude, alpha85, [maude-bugs@maude.cs.uiuc.edu])
 #
 #	Allow directory names that look like macros.
 #
@@ -16,21 +16,21 @@ AC_CANONICAL_HOST
 #
 #	Initialize automake stuff.
 #
-AM_INIT_AUTOMAKE(Maude, alpha84c)
+AM_INIT_AUTOMAKE(Maude, alpha85)
 #
 #	Cause defines to be put in a header file rather than passed as
 #	compiler flags.
 #
 AC_CONFIG_HEADER(config.h)
 #
-#	If the user set CCFLAGS or CXXFLAGS we leave them alone.
-#	Otherwise we set them to -g to stop AC_PROG_C and
+#	If the user set CFLAGS or CXXFLAGS we leave them alone.
+#	Otherwise we set them to -g to stop AC_PROG_CC and
 #	AC_PROG_CXX from setting them.
 #
-USER_SET_CCFLAGS=yes
-if (test -z "$CCFLAGS") then
-  USER_SET_CCFLAGS=no
-  CCFLAGS="-g"
+USER_SET_CFLAGS=yes
+if (test -z "$CFLAGS") then
+  USER_SET_CFLAGS=no
+  CFLAGS="-g"
 fi
 USER_SET_CXXFLAGS=yes
 if (test -z "$CXXFLAGS") then
@@ -59,6 +59,11 @@ AC_SUBST(FLEX)
 #
 #	*** LIBRARIES ***
 #
+#
+#	Figure out what libraries need to be linked in to use sockets.
+#
+AC_CHECK_LIB(nsl, inet_addr)
+AC_CHECK_LIB(socket, socket)
 #
 #	Check if user set particular Buddy library to use and if
 #	not set default.
@@ -143,8 +148,8 @@ else
   else
     OFLAGS="-O"
   fi
-  if (test $USER_SET_CCFLAGS = no) then
-    CCFLAGS="$CCFLAGS $OFLAGS"
+  if (test $USER_SET_CFLAGS = no) then
+    CFLAGS="$CFLAGS $OFLAGS"
   fi
   if (test $USER_SET_CXXFLAGS = no) then
     CXXFLAGS="$CXXFLAGS $OFLAGS"
@@ -163,7 +168,7 @@ else
 #	to v7 which does not) but schedule for a more recent v9
 #	implementation.
 #
-    TWEAKFLAGS="-mcpu=v8 -mtune=ultrasparc"
+    TWEAKFLAGS="-march=v8 -mtune=ultrasparc"
     ;;
 #
 #	For the Intel x86 family we select the smallest stack alignment
@@ -200,8 +205,8 @@ else
 
   esac
 
-  if (test $USER_SET_CCFLAGS = no) && (test $GCC = yes) then
-    CCFLAGS="$CCFLAGS $TWEAKFLAGS"
+  if (test $USER_SET_CFLAGS = no) && (test $GCC = yes) then
+    CFLAGS="$CFLAGS $TWEAKFLAGS"
   fi
   if (test $USER_SET_CXXFLAGS = no) && (test $GXX = yes) then
     CXXFLAGS="$CXXFLAGS $TWEAKFLAGS"
@@ -240,8 +245,8 @@ case $host in
 
 esac
 
-if (test $USER_SET_CCFLAGS = no) && (test $GCC = yes) then
-  CCFLAGS="$CCFLAGS $FIXFLAGS"
+if (test $USER_SET_CFLAGS = no) && (test $GCC = yes) then
+  CFLAGS="$CFLAGS $FIXFLAGS"
 fi
 if (test $USER_SET_CXXFLAGS = no) && (test $GXX = yes) then
   CXXFLAGS="$CXXFLAGS $FIXFLAGS"
@@ -263,6 +268,17 @@ AC_ARG_ENABLE(compiler,
 if (test "$COMPILER" = yes) then
   AC_DEFINE([COMPILER], [], [build the experimental integrated compiler])
   AC_DEFINE([ANNOTATED], [], [annotate comiler output])
+fi
+#
+#	Check to see if we should support MOS oracles.
+#
+AC_ARG_ENABLE(mos,
+	      AC_HELP_STRING([--enable-mos],
+                             [support MOS oracles (DO NOT USE!) [default=no]]),
+	      [MOS=$enableval],
+	      [MOS=no])
+if (test "$MOS" = yes) then
+  AC_DEFINE([MOS], [], [support MOS oracles])
 fi
 #
 #	Conditional compilation and linking.

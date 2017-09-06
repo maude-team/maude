@@ -63,6 +63,52 @@ SortTable::SortTable(int arity)
   ctorStatus = 0;
 }
 
+bool
+SortTable::domainSubsumes(int subsumer, int victim) const
+{
+  const Vector<Sort*>& s = opDeclarations[subsumer].getDomainAndRange();
+  const Vector<Sort*>& v = opDeclarations[victim].getDomainAndRange();
+  for (int i = 0; i < nrArgs; ++i)
+    {
+      if (!(leq(v[i], s[i])))
+	return false;
+    }
+  return true;
+}
+
+void
+SortTable::computeMaximalOpDeclSetTable()
+{
+  const ConnectedComponent* range = rangeComponent();
+  int nrSorts = range->nrSorts();
+  maximalOpDeclSetTable.resize(nrSorts);
+  int nrDeclarations = opDeclarations.length();
+  for (int i = 0; i < nrSorts; ++i)
+    {
+      NatSet& opDeclSet = maximalOpDeclSetTable[i];
+      const Sort* target = range->sort(i);
+      for (int j = 0; j < nrDeclarations; ++j)
+	{
+	  if (leq(opDeclarations[j].getDomainAndRange()[nrArgs], target))
+	    {
+	      for (int k = 0; k < j; ++k)
+		{
+		  if (opDeclSet.contains(k))
+		    {
+		      if(domainSubsumes(k, j))
+			goto nextDecl;
+		      else if (domainSubsumes(j, k))
+			opDeclSet.subtract(k);
+		    }
+		}
+	      opDeclSet.insert(j);
+	    }
+	nextDecl:
+	  ;
+	}
+    }
+}
+
 void
 SortTable::compileOpDeclarations()
 {

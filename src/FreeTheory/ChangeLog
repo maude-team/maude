@@ -1,3 +1,8 @@
+2004-10-07  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeDagNode.hh (FreeDagNode): removed parens from DagNode* to
+	appease g++ 2.4.2
+
 2003-09-02  Steven Eker  <eker@goo.csl.sri.com>
 
 	* freeSymbol.cc (complexStrategy): use applyReplaceNoOwise()

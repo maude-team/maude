@@ -117,7 +117,7 @@ MixfixModule::addOpDeclaration(Token prefixName,
 	      //	We have the same name and could appear to have
 	      //	the same number of arguments. Thus ambiguity is possible
 	      //	and we have to rely on context or actual arguments for
-	      //	disambiguarion.
+	      //	disambiguation.
 	      //
 	      const Vector<Sort*>& iDomainAndRange =
 		s->getOpDeclarations()[0].getDomainAndRange();
@@ -547,8 +547,12 @@ MixfixModule::newFancySymbol(Token prefixName,
       }
     case SymbolType::RANDOM_OP_SYMBOL:
       return new RandomOpSymbol(name);
+    case SymbolType::MATRIX_OP_SYMBOL:
+      return new MatrixOpSymbol(name, nrArgs);
     case SymbolType::COUNTER_SYMBOL:
       return new CounterSymbol(name);
+    case SymbolType::SOCKET_MANAGER_SYMBOL:
+      return new SocketManagerSymbol(name);
     }
 
   int lineNr = prefixName.lineNumber();

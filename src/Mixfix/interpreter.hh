@@ -95,6 +95,10 @@ public:
 
     PRINT_COLOR = 0x20000000,		// for dag node coloring
     //
+    //	Counter flags.
+    //
+    AUTO_CLEAR_RULES = 0x40000000,
+    //
     //	Compiler flags.
     //
     COMPILE_COUNT = 0x80000000,
@@ -108,7 +112,7 @@ public:
     TRACE_CONDITION | TRACE_SUBSTITUTION | TRACE_MB | TRACE_EQ | TRACE_RL |
     AUTO_CLEAR_PROFILE |
     PRINT_FORMAT | PRINT_MIXFIX | PRINT_WITH_ALIASES |
-    PRINT_FLAT | PRINT_NUMBER | PRINT_RAT
+    PRINT_FLAT | PRINT_NUMBER | PRINT_RAT | AUTO_CLEAR_RULES
   };
 
   Interpreter();
@@ -131,11 +135,13 @@ public:
   void creduce(const Vector<Token>& subject);
   void rewrite(const Vector<Token>& subject, Int64 limit, bool debug);
   void fRewrite(const Vector<Token>& subject, Int64 limit, Int64 gas, bool debug);
+  void eRewrite(const Vector<Token>& subject, Int64 limit, Int64 gas, bool debug);
   void cont(Int64 limit, bool debug);
 
   void match(const Vector<Token>& bubble, bool withExtension, Int64 limit);
   void search(const Vector<Token>& bubble, Int64 limit);
   void showSearchPath(int stateNr);
+  void showSearchPathLabels(int stateNr);
   void showSearchGraph();
 
   void loop(const Vector<Token>& subject);
@@ -177,6 +183,7 @@ private:
 		    ContinueFuncPtr cf = 0);
   void rewriteCont(Int64 limit, bool debug);
   void fRewriteCont(Int64 limit, bool debug);
+  void eRewriteCont(Int64 limit, bool debug);
   bool contLoop2(const Vector<Token>& input);
   void doLoop(DagNode* d, VisibleModule* module);
   void searchCont(Int64 limit, bool debug);

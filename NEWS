@@ -1,3 +1,22 @@
+Overview of Changes in Maude alpha85
+====================================
+* added min/max functions to number hierarchy
+* fixed bug in up'ing FloatOpSymbol hook
+* fixed sufficient completeness issues in the prelude
+* fixed a bug in up'ing terms which gave kind variables the wrong
+  sort
+* glbSorts() now handles kinds
+* show profile now includes percentages
+* show path labels command added
+* metaSearchPath() added
+* set clear rules on/off command added
+* maximalAritySet() added
+
+Overview of Changes in Maude alpha84d
+=====================================
+* fixed 0.0 ^ -1.0 bug
+* module selectors now support theories
+
 Overview of Changes in Maude alpha84c
 =====================================
 * added random number generation

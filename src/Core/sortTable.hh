@@ -58,6 +58,7 @@ public:
   virtual bool canProduceErrorSort() const;
   int traverse(int position, int sortIndex) const;
   bool kindLevelDeclarationsOnly() const;
+  const NatSet& getMaximalOpDeclSet(Sort* target);
 
 #ifdef COMPILER
   void generateSortDiagram(CompilationContext& context) const;
@@ -74,6 +75,8 @@ protected:
 private:
   void buildSortDiagram();
   void buildCtorDiagram();
+  void computeMaximalOpDeclSetTable();
+  bool domainSubsumes(int subsumer, int victim) const;
   int findStateNumber(Vector<NatSet>& stateSet, const NatSet& state);
   int findMinSortIndex(const NatSet& state);
   bool partiallySubsumes(int subsumer, int victim, int argNr);
@@ -97,12 +100,21 @@ private:
   Sort* singleNonErrorSort;  // if we can only generate one non error sort
   Vector<int> ctorDiagram;
   int ctorStatus;  // place holder
+  Vector<NatSet> maximalOpDeclSetTable;  // indices of maximal op decls with range <= each sort
 };
 
 inline int
 SortTable::arity() const
 {
   return nrArgs;
+}
+
+inline const NatSet&
+SortTable::getMaximalOpDeclSet(Sort* target)
+{
+  if (maximalOpDeclSetTable.isNull())
+    computeMaximalOpDeclSetTable();
+  return maximalOpDeclSetTable[target->index()];
 }
 
 inline bool
