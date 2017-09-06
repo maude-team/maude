@@ -24,6 +24,8 @@
 //	Code for handling importation.
 //
 
+ModuleCache moduleCache;  // HACK
+
 void
 PreModule::processImports()
 {
@@ -34,55 +36,97 @@ PreModule::processImports()
   */
   int nrAutoImports = autoImports.cardinality();
   for (int i = 0; i < nrAutoImports; i++)
-    importModule(autoImports.index2Int(i), *this);
+    {
+      if (ImportModule* fm = getModule(autoImports.index2Int(i), *this))
+	flatModule->addImport(fm);
+    }
+
   int nrImports = imports.length();
   for (int i = 0; i < nrImports; i++)
     {
       Import import = imports[i];
-      if (import.expr->getType() != ModuleExpression::MODULE)
-	{
-	  IssueWarning(LineNumber(*this) <<
-		       ": bad import: " << QUOTE(import.expr));
-	}
-      else
-	{
-	 
-	  WarningCheck(import.mode.code() != Token::encode("us") &&
-		       import.mode.code() != Token::encode("using"), 
-		       LineNumber(import.mode.lineNumber()) <<
-		       ": importation mode " << QUOTE("using") <<
-		       " not supported - treating it like " <<
-		       QUOTE("including") << '.');
-	  importModule(import.expr->getModuleName(), import.mode.lineNumber());
-	}
+      WarningCheck(import.mode.code() != Token::encode("us") &&
+		   import.mode.code() != Token::encode("using"), 
+		   LineNumber(import.mode.lineNumber()) <<
+		   ": importation mode " << QUOTE("using") <<
+		   " not supported - treating it like " <<
+		   QUOTE("including") << '.');
+
+      if (ImportModule* fm = makeModule(import.expr))
+	flatModule->addImport(fm);
     }
+  moduleCache.destructUnusedModules();  // house keeping
 }
 
-void
-PreModule::importModule(int name, const LineNumber& lineNumber)
+ImportModule*
+PreModule::getModule(int name, const LineNumber& lineNumber)
 {
   if (PreModule* m = interpreter.getModule(name))
     {
-      if (VisibleModule* fm = m->getFlatSignature())
+      if (ImportModule* fm = m->getFlatSignature())
 	{
-	  fm->economize();  // HACK
+	  //
+	  //	We might have had to build a parser for this
+	  //	module in order to deal with local statements,
+	  //	term hooks and identities.
+	  //	We delete the parser since we don't
+	  //	have any further use for it.
+	  //
+	  fm->economize();
 	  if (fm->isBad())
 	    {
-	      IssueWarning(lineNumber << ": unable to import module " <<
+	      IssueWarning(lineNumber << ": unable to use module " <<
 			   QUOTE(m) << " due to unpatchable errors.");
 	    }
 	  else
-	    flatModule->addImport(fm);
+	    return fm;
 	}
-      else
-	{
-	  IssueWarning(lineNumber << ": mutually recursive import of module " <<
-		       QUOTE(m) << " ignored.");
-	}
+      IssueWarning(lineNumber <<
+		   ": mutually recursive import of module " <<
+		   QUOTE(m) << " ignored.");
     }
   else
     {
-      IssueWarning(*this << ": module " << QUOTE(Token::name(name)) <<
+      IssueWarning(lineNumber <<
+		   ": module " << QUOTE(Token::name(name)) <<
 		   " does not exist.");
     }
+  return 0;
+}
+
+ImportModule*
+PreModule::makeModule(const ModuleExpression* expr)
+{
+  switch (expr->getType())
+    {
+    case ModuleExpression::MODULE:
+      {
+	Token name = expr->getModuleName();
+	if (ImportModule* fm = getModule(name.code(), name.lineNumber()))
+	  return fm;
+	break;
+      }
+    case ModuleExpression::RENAMING:
+      {
+	if (ImportModule* fm = makeModule(expr->getModule()))
+	  return moduleCache.makeRenamedCopy(fm, expr->getRenaming());
+	break;
+      }
+    case ModuleExpression::SUMMATION:
+      {
+	const list<ModuleExpression*>& modules = expr->getModules();
+	Vector<ImportModule*> fms;
+	FOR_EACH_CONST(i, list<ModuleExpression*>, modules)
+	  {
+	    if (ImportModule* fm = makeModule(*i))
+	      fms.append(fm);
+	  }
+	if (!fms.empty())
+	  return moduleCache.makeSummation(fms);
+	break;
+      }
+    default:
+      CantHappen("bad module expression");
+    }
+  return 0;
 }

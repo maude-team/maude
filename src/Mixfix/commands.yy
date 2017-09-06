@@ -221,6 +221,10 @@ command		:	KW_SELECT		{ lexerCmdMode(); clear(); }
 			  if (interpreter.setCurrentModule(bubble))
 			    interpreter.showModule(true);
 			}
+		|	KW_SHOW KW_MODULES '.'
+			{
+			  interpreter.showModules(true);
+			}
 		|	KW_SHOW KW_SORTS	{ lexerCmdMode(); clear(); }
 			cTokensBarDot '.'
 			{

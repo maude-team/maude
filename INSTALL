@@ -8,9 +8,10 @@ GNU bison	http://www.gnu.org/software/bison/
 GNU flex	http://www.gnu.org/software/flex/
 
 It is recommended that you use the latest versions of bison and flex
-since Maude is known to tickle bugs in certain older versions. Doug
-Lea's malloc (dlmalloc) is now included in the Maude source tree
-(src/3rdParty/).
+since Maude is known to tickle bugs in certain older versions. You
+should use gcc 3.1 or later as there are code generation issues with
+the 3.0.* series. Doug Lea's malloc (dlmalloc) is now included in the
+Maude source tree (src/3rdParty/).
 
 Maude requires the following packages:
 
@@ -31,7 +32,7 @@ issues on various platforms.
 It is recommended that Tecla be configured with CFLAGS set to
 "-O2 -D_POSIX_C_SOURCE=1". This has the effect of using the thread
 unsafe library calls which avoids binary compatibility issues on
-various platforms. It is recommened that Tecla is built and installed
+various platforms. It is recommended that Tecla is built and installed
 with the command:
 
  make TARGETS=normal TARGET_LIBS=static install

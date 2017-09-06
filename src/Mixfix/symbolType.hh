@@ -125,6 +125,7 @@ public:
   int getFlags() const;
   void setFlags(int flags);
   void clearFlags(int flags);
+  void assignFlags(int flags, bool value);
   int getBasicType() const;
   void setBasicType(int type);
 
@@ -172,6 +173,15 @@ inline void
 SymbolType::clearFlags(int flags)
 {
   info &= ~flags;
+}
+
+inline void
+SymbolType::assignFlags(int flags, bool value)
+{
+  if (value)
+    setFlags(flags);
+  else
+    clearFlags(flags);
 }
 
 inline int

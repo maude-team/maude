@@ -172,7 +172,18 @@ PreModule::fixUpSymbols()
 	      Term* id = flatModule->parseTerm(opDef.identity, wanted->component());
 	      if (id == 0)
 		FIX_UP_FAILED;
-	      flatModule->addIdentityToPolymorph(opDecl.polymorphIndex, id);
+	      int index = opDecl.polymorphIndex;
+	      if (Term* oldId = flatModule->getPolymorphIdentity(index))
+		{
+		  WarningCheck(id->equal(oldId), *id <<
+			       ": declaration of identity " << QUOTE(id) <<
+			       " for polymorphic operator " << QUOTE(opDecl.prefixName) <<
+			       " clashes with previously declared identity " <<
+			       QUOTE(oldId) << " in " << *oldId << '.');
+		  id->deepSelfDestruct();
+		}
+	      else
+		flatModule->addIdentityToPolymorph(opDecl.polymorphIndex, id);
 	    }
 	  else
 	    {

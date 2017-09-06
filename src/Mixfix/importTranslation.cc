@@ -46,10 +46,11 @@
 //	front end class definitions
 #include "importModule.hh"
 #include "importTranslation.hh"
+#include "renaming.hh"
 
-ImportTranslation::ImportTranslation(ImportModule* importer)
-  : importer(importer)
+ImportTranslation::ImportTranslation(ImportModule* target, Renaming* renaming)
 {
+  push(renaming, target);
 }
 
 Sort*
@@ -57,10 +58,31 @@ ImportTranslation::translate(const Sort* sort)
 {
   if (sort->index() == Sort::ERROR_SORT)
     return translate(sort->component())->sort(Sort::ERROR_SORT);
-  Sort* s = importer->findSort(sort->id());
+
+  int id = sort->id();
+  FOR_EACH_CONST(i, list<Renaming*>, renamings)
+    {
+      if (Renaming* r = *i)
+	id = r->renameSort(id);
+    }
+  Sort* s = targets.back()->findSort(id);
   Assert(s != 0, "no translation for sort " << sort <<
-	 " in " << importer);
+	 " in " << targets.back());
   return s;
+}
+
+int
+ImportTranslation::translateLabel(int id)
+{
+  if (id != NONE)
+    {
+      FOR_EACH_CONST(i, list<Renaming*>, renamings)
+	{
+	  if (Renaming* r = *i)
+	    id = r->renameLabel(id);
+	}
+    }
+  return id;
 }
 
 Symbol*
@@ -69,35 +91,72 @@ ImportTranslation::translate(Symbol* symbol)
   Symbol* s = static_cast<Symbol*>(directMap.getMap(symbol));
   if (s != 0)
     return s;
-  Symbol* importerVersion = 0;
-  switch (static_cast<MixfixModule*>(symbol->getModule())->getSymbolType(symbol).getBasicType())
+
+  switch (safeCast(MixfixModule*, symbol->getModule())->
+	  getSymbolType(symbol).getBasicType())
     {
     case SymbolType::VARIABLE:
       {
 	Sort* sort = translate(safeCast(VariableSymbol*, symbol)->getSort());
-	importerVersion = importer->instantiateVariable(sort);
+	s = targets.back()->instantiateVariable(sort);
 	break;
       }
     case SymbolType::SORT_TEST:
       {
 	SortTestSymbol* t = safeCast(SortTestSymbol*, symbol);
-	importerVersion = importer->instantiateSortTest(translate(t->sort()), t->eager());
+	s = targets.back()->instantiateSortTest(translate(t->sort()), t->eager());
 	break;
       }
     default:
       {
 	int nrArgs = symbol->arity();
-	static Vector<ConnectedComponent*> domainComponents;
-	domainComponents.resize(nrArgs);
-	for (int i = 0; i < nrArgs; i++)
-	  domainComponents[i] = translate(symbol->domainComponent(i));
-	ConnectedComponent* rangeComponent = translate(symbol->rangeComponent());
-	importerVersion = importer->findSymbol(symbol->id(), domainComponents, rangeComponent);
+	Vector<ConnectedComponent*> domainComponents(nrArgs);
+	s = symbol;
+	list<ImportModule*>::const_iterator i2 = targets.begin();
+	FOR_EACH_CONST(i, list<Renaming*>, renamings)
+	  {
+	    Renaming* r =  *i;
+	    int id = s->id();
+	    //
+	    //	Change name if needed.
+	    //
+	    if (r != 0)
+	      {
+		int index = r->renameOp(s);
+		if (index != NONE)
+		  id = r->getOpTo(index);
+	      }
+	    //
+	    //	Now translate domain and range components.
+	    //
+	    for (int j = 0; j < nrArgs; j++)
+	      domainComponents[j] = translate(r, *i2, s->domainComponent(j));
+	    ConnectedComponent* rangeComponent = translate(r, *i2, s->rangeComponent());
+	    //
+	    //	Look up symbol in target module.
+	    //
+	    s = (*i2)->findSymbol(id, domainComponents, rangeComponent);
+	    Assert(s != 0, "no translation for renamed " << s  << " in " << *i2);
+	    ++i2;
+	  }
 	break;
       }
     }
-  Assert(importerVersion != 0, "no translation for " << symbol <<
-	 " in " << importer);
-  directMap.setMap(symbol, importerVersion);
-  return importerVersion;
+  Assert(s != 0, "no translation for " << symbol << " in " << targets.back());
+  directMap.setMap(symbol, s);
+  return s;
+}
+
+ConnectedComponent*
+ImportTranslation::translate(Renaming* renaming,
+			     ImportModule* target,
+			     const ConnectedComponent* old)
+{
+  Sort* sort = old->sort(1);
+  int id = sort->id();
+  if (renaming != 0)
+    id = renaming->renameSort(id);
+  Sort* s = target->findSort(id);
+  Assert(s != 0, "no translation for sort " << sort << " in " << target);
+  return s->component();
 }

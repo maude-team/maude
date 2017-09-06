@@ -136,7 +136,7 @@ MixfixModule::addOpDeclaration(Token prefixName,
 			  if (!(symbolType.hasFlag(SymbolType::DITTO)) &&
 			      !(getSymbolType(s).compatible(symbolType)))
 			    {
-			      IssueWarning( LineNumber(prefixName.lineNumber()) <<
+			      IssueWarning(LineNumber(prefixName.lineNumber()) <<
 					   ": declaration for " << QUOTE(s) <<
 					   " has different attributes from declaration on " <<
 					   *s << '.');
@@ -354,13 +354,32 @@ MixfixModule::addOpDeclaration(Token prefixName,
     {
     case SymbolType::SYSTEM_TRUE:
       {
-	trueSymbol = static_cast<FreeSymbol*>(symbol);  // HACK
-	boolSort = domainAndRange[0];
+	if (trueSymbol == 0)
+	  {
+	    trueSymbol = safeCast(FreeSymbol*, symbol);  // HACK
+	    boolSort = domainAndRange[0];
+	  }
+	else
+	  {
+	    IssueWarning(*symbol << ": declaration for SystemTrue symbol " <<
+			 QUOTE(symbol) << " conflicts with SystemTrue symbol " <<
+			 QUOTE(trueSymbol) << " on " << *trueSymbol << '.');
+	  }
 	break;
       }
     case SymbolType::SYSTEM_FALSE:
       {
-	falseSymbol = static_cast<FreeSymbol*>(symbol);  // HACK
+	if (falseSymbol == 0)
+	  {
+	    falseSymbol = safeCast(FreeSymbol*, symbol);  // HACK
+	    boolSort = domainAndRange[0];
+	  }
+	else
+	  {
+	    IssueWarning(*symbol << ": declaration for SystemFalse symbol " <<
+			 QUOTE(symbol) << " conflicts with SystemFalse symbol " <<
+			 QUOTE(falseSymbol) << " on " << *falseSymbol << '.');
+	  }
 	break;
       }
 
@@ -654,6 +673,16 @@ MixfixModule::addPolymorph(Token prefixName,
 			   const Vector<int>& gather,
 			   const Vector<int>& format)
 {
+  int index = findPolymorphIndex(prefixName.code(), domainAndRange);
+  if (index != NONE)
+    {
+      IssueWarning(LineNumber(prefixName.lineNumber()) <<
+		   ": declaration for polymorphic operator " << QUOTE(prefixName) <<
+		   " duplicates declaration on " <<
+		   LineNumber(polymorphs[index].name.lineNumber()) << '.');
+      return index;
+    }
+
   int nrPolymorphs = polymorphs.length();
   polymorphs.expandBy(1);
   Polymorph& p = polymorphs[nrPolymorphs];

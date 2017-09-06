@@ -169,6 +169,10 @@ private:
   };
 
   static int iterToken(DagNode* dagNode);
+  static DagNode* upGroup(const Vector<DagNode*>& args,
+			  Symbol* emptyCase,
+			  Symbol* multipleCase);
+  static void convertToTokens(const Vector<int>& ids, Vector<Token>& tokens);
 
   DagNode* upQid(int id, PointerMap& qidMap);
   DagNode* upJoin(int id, Sort* sort, char sep, PointerMap& qidMap);
@@ -219,7 +223,19 @@ private:
 		     const OpDeclaration& decl,
 		     MixfixModule* m,
 		     PointerMap& qidMap);
+  DagNode* upModuleExpression(const ModuleExpression* e, PointerMap& qidMap);
+  DagNode* upRenaming(const Renaming* r, PointerMap& qidMap);
+  DagNode* upTypeSorts(const set<int>& sorts, PointerMap& qidMap);
+  DagNode* upRenamingAttributeSet(const Renaming* r, int index, PointerMap& qidMap);
 
+  bool downModuleExpression(DagNode* metaExpr, ImportModule*& m);
+  bool downRenamings(DagNode* metaRenamings, Renaming* renaming);
+  bool downRenaming(DagNode* metaRenaming, Renaming* renaming);
+  bool downRenamingTypes(DagNode* metaTypes, Renaming* renaming);
+  bool downRenamingType(DagNode* metaType, Renaming* renaming);
+  bool downRenamingAttributes(DagNode* metaRenamingAttributes, Renaming* renaming);
+  bool downRenamingAttribute(DagNode* metaRenamingAttribute, Renaming* renaming);
+  
   bool downVariable(DagNode* metaVariable, MixfixModule* m, Symbol*& vs);
   bool downTypeList(DagNode* metaTypeList, MixfixModule* m, Vector<Sort*>& typeList);
   bool downPolymorphTypeList(DagNode* metaTypeList,
@@ -307,6 +323,19 @@ MetaLevel::AttributeInfo::AttributeInfo()
   prec = DEFAULT;
   identity = 0;
   fixUpInfo = 0;
+}
+
+inline DagNode*
+MetaLevel::upGroup(const Vector<DagNode*>& args,
+		   Symbol* emptyCase,
+		   Symbol* multipleCase)
+{
+  int nrArgs = args.length();
+  if (nrArgs == 0)
+    return emptyCase->makeDagNode();
+  else if (nrArgs == 1)
+    return args[0];
+  return multipleCase->makeDagNode(args);
 }
 
 #endif

@@ -64,6 +64,8 @@ maude_LDADD = \
 	$(DLMALLOC_LIB)
 
 maude_SOURCES = \
+	renaming.cc \
+	moduleCache.cc \
 	moduleExpression.cc \
 	importModule.cc \
 	importTranslation.cc \
@@ -120,9 +122,10 @@ surface.cc surface.h: surface.yy
 #	seem to work so...
 lexer.cc: \
 	$(srcdir)/lexer.ll surface.h
-	$(FLEX) -t -pp $(srcdir)/lexer.ll > lexer.cc
+	$(FLEX) -t -p -p $(srcdir)/lexer.ll > lexer.cc
 
 EXTRA_DIST = \
+	renameModule.cc \
 	lexerAux.cc \
 	import.cc \
 	process.cc \
@@ -155,6 +158,8 @@ EXTRA_DIST = \
 	model-checker.maude
 
 noinst_HEADERS = \
+	renaming.hh \
+	moduleCache.hh \
 	moduleExpression.hh \
 	commonTokens.hh \
 	compiler.hh \

@@ -94,10 +94,8 @@ PreModule::setFlag(int flag)
 void
 PreModule::setPrec(Token precTok)
 {
-  const char* str = precTok.name();
-  char* pointer;
-  long prec = strtol(str, &pointer, 10);
-  if (pointer != str && *pointer == '\0' &&
+  int prec;
+  if (precTok.getInt(prec) &&
       prec >= MixfixModule::MIN_PREC && prec <= MixfixModule::MAX_PREC)
     {
       OpDef& opDef = opDefs[opDefs.length() - 1];
@@ -107,7 +105,7 @@ PreModule::setPrec(Token precTok)
   else
     {
       IssueWarning(LineNumber(precTok.lineNumber()) <<
-		   ": bad value " << QUOTE(str) << " for prec attribute.");
+		   ": bad value " << QUOTE(precTok) << " for prec attribute.");
     }
 }
 

@@ -25,21 +25,30 @@
 //
 #ifndef _importTranslation_hh_
 #define _importTranslation_hh_
+#include <list>
 #include "symbolMap.hh"
 #include "pointerMap.hh"
+
 
 class ImportTranslation : public SymbolMap
 {
   NO_COPYING(ImportTranslation);
 
 public:
-  ImportTranslation(ImportModule* importer);
+  ImportTranslation(ImportModule* target, Renaming* renaming = 0);
+  void push(Renaming* renaming, ImportModule* target);
   Symbol* translate(Symbol* symbol);
   Sort* translate(const Sort* sort);
   ConnectedComponent* translate(const ConnectedComponent* component);
+  int translateLabel(int id);
 
 private:
-  ImportModule* const importer;
+  static ConnectedComponent* translate(Renaming* renaming,
+				       ImportModule* target,
+				       const ConnectedComponent* old);
+
+  list<Renaming*> renamings;
+  list<ImportModule*> targets;
   PointerMap directMap;
 };
 
@@ -47,6 +56,13 @@ inline ConnectedComponent*
 ImportTranslation::translate(const ConnectedComponent* component)
 {
   return translate(component->sort(1))->component();
+}
+
+inline void
+ImportTranslation::push(Renaming* renaming, ImportModule* target)
+{
+  renamings.push_front(renaming);
+  targets.push_front(target);
 }
 
 #endif

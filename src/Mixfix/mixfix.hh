@@ -53,5 +53,6 @@ class CommonTokens;
 class MetadataStore;
 class ModuleExpression;
 class Renaming;
+class ModuleCache;
 
 #endif

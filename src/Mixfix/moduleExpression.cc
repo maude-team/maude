@@ -29,13 +29,16 @@
 #include "vector.hh"
 
 //      forward declarations
+#include "core.hh"
+#include "interface.hh"
 #include "mixfix.hh"
 
 //	front end class definitions
 #include "token.hh"
+#include "renaming.hh"
 #include "moduleExpression.hh"
 
-ModuleExpression::ModuleExpression(int moduleName)
+ModuleExpression::ModuleExpression(Token moduleName)
  : type(MODULE),
    moduleName(moduleName)
 {
@@ -44,9 +47,21 @@ ModuleExpression::ModuleExpression(int moduleName)
 ModuleExpression::ModuleExpression(ModuleExpression* left, ModuleExpression* right)
  : type(SUMMATION)
 {
-  // should we flatten summations?
-  modules.append(left);
-  modules.append(right);
+  if (right->type == SUMMATION)
+    {
+      modules.swap(right->modules);
+      delete right;
+    }
+  else
+    modules.push_front(right);
+
+  if (left->type == SUMMATION)
+    {
+      modules.splice(modules.begin(), left->modules);
+      delete left;
+    }
+  else
+    modules.push_front(left);
 }
 
 ModuleExpression::ModuleExpression(ModuleExpression* module, Renaming* renaming)
@@ -56,6 +71,22 @@ ModuleExpression::ModuleExpression(ModuleExpression* module, Renaming* renaming)
 {
 }
 
+void
+ModuleExpression::deepSelfDestruct()
+{
+  if (type == RENAMING)
+    {
+      module->deepSelfDestruct();
+      delete renaming;
+    }
+  else
+    {
+      FOR_EACH_CONST(i, list<ModuleExpression*>, modules)
+	(*i)->deepSelfDestruct();
+    }
+  delete this;
+}
+
 ostream&
 operator<<(ostream& s, const ModuleExpression* expr)
 {
@@ -63,7 +94,28 @@ operator<<(ostream& s, const ModuleExpression* expr)
     {
     case ModuleExpression::MODULE:
       {
-	cout << Token::name(expr->getModuleName());
+	s << expr->getModuleName();
+	break;
+      }
+    case ModuleExpression::SUMMATION:
+      {
+	const list<ModuleExpression*>& modules = expr->getModules();
+	const char* sep = "";
+	FOR_EACH_CONST(i, list<ModuleExpression*>, modules)
+	  {
+	    s << sep << *i;
+	    sep = " + ";
+	  }
+	break;
+      }
+    case ModuleExpression::RENAMING:
+      {
+	const ModuleExpression* module = expr->getModule();
+	if (module->getType() == ModuleExpression::SUMMATION)
+	  s << '(' << expr->getModule() << ')';
+	else
+	  s << expr->getModule();
+	s << " * " << expr->getRenaming();
 	break;
       }
     default:
@@ -71,4 +123,3 @@ operator<<(ostream& s, const ModuleExpression* expr)
     }
   return s;
 }
-

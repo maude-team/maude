@@ -26,6 +26,7 @@ libmeta_a_SOURCES = \
 
 EXTRA_DIST = \
 	metaDown.cc \
+	metaDownRenamings.cc \
 	metaDownOps.cc \
 	metaDownFixUps.cc \
 	metaLevelSignature.cc \

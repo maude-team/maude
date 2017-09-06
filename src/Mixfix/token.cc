@@ -64,6 +64,20 @@ operator<<(ostream& s, const Vector<Token>& tokens)
 }
 
 void
+Token::printTokens(ostream& s,
+		   const Vector<Token>& tokens,
+		   const char* seperator)
+{
+  const char* sep = "";
+  int nrTokens = tokens.length();
+  for (int i = 0; i < nrTokens; i++)
+    {
+      s << sep << tokens[i];
+      sep = seperator;
+    }
+}
+
+void
 Token::printTokenVector(ostream& s,
 			const Vector<Token>& tokens,
 			int first,
@@ -159,6 +173,16 @@ Token::quoteNameCode(int idCode)
   quotedName += stringTable.name(idCode);
   return encode(quotedName.c_str());
 }
+
+bool
+Token::getInt(int& value) const
+{
+  const char* str = name();
+  char* pointer;
+  value = strtol(str, &pointer, 10);
+  return pointer != str && *pointer == '\0';
+}
+
 /*
 int
 Token::extractMixfix(int prefixNameCode, Vector<int>& mixfixSyntax)
