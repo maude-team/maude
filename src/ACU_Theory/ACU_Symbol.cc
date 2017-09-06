@@ -432,3 +432,9 @@ ACU_Symbol::makeUnificationSubproblem()
 {
   return new ACU_UnificationSubproblem2(this);
 }
+
+int 
+ACU_Symbol::unificationPriority() const
+{
+  return 10;
+}

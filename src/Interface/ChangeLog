@@ -1,3 +1,11 @@
+2008-04-18  Steven Eker  <eker@goo.csl.sri.com>
+
+	* symbol.cc (unificationPriority): added
+
+	* symbol.hh (class Symbol): added decl for unificationPriority()
+
+===================================Maude91==========================================
+
 2008-03-23  Steven Eker  <eker@goo.csl.sri.com>
 
 	* dagNode.hh (class DagNode): deleted decls for old versions of

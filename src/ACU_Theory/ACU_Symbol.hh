@@ -60,6 +60,7 @@ public:
 			      DagNode* subject,
 			      Vector<Bdd>& generalizedSort);
   UnificationSubproblem* makeUnificationSubproblem();
+  int unificationPriority() const;
   //
   //	Member functions special to ACU_Symbol.
   //

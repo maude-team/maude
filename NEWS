@@ -1,3 +1,9 @@
+Overview of Changes in Maude alpha91
+====================================
+* fixed bug where natSystemSolve() would lose hooks during importation
+* fixed bug where unify command was not cleaning up after bad
+  unification problem
+
 Overview of Changes in Maude alpha90a
 =====================================
 * added stack overflow handling using libsigsegv

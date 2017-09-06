@@ -109,7 +109,7 @@ PendingUnificationStack::solve(bool findFirst, UnificationContext& solution)
 {
   DebugAdvisory("PendingUnificationStack::solve() findFirst = " << findFirst);
 #ifndef NO_ASSERT
-  dump(cerr);
+  //  dump(cerr);
 #endif
   if (findFirst ? makeNewSubproblem() : !(subproblemStack.empty()))
     {
@@ -137,37 +137,84 @@ PendingUnificationStack::makeNewSubproblem()
 {
   DebugAdvisory("makeNewSubproblem()");
 #ifndef NO_ASSERT
-  dump(cerr);
+  //  dump(cerr);
 #endif
+#if 1
   //
-  //	Find a theory with unsolved unifications and put all of its unsolved unifications
-  //	into a new active subproblem.
-  //	
+  //    Find a theory with unsolved unifications and put all of its unsolved unifications
+  //    into a new active subproblem.
+  //
   int nrTheories = theoryTable.size();
   for (int i = 0; i < nrTheories; ++i)
     {
       int j = theoryTable[i].firstProblemInTheory;
       if (j != NONE)
-	{
-	  UnificationSubproblem* sp = theoryTable[i].controllingSymbol->makeUnificationSubproblem();
-	  do
-	    {
-	      PendingUnification& p = unificationStack[j];
-	      sp->addUnification(p.lhs, p.rhs);
-	      j = p.nextProblemInTheory;
-	    }
-	  while (j != NONE);
-	  int nrSubproblems = subproblemStack.size();
-	  subproblemStack.resize(nrSubproblems + 1);
-	  ActiveSubproblem& a = subproblemStack[nrSubproblems];
-	  a.theoryIndex = i;
-	  a.savedFirstProblem = theoryTable[i].firstProblemInTheory;
-	  a.subproblem = sp;
-	  theoryTable[i].firstProblemInTheory = NONE;
-	  return true;
-	}
+        {
+          UnificationSubproblem* sp = theoryTable[i].controllingSymbol->makeUnificationSubproblem();
+          do
+            {
+              PendingUnification& p = unificationStack[j];
+              sp->addUnification(p.lhs, p.rhs);
+              j = p.nextProblemInTheory;
+            }
+          while (j != NONE);
+          int nrSubproblems = subproblemStack.size();
+          subproblemStack.resize(nrSubproblems + 1);
+          ActiveSubproblem& a = subproblemStack[nrSubproblems];
+          a.theoryIndex = i;
+          a.savedFirstProblem = theoryTable[i].firstProblemInTheory;
+          a.subproblem = sp;
+          theoryTable[i].firstProblemInTheory = NONE;
+          return true;
+        }
     }
   return false;
+#else
+  //
+  //	Find the theory with the most unsolved unifications.
+  //	This doesn't seem beneficial so far so we use the old code in the release build.
+  //	
+  int chosenTheory = NONE;
+  int maxUnsolved = 0;
+  int nrTheories = theoryTable.size();
+  for (int i = 0; i < nrTheories; ++i)
+    {
+      int nrUnsolved = 0;
+      for (int j = theoryTable[i].firstProblemInTheory; j != NONE; j = unificationStack[j].nextProblemInTheory)
+	++nrUnsolved;
+      DebugAdvisory("theory " << theoryTable[i].controllingSymbol << " has " << nrUnsolved << " unsolved unifications");
+      nrUnsolved *= theoryTable[i].controllingSymbol->unificationPriority();
+      if (nrUnsolved > maxUnsolved)
+	{
+	  if (maxUnsolved > 0)
+	    { cerr << "choice situation\n";  dump(cerr); }
+	  chosenTheory = i;
+	  maxUnsolved = nrUnsolved;
+	}
+      
+    }
+  if (maxUnsolved == 0)
+    return false;
+  //
+  //	Put all of its unsolved unifications into a new active subproblem.
+  //
+  Theory& t = theoryTable[chosenTheory];
+  UnificationSubproblem* sp = t.controllingSymbol->makeUnificationSubproblem();
+  for (int j = t.firstProblemInTheory; j != NONE;)
+    {
+      PendingUnification& p = unificationStack[j];
+      sp->addUnification(p.lhs, p.rhs);
+      j = p.nextProblemInTheory;
+    }
+  int nrSubproblems = subproblemStack.size();
+  subproblemStack.resize(nrSubproblems + 1);
+  ActiveSubproblem& a = subproblemStack[nrSubproblems];
+  a.theoryIndex = chosenTheory;
+  a.savedFirstProblem = t.firstProblemInTheory;
+  a.subproblem = sp;
+  t.firstProblemInTheory = NONE;
+  return true;
+#endif
 }
 
 void
@@ -175,7 +222,7 @@ PendingUnificationStack::killTopSubproblem()
 {
   DebugAdvisory("killTopSubproblem()");
 #ifndef NO_ASSERT
-  dump(cerr);
+  //  dump(cerr);
 #endif
   //
   //	Kill the top element of the active subproblem stack, and link the unifications it was

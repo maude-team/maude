@@ -5,6 +5,7 @@ TESTS = \
 	renaming \
 	dataStructures \
 	parameterization \
+	unification \
 	diophantine
 
 MAUDE_FILES = \
@@ -14,6 +15,7 @@ MAUDE_FILES = \
 	renaming.maude \
 	dataStructures.maude \
 	parameterization.maude \
+	unification.maude \
 	diophantine.maude
 
 
@@ -24,6 +26,7 @@ RESULT_FILES = \
 	renaming.expected \
 	dataStructures.expected \
 	parameterization.expected \
+	unification.expected \
 	diophantine.expected
 
 EXTRA_DIST = $(TESTS) $(MAUDE_FILES) $(RESULT_FILES)

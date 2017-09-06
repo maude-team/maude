@@ -1,3 +1,11 @@
+2008-04-18  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_Symbol.hh (class ACU_Symbol): added decl for unificationPriority()
+
+	* ACU_Symbol.cc (unificationPriority): added
+
+===================================Maude91===========================================
+
 2008-03-23  Steven Eker  <eker@goo.csl.sri.com>
 
 	* ACU_DagNode.hh (class ACU_DagNode): ACU_UnificationSubproblem,

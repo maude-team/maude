@@ -1,3 +1,10 @@
+2008-04-10  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unificationProblem.cc (UnificationProblem): change variable name
+	warning
+
+===================================Maude91===========================================
+
 2008-02-12  Steven Eker  <eker@goo.csl.sri.com>
 
 	* narrowingUnificationProblem.cc (markReachableNodes): symmetric

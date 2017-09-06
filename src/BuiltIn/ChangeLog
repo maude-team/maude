@@ -1,3 +1,10 @@
+2008-04-10  Steven Eker  <eker@goo.csl.sri.com>
+
+	* matrixOpSymbol.cc (MACRO): added
+
+	* matrixOpSymbol.hh (class MatrixOpSymbol): added decl for
+	copyAttachments()
+
 2007-09-06  Steven Eker  <eker@goo.csl.sri.com>
 
 	* branchSymbol.cc (computeBaseSort): added explanation of what it

@@ -55,6 +55,8 @@ Interpreter::unify(const Vector<Token>& bubble, bool withExtension, Int64 limit)
   UnificationProblem* problem = new UnificationProblem(lhs, rhs, new FreshVariableSource(fm), withExtension);
   if (problem->problemOK())
     doUnification(timer, fm, problem, 0, limit);
+  else
+    delete problem;
 #ifdef QUANTIFY_REWRITING
   else
     quantify_stop_recording_data();

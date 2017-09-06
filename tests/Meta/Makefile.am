@@ -1,5 +1,6 @@
 TESTS = \
 	metaApply \
+	metaUnify \
 	metaFrewrite \
 	metaMatch \
 	metaMeta \
@@ -25,6 +26,7 @@ TESTS = \
 
 MAUDE_FILES = \
 	metaApply.maude \
+	metaUnify.maude \
 	metaFrewrite.maude \
 	metaMatch.maude \
 	metaMeta.maude \
@@ -50,6 +52,7 @@ MAUDE_FILES = \
 
 RESULT_FILES = \
 	metaApply.expected \
+	metaUnify.expected \
 	metaFrewrite.expected \
 	metaApply.expected \
 	metaFrewrite.expected \

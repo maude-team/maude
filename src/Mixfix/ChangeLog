@@ -1,3 +1,9 @@
+2008-04-20  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unify.cc (unify): fix bug where we were not deleting problem
+	after problemOK failed, allowing a garbage collect to call the bad
+	problems markReachableNodes()
+
 2008-03-23  Steven Eker  <eker@goo.csl.sri.com>
 
 	* top.yy: deleted KW_XUNIFY
