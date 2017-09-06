@@ -1,3 +1,25 @@
+/*
+
+    This file is part of the Maude 2 interpreter.
+
+    Copyright 1997-2003 SRI International, Menlo Park, CA 94025, USA.
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
+
+*/
+
 //
 //      Implementation for AC/ACU matcher that works on red-black trees.
 //
@@ -509,6 +531,41 @@ ACU_LhsAutomaton::treeMatch(ACU_TreeDagNode* subject,
 	{
 	  if (solution.value(i->index) == 0)
 	    return forcedLoneVariableCase(subject, *i, solution, returnedSubproblem);
+	}
+      CantHappen("didn't find unbound variable");
+    }
+  if (matchStrategy == FULL)
+    {
+      Assert(nrUnboundVariables <= 1, "nrUnboundVariables = " << nrUnboundVariables);
+      if (nrUnboundVariables != 1)
+	return UNDECIDED;  // should be smarter
+      if (current.getSize() == 0)
+	return UNDECIDED;  // should be smarter
+      if (current.getSize() == 1 && current.getMaxMult() == 1)
+	return UNDECIDED;  // should be smarter
+      //
+      //	The only way we can be here is if we have a nonground alien
+      //	and a collector variable, and no extension.
+      //
+      Assert(nonGroundAliens.length() == 1,
+	     "wrong number of nonGroundAliens" << nonGroundAliens.length());
+      Assert(extensionInfo == 0, "should not have extension");
+
+      FOR_EACH_CONST(i, Vector<TopVariable>, topVariables)
+	{
+	  if (solution.value(i->index) == 0)
+	    {
+	      Assert(i->multiplicity == 1, "collector multiplicity = " << i->multiplicity);
+	      returnedSubproblem =
+		new ACU_LazySubproblem(subject,
+				       current,
+				       solution,
+				       nonGroundAliens[0].automaton,
+				       nonGroundAliens[0].term,
+				       i->index,
+				       i->sort);
+	      return true;
+	    }
 	}
       CantHappen("didn't find unbound variable");
     }

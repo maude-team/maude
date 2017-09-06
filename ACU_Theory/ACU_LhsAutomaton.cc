@@ -1,3 +1,25 @@
+/*
+
+    This file is part of the Maude 2 interpreter.
+
+    Copyright 1997-2003 SRI International, Menlo Park, CA 94025, USA.
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
+
+*/
+
 //
 //      Implementation for class ACU_LhsAutomaton.
 //
@@ -46,6 +68,7 @@
 #include "ACU_TreeDagNode.hh"
 #include "ACU_LhsAutomaton.hh"
 #include "ACU_Subproblem.hh"
+#include "ACU_LazySubproblem.hh"
 #include "ACU_ExtensionInfo.hh"
 
 //	our stuff
@@ -71,8 +94,8 @@ ACU_LhsAutomaton::ACU_LhsAutomaton(ACU_Symbol* symbol,
   uniqueCollapseAutomaton = 0;
   treeMatchOK = true;
   collectorSeen = matchAtTop;
+  nrExpectedUnboundVariables = 0;
 } 
-
 
 ACU_LhsAutomaton::~ACU_LhsAutomaton()
 {
@@ -107,7 +130,10 @@ ACU_LhsAutomaton::addTopVariable(const VariableTerm* variable,
 {
   Sort* s = variable->getSort();
   int bound = topSymbol->sortBound(s);
-  collectorSeen = collectorSeen || (!willBeBound && bound == UNBOUNDED);
+  collectorSeen = collectorSeen ||
+    (!willBeBound && bound == UNBOUNDED && multiplicity == 1);
+  if (!willBeBound)
+    ++nrExpectedUnboundVariables;
   bool takeIdentity = topSymbol->takeIdentity(s);
   int nrTopVariables = topVariables.length();
   topVariables.expandBy(1);
@@ -217,9 +243,26 @@ ACU_LhsAutomaton::complete(MatchStrategy strategy,
   //	treeMatchOK will have already been falsified if (3) or (4) fail to
   //	hold. We check (5). (7) is recorded by the collectorSeen flag.
   //
-  treeMatchOK = treeMatchOK &&
-    (strategy == LONE_VARIABLE || strategy == GREEDY) &&
-    collectorSeen;
+  if (treeMatchOK)
+    {
+      if (strategy == LONE_VARIABLE || strategy == GREEDY)
+	treeMatchOK = collectorSeen;
+      else if (strategy == FULL)
+	{
+	  //
+	  //	We now allow non-greedy tree matching if there is a single
+	  //	alien with multiplicity and a single unbound variable with
+	  //	multiplicity 1 and no extension.
+	  //
+	  treeMatchOK = collectorSeen &&
+	    !matchAtTop &&
+	    nrExpectedUnboundVariables == 1 &&
+	    nonGroundAliens.length() == 1 &&
+	    nonGroundAliens[0].multiplicity == 1;
+	}
+      else
+	treeMatchOK = false;
+    }
 
   matchStrategy = strategy;
   Assert(nrIndependent <= nonGroundAliens.length(), "too many independent");
@@ -237,7 +280,7 @@ ACU_LhsAutomaton::dump(ostream& s, const VariableInfo& variableInfo, int indentL
     "\"\tmatchAtTop = " << static_cast<bool>(matchAtTop) <<
     "\tcollapsePossible = " << static_cast<bool>(collapsePossible) << '\n';
   s << Indent(indentLevel) << "treeMatchOK = " << static_cast<bool>(treeMatchOK) <<
-    "\tcollectorSeen = " << collectorSeen <<
+    "\tcollectorSeen = " << static_cast<bool>(collectorSeen) <<
     "\tmatchStrategy = " << static_cast<MatchStrategy>(matchStrategy) << '\n';
   if (uniqueCollapseAutomaton != 0)
     {

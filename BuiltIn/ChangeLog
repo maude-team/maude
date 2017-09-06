@@ -1,3 +1,18 @@
+2003-05-30  Steven Eker  <eker@goo.csl.sri.com>
+
+	* equalitySymbol.cc (domainSortAlwaysLeqThan): added
+
+	* equalitySymbol.hh (class EqualitySymbol): added decl for
+	domainSortAlwaysLeqThan()
+
+	* branchSymbol.cc (rangeSortNeverLeqThan): added
+	(rangeSortAlwaysLeqThan): added
+	(domainSortAlwaysLeqThan): added
+
+	* branchSymbol.hh (class BranchSymbol): added decls for
+	rangeSortNeverLeqThan(), rangeSortAlwaysLeqThan(),
+	domainSortAlwaysLeqThan()
+
 2003-05-15  Steven Eker  <eker@goo.csl.sri.com>
 
 	* ACU_NumberOpSymbol.cc (eqRewrite2): fix bug in case that some

@@ -1,3 +1,9 @@
+2003-05-27  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaDown.cc (downImport): handle extendingSymbol
+
+	* metaLevelSignature.cc (MACRO): added extendingSymbol
+
 2003-05-23  Steven Eker  <eker@goo.csl.sri.com>
 
 	* metaUpModule.cc (upMbs): only up non-bad mbs

@@ -1,3 +1,52 @@
+2003-05-29  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_TreeMatcher.cc (treeMatch): added extra Assert()s for FULL case
+
+	* ACU_LhsAutomaton.cc (addTopVariable): update nrExpectedUnboundVariables
+	(ACU_LhsAutomaton): clear nrExpectedUnboundVariables
+	(addTopVariable): fix bug where we were not checking that
+	multiplicity == 1 in order to set collectorSeen
+
+	* ACU_LhsAutomaton.hh (class ACU_LhsAutomaton): data member
+	nrExpectedUnboundVariables
+
+	* ACU_LhsAutomaton.cc (complete): fix bug where we weren't
+	checking that single nga had multiplicity 1 before enabling
+	treeMatchOK in FULL case
+
+	* ACU_TreeMatcher.cc (treeMatch): check for only 1 thing left in
+	FULL case
+
+	* ACU_LazySubproblem.cc (ACU_LazySubproblem): call ctors for
+	matchTime and local
+	(bindCollector): use checkSort()
+	(bindCollector): added Assert() for empty tree
+
+	* ACU_LhsAutomaton.cc (complete): allow the use of tree matching
+	in some FULL cases
+
+	* ACU_LazySubproblem.cc (bindCollector): simplified as
+	collectorSort will never be 0
+
+	* ACU_TreeMatcher.cc (treeMatch): use ACU_LazySubproblem()
+
+	* ACU_LazySubproblem.hh (class ACU_LazySubproblem): added decl for
+	bindCollector()
+	(class ACU_LazySubproblem): replaced topSymbol with subject;
+	updated decls for bindCollector() and ctor
+
+	* ACU_LazySubproblem.cc (ACU_LazySubproblem): init topSymbol
+
+	* ACU_LazySubproblem.hh (class ACU_LazySubproblem): added data
+	member topSymbol; updated decl for ctor
+
+	* ACU_LazySubproblem.cc (ACU_LazySubproblem): remaining arg is now
+	a const ACU_Tree&; use copy() to initialize matchTime
+	(bindCollector): added
+
+	* ACU_LazySubproblem.hh (class ACU_LazySubproblem): data member
+	remaining becomes ACU_Tree; updated decl for ctor
+
 2003-05-19  Steven Eker  <eker@goo.csl.sri.com>
 
 	* ACU_Normalize.cc (normalizeAtTop): use useTree()

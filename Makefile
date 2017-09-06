@@ -22,11 +22,13 @@ whole:
 	cd $(ROOT_DIR)/Temporal; $(MAKE) clean; $(MAKE) -e
 	cd $(ROOT_DIR)/BuiltIn; $(MAKE) clean; $(MAKE) -e
 	cd $(ROOT_DIR)/MSCP10; $(MAKE) clean; $(MAKE) -e
-	cd $(ROOT_DIR)/FullCompiler; $(MAKE) clean; $(MAKE) -e
 	cd $(ROOT_DIR)/Meta; $(MAKE) clean; $(MAKE) -e
 	cd $(ROOT_DIR)/ObjectSystem; $(MAKE) clean; $(MAKE) -e
 	cd $(ROOT_DIR)/System; $(MAKE) clean; $(MAKE) -e
 	cd $(ROOT_DIR)/Mixfix; $(MAKE) clean; $(MAKE) -e
+
+#	cd $(ROOT_DIR)/FullCompiler; $(MAKE) clean; $(MAKE) -e
+
 
 clean:
 	cd $(ROOT_DIR)/Core; $(MAKE) clean

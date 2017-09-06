@@ -27,15 +27,18 @@ DFLAGS =	-DLINUX \
 		-DLIBv3 \
 		-DNO_ASSERT \
 		-DSPEED_HACKS \
-		-DCOMPILER \
-		-DANNOTATE \
 		-DLOCAL_INLINES \
 		-I/homes/eker/include \
 		-L/homes/eker/Linux/3.2/lib \
 		$(OFLAGS) $(WFLAGS)
+
+#		-DCOMPILER \
+#		-DANNOTATE \
 
 GMP_LIB_DIR =	/homes/eker/Linux/3.2/lib
 
 LINKAGE =	-static
 
 ARFLAGS =	rus
+
+DLMALLOC=	-ldlmalloc

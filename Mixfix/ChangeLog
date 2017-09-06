@@ -1,3 +1,23 @@
+2003-05-31  Steven Eker  <eker@goo.csl.sri.com>
+
+	* interact.cc (segmentationFaultHandler): use system call rather
+	than stream to output message since line wrapper can't be relied
+	on
+
+	* fixUp.cc (findHookSymbol): made slightly more robust in the case
+	of a missing sort
+
+2003-05-30  Steven Eker  <eker@goo.csl.sri.com>
+
+	* maudemlBuffer.cc (generate): (Term* version) use variable q
+	(generate): (DagNode* version) use variable q
+
+	* lexerAux.cc: deleted SUNOS #ifdef
+
+2003-05-28  Steven Eker  <eker@goo.csl.sri.com>
+
+	* banner.cc: replaced LIBv3 #ifdef
+
 2003-05-23  Steven Eker  <eker@goo.csl.sri.com>
 
 	* importModule.cc (donateStatements): copy metadata (this fixes a

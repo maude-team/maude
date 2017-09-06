@@ -35,15 +35,19 @@ DFLAGS =	-DSOLARIS \
 		-DLIBv3 \
 		-DNO_ASSERT \
 		-DSPEED_HACKS \
-		-DCOMPILER \
-		-DANNOTATE \
 		-DLOCAL_INLINES \
 		-I/homes/eker/include \
 		-L/homes/eker/Solaris/3.2/lib \
 		$(OFLAGS) $(WFLAGS)
+
+#		-DCOMPILER \
+#		-DANNOTATE \
+
 
 GMP_LIB_DIR =	/homes/eker/Solaris/3.2/lib
 
 LINKAGE =
 
 ARFLAGS =	rus
+
+DLMALLOC=	-ldlmalloc

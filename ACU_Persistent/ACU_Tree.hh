@@ -1,3 +1,25 @@
+/*
+
+    This file is part of the Maude 2 interpreter.
+
+    Copyright 1997-2003 SRI International, Menlo Park, CA 94025, USA.
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
+
+*/
+
 //
 //	Class for red-black trees of argument-multiplicity pairs.
 //
@@ -6,6 +28,7 @@
 #include "argVec.hh"
 #include "ACU_Pair.hh"
 #include "ACU_RedBlackNode.hh"
+#include "ACU_Stack.hh"
 
 class ACU_Tree
 {
@@ -29,6 +52,7 @@ public:
 
   void insertMult(DagNode* dagNode, int multiplicity);
   void deleteMult(ACU_Stack& path, int multiplicity);
+  void deleteMult2(ACU_Stack& path, int multiplicity);
 
   int computeBaseSort(BinarySymbol* symbol) const;
   void mark();
@@ -148,6 +172,28 @@ ACU_Tree::deleteMult(ACU_Stack& path, int multiplicity)
   int delta;
   root = ACU_RedBlackNode::consDelete(path, multiplicity, delta);
   size += delta;
+
+#ifdef CHECK_TREE
+  checkIntegrity(dagNode, multiplicity);
+#endif
+}
+
+inline void
+ACU_Tree::deleteMult2(ACU_Stack& path, int multiplicity)
+{
+  //
+  //	This version preserves the stack.
+  //
+#ifdef CHECK_TREE
+  checkIntegrity();
+  ACU_RedBlackNode* dagNode = path.top();
+#endif
+
+  path.save();
+  int delta;
+  root = ACU_RedBlackNode::consDelete(path, multiplicity, delta);
+  size += delta;
+  path.restore();
 
 #ifdef CHECK_TREE
   checkIntegrity(dagNode, multiplicity);

@@ -1,3 +1,28 @@
+2003-05-30  Steven Eker  <eker@goo.csl.sri.com>
+
+	* sortTable.hh (class SortTable): added decl for
+	kindLevelDeclarationsOnly()
+
+	* sortTable.cc (kindLevelDeclarationsOnly): added
+
+2003-05-29  Steven Eker  <eker@goo.csl.sri.com>
+
+	* substitution.hh (nrFragileBindings): made const
+
+2003-05-28  Steven Eker  <eker@goo.csl.sri.com>
+
+	* sortConstraintTable.cc (constrainToSmallerSort2): use
+	MemoryCell::okToCollectGarbage() (2 places)
+
+	* run.cc (ruleRewrite): use MemoryCell::okToCollectGarbage()
+	(ascend): use MemoryCell::okToCollectGarbage()
+	(doRewriting): use MemoryCell::okToCollectGarbage()
+
+	* preEquation.cc (checkCondition): use
+	MemoryCell::okToCollectGarbage()
+	
+===================================Maude80b===========================================
+
 2003-05-23  Steven Eker  <eker@goo.csl.sri.com>
 
 	* ruleTable.cc (applyRules): use isNonexec()

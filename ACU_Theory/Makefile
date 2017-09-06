@@ -18,7 +18,8 @@ MODULES =	ACU_Symbol.o \
 		ACU_NonLinearLhsAutomaton.o \
 		ACU_ArgumentIterator.o \
 		ACU_DagArgumentIterator.o \
-		ACU_TreeDagArgumentIterator.o
+		ACU_TreeDagArgumentIterator.o \
+		ACU_LazySubproblem.o
 
 IFLAGS =        -I$(ROOT_DIR)/Core \
                 -I$(ROOT_DIR)/Interface \

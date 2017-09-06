@@ -16,24 +16,20 @@ BISON =	bison
 FLEX =	flex
 CC =	gcc-3.2
 CXX =	g++-3.2
-#CC =	gcc
-#CXX =	g++
 AR =	ar
 
-# -Wno-reorder is needed for rope package!
-DFLAGS =	-Wall -Wno-non-virtual-dtor -DSOLARIS  -DLIBv3 \
-		-g -DDUMP -DCOMPILER -DANNOTATE -DTDEBUG -fno-exceptions \
+DFLAGS =	-Wall -Wno-non-virtual-dtor -DSOLARIS -DLIBv3 \
+		-g -DDUMP -DTDEBUG -fno-exceptions \
 		-I/homes/eker/include \
 		-L/homes/eker/Solaris/3.2/lib
 
+#		-g -DDUMP -DCOMPILER -DANNOTATE -DTDEBUG -fno-exceptions \
+
 GMP_LIB_DIR =	/homes/eker/Solaris/3.2/lib
 
-#DFLAGS =	-Wall -Wno-non-virtual-dtor -Wno-reorder -DSOLARIS \
-
-#		-I/csl/include \
-#		-L/homes/eker/Solaris/lib
-#		-ggdb -DDUMP -DCOMPILER -DANNOTATE -DTDEBUG -fno-exceptions \
 
 LINKAGE =
 
 ARFLAGS =	rus
+
+DLMALLOC=	-ldlmalloc

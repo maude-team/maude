@@ -1,3 +1,25 @@
+/*
+
+    This file is part of the Maude 2 interpreter.
+
+    Copyright 1997-2003 SRI International, Menlo Park, CA 94025, USA.
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
+
+*/
+
 //
 //      Implementation for class AssociativeSymbol.
 //
@@ -110,28 +132,27 @@ AssociativeSymbol::associativeSortCheck()
   Assert(domainComponent(0) == component && domainComponent(1) == component,
 	 "Associative operator " << this <<
 	 " has a domain sort in a different connected component from its range sort");
+  uniSort = 0;
+
+  if (kindLevelDeclarationsOnly())
+    return;
+  WarningCheck(getSortConstraints().empty(),
+	       "membership axioms are not guaranteed to work correctly for associative symbol " <<
+	       QUOTE(this) << " as it has declarations that are not at the kind level.");
+
   int nrSorts = component->nrSorts();
   //
-  //	First check to see if symbol has a uniform sort table.
-  //	(in which case it is automatically  associative and
-  //	and a single sort constraint is guaranteed to work correctly).
+  //	Check to see if symbol has a uniform sort table.
+  //	(in which case it is automatically  associative).
   //	We do this by taking the singleNonErrorSort if it has one
   //	and checking it for uniformity.
   //
-  uniSort = 0;
   Sort* candidate = getSingleNonErrorSort();
   if (candidate != 0 && checkUniformity(candidate, nrSorts))
-    uniSort = candidate;
-  int nrSortConstraints = getSortConstraints().length();
-  if (uniSort != 0) //FIX
     {
-      WarningCheck(nrSortConstraints <= 1, "associative symbol \"" << this <<
-		   "\" has multiple sort constraints which are not guaranteed to work correctly.");
+      uniSort = candidate;
       return;
     }
-  WarningCheck(nrSortConstraints == 0,
-	       "sort constraints are not guaranteed to work correctly for associative symbol \""
-	       << this << "\" as it has a non-uniform sort structure.");
   //
   //   Sort table is not uniform so check all triples to see if it is associative.
   //

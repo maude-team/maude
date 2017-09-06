@@ -1,3 +1,33 @@
+2003-05-30  Steven Eker  <eker@goo.csl.sri.com>
+
+	* associativeSymbol.hh (class AssociativeSymbol): deleted decl for
+	kindLevelDeclarationsOnly()
+
+	* associativeSymbol.cc (kindLevelDeclarationsOnly): deleted
+
+	* symbol.hh (class Symbol): virtualized rangeSortNeverLeqThan(),
+	rangeSortAlwaysLeqThan(), domainSortAlwaysLeqThan()
+
+2003-05-29  Steven Eker  <eker@goo.csl.sri.com>
+
+	* binarySymbol.cc (rightIdentitySortCheck): updated comment
+
+	* associativeSymbol.cc (associativeSortCheck): use QUOTE()
+
+2003-05-28  Steven Eker  <eker@goo.csl.sri.com>
+
+	* associativeSymbol.hh (class AssociativeSymbol): added decl for
+	kindLevelDeclarationsOnly()
+
+	* associativeSymbol.cc (kindLevelDeclarationsOnly): added
+	(associativeSortCheck): use kindLevelDeclarationsOnly(); warn if
+	there are memberships together with declarations that are not at
+	the kind level
+
+	* dagNode.hh (okToCollectGarbage): deleted
+	
+===================================Maude80b===========================================
+
 2003-05-22  Steven Eker  <eker@goo.csl.sri.com>
 
 	* dagNode.hh (mark): tighten Assert()

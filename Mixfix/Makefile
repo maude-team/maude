@@ -22,12 +22,13 @@ MODULES =       importModule.o \
 		maudemlBuffer.o \
 		interpreter.o \
 		moduleDatabase.o \
-		compiler.o \
 		profileModule.o \
 		mixfixParser.o \
 		visibleModule.o \
 		commonTokens.o \
 		metadataStore.o
+
+#		compiler.o \
 
 
 IFLAGS =        -I$(ROOT_DIR)/Core \
@@ -66,12 +67,12 @@ LFLAGS =	-L$(ROOT_DIR)/Core \
 		-L$(ROOT_DIR)/Utility \
 		-L$(ROOT_DIR)/Temporal \
 		-L$(ROOT_DIR)/BuiltIn \
-		-L$(ROOT_DIR)/FullCompiler \
 		-L$(ROOT_DIR)/Meta \
 		-L$(ROOT_DIR)/MSCP10 \
 		-L$(ROOT_DIR)/ObjectSystem \
 		-L$(ROOT_DIR)/System
 
+#		-L$(ROOT_DIR)/FullCompiler \
 
 OUR_LIBS =	-lmeta \
 		-lobjectSystem \
@@ -88,7 +89,6 @@ OUR_LIBS =	-lmeta \
 		-lcore \
 		-linterface \
 		-lvariable \
-		-lfullCompiler \
 		-lcore \
 		-linterface \
 		-lmscp10 \
@@ -96,6 +96,7 @@ OUR_LIBS =	-lmeta \
 		-lsystem \
 		-lutility
 
+#		-lfullCompiler \
 
 #  We need the following 3rd party libraries
 #  (in addition to those normally linked in by g++):
@@ -106,7 +107,7 @@ OUR_LIBS =	-lmeta \
 #	gmp		GNU GMP (http://www.swox.com/gmp/)
 #	gmpxx		C++ bindings for GNU GMP
 
-OTHER_LIBS =	-ldlmalloc \
+OTHER_LIBS =	$(DLMALLOC) \
 		-lbdd \
 		-ltecla \
 		-lcurses
@@ -136,12 +137,6 @@ PURIFY_FLAGS =	-free-queue-length=10000 \
 		-chain-length="20" \
 		-cache-dir=$(CACHE_DIR) \
 		-always-use-cache-dir
-
-#PURIFY_FLAGS =	-free-queue-length=100000 \
-#		-free-queue-threshold=10000000 \
-#		-chain-length="20" \
-#		-cache-dir=$(CACHE_DIR) \
-#		-always-use-cache-dir
 
 PURECOV_FLAGS =
 

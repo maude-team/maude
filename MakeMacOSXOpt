@@ -1,5 +1,5 @@
 #
-#	Optimized version for Linux.
+#	Optimized version for MaxOSX
 #
 
 #
@@ -27,8 +27,6 @@ DFLAGS =	-DMACOSX \
 		-DLIBv3 \
 		-DNO_ASSERT \
 		-DSPEED_HACKS \
-		-DCOMPILER \
-		-DANNOTATE \
 		-DTRUE=TRUE \
 		-DFALSE=FALSE \
 		-DLOCAL_INLINES \
@@ -38,6 +36,9 @@ DFLAGS =	-DMACOSX \
 		-L$(HOME)/local/lib \
 		-g \
 		$(OFLAGS) $(WFLAGS)
+
+#		-DCOMPILER \
+#		-DANNOTATE \
 
 GMP_LIB_DIR =	/sw/lib
 
