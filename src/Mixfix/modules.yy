@@ -86,9 +86,13 @@ argList		:	argList ',' token		{ store($3); }
  */
 renaming	:	'('
 			{
-			  currentRenaming = new Renaming;
+			  oldSyntaxContainer = currentSyntaxContainer;
+			  currentSyntaxContainer = currentRenaming = new Renaming;
 			}
 			mappingList ')'
+			{
+			  currentSyntaxContainer = oldSyntaxContainer;
+			}
 		;
 
 mappingList	:	mappingList ',' mapping
@@ -118,25 +122,8 @@ fromOpName	:	token			{ clear(); store($1); }
 			}
 		;
 
-fromSpec	:	':' fromTypeList arrow fromType {}
+fromSpec	:	':' typeList arrow typeName {}
 		|
-		;
-
-fromTypeList	:	fromTypeList fromType
-		|
-		;
-
-fromType	:	sortName
-			{
-			  clear();
-			  bubble.append($1);
-			  currentRenaming->addType(bubble);
-			}
-		|	'['			{ clear(); }
-			sortNames ']'
-			{
-			  currentRenaming->addType(bubble);
-			}
 		;
 
 toOpName	:	token			{ clear(); store($1); }
@@ -170,6 +157,7 @@ view		:	KW_VIEW			{ lexerIdMode(); }
 			{
 			  fileTable.beginModule($1, $3);
 			  interpreter.setCurrentView(new View($3));
+			  currentSyntaxContainer = CV;
 			  CV->addFrom(moduleExpressions.top());
 			  moduleExpressions.pop();
 			}
@@ -177,15 +165,13 @@ view		:	KW_VIEW			{ lexerIdMode(); }
 			{
 			  CV->addTo(moduleExpressions.top());
 			  moduleExpressions.pop();
-			  currentRenaming = CV;  // trick to reuse renaming fromOpName, fromSpec syntax
 			}
 			KW_IS viewDecList KW_ENDV
 			{
 			  lexerInitialMode();
 			  fileTable.endModule(lineNumber);
-			  CV->finishView();
 			  interpreter.insertView(($3).code(), CV);
-			  currentRenaming = 0;
+			  CV->finishView();
 			}
 		;
 
@@ -197,8 +183,9 @@ viewDeclaration	:	KW_SORT sortName KW_TO sortDot
 			{
 			  CV->addSortMapping($2, $4);
 			}
-		|	KW_OP fromOpName fromSpec KW_TO	{ clear(); }
-			endStatement			{ CV->addOpTarget(bubble); }
+		|	KW_VAR varNameList ':' typeDot {}
+		|	KW_OP			{ clear(); }
+			tokensBarColonTo viewEndOpMap
 		;
 
 sortDot		:	sortName '.'		{ $$ = $1; }
@@ -212,6 +199,55 @@ sortDot		:	sortName '.'		{ $$ = $1; }
 			}
 		;
 
+viewEndOpMap	:	':'
+			{
+			  //
+			  //	Specific op->op mapping.
+			  //
+			  Token::peelParens(bubble);  // remove any enclosing parens from op name
+			  CV->addOpMapping(bubble);
+			}
+			typeList arrow typeName KW_TO
+			{
+			  clear();
+			}
+			endStatement
+			{
+			  Token::peelParens(bubble);  // remove any enclosing parens from op name
+			  CV->addOpTarget(bubble);
+			}
+		|	KW_TO
+			{
+			  //
+			  //	At this point we don't know if we have an op->term mapping
+			  //	or a generic op->op mapping so we save the from description and
+			  //	press on.
+			  //
+			  opDescription = bubble;
+			  clear();
+			}
+			endStatement
+			{
+			  if (bubble[0].code() == Token::encode("term"))
+			    {
+			      //
+			      //	Op->term mapping.
+			      //
+			      CV->addOpTermMapping(opDescription, bubble);
+			    }
+			  else
+			    {
+			      //
+			      //	Generic op->op mapping.
+			      //
+			      Token::peelParens(opDescription);  // remove any enclosing parens from op name
+			      CV->addOpMapping(opDescription);
+			      Token::peelParens(bubble);  // remove any enclosing parens from op name
+			      CV->addOpTarget(bubble);
+			    }
+			}
+		;
+
 /*
  *	Modules and Theories.
  */
@@ -219,6 +255,7 @@ module		:	startModule		{ lexerIdMode(); }
 			token
 			{
 			  interpreter.setCurrentModule(new PreModule($1, $3));
+			  currentSyntaxContainer = CM;
 			  fileTable.beginModule($1, $3);
 			}
 			parameters KW_IS decList KW_ENDM
@@ -264,7 +301,7 @@ badType		:	ENDS_IN_DOT
 			  t.dropChar($1);
 			  clear();
 			  store(t);
-			  CM->addType(false, bubble);
+			  currentSyntaxContainer->addType(false, bubble);
 			}
 		;
 
@@ -380,8 +417,8 @@ cPair		:	tokenBarDot ':' token
 			}
 		;
 
-varNameList	:	varNameList tokenBarColon { CM->addVarDecl($2); }
-		|	tokenBarColon		{ CM->addVarDecl($1); }
+varNameList	:	varNameList tokenBarColon	{ currentSyntaxContainer->addVarDecl($2); }
+		|	tokenBarColon			{ currentSyntaxContainer->addVarDecl($1); }
 		;
 
 opName		:	token			{ clear(); store($1); }
@@ -427,12 +464,12 @@ typeName	:	sortName
 			{
 			  clear();
 			  store($1);
-			  CM->addType(false, bubble);
+			  currentSyntaxContainer->addType(false, bubble);
 			}
 		|	'['			{ clear(); }
 			sortNames ']'
 			{
-			  CM->addType(true, bubble);
+			  currentSyntaxContainer->addType(true, bubble);
 			}
 		;
 

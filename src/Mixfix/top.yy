@@ -77,8 +77,11 @@ void eatComment(bool firstNonWhite);
 Vector<Token> bubble;
 Vector<Token> fragments;
 Vector<Token> moduleExpr;
+Vector<Token> opDescription;
 stack<ModuleExpression*> moduleExpressions;
 Renaming* currentRenaming = 0;
+SyntaxContainer* currentSyntaxContainer = 0;
+SyntaxContainer* oldSyntaxContainer = 0;
 
 Int64 number;
 Int64 number2;

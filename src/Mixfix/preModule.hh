@@ -28,6 +28,7 @@
 #include <set>
 #include "namedEntity.hh"
 #include "lineNumber.hh"
+#include "syntaxContainer.hh"
 #include "commonTokens.hh"
 #include "importModule.hh"
 #include "moduleDatabase.hh"
@@ -35,8 +36,9 @@
 class PreModule
   : public NamedEntity,
     public LineNumber,
-    private CommonTokens,
-    private Entity::User
+    public SyntaxContainer,
+    public Entity::User,
+    private CommonTokens
 {
   NO_COPYING(PreModule);
 
@@ -85,6 +87,9 @@ public:
   int getNrImports() const;
   int getImportMode(int index) const;
   const ModuleExpression* getImport(int index) const;
+  int getNrParameters() const;
+  int getParameterName(int index) const;
+  const ModuleExpression* getParameter(int index) const;
 
   void process();
 
@@ -119,12 +124,6 @@ private:
     };
     bool originator;  // did we originate this symbol in our flat module?
     int bubbleSpecIndex;
-  };
-
-  struct Type
-  {
-    bool kind;
-    Vector<Token> tokens;
   };
 
   struct OpDef
@@ -205,8 +204,6 @@ private:
   set<int> potentialLabels;
   ModuleDatabase::ImportMap autoImports;
   VisibleModule* flatModule;
-
-  friend ostream& operator<<(ostream& s, const PreModule::Type& type);
 };
 
 inline bool
@@ -256,5 +253,34 @@ PreModule::getImport(int index) const
 {
   return imports[index].expr;
 }
+
+inline int
+PreModule::getNrParameters() const
+{
+  return parameters.length();
+}
+
+inline int
+PreModule::getParameterName(int index) const
+{
+  return parameters[index].name.code();
+}
+
+inline const ModuleExpression*
+PreModule::getParameter(int index) const
+{
+  return parameters[index].theory;
+}
+
+#ifndef NO_ASSERT
+inline ostream&
+operator<<(ostream& s, const PreModule* p)
+{
+  //
+  //	Needed to avoid ambiguity.
+  //
+  s << static_cast<const NamedEntity*>(p);
+}
+#endif
 
 #endif

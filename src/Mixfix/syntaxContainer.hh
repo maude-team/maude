@@ -21,43 +21,26 @@
 */
 
 //
-//	Class for objects that are numbered within a module.
-//	This provides us with:
-//	  (1) a way of getting back to the module containing an object; and
-//	  (2) a number that is useful for indexing.
+//      Abstract base class for objects that receive syntax from surface parser.
 //
-#ifndef _moduleItem_hh_
-#define _moduleItem_hh_
+#ifndef _syntaxContainer_hh_
+#define _syntaxContainer_hh_
+#include "token.hh"
 
-class ModuleItem
+class SyntaxContainer
 {
 public:
-  void setModuleInfo(Module* module, int indexWithinModule);
-  Module* getModule() const;
-  int getIndexWithinModule() const;
+  virtual void addVarDecl(Token varName) = 0;
+  virtual void addType(bool kind, const Vector<Token>& tokens) = 0;
 
-private:
-  Module* parentModule;
-  int indexWithinParent;
+protected:
+  struct Type
+  {
+    bool kind;
+    Vector<Token> tokens;
+  };
+
+  friend ostream& operator<<(ostream& s, const Type& type);
 };
-
-inline void
-ModuleItem::setModuleInfo(Module* module, int indexWithinModule)
-{
-  parentModule = module;
-  indexWithinParent = indexWithinModule;
-}
-
-inline Module*
-ModuleItem::getModule() const
-{
-  return parentModule;
-}
-
-inline int
-ModuleItem::getIndexWithinModule() const
-{
-  return indexWithinParent;
-}
 
 #endif

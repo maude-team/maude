@@ -1,3 +1,13 @@
+2005-06-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* tests/Misc/renaming (MAUDE_LIB): created
+
+	* tests/Misc/renaming.expected: created
+
+	* tests/Misc/renaming.maude: added
+
+===================================Maude86b===========================================
+
 2005-01-07  Steven Eker  <eker@goo.csl.sri.com>
 
 	* tests/Meta/metaPrettyPrint.maude: updated test for print option argument

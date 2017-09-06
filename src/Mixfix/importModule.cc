@@ -69,6 +69,9 @@ ImportModule::ImportModule(int name, ModuleType moduleType, Origin origin, Entit
     addUser(parent);  // HACK
   importPhase = UNVISITED;
   nrBoundParameters = 0;
+  nrSortsFromParameters = 0;
+  nrSymbolsFromParameters = 0;
+  nrPolymorphsFromParameters = 0;
   protectCount = 0;
   canonicalRenaming = 0;
   baseModule = 0;
@@ -76,7 +79,7 @@ ImportModule::ImportModule(int name, ModuleType moduleType, Origin origin, Entit
 
 ImportModule::~ImportModule()
 {
-  delete canonicalRenaming;
+  Assert(canonicalRenaming == 0, "undeleted canonicalRenaming in " << this);
 }
 
 void
@@ -85,14 +88,29 @@ ImportModule::addImport(ImportModule* importedModule,
 			LineNumber lineNumber)
 {
   ModuleType t = importedModule->getModuleType();
-  WarningCheck(!isTheory(t) || mode == INCLUDING,
-	       lineNumber << ": theories may only be imported using the " <<
-	       QUOTE("including") << " importation mode.");
-  WarningCheck(canImport(getModuleType(), t),
-	       lineNumber << ": importation of " <<
-	       QUOTE(moduleTypeString(t)) << " by " <<
-	       QUOTE(moduleTypeString(getModuleType())) <<
-	       " not allowed."); 
+  if (isTheory(t) && mode != INCLUDING)
+    {
+      //
+      //	Since we don't use or even store the mode we don't need
+      //	to do anything special to recover.
+      //
+      IssueWarning(lineNumber << ": theories may only be imported using the " <<
+		   QUOTE("including") <<
+		   " importation mode. Recovering by treating mode as including.");
+    }
+  if (!canImport(getModuleType(), t))
+    {
+      //
+      //	Allowing modules to import theories would allow inconsistancies
+      //	to get into the parameterization mechanism. So we just disallow
+      //	illegal imports to avoid having to deal with tricky cases.
+      //
+      IssueWarning(lineNumber << ": importation of " <<
+		   QUOTE(moduleTypeString(t)) << " by " <<
+		   QUOTE(moduleTypeString(getModuleType())) <<
+		   " not allowed.  Recovering by ignoring import.");
+      return;
+    }
   importedModules.append(importedModule);
   importedModule->addUser(this);
 }
@@ -117,7 +135,6 @@ ImportModule::addParameter(const Token parameterName,
 	     
   parameterNames.append(parameterName.code());
   importedModules.append(parameterTheory);
-  //parameterTheories.append(parameterTheory);
   parameterTheory->addUser(this);
 }
 
@@ -164,19 +181,20 @@ void
 ImportModule::deepSelfDestruct()
 {
   //
-  //	First remove ourself from the list of users of each of our imports, parameters
-  //	and base module. This is so we will not receive a regretToInform() message after
-  //	we delete ourself.
+  //	First remove ourself from the list of users of each of our imports, parameters,
+  // 	view arguments and base module. This is so we will not receive a regretToInform()
+  //	message after we delete ourself.
   //
-  /*
-  {
-    FOR_EACH_CONST(i, Vector<ImportModule*>, parameterTheories)
-      (*i)->removeUser(this);
-  }
-  */
   {
     FOR_EACH_CONST(i, Vector<ImportModule*>, importedModules)
       (*i)->removeUser(this);
+  }
+  {
+    FOR_EACH_CONST(i, Vector<View*>, viewArgs)
+      {
+	if (*i != 0)
+	  (*i)->removeUser(this);
+      }
   }
   if (baseModule != 0)
     baseModule->removeUser(this);
@@ -184,6 +202,13 @@ ImportModule::deepSelfDestruct()
   //	Now we inform all our users of our impending demise.
   //
   informUsers();
+  //
+  //	Delete our canonical renaming.
+  //
+  delete canonicalRenaming;
+#ifndef NO_ASSERT
+  canonicalRenaming = 0;
+#endif
   //
   //	And then delete ourself or mark ourself for deletion.
   //
@@ -213,10 +238,14 @@ ImportModule::unprotect()
 void
 ImportModule::importSorts()
 {
+  int nrParameters = getNrParameters();
   int nrImportedModules = importedModules.length();
   for (int i = 0; i < nrImportedModules; i++)
-    importedModules[i]->donateSorts(this);
-
+    {
+      if (i == nrParameters)
+	nrSortsFromParameters = getSorts().size();
+      importedModules[i]->donateSorts(this);
+    }
   const Vector<Sort*> sorts = getSorts();
   nrImportedSorts = sorts.length();
   nrImportedSubsorts.expandTo(nrImportedSorts);
@@ -248,10 +277,17 @@ ImportModule::donateSorts(ImportModule* importer)
 void
 ImportModule::importOps()
 {
+  int nrParameters = getNrParameters();
   int nrImportedModules = importedModules.length();
   for (int i = 0; i < nrImportedModules; i++)
-    importedModules[i]->donateOps(this);
-
+    {
+      if (i == nrParameters)
+	{
+	  nrSymbolsFromParameters = getSymbols().size();
+	  nrPolymorphsFromParameters = getNrPolymorphs();
+	}
+      importedModules[i]->donateOps(this);
+    }
   const Vector<Symbol*>& symbols = getSymbols();
   nrImportedSymbols = symbols.length();
   nrImportedDecls.expandTo(nrImportedSymbols);

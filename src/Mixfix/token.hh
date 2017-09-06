@@ -62,7 +62,7 @@ public:
 
   void tokenize(const char* tokenString, int lineNumber);
   void tokenize(int code, int lineNumber);
-  void parameterRename(int parameterCode, const Token& original);
+  static int parameterRename(int parameterCode, int originalCode);
   void fixUp(const char* tokenString, int& lineNumber);
   void dropChar(const Token& original);
 
@@ -111,6 +111,7 @@ public:
   static void printTokens(ostream& s,
 			  const Vector<Token>& tokens,
 			  const char* seperator);
+  static void peelParens(Vector<Token>& tokens);
 
 private:
   static void bufferExpandTo(int size);

@@ -258,18 +258,20 @@ ModuleCache::destructUnusedModules()
   //	simple. If the number of cached modules grows beyond a few hundred
   //	a more complex O(n) solution based on keeping a linked list of
   //	candidates would be appropriate. We would need a call back from
-  //	ImportModule to tell us when a module loses its last user.
+  //	ImportModule to tell us when a module het down to 1 user (us!).
   //
  restart:
   {
     FOR_EACH_CONST(i, ModuleMap, moduleMap)
       {
-	if (!(i->second->hasUsers()))
+	int nrUsers = i->second->getNrUsers();
+	Assert(nrUsers >= 1, "no users");  // we are a user
+	if (nrUsers == 1)
 	  {
-	    DebugAdvisory("module " << i->second << " has no users");
+	    DebugAdvisory("module " << i->second << " has no other users");
 	    i->second->deepSelfDestruct();  // invalidates i
 	    goto restart;
-	  }    
+	  }
       }
   }
 }

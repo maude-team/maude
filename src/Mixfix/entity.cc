@@ -35,57 +35,84 @@
 
 //	front end class definitions
 #include "importModule.hh"
+#include "preModule.hh"
+#include "view.hh"
 #include "entity.hh"
 
+#ifndef NO_ASSERT
+ostream&
+operator<<(ostream& s, const Entity* e)
+{
+  if (const ImportModule* m = dynamic_cast<const ImportModule*>(e))
+    s << "module " << m;
+  else if (const View* v = dynamic_cast<const View*>(e))
+    s << "view " << v;
+  else
+    s << "unknown entity";
+}
+
+ostream&
+operator<<(ostream& s, const Entity::User* u)
+{
+  if (const PreModule* p = dynamic_cast<const PreModule*>(u))
+    s << "premodule " << p;
+  else if (const ImportModule* m = dynamic_cast<const ImportModule*>(u))
+    s << "module " << m;
+  else if (const View* v = dynamic_cast<const View*>(u))
+    s << "view " << v;
+  else
+    s << "unknown user";
+}
+#endif
+ 
 void
 Entity::addUser(User* user)
 {
-  pair<UserSet::iterator, bool> p = users.insert(user);
-  if (!p.second)
-    DebugAdvisory("already added user");
+  if (users.insert(user).second)
+    {
+      DebugAdvisory("added " <<  user << " to user set for " << this);
+    }
+  else
+    {
+      DebugAdvisory(user << " is already in user set for " << this);
+    }
 }
 
 void
 Entity::removeUser(User* user)
 {
-#ifndef NO_ASSERT
-  if (ImportModule* m = dynamic_cast<ImportModule*>(user))
+  if (users.erase(user) == 1)
     {
-      if (ImportModule* us = dynamic_cast<ImportModule*>(this))
-	DebugAdvisory("removed module " << m << " from user set for module " << us);
-      else
-	DebugAdvisory("removed module " << m << " from user set");
+      DebugAdvisory("removed " << user << " from user set for " << this);
     }
   else
-    DebugAdvisory("removed unknown user from user set");
-#endif
-  if (users.erase(user) != 1)
-    DebugAdvisory("missing user");
+    {
+      DebugAdvisory("missing " << user << " in user set for " << this);
+    }
 }
 
 void
 Entity::informUsers()
 {
+  DebugAdvisory(this << " informs users");
   //
   //	We need to be careful since informing a user will often cause the user
   //	and/or other users to be removed, invalidating iterators.
   //
   const UserSet::const_iterator e = users.end();
+  User* last = 0;
   for (;;)
     {
       UserSet::iterator i = users.begin();
       if (i == e)
-	return;
-      for (;;)
+	break;
+      User* user = *i;
+      if (user == last)
+	users.erase(i);
+      else
 	{
-	  User* u = *i;
-	  u->regretToInform(this);  // invalidates i
-	  i = users.begin();
-	  if (i == e)
-	    return;
-	  if (*i == u)
-	    break;
+	  user->regretToInform(this);  // invalidates i
+	  last = user;
 	}
-      users.erase(i);
-    } 
+    }
 }

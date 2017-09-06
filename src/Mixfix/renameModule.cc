@@ -34,7 +34,6 @@ ImportModule::makeRenamedCopy(int name, Renaming* canonical, ModuleCache* module
       copy->addParameter(t, importedModules[i]);
     }
   Assert(nrBoundParameters == 0, "renamed module has bound parameters");
-  //  copy->nrBoundParameters = nrBoundParameters;
 
   int nrImports = importedModules.size();
   for (int i = nrParameters; i < nrImports; ++i)
@@ -101,6 +100,7 @@ ImportModule::donateSorts2(ImportModule* copy, Renaming* renaming)
   //
   //	Donate our sorts, after a possible renaming.
   //
+  bool moduleDonatingToTheory = copy->isTheory() && !isTheory();
   const Vector<Sort*>& sorts = getSorts();
   for (int i = nrImportedSorts; i < nrUserSorts; i++)
     {
@@ -116,10 +116,31 @@ ImportModule::donateSorts2(ImportModule* copy, Renaming* renaming)
 	}
       else
 	{
-	  IssueAdvisory(*copy << ": sort " << QUOTE(original) <<
-		       " has been imported from both " << *original <<
-		       " and " << *sort << '.');
+	  if (copy->isTheory() &&
+	      (moduleDonatingToTheory != copy->sortDeclaredInModule.contains(sort->getIndexWithinModule())))
+	    {
+	      //
+	      //	A theory is getting the same sort from a module and a theory.
+	      //	This is a nasty situation that can cause various inconsistancies
+	      //	down the road since sorts from modules are handled differently
+	      //	from sorts from thoeries; so we handle it harshly.
+	      //
+	      IssueWarning(*copy << ": sort " << QUOTE(original) <<
+			    " has been imported from both " << *original <<
+			   " and " << *sort <<
+			   ". Since it is imported from both a module and a theory, this renders theory " <<
+			   QUOTE(copy) << " unusable.");
+	      copy->markAsBad();
+	    }
+	  else
+	    {
+	      IssueAdvisory(*copy << ": sort " << QUOTE(original) <<
+			    " has been imported from both " << *original <<
+			    " and " << *sort << '.');
+	    }
 	}
+      if (moduleDonatingToTheory)
+	copy->sortDeclaredInModule.insert(sort->getIndexWithinModule());
     }
   //
   //	Donate our subsort relations, after a possible renaming.
@@ -142,6 +163,8 @@ ImportModule::donateSorts2(ImportModule* copy, Renaming* renaming)
 void
 ImportModule::donateOps2(ImportModule* copy, Renaming* renaming)
 {
+  bool moduleDonatingToTheory = copy->isTheory() && !isTheory();
+
   Vector<int> gather;
   Vector<Sort*> domainAndRange;
   Vector<int> emptyStrategy;
@@ -229,6 +252,8 @@ ImportModule::donateOps2(ImportModule* copy, Renaming* renaming)
 		}
 	      else  // we must have already imported some declarations
 	        Assert(!originator, "bad origination of " << symbol);
+	      if (moduleDonatingToTheory)
+		copy->opDeclaredInModule.insert(newSymbol->getIndexWithinModule());
 	    }
 	}
     }
@@ -276,15 +301,17 @@ ImportModule::donateOps2(ImportModule* copy, Renaming* renaming)
       const Vector<int>& strategy = symbolType.hasFlag(SymbolType::STRAT) ?
 	getPolymorphStrategy(i) : emptyStrategy;
 
-      copy->addPolymorph(name,
-			 domainAndRange,
-			 symbolType,
-			 strategy,
-			 getPolymorphFrozen(i),
-			 prec,
-			 gather,
-			 *format,
-			 getPolymorphMetadata(i));
+      int copyIndex = copy->addPolymorph(name,
+					 domainAndRange,
+					 symbolType,
+					 strategy,
+					 getPolymorphFrozen(i),
+					 prec,
+					 gather,
+					 *format,
+					 getPolymorphMetadata(i));
+      if (moduleDonatingToTheory)
+	copy->polymorphDeclaredInModule.insert(copyIndex);
     }
 }
 

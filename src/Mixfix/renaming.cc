@@ -33,6 +33,9 @@
 #include "interface.hh"
 #include "mixfix.hh"
 
+//      interface class definitions
+#include "term.hh"
+
 //	front end class definitions
 #include "token.hh"
 #include "preModule.hh"
@@ -193,15 +196,25 @@ Renaming::makeCanonicalVersion(ImportModule* module) const
   {
     //
     //	Prune sort mappings to those that actually occur
-    //	in the module.
+    //	in the module. We do not allow sorts that come from
+    //	a parameter to be mapped.
     //
     FOR_EACH_CONST(i, IdMap, sortMap)
       {
-	if (module->findSort(i->first) != 0)
+	Sort* s = module->findSort(i->first);
+	if (s != 0)
 	  {
-	    pair<IdMap::iterator, bool> p = canonical->sortMap.insert(*i);
-	    Assert(p.second, "dup sort mapping");
-	    canonical->sortMapIndex.append(p.first);
+	    if (module->parameterDeclared(s))
+	      {
+		IssueAdvisory("Ignoring a sort mapping because sort " <<
+			      QUOTE(s) << " comes from a parameter.");
+	      }
+	    else
+	      {
+		pair<IdMap::iterator, bool> p = canonical->sortMap.insert(*i);
+		Assert(p.second, "dup sort mapping");
+		canonical->sortMapIndex.append(p.first);
+	      }
 	  }
       }
   }
@@ -222,13 +235,16 @@ Renaming::makeCanonicalVersion(ImportModule* module) const
       }
   }
   {
-    set<int> genericsAdded;
+    IdSet genericsToAdd;
+    IdSet genericsToAvoid;
     {
       //
-      //	For each operator in the module that would be remapped
-      //	by the orginal remapping, add a mapping to the canonical
-      //	renaming unless the mapping is a generic one that we have
-      //	already added.
+      //	For each operator in the module that is not from a parameter
+      //	and would be remapped by an orginal mapping, we add a mapping
+      //	to the canonical renaming unless the mapping is a generic one
+      //	in which case we add the id to genericsToAdd. For operators
+      //	from parameter theories, if the mapping is specific we emit an
+      //	advisory otherwise we add it to generics to avoid.
       //
       const Vector<Symbol*> symbols = module->getSymbols();
       int nrUserSymbols = module->getNrUserSymbols();
@@ -239,42 +255,47 @@ Renaming::makeCanonicalVersion(ImportModule* module) const
 	  const OpMap::const_iterator e = opMap.upper_bound(id);
 	  for (OpMap::const_iterator j = opMap.lower_bound(id); j != e; ++j)
 	    {
-	      const Vector<set<int> >& types = j->second.types;
-	      if (types.empty())
+	      const Vector<IdSet>& types = j->second.types;
+	      if (module->parameterDeclared(symbol))
 		{
-		  //
-		  //	generic case
-		  //
-		  if (genericsAdded.find(id) == genericsAdded.end())
+		  if (types.empty())
 		    {
-		      genericsAdded.insert(id);
-		      OpMap::iterator n = canonical->opMap.insert(*j);
-		      n->second.index = canonical->opMapIndex.size();
-		      canonical->opMapIndex.append(n);
+		      genericsToAdd.insert(id);  // HACK: so that we see it and generate an advisory
+		      genericsToAvoid.insert(id);
+		    }
+		  else
+		    {
+		      IssueAdvisory("Ignoring a specific op mapping because operator " <<
+				    QUOTE(symbol) << " comes from a parameter.");
 		    }
 		}
 	      else
 		{
-		  //
-		  //	arity specific case
-		  //
-		  if (typeMatch(types, symbol))
+		  if (types.empty())
+		    genericsToAdd.insert(id);
+		  else
 		    {
-		      OpMap::iterator n =
-			canonical->opMap.insert(OpMap::value_type(id, OpMapping()));
-		      int nrTypes = types.size();
-		      n->second.types.resize(nrTypes);
-		      --nrTypes;
-		      for (int i = 0; i < nrTypes; i++)
-			setType(n->second.types[i], symbol->domainComponent(i));
-		      setType(n->second.types[nrTypes], symbol->rangeComponent());
-		      n->second.name = j->second.name;
-		      n->second.prec = j->second.prec;
-		      n->second.gather = j->second.gather;
-		      n->second.format = j->second.format;
-		      n->second.latexMacro = j->second.latexMacro;
-		      n->second.index = canonical->opMapIndex.size();
-		      canonical->opMapIndex.append(n);
+		      //
+		      //	arity specific case
+		      //
+		      if (typeMatch(types, symbol))
+			{
+			  OpMap::iterator n =
+			    canonical->opMap.insert(OpMap::value_type(id, OpMapping()));
+			  int nrTypes = types.size();
+			  n->second.types.resize(nrTypes);
+			  --nrTypes;
+			  for (int i = 0; i < nrTypes; i++)
+			    setType(n->second.types[i], symbol->domainComponent(i));
+			  setType(n->second.types[nrTypes], symbol->rangeComponent());
+			  n->second.name = j->second.name;
+			  n->second.prec = j->second.prec;
+			  n->second.gather = j->second.gather;
+			  n->second.format = j->second.format;
+			  n->second.latexMacro = j->second.latexMacro;
+			  n->second.index = canonical->opMapIndex.size();
+			  canonical->opMapIndex.append(n);
+			}
 		    }
 		}
 	    }
@@ -282,24 +303,43 @@ Renaming::makeCanonicalVersion(ImportModule* module) const
     }
     {
       //
-      //	For each polymorph in the module, check to see if
-      //	it would be remapped by a generic mapping we have
-      //	not yet added.
+      //	For each polymorph in the module, add its id to genericsToAdd
+      //	genericsToAvoid depending on whether it comes from a parameter.
       //
       int nrPolymorphs = module->getNrPolymorphs();
       for (int i = 0; i < nrPolymorphs; i++)
 	{
 	  int id = module->getPolymorphName(i).code();
+	  if (module->parameterDeclaredPolymorph(i))
+	    genericsToAvoid.insert(id);
+	  else
+	    genericsToAdd.insert(id);
+	}
+    }
+    {
+      //
+      // 	Finally we add the generics whose addition we deferred and
+      //	which we didn't decide to avoid.
+      //
+      FOR_EACH_CONST(i, IdSet, genericsToAdd)
+	{
+	  int id = *i;
 	  const OpMap::const_iterator e = opMap.upper_bound(id);
 	  for (OpMap::const_iterator j = opMap.lower_bound(id); j != e; ++j)
 	    {
-	      if (j->second.types.empty() &&
-		  genericsAdded.find(id) == genericsAdded.end())
+	      if (j->second.types.empty())
 		{
-		  genericsAdded.insert(id);
-		  OpMap::iterator n = canonical->opMap.insert(*j);
-		  n->second.index = canonical->opMapIndex.size();
-		  canonical->opMapIndex.append(n);
+		  if (genericsToAvoid.find(id) != genericsToAvoid.end())
+		    {
+		      IssueAdvisory("Ignoring a generic op mapping because operator " <<
+				    QUOTE(Token::name(id)) << " comes from a parameter.");
+		    }
+		  else
+		    {
+		      OpMap::iterator n = canonical->opMap.insert(*j);
+		      n->second.index = canonical->opMapIndex.size();
+		      canonical->opMapIndex.append(n);
+		    }
 		}
 	    }
 	}
@@ -379,6 +419,41 @@ Renaming::renameOp(Symbol* oldSymbol) const
   return index;
 }
 
+bool
+Renaming::typeMatch(const Vector<set<int> >& types, const Vector<int>& sortNames)
+{
+  int nrTypes = types.size();
+  for (int i = 0; i < nrTypes; ++i)
+    {
+      const set<int>& type = types[i];
+      if (type.find(sortNames[i]) == type.end())
+	return false;
+    }
+  return true;
+}
+
+int
+Renaming::renameOp(int id, const Vector<int>& sortNames) const
+{
+  int index = NONE;
+  const OpMap::const_iterator e = opMap.end();
+  for (OpMap::const_iterator i = opMap.find(id); i != e && i->first == id; ++i)
+    {
+      const Vector<set<int> >& types = i->second.types;
+      if (types.empty() || typeMatch(types, sortNames))
+	{
+	  if (index == NONE)
+	    index = i->second.index;
+	  else
+	    {
+	      IssueWarning("multiple renamings apply to " << QUOTE(Token::name(id)));
+	      break;
+	    }
+	}
+    }
+  return index;
+}
+
 int
 Renaming::renamePolymorph(int oldId) const
 {
@@ -425,6 +500,14 @@ Renaming::addSortMapping(Token from, Token to)
 }
 
 void
+Renaming::addSortMapping(int from, int to)
+{
+  pair<IdMap::iterator, bool> p = sortMap.insert(IdMap::value_type(from, to));
+  Assert(p.second, "multiple mapping for sort");
+  sortMapIndex.append(p.first);
+}
+
+void
 Renaming::addLabelMapping(Token from, Token to)
 {
   pair<IdMap::iterator, bool> p = labelMap.insert(IdMap::value_type(from.code(), to.code()));
@@ -434,6 +517,14 @@ Renaming::addLabelMapping(Token from, Token to)
     IssueWarning(LineNumber(from.lineNumber()) <<
 		 ": multiple mapping for label " << QUOTE(from) <<
 		 " in renaming.");
+}
+
+void
+Renaming::addLabelMapping(int from, int to)
+{
+  pair<IdMap::iterator, bool> p = labelMap.insert(IdMap::value_type(from, to));
+  Assert(p.second, "multiple mapping for label");
+  labelMapIndex.append(p.first);
 }
 
 void
@@ -447,7 +538,22 @@ Renaming::addOpMapping(const Vector<Token>& tokens)
 }
 
 void
-Renaming::addType(const Vector<Token>& tokens)
+Renaming::addOpMapping(int code)
+{
+  lastOpMapping = opMap.insert(OpMap::value_type(code, OpMapping()));
+  lastOpMapping->second.prec = MixfixModule::MIN_PREC - 1;  // initialize to invalid value
+  lastOpMapping->second.index = opMapIndex.size();
+  opMapIndex.append(lastOpMapping);
+}
+
+void
+Renaming::addVarDecl(Token /* varName */)
+{
+  CantHappen("renamings don't take var decls");
+}
+
+void
+Renaming::addType(bool /* kind */, const Vector<Token>& tokens)
 {
   Vector<set<int> >& types = lastOpMapping->second.types;
   int nrTypes = types.length();
@@ -457,10 +563,35 @@ Renaming::addType(const Vector<Token>& tokens)
     type.insert(i->code());
 }
 
+
+void
+Renaming::addType(const ConnectedComponent* component)
+{
+  Vector<set<int> >& types = lastOpMapping->second.types;
+  int nrTypes = types.length();
+  types.resize(nrTypes + 1);
+  setType(types[nrTypes], component);
+}
+
 void
 Renaming::addOpTarget(const Vector<Token>& tokens)
 {
   lastOpMapping->second.name = Token::bubbleToPrefixNameCode(tokens);
+  lastOpMapping->second.term = 0;
+}
+
+void
+Renaming::addOpTarget(int code)
+{
+  lastOpMapping->second.name = code;
+  lastOpMapping->second.term = 0;
+}
+
+void
+Renaming::addOpTargetTerm(Term* term)
+{
+  lastOpMapping->second.name = NONE;
+  lastOpMapping->second.term = term;
 }
 
 void
@@ -583,6 +714,8 @@ Renaming::printRenaming(ostream& s, const char* sep, const char* sep2) const
 	    s << " -> ";
 	    printRenamingType(s, i, nrTypes);
 	  }
+	Assert(getOpTo(i) != NONE && getOpTargetTerm(i) == 0,
+	       "renamings with op->term mappings are not printable");
 	s << " to " << Token::name(getOpTo(i));
 	int prec = getPrec(i);
 	const Vector<int>& gather = getGather(i);

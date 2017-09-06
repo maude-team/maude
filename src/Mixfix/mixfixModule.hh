@@ -106,7 +106,6 @@ public:
   void addTermHookToPolymorph(int polymorphIndex,
 			      int purpose,
 			      Term* term);
-
   //
   //	Functions to make things.
   //
@@ -166,7 +165,7 @@ public:
   //
   //	Find functions.
   //
-  Sort* findSort(int name);
+  Sort* findSort(int name) const;
   Symbol* findSymbol(int name,
 		     const Vector<ConnectedComponent*>& domainComponents,
 		     ConnectedComponent* rangeComponent);
@@ -221,8 +220,10 @@ public:
   static Sort* hookSort(Sort* sort);
   static ModuleType join(ModuleType t1, ModuleType t2);
   static bool isTheory(ModuleType t);
+  bool isTheory() const;
   static bool canImport(ModuleType t1, ModuleType t2);
   static bool canHaveAsParameter(ModuleType t1, ModuleType t2);
+
 protected:
   static int findMatchingParen(const Vector<Token>& tokens, int pos);
   
@@ -801,6 +802,12 @@ inline bool
 MixfixModule::isTheory(ModuleType t)
 {
   return t & THEORY;
+}
+
+inline bool
+MixfixModule::isTheory() const
+{
+  return isTheory(getModuleType()); 
 }
 
 inline bool

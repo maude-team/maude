@@ -1,3 +1,73 @@
+2005-07-27  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaDownRenamings.cc (downModuleExpression): check bad flag in
+	modules returned by interpreter member functions
+
+2005-07-21  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaLevel.hh (class MetaLevel): added decls for
+	upParameterDecl(), upParameterDecls(), upHeader()
+
+	* metaUpModule.cc (upParameterDecl, upParameterDecls, upHeader):
+	added
+	(upModule): use upHeader()
+
+	* metaLevel.hh (class MetaLevel): added decl for upArguments()
+
+	* metaUpModule.cc (upArguments): added
+	(upModuleExpression): support instantiation
+
+2005-07-20  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaLevel.hh (class MetaLevel): added decls for downHeader(),
+	downParameterDeclList(), downParameterDecl()
+
+	* metaDown.cc (downModule): use safeCase()
+	(downHeader): added
+	(downParameterDeclList): added
+	(downParameterDecl): added
+	(downModule): handle parameter lists
+
+	* metaLevelSignature.cc (MACRO): added headerSymbol,
+	parameterDeclSymbol, parameterDeclListSymbol
+
+	* metaDown.cc (downImport): check that we don't have free parameters
+
+	* metaLevel.hh (class MetaLevel): added decl for
+	downInstantiationArguments()
+
+	* metaDownRenamings.cc (downModuleExpression): implemented
+	instantiationSymbol case
+	(downInstantiationArguments): added
+
+	* metaDown.cc (downImport): pass enclosingModule argument to
+	downModuleExpression()
+
+	* metaLevel.hh (class MetaLevel): updated decl for
+	downModuleExpression()
+
+	* metaDownRenamings.cc (downModuleExpression): don't allow modules
+	with parameters to be summed
+	(downModuleExpression): don't allow modules with bound parameters
+	to be renamed
+	(downModuleExpression): take and pass enclosingModule argument
+
+2005-07-19  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaDownRenamings.cc (downModuleExpression): added code stub for
+	instantiationSymbol case
+	(downModuleExpression): fixed nasty bug where we were returning
+	the result of makeSummation() rather than assigning it to m
+
+	* metaLevelSignature.cc (MACRO): added instantiationSymbol
+
+2005-06-07  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaDownRenamings.cc (downRenamingType): new addType() calling
+	convention
+	
+===================================Maude86b===========================================
+
 2005-04-27  Steven Eker  <eker@goo.csl.sri.com>
 
 	* metaModule.cc (MetaModule): pass origin argument to

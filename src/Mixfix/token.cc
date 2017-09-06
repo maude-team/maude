@@ -130,14 +130,13 @@ Token::reallocateBuffer(int length)
   bufferLength = length;
 }
 
-void
-Token::parameterRename(int parameterCode, const Token& original)
+int
+Token::parameterRename(int parameterCode, int originalCode)
 {
   string newName(stringTable.name(parameterCode));
   newName += '$';
-  newName += stringTable.name(original.codeNr);
-  codeNr = encode(newName.c_str());
-  lineNr = original.lineNr;
+  newName += stringTable.name(originalCode);
+  return encode(newName.c_str());
 }
 
 void
@@ -903,3 +902,39 @@ Token::getRational(mpz_class& numerator, mpz_class& denominator)
   mpz_set_str(numerator.get_mpz_t(), s, 10);
   mpz_set_str(denominator.get_mpz_t(), p + 1, 10);
 }
+
+void
+Token::peelParens(Vector<Token>& tokens)
+{
+  //
+  //	If tokens look like ( ... ) with middle part having balanced parens, peel outer parens.
+  //
+  int len = tokens.size();
+  if (len < 2)
+    return;
+  int open = encode("(");
+  int close = encode(")");
+  if (tokens[0].codeNr != open && tokens[len - 1].codeNr != close)
+    return;
+  int depth = 0;
+  for (int i = 1; i < len - 1; ++i)
+    {
+      int codeNr = tokens[i].codeNr;
+      if (codeNr == open)
+	++depth;
+      else if (codeNr == close)
+	{
+	  --depth;
+	  if (depth < 0)
+	    return;
+	}
+    }
+  if (depth != 0)
+    return;
+  for (int i = 1; i < len - 1; ++i)
+    tokens[i - 1] = tokens[i];
+  tokens.resize(len - 2);
+}
+  
+
+

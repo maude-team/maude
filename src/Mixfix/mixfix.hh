@@ -58,5 +58,6 @@ class View;
 class ModuleDatabase;
 class ViewDatabase;
 class Entity;
+class SyntaxContainer;
 
 #endif

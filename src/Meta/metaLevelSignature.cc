@@ -48,6 +48,12 @@
      //	META-MODULE stuff:
      //
      //
+     //	Module header constructors.
+     //
+     MACRO(headerSymbol, FreeSymbol, 0, 2)
+     MACRO(parameterDeclSymbol, FreeSymbol, 0, 2)
+     MACRO(parameterDeclListSymbol, Symbol, SymbolType::ASSOC, 2)
+     //
      //	Importation constructors.
      //
      MACRO(protectingSymbol, FreeSymbol, 0, 1)
@@ -94,7 +100,8 @@
      //
      MACRO(sumSymbol, Symbol, SymbolType::ASSOC | SymbolType::COMM, 2)
      MACRO(renamingSymbol, FreeSymbol, 0, 2)
-     //
+     MACRO(instantiationSymbol, FreeSymbol, 0, 1)
+    //
      //	Hook constructors.
      //
      MACRO(termHookSymbol, FreeSymbol, 0, 2)
