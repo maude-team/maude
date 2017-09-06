@@ -1,3 +1,12 @@
+2006-04-05  Steven Eker  <eker@goo.csl.sri.com>
+
+	* rewriteSearchState.hh (class RewriteSearchState): add default
+	label arg for ctor
+
+	* rewriteSequenceSearch.cc: fix comment
+
+===================================Maude87a===========================================
+
 2003-11-06  Steven Eker  <eker@goo.csl.sri.com>
 
 	* satSolverSymbol.cc (attachData): use NULL_DATA()

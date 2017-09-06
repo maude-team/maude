@@ -21,36 +21,49 @@
 */
 
 //
-//      Implementation for abstract class Strategy.
+//	Implementation for class StateTransitionGraph3.
 //
 
 //	utility stuff
 #include "macros.hh"
 #include "vector.hh"
 
-//      forward declarations
+//	forward declarations
 #include "interface.hh"
 #include "core.hh"
-#include "strategyLanguage.hh"
+
+//	interface class definitions
+#include "dagNode.hh"
 
 //	strategy language class definitions
-#include "iterationStrategy.hh"
-#include "iterationSetGenerator.hh"
+#include "stateCache.hh"
 
-IterationStrategy::IterationStrategy(StrategyExpression* child, bool zeroAllowed, bool normalForm)
-  : child(child),
-    zeroAllowed(zeroAllowed),
-    normalForm(normalForm)
+
+StateCache::~StateCache()
 {
+  FOR_EACH_CONST(i, Vector<IdSet*>, seen)
+    delete *i;
 }
 
-IterationStrategy::~IterationStrategy()
+void
+StateCache::markReachableNodes()
 {
-  delete child;
+  int nrDags = seen.length();
+  for (int i = 0; i < nrDags; i++)
+    seenSet.index2DagNode(i)->mark();
 }
 
-SetGenerator*
-IterationStrategy::execute(DagNode* subject, RewritingContext& context)
+bool
+StateCache::insertState(DagNode* dag, StrategyId stratPos)
 {
-  return new IterationSetGenerator(subject, context, child, zeroAllowed, normalForm);
+  int dagIndex = seenSet.dagNode2Index(dag);
+  if (dagIndex == NONE)
+    {
+      seenSet.insert(dag);
+      IdSet *is = new IdSet;
+      is->insert(stratPos);
+      seen.append(is);
+      return false;
+    }
+  return !((seen[dagIndex]->insert(stratPos)).second);
 }

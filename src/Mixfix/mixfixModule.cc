@@ -122,6 +122,9 @@
 #include "configSymbol.hh"
 #include "socketManagerSymbol.hh"
 
+//	strategy language class definitions
+#include "unaryStrategy.hh"
+
 //	front end class definitions
 #include "mixfixParser.hh"
 #include "mixfixModule.hh"

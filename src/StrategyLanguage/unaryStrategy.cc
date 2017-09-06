@@ -21,7 +21,7 @@
 */
 
 //
-//      Implementation for abstract class Strategy.
+//      Implementation for class UnaryStrategy.
 //
 
 //	utility stuff
@@ -34,23 +34,22 @@
 #include "strategyLanguage.hh"
 
 //	strategy language class definitions
-#include "iterationStrategy.hh"
-#include "iterationSetGenerator.hh"
+#include "unaryStrategy.hh"
+#include "unarySetGenerator.hh"
 
-IterationStrategy::IterationStrategy(StrategyExpression* child, bool zeroAllowed, bool normalForm)
+UnaryStrategy::UnaryStrategy(StrategyExpression* child, StrategyType type)
   : child(child),
-    zeroAllowed(zeroAllowed),
-    normalForm(normalForm)
+    type(type)
 {
 }
 
-IterationStrategy::~IterationStrategy()
+UnaryStrategy::~UnaryStrategy()
 {
   delete child;
 }
 
 SetGenerator*
-IterationStrategy::execute(DagNode* subject, RewritingContext& context)
+UnaryStrategy::execute(DagNode* subject, RewritingContext& context)
 {
-  return new IterationSetGenerator(subject, context, child, zeroAllowed, normalForm);
+  return new UnarySetGenerator(subject, context, child, type);
 }

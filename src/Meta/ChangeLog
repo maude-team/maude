@@ -1,3 +1,9 @@
+2006-05-09  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaSearch.cc (metaSearchPath): fix comment
+
+===================================Maude87a===========================================
+
 2006-01-23  Steven Eker  <eker@goo.csl.sri.com>
 
 	* descentFunctions.cc (metaRewrite): added DebugAdvisory()s

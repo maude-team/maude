@@ -34,23 +34,24 @@
 #include "strategyLanguage.hh"
 
 //	strategy language class definitions
-#include "iterationStrategy.hh"
-#include "iterationSetGenerator.hh"
+#include "concatenationStrategy.hh"
+#include "concatenationSetGenerator.hh"
 
-IterationStrategy::IterationStrategy(StrategyExpression* child, bool zeroAllowed, bool normalForm)
-  : child(child),
-    zeroAllowed(zeroAllowed),
-    normalForm(normalForm)
+ConcatenationStrategy::ConcatenationStrategy(const Vector<StrategyExpression*> strategies)
+  : strategies(strategies)
 {
+  Assert(!strategies.empty(), "no strategies");
 }
 
-IterationStrategy::~IterationStrategy()
+ConcatenationStrategy::~ConcatenationStrategy()
 {
-  delete child;
+  int nrStrategies = strategies.size();
+  for (int i = 0; i < nrStrategies; ++i)
+    delete strategies[i];
 }
 
 SetGenerator*
-IterationStrategy::execute(DagNode* subject, RewritingContext& context)
+ConcatenationStrategy::execute(DagNode* subject, RewritingContext& context)
 {
-  return new IterationSetGenerator(subject, context, child, zeroAllowed, normalForm);
+  return new ConcatenationSetGenerator(subject, context, strategies);
 }

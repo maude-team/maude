@@ -21,36 +21,22 @@
 */
 
 //
-//      Implementation for abstract class Strategy.
+//      Class for concatenation strategy combinator.
 //
+#ifndef _concatenationStrategy_hh_
+#define _concatenationStrategy_hh_
+#include "strategyExpression.hh"
 
-//	utility stuff
-#include "macros.hh"
-#include "vector.hh"
-
-//      forward declarations
-#include "interface.hh"
-#include "core.hh"
-#include "strategyLanguage.hh"
-
-//	strategy language class definitions
-#include "iterationStrategy.hh"
-#include "iterationSetGenerator.hh"
-
-IterationStrategy::IterationStrategy(StrategyExpression* child, bool zeroAllowed, bool normalForm)
-  : child(child),
-    zeroAllowed(zeroAllowed),
-    normalForm(normalForm)
+class ConcatenationStrategy : public StrategyExpression
 {
-}
+public:
+  ConcatenationStrategy(const Vector<StrategyExpression*> strategies);
+  ~ConcatenationStrategy();
 
-IterationStrategy::~IterationStrategy()
-{
-  delete child;
-}
+  SetGenerator* execute(DagNode* subject, RewritingContext& context);
 
-SetGenerator*
-IterationStrategy::execute(DagNode* subject, RewritingContext& context)
-{
-  return new IterationSetGenerator(subject, context, child, zeroAllowed, normalForm);
-}
+private:
+  const Vector<StrategyExpression*> strategies;
+};
+
+#endif

@@ -43,11 +43,12 @@
 ApplicationSetGenerator::ApplicationSetGenerator(DagNode* start,
 						 RewritingContext& context,
 						 int label,
+						 bool top,
 						 const Vector<Term*>& variables,
 						 Vector<CachedDag>& values)
   : context(context),
     initial(context.makeSubcontext(start)),
-    rewriteState(initial, label, RewriteSearchState::ALLOW_NONEXEC)
+    rewriteState(initial, label, RewriteSearchState::ALLOW_NONEXEC, 0, top ? NONE : UNBOUNDED)
 {
   int nrValues = values.size();
   if (nrValues > 0)

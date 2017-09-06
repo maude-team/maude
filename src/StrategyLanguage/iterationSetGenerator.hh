@@ -35,18 +35,26 @@ public:
   IterationSetGenerator(DagNode* start,
 			RewritingContext& context,
 			StrategyExpression* strategy,
-			bool zeroAllowed);
+			bool zeroAllowed,
+			bool normalForm);
   ~IterationSetGenerator();
 
   DagNode* findNextSolution();
 
 private:
-  typedef list<SetGenerator*> GenQueue;
+  struct SearchNode
+  {
+    SetGenerator* generator;
+    DagNode* startDag;
+  };
 
+  typedef list<SearchNode> GenQueue;
+
+  DagRoot start;
   RewritingContext& context;
   StrategyExpression* const strategy;
-  const bool zeroAllowed;
-  DagRoot start;
+  const bool zeroAllowed;		// allow start dag as a solution
+  const bool normalForm;		// insist that solution are not further rewritable
   bool zeroReturnable;
   GenQueue genQueue;
 };

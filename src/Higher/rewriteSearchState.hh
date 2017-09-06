@@ -37,11 +37,17 @@ public:
     ALLOW_NONEXEC = 16
   };
 
+  //
+  //	label may be UNDEFINED to make any rule usable.
+  //	maxDepth may be NONE to force at top rewrites without extension;
+  //	otherwise rewriting is done with extension and maxDepth may be
+  //	UNBOUNDED to indicate no bound.
+  //
   RewriteSearchState(RewritingContext* context,
-		     int label,
+		     int label = UNDEFINED,
 		     int flags = 0,
 		     int minDepth = 0,
-		     int maxDepth = -1);
+		     int maxDepth = NONE);
 
   Rule* getRule() const;
   DagNode* getReplacement() const;

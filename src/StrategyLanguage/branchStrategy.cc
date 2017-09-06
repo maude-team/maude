@@ -21,7 +21,7 @@
 */
 
 //
-//      Implementation for abstract class Strategy.
+//      Implementation for class BranchStrategy.
 //
 
 //	utility stuff

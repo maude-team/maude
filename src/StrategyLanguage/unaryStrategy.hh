@@ -21,36 +21,30 @@
 */
 
 //
-//      Implementation for abstract class Strategy.
+//      Class for simple unary combinators.
 //
+#ifndef _unaryStrategy_hh_
+#define _unaryStrategy_hh_
+#include "strategyExpression.hh"
 
-//	utility stuff
-#include "macros.hh"
-#include "vector.hh"
-
-//      forward declarations
-#include "interface.hh"
-#include "core.hh"
-#include "strategyLanguage.hh"
-
-//	strategy language class definitions
-#include "iterationStrategy.hh"
-#include "iterationSetGenerator.hh"
-
-IterationStrategy::IterationStrategy(StrategyExpression* child, bool zeroAllowed, bool normalForm)
-  : child(child),
-    zeroAllowed(zeroAllowed),
-    normalForm(normalForm)
+class UnaryStrategy : public StrategyExpression
 {
-}
+public:
+  enum StrategyType
+  {
+    NOT,
+    TEST,
+    TRY
+  };
 
-IterationStrategy::~IterationStrategy()
-{
-  delete child;
-}
+  UnaryStrategy(StrategyExpression* child, StrategyType type);
+  ~UnaryStrategy();
 
-SetGenerator*
-IterationStrategy::execute(DagNode* subject, RewritingContext& context)
-{
-  return new IterationSetGenerator(subject, context, child, zeroAllowed, normalForm);
-}
+  SetGenerator* execute(DagNode* subject, RewritingContext& context);
+
+private:
+  StrategyExpression* const child;
+  const StrategyType type;
+};
+
+#endif

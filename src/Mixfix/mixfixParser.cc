@@ -76,10 +76,11 @@
 //	strategy languages definitions
 #include "trivialStrategy.hh"
 #include "applicationStrategy.hh"
-#include "strategySequence.hh"
+#include "concatenationStrategy.hh"
 #include "unionStrategy.hh"
 #include "iterationStrategy.hh"
 #include "branchStrategy.hh"
+#include "unaryStrategy.hh"
 
 //	front end class definitions
 #include "mixfixModule.hh"
@@ -431,7 +432,20 @@ MixfixParser::makeStrategy(int node)
 	s = new ApplicationStrategy(label, variables, values, strategies);
 	break;
       }
-    case MAKE_SEQUENCE:
+    case MAKE_TOP:
+      {
+	s = makeStrategy(parser.getChild(node, 0));
+	if (ApplicationStrategy* a = dynamic_cast<ApplicationStrategy*>(s))
+	  a->setTop();
+	else
+	  {
+	    int pos = currentOffset + parser.getFirstPosition(node);
+	    IssueWarning(LineNumber((*currentSentence)[pos].lineNumber()) <<
+			 ": use of top strategy modifier on a non-application strategy ignored.");
+	  }
+	break;
+      }
+    case MAKE_CONCATENATION:
     case MAKE_UNION:
       {
 	Vector<StrategyExpression*> strategies;
@@ -442,8 +456,8 @@ MixfixParser::makeStrategy(int node)
 	  }
 	while (actions[parser.getProductionNumber(node)].action == a.action);
 	strategies.append(makeStrategy(node));
-	if (a.action == MAKE_SEQUENCE)
-	  s = new StrategySequence(strategies);
+	if (a.action == MAKE_CONCATENATION)
+	  s = new ConcatenationStrategy(strategies);
 	else
 	  s = new UnionStrategy(strategies);
 	break;
@@ -451,14 +465,21 @@ MixfixParser::makeStrategy(int node)
     case MAKE_ITERATION:
       {
 	s = new IterationStrategy(makeStrategy(parser.getChild(node, 0)),
-				  actions[parser.getProductionNumber(node)].data);
+				  actions[parser.getProductionNumber(node)].data,
+				  actions[parser.getProductionNumber(node)].data2);
 	break;
       }
     case MAKE_BRANCH:
       {
 	s = new BranchStrategy(makeStrategy(parser.getChild(node, 0)),
-			       makeStrategy(parser.getChild(node, 1)),
-			       makeStrategy(parser.getChild(node, 2)));
+                               makeStrategy(parser.getChild(node, 1)),
+                               makeStrategy(parser.getChild(node, 2)));
+	break;
+      }
+    case MAKE_UNARY:
+      {
+	s = new UnaryStrategy(makeStrategy(parser.getChild(node, 0)),
+			      static_cast<UnaryStrategy::StrategyType>(actions[parser.getProductionNumber(node)].data));
 	break;
       }
     default:

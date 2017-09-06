@@ -1,3 +1,43 @@
+2006-04-24  Steven Eker  <eker@goo.csl.sri.com>
+
+	* mixfixParser.hh (class MixfixParser): added MAKE_UNARY to enum
+	SemanticActions
+
+	* mixfixParser.cc (makeStrategy): added MAKE_UNARY case
+
+	* makeGrammar.cc (makeStrategyLanguageProductions): fix bad gather
+	in top() syntax
+	(makeStrategyLanguageProductions): added syntax for not, test and
+	try strategies
+
+2006-04-18  Steven Eker  <eker@goo.csl.sri.com>
+
+	* mixfixParser.cc (makeStrategy): support normalForm flag for IterationStrategy()
+
+	* makeGrammar.cc (makeStrategyLanguageProductions): syntax for !
+	operator
+
+2006-04-13  Steven Eker  <eker@goo.csl.sri.com>
+
+	* makeGrammar.cc (makeStrategyLanguageProductions): added syntax
+	for top() modifier
+
+	* mixfixParser.hh (class MixfixParser): added MAKE_TOP to 
+
+	* mixfixParser.cc (makeStrategy): added case for MAKE_TOP
+
+2006-04-12  Steven Eker  <eker@goo.csl.sri.com>
+
+	* mixfixParser.hh (class MixfixParser): MAKE_SEQUENCE ->
+	MAKE_CONCATENATION
+
+	* makeGrammar.cc (makeStrategyLanguageProductions): MAKE_SEQUENCE
+	-> MAKE_CONCATENATION
+
+	* mixfixParser.cc (makeStrategy): use ConcatenationStrategy() in
+	place of StrategySequence()
+	(makeStrategy): MAKE_SEQUENCE -> MAKE_CONCATENATION
+
 2006-03-23  Steven Eker  <eker@goo.csl.sri.com>
 
 	* execute.cc (sRewrite): handle limit = NONE case

@@ -21,7 +21,7 @@
 */
 
 //
-//      Implementation for abstract class IterationSetGenerator.
+//      Implementation for abstract class ConcatenationSetGenerator.
 //
 
 //	utility stuff
@@ -35,69 +35,60 @@
 
 //	strategy language class definitions
 #include "strategyExpression.hh"
-#include "iterationSetGenerator.hh"
+#include "concatenationSetGenerator.hh"
 
-IterationSetGenerator::IterationSetGenerator(DagNode* start,
-					     RewritingContext& context,
-					     StrategyExpression* strategy,
-					     bool zeroAllowed,
-					     bool normalForm)
-  : start(start),
+ConcatenationSetGenerator::ConcatenationSetGenerator(DagNode* subject,
+						     RewritingContext& context,
+						     const Vector<StrategyExpression*>& strategies)
+  : start(subject),
     context(context),
-    strategy(strategy),
-    zeroAllowed(zeroAllowed),
-    normalForm(normalForm)
+    strategies(strategies)
 {
-  zeroReturnable = zeroAllowed;
 }
 
-IterationSetGenerator::~IterationSetGenerator()
+ConcatenationSetGenerator::~ConcatenationSetGenerator()
 {
   FOR_EACH_CONST(i, GenQueue, genQueue)
     delete i->generator;
 }
 
 DagNode*
-IterationSetGenerator::findNextSolution()
+ConcatenationSetGenerator::findNextSolution()
 {
-  if (zeroReturnable && !normalForm)
-    {
-      zeroReturnable = false;
-      return start.getNode();
-    }
-
   if (genQueue.empty())
     {
+      //
+      //	Initialize by applying first strategy to start term.
+      //
       genQueue.push_back(SearchNode());
-      genQueue.back().generator = strategy->execute(start.getNode(), context);
-      genQueue.back().startDag = (zeroAllowed && normalForm) ? start.getNode() : 0;
+      genQueue.back().generator = strategies[0]->execute(start.getNode(), context);
+      genQueue.back().nextStrategy = 1;
     }
 
+  int nrStrategies = strategies.size();
   do
     {
       SetGenerator* g = genQueue.front().generator;
-      DagNode* s = genQueue.front().startDag;
+      int i = genQueue.front().nextStrategy;
       genQueue.pop_front();
-      DagNode* d = g->findNextSolution();
-      if (d == 0)
-	{
-	  delete g;
-	  if (s != 0)
-	    return s;
-	}
-      else
-	{
-	  genQueue.push_back(SearchNode());
-	  genQueue.back().generator = strategy->execute(d, context);
-	  genQueue.back().startDag = normalForm ? d : 0;
 
+      for (;; ++i)
+	{
+	  DagNode* d = g->findNextSolution();
+	  if (d == 0)
+	    break;
+	  //
+	  //	g produced a solution so it earns its place on the queue.
+	  //
 	  genQueue.push_back(SearchNode());
 	  genQueue.back().generator = g;
-	  genQueue.back().startDag = 0;
-
-	  if (!normalForm)
+	  genQueue.back().nextStrategy = i;
+	  
+	  if (i == nrStrategies)
 	    return d;
+	  g = strategies[i]->execute(d, context);
 	}
+      delete g;
     }
   while (!genQueue.empty());
   return 0;

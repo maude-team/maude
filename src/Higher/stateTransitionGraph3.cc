@@ -91,10 +91,10 @@ StateTransitionGraph3::getNextState(int stateNr, int index)
     {
       RewritingContext* newContext = initial->makeSubcontext(seenSet.index2DagNode(stateNr));
       n->rewriteState = new RewriteSearchState(newContext,
-					      NONE,
-					      RewriteSearchState::GC_CONTEXT,
-					      0,
-					      UNBOUNDED);
+					       NONE,
+					       RewriteSearchState::GC_CONTEXT,
+					       0,
+					       UNBOUNDED);
     }
 
   RewriteSearchState* rewriteState = n->rewriteState;
