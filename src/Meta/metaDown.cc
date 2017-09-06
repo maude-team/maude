@@ -111,77 +111,85 @@ MetaLevel::downModule(DagNode* metaModule)
   if (cm != 0)
     return cm;
   Symbol* ms = metaModule->symbol();
-  if (ms == fmodSymbol || ms == modSymbol)
+
+  MixfixModule::ModuleType mt;
+  if (ms == fmodSymbol)
+    mt = MixfixModule::FUNCTIONAL_MODULE;
+  else if (ms == fthSymbol)
+    mt = MixfixModule::FUNCTIONAL_THEORY;
+  else if (ms == modSymbol)
+    mt = MixfixModule::SYSTEM_MODULE;
+  else if (ms == thSymbol)
+    mt = MixfixModule::SYSTEM_THEORY;
+  else
+    return 0;
+
+  FreeDagNode* f = static_cast<FreeDagNode*>(metaModule);
+  int id;
+  if (downQid(f->getArgument(0), id))
     {
-      FreeDagNode* f = static_cast<FreeDagNode*>(metaModule);
-      int id;
-      if (downQid(f->getArgument(0), id))
+      MetaModule* m = new MetaModule(id, mt, &cache);
+      if (downImports(f->getArgument(1), m))
 	{
-	  MetaModule* m = new MetaModule(id,
-					 ms == fmodSymbol ?
-					 MetaModule::FUNCTIONAL_MODULE :
-					 MetaModule::SYSTEM_MODULE,
-					 &cache);
-	  if (downImports(f->getArgument(1), m))
+	  m->importSorts();
+	  if (downSorts(f->getArgument(2), m) &&
+	      downSubsorts(f->getArgument(3), m))
 	    {
-	      m->importSorts();
-	      if (downSorts(f->getArgument(2), m) &&
-		  downSubsorts(f->getArgument(3), m))
+	      m->closeSortSet();
+	      if (!(m->isBad()))
 		{
-		  m->closeSortSet();
-		  if (!(m->isBad()))
+		  m->importOps();
+		  if (downOpDecls(f->getArgument(4), m))
 		    {
-		      m->importOps();
-		      if (downOpDecls(f->getArgument(4), m))
+		      m->closeSignature();
+		      m->fixUpImportedOps();
+		      if (downFixUps(m) && !(m->isBad()))
 			{
-			  m->closeSignature();
-			  m->fixUpImportedOps();
-			  if (downFixUps(m) && !(m->isBad()))
+			  m->closeFixUps();
+			  if (downMembAxs(f->getArgument(5), m) &&
+			      downEquations(f->getArgument(6), m) &&
+			      (mt == MixfixModule::FUNCTIONAL_MODULE ||
+			       mt == MixfixModule::FUNCTIONAL_THEORY ||
+			       downRules(f->getArgument(7), m)))
 			    {
-			      m->closeFixUps();
-			      if (downMembAxs(f->getArgument(5), m) &&
-				  downEquations(f->getArgument(6), m) &&
-				  (ms == fmodSymbol || downRules(f->getArgument(7), m)))
-				{
-				  m->localStatementsComplete();
-				  m->importStatements();
-				  m->closeTheory();
-				  m->resetImports();
-				  cache.insert(metaModule, m);
-				  //
-				  //	We may have displace a module from the 
-				  //	metamodule cache generating garbage in
-				  //	the expression. Also there may be an
-				  //	accumulation of garbage anyway from meta-meta
-				  //	processing so we should tidy the (expression)
-				  //	module cache regularly.
-				  //
-				  interpreter.destructUnusedModules();
-				  return m;
-				}
+			      m->localStatementsComplete();
+			      m->importStatements();
+			      m->closeTheory();
+			      m->resetImports();
+			      cache.insert(metaModule, m);
+			      //
+			      //	We may have displace a module from the 
+			      //	metamodule cache generating garbage in
+			      //	the expression. Also there may be an
+			      //	accumulation of garbage anyway from meta-meta
+			      //	processing so we should tidy the (expression)
+			      //	module cache regularly.
+			      //
+			      interpreter.destructUnusedModules();
+			      return m;
 			    }
 			}
 		    }
 		}
 	    }
-	  //
-	  //	Put the import status flags of any modules that the
-	  //	metamodule (transitively) depended on in a good state.
-	  //
-	  m->resetImports();
-	  //
-	  //	Deep self destruction ensures that pointers to the doomed
-	  //	metamodule are removed from modules it depends on.
-	  //
-	  m->deepSelfDestruct();
-	  //
-	  //	Pulling down module expressions may have resulted in
-	  //	the creation of cached modules that no longer have
-	  //	dependents now that we failed to build the metamodule.
-	  //	Thus we now need to tidy the module cache.
-	  //	
-	  interpreter.destructUnusedModules();
 	}
+      //
+      //	Put the import status flags of any modules that the
+      //	metamodule (transitively) depended on in a good state.
+      //
+      m->resetImports();
+      //
+      //	Deep self destruction ensures that pointers to the doomed
+      //	metamodule are removed from modules it depends on.
+      //
+      m->deepSelfDestruct();
+      //
+      //	Pulling down module expressions may have resulted in
+      //	the creation of cached modules that no longer have
+      //	dependents now that we failed to build the metamodule.
+      //	Thus we now need to tidy the module cache.
+      //	
+      interpreter.destructUnusedModules();
     }
   return 0;
 }
@@ -207,15 +215,22 @@ bool
 MetaLevel::downImport(DagNode* metaImport, MetaModule* m)
 {
   Symbol* mi = metaImport->symbol();
-  if (mi == protectingSymbol || mi == extendingSymbol || mi == includingSymbol)
+  ImportModule::ImportMode mode;
+  if (mi == protectingSymbol)
+    mode = ImportModule::PROTECTING;
+  else if (mi == extendingSymbol)
+    mode = ImportModule::EXTENDING;
+  else if (mi == includingSymbol)
+    mode = ImportModule::INCLUDING;
+  else
+    return false;
+  
+  FreeDagNode* f = safeCast(FreeDagNode*, metaImport);
+  ImportModule* im;
+  if (downModuleExpression(f->getArgument(0), im))
     {
-      FreeDagNode* f = safeCast(FreeDagNode*, metaImport);
-      ImportModule* im;
-      if (downModuleExpression(f->getArgument(0), im))
-	{
-	  m->addImport(im);
-	  return true;
-	}
+      m->addImport(im, mode, LineNumber(FileTable::META_LEVEL_CREATED));
+      return true;
     }
   return false;
 }

@@ -3,7 +3,7 @@
 #
 #	Initialize autoconf stuff.
 #
-AC_INIT(Maude, alpha84a, [maude-bugs@maude.cs.uiuc.edu])
+AC_INIT(Maude, 2.1.1, [maude-bugs@maude.cs.uiuc.edu])
 #
 #	Allow directory names that look like macros.
 #
@@ -16,7 +16,7 @@ AC_CANONICAL_HOST
 #
 #	Initialize automake stuff.
 #
-AM_INIT_AUTOMAKE(Maude, alpha84a)
+AM_INIT_AUTOMAKE(Maude, 2.1.1)
 #
 #	Cause defines to be put in a header file rather than passed as
 #	compiler flags.

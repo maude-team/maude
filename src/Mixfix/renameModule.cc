@@ -24,8 +24,9 @@ ImportModule*
 ImportModule::makeRenamedCopy(int name, Renaming* canonical, ModuleCache* moduleCache)
 {
   ImportModule* copy = new ImportModule(name, getModuleType(), moduleCache);
+  LineNumber lineNumber(FileTable::AUTOMATIC);
   FOR_EACH_CONST(i, Vector<ImportModule*>, importedModules)
-    copy->addImport(moduleCache->makeRenamedCopy(*i, canonical));
+    copy->addImport(moduleCache->makeRenamedCopy(*i, canonical), INCLUDING, lineNumber);
   copy->canonicalRenaming = canonical;
   copy->baseModule = this;
   dependentModules.append(copy);

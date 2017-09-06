@@ -158,6 +158,15 @@ Token::fixUp(const char* tokenString, int& lineNumber)
   lineNumber += nrBackslashNewlineCombos;
 }
 
+void
+Token::dropChar(const Token& original)
+{
+  string truncated(stringTable.name(original.codeNr));
+  truncated.resize(truncated.size() - 1);
+  codeNr = encode(truncated.c_str());
+  lineNr = original.lineNr;
+}
+
 int
 Token::dotNameCode(int sortNameCode)
 {

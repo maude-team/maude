@@ -171,7 +171,9 @@
      //	Module constructors.
      //
      MACRO(fmodSymbol, FreeSymbol, 0, 7)
+     MACRO(fthSymbol, FreeSymbol, 0, 7)
      MACRO(modSymbol, FreeSymbol, 0, 8)
+     MACRO(thSymbol, FreeSymbol, 0, 8)
 
      //
      //	META-LEVEL stuff:

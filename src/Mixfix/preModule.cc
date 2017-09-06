@@ -81,11 +81,20 @@
 #include "ops.cc"
 #include "command.cc"
 
-PreModule::PreModule(Token moduleName, MixfixModule::ModuleType moduleType)
+PreModule::PreModule(Token startToken, Token moduleName)
   : NamedEntity(moduleName.code()),
     LineNumber(moduleName.lineNumber()),
-    moduleType(moduleType)
+    startTokenCode(startToken.code())
 {
+  if (startTokenCode == th)
+    moduleType = MixfixModule::SYSTEM_THEORY;
+  else if (startTokenCode == fth)
+    moduleType = MixfixModule::FUNCTIONAL_THEORY;
+  else if (startTokenCode == mod || startTokenCode == omod)
+    moduleType = MixfixModule::SYSTEM_MODULE;
+  else
+    moduleType = MixfixModule::FUNCTIONAL_MODULE;
+
   lastSawOpDecl = false;
   isCompleteFlag = false;
   flatModule = 0;
@@ -146,9 +155,34 @@ PreModule::getFlatSignature()
   return flatModule;
 }
 
-void
-PreModule::finishModule()
+bool
+PreModule::compatible(int endTokenCode)
 {
+  if (startTokenCode == th)
+    return endTokenCode == endth;
+  if (startTokenCode == fth)
+    return endTokenCode == endfth;
+  if (startTokenCode == mod)
+    return endTokenCode == endm;
+  if (startTokenCode == fmod)
+    return endTokenCode == endfm;
+  if (startTokenCode == omod)
+    return endTokenCode == endom;
+  //
+  //	OBJ backward compatibility.
+  //
+  return endTokenCode == endo || endTokenCode == jbo;
+}
+
+void
+PreModule::finishModule(Token endToken)
+{
+  if (!compatible(endToken.code()))
+    {
+      IssueWarning(LineNumber(endToken.lineNumber()) << ": module started with " <<
+		   QUOTE(Token::name(startTokenCode)) << " ends with "
+		   << QUOTE(endToken) << '.');
+    }
   autoImports = interpreter.getAutoImports(); // deep copy
   isCompleteFlag = true;
   interpreter.insertModule(id(), this);
@@ -172,6 +206,21 @@ PreModule::addImport(Token mode, ModuleExpression* expr)
 void
 PreModule::addStatement(const Vector<Token>& statement)
 {
+  int keywordCode = statement[0].code();
+  if (keywordCode == rl || keywordCode == crl)
+    {
+      if (moduleType == MixfixModule::FUNCTIONAL_THEORY)
+	{
+	  IssueWarning(LineNumber(statement[0].lineNumber()) <<
+		       ": rule not allowed in a functional theory.");
+	}
+      else if (moduleType == MixfixModule::FUNCTIONAL_MODULE)
+	{
+	  IssueWarning(LineNumber(statement[0].lineNumber()) <<
+		       ": rule not allowed in a functional module.");
+	}
+    }
+
   if (statement[1].code() == leftBracket &&
       statement[3].code() == rightBracket &&
       statement[4].code() == colon)

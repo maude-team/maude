@@ -22,7 +22,7 @@
 
 ***
 ***	Maude interpreter standard prelude.
-***	Version 84a
+***	Version 84b
 ***
 ***	Some of the overall structure is taken from the OBJ3
 ***	interpreter standard prelude.
@@ -993,18 +993,26 @@ fmod META-MODULE is
   eq R:Rule R:Rule = R:Rule .
 
 *** modules
-  sorts FModule Module .
-  subsort FModule < Module .
+  sorts FModule SModule FTheory STheory Module .
+  subsorts FModule < SModule < Module .
+  subsorts FTheory < STheory < Module .
   op fmod_is_sorts_.____endfm : Qid ImportList SortSet SubsortDeclSet
     OpDeclSet MembAxSet EquationSet -> FModule [ctor gather (& & & & & & &)
      format (d d d n++i ni d d ni ni ni ni n--i d)] .
+  op fth_is_sorts_.____endfth : Qid ImportList SortSet SubsortDeclSet
+    OpDeclSet MembAxSet EquationSet -> FTheory [ctor gather (& & & & & & &)
+     format (d d d n++i ni d d ni ni ni ni n--i d)] .
   op mod_is_sorts_._____endm : Qid ImportList SortSet SubsortDeclSet
-    OpDeclSet MembAxSet EquationSet RuleSet -> Module
+    OpDeclSet MembAxSet EquationSet RuleSet -> SModule
+    [ctor gather (& & & & & & & &)
+     format (d d d n++i ni d d ni ni ni ni ni n--i d)] .
+  op th_is_sorts_._____endth : Qid ImportList SortSet SubsortDeclSet
+    OpDeclSet MembAxSet EquationSet RuleSet -> STheory
     [ctor gather (& & & & & & & &)
      format (d d d n++i ni d d ni ni ni ni ni n--i d)] .
   op [_] : Qid -> Module .
-  eq [Q:Qid] = (mod Q:Qid is protecting Q:Qid .
-                sorts none . none none none none none endm) .
+  eq [Q:Qid] = (th Q:Qid is including Q:Qid .
+                sorts none . none none none none none endth) .
 
 *** projection functions
   var Q : Qid .
@@ -1235,8 +1243,16 @@ fmod META-LEVEL is
 		(fmod_is_sorts_.____endfm :
 			Qid ImportList SortSet SubsortDeclSet OpDeclSet 
 			MembAxSet EquationSet ~> FModule)
+	op-hook fthSymbol
+		(fth_is_sorts_.____endfth :
+			Qid ImportList SortSet SubsortDeclSet OpDeclSet 
+			MembAxSet EquationSet ~> FModule)
 	op-hook modSymbol
 		(mod_is_sorts_._____endm :
+			Qid ImportList SortSet SubsortDeclSet OpDeclSet 
+			MembAxSet EquationSet RuleSet ~> Module)
+	op-hook thSymbol
+		(th_is_sorts_._____endth :
 			Qid ImportList SortSet SubsortDeclSet OpDeclSet 
 			MembAxSet EquationSet RuleSet ~> Module)
 

@@ -511,9 +511,9 @@ optNumber	:	SIMPLE_NUMBER	        { $$ = $1; }
 		|				{ $$ = NONE; }
 		;
 
-importMode	:	KW_PROTECT		{ $$ = ModuleDatabase::PROTECTING; }
-		|	KW_EXTEND		{ $$ = ModuleDatabase::EXTENDING; }
-		|	KW_INCLUDE		{ $$ = ModuleDatabase::INCLUDING; }
+importMode	:	KW_PROTECT		{ $$ = ImportModule::PROTECTING; }
+		|	KW_EXTEND		{ $$ = ImportModule::EXTENDING; }
+		|	KW_INCLUDE		{ $$ = ImportModule::INCLUDING; }
 		;
 /*
  *	Optional module expression followed by term followed by dot.

@@ -34,10 +34,13 @@ MetaLevel::upModule(bool flat, PreModule* pm, PointerMap& qidMap)
   args.append(upOpDecls(flat, m, qidMap));
   args.append(upMbs(flat, m, qidMap));
   args.append(upEqs(flat, m, qidMap));
-  if (m->getModuleType() == MixfixModule::FUNCTIONAL_MODULE)
+  MixfixModule::ModuleType mt = m->getModuleType();
+  if (mt == MixfixModule::FUNCTIONAL_MODULE)
     return fmodSymbol->makeDagNode(args);
+  else if (mt == MixfixModule::FUNCTIONAL_THEORY)
+    return fthSymbol->makeDagNode(args);
   args.append(upRls(flat, m, qidMap));
-  return modSymbol->makeDagNode(args);
+  return ((mt == MixfixModule::SYSTEM_MODULE) ? modSymbol : thSymbol)->makeDagNode(args);
 }
 
 DagNode*
@@ -55,9 +58,9 @@ MetaLevel::upImports(PreModule* pm, PointerMap& qidMap)
       {
 	args2[0] = upQid(i->first, qidMap);
 	Symbol* s = includingSymbol;
-	if (i->second == ModuleDatabase::PROTECTING)
+	if (i->second == ImportModule::PROTECTING)
 	  s = protectingSymbol;
-	else if (i->second == ModuleDatabase::EXTENDING)
+	else if (i->second == ImportModule::EXTENDING)
 	  s = extendingSymbol;
 	args.append(s->makeDagNode(args2));
       }

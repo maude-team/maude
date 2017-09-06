@@ -103,9 +103,8 @@ in					RETURN(KW_IN)
 }
 
 <INITIAL>{
-fmod|obj				RETURN(KW_FMOD)  // needed for FileTable
-mod					RETURN(KW_MOD)   // needed for FileTable
-omod					RETURN(KW_OMOD)   // needed for FileTable
+th|fth|mod|fmod|obj			RETURN(KW_MOD)
+omod					RETURN(KW_OMOD)
 load					return KW_LOAD;
 pwd					return KW_PWD;
 cd					return KW_CD;
@@ -264,13 +263,12 @@ eq					RETURN(KW_EQ)
 ceq|cq					RETURN(KW_CEQ)
 rl					RETURN(KW_RL)
 crl					RETURN(KW_CRL)
-endfm|endo|jbo				RETURN(KW_ENDFM)
-endm					RETURN(KW_ENDM)
-endom					RETURN(KW_ENDOM)
+end(th|fth|m|fm|om|o)|jbo		RETURN(KW_ENDM)
 "->"					RETURN(KW_ARROW)
 "=>"					RETURN(KW_ARROW2)
 "~>"					RETURN(KW_PARTIAL)
 [:()\[\].,<=|+*]			RETURN(*yytext)
+{maudeId}"."				FIX_UP(ENDS_IN_DOT)
 {maudeId}|[{}]				FIX_UP(IDENTIFIER)
 }
 

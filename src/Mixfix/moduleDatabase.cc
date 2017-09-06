@@ -83,7 +83,9 @@ ModuleDatabase::deleteModule(int name)
 }
 
 void
-ModuleDatabase::setAutoImport(ImportMode importMode, Token name, bool polarity)
+ModuleDatabase::setAutoImport(ImportModule::ImportMode importMode,
+			      Token name,
+			      bool polarity)
 {
   int code = name.code();
   if (polarity)

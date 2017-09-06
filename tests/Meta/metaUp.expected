@@ -108,7 +108,7 @@ eq '_or_['A:Bool,'B:Bool] = '_xor_['_and_['A:Bool,'B:Bool],'_xor_['A:Bool,
     'B:Bool]] [none] .
 eq '_xor_['A:Bool,'A:Bool] = 'false.Bool [none] .
 eq '_xor_['false.Bool,'A:Bool] = 'A:Bool [none] .
-eq '`[_`]['Q:Qid] = 'mod_is_sorts_._____endm['Q:Qid,'protecting_.['Q:Qid],
+eq '`[_`]['Q:Qid] = 'th_is_sorts_._____endth['Q:Qid,'including_.['Q:Qid],
     'none.SortSet,'none.SubsortDeclSet,'none.OpDeclSet,'none.MembAxSet,
     'none.EquationSet,'none.RuleSet] [none] .
 eq 'getContext['`{_`,_`,_`,_`}['T:Term,'T:Type,'S:Substitution,'C:Context]] =

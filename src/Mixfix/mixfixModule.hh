@@ -42,13 +42,19 @@ class MixfixModule : public ProfileModule, public MetadataStore, protected Commo
 {
   NO_COPYING(MixfixModule);
 
+  enum Bits
+  {
+    SYSTEM = 1,
+    THEORY = 2
+  };
+
 public:
   enum ModuleType
   {
     FUNCTIONAL_MODULE = 0,
-    SYSTEM_MODULE = 1,
-    FUNCTIONAL_THEORY = 2,
-    SYSTEM_THEORY = 3
+    SYSTEM_MODULE = SYSTEM,
+    FUNCTIONAL_THEORY = THEORY,
+    SYSTEM_THEORY = SYSTEM | THEORY
   };
 
   enum GatherSymbols
@@ -208,7 +214,7 @@ public:
   void copyBubbleSpec(Symbol* originalSymbol, Symbol* newSymbol);
   void copyFixUpBubbleSpec(Symbol* originalSymbol, SymbolMap* map);
   void fixUpBubbleSpec(int bubbleSpecIndex,
-		       QuotedIdentifierSymbol* qidSymbol,
+		       Symbol* qidSymbol,
 		       Symbol* nilQidListSymbol,
 		       Symbol* qidListSymbol);
   //
@@ -221,6 +227,8 @@ public:
   //
   static Sort* hookSort(Sort* sort);
   static ModuleType join(ModuleType t1, ModuleType t2);
+  static bool isTheory(ModuleType t);
+  static bool canImport(ModuleType t1, ModuleType t2);
 
 protected:
   static int findMatchingParen(const Vector<Token>& tokens, int pos);
@@ -828,6 +836,18 @@ inline MixfixModule::ModuleType
 MixfixModule::join(ModuleType t1, ModuleType t2)
 {
   return static_cast<ModuleType>(t1 | t2);
+}
+
+inline bool
+MixfixModule::isTheory(ModuleType t)
+{
+  return t & THEORY;
+}
+
+inline bool
+MixfixModule::canImport(ModuleType t1, ModuleType t2)
+{
+  return (t1 | t2) == t1;
 }
 
 #endif

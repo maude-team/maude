@@ -47,11 +47,11 @@ public:
     TERM_HOOK
   };
 
-  PreModule(Token moduleName, MixfixModule::ModuleType moduleType);
+  PreModule(Token startToken, Token moduleName);
   ~PreModule();
 
   void loseFocus();
-  void finishModule();
+  void finishModule(Token endToken);
   bool isComplete();
 
   void addImport(Token mode, ModuleExpression* expr);
@@ -178,8 +178,10 @@ private:
   void processStatements();
   DagNode* makeDag(Term* subjectTerm);
   DagNode* makeDag(const Vector<Token>& subject);
+  bool compatible(int endTokenCode);
 
   MixfixModule::ModuleType moduleType;
+  int startTokenCode;
   Bool lastSawOpDecl;
   Bool isCompleteFlag;
   Vector<Import> imports;

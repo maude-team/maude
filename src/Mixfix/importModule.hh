@@ -27,12 +27,20 @@
 #define _importModule_hh_
 #include <set>
 #include "mixfixModule.hh"
+#include "fileTable.hh"
 
 class ImportModule : public MixfixModule
 {
   NO_COPYING(ImportModule);
 
 public:
+  enum ImportMode
+  {
+    PROTECTING,
+    EXTENDING,
+    INCLUDING
+  };
+
   class Parent
   {
   public:
@@ -42,7 +50,9 @@ public:
   ImportModule(int name, ModuleType moduleType, Parent* parent = 0);
   ~ImportModule();
 
-  void addImport(ImportModule* importedModule);
+  void addImport(ImportModule* importedModule,
+		 ImportMode mode,
+		 LineNumber lineNumber);
   void closeSortSet();
   void closeSignature();
   void deepSelfDestruct();

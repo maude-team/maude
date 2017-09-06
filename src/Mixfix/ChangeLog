@@ -1,3 +1,187 @@
+2004-05-25  Steven Eker  <eker@goo.csl.sri.com>
+
+	* import.cc (getModule): don't fall into mutually recursive import
+	warning
+
+	* fixUp.cc (fixUpSymbols): added check for missing identity
+
+	* ops.cc (setIdentity): check for missing identity
+	(setIdentity): unmade change - parser never calls this function
+	with an empty bubble!
+
+2004-05-24  Steven Eker  <eker@goo.csl.sri.com>
+
+	* mixfixModule.cc (fixUpBubbleSpec): pass qidSymbol as a Symbol*
+	and check it
+
+	* fixUp.cc (fixUpSymbols): use new fixUpBubbleSpec() convention
+
+	* mixfixModule.hh (CommonTokens): updated decl for
+	fixUpBubbleSpec()
+
+	* fixUp.cc (fixUpSymbols): use dynamic_cast<> instead of
+	safeCast()
+
+	* mixfixModule.cc (fixUpBubbleSpec): check for missing symbols
+
+2004-05-19  Steven Eker  <eker@goo.csl.sri.com>
+
+	* fixUp.cc (fixUpSymbols): use safeCast()
+	(findHookSymbol): rewritten to avoid running of the end of the
+	Vector if the hook has bad syntax
+
+	* entry.cc (addOpDeclaration): added warnings for ad hoc
+	overloaded operators that have same domain but different ranges
+
+2004-05-18  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: changed definition of ['FOO] so that it works
+	with theories
+
+	* importModule.hh (class ImportModule): updated decl for 
+
+	* importModule.cc (addImport): pass lineNumber by value
+	addImport()
+
+2004-05-17  Steven Eker  <eker@goo.csl.sri.com>
+
+	* commands.yy (importMode): ModuleDatabase -> ImportModule (3
+	places)
+
+	* moduleCache.cc (makeSummation): use new addImport() conventions
+
+	* import.cc (processImports): rewritten to use new addImport()
+	conventions
+
+	* moduleDatabase.cc (setAutoImport): ImportMode now belongs to
+	ImportModule
+
+	* moduleDatabase.hh (class ModuleDatabase): deleted enum
+	ImportMode
+
+	* importModule.hh (class ImportModule): added enum ImportMode;
+	updated decl for addImport()
+
+	* importModule.cc (addImport): take mode and lineNumber; do
+	importation checks here
+
+	* prelude.maude: added thSymbol and fthSymbol
+
+	* import.cc (processImports): added warnings for violation of
+	importation rules by automatic imports
+
+	* modules.yy (declaration): use moduleExprDot
+	(moduleExprDot): added
+	(moduleExprDot): added
+	(mapping): use sortToken rather than token for sort mappings; use
+	token rather than identifier for label mappings
+
+2004-05-12  Steven Eker  <eker@goo.csl.sri.com>
+
+	* top.yy: added decl for endsInDot
+
+	* modules.yy (endStatement): added
+	(endsInDot): added
+	(endToken): redefined to eliminate ENDS_IN_DOT
+	(endTokens): endsInDot replaces '.' (2 places)
+	(tokenBarDot): redefined to eliminate ENDS_IN_DOT
+	(endStatement): use dot
+
+	* top.yy: deleted decl for tokenBarLt
+
+	* modules.yy (subsortList): added
+	(listBarLt): deleted
+	(listBarDot): deleted
+	(typeAttr): added
+	(domainRangeAttr): use typeAttr
+	(typeDot): added
+	(badType): added
+	(typeAttr): use badType
+	(tokenBarLt): deleted
+
+	* token.cc (dropChar): added
+
+	* modules.yy (identifier): added ENDS_IN_DOT
+	(tokenBarColonTo): added ENDS_IN_DOT
+	(tokenBarCommaLeft): added ENDS_IN_DOT
+	(sortToken): rule out ENDS_IN_DOT and ,
+	(sortTokenList): added
+	(dot): added to try to recover from missing space
+
+	* lexer.ll (id): added decl for ENDS_IN_DOT
+
+	* top.yy: added ENDS_IN_DOT
+
+2004-05-11  Steven Eker  <eker@goo.csl.sri.com>
+
+	* import.cc (processImports): check to see that theories are only
+	imported using the including mode
+	(processImports): check that module types are legal for import
+
+	* mixfixModule.hh (CommonTokens): added enum Bits
+	(isTheory): added
+	(canImport): added
+
+	* preModule.cc (addStatement): check for rules in functional
+	theory/module
+
+	* preModule.hh (Parent): added decl for compatible()
+
+	* preModule.cc (PreModule): init startTokenCode
+	(compatible): added
+	(finishModule): use compatible()
+
+	* preModule.hh (Parent): added data member startTokenCode
+
+	* modules.yy (startModule): added
+
+	* lexer.ll: seperated out omod
+
+	* top.yy: put KW_OMOD back
+	added nonterminal startModule
+
+	* preModule.cc (PreModule): handle start token
+
+	* commonTokens.cc (CommonTokens): added th fth mod fmod omod obj
+	endth endfth endm endfm endom endo jbo
+
+	* commonTokens.hh (class CommonTokens): added th fth mod fmod omod
+	obj endth endfth endm endfm endom endo jbo
+
+	* preModule.hh (Parent): updated decls for ctor and finishModule()
+
+	* modules.yy (startKeyword2): deleted KW_ENDTH KW_ENDFTH KW_ENDFM
+	KW_ENDOM
+
+	* top.yy: deleted KW_ENDTH KW_ENDFTH KW_ENDFM KW_ENDOM KW_TH
+	KW_FTH KW_FMOD KW_OMOD
+
+	* lexer.ll: merged th fth fmod omod into mod; merged endth endfth
+	endfm into endm
+
+	* modules.yy: deleted productions for endfm notEndfm endm
+	notEndm endom notEndom
+	(module): simplified to a single production
+	(oDecList): deleted
+	(fDecList): deleted
+	(declaration): merged with fDeclaration and oDeclaration
+
+	* top.yy: deleted nonterminals notEndfm notEndm notEndom 
+
+	* modules.yy (startKeyword2): added KW_ENDTH KW_ENDFTH
+
+	* top.yy: added KW_TH KW_FTH KW_ENDTH KW_ENDFTH
+
+	* lexer.ll (id): added keywords th fth endth endfth
+	
+2004-05-07  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ops.cc (setIdentity): added check for empty identity; didn't
+	fix our proble though since we never get here with an empy
+	identity; reverted change
+	
+===================================Maude84b===========================================
+
 2004-04-27  Steven Eker  <eker@goo.csl.sri.com>
 
 	* command.cc (showModule): use moduleEndString()
