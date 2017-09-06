@@ -1,3 +1,7 @@
+Overview of Changes in Maude alpha91c
+=====================================
+* Special case optimization for AC/ACU matching with extension
+
 Overview of Changes in Maude alpha91b
 =====================================
 * Removed extranous debugging print statement

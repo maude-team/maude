@@ -1,3 +1,19 @@
+2008-09-24  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_Matcher.cc (fullMatch): fix bug where we weren't setting up
+	the extensionInfo in the new fast success case
+
+2008-09-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_Matcher.cc (fullMatch): catch the case where we have no
+	patterns, one variable that can't take identity, one subject and
+	extension
+	(fullMatch): catch the same case where we can take identity but
+	we're not allowed to since there were only two things in the
+	subject
+
+===================================Maude91c===========================================
+
 2008-09-11  Steven Eker  <eker@goo.csl.sri.com>
 
 	* ACU_DagNode.cc (computeBaseSortForGroundSubterms): added default
