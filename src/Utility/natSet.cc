@@ -57,6 +57,13 @@ NatSet::countBits(Word w)
   return count;
 }
 
+local_inline unsigned int
+NatSet::getShift(value_type i)
+{
+  Assert(i >= 0, "-ve argument");
+  return i & (WORD_SIZE - 1);
+}
+
 local_inline NatSet::Word
 NatSet::getMask(value_type i)
 {
@@ -83,14 +90,14 @@ NatSet::arrayMin(int i) const
   return -1;
 }
 
-bool
+FastBool
 NatSet::arrayContains(value_type i) const
 {
   int w = getWordNr(i);
-  Assert(i > 0, "bad value");
+  Assert(w > 0, "bad wordNr " << w);  // we don't deal with first word here
   if (w > array.length())
     return false;
-  return array[w - 1] & getMask(i);
+  return (array[w - 1] >> getShift(i)) & 1;
 }
 
 void

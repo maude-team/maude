@@ -614,15 +614,39 @@ ACU_Term::compileRhs2(RhsBuilder& rhsBuilder,
   ACU_RhsAutomaton* automaton = new ACU_RhsAutomaton(symbol(), nrArgs);
   bool argEager = eagerContext && symbol()->getPermuteStrategy() == BinarySymbol::EAGER;
   Vector<int> sources;
-  for (int i = 0; i < nrArgs; i++)
+  /*
+  if (nrArgs == 2 && argArray[1].term->symbol() == symbol())
     {
-      int index = argArray[i].term->compileRhs(rhsBuilder,
-					       variableInfo,
-					       availableTerms,
-					       argEager);
+      //
+      //	1/6/10
+      //	Special case code to catch clt's right nesting and build in reverse order.
+      //
+      int rIndex = argArray[1].term->compileRhs(rhsBuilder,
+						variableInfo,
+						availableTerms,
+						argEager);
+      int lIndex = argArray[0].term->compileRhs(rhsBuilder,
+						variableInfo,
+						availableTerms,
+						argEager);
+      automaton->addArgument(lIndex, argArray[0].multiplicity);
+      sources.append(lIndex);
+      automaton->addArgument(rIndex, argArray[1].multiplicity);
+      sources.append(rIndex);
+    }
+  else
+  */
+    { 
+      for (int i = 0; i < nrArgs; i++)
+	{
+	  int index = argArray[i].term->compileRhs(rhsBuilder,
+						   variableInfo,
+						   availableTerms,
+						   argEager);
 
-      automaton->addArgument(index, argArray[i].multiplicity);
-      sources.append(index);
+	  automaton->addArgument(index, argArray[i].multiplicity);
+	  sources.append(index);
+	}
     }
   //
   //	Need to flag last use of each source.

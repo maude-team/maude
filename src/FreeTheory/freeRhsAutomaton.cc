@@ -74,11 +74,11 @@ FreeRhsAutomaton::remapIndices(VariableInfo& variableInfo)
 }
 
 local_inline void
-FreeRhsAutomaton::fillOutArgs(int nrArgs,
-			      const Instruction& instr,
+FreeRhsAutomaton::fillOutArgs(const Instruction& instr,
 			      Substitution& matcher,
 			      FreeDagNode* d)
 {
+  int nrArgs = d->symbol()->arity();
   if (nrArgs > 0)
     {
       DagNode** args = d->argArray();
@@ -99,9 +99,8 @@ FreeRhsAutomaton::construct(Substitution& matcher)
   Vector<Instruction>::const_iterator e = t.end();
   do
     {
-      int nrArgs = k->symbol->arity();
       d = new FreeDagNode(k->symbol);
-      fillOutArgs(nrArgs, *k, matcher, d);
+      fillOutArgs(*k, matcher, d);
       matcher.bind(k->destination, d);
     }
   while (++k != e);
@@ -113,22 +112,14 @@ FreeRhsAutomaton::replace(DagNode* old, Substitution& matcher)
 {
   const Vector<Instruction>& t = instructions;
   Vector<Instruction>::const_iterator e = t.end() - 1;
-  for (Vector<Instruction>::const_iterator i = t.begin();; ++i)
+  for (Vector<Instruction>::const_iterator i = t.begin(); i != e; ++i)
     {
-      int nrArgs = i->symbol->arity();
-      if (i == e)
-	{
-	  FreeDagNode* d = new(old) FreeDagNode(i->symbol);
-	  fillOutArgs(nrArgs, *i, matcher, d);
-	  break;
-	}
-      else
-	{
-	  FreeDagNode* d = new FreeDagNode(i->symbol);
-	  fillOutArgs(nrArgs, *i, matcher, d);
-	  matcher.bind(i->destination, d);
-	}
+      FreeDagNode* d = new FreeDagNode(i->symbol);
+      fillOutArgs(*i, matcher, d);
+      matcher.bind(i->destination, d);
     }
+  FreeDagNode* d = new(old) FreeDagNode(e->symbol);
+  fillOutArgs(*e, matcher, d);
 }
 
 #ifdef DUMP

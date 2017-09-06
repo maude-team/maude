@@ -65,7 +65,7 @@ public:
   void subtract(const NatSet& other);
   void intersect(const NatSet& other);
   NatSet& operator=(const NatSet& original);
-  bool contains(value_type i) const;
+  FastBool contains(value_type i) const;
   bool contains(const NatSet& other) const;
   bool disjoint(const NatSet& other) const;
   bool operator==(const NatSet& other) const;
@@ -88,11 +88,12 @@ private:
   static int topBit(Word w);
   static int bottomBit(Word w);
   static int countBits(Word w);
+  static unsigned int getShift(value_type i);
   static Word getMask(value_type i);
   static int getWordNr(value_type i);
 
   value_type arrayMin(int i) const;
-  bool arrayContains(value_type i) const;
+  FastBool arrayContains(value_type i) const;
 
   Word firstWord;
   Vector<Word> array;
@@ -158,11 +159,11 @@ NatSet::end() const
   return i;
 }
 
-inline bool
+inline FastBool
 NatSet::contains(value_type i) const
 {
   Assert(i >= 0, "-ve argument");
-  return i < WORD_SIZE ? (firstWord & (1 << i)) : arrayContains(i);
+  return i < WORD_SIZE ? ((firstWord >> i) & 1) : arrayContains(i);
 }
 
 inline bool

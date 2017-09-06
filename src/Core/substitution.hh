@@ -47,7 +47,7 @@ public:
   Substitution(int size, int cSize);  // rewriting contexts
   static void notify(int size);
 
-  void clear(int size);
+  void clear(long size);
   void finished();
   DagNode* value(int index) const;
   void bind(int index, DagNode* value);
@@ -67,7 +67,7 @@ protected:
   int addNewVariable();
 
 private:
-  Vector<DagNode*> values;
+  Vector<DagNode*> values;  // only allow even sizes
   int copySize;
 };
 
@@ -90,11 +90,18 @@ Substitution::Substitution(int size, int cSize) : values(size)
 }
 
 inline void
-Substitution::clear(int size)
+Substitution::clear(long size)
 {
+  //
+  //	Take a long argument to avoid the need for an explicit extension instruction on x86-64.
+  //
   Assert(size >= 0, "-ve size");
   Assert(size <= values.length(), "size > length");
   Assert(values.length() != 0, "clearing of zero length substitutions is not supported");
+  //
+  //	Save size early so we don't tie up a register.
+  //
+  copySize = size;
   //
   //	We alway clear at least 1 value in order to get a faster loop
   //	since the case size = 0 occurs very infrequently, and clearing
@@ -103,9 +110,10 @@ Substitution::clear(int size)
   Vector<DagNode*>::iterator i = values.begin();
   Vector<DagNode*>::iterator e = i + size;
   do
-    *i = 0;
+    {
+      *i = 0;
+    }
   while (++i < e);  // i > e possible if size = 0
-  copySize = size;
 }
 
 inline DagNode*
@@ -201,7 +209,7 @@ Substitution::addNewVariable()
   //
   if (copySize > values.length())
     values.expandTo(copySize);
-  values.resize(copySize);
+  values.resize(copySize);  // looks wrong?
   values[index] = 0;
   return index;
 }

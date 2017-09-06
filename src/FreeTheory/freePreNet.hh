@@ -79,7 +79,7 @@ private:
   struct Arc
   {
     Symbol* label;	// symbol at test position; 0 denotes ? arc
-    int target;		// index of target not if this symbol found
+    int target;		// index of target if this symbol found
   };
 
   struct Pair

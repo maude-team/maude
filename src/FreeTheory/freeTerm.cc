@@ -163,10 +163,59 @@ FreeTerm::compareArguments(const Term* other) const
     {
       int r = argArray[i]->compare(ta[i]);
       if (r != 0)
-	    return r;
+	return r;
     }
   return 0;
 }
+
+int
+FreeTerm::compareArguments(const DagNode* other) const
+{
+  Assert(symbol() == other->symbol(), "symbols differ");
+  int nrArgs = other->symbol()->arity();
+  if (nrArgs != 0)
+    {
+      DagNode** q = static_cast<const FreeDagNode*>(other)->argArray();
+      Vector<Term*>::const_iterator p = argArray.begin();
+      for (;;)
+	{
+	  int r = (*p)->compare(*q);
+	  if (r != 0)
+	    return r;
+	  if (--nrArgs == 0)
+	    break;
+	  ++p;
+	  ++q;
+	}
+    }
+  return 0;
+}
+
+/*
+int
+FreeTerm::compareArguments(const DagNode* other) const
+{
+  Assert(symbol() == other->symbol(), "symbols differ");
+  int nrArgs = other->symbol()->arity();
+  if (nrArgs != 0)
+    {
+      DagNode** q = static_cast<const FreeDagNode*>(other)->argArray();
+      Vector<Term*>::const_iterator p = argArray.begin();
+      for (int i = nrArgs;; ++p, ++q)
+	{
+	  int r = (*p)->compare(*q);
+	  if (r != 0)
+	    return r;
+	  if (--i == 0)
+	    break;
+	}
+    }
+  return 0;
+}
+*/
+
+
+/*
 
 int
 FreeTerm::compareArguments(const DagNode* other) const
@@ -185,6 +234,8 @@ FreeTerm::compareArguments(const DagNode* other) const
     }
   return 0;
 }
+
+*/
 
 int
 FreeTerm::partialCompareArguments(const Substitution& partialSubstitution,

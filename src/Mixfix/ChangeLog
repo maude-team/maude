@@ -1,3 +1,10 @@
+2010-03-05  Steven Eker  <eker@rho>
+
+	* bufferPrint.cc (MixfixModule::printTails): bug where we were
+	appending leftParen rather that rightParen in needAssocParen case
+
+===================================Maude92c===========================================
+
 2009-12-24  Steven Eker  <eker@goo.csl.sri.com>
 
 	* trial.cc (traceBeginRuleTrial): added missing '\n'

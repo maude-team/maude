@@ -300,14 +300,21 @@ FreeRemainder::slowMatchReplace2(DagNode* subject,
       //	the stack; but the stack must be preserved to allow us to handle
       //	the next remainder if the condition fails or rewriting is aborted.
       //
-      Vector<DagNode**> savedStack(stack);
+      Vector<DagNode**> savedStack(stack.size());
+      savedStack.swap(stack);  // save by swapping is safe since we no longer keep pointer to stack elements
       bool r = equation->checkCondition(subject, context, subproblem);
-      stack = savedStack;	// cannot swap because FreeNet may have pointers into stack
+      savedStack.swap(stack);
       if (!r)
 	{
 	  delete subproblem;
 	  return false;
 	}
+      /*
+      Vector<DagNode**> savedStack(stack);
+      bool r = equation->checkCondition(subject, context, subproblem);
+      stack = savedStack;	// cannot swap because FreeNet may have pointers into stack
+
+      */
     }
   //
   //	Do replacement

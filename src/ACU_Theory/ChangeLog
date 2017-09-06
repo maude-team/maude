@@ -1,3 +1,49 @@
+2010-02-26  Steven Eker  <eker@rho>
+
+	* ACU_DagOperations.cc (ACU_DagNode::binarySearch): removed
+	setOnLs()/setOnGeq() since it seems to be a pessimization (both
+	versions)
+
+2010-02-24  Steven Eker  <eker@rho>
+
+	* ACU_Normalize.cc (ACU_DagNode::copyAndBinaryInsert): use new
+	binarySearch() convention
+
+
+2010-02-19  Steven Eker  <eker@rho>
+
+	* ACU_DagNode.hh (class ACU_DagNode): updated decl for DagNode*
+	version of binarySearch()
+
+	* ACU_DagOperations.cc (ACU_DagNode::binarySearch): rewrote
+	DagNode* version
+	(ACU_DagNode::eliminateSubject): use new binarySearch() convention
+
+	* ACU_DagNode.hh (class ACU_DagNode): updated decl for Term*
+	version of binarySearch()
+
+	* ACU_GndLhsAutomaton.cc (ACU_GndLhsAutomaton::match): use new
+	binarySearch() convention
+
+	* ACU_Matcher.cc (ACU_LhsAutomaton::eliminateGroundAliens): use
+	new binarySearch() convention
+
+	* ACU_DagOperations.cc (ACU_DagNode::binarySearch): rewritten to
+	return position rather than pass it back through a reference argument
+	(ACU_DagNode::eliminateArgument): use new binarySearch semantics
+
+2010-02-18  Steven Eker  <eker@rho>
+
+	* ACU_DagOperations.cc (ACU_DagNode::binarySearch): use unsigned
+	sum optimization in both versions
+
+2010-01-06  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_Term.cc (compileRhs2): experiment code to check my
+	understanding of clt's extreme right nesting example
+
+===================================Maude92c===========================================
+
 2009-12-09  Steven Eker  <eker@goo.csl.sri.com>
 
 	* ACU_TreeDagNode.cc (makeCanonical): added

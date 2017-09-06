@@ -429,9 +429,11 @@ DagNode::reduce(RewritingContext& context)
 {
   while (!isReduced())
     {
-      if (!(topSymbol->eqRewrite(this, context)))
+      Symbol* s = topSymbol;  // to avoid reloading this after a call to eqRewrite() returns false
+      if (!(s->eqRewrite(this, context)))
 	{
 	  setReduced();
+	  //s->fastComputeTrueSort(this, context);
 	  topSymbol->fastComputeTrueSort(this, context);
 	  break;
 	}

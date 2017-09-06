@@ -1,3 +1,13 @@
+2010-01-28  Steven Eker  <eker@goo.csl.sri.com>
+
+	* dagNode.hh (reduce): try storing topSymbol in a local variable
+	to avoid reloading it
+
+	* symbol.hh (class Symbol): makeCanonical() becomes null
+
+	* symbol.cc (makeUnificationSubproblem): moved here to avoid gcc
+	making copies for derived classes that don't define their own
+
 2009-12-02  Steven Eker  <eker@goo.csl.sri.com>
 
 	* term.hh (hash): updated both versions to be symmetrical with

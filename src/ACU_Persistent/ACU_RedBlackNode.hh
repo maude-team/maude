@@ -282,7 +282,7 @@ ACU_RedBlackNode::getRight() const
 inline ACU_RedBlackNode*
 ACU_RedBlackNode::getChild(int sign) const
 {
-  return children[getSignBit(sign)];
+  return children[sign < 0];
 }
 
 inline void
