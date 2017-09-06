@@ -37,8 +37,6 @@ public:
   bool isConstructor(DagNode* subject);
   void compileOpDeclarations();
 
-  DagNode* makeCanonicalCopyEagerUptoReduced(DagNode* original, HashConsSet* /* hcs */);
-
 private:
   Sort* sort;
   Sort* charSort;

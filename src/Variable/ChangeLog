@@ -1,3 +1,14 @@
+2010-10-19  Steven Eker  <eker@rho>
+
+	* variableSymbol.cc
+	(VariableSymbol::makeCanonicalCopyEagerUptoReduced): becomes
+	makeCanonicalCopy() - no change in semantics needed
+
+	* variableSymbol.hh (class VariableSymbol):
+	makeCanonicalCopyEagerUptoReduced() -> makeCanonicalCopy()
+
+===================================Maude95a===========================================
+
 2010-09-29  Steven Eker  <eker@rho>
 
 	* variableSymbol.hh (class VariableSymbol): added decl for

@@ -1,3 +1,13 @@
+2010-10-19  Steven Eker  <eker@rho>
+
+	* AU_Symbol.cc (AU_Symbol::makeCanonicalCopyEagerUptoReduced):
+	becomes makeCanonicalCopy() with change of semantics
+
+	* AU_Symbol.hh (class AU_Symbol):
+	makeCanonicalCopyEagerUptoReduced() -> makeCanonicalCopy()
+
+===================================Maude95a===========================================
+
 2010-09-29  Steven Eker  <eker@rho>
 
 	* AU_Symbol.cc (AU_Symbol::makeCanonicalCopyEagerUptoReduced):

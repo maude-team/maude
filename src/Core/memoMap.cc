@@ -38,12 +38,16 @@
 int
 MemoMap::getFromIndex(DagNode* fromDag)
 {
-  int fromIndex =  dags.insertCopyEagerUptoReduced(fromDag);
-  int nrToDags = toIndices.size();
-  if (fromIndex >= nrToDags)
+  //
+  //	We assume that a fromDag is unreduced and therefore we never use
+  //	the original in the hash cons table incase it is reduced in place.
+  //
+  int fromIndex =  dags.insertCopy(fromDag);
+  int nrFromDags = toIndices.size();
+  if (fromIndex >= nrFromDags)
     {
       toIndices.resize(fromIndex + 1);
-      for (int i = nrToDags; i <= fromIndex; ++i)
+      for (int i = nrFromDags; i <= fromIndex; ++i)
 	toIndices[i] = NONE;
     }
   return fromIndex;

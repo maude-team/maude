@@ -45,6 +45,7 @@ public:
   //	Hash cons stuff.
   //
   DagNode* makeCanonical(DagNode* original, HashConsSet* /* hcs */);
+  DagNode* makeCanonicalCopy(DagNode* original, HashConsSet* /* hcs */);
 };
 
 #endif

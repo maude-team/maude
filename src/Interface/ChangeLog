@@ -1,3 +1,15 @@
+2010-10-20  Steven Eker  <eker@rho>
+
+	* dagNode.hh (DagNode::upgradeSortIndex): added
+	(DagNode::copySortIndex): added
+
+2010-10-19  Steven Eker  <eker@rho>
+
+	* symbol.hh (class Symbol): makeCanonicalCopyEagerUptoReduced() ->
+	makeCanonicalCopy()
+
+===================================Maude95a==========================================
+
 2010-09-30  Steven Eker  <eker@rho>
 
 	* symbol.hh (class Symbol): removed derivation from ModuleItem now

@@ -1,3 +1,14 @@
+2010-10-19  Steven Eker  <eker@rho>
+
+	* quotedIdentifierSymbol.cc
+	(QuotedIdentifierSymbol::makeCanonicalCopyEagerUptoReduced):
+	deleted
+
+	* quotedIdentifierSymbol.hh (class QuotedIdentifierSymbol):
+	deleted decl for makeCanonicalCopyEagerUptoReduced()
+
+===================================Maude95a===========================================
+
 2010-10-06  Steven Eker  <eker@rho>
 
 	* renameModule.cc (ImportModule::donateOps2): use new symbol name

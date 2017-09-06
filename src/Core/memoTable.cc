@@ -45,10 +45,21 @@
 bool
 MemoTable::memoRewrite(SourceSet& sourceSet, DagNode* subject, RewritingContext& context)
 {
+#if 0
+  DebugAdvisory("memoRewrite()  subject " << subject <<
+		" at " << ((void*) subject) <<
+		" has sort index " << subject->getSortIndex());
+#endif
   MemoMap* memoMap = getModule()->getMemoMap();
   int subjectIndex = memoMap->getFromIndex(subject);
+
   if (DagNode* toDag = memoMap->getToDag(subjectIndex))
     {
+#if 0
+      DebugAdvisory("memoRewrite()  toDag " << subject << 
+		    " at " << ((void*) toDag) <<
+		    " has sort index " << subject->getSortIndex());
+#endif
       bool trace = RewritingContext::getTraceStatus();
       if (trace)
 	{
@@ -69,6 +80,11 @@ MemoTable::memoRewrite(SourceSet& sourceSet, DagNode* subject, RewritingContext&
 void
 MemoTable::memoEnter(SourceSet& sourceSet, DagNode* destination)
 {
+#if 0
+  DebugAdvisory("memoEnter()  destination " << destination <<
+		" at " << ((void*) destination) <<
+		" has sort index " << destination->getSortIndex());
+#endif
   MemoMap* memoMap = getModule()->getMemoMap();
   FOR_EACH_CONST(i, SourceSet, sourceSet)
     memoMap->assignToDag(*i, destination);

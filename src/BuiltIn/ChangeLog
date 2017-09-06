@@ -1,3 +1,19 @@
+2010-10-19  Steven Eker  <eker@rho>
+
+	* stringSymbol.cc
+	(StringSymbol::makeCanonicalCopyEagerUptoReduced): deleted
+
+	* stringSymbol.hh (class StringSymbol): deleted decl for
+	makeCanonicalCopyEagerUptoReduced()
+
+	* floatSymbol.cc (FloatSymbol::makeCanonicalCopyEagerUptoReduced):
+	deleted
+
+	* floatSymbol.hh (class FloatSymbol): deleted decl for
+	makeCanonicalCopyEagerUptoReduced()
+
+===================================Maude95a===========================================
+
 2010-09-29  Steven Eker  <eker@rho>
 
 	* stringSymbol.hh (class StringSymbol): added decl for

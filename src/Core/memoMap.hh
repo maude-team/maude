@@ -37,7 +37,7 @@ public:
 
 private:
   HashConsSet dags;
-  Vector<int> toIndices;
+  Vector<int> toIndices;  // maps from-indices to to-indices
 };
 
 inline DagNode*

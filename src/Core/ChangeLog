@@ -1,3 +1,35 @@
+2010-10-20  Steven Eker  <eker@rho>
+
+	* hashConsSet.cc (HashConsSet::insert): use upgradeSortIndex() to
+	make sure any sort information in our argument is copied into an
+	existing canonical version
+
+2010-10-19  Steven Eker  <eker@rho>
+
+	* memoMap.cc (MemoMap::getFromIndex): use insertCopy() instead of
+	insertCopyEagerUptoReduced()
+
+	* hashConsSet.hh (class HashConsSet): insertCopyEagerUptoReduced()
+	becomes insertCopy(); decl for getCanonicalCopyEagerUptoReduced()
+	deleted
+	(HashConsSet::getCanonicalCopyEagerUptoReduced): deleted
+
+	* hashConsSet.cc (HashConsSet::insertCopyEagerUptoReduced):
+	becomes insertCopy() with change of semantics
+
+	* memoMap.hh (class MemoMap): reverted previous change - it
+	doesn't solve the problem since lazy symbols can still occur in
+	toDags
+
+	* memoMap.cc (MemoMap::getFromIndex): use fromDags
+
+	* memoMap.hh (class MemoMap): split dags in to fromDags and
+	toDags; this is to solve a nasty issue with reduced flags being
+	unset arbitarily deep in fromDags with lazy function symbols
+	(MemoMap::getToDag, MemoMap::assignToDag): use toDags
+
+===================================Maude95a===========================================
+
 2010-09-30  Steven Eker  <eker@rho>
 
 	* memoMap.cc: created
