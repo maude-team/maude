@@ -99,8 +99,11 @@ VariantUnificationProblem::VariantUnificationProblem(RewritingContext* context,
   //
   newContext = context->makeSubcontext(unificationDag);
   //
-  //	VariantSearch actually does the work.
+  //	VariantSearch actually does the work. It can trigger garbage collection
+  //	via reduce so we need to set substitutionSize to ensure solution won't
+  //	be read.
   //
+  substitutionSize = 0;
   variantSearch = new VariantSearch(newContext,
 				    blockerDags,
 				    freshVariableGenerator,

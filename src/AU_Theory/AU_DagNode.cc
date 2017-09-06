@@ -476,7 +476,6 @@ AU_DagNode::instantiateWithCopies2(const Substitution& substitution, const Vecto
 {
   AU_Symbol* s = symbol();
   bool eager = s->getPermuteStrategy() == BinarySymbol::EAGER;
-
   int nrArgs = argArray.length();
   for (int i = 0; i < nrArgs; ++i)
     {
@@ -484,7 +483,6 @@ AU_DagNode::instantiateWithCopies2(const Substitution& substitution, const Vecto
       DagNode* n = eager ?
 	a->instantiateWithCopies(substitution, eagerCopies) :
 	a->instantiate(substitution);
-
       if (n != 0)
 	{
 	  //
@@ -542,8 +540,8 @@ AU_DagNode::instantiateWithCopies2(const Substitution& substitution, const Vecto
 	      d->setGround();
 	    }
 	  Assert(d->isDeque() == false, "Oops we got a deque! " << d);
-	  return d;
 #endif	
+	  return d;
 	}
     }
   return 0;  // unchanged

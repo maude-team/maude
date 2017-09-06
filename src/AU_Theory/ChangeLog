@@ -1,3 +1,10 @@
+2017-04-25  Steven Eker  <eker@install.csl.sri.com>
+
+	* AU_DagNode.cc (instantiateWithCopies2): fixed bug where return d was
+	inside the ifdef'd code
+
+===================================Maude112b===========================================
+
 2017-04-14  Steven Eker  <eker@install.csl.sri.com>
 
 	* AU_Matcher.cc (forcedLoneVariableCase): added comments
