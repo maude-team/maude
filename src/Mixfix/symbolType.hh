@@ -37,28 +37,26 @@ public:
   {
     STANDARD,
     //
+    //	System created symbols.
+    //
+    VARIABLE,
+    SORT_TEST,
+    //
     //	Special properties.
     //
     SYSTEM_TRUE,
     SYSTEM_FALSE,
     BUBBLE,
     //
-    //	Polymorphs.
-    //	
-    BRANCH_SYMBOL,
-    EQUALITY_SYMBOL,
-    UP_SYMBOL,
-    DOWN_SYMBOL,
-    //
     //	Special symbols that do not deal with attachments.
     //
-    VARIABLE,
-    SORT_TEST,
     FLOAT,
     STRING,
     //
     //	Special symbols that do deal with attachments.
     //
+    BRANCH_SYMBOL,
+    EQUALITY_SYMBOL,
     FLOAT_OP,
     STRING_OP,
     QUOTED_IDENTIFIER,
@@ -111,6 +109,7 @@ public:
     //
     //	Misc.
     //
+    POLY = 0x400000,
     DITTO = 0x800000,
     //
     //	Conjunctions.
@@ -133,7 +132,7 @@ public:
   bool hasAllFlags(int flags) const;
   //  bool hasAxioms() const;
   bool hasAttachments() const;
-  bool isPolymorph() const;
+  bool hasSpecial() const;
   // bool isVariable() const;
   bool isCreatedOnTheFly() const;
   bool compatible(SymbolType other) const;
@@ -203,21 +202,21 @@ inline bool
 SymbolType::hasAttachments() const
 {
   int t = getBasicType();
-  return (t >= FLOAT_OP) && (t < END_OF_SYMBOLS_WITH_ATTACHMENTS);
+  return (t >= BRANCH_SYMBOL) && (t < END_OF_SYMBOLS_WITH_ATTACHMENTS);
 }
 
 inline bool
-SymbolType::isPolymorph() const
+SymbolType::hasSpecial() const
 {
   int t = getBasicType();
-  return t >= BRANCH_SYMBOL && t <= DOWN_SYMBOL;
+  return (t >= SYSTEM_TRUE) && (t < END_OF_SYMBOLS_WITH_ATTACHMENTS);
 }
 
 inline bool
 SymbolType::isCreatedOnTheFly() const
 {
   int t = getBasicType();
-  return isPolymorph() || t == VARIABLE || t == SORT_TEST;
+  return hasFlag(POLY) || t == VARIABLE || t == SORT_TEST;
 }
 
 #endif

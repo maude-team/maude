@@ -97,6 +97,64 @@ NumberOpSymbol::copyAttachments(Symbol* original, SymbolMap* map)
 }
 
 void
+NumberOpSymbol::getDataAttachments(const Vector<Sort*>& opDeclaration,
+				   Vector<const char*>& purposes,
+				   Vector<Vector<const char*> >& data)
+{
+  int nrDataAttachments = purposes.length();
+  purposes.resize(nrDataAttachments + 1);
+  purposes[nrDataAttachments] = "NumberOpSymbol";
+  data.resize(nrDataAttachments + 1);
+  data[nrDataAttachments].resize(1);
+  const char*& d = data[nrDataAttachments][0];
+  switch (op)
+    {
+    CODE_CASE(d, '-', 0, "-")
+    CODE_CASE(d, '~', 0, "~")
+    CODE_CASE(d, 'a', 'b', "abs")
+    CODE_CASE(d, '+', 0, "+")
+    CODE_CASE(d, '*', 0, "*")
+    CODE_CASE(d, 'g', 'c', "gcd")
+    CODE_CASE(d, 'l', 'c', "lcm")
+    CODE_CASE(d, '|', 0, "|")
+    CODE_CASE(d, '&', 0, "&")
+    CODE_CASE(d, 'x', 'o', "xor")
+    CODE_CASE(d, 'q', 'u', "quo")
+    CODE_CASE(d, 'r', 'e', "rem")
+    CODE_CASE(d, '^', 0, "^")
+    CODE_CASE(d, '<', '<', "<<")
+    CODE_CASE(d, '>', '>', ">>")
+    CODE_CASE(d, '<', 0, "<")
+    CODE_CASE(d, '<', '=', "<=")
+    CODE_CASE(d, '>', 0, ">")
+    CODE_CASE(d, '>', '=', ">=")
+    CODE_CASE(d, 'd', 'i', "divides")
+    CODE_CASE(d, 'm', 'o', "modExp")
+    default:
+      CantHappen("bad number op");
+    }
+  FreeSymbol::getDataAttachments(opDeclaration, purposes, data);
+}
+
+void
+NumberOpSymbol::getSymbolAttachments(Vector<const char*>& purposes,
+				     Vector<Symbol*>& symbols)
+{
+  APPEND_SYMBOL(purposes, symbols, succSymbol);
+  APPEND_SYMBOL(purposes, symbols, minusSymbol);
+  FreeSymbol::getSymbolAttachments(purposes, symbols);
+}
+
+void
+NumberOpSymbol::getTermAttachments(Vector<const char*>& purposes,
+				   Vector<Term*>& terms)
+{
+  APPEND_TERM(purposes, terms, trueTerm);
+  APPEND_TERM(purposes, terms, falseTerm);
+  FreeSymbol::getTermAttachments(purposes, terms);
+}
+
+void
 NumberOpSymbol::postInterSymbolPass()
 {
   PREPARE_TERM(trueTerm);

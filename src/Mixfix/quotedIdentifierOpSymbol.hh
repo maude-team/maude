@@ -37,6 +37,12 @@ public:
 		  const Vector<const char*>& data);
   bool attachSymbol(const char* purpose, Symbol* symbol);
   void copyAttachments(Symbol* original, SymbolMap* map);
+  void getDataAttachments(const Vector<Sort*>& opDeclaration,
+			  Vector<const char*>& purposes,
+			  Vector<Vector<const char*> >& data);
+  void getSymbolAttachments(Vector<const char*>& purposes,
+			    Vector<Symbol*>& symbols);
+
   bool eqRewrite(DagNode* subject, RewritingContext& context);
 
 private:

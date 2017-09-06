@@ -36,6 +36,10 @@ public:
 		  const char* purpose,
 		  const Vector<const char*>& data);
   void copyAttachments(Symbol* original, SymbolMap* map);
+  void getDataAttachments(const Vector<Sort*>& opDeclaration,
+			  Vector<const char*>& purposes,
+			  Vector<Vector<const char*> >& data);
+
   void fillInSortInfo(Term* subject);
   void computeBaseSort(DagNode* subject);
   bool isConstructor(DagNode* subject);

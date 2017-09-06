@@ -68,12 +68,19 @@ public:
   void setIdentity(const Vector<Token>& identity);
   void setStrat(const Vector<Token>& strategy);
   void setFrozen(const Vector<Token>& frozen);
+  void setPoly(const Vector<Token>& polyArgs);
   void setLatexMacro(const string& latexMacro);
   void addHook(HookType type, Token name, const Vector<Token>& details);
   void addVarDecl(Token varName);
   void addStatement(const Vector<Token>& statement);
   VisibleModule* getFlatSignature();
   VisibleModule* getFlatModule();
+
+  int getNrAutoImports() const;
+  int getNrImports() const;
+  int getAutoImport(int index) const;
+  int getImportMode(int index) const;
+  const ModuleExpression* getImport(int index) const;
 
   void process();
 
@@ -118,6 +125,7 @@ private:
     Vector<Hook> special;
     Vector<int> strategy;
     NatSet frozen;
+    NatSet polyArgs;
     int prec;
     Vector<int> gather;
     Vector<int> format;
@@ -143,6 +151,7 @@ private:
   Symbol* findHookSymbol(const Vector<Token>& fullName);
   void printOpDef(ostream&s, int defIndex);
   bool defaultFixUp(OpDef& opDef, Symbol* symbol);
+  bool defaultFixUp(OpDef& opDef, int index);
   void extractSpecialTerms(const Vector<Token>& bubble,
 			   int begin,
 			   ConnectedComponent* component,
@@ -194,6 +203,36 @@ inline void
 PreModule::addSubsortDecl(const Vector<Token>& subsortDecl)
 {
   subsortDecls.append(subsortDecl);
+}
+
+inline int
+PreModule::getNrAutoImports() const
+{
+  return autoImports.cardinality();
+}
+
+inline int
+PreModule::getNrImports() const
+{
+  return imports.length();
+}
+
+inline int
+PreModule::getAutoImport(int index) const
+{
+  return autoImports.index2Int(index); 
+}
+
+inline int
+PreModule::getImportMode(int index) const
+{
+  return imports[index].mode.code();
+}
+
+inline const ModuleExpression*
+PreModule::getImport(int index) const
+{
+  return imports[index].expr;
 }
 
 #endif

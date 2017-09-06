@@ -22,7 +22,7 @@
 
 ***
 ***	Maude interpreter standard prelude.
-***	Version Alpha 82
+***	Version Alpha 83
 ***
 ***	Some of the overall structure is taken from the OBJ3
 ***	interpreter standard prelude.
@@ -39,18 +39,19 @@ endfm
 fmod TRUTH is
   protecting TRUTH-VALUE .
   op if_then_else_fi : Bool Universal Universal -> Universal 
-	[special (id-hook BranchSymbol
-		  term-hook trueTerm (true)
-		  term-hook falseTerm (false))] .
+	[poly (2 3 0)
+         special (id-hook BranchSymbol
+		  term-hook 1 (true)
+		  term-hook 2 (false))] .
 
   op _==_ : Universal Universal -> Bool 
-	[prec 51
+	[prec 51 poly (1 2)
          special (id-hook EqualitySymbol
 		  term-hook equalTerm (true)
 		  term-hook notEqualTerm (false))] .
 
   op _=/=_ : Universal Universal -> Bool 
-	[prec 51
+	[prec 51 poly (1 2)
          special (id-hook EqualitySymbol
 		  term-hook equalTerm (false)
 		  term-hook notEqualTerm (true))] .
@@ -89,13 +90,13 @@ endfm
 
 fmod IDENTICAL is
   op _===_ : Universal Universal -> Bool 
-	[prec 51 strat (0) 
+	[prec 51 poly (1 2) strat (0)
          special (id-hook EqualitySymbol
 		  term-hook equalTerm (true)
 		  term-hook notEqualTerm (false))] .
 
   op _=/==_ : Universal Universal -> Bool 
-        [prec 51 strat (0) 
+        [prec 51 poly (1 2) strat (0)
 	 special (id-hook EqualitySymbol
 		  term-hook equalTerm (false)
 		  term-hook notEqualTerm (true))] .
@@ -876,9 +877,9 @@ fmod META-MODULE is
 *** hooks
   sorts Hook HookList .
   subsort Hook < HookList .
-  op id-hook : Qid QidList -> Hook [ctor] .
-  op op-hook : Qid Qid QidList Qid -> Hook [ctor] .
-  op term-hook : Qid Term -> Hook [ctor] .
+  op id-hook : Qid QidList -> Hook [ctor format (nssss d)] .
+  op op-hook : Qid Qid QidList Qid -> Hook [ctor format (nssss d)] .
+  op term-hook : Qid Term -> Hook [ctor format (nssss d)] .
   op __ : HookList HookList -> HookList [ctor assoc] .
 
 *** attribute sets
@@ -906,6 +907,7 @@ fmod META-MODULE is
   op object : -> Attr [ctor] .
   op msg : -> Attr [ctor] .
   op frozen : NatList -> Attr [ctor] .
+  op poly : NatList -> Attr [ctor] .
   op special : HookList -> Attr [ctor] .
 
 *** statement attributes
@@ -1153,6 +1155,7 @@ fmod META-LEVEL is
 	op-hook formatSymbol		(format : QidList ~> Attr)
 	op-hook ctorSymbol		(ctor : ~> Attr)
 	op-hook frozenSymbol		(frozen : NatList ~> Attr)
+	op-hook polySymbol		(poly : NatList ~> Attr)
 	op-hook configSymbol		(config : ~> Attr)
 	op-hook objectSymbol		(object : ~> Attr)
 	op-hook msgSymbol		(msg : ~> Attr)
@@ -1338,6 +1341,31 @@ fmod META-LEVEL is
 	   id-hook MetaLevelOpSymbol	(metaMinimalSorts)
 	   op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .
 
+  op upModule : Qid Bool ~> Module
+	[special (
+	   id-hook MetaLevelOpSymbol	(metaUpModule)
+	   op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .
+
+  op upImports : Qid ~> ImportList
+	[special (
+	   id-hook MetaLevelOpSymbol	(metaUpImports)
+	   op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .
+
+  op upSorts : Qid Bool ~> SortSet
+	[special (
+	   id-hook MetaLevelOpSymbol	(metaUpSorts)
+	   op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .
+
+  op upSubsortDecls : Qid Bool ~> SubsortDeclSet
+	[special (
+	   id-hook MetaLevelOpSymbol	(metaUpSubsortDecls)
+	   op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .
+
+  op upOpDecls : Qid Bool ~> OpDeclSet
+	[special (
+	   id-hook MetaLevelOpSymbol	(metaUpOpDecls)
+	   op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .
+
   op upMbs : Qid Bool ~> MembAxSet
 	[special (
 	   id-hook MetaLevelOpSymbol	(metaUpMbs)
@@ -1354,13 +1382,15 @@ fmod META-LEVEL is
 	   op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .
 
   op upTerm : Universal -> Term
-	[special (
-	   id-hook UpSymbol
+	[poly (1)
+         special (
+	   id-hook MetaLevelOpSymbol	(metaUpTerm)
 	   op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .
 
   op downTerm : Term Universal -> Universal
-	[special (
-	   id-hook DownSymbol
+	[poly (2 0)
+         special (
+	   id-hook MetaLevelOpSymbol	(metaDownTerm)
 	   op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .
 endfm
 

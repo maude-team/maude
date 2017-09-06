@@ -94,10 +94,10 @@ PreModule::setFlag(int flag)
 void
 PreModule::setPrec(Token precTok)
 {
-  const char* string = precTok.name();
+  const char* str = precTok.name();
   char* pointer;
-  long prec = strtol(string, &pointer, 10);
-  if (pointer != string && *pointer == '\0' &&
+  long prec = strtol(str, &pointer, 10);
+  if (pointer != str && *pointer == '\0' &&
       prec >= MixfixModule::MIN_PREC && prec <= MixfixModule::MAX_PREC)
     {
       OpDef& opDef = opDefs[opDefs.length() - 1];
@@ -107,7 +107,7 @@ PreModule::setPrec(Token precTok)
   else
     {
       IssueWarning(LineNumber(precTok.lineNumber()) <<
-		   ": bad value " << QUOTE(string) << " for prec attribute.");
+		   ": bad value " << QUOTE(str) << " for prec attribute.");
     }
 }
 
@@ -184,13 +184,13 @@ PreModule::setFormat(const Vector<Token>& format)
   OpDef& opDef = opDefs[opDefs.length() - 1];
   for (int i = 0; i < length; i++)
     {
-      const char* string = format[i].name();
-      if (checkFormatString(string))
+      const char* str = format[i].name();
+      if (checkFormatString(str))
 	opDef.format.append(format[i].code());
       else
 	{
 	  IssueWarning(LineNumber(format[i].lineNumber()) <<
-		       ": bad value " << QUOTE(string) <<
+		       ": bad value " << QUOTE(str) <<
 		       " in format attribute. Recovering by ignoring format attribute.");
 	  opDef.format.clear();  // for safety
 	  return;
@@ -219,10 +219,10 @@ PreModule::setFrozen(const Vector<Token>& frozen)
     {
       for (int i = 0; i < length; i++)
 	{
-	  const char* string = frozen[i].name();
+	  const char* str = frozen[i].name();
 	  char* pointer;
-	  long argPos = strtol(string, &pointer, 10);
-	  if (pointer != string && *pointer == '\0' &&
+	  long argPos = strtol(str, &pointer, 10);
+	  if (pointer != str && *pointer == '\0' &&
 	      argPos >= 1 && argPos <= maxArgPos)
 	    {
 	      WarningCheck(!(opDef.frozen.contains(argPos - 1)),
@@ -234,7 +234,7 @@ PreModule::setFrozen(const Vector<Token>& frozen)
 	  else
 	    {
 	      IssueWarning(LineNumber(frozen[i].lineNumber()) <<
-			   ": bad value " << QUOTE(string) <<
+			   ": bad value " << QUOTE(str) <<
 			   " in frozen attribute. Recovering by ignoring frozen attribute.");
 	      opDef.frozen.clear();  // for safety
 	      return;
@@ -252,16 +252,16 @@ PreModule::setStrat(const Vector<Token>& strategy)
   int maxArgPos = opDef.types.length();
   for (int i = 0; i < length; i++)
     {
-      const char* string = strategy[i].name();
+      const char* str = strategy[i].name();
       char* pointer;
-      long argPos = strtol(string, &pointer, 10);
-      if (pointer != string && *pointer == '\0' &&
+      long argPos = strtol(str, &pointer, 10);
+      if (pointer != str && *pointer == '\0' &&
 	  argPos >= -maxArgPos && argPos <= maxArgPos)
 	opDef.strategy.append(static_cast<int>(argPos));
       else
 	{
 	  IssueWarning(LineNumber(strategy[i].lineNumber()) <<
-		       ": bad value " << QUOTE(string) <<
+		       ": bad value " << QUOTE(str) <<
 		       " in strategy attribute. Recovering by ignoring strategy attribute.");
 	  opDef.strategy.clear();  // for safety
 	  return;
@@ -271,9 +271,35 @@ PreModule::setStrat(const Vector<Token>& strategy)
 }
 
 void
+PreModule::setPoly(const Vector<Token>& polyArgs)
+{
+  int length = polyArgs.length();
+  OpDef& opDef = opDefs[opDefs.length() - 1];
+  int maxArgPos = opDef.types.length();
+  for (int i = 0; i < length; i++)
+    {
+      const char* str = polyArgs[i].name();
+      char* pointer;
+      long argPos = strtol(str, &pointer, 10);
+      if (pointer != str && *pointer == '\0' &&
+	  argPos >= 0 && argPos <= maxArgPos)
+	opDef.polyArgs.insert(argPos);
+      else
+	{
+	  IssueWarning(LineNumber(polyArgs[i].lineNumber()) <<
+		       ": bad value " << QUOTE(str) <<
+		       " in polymorphic attribute. Recovering by ignoring value.");
+	}
+    }
+  opDef.symbolType.setFlags(SymbolType::POLY);
+}
+
+void
 PreModule::setLatexMacro(const string& latexMacro)
 {
-  opDefs[opDefs.length() - 1].latexMacro = latexMacro;
+  OpDef& opDef = opDefs[opDefs.length() - 1];
+  opDef.latexMacro = latexMacro;
+  opDef.symbolType.setFlags(SymbolType::LATEX);
 }
 
 void
@@ -288,7 +314,11 @@ PreModule::addHook(HookType type, Token name, const Vector<Token>& details)
   hook.name = code;
   hook.details = details;  // deep copy
   if (type == ID_HOOK)
-    opDef.symbolType.setBasicType(SymbolType::specialNameToBasicType(name.name()));
+    {
+      int b = SymbolType::specialNameToBasicType(name.name());
+      if (b != SymbolType::STANDARD)
+	opDef.symbolType.setBasicType(b);
+    }
 }
 
 void

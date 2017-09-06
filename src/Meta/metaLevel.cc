@@ -38,8 +38,6 @@
 #include "variable.hh"
 #include "higher.hh"
 #include "freeTheory.hh"
-//#include "AU_Theory.hh"
-//#include "ACU_Theory.hh"
 #include "S_Theory.hh"
 #include "CUI_Theory.hh"
 #include "NA_Theory.hh"
@@ -67,14 +65,6 @@
 //      free theory class definitions
 #include "freeSymbol.hh"
 #include "freeDagNode.hh"
-
-//      AU theory class definitions
-//#include "AU_Symbol.hh"
-//#include "AU_DagNode.hh"
-
-//      ACU theory class definitions
-//#include "ACU_Symbol.hh"
-//#include "ACU_DagNode.hh"
 
 //      S theory class definitions
 #include "S_Symbol.hh"
@@ -113,6 +103,7 @@
 #include "metaLevel.hh"
 #include "interpreter.hh"
 #include "visibleModule.hh"
+#include "moduleExpression.hh"
 #include "main.hh"  // HACK to access global module database
 
 //	our stuff
@@ -157,6 +148,39 @@ MetaLevel::bind(const char* name, Term* term)
   return false;
 }
 
+bool
+MetaLevel::bind(const char* name, Symbol* symbol)
+{
+  Assert(symbol != 0, "null symbol for " << name);
+#define MACRO(SymbolName, SymbolClass, RequiredFlags, NrArgs) \
+  if (strcmp(name, #SymbolName) == 0) SymbolName = static_cast<SymbolClass*>(symbol); else
+#include "metaLevelSignature.cc"
+#undef MACRO
+    {
+      IssueWarning("unrecognized symbol hook name " << QUOTE(name) << '.');
+      return false;
+    }
+  return true;
+}
+
+void
+MetaLevel::getSymbolAttachments(Vector<const char*>& purposes,
+				Vector<Symbol*>& symbols)
+{
+#define MACRO(SymbolName, SymbolClass, RequiredFlags, NrArgs) \
+  APPEND_SYMBOL(purposes, symbols, SymbolName);
+#include "metaLevelSignature.cc"
+#undef MACRO
+}
+
+void
+MetaLevel::getTermAttachments(Vector<const char*>& purposes,
+			      Vector<Term*>& terms)
+{
+  APPEND_TERM(purposes, terms, trueTerm);
+  APPEND_TERM(purposes, terms, falseTerm);
+}
+
 void
 MetaLevel::postInterSymbolPass()
 {
@@ -178,19 +202,4 @@ MetaLevel::reset()
   trueTerm.reset();  // so true dag can be garbage collected
   falseTerm.reset();  // so false dag can be garbage collected
   cache.flush();
-}
-
-bool
-MetaLevel::bind(const char* name, Symbol* symbol)
-{
-  Assert(symbol != 0, "null symbol for " << name);
-#define MACRO(SymbolName, SymbolClass, RequiredFlags, NrArgs) \
-  if (strcmp(name, #SymbolName) == 0) SymbolName = static_cast<SymbolClass*>(symbol); else
-#include "metaLevelSignature.cc"
-#undef MACRO
-    {
-      IssueWarning("unrecognized symbol hook name " << QUOTE(name) << '.');
-      return false;
-    }
-  return true;
 }

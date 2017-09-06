@@ -452,6 +452,10 @@ MixfixModule::newFancySymbol(Token prefixName,
   int kindIndex = domainAndRange[nrArgs]->component()->getIndexWithinModule();
   switch (symbolType.getBasicType())
     {
+    case SymbolType::BRANCH_SYMBOL:
+      return new BranchSymbol(name, nrArgs);
+    case SymbolType::EQUALITY_SYMBOL:
+      return new EqualitySymbol(name, strategy);
     case SymbolType::FLOAT:
       return new FloatSymbol(name);
     case SymbolType::STRING:
@@ -645,6 +649,7 @@ MixfixModule::addPolymorph(Token prefixName,
 			   const Vector<Sort*>& domainAndRange,
 			   SymbolType symbolType,
 			   const Vector<int>& strategy,
+			   const NatSet& frozen,
 			   int prec,
 			   const Vector<int>& gather,
 			   const Vector<int>& format)
@@ -652,11 +657,12 @@ MixfixModule::addPolymorph(Token prefixName,
   int nrPolymorphs = polymorphs.length();
   polymorphs.expandBy(1);
   Polymorph& p = polymorphs[nrPolymorphs];
-  p.name = prefixName.code();
+  p.name = prefixName;
   p.domainAndRange = domainAndRange;  // deep copy
   p.strategy = strategy;  // deep copy
-  p.shareWithSymbol = 0;
-  int nrUnderscores = Token::extractMixfix(p.name, p.symbolInfo.mixfixSyntax);
+  p.frozen = frozen;  // deep copy
+  p.identity = 0;
+  int nrUnderscores = Token::extractMixfix(prefixName.code(), p.symbolInfo.mixfixSyntax);
   if (p.symbolInfo.mixfixSyntax.length() == 0)
     {
       p.symbolInfo.prec = 0;
@@ -717,8 +723,21 @@ MixfixModule::addPolymorph(Token prefixName,
 	}
     }
   p.symbolInfo.symbolType = symbolType;
-  p.symbolInfo.iflags = 0;
   p.symbolInfo.next = NONE;
+  {
+    p.symbolInfo.iflags = ADHOC_OVERLOADED | DOMAIN_OVERLOADED;
+    int nrArgs = domainAndRange.length() - 1;
+    for (int i = 0; i < nrArgs; i++)
+      {
+	if (domainAndRange[i] == 0)
+	  {
+	    p.symbolInfo.iflags &= ~DOMAIN_OVERLOADED;
+	    break;
+	  }
+      }
+    if (domainAndRange[nrArgs] != 0)
+      p.symbolInfo.iflags |= RANGE_OVERLOADED;
+  }
   return nrPolymorphs;
 }
 

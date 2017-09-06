@@ -58,6 +58,7 @@ public:
   int getNrUserSorts() const;
   int getNrImportedSubsorts(int sortIndex) const;
   int getNrImportedSymbols() const;
+  int getNrImportedPolymorphs() const;
   int getNrUserSymbols() const;
   int getNrImportedDeclarations(int symbolIndex) const;
   int getNrUserDeclarations(int symbolIndex) const;
@@ -177,6 +178,15 @@ ImportModule::getNrImportedSymbols() const
   //	Symbols with index < this value were imported.
   //
   return nrImportedSymbols;
+}
+
+inline int
+ImportModule::getNrImportedPolymorphs() const
+{
+  //
+  //	Symbols with index < this value were imported.
+  //
+  return nrImportedPolymorphs;
 }
 
 inline int

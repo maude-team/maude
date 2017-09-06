@@ -121,8 +121,8 @@ MetaLevelOpSymbol::okToBind()
 }
 
 bool
-MetaLevelOpSymbol::attachData(const Vector<Sort*>& /* opDeclaration */,
-			      const char* /* purpose */,
+MetaLevelOpSymbol::attachData(const Vector<Sort*>& opDeclaration,
+			      const char* purpose,
 			      const Vector<const char*>& data)
 {
   if (data.length() == 1)
@@ -133,10 +133,10 @@ MetaLevelOpSymbol::attachData(const Vector<Sort*>& /* opDeclaration */,
 	descentFunction = &MetaLevelOpSymbol::SymbolName; else
 #include "descentSignature.cc"
 #undef MACRO
-        return false;
+        return FreeSymbol::attachData(opDeclaration, purpose, data);
       return true;
     }
-  return false;
+  return FreeSymbol::attachData(opDeclaration, purpose, data);
 }
 
 bool
@@ -144,13 +144,16 @@ MetaLevelOpSymbol::attachSymbol(const char* purpose, Symbol* symbol)
 {
   if (metaLevel == 0)
     BIND_SYMBOL(purpose, symbol, shareWith, MetaLevelOpSymbol*);
-  return okToBind() && metaLevel->bind(purpose, symbol);
+  return (okToBind() && metaLevel->bind(purpose, symbol)) ? true :
+    FreeSymbol::attachSymbol(purpose, symbol);
+    
 }
 
 bool
 MetaLevelOpSymbol::attachTerm(const char* purpose, Term* term)
 {
-  return okToBind() && metaLevel->bind(purpose, term);
+  return (okToBind() && metaLevel->bind(purpose, term)) ? true :
+    FreeSymbol::attachTerm(purpose, term);
 }
 
 void
@@ -172,6 +175,50 @@ MetaLevelOpSymbol::copyAttachments(Symbol* original, SymbolMap* map)
 	  shareWith = 0;
 	}
     }
+  FreeSymbol::copyAttachments(original, map);
+}
+
+void
+MetaLevelOpSymbol::getDataAttachments(const Vector<Sort*>& opDeclaration,
+				      Vector<const char*>& purposes,
+				      Vector<Vector<const char*> >& data)
+{
+  int nrDataAttachments = purposes.length();
+  purposes.resize(nrDataAttachments + 1);
+  purposes[nrDataAttachments] = "MetaLevelOpSymbol";
+  data.resize(nrDataAttachments + 1);
+  data[nrDataAttachments].resize(1);
+  const char*& str = data[nrDataAttachments][0];
+#define MACRO(SymbolName, NrArgs) \
+  if (descentFunction == &MetaLevelOpSymbol::SymbolName) \
+    str = #SymbolName; else
+#include "descentSignature.cc"
+    CantHappen("unrecognized descentFunction");
+#undef MACRO
+  FreeSymbol::getDataAttachments(opDeclaration, purposes, data);
+}
+
+void
+MetaLevelOpSymbol::getSymbolAttachments(Vector<const char*>& purposes,
+					Vector<Symbol*>& symbols)
+{
+  if (shareWith == 0)
+    metaLevel->getSymbolAttachments(purposes, symbols);
+  else
+    {
+      purposes.append("shareWith");
+      symbols.append(shareWith);
+    }
+  FreeSymbol::getSymbolAttachments(purposes, symbols);
+}
+
+void
+MetaLevelOpSymbol::getTermAttachments(Vector<const char*>& purposes,
+				      Vector<Term*>& terms)
+{
+  if (shareWith == 0)
+    metaLevel->getTermAttachments(purposes, terms);
+  FreeSymbol::getTermAttachments(purposes, terms);
 }
 
 void

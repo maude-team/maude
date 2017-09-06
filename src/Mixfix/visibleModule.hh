@@ -38,6 +38,7 @@ public:
   void showKinds(ostream& s) const;
   void showSortsAndSubsorts(ostream& s) const;
   void showModule(ostream& s, bool all) const;
+  void showPolymorphs(ostream& s, bool indent, bool all) const;
   void showOps(ostream& s, bool indent, bool all) const;
   void showVars(ostream& s, bool indent) const;
   void showMbs(ostream& s, bool indent, bool all) const;
@@ -47,8 +48,10 @@ public:
 private:
   void showSorts1(ostream& s, bool indent, bool all) const;
   void showSubsorts(ostream& s, bool indent, bool all) const;
-  void showDecls(ostream& s, bool indent, Symbol* symbol, bool all) const;
-  void showAttributes(ostream& s, Symbol* symbol, bool ctor = false) const;
+  void showPolymorphDecl(ostream& s, bool indent, int index) const;
+  void showPolymorphAttributes(ostream& s, int index) const;
+  void showDecls(ostream& s, bool indent, int index, bool all) const;
+  void showAttributes(ostream& s, Symbol* symbol, const OpDeclaration& decl) const;
 };
 
 #endif

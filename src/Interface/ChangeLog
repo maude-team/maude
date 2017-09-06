@@ -1,3 +1,20 @@
+2003-11-03  Steven Eker  <eker@goo.csl.sri.com>
+
+	* symbol.cc (getDataAttachments): added
+	(getSymbolAttachments): added
+	(getTermAttachments): added
+
+	* symbol.hh (class Symbol): added declatations for
+	getDataAttachments(), getSymbolAttachments(), getTermAttachments()
+
+2003-10-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* symbol.cc (attachTerm): added error message
+	(attachSymbol): added error message
+	(attachData): added error message
+
+===================================Maude83===========================================
+
 2003-05-30  Steven Eker  <eker@goo.csl.sri.com>
 
 	* associativeSymbol.hh (class AssociativeSymbol): deleted decl for

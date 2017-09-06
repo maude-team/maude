@@ -80,11 +80,10 @@ ModelCheckerSymbol::ModelCheckerSymbol(int id)
 
 bool
 ModelCheckerSymbol::attachData(const Vector<Sort*>& opDeclaration,
-			const char* purpose,
-			const Vector<const char*>& data)
+			       const char* purpose,
+			       const Vector<const char*>& data)
 {
-  if (strcmp(purpose, "ModelCheckerSymbol") == 0)
-    return data.length() == 0;
+  NULL_DATA(purpose, ModelCheckerSymbol, data);
   return  TemporalSymbol::attachData(opDeclaration, purpose, data);
 }
 
@@ -124,6 +123,38 @@ ModelCheckerSymbol::copyAttachments(Symbol* original, SymbolMap* map)
 
   COPY_TERM(orig, trueTerm, map);
   TemporalSymbol::copyAttachments(original, map);
+}
+
+void
+ModelCheckerSymbol::getDataAttachments(const Vector<Sort*>& opDeclaration,
+				       Vector<const char*>& purposes,
+				       Vector<Vector<const char*> >& data)
+{
+  APPEND_DATA(purposes, data, ModelCheckerSymbol);
+  TemporalSymbol::getDataAttachments(opDeclaration, purposes, data);
+}
+
+void
+ModelCheckerSymbol::getSymbolAttachments(Vector<const char*>& purposes,
+					 Vector<Symbol*>& symbols)
+{
+  APPEND_SYMBOL(purposes, symbols, satisfiesSymbol);
+  APPEND_SYMBOL(purposes, symbols, qidSymbol);
+  APPEND_SYMBOL(purposes, symbols, unlabeledSymbol);
+  APPEND_SYMBOL(purposes, symbols, deadlockSymbol);
+  APPEND_SYMBOL(purposes, symbols, transitionSymbol);
+  APPEND_SYMBOL(purposes, symbols, transitionListSymbol);
+  APPEND_SYMBOL(purposes, symbols, nilTransitionListSymbol);
+  APPEND_SYMBOL(purposes, symbols, counterexampleSymbol);
+  TemporalSymbol::getSymbolAttachments(purposes, symbols);
+}
+
+void
+ModelCheckerSymbol::getTermAttachments(Vector<const char*>& purposes,
+				       Vector<Term*>& terms)
+{
+  APPEND_TERM(purposes, terms, trueTerm);
+  TemporalSymbol::getTermAttachments(purposes, terms);
 }
 
 void

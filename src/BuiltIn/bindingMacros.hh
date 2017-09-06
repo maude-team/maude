@@ -102,4 +102,33 @@
 	name.setTerm(t->deepCopy(mapping)); \
     }
 
+#define APPEND_DATA(purposes, data, name) \
+  { \
+    int n = purposes.length(); \
+    purposes.resize(n + 1); \
+    purposes[n] = #name; \
+    data.resize(n + 1); \
+  }
+
+#define APPEND_SYMBOL(purposes, symbols, name) \
+  if (name != 0) \
+    { \
+      purposes.append(#name); \
+      symbols.append(name); \
+    }
+
+#define APPEND_TERM(purposes, terms, name) \
+  if (Term* t = name.getTerm()) \
+    { \
+      purposes.append(#name); \
+      terms.append(t); \
+    }
+
+#define CODE_CASE(d, c1, c2, s) \
+  case CODE(c1, c2): \
+    { \
+      d = s; \
+      break; \
+    }
+
 #endif

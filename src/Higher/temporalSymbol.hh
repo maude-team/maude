@@ -38,6 +38,8 @@ public:
 
   bool attachSymbol(const char* purpose, Symbol* symbol);
   void copyAttachments(Symbol* original, SymbolMap* map);
+  void getSymbolAttachments(Vector<const char*>& purposes,
+			    Vector<Symbol*>& symbols);
 
 protected:
   int build(LogicFormula& formula, DagNodeSet& propositions, DagNode* dagNode) const;

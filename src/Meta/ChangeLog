@@ -1,3 +1,202 @@
+2003-11-10  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaDownFixUps.cc (downFixUps): don't try attaching hooks to
+	symbols and polymorphs that don't take attachments
+
+	* metaLevel.hh (class MetaLevel): added decl for upSpecial()
+
+	* metaUpModule.cc (upSpecial): added
+	(upOpDecl): use upSpecial()
+
+	* metaUp.cc (upTerm): use disambiguatorSort() (5 places)
+
+	* metaLevel.hh (class MetaLevel): added decls for
+	upPolymorphSpecial(), upIdHook(), upOpHook(), upTermHook()
+
+	* metaUpModule.cc (upPolymorphDecl): pass qidMap to upQidList()
+	(upOpDecl): pass qidMap to upQidList()
+	(upPolymorphSpecial): added
+	(upIdHook): added
+	(upOpHook): added
+	(upTermHook): added
+	(upPolymorphDecl): use upPolymorphSpecial()
+
+	* metaLevel.hh (class MetaLevel): added decl for qidMap version of
+	upQidList()
+
+	* metaUp.cc (upQidList): take qidMap arg
+	(upQidList): added no qidMap version
+
+2003-11-05  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaLevel.cc (getSymbolAttachments): added
+	(getTermAttachments): added
+
+	* metaLevel.hh (class MetaLevel): added decls for
+	getSymbolAttachments(), getTermAttachments()
+
+	* metaLevelOpSymbol.hh (class MetaLevelOpSymbol): added decls for
+	getDataAttachments(), getSymbolAttachments(), getTermAttachments()
+
+	* metaLevelOpSymbol.cc (attachSymbol): call FreeSymbol::attachSymbol()
+	(attachTerm): call FreeSymbol::attachTerm()
+	(copyAttachments): call FreeSymbol::copyAttachments()
+	(getDataAttachments): added
+	(getSymbolAttachments): added
+	(getTermAttachments): added
+	(attachData): call FreeSymbol::attachData()
+
+2003-11-03  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaLevel.hh (class MetaLevel): added decl for iterToken()
+
+	* metaUp.cc (iterToken): added
+	(upContext): use iterToken() to handle iter case, fixing a bug
+	(upDagNode): use iterToken()
+
+2003-10-30  Steven Eker  <eker@goo.csl.sri.com>
+
+	* descentSignature.cc (MACRO): added metaUpModule
+
+	* ascentFunctions.cc (metaUpModule): added
+
+	* metaLevel.hh (class MetaLevel): added decl for upModule()
+
+	* metaUpModule.cc (upModule): added
+
+	* metaLevel.hh (class MetaLevel): added declarations for
+	upGather() and upIdentity()
+
+	* metaUpModule.cc (upPolymorphDecl): added support for prec,
+	gather and id: attributes
+	(upOpDecl): added support for prec, gather and id: attributes
+	(upIdentity): added
+	(upGather): added
+
+2003-10-29  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaLevel.hh (class MetaLevel): added decls for upStrat() and
+	upFrozen()
+
+	* metaUpModule.cc (upStrat): added
+	(upFrozen): added
+	(upPolymorphDecl): handle strat, frozen, format
+	(upOpDecl): handle strat, frozen, format
+
+	* metaLevel.hh (class MetaLevel): added decl for upAttributeSet()
+
+	* metaUpModule.cc (upAttributeSet): added
+
+	* metaLevel.hh (class MetaLevel): added decls for upOpDecl(),
+	upPolymorphDecl() and upOpDecls()
+
+	* metaUpModule.cc (upPolymorphDecl): added
+	(upOpDecl): added
+
+	* descentSignature.cc (MACRO): added metaUpOpDecls
+
+	* metaUpModule.cc (upOpDecls): added
+
+	* ascentFunctions.cc (metaUpOpDecls): added
+
+	* metaLevel.hh (class MetaLevel): added decl for upImports()
+
+	* descentSignature.cc (MACRO): added metaUpImports
+
+	* metaUpModule.cc (upImports): added
+
+	* ascentFunctions.cc (metaUpImports): added
+
+2003-10-28  Steven Eker  <eker@goo.csl.sri.com>
+
+	* descentSignature.cc (MACRO): added metaUpSubsortDecls
+
+	* ascentFunctions.cc (metaUpSubsortDecls): added
+
+	* metaLevel.hh (class MetaLevel): added decl for upSubsortDecls()
+
+	* metaUpModule.cc (upSubsortDecls): added
+
+	* metaLevel.hh (class MetaLevel): added decl for upSorts()
+
+	* metaUpModule.cc (upSorts): added
+	(upSorts): added
+
+	* metaLevel.hh (class MetaLevel): added del for 4 arg version of
+	upSortSet()
+
+	* metaUp.cc (upSortSet): added 4 arg version
+	(upSortSet): reimplemented in terms of 4 arg version
+
+	* descentSignature.cc (MACRO): added metaUpSorts
+
+	* ascentFunctions.cc (metaUpSorts): added
+
+2003-10-24  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaLevel.hh (class MetaLevel): updated many decls
+
+	* metaDownFixUps.cc (fixUpIdentitySymbol): renamed to handleIdentity()
+	(fixUpSpecialSymbol): renamed to handleSpecial()
+	(fixUpPolymorph): renamed to handleSpecial()
+	(handleIdentity): added polymorph version
+
+	* metaDownOps.cc (downOpDecl): use new addComplexSymbol() conventions
+
+	* metaLevel.hh (class MetaLevel): replaced IDENTITY_SYMBOL and
+	SPECIAL_SYMBOL with REGULAR_SYMBOL in enum ComplexSymbolType
+
+	* metaModule.cc (addComplexSymbol): handle identity separately
+	(both versions)
+	(removeComplexSymbol): handle identity separately
+
+	* metaModule.hh (class MetaModule): updated decls for all member
+	functions; added identity field to struct ComplexSymbol
+
+2003-10-21  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaDownFixUps.cc (downHook): use safeCast() and temp var
+	(downOpHook): use safeCast()
+	(fixUpBubble): use safeCast()
+
+	* metaDownOps.cc (downPolymorphTypeList): use polyArgs rather than
+	wanted set
+	(downAttr): don't subtract 1 from poly attribute numbers
+	(downOpDecl): fixed test for range being poly
+	(downAttr): use safeCast() (3 places)
+	(checkHook): use safeCast()
+
+	* metaLevel.hh (class MetaLevel): added decl for polymorph version
+	of downHook()
+
+	* metaDownFixUps.cc (downHook): added polymorph version
+	(fixUpPolymorph): rewritten in generic way
+
+	* metaLevel.hh (class MetaLevel): updated decl for
+	downPolymorphTypeList()
+
+	* metaDownOps.cc (downPolymorphTypeList): rewritten to handle
+	wanted set
+	(downOpDecl): polymorph code rewritten in generic way
+
+2003-10-20  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaDownOps.cc (downAttr): handle poly meta-attribute
+
+	* metaLevel.hh (class MetaLevel): added polyArgs to struct AttributeInfo
+
+	* metaLevelSignature.cc (MACRO): added instatiation for polySymbol
+
+	* metaDownOps.cc (downOpDecl): commented out UP_SYMBOL,
+	DOWN_SYMBOL cases
+
+2003-10-13  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaDownOps.cc (downOpDecl): don't use isPolymorph(); use new
+	addPolymorph() convention
+
+===================================Maude83===========================================
+
 2003-09-30  Steven Eker  <eker@goo.csl.sri.com>
 
 	* metaDownFixUps.cc (fixUpPolymorph): handle shareWith hook

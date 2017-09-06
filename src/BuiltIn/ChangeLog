@@ -1,3 +1,124 @@
+2003-11-10  Steven Eker  <eker@goo.csl.sri.com>
+
+	* stringOpSymbol.cc (getDataAttachments): fixed bug where we were
+	returning NumberOpSymbol rather than StringOpSymbol
+
+2003-11-06  Steven Eker  <eker@goo.csl.sri.com>
+
+	* branchSymbol.cc (getDataAttachments): added
+	(getTermAttachments): added
+
+	* branchSymbol.hh (class BranchSymbol): added decls for
+	getDataAttachments() and getTermAttachments()
+
+	* equalitySymbol.cc (getDataAttachments): added
+	(getTermAttachments): added
+
+	* equalitySymbol.hh (class EqualitySymbol): added decls for
+	getDataAttachments() and getTermAttachments()
+
+2003-11-05  Steven Eker  <eker@goo.csl.sri.com>
+
+	* floatOpSymbol.cc (getDataAttachments): added
+	(getSymbolAttachments): added
+	(getTermAttachments): added
+
+	* stringOpSymbol.cc (getDataAttachments): added
+	(getSymbolAttachments): added
+	(getTermAttachments): added
+
+	* stringOpSymbol.hh (class StringOpSymbol): added decls for
+	getDataAttachments(), getSymbolAttachments(), getTermAttachments()
+
+	* floatOpSymbol.hh (class FloatOpSymbol): added decls for
+	getDataAttachments(), getSymbolAttachments(), getTermAttachments()
+
+	* divisionSymbol.hh (class DivisionSymbol): added decls
+	for getDataAttachments() and getSymbolAttachments()
+
+	* divisionSymbol.cc (getDataAttachments): added
+	(getSymbolAttachments): added
+
+	* minusSymbol.cc (getDataAttachments): added
+
+	* minusSymbol.hh (class MinusSymbol): added decl for
+	getDataAttachments()
+
+	* ACU_NumberOpSymbol.cc (getDataAttachments): added
+	(getSymbolAttachments): added
+
+	* ACU_NumberOpSymbol.hh (class ACU_NumberOpSymbol): added decls
+	for getDataAttachments() and getSymbolAttachments()
+
+	* CUI_NumberOpSymbol.cc (getDataAttachments): added
+	(getSymbolAttachments): added
+
+	* CUI_NumberOpSymbol.hh (class CUI_NumberOpSymbol): added decls
+	for getDataAttachments() and getSymbolAttachments()
+
+	* numberOpSymbol.cc (getDataAttachments): added
+	(getSymbolAttachments): added
+	(getTermAttachments): added
+
+	* numberOpSymbol.hh (class NumberOpSymbol): added decls for
+	getDataAttachments(), getSymbolAttachments(), getTermAttachments()
+
+	* succSymbol.cc (getDataAttachments): added
+	(getTermAttachments): added
+
+	* bindingMacros.hh (APPEND_DATA): added
+
+	* succSymbol.hh (class SuccSymbol): added decls for
+	getDataAttachments() and getTermAttachments()
+
+	* bindingMacros.hh (APPEND_TERM): added
+
+2003-11-03  Steven Eker  <eker@goo.csl.sri.com>
+
+	* bindingMacros.hh (APPEND_SYMBOL): added
+
+2003-10-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* equalitySymbol.hh (class EqualitySymbol): updated decl for
+	EqualitySymbol()
+
+	* equalitySymbol.cc (EqualitySymbol): don't take term args
+
+	* branchSymbol.hh (class BranchSymbol): updated decl for
+	BranchSymbol()
+
+	* branchSymbol.cc (BranchSymbol): take nrArgs arg rather than term
+	arg
+
+	* equalitySymbol.hh (class EqualitySymbol): deleted decl for
+	~EqualitySymbol()
+
+	* equalitySymbol.cc (~EqualitySymbol): deleted now we no longer
+	need to prevent deep self destruction of equalTerm and
+	notEqualTerm
+
+	* branchSymbol.cc (~BranchSymbol): deepSelfDestruct() test terms
+
+2003-10-15  Steven Eker  <eker@goo.csl.sri.com>
+
+	* equalitySymbol.cc (attachData): added
+	(copyAttachments): added
+	(attachTerm): added
+
+	* equalitySymbol.hh (class EqualitySymbol): added declarations for
+	attachData(), attachTerm(), copyAttachments()
+
+2003-10-14  Steven Eker  <eker@goo.csl.sri.com>
+
+	* branchSymbol.cc (attachData): added
+	(attachTerm): added
+	(copyAttachments): added
+
+	* branchSymbol.hh (class BranchSymbol): added declarations for
+	attachData(), attachTerm(), copyAttachments()
+
+===================================Maude83===========================================
+
 2003-07-28  Steven Eker  <eker@goo.csl.sri.com>
 
 	* floatSymbol.cc: need to include mathStuff.hh

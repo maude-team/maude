@@ -54,16 +54,20 @@ void
 MixfixModule::suffix(ostream& s,
 		     Term* term,
 		     bool needDisambig,
-		     const char* color)
+		     const char* /* color */)
 {
   if (needDisambig)
-    {
-      Symbol* symbol = term->symbol();
-      int sortIndex = term->getSortIndex();
-      if (sortIndex <= Sort::ERROR_SORT)
-	sortIndex = chooseDisambiguator(symbol);
-      s << ")." << symbol->rangeComponent()->sort(sortIndex);
-    }
+    s << ")." << disambiguatorSort(term);
+}
+
+Sort*
+MixfixModule::disambiguatorSort(const Term* term)
+{
+  Symbol* symbol = term->symbol();
+  int sortIndex = term->getSortIndex();
+  if (sortIndex <= Sort::ERROR_SORT)
+    sortIndex = chooseDisambiguator(symbol);
+  return symbol->rangeComponent()->sort(sortIndex);
 }
 
 bool
@@ -392,11 +396,5 @@ MixfixModule::prettyPrint(ostream& s,
 	    }
 	}
     }
-  if (needDisambig)
-    {
-      int sortIndex = term->getSortIndex();
-      if (sortIndex <= Sort::ERROR_SORT)
-	sortIndex = chooseDisambiguator(symbol);
-      s << ")." << symbol->rangeComponent()->sort(sortIndex);
-    }
+  suffix(s, term, needDisambig, color);
 }

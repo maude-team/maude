@@ -101,6 +101,21 @@ TemporalSymbol::copyAttachments(Symbol* original, SymbolMap* map)
   FreeSymbol::copyAttachments(original, map);
 }
 
+void
+TemporalSymbol::getSymbolAttachments(Vector<const char*>& purposes,
+				     Vector<Symbol*>& symbols)
+{
+  APPEND_SYMBOL(purposes, symbols, trueSymbol);
+  APPEND_SYMBOL(purposes, symbols, falseSymbol);
+  APPEND_SYMBOL(purposes, symbols, notSymbol);
+  APPEND_SYMBOL(purposes, symbols, nextSymbol);
+  APPEND_SYMBOL(purposes, symbols, andSymbol);
+  APPEND_SYMBOL(purposes, symbols, orSymbol);
+  APPEND_SYMBOL(purposes, symbols, untilSymbol);
+  APPEND_SYMBOL(purposes, symbols, releaseSymbol);
+  FreeSymbol::getSymbolAttachments(purposes, symbols);
+}
+
 int
 TemporalSymbol::build(LogicFormula& formula, DagNodeSet& propositions, DagNode* dagNode) const
 {

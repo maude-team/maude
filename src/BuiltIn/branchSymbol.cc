@@ -46,19 +46,107 @@
 #include "freeDagNode.hh"
  
 //      built in class definitions
+#include "bindingMacros.hh"
 #include "branchSymbol.hh"
 
-BranchSymbol::BranchSymbol(int id, Vector<Term*>& testValues)
-  : FreeSymbol(id, testValues.length() + 1)
+BranchSymbol::BranchSymbol(int id, int nrArgs)
+  : FreeSymbol(id, nrArgs)
 {
-  testTerms = testValues;  // deep copy
 }
 
 BranchSymbol::~BranchSymbol()
 {
-  //  int nrTestTerms = testTerms.length();
-  //for (int i = 0; i < nrTestTerms; i++)
-  //  testTerms[i]->deepSelfDestruct();
+  int nrTestTerms = testTerms.length();
+  for (int i = 0; i < nrTestTerms; i++)
+    testTerms[i]->deepSelfDestruct();
+}
+
+bool
+BranchSymbol::attachData(const Vector<Sort*>& opDeclaration,
+			 const char* purpose,
+			 const Vector<const char*>& data)
+{
+  NULL_DATA(purpose, BranchSymbol, data);
+  return FreeSymbol::attachData(opDeclaration, purpose, data);
+}
+
+bool
+BranchSymbol::attachTerm(const char* purpose, Term* term)
+{
+  int index = atoi(purpose);
+  if (index > 0)
+    {
+      int len = testTerms.length();
+      if (len < index)
+	{
+	  testTerms.resize(index);
+	  for (; len < index; len++)
+	    testTerms[len] = 0;
+	}
+      if (testTerms[index - 1] == 0)
+	{
+	  testTerms[index - 1] = term;
+	  return true;
+	}
+    }
+  return FreeSymbol::attachTerm(purpose, term);
+}
+
+void
+BranchSymbol::copyAttachments(Symbol* original, SymbolMap* map)
+{
+  BranchSymbol* orig = safeCast(BranchSymbol*, original);
+  int nrTerms = orig->testTerms.length();
+  int len = testTerms.length();
+  if (len < nrTerms)
+    {
+      testTerms.resize(nrTerms);
+      for (; len < nrTerms; len++)
+	testTerms[len] = 0;
+    }
+
+  for (int i = 0; i < nrTerms; i++)
+    {
+      if (testTerms[i] == 0)
+	{
+	  if (Term* t = orig->testTerms[i])
+	    testTerms[i] = t->deepCopy(map);
+	}
+    }
+  FreeSymbol::copyAttachments(original, map);
+}
+
+void
+BranchSymbol::getDataAttachments(const Vector<Sort*>& opDeclaration,
+				 Vector<const char*>& purposes,
+				 Vector<Vector<const char*> >& data)
+{
+  APPEND_DATA(purposes, data, BranchSymbol);
+  FreeSymbol::getDataAttachments(opDeclaration, purposes, data);
+}
+
+void
+BranchSymbol::getTermAttachments(Vector<const char*>& purposes,
+				 Vector<Term*>& terms)
+{
+  static Vector<string> numbers;
+  int nrTerms = testTerms.length();
+  int nrNumbers = numbers.length();
+  if (nrNumbers < nrTerms)
+    {
+      numbers.resize(nrTerms);
+      for (; nrNumbers < nrTerms; nrNumbers++)
+	numbers[nrNumbers] = int64ToString(nrNumbers + 1);
+    }
+  for (int i = 0; i < nrTerms; i++)
+    {
+      if (Term* t = testTerms[i])
+	{
+	  purposes.append(numbers[i].c_str());
+	  terms.append(t);
+	}
+    }
+  FreeSymbol::getTermAttachments(purposes, terms);
 }
 
 void

@@ -40,9 +40,6 @@ PreModule::findHook(const Vector<Hook>& hookList, HookType type, int name)
 Symbol*
 PreModule::findHookSymbol(const Vector<Token>& fullName)
 {
-  int colon = Token::encode(":");
-  int arrow = Token::encode("~>");
-  
   static Vector<Token> name;
   name.contractTo(0);
   int pos;
@@ -52,7 +49,7 @@ PreModule::findHookSymbol(const Vector<Token>& fullName)
 
   static Vector<ConnectedComponent*> domain;
   domain.contractTo(0);
-  for (pos++; fullName[pos].code() != arrow; pos++)
+  for (pos++; fullName[pos].code() != partial; pos++)
     {
       Sort* s = flatModule->findSort(fullName[pos].code());
       if (s == 0)
@@ -105,6 +102,46 @@ PreModule::defaultFixUp(OpDef& opDef, Symbol* symbol)
   return true;
 }
 
+bool
+PreModule::defaultFixUp(OpDef& opDef, int index)
+{
+  const Vector<Hook>& hookList = opDef.special;
+  int nrHooks = hookList.length();
+  for (int i = 0; i < nrHooks; i++)
+    {
+      const Hook& h = hookList[i];
+      switch (h.type)
+	{
+	case ID_HOOK:
+	  {
+	    int nrDetails = h.details.length();
+	    Vector<int> hd(nrDetails);
+	    for (int j = 0; j < nrDetails; j++)
+	      hd[j] = h.details[j].code();
+	    flatModule->addIdHookToPolymorph(index, h.name, hd);
+	    break;
+	  }
+	case OP_HOOK:
+	  {
+	    Symbol* hs = findHookSymbol(h.details);
+	    if (hs == 0)
+	      return false;
+	    flatModule->addOpHookToPolymorph(index, h.name, hs);
+	    break;
+	  }
+	case TERM_HOOK:
+	  {
+	    Term* ht = flatModule->parseTerm(h.details); // potential component problem
+	    if (ht == 0)
+	      return false;
+	    flatModule->addTermHookToPolymorph(index, h.name, ht);
+	    break;
+	  }
+	}
+    }
+  return true;
+}
+
 #define FIX_UP_FAILED	{flatModule->markAsBad(); continue;}
 
 void
@@ -120,24 +157,49 @@ PreModule::fixUpSymbols()
       //
       if (opDef.identity.length() != 0)
 	{
-	  if (BinarySymbol* s = dynamic_cast<BinarySymbol*>(opDecl.symbol))
+	  if (opDef.symbolType.hasFlag(SymbolType::POLY))
 	    {
-	      Sort* wanted =
-		opDef.domainAndRange[opDef.symbolType.hasFlag(SymbolType::LEFT_ID) ? 0 : 1];
+	      int nonPolyIndex = opDef.symbolType.hasFlag(SymbolType::LEFT_ID) ? 0 : 1;
+	      Sort* wanted = opDef.domainAndRange[nonPolyIndex];
+	      if (wanted == 0)
+		{
+		  static const char* lr[] = {"left", "right"};
+		  IssueWarning(LineNumber(opDecl.prefixName.lineNumber()) <<
+			       ": polymorphic operator " << QUOTE(opDecl.prefixName) <<
+			       " cannot have a " << lr[nonPolyIndex] << " identity.");
+		  FIX_UP_FAILED;
+		}
 	      Term* id = flatModule->parseTerm(opDef.identity, wanted->component());
 	      if (id == 0)
 		FIX_UP_FAILED;
-	      if (Term* oldId = s->getIdentity())
+	      flatModule->addIdentityToPolymorph(opDecl.polymorphIndex, id);
+	    }
+	  else
+	    {
+	      //
+	      //	Might not be a binary symbol if it got converted to
+	      //	a free symbol during error recovery.
+	      //
+	      if (BinarySymbol* s = dynamic_cast<BinarySymbol*>(opDecl.symbol))
 		{
-		  WarningCheck(id->equal(oldId), *id <<
-			       ": declaration of identity " << QUOTE(id) <<
-			       " for operator " << QUOTE(s) <<
-			       " clashes with previously declared identity " <<
-			       QUOTE(oldId) << " in " << *oldId << '.');
-		  id->deepSelfDestruct();
+		  Sort* wanted =
+		    opDef.domainAndRange[opDef.symbolType.hasFlag(SymbolType::LEFT_ID) ? 0 : 1];
+		  Term* id = flatModule->parseTerm(opDef.identity, wanted->component());
+		  if (id == 0)
+		    FIX_UP_FAILED;
+		  if (Term* oldId = s->getIdentity())
+		    {
+		      WarningCheck(id->equal(oldId), *id <<
+				   ": declaration of identity " << QUOTE(id) <<
+				   " for operator " << QUOTE(s) <<
+				   " clashes with previously declared identity " <<
+				   QUOTE(oldId) << " in " << *oldId << '.');
+		      id->deepSelfDestruct();
+		    }
+		  else
+		    s->setIdentity(id);
 		}
-	      else
-		s->setIdentity(id);
+	      
 	    }
 	}
       //
@@ -145,89 +207,48 @@ PreModule::fixUpSymbols()
       //
       if (opDef.symbolType.hasAttachments())
 	{
-	  if (!defaultFixUp(opDef, opDecl.symbol))
+	  if (opDef.symbolType.hasFlag(SymbolType::POLY))
 	    {
-	      IssueWarning("bad special for " << QUOTE(opDecl.symbol) << '.');
-	      FIX_UP_FAILED;
+	      if (!defaultFixUp(opDef, opDecl.polymorphIndex))
+		{
+		  IssueWarning(LineNumber(opDecl.prefixName.lineNumber()) <<
+			       ": bad special for polymorphic operator " <<
+			       QUOTE(opDecl.prefixName) << '.');
+		  FIX_UP_FAILED;
+		}
+	    }
+	  else
+	    {
+	      if (!defaultFixUp(opDef, opDecl.symbol))
+		{
+		  IssueWarning(LineNumber(opDecl.prefixName.lineNumber()) <<
+			       ": bad special for operator " <<
+			       QUOTE(opDecl.prefixName) << '.');
+		  FIX_UP_FAILED;
+		}
 	    }
 	}
-      else if (opDecl.originator)
+      else if (opDef.symbolType.getBasicType() == SymbolType::BUBBLE)
 	{
-	  //
-	  //	We have responsibility for fixing up symbol.
-	  //
-	  switch (opDef.symbolType.getBasicType())
-	    {
-	    case SymbolType::BRANCH_SYMBOL:
-	      {
-		Vector<Term*> terms;
-		ConnectedComponent* component = opDef.domainAndRange[0]->component();
-		int h = findHook(opDef.special, TERM_HOOK, Token::encode("trueTerm"));
-		if (h == NONE)
-		  FIX_UP_FAILED;
-		terms.append(flatModule->parseTerm(opDef.special[h].details, component));
-		h = findHook(opDef.special, TERM_HOOK, Token::encode("falseTerm"));
-		if (h == NONE)
-		  FIX_UP_FAILED;
-		terms.append(flatModule->parseTerm(opDef.special[h].details, component));
-		flatModule->fixUpPolymorph(opDecl.polymorphIndex, terms);
-		if (terms[0] == 0 || terms[1] == 0)
-		  FIX_UP_FAILED;
-		break;
-	      }
-	    case SymbolType::EQUALITY_SYMBOL:
-	      {
-		Vector<Term*> terms;
-		ConnectedComponent* component = opDef.domainAndRange[2]->component();
-		int h = findHook(opDef.special, TERM_HOOK, Token::encode("equalTerm"));
-		if (h == NONE)
-		  FIX_UP_FAILED;
-		terms.append(flatModule->parseTerm(opDef.special[h].details, component));
-		h = findHook(opDef.special, TERM_HOOK, Token::encode("notEqualTerm"));
-		if (h == NONE)
-		  FIX_UP_FAILED;
-		terms.append(flatModule->parseTerm(opDef.special[h].details, component));
-		flatModule->fixUpPolymorph(opDecl.polymorphIndex, terms);
-		if (terms[0] == 0 || terms[1] == 0)
-		  FIX_UP_FAILED;
-		break;
-	      }
-	    case SymbolType::UP_SYMBOL:
-	    case SymbolType::DOWN_SYMBOL:
-	      {
-		int h = findHook(opDef.special, OP_HOOK, Token::encode("shareWith"));
-		if (h == NONE)
-		  FIX_UP_FAILED;
-		Symbol* shareWithSymbol = findHookSymbol(opDef.special[h].details);
-		if (shareWithSymbol == 0)
-		  FIX_UP_FAILED;
-		flatModule->fixUpPolymorph(opDecl.polymorphIndex, shareWithSymbol);
-		break;
-	      }
-	    case SymbolType::BUBBLE:
-	      {
-		int h = findHook(opDef.special, OP_HOOK, Token::encode("qidSymbol"));
-		if (h == NONE)
-		  FIX_UP_FAILED;
-		QuotedIdentifierSymbol* quotedIdentifierSymbol =
-		  static_cast<QuotedIdentifierSymbol*>(findHookSymbol(opDef.special[h].details));
-		if (quotedIdentifierSymbol == 0)
-		  FIX_UP_FAILED;
-		Symbol* nilQidListSymbol = 0;
-		Symbol* qidListSymbol = 0;
-		h = findHook(opDef.special, OP_HOOK, Token::encode("nilQidListSymbol"));
-		if (h != NONE)
-		  nilQidListSymbol = findHookSymbol(opDef.special[h].details);
-		h = findHook(opDef.special, OP_HOOK, Token::encode("qidListSymbol"));
-		if (h != NONE)
-		  qidListSymbol = findHookSymbol(opDef.special[h].details);
-		flatModule->fixUpBubbleSpec(opDecl.bubbleSpecIndex,
-					    quotedIdentifierSymbol,
-					    nilQidListSymbol,
-					    qidListSymbol);
-		break;
-	      }
-	    }
+	  int h = findHook(opDef.special, OP_HOOK, Token::encode("qidSymbol"));
+	  if (h == NONE)
+	    FIX_UP_FAILED;
+	  QuotedIdentifierSymbol* quotedIdentifierSymbol =
+	    static_cast<QuotedIdentifierSymbol*>(findHookSymbol(opDef.special[h].details));
+	  if (quotedIdentifierSymbol == 0)
+	    FIX_UP_FAILED;
+	  Symbol* nilQidListSymbol = 0;
+	  Symbol* qidListSymbol = 0;
+	  h = findHook(opDef.special, OP_HOOK, Token::encode("nilQidListSymbol"));
+	  if (h != NONE)
+	    nilQidListSymbol = findHookSymbol(opDef.special[h].details);
+	  h = findHook(opDef.special, OP_HOOK, Token::encode("qidListSymbol"));
+	  if (h != NONE)
+	    qidListSymbol = findHookSymbol(opDef.special[h].details);
+	  flatModule->fixUpBubbleSpec(opDecl.bubbleSpecIndex,
+				      quotedIdentifierSymbol,
+				      nilQidListSymbol,
+				      qidListSymbol);
 	}
     }
 }

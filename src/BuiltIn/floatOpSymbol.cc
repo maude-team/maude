@@ -110,6 +110,72 @@ FloatOpSymbol::copyAttachments(Symbol* original, SymbolMap* map)
 }
 
 void
+FloatOpSymbol::getDataAttachments(const Vector<Sort*>& opDeclaration,
+				  Vector<const char*>& purposes,
+				  Vector<Vector<const char*> >& data)
+{
+  int nrDataAttachments = purposes.length();
+  purposes.resize(nrDataAttachments + 1);
+  purposes[nrDataAttachments] = "NumberOpSymbol";
+  data.resize(nrDataAttachments + 1);
+  data[nrDataAttachments].resize(1);
+  const char*& d = data[nrDataAttachments][0];
+  switch (op)
+    {
+    CODE_CASE(d, '-', 0, "-")
+    CODE_CASE(d, 'a', 'b', "abs")
+    CODE_CASE(d, 'c', 'e', "ceiling")
+    CODE_CASE(d, 's', 'q', "sqrt")
+    CODE_CASE(d, 'e', 'x', "exp")
+    CODE_CASE(d, 'l', 'o', "log")
+    CODE_CASE(d, 's', 'i', "sin")
+    CODE_CASE(d, 'c', 'o', "cos")
+    CODE_CASE(d, 't', 'a', "tan")
+    CODE_CASE(d, 'a', 's', "asin")
+    CODE_CASE(d, 'a', 'c', "acos")
+    CODE_CASE(d, 'a', 't', "atan")
+    CODE_CASE(d, 'r', 'a', "rat")
+    CODE_CASE(d, '+', 0, "+")
+    CODE_CASE(d, '*', 0, "*")
+    CODE_CASE(d, '/', 0, "/")
+    CODE_CASE(d, 'r', 'e', "rem")
+    CODE_CASE(d, '^', 0, "^")
+    CODE_CASE(d, '<', 0, "<")
+    CODE_CASE(d, '<', '=', "<=")
+    CODE_CASE(d, '>', 0, ">")
+    CODE_CASE(d, '>', '=', ">=")
+    case CODE('f', 'l'):
+      {
+	d = (succSymbol == 0) ? "floor" : "float";  // HACK
+	break;
+      }
+    default:
+      CantHappen("bad float op");
+    }
+  FreeSymbol::getDataAttachments(opDeclaration, purposes, data);
+}
+
+void
+FloatOpSymbol::getSymbolAttachments(Vector<const char*>& purposes,
+				    Vector<Symbol*>& symbols)
+{
+  APPEND_SYMBOL(purposes, symbols, floatSymbol);
+  APPEND_SYMBOL(purposes, symbols, succSymbol);
+  APPEND_SYMBOL(purposes, symbols, minusSymbol);
+  APPEND_SYMBOL(purposes, symbols, divisionSymbol);
+  FreeSymbol::getSymbolAttachments(purposes, symbols);
+}
+
+void
+FloatOpSymbol::getTermAttachments(Vector<const char*>& purposes,
+				  Vector<Term*>& terms)
+{
+  APPEND_TERM(purposes, terms, trueTerm);
+  APPEND_TERM(purposes, terms, falseTerm);
+  FreeSymbol::getTermAttachments(purposes, terms);
+}
+
+void
 FloatOpSymbol::postInterSymbolPass()
 {
   PREPARE_TERM(trueTerm);

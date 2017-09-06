@@ -1,3 +1,27 @@
+2003-11-06  Steven Eker  <eker@goo.csl.sri.com>
+
+	* satSolverSymbol.cc (attachData): use NULL_DATA()
+	(getDataAttachments): added
+	(getSymbolAttachments): added
+	(getTermAttachments): added
+
+	* satSolverSymbol.hh (class SatSolverSymbol): added decls for
+	getDataAttachments(), getSymbolAttachments(), getTermAttachments()
+
+	* modelCheckerSymbol.cc (attachData): use NULL_DATA()
+	(getDataAttachments): added
+	(getSymbolAttachments): added
+	(getTermAttachments): added
+
+	* modelCheckerSymbol.hh (class ModelCheckerSymbol): added decls
+	for getDataAttachments(), getSymbolAttachments(),
+	getTermAttachments()
+
+	* temporalSymbol.cc (getSymbolAttachments): added
+
+	* temporalSymbol.hh (class TemporalSymbol): added decl for
+	getSymbolAttachments()
+
 2003-07-14  Steven Eker  <eker@goo.csl.sri.com>
 
 	* temporalSymbol.cc (build): TRUE -> LTL_TRUE, FALSE -> LTL_FALSE

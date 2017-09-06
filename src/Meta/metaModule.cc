@@ -44,19 +44,21 @@ MetaModule::MetaModule(int name, ModuleType moduleType, Parent* parent)
 }
 
 void
-MetaModule::addComplexSymbol(int type, int index, DagNode* fixUpInfo)
+MetaModule::addComplexSymbol(int type, int index, DagNode* identity, DagNode* fixUpInfo)
 {
   int nrComplexSymbols = complexSymbols.length();
   complexSymbols.expandBy(1);
   ComplexSymbol& cs = complexSymbols[nrComplexSymbols];
   cs.type = type;
   cs.index =  index;
+  cs.identity = identity;
   cs.fixUpInfo = fixUpInfo;
 }
 
 void
 MetaModule::addComplexSymbol(int type,
 			     int index,
+			     DagNode* identity,
 			     DagNode* fixUpInfo,
 			     const Vector<Sort*>& domainAndRange)
 {
@@ -65,6 +67,7 @@ MetaModule::addComplexSymbol(int type,
   ComplexSymbol& cs = complexSymbols[nrComplexSymbols];
   cs.type = type;
   cs.index = index;
+  cs.identity = identity;
   cs.fixUpInfo = fixUpInfo;
   cs.domainAndRange = domainAndRange;  // deep copy
 }
@@ -72,6 +75,7 @@ MetaModule::addComplexSymbol(int type,
 bool
 MetaModule::removeComplexSymbol(int& type,
 				int& index,
+				DagNode*& identity,
 				DagNode*& fixUpInfo,
 				Vector<Sort*>& domainAndRange)
 {
@@ -82,6 +86,7 @@ MetaModule::removeComplexSymbol(int& type,
   ComplexSymbol& cs = complexSymbols[nrComplexSymbols];
   type = cs.type;
   index = cs.index;
+  identity = cs.identity;
   fixUpInfo = cs.fixUpInfo;
   domainAndRange = cs.domainAndRange;  // deep copy
   complexSymbols.contractTo(nrComplexSymbols);
