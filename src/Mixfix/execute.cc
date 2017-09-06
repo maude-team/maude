@@ -405,10 +405,12 @@ Interpreter::sRewrite(const Vector<Token>& subjectAndStrategy, Int64 limit, bool
       UserLevelRewritingContext::clearDebug();
       return;
     }
-  SetGenerator* gen = strategy->execute(subjectDag, *context);
+
+  Assert(context->root() != 0, "null root");
+  StrategicSearch* ss = new StrategicSearch(context, strategy);
   for (Int64 i = 0; i != limit; ++i)  // limit could be -1 for "no limit"
     {
-      DagNode* d = gen->findNextSolution();
+      DagNode* d = ss->findNextSolution();
       if (context->traceAbort())
 	break;
       if (d == 0)
@@ -419,7 +421,7 @@ Interpreter::sRewrite(const Vector<Token>& subjectAndStrategy, Int64 limit, bool
       cout << d << endl;
     }
   delete context;
-  delete gen;
+  delete ss;
   delete strategy;
   (void) fm->unprotect();
   UserLevelRewritingContext::clearDebug();

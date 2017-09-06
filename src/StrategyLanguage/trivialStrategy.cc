@@ -35,15 +35,18 @@
 
 //	strategy language class definitions
 #include "trivialStrategy.hh"
-#include "trivialSetGenerator.hh"
+#include "decompositionProcess.hh"
 
 TrivialStrategy::TrivialStrategy(bool result)
   : result(result)
 {
 }
 
-SetGenerator*
-TrivialStrategy::execute(DagNode* subject, RewritingContext& /* context */ )
+StrategicExecution::Survival
+TrivialStrategy::decompose(StrategicSearch& /* searchObject */, DecompositionProcess* /* remainder */)
 {
-  return new TrivialSetGenerator(result ? subject : 0);
+  //
+  //	If we are idle, remainder survives; if we are fail, remainder dies.
+  //
+  return result ? StrategicExecution::SURVIVE : StrategicExecution::DIE;
 }

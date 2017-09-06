@@ -26,7 +26,7 @@
 #ifndef _applicationProcess_hh_
 #define _applicationProcess_hh_
 #include "strategicProcess.hh"
-#include "sharedRewriteSearchState.hh"
+#include "rewriteSearchState.hh"
 
 class ApplicationProcess : public StrategicProcess
 {
@@ -40,31 +40,24 @@ public:
 		     StrategicExecution* taskSibling,
 		     StrategicProcess* insertionPoint);
 
+  ~ApplicationProcess();
+
   Survival run(StrategicSearch& searchObject);
 
-  static StrategicExecution::Survival
-    resolveRemainingConditionFragments(StrategicSearch& searchObject,
-				       SharedRewriteSearchState::Ptr rewriteState,
-				       PositionState::PositionIndex redexIndex,
-				       ExtensionInfo* extensionInfo,
-				       Substitution* substitutionSoFar,
-				       Rule* rule,
-				       int fragmentNr,
-				       const Vector<StrategyExpression*>& strategies,
-				       int strategyNr,
-				       const StrategyStack& pending,
-				       StrategicExecution* taskSibling,
-				       StrategicProcess* other);
+  StrategicExecution::Survival resolveRemainingConditionFragments(StrategicSearch& searchObject,
+								  RewriteSearchState& rewriteState,
+								  int fragmentNr,
+								  const Vector<StrategyExpression*>& strategies,
+								  int strategyNr,
+								  const StrategyStack& pending,
+								  StrategicExecution* taskSibling,
+								  StrategicProcess* other);
 
 private:
-  static DagNode* doRewrite(StrategicSearch& searchObject,
-			    SharedRewriteSearchState::Ptr rewriteState,
-			    PositionState::PositionIndex redexIndex,
-			    ExtensionInfo* extensionInfo,
-			    Substitution* substitution,
-			    Rule* rule);
+  static DagNode* doRewrite(RewriteSearchState& rewriteState, RewritingContext& context);
 
-  SharedRewriteSearchState::Ptr rewriteState;
+  RewritingContext* initial;
+  RewriteSearchState rewriteState;
   const StrategyStack pending;
   ApplicationStrategy* strategy;
 };

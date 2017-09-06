@@ -21,7 +21,7 @@
 */
 
 //
-//      Implementation for abstract class Strategy.
+//      Implementation for class IterationStrategy.
 //
 
 //	utility stuff
@@ -35,22 +35,29 @@
 
 //	strategy language class definitions
 #include "iterationStrategy.hh"
-#include "iterationSetGenerator.hh"
+#include "decompositionProcess.hh"
 
-IterationStrategy::IterationStrategy(StrategyExpression* child, bool zeroAllowed, bool normalForm)
+IterationStrategy::IterationStrategy(StrategyExpression* child, bool zeroAllowed)
   : child(child),
-    zeroAllowed(zeroAllowed),
-    normalForm(normalForm)
+    star(zeroAllowed ? 0 : new IterationStrategy(child, true))
 {
 }
 
 IterationStrategy::~IterationStrategy()
 {
-  delete child;
+  delete (star != 0 ? star : child);
 }
 
-SetGenerator*
-IterationStrategy::execute(DagNode* subject, RewritingContext& context)
+StrategicExecution::Survival
+IterationStrategy::decompose(StrategicSearch& /* searchObject */, DecompositionProcess* remainder)
 {
-  return new IterationSetGenerator(subject, context, child, zeroAllowed, normalForm);
+  if (star)  // + case; push * subexpression
+    remainder->pushStrategy(star);
+  else  // * case
+    {
+      (void) new DecompositionProcess(remainder);  // idle alternative
+      remainder->pushStrategy(this);
+    }
+  remainder->pushStrategy(child);
+  return StrategicExecution::SURVIVE;  // remainder should not request deletion
 }

@@ -58,7 +58,6 @@
   MACRO(ifToken, "if")
   MACRO(colon, ":")
   MACRO(colon2, "::")
-  MACRO(colon3, ":::")
   MACRO(wedge, "/\\")
   MACRO(label, "label")
   MACRO(metadata, "metadata")
@@ -105,6 +104,9 @@
   MACRO(query, "?")
   MACRO(matches, "<=?")
   MACRO(assignment, "<-")
+  MACRO(orelse, "or-else")
+  MACRO(match, "match")
+  MACRO(xmatch, "xmatch")
     //
     //	Special hook identifier tokens.
     //

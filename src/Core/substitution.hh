@@ -23,6 +23,19 @@
 //
 //	Class for substitutions.
 //
+//	Substitutions are used to hold partly built dags as well as variable
+//	variable bindings so that the same dag construction code can handle
+//	variable and non-variable operator arguments without branching.
+//
+//	Default substitutions come in a standards size (allocateSize) allowing
+//	them to be reused rather than reallocated. Within a default substitution
+//	entries 0,..., copySize-1 are real entries (actual variables, shared dags)
+//	while the remaining entries may be used as temporaries by any function
+//	that cares to use them.
+//
+//	Special purpose substitutions of any may be created, with no temporary
+//	storage.
+//
 #ifndef _substitution_hh_
 #define _substitution_hh_
 
@@ -46,7 +59,6 @@ public:
   int nrFragileBindings() const;
 
 private:
-  // Substitution(const Substitution& original);
   static int allocateSize;
 
   Vector<DagNode*> values;

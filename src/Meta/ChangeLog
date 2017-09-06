@@ -1,3 +1,16 @@
+2006-10-05  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaMatch.cc (makeMatchSearchState2): revert fix from 2005-02-16
+	since requiring pattern and subject to be in the same component is
+	too strong for metaXmatch()
+
+2006-09-26  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaUpModule.cc (upRenaming): fix bug where we weren't handling
+	the single argument case
+
+===================================Maude88a===========================================
+
 2006-07-20  Steven Eker  <eker@goo.csl.sri.com>
 
 	* descentFunctions.cc (metaNormalize): added

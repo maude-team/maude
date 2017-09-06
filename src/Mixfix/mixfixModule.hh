@@ -244,9 +244,11 @@ public:  // HACK
     //	Precedences for strategy language.
     //
     ASSIGNMENT_PREC = 75,
+    STRAT_TEST_PREC = 93,
     STRAT_SEQ_PREC = 95,
     STRAT_UNION_PREC = 97,
-    STRAT_BRANCH_PREC = 99
+    STRAT_ORELSE_PREC = 99,
+    STRAT_BRANCH_PREC = 101
   };
 
 private:

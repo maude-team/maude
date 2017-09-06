@@ -62,7 +62,7 @@
 #include "autoWrapBuffer.hh"
 
 #include "interpreter.hh"  // HACK
-#include "main.hh"  // HACK shouldn't be accessing global variables
+#include "global.hh"  // HACK shouldn't be accessing global variables
 
 //	our stuff
 #include "interact.cc"

@@ -51,7 +51,7 @@
 
 //	strategy languages definitions
 #include "strategyExpression.hh"
-#include "setGenerator.hh"
+#include "strategicSearch.hh"
 
 //	front end class definitions
 #include "timer.hh"

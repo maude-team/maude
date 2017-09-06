@@ -123,7 +123,7 @@
 #include "socketManagerSymbol.hh"
 
 //	strategy language class definitions
-#include "unaryStrategy.hh"
+#include "branchStrategy.hh"
 
 //	front end class definitions
 #include "mixfixParser.hh"
@@ -137,7 +137,7 @@
 #include "userLevelRewritingContext.hh"
 
 #include "interpreter.hh"
-#include "main.hh"  // HACK shouldn't be accessing global variables
+#include "global.hh"  // HACK shouldn't be accessing global variables
 
 Vector<int> MixfixModule::emptyGather;
 Vector<int> MixfixModule::gatherAny(1);

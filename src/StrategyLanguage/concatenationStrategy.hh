@@ -33,7 +33,7 @@ public:
   ConcatenationStrategy(const Vector<StrategyExpression*> strategies);
   ~ConcatenationStrategy();
 
-  SetGenerator* execute(DagNode* subject, RewritingContext& context);
+  StrategicExecution::Survival decompose(StrategicSearch& searchObject, DecompositionProcess* remainder);
 
 private:
   const Vector<StrategyExpression*> strategies;

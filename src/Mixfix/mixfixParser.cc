@@ -80,7 +80,7 @@
 #include "unionStrategy.hh"
 #include "iterationStrategy.hh"
 #include "branchStrategy.hh"
-#include "unaryStrategy.hh"
+#include "testStrategy.hh"
 
 //	front end class definitions
 #include "mixfixModule.hh"
@@ -465,21 +465,31 @@ MixfixParser::makeStrategy(int node)
     case MAKE_ITERATION:
       {
 	s = new IterationStrategy(makeStrategy(parser.getChild(node, 0)),
-				  actions[parser.getProductionNumber(node)].data,
-				  actions[parser.getProductionNumber(node)].data2);
+				  actions[parser.getProductionNumber(node)].data);
 	break;
       }
     case MAKE_BRANCH:
       {
+	BranchStrategy::Action successAction = static_cast<BranchStrategy::Action>(actions[parser.getProductionNumber(node)].data);
+	BranchStrategy::Action failureAction = static_cast<BranchStrategy::Action>(actions[parser.getProductionNumber(node)].data2);
+	int child = 0;
+	StrategyExpression* successStrategy =
+	  (successAction == BranchStrategy::NEW_STRATEGY) ? makeStrategy(parser.getChild(node, ++child)) : 0;
+	StrategyExpression* failureStrategy =
+	  (failureAction == BranchStrategy::NEW_STRATEGY) ? makeStrategy(parser.getChild(node, ++child)) : 0;
 	s = new BranchStrategy(makeStrategy(parser.getChild(node, 0)),
-                               makeStrategy(parser.getChild(node, 1)),
-                               makeStrategy(parser.getChild(node, 2)));
+			       successAction,
+			       successStrategy,
+			       failureAction,
+			       failureStrategy);
 	break;
       }
-    case MAKE_UNARY:
+    case MAKE_TEST:
       {
-	s = new UnaryStrategy(makeStrategy(parser.getChild(node, 0)),
-			      static_cast<UnaryStrategy::StrategyType>(actions[parser.getProductionNumber(node)].data));
+	Vector<ConditionFragment*> condition;
+	if (parser.getNumberOfChildren(node) > 1)  // such that clause
+	  makeCondition(parser.getChild(node, 2), condition);
+	s = new TestStrategy(makeTerm(parser.getChild(node, 0)), actions[parser.getProductionNumber(node)].data, condition);
 	break;
       }
     default:
@@ -691,6 +701,11 @@ MixfixParser::makeConditionFragment(int node)
   Action& a = actions[parser.getProductionNumber(node)];
   switch (a.action)
     {
+    case PASS_THRU:
+      {
+	f = makeConditionFragment(parser.getChild(node, 0));
+	break;
+      }
     case MAKE_TRUE:
       {
 	f = new EqualityConditionFragment(makeTerm(parser.getChild(node, 0)),

@@ -1,5 +1,13 @@
 bin_PROGRAMS = maude
 
+data_DATA = \
+	prelude.maude \
+	model-checker.maude \
+	socket.maude \
+	linear.maude \
+	machine-int.maude \
+	term-order.maude
+
 if BUILD_COMPILER
   FULL_COMPILER_LIB = ../FullCompiler/libfullCompiler.a
 endif

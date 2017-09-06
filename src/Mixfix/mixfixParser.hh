@@ -106,7 +106,7 @@ public:
     MAKE_UNION,
     MAKE_ITERATION,
     MAKE_BRANCH,
-    MAKE_UNARY,
+    MAKE_TEST,
 
     MAKE_SUBSTITUTION
   };
