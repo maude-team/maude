@@ -1,3 +1,7 @@
+Overview of Changes in Maude alpha91b
+=====================================
+* Removed extranous debugging print statement
+
 Overview of Changes in Maude alpha91a
 =====================================
 * Now solve diophantine equations over ints rather than mpzs for

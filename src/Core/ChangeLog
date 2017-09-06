@@ -1,3 +1,10 @@
+2008-09-18  Steven Eker  <eker@goo.csl.sri.com>
+
+	* equationTable.cc (applyReplace): removed extraneous debugging
+	print statement
+
+===================================Maude91b===========================================
+
 2008-09-16  Steven Eker  <eker@goo.csl.sri.com>
 
 	* rootContainer.hh (class RootContainer): added empty virtual dtor
