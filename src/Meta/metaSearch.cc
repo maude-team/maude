@@ -21,22 +21,21 @@
 */
 
 //
-//	Code for metaSearch descent function.
+//	Code for metaSearch()/metaSearchPath() descent functions.
 //
 
 local_inline bool
-MetaLevelOpSymbol::downSearchType(DagNode* arg,
-				  RewriteSequenceSearch::SearchType& searchType) const
+MetaLevelOpSymbol::downSearchType(DagNode* arg, SequenceSearch::SearchType& searchType) const
 {
   int qid;
   if (metaLevel->downQid(arg, qid))
     {
       if (qid == Token::encode("+"))
-	searchType = RewriteSequenceSearch::AT_LEAST_ONE_STEP;
+	searchType = SequenceSearch::AT_LEAST_ONE_STEP;
       else if (qid == Token::encode("*"))
-	searchType = RewriteSequenceSearch::ANY_STEPS;
+	searchType = SequenceSearch::ANY_STEPS;
       else if (qid == Token::encode("!"))
-	searchType = RewriteSequenceSearch::NORMAL_FORM;
+	searchType = SequenceSearch::NORMAL_FORM;
       else
 	return false;
       return true;

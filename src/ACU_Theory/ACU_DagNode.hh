@@ -74,7 +74,12 @@ public:
 			  ExtensionInfo* extensionInfo);
   mpz_class nonVariableSize();
   void insertVariables2(NatSet& occurs);
-  DagNode* instantiate2(Substitution& substitution);
+  DagNode* instantiate2(const Substitution& substitution);
+  //
+  //	Interface for narrowing.
+  //
+  bool indexVariables2(NarrowingVariableInfo& indices, int baseIndex);
+  DagNode* instantiateWithReplacement(const Substitution& substitution, int argIndex, DagNode* newDag);
   //
   //    Functions particular to ACU_DagNode.
   //

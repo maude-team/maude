@@ -1,3 +1,36 @@
+2007-11-19  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaLevelOpSymbol.hh (class MetaLevelOpSymbol): added decls for
+	getCachedNarrowingSequenceSearch() and
+	makeNarrowingSequenceSearch()
+
+	* metaNarrow.cc: created
+
+	* metaLevelOpSymbol.hh (class MetaLevelOpSymbol): updated decl for
+	downSearchType()
+
+	* metaSearch.cc (downSearchType): use SequenceSearch in place of
+	RewriteSequenceSearch
+
+	* metaOpCache.hh (class MetaOpCache): added narrowingSearch to
+	struct Item
+
+	* metaOpCache.cc (insert, remove): added NarrowingSequenceSearch*
+	versions
+	(clear): delete narrowingSearch
+
+	* metaOpCache.hh (class MetaOpCache): added declarations for
+	NarrowingSequenceSearch* versions of insert() and remove()
+
+	* descentSignature.cc (MACRO): added metaNarrow
+
+2007-10-11  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaUnify.cc (metaUnify2): use getVariableInfo()
+	(metaXunify2): use getVariableInfo()
+
+===================================Maude89h===========================================
+
 2007-08-24  Steven Eker  <eker@goo.csl.sri.com>
 
 	* metaUnify.cc (metaXunify2): variablesOK() -> problemOK()

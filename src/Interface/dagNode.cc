@@ -184,6 +184,7 @@ DagNode::computeBaseSortForGroundSubterms()
 	}
     }
   topSymbol->computeBaseSort(this);
+  setGround();
   return GROUND;
 }
 
@@ -193,10 +194,17 @@ DagNode::computeSolvedForm(DagNode* rhs,
 			   Subproblem*& returnedSubproblem,
 			   ExtensionInfo* extensionInfo)
 {
-  if (extensionInfo != 0 || getSortIndex() == Sort::SORT_UNKNOWN)
+  //
+  //	If extensionInfo exists or we are nonground we dispatch the theory specific algorithm.
+  //
+  if (extensionInfo != 0 || !isGround())
     return computeSolvedForm2(rhs, solution, returnedSubproblem, extensionInfo);
-  if (rhs->getSortIndex() == Sort::SORT_UNKNOWN)
+  //
+  //	No extension and ground. If the other unificand is nonground, call its algorithm.
+  //
+  if (!(rhs->isGround()))
     return rhs->computeSolvedForm2(this, solution, returnedSubproblem, 0);
+  //
   //
   //	We have two ground terms and no extension so we can just compare them without the
   //	need for an unification algorithm.
@@ -221,7 +229,7 @@ DagNode::nonVariableSize()
   //
   //	terms in unimplemented theories should be ground and will be treated as constants.
   //
-  Assert(getSortIndex() != Sort::SORT_UNKNOWN, "expected ground " << this);
+  Assert(isGround(), "expected ground " << this);
   return 1;
 }
 
@@ -230,14 +238,39 @@ DagNode::computeGeneralizedSort(const SortBdds& sortBdds,
 				const Vector<int>& realToBdd,
 				Vector<Bdd>& generalizedSort)
 {
-  int sortIndex = getSortIndex();
-  if (sortIndex == Sort::SORT_UNKNOWN)
-    symbol()->computeGeneralizedSort(sortBdds, realToBdd, this, generalizedSort);
-  else
+  if (isGround())
     {
+      //
+      //	We assume that any code setting the ground flag will also ensure a sort index is set.
+      //	FIXME: this may not be true if the node is unreduced.
+      //
+      Assert(getSortIndex() != Sort::SORT_UNKNOWN, "unknown sort in node flagged as ground");
       int nrBdds = sortBdds.getNrVariables(symbol()->rangeComponent()->getIndexWithinModule());
-      sortBdds.makeIndexVector(nrBdds, sortIndex, generalizedSort);
+      sortBdds.makeIndexVector(nrBdds, getSortIndex(), generalizedSort);
     }
+  else
+    symbol()->computeGeneralizedSort(sortBdds, realToBdd, this, generalizedSort);
+}
+
+
+//
+//	Narrowing code.
+//
+
+bool
+DagNode::indexVariables2(NarrowingVariableInfo& indices, int baseIndex)
+{
+  //
+  //	This is the backstop version for an unimplemented theory. It does the right
+  //	thing but is rather inefficient for runtime code.
+  //
+  bool ground = true;
+  for (DagArgumentIterator a(*this); a.valid(); a.next())
+    {
+      if (!(a.argument()->indexVariables(indices, baseIndex)))
+	ground = false;
+    }
+  return ground;
 }
 
 #ifdef DUMP

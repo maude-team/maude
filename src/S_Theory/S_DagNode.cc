@@ -270,7 +270,7 @@ S_DagNode::insertVariables2(NatSet& occurs)
 }
 
 DagNode*
-S_DagNode::instantiate2(Substitution& substitution)
+S_DagNode::instantiate2(const Substitution& substitution)
 {
   if (DagNode* n = arg->instantiate(substitution))
     {
@@ -278,14 +278,32 @@ S_DagNode::instantiate2(Substitution& substitution)
       S_Symbol* s = symbol();
       if (s == n->symbol())
 	{
+	  //
+	  //	Our argument instantiated into our theory so we need
+	  //	to do theory normalization.
+	  //
 	  S_DagNode* t = safeCast(S_DagNode*, n);
 	  num += *(t->number);
 	  n = t->arg;
 	}
       DagNode* d =  new S_DagNode(s, num, n);
-      if (n->getSortIndex() != Sort::SORT_UNKNOWN)
-	s->computeBaseSort(d);
+      if (n->isGround())
+	{
+	  s->computeBaseSort(d);
+	  d->setGround();
+	}
       return d;
     }
   return 0;
+}
+
+//
+//	Narrowing code.
+//
+
+DagNode*
+S_DagNode::instantiateWithReplacement(const Substitution& /* substitution */, int argIndex, DagNode* newDag)
+{
+  Assert(argIndex == 0, "bad arg index");
+  return new S_DagNode(symbol(), *number, newDag);
 }

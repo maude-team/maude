@@ -191,7 +191,7 @@ int yylex(YYSTYPE* lvalp);
 /*
  *	Nonterminals that return bool.
  */
-%type <yyBool> polarity select match optDebug conceal exclude arrow unify
+%type <yyBool> polarity select match optDebug conceal exclude arrow unify search
 /*
  *	Nonterminals that return int.
  */

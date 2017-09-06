@@ -117,7 +117,10 @@ DisjunctiveSubproblemAccumulator::extract(Substitution& solution,
       returnedSubproblem = firstSubproblem;
       firstSubproblem = 0;  // so dtor won't delete it
       if (firstExtensionInfo != 0)
-	extensionInfo->copy(firstExtensionInfo);
+	{
+	  Assert(extensionInfo != 0, "extensionInfo null while firstExtensionInfo not null");
+	  extensionInfo->copy(firstExtensionInfo);
+	}
       else
 	{
 	  if (extensionInfo != 0)

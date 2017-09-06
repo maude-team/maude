@@ -1,3 +1,10 @@
+2007-11-19  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: metaXunify()/metaDisjointXunify() deleted;
+	metaNarrow() added
+
+===================================Maude89h===========================================
+
 2007-06-27  Steven Eker  <eker@goo.csl.sri.com>
 
 	* prelude.maude: added metaXunify(), metaDisjointXunify() and

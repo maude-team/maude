@@ -26,6 +26,7 @@
 #ifndef _freeDagNode_hh_
 #define _freeDagNode_hh_
 #include "dagNode.hh"
+#include "freeSymbol.hh"
 
 class FreeDagNode : public DagNode
 {
@@ -56,7 +57,17 @@ public:
 			  ExtensionInfo* extensionInfo);
   mpz_class nonVariableSize();
   void insertVariables2(NatSet& occurs);
-  DagNode* instantiate2(Substitution& substitution);
+  DagNode* instantiate2(const Substitution& substitution);
+  //
+  //	Narrowing member functions.
+  //
+  bool indexVariables2(NarrowingVariableInfo& indices, int baseIndex);
+  DagNode* instantiateWithReplacement(const Substitution& substitution, int argIndex, DagNode* newDag);
+  //
+  //	Functions particular to free dag nodes.
+  //
+  FreeSymbol* symbol() const;
+  //
   //
   //	Fast theory specific access to argument list
   //
@@ -91,6 +102,12 @@ private:
   friend class FreeNet;			// for matching DAG subject
   friend class FreeRhsAutomaton;	// for constructing replacement DAG
 };
+
+inline FreeSymbol*
+FreeDagNode::symbol() const
+{
+  return safeCast(FreeSymbol*, DagNode::symbol());
+}
 
 inline
 FreeDagNode::FreeDagNode(Symbol* symbol) : DagNode(symbol)

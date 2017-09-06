@@ -1,3 +1,43 @@
+2007-11-20  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_UnificationSubproblem.cc (ACU_UnificationSubproblem):
+	savedSubstitution needs to be at least size 1 in new Substitution
+	handling
+	(unificationSolve): fix bug by using clone() to restore old
+	substitution
+
+2007-11-07  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_TreeDagNode.cc (indexVariables2): added
+
+	* ACU_TreeDagNode.hh (class ACU_TreeDagNode): added decl for
+	indexVariables2()
+
+2007-11-05  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_DagNode.cc (indexVariables2, instantiateWithReplacement): added
+	(instantiate2): use isGround() rather than checking for an unknown
+	sort
+	(instantiate2): call setGround()
+
+	* ACU_DagNode.hh (class ACU_DagNode): added decl for
+	indexVariables2() and instantiateWithReplacement() 
+
+2007-11-01  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_DagNode.cc (instantiate2): updated
+
+	* ACU_DagNode.hh (class ACU_DagNode): updated decl for
+	instantiate2()
+
+2007-09-28  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ACU_UnificationSubproblem.cc (unificationSolve): replaced two
+	clone() calls with copy() calls since when we copy back a saved
+	substitution, both substitutions should have the same copy size
+
+===================================Maude89h===========================================
+
 2007-08-24  Steven Eker  <eker@goo.csl.sri.com>
 
 	* ACU_DagNode.cc (computeBaseSortForGroundSubterms): rewritten

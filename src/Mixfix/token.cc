@@ -833,7 +833,8 @@ Token::bubbleToPrefixNameCode(const Vector<Token>& opBubble)
     {
       const char* name = stringTable.name(opBubble[i].codeNr);
       char c = name[0];
-      Assert(c != '`', "can't start token with `");
+      // FIXME: it seems that `(_`) can start with `
+      //Assert(c != '`', "can't start token with ` : " << name << " in " << opBubble);
       if (specialChar(c) || (!lastCharSpecial && c != '_'))
 	result += '`';
       result += name;

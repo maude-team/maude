@@ -172,9 +172,10 @@ CUI_DagNode::stackArguments(Vector<RedexPosition>& stack,
   DagNode* d = argArray[0];
   if (!(respectFrozen && frozen.contains(0)) && !(d->isUnstackable()))
     stack.append(RedexPosition(d, parentIndex, 0));
-  d = argArray[1];
-  if (!(respectFrozen && frozen.contains(1)) && !(d->isUnstackable()))
-    stack.append(RedexPosition(d, parentIndex, 1));
+  DagNode* d2 = argArray[1];
+  if (!(respectFrozen && frozen.contains(1)) && !(d->isUnstackable()) &&
+      !(symbol()->comm() && d->equal(d2)))  // don't stack equal args in the comm case
+    stack.append(RedexPosition(d2, parentIndex, 1));
 }
 
 void
@@ -338,7 +339,6 @@ CUI_DagNode::computeSolvedForm2(DagNode* rhs,
   return false;
 }
 
-
 mpz_class
 CUI_DagNode::nonVariableSize()
 {
@@ -353,7 +353,7 @@ CUI_DagNode::insertVariables2(NatSet& occurs)
 }
 
 DagNode*
-CUI_DagNode::instantiate2(Substitution& substitution)
+CUI_DagNode::instantiate2(const Substitution& substitution)
 {
   bool changed = false;
   DagNode* a0 = argArray[0];
@@ -372,20 +372,38 @@ CUI_DagNode::instantiate2(Substitution& substitution)
     {
       CUI_Symbol* s = symbol();
       CUI_DagNode* d = new CUI_DagNode(s);
-      if (a0->compare(a1) <= 0)
+      d->argArray[0] = a0;
+      d->argArray[1] = a1;
+      if(!(d->normalizeAtTop()) && a0->isGround() && a1->isGround())
 	{
-	  d->argArray[0] = a0;
-	  d->argArray[1] = a1;
+	  s->computeBaseSort(d);
+	  d->setGround();
 	}
-      else
-	{
-	  d->argArray[0] = a1;
-	  d->argArray[1] = a0;
-	}
-      if (a0->getSortIndex() != Sort::SORT_UNKNOWN &&
-	  a1->getSortIndex() != Sort::SORT_UNKNOWN)
-	s->computeBaseSort(d);
       return d;
     }
   return 0;
+}
+
+//
+//	Narrowing code.
+//
+
+bool
+CUI_DagNode::indexVariables2(NarrowingVariableInfo& indices, int baseIndex)
+{
+  return argArray[0]->indexVariables(indices, baseIndex) &  // always make both calls
+    argArray[1]->indexVariables(indices, baseIndex);
+}
+
+DagNode*
+CUI_DagNode::instantiateWithReplacement(const Substitution& substitution, int argIndex, DagNode* replacement)
+{
+  CUI_DagNode* d = new CUI_DagNode(symbol());
+  int other = 1 - argIndex;
+  d->argArray[argIndex] = replacement;
+  DagNode* n = argArray[other];
+  if (DagNode* c = n->instantiate(substitution))  // changed under substitutition
+    n = c;
+  d->argArray[other] = n;
+  return d;
 }

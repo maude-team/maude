@@ -695,8 +695,8 @@ MixfixParser::makeTerm(int node)
 #endif
     default:
       {
-	t = 0;  // to avoid uninitialized variable warning
 	CantHappen("bad action");
+	return 0;  // to avoid uninitialized variable warning
       }
     }
   t->setLineNumber((*currentSentence)[pos].lineNumber());

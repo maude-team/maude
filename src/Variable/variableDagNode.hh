@@ -57,7 +57,11 @@ public:
 			  ExtensionInfo* extensionInfo);
   mpz_class nonVariableSize();
   void insertVariables2(NatSet& occurs);
-  DagNode* instantiate2(Substitution& substitution);
+  DagNode* instantiate2(const Substitution& substitution);
+  //
+  //	Narrowing member functions.
+  //
+  bool indexVariables2(NarrowingVariableInfo& indicies, int baseIndex);
   //
   //	Functions specific to VariableDagNode.
   //

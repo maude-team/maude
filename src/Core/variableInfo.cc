@@ -70,7 +70,7 @@ VariableInfo::makeConstructionIndex()
   return MAX_NR_PROTECTED_VARIABLES + nrConstructionIndices;
 }
 
-void
+int
 VariableInfo::computeIndexRemapping()
 {
   int nrConstructionIndices = constructionIndices.length();
@@ -129,12 +129,12 @@ VariableInfo::computeIndexRemapping()
 	constructionIndices[i].newIndex = nrProtectedVariables + coloring[i];
     }
   //
-  //	Finally, we need to notify class Substitution of the minimum size
-  //	of substitution needed.
+  //	Finally, we need return the minimum size of substitution needed.
   //
+  return nrProtectedVariables + nrColors;
   /*
   DebugAdvisory("nrProtectedVariables = " << nrProtectedVariables <<
 		"\tnrColors = " << nrColors);
   */
-  Substitution::notify(nrProtectedVariables + nrColors);
+  //Substitution::notify(nrProtectedVariables + nrColors);
 }

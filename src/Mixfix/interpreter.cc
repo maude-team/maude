@@ -32,6 +32,7 @@
 //      forward declarations
 #include "interface.hh"
 #include "core.hh"
+#include "variable.hh"
 #include "AU_Theory.hh"
 #include "higher.hh"
 #include "strategyLanguage.hh"
@@ -49,6 +50,7 @@
 #include "matchSearchState.hh"
 #include "rewriteSequenceSearch.hh"
 #include "unificationProblem.hh"
+#include "narrowingSequenceSearch.hh"
 
 //	object system class definitions
 #include "pseudoThread.hh"

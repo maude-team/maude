@@ -209,6 +209,7 @@ Symbol::finalizeSortInfo()
 void
 Symbol::reset()
 {
+  resetEachRule();
 }
 
 bool

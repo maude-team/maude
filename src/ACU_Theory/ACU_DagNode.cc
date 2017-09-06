@@ -655,7 +655,7 @@ ACU_DagNode::insertVariables2(NatSet& occurs)
 }
 
 DagNode*
-ACU_DagNode::instantiate2(Substitution& substitution)
+ACU_DagNode::instantiate2(const Substitution& substitution)
 {
   ACU_Symbol* s = symbol();
   int nrArgs = argArray.length();
@@ -674,7 +674,7 @@ ACU_DagNode::instantiate2(Substitution& substitution)
 	  //
 	  for (int j = 0; j < i; ++j)
 	    {
-	      if (argArray[j].dagNode->getSortIndex() == Sort::SORT_UNKNOWN)
+	      if (!(argArray[j].dagNode->isGround()))
 		ground = false;
 	      d->argArray[j] = argArray[j];	
 	    }
@@ -683,7 +683,7 @@ ACU_DagNode::instantiate2(Substitution& substitution)
 	  //
 	  d->argArray[i].dagNode = n;
 	  d->argArray[i].multiplicity = argArray[i].multiplicity;
-	  if (n->getSortIndex() == Sort::SORT_UNKNOWN)
+	  if (!(n->isGround()))
 	    ground = false;
 	  //
 	  //	Handle remaining arguments.
@@ -693,7 +693,7 @@ ACU_DagNode::instantiate2(Substitution& substitution)
 	      DagNode* a = argArray[i].dagNode;
 	      if (DagNode* n = a->instantiate(substitution))
 		a = n;
-	      if (a->getSortIndex() == Sort::SORT_UNKNOWN)
+	      if (!(a->isGround()))
 		ground = false;
 	      d->argArray[i].dagNode = a;
 	      d->argArray[i].multiplicity = argArray[i].multiplicity;
@@ -703,10 +703,63 @@ ACU_DagNode::instantiate2(Substitution& substitution)
 	  //	all its arguments are ground we compute its base sort.
 	  //
 	  if (!(d->dumbNormalizeAtTop()) && ground)
-	    s->computeBaseSort(d);
+	    {
+	      s->computeBaseSort(d);  // FIXME: is this a good idea in the narrowing sense?
+	      d->setGround();
+	    }
 	  Assert(d->isTree() == false, "Oops we got a tree! " << d);
 	  return d;	
 	}
     }
   return 0;  // unchanged
+}
+
+//
+//	Narrowing code.
+//
+
+bool
+ACU_DagNode::indexVariables2(NarrowingVariableInfo& indices, int baseIndex)
+{
+  int nrArgs = argArray.length();
+  bool ground = true;
+  for (int i = 0; i < nrArgs; i++)
+    {   
+      if (!(argArray[i].dagNode->indexVariables(indices, baseIndex)))
+	ground = false;
+    }
+  return ground;
+}
+
+DagNode*
+ACU_DagNode::instantiateWithReplacement(const Substitution& substitution, int argIndex, DagNode* newDag)
+{
+  int nrArgs = argArray.length();
+  ACU_Symbol* s = symbol();
+  ACU_DagNode* n = new ACU_DagNode(s, nrArgs);
+  ArgVec<ACU_DagNode::Pair>& args2 = n->argArray;
+  int p = 0;
+
+  for (int i = 0; i < nrArgs; i++)
+    {
+      int m = argArray[i].multiplicity;
+      if (i == argIndex)
+	{
+	  --m;
+	  if (m == 0)
+	    continue;
+	}
+      DagNode* d = argArray[i].dagNode;
+      if (DagNode* c = d->instantiate(substitution))  // changed under substitutition
+	d = c;
+      args2[p].dagNode = d;
+      args2[p].multiplicity = m;
+      ++p;
+    }
+  Assert(p >= 1, "no arguments left");
+  args2.contractTo(p);
+  args2.expandBy(1);
+  args2[p].dagNode = newDag;
+  args2[p].multiplicity = 1;
+  return n;
 }

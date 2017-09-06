@@ -22,7 +22,7 @@
 
 ***
 ***	Maude interpreter standard prelude.
-***	Version alpha89c.
+***	Version alpha89h.
 ***
 ***	Some of the overall structure is taken from the OBJ3
 ***	interpreter standard prelude.
@@ -1898,7 +1898,7 @@ fmod META-LEVEL is
 
 *** success results
   sorts ResultPair ResultTriple Result4Tuple MatchPair TraceStep Trace
-    UnificationPair UnificationTriple UnificationContextTriple UnificationContext4Tuple .
+    UnificationPair UnificationTriple .
   subsort TraceStep < Trace .
   op {_,_} : Term Type -> ResultPair [ctor] .
   op {_,_,_} : Term Type Substitution -> ResultTriple [ctor] .
@@ -1906,23 +1906,19 @@ fmod META-LEVEL is
   op {_,_} : Substitution Context -> MatchPair [ctor] .
   op {_,_} : Substitution Nat -> UnificationPair [ctor] .
   op {_,_,_} : Substitution Substitution Nat -> UnificationTriple [ctor] .
-  op {_,_,_} : Substitution Context Nat -> UnificationContextTriple [ctor] .
-  op {_,_,_,_} : Substitution Substitution Context Nat -> UnificationContext4Tuple [ctor] .
   op {_,_,_} : Term Type Rule -> TraceStep [ctor] .
   op nil : -> Trace [ctor] .
   op __ : Trace Trace -> Trace [ctor assoc id: nil format (d n d)] .
 
 *** failure results
   sorts ResultPair? ResultTriple? Result4Tuple? MatchPair? Substitution? Trace?
-    UnificationPair? UnificationTriple? UnificationContextTriple? UnificationContext4Tuple? .
+    UnificationPair? UnificationTriple? .
   subsort ResultPair < ResultPair? .
   subsort ResultTriple < ResultTriple? .
   subsort Result4Tuple < Result4Tuple? .
   subsort MatchPair < MatchPair? .
   subsort UnificationPair < UnificationPair? .
   subsort UnificationTriple < UnificationTriple? .
-  subsort UnificationContextTriple < UnificationContextTriple? .
-  subsort UnificationContext4Tuple < UnificationContext4Tuple? .
   subsort Substitution < Substitution? .
   subsort Trace < Trace? .
   op noParse : Nat -> ResultPair? [ctor] .
@@ -1932,8 +1928,6 @@ fmod META-LEVEL is
   op failure : -> Result4Tuple? [ctor] .
   op noUnifier : -> UnificationPair? [ctor] .
   op noUnifier : -> UnificationTriple? [ctor] .
-  op noUnifier : -> UnificationContextTriple? [ctor] .
-  op noUnifier : -> UnificationContext4Tuple? [ctor] .
   op noMatch : -> Substitution? [ctor] .
   op noMatch : -> MatchPair? [ctor] .
   op failure : -> Trace? [ctor] .
@@ -2114,8 +2108,6 @@ fmod META-LEVEL is
         op-hook matchPairSymbol		({_,_} : Substitution Context ~> MatchPair)
         op-hook unificationPairSymbol	({_,_} : Substitution Nat ~> UnificationPair)
         op-hook unificationTripleSymbol	({_,_,_} : Substitution Substitution Nat ~> UnificationTriple)
-        op-hook unificationContextTripleSymbol	({_,_,_} : Substitution Context Nat ~> UnificationContextTriple)
-        op-hook unificationContext4TupleSymbol	({_,_,_,_} : Substitution Substitution Context Nat ~> UnificationContext4Tuple)
 
         op-hook traceStepSymbol		({_,_,_} : Term Type Rule ~> TraceStep)
         op-hook nilTraceSymbol		(nil : ~> Trace)
@@ -2127,8 +2119,6 @@ fmod META-LEVEL is
         op-hook failure4Symbol		(failure : ~> Result4Tuple?)
         op-hook noUnifierPairSymbol	(noUnifier : ~> UnificationPair?)
         op-hook noUnifierTripleSymbol	(noUnifier : ~> UnificationTriple?)
-        op-hook noUnifierContextTripleSymbol	(noUnifier : ~> UnificationContextTriple?)
-        op-hook noUnifierContext4TupleSymbol	(noUnifier : ~> UnificationContext4Tuple?)
         op-hook noMatchSubstSymbol	(noMatch : ~> Substitution?)
         op-hook noMatchPairSymbol	(noMatch : ~> MatchPair?)
         op-hook failureTraceSymbol	(failure : ~> Trace?)
@@ -2190,16 +2180,6 @@ fmod META-LEVEL is
            id-hook MetaLevelOpSymbol	(metaDisjointUnify)
            op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .
 
-  op metaXunify : Module Term Term Nat Nat ~> UnificationContextTriple?
-        [special (
-           id-hook MetaLevelOpSymbol	(metaXunify)
-           op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .
-
-  op metaDisjointXunify : Module Term Term Nat Nat ~> UnificationContext4Tuple?
-        [special (
-           id-hook MetaLevelOpSymbol	(metaDisjointXunify)
-           op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .
-
   op metaSearch : Module Term Term Condition Qid Bound Nat ~> ResultTriple?
         [special (
            id-hook MetaLevelOpSymbol	(metaSearch)
@@ -2208,6 +2188,11 @@ fmod META-LEVEL is
   op metaSearchPath : Module Term Term Condition Qid Bound Nat ~> Trace?
         [special (
            id-hook MetaLevelOpSymbol	(metaSearchPath)
+           op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .
+
+  op metaNarrow : Module Term Term Qid Bound Nat ~> ResultTriple?
+        [special (
+           id-hook MetaLevelOpSymbol	(metaNarrow)
            op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .
 
   op sortLeq : Module Type Type ~> Bool

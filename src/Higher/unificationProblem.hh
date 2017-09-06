@@ -29,7 +29,7 @@
 #include "substitution.hh"
 #include "simpleRootContainer.hh"
 
-class UnificationProblem : public VariableInfo, private SimpleRootContainer
+class UnificationProblem : private SimpleRootContainer
 {
   NO_COPYING(UnificationProblem);
 
@@ -43,7 +43,8 @@ public:
   int getNrFreeVariables() const;
   DagNode* makeContext(DagNode* filler) const;
   ExtensionInfo* getExtensionInfo() const;
-  const Vector<Term*>& getLeftHandSides() const;
+  const Vector<Term*>& getLeftHandSides() const;  // HACK so we can get kind for context hole
+  const VariableInfo& getVariableInfo() const;
 
 private:
   void markReachableNodes();
@@ -55,24 +56,26 @@ private:
   Vector<Term*> rightHandSides;
   FreshVariableGenerator* freshVariableGenerator;
 
-  const SortBdds* sortBdds;
+  VariableInfo variableInfo;
+
+  const SortBdds* sortBdds;		// sort computation BDDs for our module
   Vector<DagNode*> leftHandDags;
   Vector<DagNode*> rightHandDags;
 
   ExtensionInfo* extensionInfo;
-  UnificationContext* unsortedSolution;
-  Subproblem* subproblem;
-  bool problemOkay;
-  bool viable;
-  Vector<int> freeVariables;
-  AllSat* orderSortedUnifiers;
-  Substitution* sortedSolution;
+  UnificationContext* unsortedSolution;	// for accumulating solved forms and constructing unsorted unifiers
+  Subproblem* subproblem;		// for stuff unresolved by computeSolvedForm() pass
+  bool problemOkay;			// true if problem didn't violate ctor invariants
+  bool viable;				// true if problem didn't fail computeSolvedForm() pass
+  Vector<int> freeVariables;	     	// indices (slots) of unbound variables in unsorted unifier
+  AllSat* orderSortedUnifiers;		// satisfiability problem encoding sorts for order-sorted unifiers
+  Substitution* sortedSolution;		// for construction order-sorted unifiers
   //
-  //	Stuff for resolving dependencies in solved form.
+  //	Data for resolving dependencies in solved form.
   //
-  Vector<int> order;
-  NatSet done;
-  NatSet pending;
+  Vector<int> order;			// we build an order in which to instantiate the solved forms
+  NatSet done;				// a variable is done when every variable it (indirectly) depends on is in the order
+  NatSet pending;			// variables on the current path though the dependency digraph
 };
 
 inline bool
@@ -85,6 +88,12 @@ inline const Substitution&
 UnificationProblem::getSolution() const
 {
   return *sortedSolution;
+}
+
+inline const VariableInfo&
+UnificationProblem::getVariableInfo() const
+{
+  return variableInfo;
 }
 
 inline int

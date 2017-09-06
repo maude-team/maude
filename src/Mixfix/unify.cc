@@ -94,7 +94,7 @@ Interpreter::doUnification(Timer& timer,
 	  else
 	    cout << extensionInfo->buildMatchedPortion() << '\n';
 	}
-      UserLevelRewritingContext::printSubstitution(problem->getSolution(), *problem);
+      UserLevelRewritingContext::printSubstitution(problem->getSolution(), problem->getVariableInfo());
       if (UserLevelRewritingContext::interrupted())
 	break;
     }
