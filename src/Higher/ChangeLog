@@ -1,3 +1,11 @@
+2007-04-19  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unificationProblem.cc (UnificationProblem): fix bug where
+	subproblem was not being initialized in failure case with
+	resulting memory corruption in dtor
+
+===================================Maude89b===========================================
+
 2007-03-16  Steven Eker  <eker@goo.csl.sri.com>
 
 	* unificationProblem.cc (UnificationProblem): removed support for
@@ -9,7 +17,7 @@
 	* unificationProblem.cc (UnificationProblem): need to delete
 	subproblem
 
-===================================Maude89===========================================
+===================================Maude89a===========================================
 
 2007-03-14  Steven Eker  <eker@goo.csl.sri.com>
 
