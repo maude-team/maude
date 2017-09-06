@@ -1,9 +1,3 @@
-2010-05-18  Steven Eker  <eker@rho>
-
-	* prelude.maude: split of Boolean operations into BOOL-OPS
-
-===================================Maude93d2===========================================
-
 2010-05-05  Steven Eker  <eker@rho>
 
 	* prelude.maude: added projection functions for meta-views
