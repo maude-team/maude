@@ -1,4 +1,83 @@
+2006-11-10  Steven Eker  <eker@goo.csl.sri.com>
+
+	* userLevelRewritingContext.cc (makeSubcontext): fix bug where we
+	were checking TRACE_EQ rather than TRACE_CONDITION
+
+	* interpreter.hh (endif): added decls for doStrategicSearch() and
+	sRewriteCont()
+
+	* srewrite.cc: created
+
+	* interpreter.hh (endif): added data member savedStrategicSearch
+
+	* execute.cc (sRewrite): clean up output
+	(clearContinueInfo): clear savedStrategicSearch
+
+2006-11-09  Steven Eker  <eker@goo.csl.sri.com>
+
+	* execute.cc (sRewrite): print rewrite count and timing info
+
+2006-11-08  Steven Eker  <eker@goo.csl.sri.com>
+
+	* strategyPrint.cc (prettyPrint): added BranchStrategy and
+	TestStrategy cases
+
+2006-11-07  Steven Eker  <eker@goo.csl.sri.com>
+
+	* execute.cc (sRewrite): use StrategyExpression version of
+	operator<<()
+
+	* strategyPrint.cc (prettyPrint): added
+
+	* mixfixModule.hh (SharedTokens): added decl for
+	StrategyExpression* version of prettyPrint(); make
+	StrategyExpression* verison of operator<<() a friend
+
+	* strategyPrint.cc: created
+
+2006-11-02  Steven Eker  <eker@goo.csl.sri.com>
+
+	* makeGrammar.cc (makeStrategyLanguageProductions): use new
+	MAKE_APPLICATION semantics to handle all four cases
+
+	* mixfixParser.hh (class MixfixParser): deleted
+	MAKE_APPLICATION_WITH_SUBSTITUTION and
+	MAKE_APPLICATION_WITH_STRATEGY_LIST
+
+	* mixfixParser.cc (makeStrategy): combine all four application
+	cases
+
+	* makeGrammar.cc (makeStrategyLanguageProductions): added syntax
+	for applications with substitutions and strategy lists
+
+2006-11-01  Steven Eker  <eker@goo.csl.sri.com>
+
+	* mixfixModule.hh (SharedTokens): added STRATEGY_LIST to enum NonTerminal
+
+	* makeGrammar.cc (makeStrategyLanguageProductions): added syntax
+	for strategy lists and applications with strategy lists
+
+	* mixfixParser.hh (class MixfixParser): added decl for
+	makeStrategyList()
+	(class MixfixParser): added MAKE_APPLICATION_WITH_STRATEGY_LIST
+	and MAKE_STRATEGY_LIST to enum SemanticActions
+
+	* mixfixParser.cc (makeStrategy): added
+	MAKE_APPLICATION_WITH_STRATEGY_LIST case
+	(makeStrategyList): created
+
+2006-10-11  Steven Eker  <eker@goo.csl.sri.com>
+
+	* specialTokens.cc (MACRO): added amatch
+
+	* makeGrammar.cc (makeStrategyLanguageProductions): xmatch becomes
+	amatch; added new xmatch
+
 2006-10-09  Steven Eker  <eker@goo.csl.sri.com>
+
+	* banner.cc (printBanner): update copyright notice
+	
+===================================Maude88b===========================================
 
 	* modules.yy (domainRangeAttr): fix type clash
 

@@ -22,7 +22,7 @@
 
 ***
 ***	Approximation of Maude 1.0 MachineInts.
-***	Version alpha88
+***	Version 2.3.
 ***
 ***	Note that 0 lives in MachineZero. Also using out of range
 ***	integer constants may cause incorrect results. MACHINE-INT may
@@ -63,7 +63,7 @@ fmod RENAMED-INT is
 endfm
 
 fth BIT-WIDTH is
-  pr RENAMED-INT .
+  protecting RENAMED-INT .
   op $nrBits : -> NzMachineNat .
 
   var N : NzMachineNat .

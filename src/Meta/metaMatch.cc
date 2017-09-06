@@ -209,10 +209,10 @@ MetaLevelOpSymbol::metaXmatch(FreeDagNode* subject, RewritingContext& context)
 	    Sort* sort = pattern->getLhs()->getSort();  // HACK
 	    VariableSymbol* vs = safeCast(VariableSymbol*, m->instantiateVariable(sort));
 	    DagNode* hole = new VariableDagNode(vs, 0);
-	    DagNode* top = state->rebuildDag(hole);
+	    RewriteSearchState::DagPair top = state->rebuildDag(hole);
 	    result = metaLevel->upMatchPair(*substitution,
 					    *pattern,
-					    top,
+					    top.first,
 					    hole,
 					    m);
 	  }

@@ -22,7 +22,10 @@ libstrategyLanguage_a_SOURCES = \
 	strategicProcess.cc \
 	decompositionProcess.cc \
 	applicationProcess.cc \
-	strategicSearch.cc
+	strategicSearch.cc \
+	sharedRewriteSearchState.cc \
+	matchProcess.cc \
+	rewriteTask.cc
 
 noinst_HEADERS = \
 	strategyLanguage.hh \
@@ -40,4 +43,7 @@ noinst_HEADERS = \
 	strategicProcess.hh \
 	decompositionProcess.hh \
 	applicationProcess.hh \
-	strategicSearch.hh
+	strategicSearch.hh \
+	sharedRewriteSearchState.hh \
+	matchProcess.hh \
+	rewriteTask.hh

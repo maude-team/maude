@@ -37,13 +37,15 @@
 #include "rewritingContext.hh"
 
 //	strategy language class definitions
+#include "strategyExpression.hh"
 #include "strategicProcess.hh"
 #include "strategicSearch.hh"
 #include "decompositionProcess.hh"
 
 StrategicSearch::StrategicSearch(RewritingContext* initial, StrategyExpression* strategy)
   : StrategicTask(static_cast<StrategicTask*>(0)),
-    initial(initial)
+    initial(initial),
+    strategy(strategy)
 {
   Assert(initial != 0, "null context");
   Assert(initial->root() != 0, "null root");
@@ -55,6 +57,11 @@ StrategicSearch::StrategicSearch(RewritingContext* initial, StrategyExpression* 
   exhausted = false;
 }
 
+StrategicSearch::~StrategicSearch()
+{
+  delete initial;
+  delete strategy;
+}
 
 DagNode*
 StrategicSearch::findNextSolution()
@@ -78,6 +85,11 @@ StrategicSearch::findNextSolution()
       //
       if (s == DIE)
 	delete nextToRun;
+      //
+      //	Now safe to abort.
+      //
+      if (RewritingContext::getTraceStatus() && initial->traceAbort())
+	break;
       //
       //	t may not be valid anymore, but in this case we should be
       //	exhausted.

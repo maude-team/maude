@@ -105,19 +105,29 @@ PositionState::findNextPosition()
   return true;
 }
 
-DagNode*
+PositionState::DagPair
 PositionState::rebuildDag(DagNode* replacement, ExtensionInfo* extInfo, PositionIndex index) const
 {
+  //
+  //	Extend the replacement term if needed.
+  //
   if (extInfo != 0 && !(extInfo->matchedWhole()))
     replacement = positionQueue[index].node()->partialConstruct(replacement, extInfo);
-
+  //
+  //	Walk up the stack rebuilding.
+  //
+  DagNode* newDag = replacement;
   int argIndex = positionQueue[index].argIndex();
   for (PositionIndex i = positionQueue[index].parentIndex(); i != UNDEFINED;)
     {
       const RedexPosition& rp = positionQueue[i];
-      replacement = rp.node()->copyWithReplacement(argIndex, replacement);
+      newDag = rp.node()->copyWithReplacement(argIndex, newDag);
       argIndex = rp.argIndex();
       i = rp.parentIndex();
     }
-  return replacement;
+  //
+  //	We return the rebuilt dag, and the extended replacement term since the caller may
+  //	need the later for tracing purposes.
+  //
+  return DagPair(newDag, replacement);
 }

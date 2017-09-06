@@ -20,6 +20,11 @@
 
 )
 
+***
+***	Strict total ordering on terms of a given kind.
+***	Version 2.3.
+***
+
 fmod TERM-ORDER{X :: TRIV} is
   protecting EXT-BOOL .
   protecting CONVERSION .

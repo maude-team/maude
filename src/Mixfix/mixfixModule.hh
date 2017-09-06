@@ -329,7 +329,9 @@ private:
     ASSIGNMENT = -37,
     SUBSTITUTION = -38,
 
-    COMPLEX_BASE = -39
+    STRATEGY_LIST = -39,
+
+    COMPLEX_BASE = -40
   };
 
   enum NonTerminalType
@@ -690,11 +692,15 @@ private:
 		   const ConnectedComponent* rightCaptureComponent,
 		   bool rangeKnown);
 
+  static bool prettyPrint(ostream& s, StrategyExpression* strategy, int requiredPrec);
+
+
   NatSet objectSymbols;
   NatSet messageSymbols;
 
   friend ostream& operator<<(ostream& s, const Term* term);
   friend ostream& operator<<(ostream& s, DagNode* dagNode);
+  friend ostream& operator<<(ostream& s, StrategyExpression* strategy);
 };
 
 inline SymbolType

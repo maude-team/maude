@@ -1,3 +1,27 @@
+2006-11-09  Steven Eker  <eker@goo.csl.sri.com>
+
+	* rewritingContext.hh (transferCount): added
+	(addInCount): made arg const
+
+2006-10-20  Steven Eker  <eker@goo.csl.sri.com>
+
+	* substitution.hh (clone): added
+
+2006-10-17  Steven Eker  <eker@goo.csl.sri.com>
+
+	* conditionFragment.hh (class ConditionFragment): added decl for dump()
+
+	* preEquation.hh (class PreEquation): added decl for dump()
+
+	* preEquation.cc (dump): added
+
+2006-10-10  Steven Eker  <eker@goo.csl.sri.com>
+
+	* sort.hh (class Sort): removed extraneous qualifier that is
+	reported to cause problems under gcc 4.1
+
+===================================Maude88b===========================================
+
 2006-09-29  Steven Eker  <eker@goo.csl.sri.com>
 
 	* substitution.hh: added comment to document how substitutions

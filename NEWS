@@ -1,3 +1,12 @@
+Overview of Changes in Maude alpha88b
+=====================================
+* minor syntactic changes to appease gcc 4.1
+* minor importation changes in prelude.maude and model-checker.maude
+* fixed extension tracing bugs in search/model checker, strategy
+  language and metalevel
+* revised/extended strategy language; cont now works with srew
+* fixed trace condition bug
+
 Overview of Changes in Maude alpha88a
 =====================================
 * many changes to the prelude to fix unsoundness concerns
@@ -8,6 +17,8 @@ Overview of Changes in Maude alpha88a
 * fixed bug that allowed parsing of parameterized theories
 * fixed upModule() bug affecting renamings
 * fixed metaXmatch() kind bug introduced by alpha86 fix
+* subset tests for SET and SET*
+* predefined term ordering
 
 Overview of Changes in Maude alpha88
 ====================================
@@ -25,8 +36,8 @@ Overview of Changes in Maude alpha87
 ====================================
 * crude first version of strategy language
 
-Overview of Changes in Maude Maude 2.2 (alpha86e)
-=================================================
+Overview of Changes in Maude 2.2 (alpha86e)
+===========================================
 * fixed long standing metalevel prec bug
 
 Overview of Changes in Maude alpha86d2

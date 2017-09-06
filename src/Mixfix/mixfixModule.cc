@@ -123,7 +123,13 @@
 #include "socketManagerSymbol.hh"
 
 //	strategy language class definitions
+#include "trivialStrategy.hh"
+#include "applicationStrategy.hh"
+#include "concatenationStrategy.hh"
+#include "unionStrategy.hh"
+#include "iterationStrategy.hh"
 #include "branchStrategy.hh"
+#include "testStrategy.hh"
 
 //	front end class definitions
 #include "mixfixParser.hh"
@@ -181,6 +187,7 @@ MixfixModule::nonTerminal(const Sort* sort, NonTerminalType type)
 #include "dagNodePrint.cc"
 #include "bufferPrint.cc"
 #include "graphPrint.cc"
+#include "strategyPrint.cc"
 
 void
 MixfixModule::SymbolInfo::revertGather(Vector<int>& gatherSymbols) const

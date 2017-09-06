@@ -115,11 +115,13 @@ EXTRA_DIST = \
 	termPrint.cc \
 	dagNodePrint.cc \
 	sharedPrint.cc \
+	strategyPrint.cc \
 	interact.cc \
 	trial.cc \
 	execute.cc \
 	loopMode.cc \
 	search.cc \
+	srewrite.cc \
 	match.cc \
 	top.yy \
 	modules.yy \
