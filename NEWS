@@ -1,3 +1,19 @@
+Overview of Changes in alpha112a
+================================
+* support for debug, cont, debug cont in vu-narrow
+* support for debug, cont, debug cont, incompleteness and
+  printing state and timing information in narrow
+* support for cont/debug cont in variant unify
+* support for cont/debug cont in get variants
+* support for debug and debug cont in srewite
+* support for debug, cont, debug cont and printing
+  printing state and timing information in smt-search
+* support for debug and debug cont in search
+* fixed longstanding family of related performance bugs
+  in the ACU matchers
+* added bound element variable ACU stripper-collector automaton
+* added early failure optimization for ACU_LazySubproblem
+
 Overview of Changes in alpha112
 ===============================
 * fixed a longstanding bug in the comparison of NatSets that

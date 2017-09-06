@@ -158,6 +158,7 @@ private:
   friend class ACU_CollectorLhsAutomaton;	// for matching DAG subject
   friend class ACU_NGA_LhsAutomaton;	// for matching DAG subject
   friend class ACU_VarLhsAutomaton;	// for matching DAG subject
+  friend class ACU_BndVarLhsAutomaton;	// for matching DAG subject
   friend class ACU_GndLhsAutomaton;	// for matching DAG subject
   friend class ACU_NonLinearLhsAutomaton;	// for matching DAG subject
   friend class ACU_RhsAutomaton;	// for constructing replacement DAG

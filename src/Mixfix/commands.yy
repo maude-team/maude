@@ -145,7 +145,7 @@ command		:	KW_SELECT		{ lexBubble(END_COMMAND, 1); }
 			    interpreter.check(lexerBubble);
 			}
 
-		|	search
+		|	optDebug search
 			{
 			  lexerCmdMode();
 			  moduleExpr.contractTo(0);
@@ -156,7 +156,7 @@ command		:	KW_SELECT		{ lexBubble(END_COMMAND, 1); }
 			{
 			  lexerInitialMode();
 			  if (interpreter.setCurrentModule(moduleExpr, 1))
-			    interpreter.search(lexerBubble, number, number2, $1);
+			    interpreter.search(lexerBubble, number, number2, $2, $1);
 			}
 		|	match
 			{

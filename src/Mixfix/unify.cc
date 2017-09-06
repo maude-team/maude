@@ -21,7 +21,7 @@
 */
 
 //
-//	Code for unify and xunify commands.
+//	Code for unify command.
 //
 
 void
@@ -102,7 +102,7 @@ Interpreter::doUnification(Timer& timer,
   clearContinueInfo();  // just in case debugger left info
   if (i == limit)  // possible to continue
     {
-      savedUnificationProblem = problem;
+      savedState = problem;
       savedSolutionCount = solutionCount;
       savedModule = module;
       continueFunc = &Interpreter::unifyCont;
@@ -119,9 +119,9 @@ Interpreter::doUnification(Timer& timer,
 void
 Interpreter::unifyCont(Int64 limit, bool /* debug */)
 {
-  UnificationProblem* problem = savedUnificationProblem;
+  UnificationProblem* problem = safeCast(UnificationProblem*, savedState);
   VisibleModule* fm = savedModule;
-  savedUnificationProblem = 0;
+  savedState = 0;
   savedModule = 0;
   continueFunc = 0;
 

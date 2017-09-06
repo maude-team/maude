@@ -21,7 +21,7 @@
 */
 
 //
-//      Class for user level rewriting contexts
+//      Class for user level rewriting contexts.
 //
 #ifndef _userLevelRewritingContext_hh_
 #define _userLevelRewritingContext_hh_
@@ -56,11 +56,6 @@ public:
   };
 
   UserLevelRewritingContext(DagNode* root);
-  UserLevelRewritingContext(DagNode* root,
-			    UserLevelRewritingContext* parent,
-			    int purpose,
-			    bool localTraceFlag);
-
 
   static void setHandlers(bool handleCtrlC);
   static ParseResult commandLoop();
@@ -117,10 +112,17 @@ public:
   static void printSubstitution(const Substitution& substitution,
 				const VariableInfo& varInfo,
 				const NatSet& ignoredIndices = NatSet());
-
+  
+  static void printSubstitution(const Vector<DagNode*>& substitution,
+				const NarrowingVariableInfo& variableInfo);
 
 
 private:
+  UserLevelRewritingContext(DagNode* root,
+			    UserLevelRewritingContext* parent,
+			    int purpose,
+			    bool localTraceFlag);
+
   static void interruptHandler(int);
   static void interruptHandler2(...);
 

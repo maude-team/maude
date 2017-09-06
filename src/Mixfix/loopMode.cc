@@ -39,6 +39,7 @@ Interpreter::loop(const Vector<Token>& subject)
 bool
 Interpreter::contLoop2(const Vector<Token>& input)
 {
+  CacheableRewritingContext* savedContext = safeCast(CacheableRewritingContext*, savedState);
   if (savedContext != 0)
     {
       DagNode* d = savedContext->root();
@@ -46,7 +47,7 @@ Interpreter::contLoop2(const Vector<Token>& input)
 	{
 	  VisibleModule* fm = savedModule;
 	  delete savedContext;
-	  savedContext = 0;
+	  savedState = 0;
 	  savedModule = 0;
 	  continueFunc = 0;
 	  doLoop(l->injectInput(d, input), fm);
@@ -82,7 +83,7 @@ Interpreter::contLoop(const Vector<Token>& input)
 void
 Interpreter::doLoop(DagNode* d, VisibleModule* module)
 {
-  UserLevelRewritingContext* context = new UserLevelRewritingContext(d);
+  CacheableRewritingContext* context = new CacheableRewritingContext(d);
   if (getFlag(AUTO_CLEAR_RULES))
     module->resetRules();
 #ifdef QUANTIFY_REWRITING
@@ -115,7 +116,7 @@ Interpreter::doLoop(DagNode* d, VisibleModule* module)
 	cout << "non-loop result " << r->getSort() << ": " << r << '\n';
       cout.flush();
 
-      savedContext = context;
+      savedState = context;
       savedModule = module;
       continueFunc = &Interpreter::rewriteCont;
     }

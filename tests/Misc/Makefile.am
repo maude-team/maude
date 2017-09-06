@@ -17,7 +17,8 @@ TESTS = \
 	assocUnification \
 	sreduce \
 	smtTest \
-	narrow
+	narrow \
+	continue
 
 MAUDE_FILES = \
 	dekker.maude \
@@ -38,7 +39,8 @@ MAUDE_FILES = \
 	assocUnification.maude \
 	sreduce.maude \
 	smtTest.maude \
-	narrow.maude
+	narrow.maude \
+	continue.maude
 
 RESULT_FILES = \
 	dekker.expected \
@@ -59,6 +61,7 @@ RESULT_FILES = \
 	assocUnification.expected \
 	sreduce.expected \
 	smtTest.expected \
-	narrow.expected
+	narrow.expected \
+	continue.expected
 
 EXTRA_DIST = $(TESTS) $(MAUDE_FILES) $(RESULT_FILES)

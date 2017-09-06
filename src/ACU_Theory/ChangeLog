@@ -1,3 +1,53 @@
+2017-04-20  Steven Eker  <eker@install.csl.sri.com>
+
+	* ACU_Matcher.cc (buildBipartiteGraph): fixed symmetric bug
+	(eliminateGroundedOutAliens): fixed symmetric bug
+	(aliensOnlyMatch): fixed symmetric bug
+
+	* ACU_GreedyMatcher.cc (greedyMatch): fixed symmetric bug
+
+	* ACU_NGA_LhsAutomaton.cc (match): fixed two symmetric bugs
+
+	* ACU_TreeMatcher.cc (eliminateGroundedOutAliens): fixed bug where we had
+	the test for going past the last potential match the wrong way around
+	(greedyMatch): fixed symmetric bug
+
+	* ACU_DagOperations.cc (findFirstPotentialMatch): added comments
+
+	* ACU_LazySubproblem.cc (solve): fix bug where we had the test for going
+	pass last potential match the wrong way around
+
+2017-04-19  Steven Eker  <eker@install.csl.sri.com>
+
+	* ACU_LazySubproblem.cc (solve): added comments; end search early, as soon
+	as stripperTerm is definitely greater than subject on current path
+
+	* ACU_TreeMatcher.cc (treeMatch): added comment
+	(treeMatch): changed comments "could be smarter" to explanations
+	of why it's not worth being smarter (3 places)
+
+	* ACU_CollectorLhsAutomaton.cc (collect): added comments
+
+2017-04-17  Steven Eker  <eker@install.csl.sri.com>
+
+	* ACU_LhsCompiler0.cc (tryToMakeCollectorLhsAutomaton): added support
+	for ACU_BndVarLhsAutomaton
+
+	* ACU_DagNode.hh (ACU_BaseDagNode): added friend class
+	ACU_BndVarLhsAutomaton
+
+	* ACU_Theory.hh: added class ACU_BndVarLhsAutomaton
+
+	* ACU_BndVarLhsAutomaton.cc: created
+
+	* ACU_BndVarLhsAutomaton.hh: created
+
+2017-04-14  Steven Eker  <eker@install.csl.sri.com>
+
+	* ACU_VarLhsAutomaton.cc (match): updated comments
+
+===================================Maude112a===========================================
+
 2017-02-23  Steven Eker  <eker@install.csl.sri.com>
 
 	* ACU_DagNode.cc (instantiateWithCopies2): ifdef'd out normal form, sort and

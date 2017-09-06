@@ -343,6 +343,7 @@ SMT_RewriteSequenceSearch::findNextState()
 	  //
 	  //	Found a rewrite. Now create a new state based on the pair.
 	  //
+	  getContext()->incrementRlCount();
 	  return makeNewState();
 	}
       //
@@ -373,6 +374,7 @@ SMT_RewriteSequenceSearch::findNextState()
 	  //
 	  //	Found a rewrite. Now create a new state based on the pair.
 	  //
+	  getContext()->incrementRlCount();
 	  return makeNewState();
 	}
       //
