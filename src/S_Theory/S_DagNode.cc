@@ -271,3 +271,54 @@ S_DagNode::occurs2(int index)
 {
   return arg->occurs(index);
 }
+
+bool
+S_DagNode::computeSolvedForm(DagNode* rhs,
+			     Substitution& solution,
+			     Subproblem*& returnedSubproblem)
+{
+  S_Symbol* s = symbol();
+  if (s == rhs->symbol())
+    {
+      S_DagNode* rhs2 = safeCast(S_DagNode*, rhs);
+      mpz_class diff = *(rhs2->number) - *number;
+      if (diff == 0)
+	return arg->computeSolvedForm(rhs2->arg, solution, returnedSubproblem);
+      if (diff > 0)
+	{
+	  if (dynamic_cast<VariableDagNode*>(arg))
+	    {
+	      DagNode* d = new S_DagNode(s, diff, rhs2->arg);
+	      if (rhs2->arg->getSortIndex() != Sort::SORT_UNKNOWN)
+		s->computeBaseSort(d);
+	      return arg->computeSolvedForm(d, solution, returnedSubproblem);
+	    }
+	}
+      else
+	{
+	  if (dynamic_cast<VariableDagNode*>(rhs2->arg))
+	    {
+	      DagNode* d = new S_DagNode(s, -diff, arg);
+	      if (arg->getSortIndex() != Sort::SORT_UNKNOWN)
+		s->computeBaseSort(d);
+	      return rhs2->arg->computeSolvedForm(d, solution, returnedSubproblem);
+	    }
+	}
+      return 0;
+    }
+  if (dynamic_cast<VariableDagNode*>(rhs))
+    return rhs->computeSolvedForm(this, solution, returnedSubproblem);
+  return false;
+}
+
+mpz_class
+S_DagNode::nonVariableSize()
+{
+  return *number + arg->nonVariableSize();
+}
+
+void
+S_DagNode::insertVariables2(NatSet& occurs)
+{
+  arg->insertVariables(occurs);
+}

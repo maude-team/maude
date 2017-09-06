@@ -200,6 +200,19 @@ handleEof()
 }
 
 void
+checkForPending()
+{
+  if (nrPendingRead < pendingFiles.length())
+    {
+      string directory;
+      string fileName;
+      if (!(findFile(pendingFiles[nrPendingRead++], directory, fileName, FileTable::COMMAND_LINE) &&
+	    includeFile(directory, fileName, true, FileTable::COMMAND_LINE)))
+	nrPendingRead = pendingFiles.length();  // avoid any futher reading of pending files
+    }
+}
+
+void
 eatComment(bool firstNonWhite)
 {
   bool passThrough = !firstNonWhite && fileTable.outputLine();

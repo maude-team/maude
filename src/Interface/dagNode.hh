@@ -25,6 +25,7 @@
 //
 #ifndef _dagNode_hh_
 #define _dagNode_hh_
+#include "gmpxx.h"
 #include "symbol.hh"
 #include "redexPosition.hh"
 
@@ -123,6 +124,15 @@ public:
   void computeGeneralizedSort(const SortBdds& sortBdds,
 			      const Vector<int> realToBdd,  // first BDD variable for each free real variable
 			      Vector<Bdd>& generalizedSort);
+  //
+  //	Alternative interface for unification experiments.
+  //
+  virtual bool computeSolvedForm(DagNode* rhs,
+				 Substitution& solution,
+				 Subproblem*& returnedSubproblem) { CantHappen("Not implemented"); return false; }
+  virtual mpz_class nonVariableSize() { return 0; }
+  void insertVariables(NatSet& occurs);
+  virtual void insertVariables2(NatSet& occurs) {}
   //
   //	These member functions must be defined for each derived class in theories
   //	that need extension
@@ -515,6 +525,13 @@ DagNode::occurs(int index)
   //	If we know our sort we must be ground.
   //
   return (getSortIndex() == Sort::SORT_UNKNOWN) ? occurs2(index) : false;
+}
+
+inline void
+DagNode::insertVariables(NatSet& occurs)
+{
+  if (getSortIndex() == Sort::SORT_UNKNOWN)
+    insertVariables2(occurs);
 }
 
 inline bool

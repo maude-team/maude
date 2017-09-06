@@ -2,7 +2,7 @@
 
     This file is part of the Maude 2 interpreter.
 
-    Copyright 1997-2007 SRI International, Menlo Park, CA 94025, USA.
+    Copyright 1997-2003 SRI International, Menlo Park, CA 94025, USA.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,22 +21,32 @@
 */
 
 //
-//      Class for creating fresh variables for unification.
+//	Class for unification contexts.
 //
-#ifndef _freshVariableSource_hh_
-#define _freshVariableSource_hh_
-#include "freshVariableGenerator.hh"
+#ifndef _unificationContext_hh_
+#define _unificationContext_hh_
+#include "substitution.hh"
 
-class FreshVariableSource : public FreshVariableGenerator
+class UnificationContext : public Substitution
 {
 public:
-  FreshVariableSource(MixfixModule* module);
-  int getFreshVariableName(int index);
-  Symbol* getBaseVariableSymbol(Sort* sort);
+  UnificationContext(FreshVariableGenerator* freshVariableGenerator, int nrOriginalVariables);
+
+  DagNode* makeFreshVariable(ConnectedComponent* component);
+  Sort* getFreshVariableSort(int index) const;
 
 private:
-  MixfixModule* const module;
-  char name[1 + INT_TEXT_SIZE + 1];
+  FreshVariableGenerator* const freshVariableGenerator;
+  const int nrOriginalVariables;
+  Vector<Sort*> freshVariableSorts;
 };
+
+inline Sort*
+UnificationContext::getFreshVariableSort(int index) const
+{
+  return freshVariableSorts[index - nrOriginalVariables];
+}
+
+
 
 #endif

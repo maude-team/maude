@@ -1,3 +1,13 @@
+Overview of Changes in Maude alpha89
+=====================================
+* fixed bug where new unsorted unifier would not be look for after an
+  unsorted unifier failed to have at least one sorted solution
+* fixed bug where non-unifiers were generated in deeply nested
+  commutative unification examples
+* fixed bug where command line files were ignored with -no-prelude
+  flag
+* use dag solved forms for unification
+
 Overview of Changes in Maude alpha88f
 =====================================
 * added commutative unification
@@ -6,8 +16,8 @@ Overview of Changes in Maude alpha88f
 * fixed unification with too many variables bug
 * added iter theory unification
 
-Overview of Changes in Maude alpha88e
-=====================================
+Overview of Changes in Maude 2.3 (alpha88e)
+===========================================
 * string, qid and float constants allowed in unification
 * fixed unify f(X, Y) =? f(Y, X)  bug
 

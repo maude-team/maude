@@ -40,6 +40,7 @@
 //      core class definitions
 #include "substitution.hh"
 #include "localBinding.hh"
+#include "subproblemAccumulator.hh"
 
 //	variable class definitions
 #include "variableDagNode.hh"
@@ -174,4 +175,104 @@ Substitution::unificationDifference(const Substitution& original) const
 	result->addBinding(i - b, d);
     }
   return result;
+}
+
+LocalBinding*
+Substitution::makeLocalBinding() const
+{
+  int nrBindings = 0;
+  Vector<DagNode*>::const_iterator b = values.begin();
+  Vector<DagNode*>::const_iterator e = b + copySize;
+
+  for (Vector<DagNode*>::const_iterator i = b; i != e; ++i)
+    {
+      if (*i != 0)
+	++nrBindings;
+    }
+
+  if (nrBindings == 0)
+    return 0;
+  LocalBinding* result = new LocalBinding(nrBindings);
+
+  for (Vector<DagNode*>::const_iterator i = b; i != e; ++i)
+    {
+      DagNode* d = *i;
+      if (d != 0)
+	result->addBinding(i - b, d);
+    }
+  return result;
+}
+
+bool
+Substitution::merge(int index, DagNode* rhs, Subproblem*& returnedSubproblem)
+{
+  returnedSubproblem = 0;
+  {
+    //
+    //	Get canonical index of variable being bound.
+    //
+    DagNode* d;
+    VariableDagNode* v;
+    while ((d = values[index]) && (v = dynamic_cast<VariableDagNode*>(d)))
+      index = v->getIndex();
+  }
+
+  if (VariableDagNode* v = dynamic_cast<VariableDagNode*>(rhs))
+    {
+      //
+      //	Variable against variable case.
+      //
+      VariableDagNode* rv = v->lastVariableInChain(*this);
+      int rIndex = rv->getIndex();
+      if (rIndex == index)
+	return true;
+      DagNode* ld = values[index];
+      if (ld == 0)
+	{
+	  values[index] = rv;
+	  return true;
+	}
+      DagNode* rd = values[rIndex];
+      if (rd == 0)
+	{
+	  values[rIndex] = ld;
+	  values[index] = rv;
+	  return true;
+	}
+      if (ld->nonVariableSize() < rd->nonVariableSize())
+	values[rIndex] = ld;  // keep smaller dag in binding
+      values[index] = rv;
+      return ld->computeSolvedForm(rd, *this, returnedSubproblem);
+    }
+  //
+  //	Variable against non-variable case
+  //
+  DagNode* ld = values[index];
+  if (ld == 0)
+    {
+      values[index] = rhs;
+      return true;
+    }
+  //
+  //	Hard case - our variable already has a solved form. We do a merge step.
+  //
+  if (ld->nonVariableSize() > rhs->nonVariableSize())
+    values[index] = rhs;
+  return ld->computeSolvedForm(rhs, *this, returnedSubproblem);
+}
+
+bool
+Substitution::merge(const Substitution& other, SubproblemAccumulator& subproblems)
+{
+  for (int i = 0; i < copySize; ++i)
+    {
+      if (DagNode* d = other.values[i])
+	{
+	  Subproblem* returnedSubproblem;
+	  if (!merge(i, d, returnedSubproblem))
+	    return false;
+	  subproblems.add(returnedSubproblem);
+	}
+    }
+  return true;
 }

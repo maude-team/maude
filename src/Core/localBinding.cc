@@ -99,6 +99,7 @@ LocalBinding::retract(Substitution& substitution)
 bool
 LocalBinding::unificationAssert(Substitution& substitution, Subproblem*& returnedSubproblem)
 {
+  cout << "unificationAssert()" << endl;
   SubproblemAccumulator subproblems;
   int nrBindings = bindings.size();
   for (int i = 0; i < nrBindings; ++i)
@@ -106,6 +107,9 @@ LocalBinding::unificationAssert(Substitution& substitution, Subproblem*& returne
       int index = bindings[i].variableIndex;
       DagNode* newValue = bindings[i].value;
       DagNode* originalValue = substitution.value(index);
+      cout << "index = " << index << "   new value = " << newValue << endl;
+      if (originalValue != 0)
+	cout << "originalValue = " << originalValue << endl;
       if (originalValue == 0)
 	substitution.unificationBind(index, 0, newValue);
       else
@@ -113,9 +117,26 @@ LocalBinding::unificationAssert(Substitution& substitution, Subproblem*& returne
 	  if (!(originalValue->unify(newValue, substitution, returnedSubproblem, 0)))
 	    return false;
 	  subproblems.add(returnedSubproblem);
+	  cout << "returnedSubproblem= " << returnedSubproblem << endl;
 	}
-      returnedSubproblem = subproblems.extractSubproblem();
     }
+  returnedSubproblem = subproblems.extractSubproblem();
+  cout << "exit unificationAssert()" << endl;
+  return true;
+}
+
+bool
+LocalBinding::solvedFormAssert(Substitution& substitution, Subproblem*& returnedSubproblem)
+{
+  SubproblemAccumulator subproblems;
+  int nrBindings = bindings.size();
+  for (int i = 0; i < nrBindings; ++i)
+    {
+      if (!(substitution.merge(bindings[i].variableIndex, bindings[i].value, returnedSubproblem)))
+	return false;
+      subproblems.add(returnedSubproblem);
+    }
+  returnedSubproblem = subproblems.extractSubproblem();
   return true;
 }
 

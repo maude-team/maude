@@ -1,3 +1,28 @@
+2007-03-09  Steven Eker  <eker@goo.csl.sri.com>
+
+	* subproblem.hh (class Subproblem): added decl for unificationSolve()
+	(class Subproblem): solve() gets a default implementation
+
+2007-03-05  Steven Eker  <eker@goo.csl.sri.com>
+
+	* dagNode.hh (class DagNode): nonVariableSize() must return
+	mpz_class for correctness wrt S_Theory
+
+2007-02-27  Steven Eker  <eker@goo.csl.sri.com>
+
+	* dagNode.hh (insertVariables): added
+	(class DagNode): added decl for insertVariables2()
+
+2007-02-26  Steven Eker  <eker@goo.csl.sri.com>
+
+	* dagNode.hh (class DagNode): added decl for nonVariableSize()
+
+2007-02-22  Steven Eker  <eker@goo.csl.sri.com>
+
+	* dagNode.hh (class DagNode): added decl for computeSolvedForm()
+
+===================================Maude89==========================================
+
 2007-01-30  Steven Eker  <eker@goo.csl.sri.com>
 
 	* dagNode.cc (computeGeneralizedSort): added

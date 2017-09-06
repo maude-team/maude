@@ -68,6 +68,13 @@ public:
   bool unificationBind(int index, Sort* varSort, DagNode* value);
   LocalBinding* unificationDifference(const Substitution& original) const;
 
+  LocalBinding* makeLocalBinding() const;
+  bool merge(int index, DagNode* rhs, Subproblem*& returnedSubproblem);
+  bool merge(const Substitution& other, SubproblemAccumulator& subproblems);
+
+protected:
+  int addNewVariable();
+
 private:
   static int allocateSize;
 
@@ -119,16 +126,16 @@ Substitution::clear(int size)
 inline DagNode*
 Substitution::value(int index) const
 {
-  Assert(index >= 0, "-ve index");
-  Assert(index < values.size(), "index too big");
+  Assert(index >= 0, "-ve index " << index);
+  Assert(index < values.size(), "index too big " << index);
   return values[index];
 }
 
 inline void
 Substitution::bind(int index, DagNode* value)
 {
-  Assert(index >= 0, "-ve index");
-  Assert(index < values.size(), "index too big");
+  Assert(index >= 0, "-ve index " << index);
+  Assert(index < values.size(), "index too big " << index);
   values[index] = value;
 }
 
@@ -172,6 +179,7 @@ Substitution::clone(const Substitution& original)
   //	to be the same.
   //
   copySize = original.copySize;
+  values.resize(copySize);
   if (copySize > 0)
     {
       Vector<DagNode*>::iterator dest = values.begin();
@@ -185,6 +193,16 @@ Substitution::clone(const Substitution& original)
 	}
       while (source != end);
     }
+}
+
+inline int
+Substitution::addNewVariable()
+{
+  int index = copySize;
+  ++copySize;
+  values.resize(copySize);
+  values[index] = 0;
+  return index;
 }
 
 #endif

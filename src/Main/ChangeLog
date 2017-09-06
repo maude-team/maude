@@ -1,3 +1,10 @@
+2007-03-14  Steven Eker  <eker@goo.csl.sri.com>
+
+	* main.cc (main): call checkForPending() if the -no-prelude flag
+	given since we won't hit a top level EOF to check for them
+	otherwise; this fixes a bug where we were ignoring command line
+	files if -no-prelude flag given
+
 2007-01-17  Steven Eker  <eker@goo.csl.sri.com>
 
 	* prelude.maude: moved set include BOOL on to after last module;

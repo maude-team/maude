@@ -115,3 +115,27 @@ NA_DagNode::computeBaseSortForGroundSubterms()
   symbol()->computeBaseSort(this);
   return true;
 }
+
+bool
+NA_DagNode::computeSolvedForm(DagNode* rhs,
+			      Substitution& solution,
+			      Subproblem*& returnedSubproblem)
+{
+  //
+  //	As a constant we can only unify with ourself or a variable.
+  //
+  if (symbol() == rhs->symbol())
+    {
+      returnedSubproblem = 0;
+      return equal(rhs);
+    }
+  if (dynamic_cast<VariableDagNode*>(rhs))
+    return rhs->computeSolvedForm(this, solution, returnedSubproblem);
+  return false;
+}
+
+mpz_class
+NA_DagNode::nonVariableSize()
+{
+  return 1;
+}
