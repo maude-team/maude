@@ -171,12 +171,8 @@ PositionState::rebuildAndInstantiateDag(DagNode* replacement,
       //	might rewrite between eager and lazy positions.
       //
       Vector<DagNode*> eagerCopies(lastVariable + 1);
-      //Vector<DagNode*> lazy(lastVariable + 1);  // there might be a more elegant way of doing this
       for (int j = firstVariable; j <= lastVariable; ++j)
-	{
-	  //lazy[j] = substitution.value(j);
-	  eagerCopies[j] = substitution.value(j)->copyEagerUptoReduced();
-	}
+	eagerCopies[j] = substitution.value(j)->copyEagerUptoReduced();
       for (int j = firstVariable; j <= lastVariable; ++j)
 	substitution.value(j)->clearCopyPointers();
 
