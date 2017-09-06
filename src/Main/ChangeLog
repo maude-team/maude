@@ -1,3 +1,34 @@
+2017-05-25  Steven Eker  <eker@install.csl.sri.com>
+
+	* prelude.maude: update syntax for metaNarrowingApply() return values;
+	reverted to {} for results; updated formatting; added projection
+	functions for new constructors
+
+2017-05-24  Steven Eker  <eker@install.csl.sri.com>
+
+	* prelude.maude: updated format attribute for assignment, and narrowing
+	results
+
+2017-05-22  Steven Eker  <eker@install.csl.sri.com>
+
+	* prelude.maude: added 6 operators and 4 sorts to support narrowing
+	search path results; added metaNarrowingSearchPath() descent function
+
+2017-05-19  Steven Eker  <eker@install.csl.sri.com>
+
+	* prelude.maude: updated decl for metaNarrowingSearch(),
+	NarrowingSearchResult ctor
+
+2017-05-02  Steven Eker  <eker@install.csl.sri.com>
+
+	* prelude.maude: remove the 1st Qid argument from metaNarrowingApply()
+
+2017-04-26  Steven Eker  <eker@install.csl.sri.com>
+
+	* prelude.maude: added narrowing attribute to META-LEVEL
+
+===================================Maude113===========================================
+
 2017-03-14  Steven Eker  <eker@install.csl.sri.com>
 
 	* prelude.maude: changed order of parameters in NarrowingSearchResult

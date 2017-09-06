@@ -2,7 +2,7 @@
 
     This file is part of the Maude 2 interpreter.
 
-    Copyright 1997-2016 SRI International, Menlo Park, CA 94025, USA.
+    Copyright 1997-2017 SRI International, Menlo Park, CA 94025, USA.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 
 ***
 ***	Maude interpreter standard prelude.
-***	Version alpha111b
+***	Version alpha113
 ***
 ***	Some of the overall structure is taken from the OBJ3
 ***	interpreter standard prelude.
@@ -1571,7 +1571,7 @@ fmod META-TERM is
 *** substitutions
   sorts Assignment Substitution .
   subsort Assignment < Substitution .
-  op _<-_ : Variable Term -> Assignment [ctor prec 63 format (nt d d d)] .
+  op _<-_ : Variable Term -> Assignment [ctor prec 63 format (n++i d d --)] .
   op none : -> Substitution [ctor] .
   op _;_ : Substitution Substitution -> Substitution
     [ctor assoc comm id: none prec 65] .
@@ -1729,6 +1729,7 @@ fmod META-MODULE is
   op owise : -> Attr [ctor] .
   op nonexec : -> Attr [ctor] .
   op variant : -> Attr [ctor] .
+  op narrowing : -> Attr [ctor] .
   op print : QidList -> Attr [ctor] .
 
 *** operator declarations
@@ -1962,8 +1963,12 @@ fmod META-LEVEL is
 
 *** success results
   sorts ResultPair ResultTriple Result4Tuple MatchPair TraceStep Trace
-    UnificationPair UnificationTriple Variant NarrowingResult NarrowingSearchResult SmtResult .
+    UnificationPair UnificationTriple Variant
+    NarrowingApplyResult NarrowingSearchResult NarrowingSearchPathResult
+    NarrowingStep NarrowingTrace SmtResult .
+
   subsort TraceStep < Trace .
+  subsort NarrowingStep < NarrowingTrace .
 
   op {_,_} : Term Type -> ResultPair [ctor] .
   op {_,_,_} : Term Type Substitution -> ResultTriple [ctor] .
@@ -1977,21 +1982,32 @@ fmod META-LEVEL is
   op __ : Trace Trace -> Trace [ctor assoc id: nil format (d n d)] .
   op {_,_,_,_} : Term Substitution Term Nat -> SmtResult [ctor] .
 
-  op [_,_,_,_,_,_] : Term Type Substitution Substitution Context Qid -> NarrowingResult
-       [ctor format (d d d d d d d d d n d d d d)] .
-  op [_,_,_,_,_] : Term Type Substitution Qid Qid -> NarrowingSearchResult [ctor] .
+  op {_,_,_,_,_,_,_} : Term Type Context Qid Substitution Substitution Qid -> NarrowingApplyResult
+       [ctor format (d n++i d d d ni d ni d d d d d ni n--i d)] .
+  op {_,_,_,_,_,_} : Term Type Substitution Qid Substitution Qid -> NarrowingSearchResult
+       [ctor format (d n++i d d d d d ni d d d ni n--i d)] .
+  op {_,_,_,_,_,_} : Term Type Substitution NarrowingTrace Substitution Qid -> NarrowingSearchPathResult
+       [ctor format (d n++i d d d d d d d d d ni n--i d)] .
+
+  op {_,_,_,_,_,_,_} : Context Qid Substitution Qid Term Type Substitution -> NarrowingStep
+       [ctor format (ni n++i d ni d d d ni d ni d d d d n--i d)] .
+
+  op nil : -> NarrowingTrace [ctor] .
+  op __ : NarrowingTrace NarrowingTrace -> NarrowingTrace [ctor assoc id: nil] .
 
 *** failure results
   sorts ResultPair? ResultTriple? Result4Tuple? MatchPair? Substitution? Trace?
-    UnificationPair? UnificationTriple? Variant? NarrowingResult? NarrowingSearchResult? SmtResult? .
+    UnificationPair? UnificationTriple? Variant?
+    NarrowingApplyResult? NarrowingSearchResult? NarrowingSearchPathResult? SmtResult? .
   subsort ResultPair < ResultPair? .
   subsort ResultTriple < ResultTriple? .
   subsort Result4Tuple < Result4Tuple? .
   subsort MatchPair < MatchPair? .
   subsort UnificationPair < UnificationPair? .
   subsort UnificationTriple < UnificationTriple? .
-  subsort NarrowingResult < NarrowingResult? .
+  subsort NarrowingApplyResult < NarrowingApplyResult? .
   subsort NarrowingSearchResult < NarrowingSearchResult? .
+  subsort NarrowingSearchPathResult < NarrowingSearchPathResult? .
   subsort Variant < Variant? .
   subsort Substitution < Substitution? .
   subsort Trace < Trace? .
@@ -2010,10 +2026,12 @@ fmod META-LEVEL is
   op noUnifierIncomplete : -> UnificationTriple? [ctor] .
   op noVariant : -> Variant? [ctor] .
   op noVariantIncomplete : -> Variant? [ctor] .
-  op failure : -> NarrowingResult? [ctor] .
-  op failureIncomplete : -> NarrowingResult? [ctor] .
+  op failure : -> NarrowingApplyResult? [ctor] .
+  op failureIncomplete : -> NarrowingApplyResult? [ctor] .
   op failure : -> NarrowingSearchResult? [ctor] .
   op failureIncomplete : -> NarrowingSearchResult? [ctor] .
+  op failure : -> NarrowingSearchPathResult? [ctor] .
+  op failureIncomplete : -> NarrowingSearchPathResult? [ctor] .
   op noMatch : -> Substitution? [ctor] .
   op noMatch : -> MatchPair? [ctor] .
   op failure : -> Trace? [ctor] .
@@ -2046,30 +2064,71 @@ fmod META-LEVEL is
   op getContext : MatchPair -> Context .
   eq getContext({S:Substitution, C:Context}) = C:Context .
 
-  op getTerm : NarrowingResult -> Term .
-  eq getTerm([T:Term, T:Type, TS:Substitution, RS:Substitution, C:Context, V:Qid]) = T:Term .
-  op getType : NarrowingResult -> Type .
-  eq getType([T:Term, T:Type, TS:Substitution, RS:Substitution, C:Context, V:Qid]) = T:Type .
-  op getTermSubstitution : NarrowingResult -> Substitution .
-  eq getTermSubstitution([T:Term, T:Type, TS:Substitution, RS:Substitution, C:Context, V:Qid]) = TS:Substitution .
-  op getRuleSubstitution : NarrowingResult -> Substitution .
-  eq getRuleSubstitution([T:Term, T:Type, TS:Substitution, RS:Substitution, C:Context, V:Qid]) = RS:Substitution .
-  op getContext : NarrowingResult -> Context .
-  eq getContext([T:Term, T:Type, TS:Substitution, RS:Substitution, C:Context, V:Qid]) = C:Context .
-  op getVariableFamily : NarrowingResult -> Qid .
-  eq getVariableFamily([T:Term, T:Type, TS:Substitution, RS:Substitution, C:Context, V:Qid]) = V:Qid .
+  op getTerm : NarrowingApplyResult -> Term .
+  eq getTerm({T:Term, T:Type, C:Context, L:Qid, TS:Substitution, RS:Substitution, V:Qid}) = T:Term .
+  op getType : NarrowingApplyResult -> Type .
+  eq getType({T:Term, T:Type, C:Context, L:Qid, TS:Substitution, RS:Substitution, V:Qid}) = T:Type .
+
+  op getContext : NarrowingApplyResult -> Context .
+  eq getContext({T:Term, T:Type, C:Context, L:Qid, TS:Substitution, RS:Substitution, V:Qid}) = C:Context .
+  op getLabel : NarrowingApplyResult -> Qid .
+  eq getLabel({T:Term, T:Type, C:Context, L:Qid, TS:Substitution, RS:Substitution, V:Qid}) = L:Qid .
+ 
+  op getTermSubstitution : NarrowingApplyResult -> Substitution .
+  eq getTermSubstitution({T:Term, T:Type, C:Context, L:Qid, TS:Substitution, RS:Substitution, V:Qid}) = TS:Substitution .
+  op getRuleSubstitution : NarrowingApplyResult -> Substitution .
+  eq getRuleSubstitution({T:Term, T:Type, C:Context, L:Qid, TS:Substitution, RS:Substitution, V:Qid}) = RS:Substitution .
+
+  op getVariableFamily : NarrowingApplyResult -> Qid .
+  eq getVariableFamily({T:Term, T:Type, C:Context, L:Qid, TS:Substitution, RS:Substitution, V:Qid}) = V:Qid .
 
   op getTerm : NarrowingSearchResult -> Term .
-  eq getTerm([T:Term, T:Type, U:Substitution, TV:Qid, UV:Qid]) = T:Term .
+  eq getTerm({T:Term, T:Type, A:Substitution, SV:Qid, U:Substitution,  UV:Qid}) = T:Term .
   op getType : NarrowingSearchResult -> Type .
-  eq getType([T:Term, T:Type, U:Substitution, TV:Qid, UV:Qid]) = T:Type .
-  op getUnifier : NarrowingSearchResult -> Substitution .
-  eq getUnifier([T:Term, T:Type, U:Substitution, TV:Qid, UV:Qid]) = U:Substitution .
-  op getTermVariableFamily : NarrowingSearchResult -> Qid .
-  eq getTermVariableFamily([T:Term, T:Type, U:Substitution, TV:Qid, UV:Qid]) = TV:Qid .
-  op getUnifierVariableFamily : NarrowingSearchResult -> Qid .
-  eq getUnifierVariableFamily([T:Term, T:Type, U:Substitution, TV:Qid, UV:Qid]) = UV:Qid .
+  eq getType({T:Term, T:Type, A:Substitution, SV:Qid, U:Substitution,  UV:Qid}) = T:Type .
 
+  op getAccumulatedSubstitution : NarrowingSearchResult -> Substitution .
+  eq getAccumulatedSubstitution({T:Term, T:Type, A:Substitution, SV:Qid, U:Substitution,  UV:Qid}) = A:Substitution .
+  op getStateVariableFamily : NarrowingSearchResult -> Qid .
+  eq getStateVariableFamily({T:Term, T:Type, A:Substitution, SV:Qid, U:Substitution,  UV:Qid}) = SV:Qid .
+
+  op getUnifier : NarrowingSearchResult -> Substitution .
+  eq getUnifier({T:Term, T:Type, A:Substitution, SV:Qid, U:Substitution,  UV:Qid}) = U:Substitution .
+  op getUnifierVariableFamily : NarrowingSearchResult -> Qid .
+  eq getUnifierVariableFamily({T:Term, T:Type, A:Substitution, SV:Qid, U:Substitution,  UV:Qid}) = UV:Qid .
+
+  op getInitialTerm : NarrowingSearchPathResult -> Term .
+  eq getInitialTerm({T:Term, T:Type, S:Substitution, T:NarrowingTrace, U:Substitution,  UV:Qid}) = T:Term .
+  op getInitialType : NarrowingSearchPathResult -> Type .
+  eq getInitialType({T:Term, T:Type, S:Substitution, T:NarrowingTrace, U:Substitution,  UV:Qid}) = T:Type .
+
+  op getInitialSubstitution : NarrowingSearchPathResult -> Substitution .
+  eq getInitialSubstitution({T:Term, T:Type, S:Substitution, T:NarrowingTrace, U:Substitution,  UV:Qid}) = S:Substitution .
+  op getTrace : NarrowingSearchPathResult -> NarrowingTrace .
+  eq getTrace({T:Term, T:Type, S:Substitution, T:NarrowingTrace, U:Substitution,  UV:Qid}) = T:NarrowingTrace .
+
+  op getUnifier : NarrowingSearchPathResult -> Substitution .
+  eq getUnifier({T:Term, T:Type, S:Substitution, T:NarrowingTrace, U:Substitution,  UV:Qid}) = U:Substitution .
+  op getUnifierVariableFamily : NarrowingSearchPathResult -> Qid .
+  eq getUnifierVariableFamily({T:Term, T:Type, S:Substitution, T:NarrowingTrace, U:Substitution,  UV:Qid}) = UV:Qid .
+
+  op getContext : NarrowingStep -> Context .
+  eq getContext({C:Context, L:Qid, U:Substitution, UV:Qid, T:Term, T:Type, A:Substitution}) = C:Context .
+  op getLabel : NarrowingStep -> Qid .
+  eq getLabel({C:Context, L:Qid, U:Substitution, UV:Qid, T:Term, T:Type, A:Substitution}) = L:Qid .
+
+  op getUnifier : NarrowingStep -> Substitution .
+  eq getUnifier({C:Context, L:Qid, U:Substitution, UV:Qid, T:Term, T:Type, A:Substitution}) = U:Substitution .
+  op getUnifierVariableFamily : NarrowingStep -> Qid .
+  eq getUnifierVariableFamily({C:Context, L:Qid, U:Substitution, UV:Qid, T:Term, T:Type, A:Substitution}) = UV:Qid .
+
+  op getTerm : NarrowingStep -> Term .
+  eq getTerm({C:Context, L:Qid, U:Substitution, UV:Qid, T:Term, T:Type, A:Substitution}) = T:Term .
+  op getType : NarrowingStep -> Type .
+  eq getType({C:Context, L:Qid, U:Substitution, UV:Qid, T:Term, T:Type, A:Substitution}) = T:Type .
+  op getAccumulatedSubstitution : NarrowingStep -> Substitution .
+  eq getAccumulatedSubstitution({C:Context, L:Qid, U:Substitution, UV:Qid, T:Term, T:Type, A:Substitution}) = A:Substitution .
+ 
 *** descent functions
   op metaReduce : Module Term ~> ResultPair
      [special (
@@ -2158,7 +2217,8 @@ fmod META-LEVEL is
         op-hook labelSymbol		(label : Qid ~> Attr)
         op-hook metadataSymbol		(metadata : String ~> Attr)
         op-hook owiseSymbol		(owise : ~> Attr)
-        op-hook variantAttrSymbol		(variant : ~> Attr)
+        op-hook variantAttrSymbol	(variant : ~> Attr)
+        op-hook narrowingSymbol		(narrowing : ~> Attr)
         op-hook nonexecSymbol		(nonexec : ~> Attr)
         op-hook printSymbol		(print : QidList ~> Attr)
 
@@ -2242,8 +2302,18 @@ fmod META-LEVEL is
         op-hook unificationPairSymbol	({_,_} : Substitution Nat ~> UnificationPair)
         op-hook unificationTripleSymbol	({_,_,_} : Substitution Substitution Nat ~> UnificationTriple)
         op-hook variantSymbol		({_,_,_,_,_} : Term Substitution Nat Parent Bool ~> Variant)
-        op-hook narrowingResultSymbol	([_,_,_,_,_,_] : Term Type Substitution Substitution Context Qid ~> NarrowingResult)
-        op-hook narrowingSearchResultSymbol	([_,_,_,_,_] : Term Type Substitution Qid Qid ~> NarrowingSearchResult)
+        op-hook narrowingApplyResultSymbol
+		({_,_,_,_,_,_,_} : Term Type Context Qid Substitution Substitution Qid ~> NarrowingApplyResult)
+        op-hook narrowingSearchResultSymbol
+		({_,_,_,_,_,_} : Term Type Substitution Qid Substitution Qid ~> NarrowingSearchResult)
+        op-hook narrowingSearchPathResultSymbol
+		({_,_,_,_,_,_} : Term Type Substitution NarrowingTrace Substitution Qid ~> NarrowingSearchPathResult)
+
+        op-hook narrowingStepSymbol
+		({_,_,_,_,_,_,_} : Context Qid Substitution Qid Term Type Substitution ~> NarrowingStep)
+        op-hook nilNarrowingTraceSymbol		(nil : ~> NarrowingTrace)
+        op-hook narrowingTraceSymbol		(__ : NarrowingTrace NarrowingTrace ~> NarrowingTrace)
+
         op-hook smtResultSymbol		({_,_,_,_} : Term Substitution Term Nat ~> SmtResult)
 
         op-hook traceStepSymbol		({_,_,_} : Term Type Rule ~> TraceStep)
@@ -2262,10 +2332,12 @@ fmod META-LEVEL is
         op-hook noUnifierIncompleteTripleSymbol	(noUnifierIncomplete : ~> UnificationTriple?)
         op-hook noVariantSymbol		(noVariant : ~> Variant?)
         op-hook noVariantIncompleteSymbol	(noVariantIncomplete : ~> Variant?)
-        op-hook narrowingFailureSymbol		(failure : ~> NarrowingResult?)
-        op-hook narrowingFailureIncompleteSymbol	(failureIncomplete : ~> NarrowingResult?)
-        op-hook narrowingSearchFailureSymbol		(failure : ~> NarrowingResult?)
+        op-hook narrowingApplyFailureSymbol		(failure : ~> NarrowingApplyResult?)
+        op-hook narrowingApplyFailureIncompleteSymbol	(failureIncomplete : ~> NarrowingApplyResult?)
+        op-hook narrowingSearchFailureSymbol		(failure : ~> NarrowingSearchResult?)
         op-hook narrowingSearchFailureIncompleteSymbol	(failureIncomplete : ~> NarrowingSearchResult?)
+        op-hook narrowingSearchPathFailureSymbol		(failure : ~> NarrowingSearchPathResult?)
+        op-hook narrowingSearchPathFailureIncompleteSymbol	(failureIncomplete : ~> NarrowingSearchPathResult?)
         op-hook noMatchSubstSymbol	(noMatch : ~> Substitution?)
         op-hook noMatchPairSymbol	(noMatch : ~> MatchPair?)
         op-hook failureTraceSymbol	(failure : ~> Trace?)
@@ -2368,14 +2440,20 @@ fmod META-LEVEL is
            id-hook MetaLevelOpSymbol	(metaVariantDisjointUnify)
            op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .
 
-  op metaNarrowingApply : Module Term Qid TermList Qid Nat -> NarrowingResult?
+
+  op metaNarrowingApply : Module Term TermList Qid Nat -> NarrowingApplyResult?
 	[special (
 	   id-hook MetaLevelOpSymbol	(metaNarrowingApply)
            op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .
 
-  op metaNarrowingSearch : Module Term Term Qid Bound Qid Qid Nat -> NarrowingSearchResult?
+  op metaNarrowingSearch : Module Term Term Qid Bound Qid Nat -> NarrowingSearchResult?
 	[special (
 	   id-hook MetaLevelOpSymbol	(metaNarrowingSearch)
+           op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .
+
+  op metaNarrowingSearchPath : Module Term Term Qid Bound Qid Nat -> NarrowingSearchPathResult?
+	[special (
+	   id-hook MetaLevelOpSymbol	(metaNarrowingSearchPath)
            op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .
 
   op sortLeq : Module Type Type ~> Bool

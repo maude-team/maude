@@ -553,6 +553,7 @@ search		:	KW_NARROW		{ $$ = Interpreter::NARROW; }
 		|	KW_SEARCH		{ $$ = Interpreter::SEARCH; }
 		|	KW_SMT_SEARCH		{ $$ = Interpreter::SMT_SEARCH; }
 		|	KW_VU_NARROW		{ $$ = Interpreter::VU_NARROW; }
+		|	KW_FVU_NARROW		{ $$ = Interpreter::FVU_NARROW; }
 		;
 
 match		:	KW_XMATCH		{ $$ = true; }

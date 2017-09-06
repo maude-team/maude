@@ -1,3 +1,7 @@
+Overview of Changes in alpha113
+===============================
+* redesigned/extended vu narrowing functionality
+
 Overview of Changes in alpha112b
 ================================
 * fixed bug in AU instantiation code introduced by

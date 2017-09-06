@@ -91,6 +91,7 @@ public:
     MAKE_NONEXEC_ATTRIBUTE,
     MAKE_OWISE_ATTRIBUTE,
     MAKE_VARIANT_ATTRIBUTE,
+    MAKE_NARROWING_ATTRIBUTE,
     MAKE_PRINT_ATTRIBUTE,
     MAKE_ATTRIBUTE_LIST,
     //
@@ -183,7 +184,8 @@ private:
     NONEXEC = 1,
     OWISE = 2,
     PRINT = 4,
-    VARIANT = 8
+    VARIANT = 8,
+    NARROWING = 16
   };
 
   struct Action

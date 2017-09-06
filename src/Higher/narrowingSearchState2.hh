@@ -54,7 +54,6 @@ public:
 			const Vector<DagNode*>& blockerDagsArg,
 			FreshVariableGenerator* freshVariableGenerator,
 			int incomingVariableFamily,
-			int label = UNDEFINED,
 			int flags = ALLOW_NONEXEC | GC_VAR_GEN | PositionState::RESPECT_FROZEN,
 			int minDepth = 0,
 			int maxDepth = UNBOUNDED);
@@ -102,7 +101,6 @@ private:
   Vector<DagNode*> blockerDags;
   FreshVariableGenerator* const freshVariableGenerator;
   const int incomingVariableFamily;
-  const int label;
   Module* const module;
   //
   //	We keep two maps between substitution slots and variables.

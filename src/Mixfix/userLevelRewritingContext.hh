@@ -116,6 +116,9 @@ public:
   static void printSubstitution(const Vector<DagNode*>& substitution,
 				const NarrowingVariableInfo& variableInfo);
 
+  static void printSubstitution(const Substitution& substitution,
+				const NarrowingVariableInfo& variableInfo);
+
 
 private:
   UserLevelRewritingContext(DagNode* root,

@@ -82,7 +82,6 @@ Substitution::Substitution(int size, int cSize) : values(size)
   copySize = cSize;
 }
 
-
 inline void
 Substitution::clear(long size)
 {

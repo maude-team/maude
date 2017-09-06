@@ -1,3 +1,14 @@
+2017-05-24  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingVariableInfo.hh (copy): added
+
+2017-04-26  Steven Eker  <eker@install.csl.sri.com>
+
+	* rule.hh (isNarrowing, setNarrowing): added
+	(PreEquation): added enum Flags
+
+===================================Maude113===========================================
+
 2017-02-17  Steven Eker  <eker@install.csl.sri.com>
 
 	* run.cc (ruleRewrite): pass eager flag to RedexPosition()

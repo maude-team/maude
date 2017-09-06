@@ -257,14 +257,14 @@ reduce in TEST : metaSmtSearch(['MULTI], upTerm(f(-2, X)), 'Z:State, nil, '*,
     1, 1, 0) .
 rewrites: 4
 result SmtResult: {'f['-2.Integer,'X:Foo],
-	'Z:State <- 'f['-2.Integer,'X:Foo],'true.Boolean,(1).NzNat}
+  'Z:State <- 'f['-2.Integer,'X:Foo],'true.Boolean,(1).NzNat}
 ==========================================
 reduce in TEST : metaSmtSearch(['MULTI], upTerm(f(-2, X)), 'Z:State, nil, '*,
     1, 1, 1) .
 rewrites: 4
 result SmtResult: {'g['_+_['-2.Integer,'1.Integer],'#2-Y:Foo],
-	'Z:State <- 'g['_+_['-2.Integer,'1.Integer],'#2-Y:Foo],'_<_[
-    '-2.Integer,'0.Integer],(2).NzNat}
+  'Z:State <- 'g['_+_['-2.Integer,'1.Integer],'#2-Y:Foo],'_<_['-2.Integer,
+    '0.Integer],(2).NzNat}
 ==========================================
 reduce in TEST : metaSmtSearch(['MULTI], upTerm(f(-2, X)), 'Z:State, nil, '*,
     1, 1, 2) .
@@ -275,8 +275,8 @@ reduce in TEST : metaSmtSearch(['MULTI], upTerm(f(-2, X)), 'Z:State, nil, '+,
     200, 1, 0) .
 rewrites: 4
 result SmtResult: {'g['_+_['-2.Integer,'1.Integer],'#201-Y:Foo],
-	'Z:State <- 'g['_+_['-2.Integer,'1.Integer],'#201-Y:Foo],'_<_[
-    '-2.Integer,'0.Integer],(201).NzNat}
+  'Z:State <- 'g['_+_['-2.Integer,'1.Integer],'#201-Y:Foo],'_<_['-2.Integer,
+    '0.Integer],(201).NzNat}
 ==========================================
 reduce in TEST : metaSmtSearch(['MULTI], upTerm(f(-2, X)), 'Z:State, nil, '+,
     200, 1, 1) .

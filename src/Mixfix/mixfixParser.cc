@@ -887,6 +887,11 @@ MixfixParser::makeAttributePart(int node,
 	    flags.setFlags(VARIANT);
 	    break;
 	  }
+	case MAKE_NARROWING_ATTRIBUTE:
+	  {
+	    flags.setFlags(NARROWING);
+	    break;
+	  }
 	case MAKE_PRINT_ATTRIBUTE:
 	  {
 	    flags.setFlags(PRINT);
@@ -999,6 +1004,9 @@ MixfixParser::makeStatementPart(int node,
 	WarningCheck(!(flags.getFlag(VARIANT)),
 		     LineNumber(lineNumber) <<
 		     ": variant attribute not allowed for membership axioms.");
+	WarningCheck(!(flags.getFlag(NARROWING)),
+		     LineNumber(lineNumber) <<
+		     ": narrowing attribute not allowed for membership axioms.");
 	Term* lhs = makeTerm(parser.getChild(pairNode, 0));
 	Sort* sort = getSort(parser.getChild(pairNode, 1));
 	SortConstraint* sc = new SortConstraint(label, lhs, sort, condition);
@@ -1015,6 +1023,9 @@ MixfixParser::makeStatementPart(int node,
     case MAKE_EQ:
     case MAKE_CEQ:
       {
+	WarningCheck(!(flags.getFlag(NARROWING)),
+		     LineNumber(lineNumber) <<
+		     ": narrowing attribute not allowed for equations.");
 	Term* lhs = makeTerm(parser.getChild(pairNode, 0));
 	Term* rhs = makeTerm(parser.getChild(pairNode, 1));
 	Equation* eq = new Equation(label, lhs, rhs, flags.getFlag(OWISE), condition);
@@ -1049,6 +1060,13 @@ MixfixParser::makeStatementPart(int node,
 	Rule* rl = new Rule(label, lhs, rhs, condition);
 	if (flags.getFlag(NONEXEC))
 	  rl->setNonexec();
+	if (flags.getFlag(NARROWING))
+	  {
+	    if (condition.empty())
+	      rl->setNarrowing();
+	    else
+	      IssueWarning(LineNumber(lineNumber) << ": narrowing attribute not allowed for conditional rules.");
+	  }
 	rl->setLineNumber(lineNumber);
 	client.insertRule(rl);
 	if (metadata != NONE)

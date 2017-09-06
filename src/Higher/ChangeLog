@@ -1,3 +1,237 @@
+2017-05-26  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingSequenceSearch3.cc (NarrowingSequenceSearch3): fixed
+	bug where we were not deleting stateBeingExpanded
+
+2017-05-25  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingFolder.cc (addHistory): added Assert() to catch null
+	values in unifier
+	(addHistory): reverted - nulls in a unifier are legal between
+	the rule variables and the dag variables
+	(markReachableNodes): check for null pointers in the unifier
+	(addHistory): added comment to explain why we don't need
+	to protect our variableInfo copy
+
+	* higher.hh: deleted class NarrowingSequenceSearch2
+
+2017-05-24  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingFolder.hh (getHistory): handle unifierVariableInfo
+
+	* narrowingSequenceSearch3.hh (getHistory): handle
+	unifierVariableInfo
+
+	* narrowingSequenceSearch3.cc (findNextInterestingState): pass
+	variableInfo to addHistory(); don't make a copy of the unifier
+
+	* narrowingFolder.hh (SimpleRootContainer): updated decl for
+	addHistory(); added variableInfo data member to struct
+	RetainedState
+
+	* narrowingFolder.cc (addHistory): moved here
+	(addHistory): take variableInfo argument; make copies of unifier
+	and variableInfo
+
+	* narrowingFolder.hh (SimpleRootContainer): deleted decl
+	for getState()
+
+	* narrowingFolder.cc (insertState): check that ther
+	is a parent state before incrementing its descendant
+	count
+	(getState): deleted
+
+2017-05-23  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingFolder.hh (getHistory): added
+	(getDepth): added
+
+	* narrowingSequenceSearch3.hh (getExtraStateInfo): added
+	(getHistory): added
+
+2017-05-19  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingSequenceSearch2.cc: deleted
+
+	* narrowingSequenceSearch2.hh: deleted
+
+	* narrowingFolder.cc (RetainedState): call
+	determineContextVariables() and insertAbstractionVariables()
+
+	* narrowingSequenceSearch3.hh (getUnifierVariableFamily): added
+	(getStateDag): deleted
+
+2017-05-18  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingSearchState2.cc (NarrowingSearchState2): fix bug that
+	we didn't hande the ground case
+	(NarrowingSearchState2): fix similar bug with blocker dags
+
+	* narrowingSequenceSearch3.cc (NarrowingSequenceSearch3): rename
+	user variables to #variables; this side steps a bug where original
+	variables could be lost due to reduce and then garbage collected
+
+2017-05-17  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingSequenceSearch3.cc (findNextInterestingState): use
+	replacementContextProtector to protect replacementContext across
+	a reduce() call
+
+	* narrowingSequenceSearch3.hh (SequenceSearch): added data member
+	replacementContextProtector
+
+	* narrowingFolder.cc (insertState): increment the nrDescendants in
+	the not folding but keeping history case
+
+	* narrowingFolder.hh (SimpleRootContainer): added decl for cleanGraph()
+
+	* narrowingFolder.cc (cleanGraph): added
+
+	* narrowingFolder.hh (SimpleRootContainer): added nrDescendants
+	field to RetainedState
+
+	* narrowingFolder.cc (RetainedState): initialize nrDescendants
+
+2017-05-16  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingSequenceSearch3.cc (NarrowingSequenceSearch3): initialize
+	stateBeingExpandedDepth, expansionSuccessful
+
+	* narrowingSequenceSearch3.hh (SequenceSearch): added data members
+	stateBeingExpandedDepth, expansionSuccessful
+
+	* narrowingSequenceSearch3.cc (findNextInterestingState): support
+	=>!
+
+2017-05-12  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingSequenceSearch3.hh (getStateInfo): added
+	(getVariableInfo): becomes getUnifierVariableInfo()
+	(getInitialVariableInfo): added
+
+	* narrowingSequenceSearch3.cc (findNextInterestingState): test for !=
+	depth to treat -1 as unbounded
+
+	* narrowingFolder.cc (subsumes): initialize subproblem to 0
+
+	* narrowingSequenceSearch3.hh (SequenceSearch): added data member
+	nextInterestingState
+	(getStateDag): added
+
+	* narrowingSequenceSearch3.cc (NarrowingSequenceSearch3): initialize
+	nextInterestingState
+	(findNextUnifier): nextInterestingState is no longer local
+
+	* narrowingSequenceSearch3.hh (getUnifier, getVariableInfo): added
+
+2017-05-11  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingSearchState3.cc (makeAccumulatedSubstitution): implemented
+
+	* narrowingFolder.hh (keepingHistory): added
+
+	* narrowingFolder.cc (RetainedState): zero out narrowingContext
+	and narrowingPosition
+	(markReachableNodes): mark narrowingContext if non-null
+
+	* narrowingFolder.hh (SimpleRootContainer): added data member
+	narrowingContext to struct RetainedState
+	(addHistory): take and save narrowingContext
+
+	* narrowingSearchState3.hh (SimpleRootContainer): updated decl
+	for getNarrowedDag()
+	(getSubstitution): becomes getUnifier()
+
+	* narrowingSearchState3.cc (getNarrowedDag): implemented
+
+2017-05-10  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingSearchState3.cc (NarrowingSearchState3): implemented
+	(~NarrowingSearchState3): implemented
+	(markReachableNodes): implemented
+	(findNextNarrowing): implemented
+
+	* narrowingSequenceSearch3.cc (findNextUnifier): handle instantiation of
+	goal correctly
+	(NarrowingSequenceSearch3): index goal
+
+2017-05-09  Steven Eker  <eker@install.csl.sri.com>
+
+	* higher.hh: added class NarrowingSearchState3 and
+	class NarrowingSequenceSearch3
+
+	* narrowingSequenceSearch3.cc: created
+
+	* narrowingSequenceSearch3.hh: created
+
+	* narrowingSearchState3.hh: created
+
+	* narrowingSearchState3.cc: created
+
+	* narrowingFolder.hh (SimpleRootContainer): added data member
+	currentStateIndex
+
+	* narrowingFolder.cc (NarrowingFolder): initialize
+	currentStateIndex
+
+	* narrowingFolder.hh (SimpleRootContainer): updated decl for
+	getNextSurvivingState()
+
+	* narrowingFolder.cc (getNextSurvivingState): added
+
+2017-05-05  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingFolder.cc (insertState): fill out depth field
+
+	* narrowingFolder.hh (SimpleRootContainer): added depth field
+	to struct RetainedState
+
+2017-05-04  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingFolder.hh (getState): added
+
+2017-05-03  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingFolder.hh (SimpleRootContainer): added field
+	narrowingPosition
+	(addHistory): handle narrowingPosition
+
+2017-05-02  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingSearchState2.hh (SimpleRootContainer): updated decl for
+	complex ctor
+
+	* narrowingSearchState2.cc (NarrowingSearchState2): deleted label arg
+
+2017-05-01  Steven Eker  <eker@install.csl.sri.com>
+
+	* narrowingSearchState2.cc (NarrowingSearchState2): don't initialize
+	label (both versions)
+
+	* narrowingSearchState2.hh (SimpleRootContainer): deleted label
+	data member
+
+	* narrowingSearchState2.cc (findNextNarrowing): check narrowing
+	attribute rather than label
+
+	* narrowingFolder.cc (markReachableNodes): protect
+	accumulatedSubstitution and unifier from garbage collection
+
+	* narrowingFolder.hh (addHistory, addAccumulatedSubstitution): added
+
+	* narrowingFolder.cc (RetainedState): default initialization of
+	variableFamily, accumulatedSubstitution, rule, unifier
+
+2017-04-28  Steven Eker  <eker@install.csl.sri.com>
+
+	* higher.hh: added class NarrowingFolder
+
+	* narrowingFolder.hh: created
+
+	* narrowingFolder.cc: created
+
+===================================Maude113===========================================
+
 2017-04-25  Steven Eker  <eker@install.csl.sri.com>
 
 	* positionState.cc (rebuildAndInstantiateDag): deleted commented

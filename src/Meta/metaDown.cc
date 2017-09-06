@@ -719,6 +719,10 @@ MetaLevel::downStatementAttr(DagNode* metaAttr, MixfixModule* m, StatementAttrib
     ai.flags.setFlags(VARIANT);
   else if (ma == nonexecSymbol)
     ai.flags.setFlags(NONEXEC);
+  else if (ma == nonexecSymbol)
+    ai.flags.setFlags(NONEXEC);
+  else if (ma == narrowingSymbol)
+    ai.flags.setFlags(NARROWING);
   else if (ma == printSymbol && !ai.flags.getFlag(PRINT))
     {
       ai.flags.setFlags(PRINT);
@@ -930,6 +934,13 @@ MetaLevel::downRule(DagNode* metaRule, MixfixModule* m)
 		  Rule* rl = new Rule(ai.label, l, r, condition);
 		  if (ai.flags.getFlag(NONEXEC))
 		    rl->setNonexec();
+		  if (ai.flags.getFlag(NARROWING))
+		    {
+		      if (condition.empty())
+			rl->setNarrowing();
+		      else
+			IssueAdvisory("narrowing attribute not allowed for conditional rule in meta-module " << QUOTE(m) << '.');
+		    }
 		  m->insertRule(rl);
 		  if (ai.metadata != NONE)
 		    m->insertMetadata(MixfixModule::RULE, rl, ai.metadata);
