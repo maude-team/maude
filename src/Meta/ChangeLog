@@ -1,3 +1,19 @@
+2015-02-23  Steven Eker  <eker@ape.csl.sri.com>
+
+	* metaVariant.cc (getCachedVariantSearch): revert, now that we
+	have a way of getting last returned variant/unifier
+	(metaGetVariant2): use getLastReturnedVariant()
+	(metaVariantUnify2): use getLastReturnedUnifier()
+
+2015-01-05  Steven Eker  <eker@ape.csl.sri.com>
+
+	* metaVariant.cc (getCachedVariantSearch): fix bug where we were
+	returning a cached state where lastSolutionNr < solutionNr even
+	though the code that uses the state doens't seem to be able to
+	handle this case
+
+===================================Maude106===========================================
+
 2014-11-18  Steven Eker  <eker@ape.csl.sri.com>
 
 	* metaUnify.cc (metaUnify2): use DebugAdvisory()

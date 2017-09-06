@@ -1,3 +1,12 @@
+2015-02-23  Steven Eker  <eker@ape.csl.sri.com>
+
+	* variantSearch.hh (getLastReturnedVariant)
+	(getLastReturnedUnifier): added
+
+	* variantFolder.hh (getLastReturnedVariant): added
+
+===================================Maude107===========================================
+
 2014-11-18  Steven Eker  <eker@ape.csl.sri.com>
 
 	* unificationProblem.cc (UnificationProblem): added

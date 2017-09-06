@@ -69,6 +69,221 @@
 
 using namespace CVC4;
 
+#include "pigPug.hh"
+
+void
+testPigPug()
+{
+  PigPug::ConstraintMap m(10);
+  for (int i = 0; i < 10; ++i)
+    m[i] = NONE;
+
+  const int nrLhs = 3;
+  PigPug::Word lhs(nrLhs);
+  for (int i = 0; i < nrLhs; ++i)
+    lhs[i] = i;
+
+  const int nrRhs = 4;
+  PigPug::Word rhs(nrRhs);
+  for (int i = 0; i < nrRhs; ++i)
+    rhs[i] = nrLhs + (i % 2);
+  
+
+  PigPug p(lhs, rhs, m, nrLhs + nrRhs, 100);
+
+  PigPug::Subst s;
+  int c = 0;
+  while (p.getNextUnifier(s) != NONE)
+    {
+      cout << "found 1" << endl;
+      ++c;
+    }
+  cout << "total = " << c << endl;
+}
+
+void
+instantiate(PigPug::Word& inst, const PigPug::Word& original, const PigPug::Subst& s)
+{
+  FOR_EACH_CONST(i, PigPug::Word, original)
+    {
+      FOR_EACH_CONST(j, PigPug::Word, s[*i])
+	inst.append(*j);
+    }
+}
+
+bool
+equal(const PigPug::Word& w1, const PigPug::Word& w2)
+{
+  int length = w1.length();
+  if (length != w2.length())
+    return false;
+  for (int i = 0; i < length; ++i)
+    {
+      if (w1[i] != w2[i])
+	return false;
+    }
+  return true;
+}
+
+void
+testPigPug2()
+{
+  PigPug::ConstraintMap m(1000);
+  for (int i = 0; i < 1000; ++i)
+    m[i] = NONE;
+
+
+  /*
+  PigPug::ConstraintMap m(10);
+  for (int i = 0; i < 10; ++i)
+    m[i] = NONE;
+  m[0] = PigPug::ELEMENT;
+  m[1] = PigPug::ELEMENT;
+
+  const int nrLhs = 4;
+  PigPug::Word lhs(nrLhs);
+  for (int i = 0; i < nrLhs; ++i)
+    lhs[i] = i;
+
+  
+  const int nrRhs = 4;
+  PigPug::Word rhs(nrRhs);
+  rhs[0] = nrLhs;
+  rhs[1] = 1;
+  rhs[2] = nrLhs;
+  rhs[3] = 0;
+  */
+
+  /*
+  const int nrLhs = 3;
+  PigPug::Word lhs(nrLhs);
+  for (int i = 0; i < nrLhs; ++i)
+    lhs[i] = i;
+
+  const int nrRhs = 4;
+  PigPug::Word rhs(nrRhs);
+  for (int i = 0; i < nrRhs; ++i)
+    rhs[i] = nrLhs + (i % 2);
+  */
+  /*
+  const int nrLhs = 5;
+  PigPug::Word lhs(nrLhs);
+  for (int i = 0; i < nrLhs; ++i)
+    lhs[i] = i;
+  m[1] = m[3] = PigPug::ELEMENT;
+
+  const int nrRhs = 2;
+  PigPug::Word rhs(6);
+  rhs[0] = nrLhs;
+  rhs[1] = 3;
+  rhs[2] = nrLhs + 1;
+  rhs[3] = nrLhs;
+  rhs[4] = 1;
+  rhs[5] = nrLhs + 1;
+  */
+
+  /*
+  // cause 2^n growth in failure cases without early failure detection
+  const int nrLhs = 98;
+  PigPug::Word lhs(nrLhs);
+  for (int i = 0; i < nrLhs; ++i)
+    lhs[i] = i;
+  const int nrRhs = 2;
+  PigPug::Word rhs(100);
+  for (int i = 0; i < 100; ++i)
+    rhs[i] = nrLhs + (i % 2);
+  m[nrLhs] = m[nrLhs + 1] = PigPug::ELEMENT;
+  */
+
+  /*
+  const int nrLhs = 100;
+  PigPug::Word lhs(nrLhs);
+  for (int i = 0; i < nrLhs; ++i)
+    {
+      lhs[i] = i;
+      m[i] = PigPug::ELEMENT;
+    }
+
+  const int nrRhs = 35;
+  PigPug::Word rhs(80);
+  for (int i = 0; i < 80; ++i)
+    rhs[i] = nrLhs + (i % 35);
+  */
+
+  const int nrLhs = 3;
+  PigPug::Word lhs(nrLhs);
+  for (int i = 0; i < nrLhs; ++i)
+    lhs[i] = i;
+
+  const int nrRhs = 4;
+  PigPug::Word rhs(nrRhs);
+  for (int i = 0; i < nrRhs; ++i)
+    rhs[i] = nrLhs + i;
+  
+
+  /*
+  const int nrLhs = 2;
+  PigPug::Word lhs(nrLhs);
+  for (int i = 0; i < nrLhs; ++i)
+    lhs[i] = i;
+
+  const int nrRhs = 3;
+  PigPug::Word rhs(nrRhs);
+  for (int i = 0; i < nrRhs; ++i)
+    rhs[i] = nrLhs + (i % 2);
+  */
+
+  PigPug p(lhs, rhs, m, nrLhs + nrRhs, 100);
+
+  PigPug::Subst s;
+  int c = 0;
+  while (p.getNextUnifier(s) != NONE)
+    {
+     ++c;
+      cout << "Solution " << c << endl;
+      int nrVariables = s.size();
+      for (int i = 0; i < nrVariables; ++i)
+	{
+	  cout << "  #" << i << " |->";
+	  FOR_EACH_CONST(j, PigPug::Word, s[i])
+	    cout << " #" << *j;
+	  cout << endl;
+	}
+
+      PigPug::Word lhsI;
+      instantiate(lhsI, lhs, s);
+      PigPug::Word rhsI;
+      instantiate(rhsI, rhs, s);
+
+      if (equal(lhsI, rhsI))
+	{
+	  cout << Tty(Tty::GREEN) << "common instantiation:";
+	  FOR_EACH_CONST(i, PigPug::Word, lhsI)
+	    cout << " #" << *i;
+	  cout << Tty(Tty::RESET) << endl;
+	}
+      else
+	{
+	  cout << Tty(Tty::RED) << "!! unsound !!" << endl;
+	  {
+	    cout << "lhsI: ";
+	    FOR_EACH_CONST(i, PigPug::Word, lhsI)
+	      cout << " #" << *i;
+	    cout << endl;
+	  }
+	  {
+	    cout << "rhsI: ";
+	    FOR_EACH_CONST(i, PigPug::Word, rhsI)
+	      cout << " #" << *i;
+	    cout << Tty(Tty::RESET) << endl;
+	  }
+	}
+      cout << endl;
+ 
+    }
+  cout << "total = " << c << endl;
+}
+
 void
 testCVC4()
 {
@@ -172,6 +387,7 @@ main(int argc, char* argv[])
 {
   void testSeq();
 
+  //testPigPug2();
   //testSeq();
   //testCVC4();
   //test2();
