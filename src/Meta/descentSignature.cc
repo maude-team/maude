@@ -38,8 +38,6 @@
   MACRO(metaXmatch, 7)
   MACRO(metaUnify, 4)
   MACRO(metaDisjointUnify, 4)
-  MACRO(metaXunify, 5)
-  MACRO(metaDisjointXunify, 5)
   MACRO(metaSearch, 7)
   MACRO(metaSearchPath, 7)
   MACRO(metaNarrow, 6)

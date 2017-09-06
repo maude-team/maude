@@ -161,7 +161,6 @@ match					return KW_MATCH;
 xmatch					return KW_XMATCH;
 search					return KW_SEARCH;
 unify					return KW_UNIFY;
-xunify					return KW_XUNIFY;
 set					return KW_SET;
 show					return KW_SHOW;
 on					return KW_ON;

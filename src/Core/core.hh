@@ -77,7 +77,6 @@ class OpDeclaration;
 class SortBdds;
 class UnificationContext;
 class FreshVariableGenerator;
-class SolvedFormSubproblemDisjunction;
 class NarrowingVariableInfo;
 class ProtectedDagNodeSet;
 class PendingUnificationStack;

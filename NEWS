@@ -1,3 +1,11 @@
+Overview of Changes in Maude alpha90a
+=====================================
+* added stack overflow handling using libsigsegv
+* semi-compilation of right hand sides optimized for huge right hand
+  sides 
+* construnction of free theory discrimination nets optimized for large
+  numbers of equations
+
 Overview of Changes in Maude alpha90
 ====================================
 * new unification combination scheme to avoid AC cycling bug
@@ -80,16 +88,16 @@ Overview of Changes in Maude alpha89
 * use dag solved forms for unification
 * first support for AC unification
 
-Overview of Changes in Maude alpha88f
-=====================================
+Overview of Changes in Maude 2.3 (alpha88f)
+===========================================
 * added commutative unification
 * fixed free theory instantiation bug
 * fixed sort calculation of S_Theory terms bug
 * fixed unification with too many variables bug
 * added iter theory unification
 
-Overview of Changes in Maude 2.3 (alpha88e)
-===========================================
+Overview of Changes in alpha88e
+===============================
 * string, qid and float constants allowed in unification
 * fixed unify f(X, Y) =? f(Y, X)  bug
 

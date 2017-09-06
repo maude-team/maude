@@ -68,12 +68,6 @@ public:
   //	Unification member functions.
   //
   ReturnResult computeBaseSortForGroundSubterms();
-  /*
-  bool computeSolvedForm2(DagNode* rhs,
-			  Substitution& solution,
-			  Subproblem*& returnedSubproblem,
-			  ExtensionInfo* extensionInfo);
-  */
   bool computeSolvedForm2(DagNode* rhs, UnificationContext& solution, PendingUnificationStack& pending);
   mpz_class nonVariableSize();
   void insertVariables2(NatSet& occurs);
@@ -167,9 +161,7 @@ private:
   friend class ACU_NonLinearLhsAutomaton;	// for matching DAG subject
   friend class ACU_RhsAutomaton;	// for constructing replacement DAG
   friend class ACU_Subproblem;		// for constructing substitution
-  friend class ACU_UnificationSubproblem;	// for constructing substitution
   friend class ACU_UnificationSubproblem2;	// for constructing substitution
-  friend class ACU_UnificationWithExtensionSubproblem;	// for constructing ACU_UnificationSubproblem
   friend class ACU_ExtensionInfo;	// for constructing matched portion
   friend class ACU_DagArgumentIterator;	// to accesss Pair
 

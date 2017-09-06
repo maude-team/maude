@@ -1,3 +1,35 @@
+2008-03-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* top.yy: deleted KW_XUNIFY
+
+	* commands.yy (command): deleted xunify
+
+	* lexer.ll: deleted xunify
+
+===================================Maude90a===========================================
+
+2008-03-12  Steven Eker  <eker@goo.csl.sri.com>
+
+	* interact.cc (internalErrorHandler): update message
+
+2008-03-07  Steven Eker  <eker@goo.csl.sri.com>
+
+	* userLevelRewritingContext.hh (class UserLevelRewritingContext):
+	added declaration for void internalErrorHandler(); removed old
+	decls
+
+	* interact.cc (setHandlers): rewritten, dead code eliminated
+	(segmentationFaultHandler): becomes internalErrorHandler(); dead
+	code eliminated
+
+2008-03-05  Steven Eker  <eker@goo.csl.sri.com>
+
+	* userLevelRewritingContext.hh (class UserLevelRewritingContext):
+	added decls for stackOverflowHandler() and sigsegvHandler()
+
+	* interact.cc: try using stackoverflow_install_handler()
+	(stackOverflowHandler, sigsegvHandler): added
+
 2008-02-28  Steven Eker  <eker@goo.csl.sri.com>
 
 	* lexer.ll (END_STATEMENT_MODE): treat whitespace after "." as

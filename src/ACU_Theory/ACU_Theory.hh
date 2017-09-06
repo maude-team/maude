@@ -43,8 +43,6 @@ class ACU_NonLinearLhsAutomaton;
 class ACU_RhsAutomaton;
 class ACU_Subproblem;
 class ACU_ExtensionInfo;
-class ACU_UnificationSubproblem;
-class ACU_UnificationWithUnificationSubproblem;
 class ACU_UnificationSubproblem2;
 
 #endif

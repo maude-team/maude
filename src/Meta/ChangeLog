@@ -1,3 +1,16 @@
+2008-03-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaLevelOpSymbol.hh (class MetaLevelOpSymbol): deleted decl for
+	metaXunify2()
+
+	* metaUnify.cc (metaXunify2): deleted
+	(metaXunify): deleted
+	(metaDisjointXunify): deleted
+
+	* descentSignature.cc (MACRO): removed metaXunify and metaDisjointXunify
+
+===================================Maude90a===========================================
+
 2008-01-22  Steven Eker  <eker@goo.csl.sri.com>
 
 	* metaUnify.cc (metaUnify2): added debug advisories to try and

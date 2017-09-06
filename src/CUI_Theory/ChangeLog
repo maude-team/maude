@@ -1,3 +1,13 @@
+2008-03-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* CUI_DagNode.cc (computeSolvedForm2): deleted commented out old
+	version
+
+	* CUI_DagNode.hh (class CUI_DagNode): deleted commented out old
+	decl for computeSolvedForm2()
+
+===================================Maude90a===========================================
+
 2008-02-12  Steven Eker  <eker@goo.csl.sri.com>
 
 	* CUI_UnificationSubproblem.cc (solve): implemented
