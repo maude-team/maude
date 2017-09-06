@@ -1,3 +1,10 @@
+2015-12-23  Steven Eker  <eker@ape.csl.sri.com>
+
+	* freeDagArgumentIterator.hh (_freeDagArgumentIterator_hh_): fixed
+	type in guard #define
+
+===================================Maude108===========================================
+
 2015-09-18  Steven Eker  <eker@ape.csl.sri.com>
 
 	* freeArgumentIterator.hh (_freeArgumentIterator_hh_): fixed

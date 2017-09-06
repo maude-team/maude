@@ -1,3 +1,115 @@
+2015-12-18  Steven Eker  <eker@ape.csl.sri.com>
+
+	* rope.hh (empty): added
+
+	* rope.cc (compare): added
+
+	* rope.hh (R): addded decls for makeZeroTerminatedString() and
+	compare()
+
+	* rope.cc (makeZeroTerminatedString): added
+
+2015-12-17  Steven Eker  <eker@ape.csl.sri.com>
+
+	* rope.cc (dumpForest): use MAX_BALANCED_HEIGHT
+	(rebalance): use MAX_BALANCED_HEIGHT
+
+2015-12-16  Steven Eker  <eker@ape.csl.sri.com>
+
+	* rope.cc (insertFragment): test against MAX_BALANCED_HEIGHT
+
+	* rope.hh (R): added constants MAX_BALANCED_HEIGHT and STACK_SIZE
+
+2015-12-11  Steven Eker  <eker@ape.csl.sri.com>
+
+	* rope.hh (operator+=): moved here
+	(operator-=): added
+	(const_iterator): added decl for rebuildStack
+	(<): added
+
+	* rope.cc (const_iterator): clear absolutePosition
+	(const_iterator): copy absolutePosition
+	(operator=): copy absolutePosition
+	(operator==): test absolutePosition
+	(operator!=): test absolutePosition
+	(++): increment absolutePosition
+	(--): decrement absolutePosition
+	(rebuildStack): added
+	(operator+=): added
+
+	* rope.hh (const_iterator): added data member absolutePosition
+	(-): added
+
+2015-12-10  Steven Eker  <eker@ape.csl.sri.com>
+
+	* rope.hh (R): updated decl for substr()
+
+	* rope.cc (substr): was previous called substring()
+
+2015-12-09  Steven Eker  <eker@ape.csl.sri.com>
+
+	* rope.cc (~Rope): call decCount
+
+	* rope.hh (operator): call incCount ()and decCout()
+
+	* rope.cc (addFragment): inc ref counts of balanced nodes
+	encountered
+	(rebalance): don't inc ref counts here
+
+2015-12-04  Steven Eker  <eker@ape.csl.sri.com>
+
+	* rope.hh (Rope): use new Fragment ctor
+
+	* rope.cc (makeTree, +, rawConcat, substring): use new Fragment
+	ctor
+
+	* rope.hh (R): added delc for deepDelete();
+	(incCount, decCount): added
+	(Fragment): added
+
+	* rope.cc (+, rebalance, substring): added incCount() calls
+	(deepDelete): added
+
+2015-11-25  Steven Eker  <eker@ape.csl.sri.com>
+
+	* rope.hh (R): added decls for rebalance(), addFragment(),
+	insertFragment(), rawConcat()
+
+	* rope.cc (operator+): check for overflow
+	(rebalance, addFragment, insertFragment, rawConcat): added
+	(operator+): call rebalance if sum is unbalanced
+
+2015-11-24  Steven Eker  <eker@ape.csl.sri.com>
+
+	* rope.cc (operator--): added
+	(operator--): consolidate cases
+
+2015-11-20  Steven Eker  <eker@ape.csl.sri.com>
+
+	* rope.hh (R): added static data member fiboTable
+
+	* rope.cc (copy): added
+
+	* rope.hh (R): added decl for madeTree();
+
+	* rope.cc (makeTree): added
+
+	* rope.hh (operator!= added): added
+	(operator>=): added
+	(operator<): added
+	(operator>): added
+
+	* rope.cc (operator<=): added
+
+2015-11-19  Steven Eker  <eker@ape.csl.sri.com>
+
+	* rope.cc (+): fixed bug where we using the wrong length for the
+	right child leaf case
+
+	* rope.hh: added from separate development
+
+	* rope.cc: added from separate development
+
 2015-07-24  Steven Eker  <eker@ape.csl.sri.com>
 
 	* wordSystem.hh (W): updated decl for findNextSolution()

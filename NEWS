@@ -1,3 +1,9 @@
+Overview of Changes in alpha108a
+================================
+* fixed bug in variant narrowing where ground terms caused substitution size
+  mismatch and memory corruption during subsumption check
+* replacement rope library avoids build problems on Mac
+
 Overview of Changes in alpha108
 ===============================
 * new associative unification algorithm based on PIG-PUG

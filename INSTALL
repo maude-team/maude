@@ -92,40 +92,21 @@ $(bindir).
 
 Note for Mac users
 ==================
-Currently (September 20th 2015):
 
-Apple no longer supports gcc. However clang ships with a buggy version
-of the rope library on which Maude depends.
-
-Currently the only way to compile Maude with is to use a hacked up
-version of a rope library extracted from a recent gcc - so this is now
-included in /3rdParty. Also this depends on other deprecated stuff which
-only works if the -mmacosx-version-min=10.5 flag is given.
-But then all the other libraries need to be compiled with this flag
-otherwise there are linking errors.
-
-The result is a big mess and currently I don't know how to get CVC4
-(which has very complex dependencies) to work under this regime.
-Currently the Mac binary has rewriting modulo SMT disabled using the
-configuration option --with-cvc4=no and special versions of BuDDy,
-Tecla, GMP and libsigsegv. Disabling rewriting modulo SMT breaks the
-testsuite.
-
-My configuration line is:
+As of Mavericks, Apple no longer supports gcc so Maude must be compiled with clang.
+The easiest way is to install the Mac Ports version of each of
+the needed tools and libraries. With Mac Ports installed in /opt/local
+I use the configuration line:
 
 ../configure \
 CC=cc \
 CXX=c++ \
---with-cvc4=no \
 FLEX=/opt/local/bin/flex \
 BISON=/opt/local/bin/bison \
-CFLAGS="-Wall -O2 -I/Volumes/eker/Clang/include -fno-stack-protector -fstrict-aliasing -mmacosx-version-min=10.5" \
-CXXFLAGS="-Wall -O2 -I/Volumes/eker/Clang/include -fno-stack-protector -fstrict-aliasing -mmacosx-version-min=10.5 -DUSE_ROPE_UGLY_HACK" \
-LDFLAGS="-L/Volumes/eker/Clang/lib" \
-BUDDY_LIB="/Volumes/eker/Clang/lib/libbdd.a" \
-TECLA_LIBS="/Volumes/eker/Clang/lib/libtecla.a /usr/lib/libncurses.dylib" \
-LIBSIGSEGV_LIB="/Volumes/eker/Clang/lib/libsigsegv.a" \
-GMP_LIBS="/Volumes/eker/Clang/lib/libgmp.a /Volumes/eker/Clang/lib/libgmpxx.a"
-
-Another option would be to use a Mac running a pre-Mavericks version of
-OS X (gcc support was dropped in Mavericks).
+CFLAGS="-Wall -O2 -I/opt/local/include -fno-stack-protector -fstrict-aliasing" \
+CXXFLAGS="-Wall -O2 -I/opt/local/include -fno-stack-protector -fstrict-aliasing" \
+BUDDY_LIB="/opt/local/lib/libbdd.a" \
+TECLA_LIBS="/opt/local/lib/libtecla.a /usr/lib/libncurses.dylib" \
+LIBSIGSEGV_LIB="/opt/local/lib/libsigsegv.a" \
+GMP_LIBS="/opt/local/lib/libgmp.a /opt/local/lib/libgmpxx.a" \
+CVC4_LIB="/opt/local/lib/libcvc4.a"
