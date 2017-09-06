@@ -29,10 +29,10 @@
 class RedexPosition
 {
 public:
-  RedexPosition() {}
-  RedexPosition(DagNode* node, int parentIndex, int argIndex);
+  RedexPosition() { CantHappen("called"); }  // needed so that Vector template can be instantiated
+  //  RedexPosition(DagNode* node, int parentIndex, int argIndex);
   RedexPosition(DagNode* node, int parentIndex, int argIndex, bool eager);
-  
+
   DagNode* node() const;
   int parentIndex() const;
   int argIndex() const;
@@ -55,6 +55,7 @@ private:
   int flags;
 };
 
+/*
 inline
 RedexPosition::RedexPosition(DagNode* node, int parentIndex, int argIndex)
   : dagNode(node),
@@ -63,6 +64,7 @@ RedexPosition::RedexPosition(DagNode* node, int parentIndex, int argIndex)
     flags(0)
 {
 }
+*/
 
 inline
 RedexPosition::RedexPosition(DagNode* node, int parentIndex, int argIndex, bool eager)

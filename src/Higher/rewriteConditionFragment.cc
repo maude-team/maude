@@ -115,7 +115,7 @@ RewriteConditionFragment::compileMatch(VariableInfo& variableInfo, NatSet& bound
 bool
 RewriteConditionFragment::solve(bool findFirst,
 				RewritingContext& solution,
-				stack<ConditionState*>& state)
+				Stack<ConditionState*>& state)
 {
   if (findFirst)
     {

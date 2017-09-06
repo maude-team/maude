@@ -903,7 +903,7 @@ MixfixModule::canHaveAsParameter(ModuleType t1, ModuleType t2)
   //	System can be parameterized by anything; functional can only be parameterized by functional.
   //	Only theories can be parameters.
   //
-  return isTheory(t2) && ((t1 | t2) & SYSTEM)  == (t1 & SYSTEM);
+  return isTheory(t2) && (((t1 | t2) & SYSTEM) == (t1 & SYSTEM));
 }
 
 #endif

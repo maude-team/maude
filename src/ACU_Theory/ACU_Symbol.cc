@@ -334,11 +334,13 @@ ACU_Symbol::normalizeAndComputeTrueSort(DagNode* subject, RewritingContext& cont
 void
 ACU_Symbol::stackArguments(DagNode* subject,
 			   Vector<RedexPosition>& stack,
-			   int parentIndex)
+			   int parentIndex,
+			   bool respectFrozen,
+			   bool eagerContext)
 {
-  if (!(getFrozen().empty()))
+  if (respectFrozen && !(getFrozen().empty()))  // under AC, any frozen argument affects all
     return;
-  bool eager = (getPermuteStrategy() == EAGER);
+  bool eager = eagerContext & (getPermuteStrategy() == EAGER);
   int argNr = 0;
   if (safeCast(ACU_BaseDagNode*, subject)->isTree())
     {

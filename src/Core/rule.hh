@@ -46,15 +46,7 @@ public:
   LhsAutomaton* getExtLhsAutomaton();
   void print(ostream& s) const;
 
-  bool isNarrowing() const;
-  void setNarrowing();
-
 private:
-  enum Flags
-  {
-    NARROWING = 0x10
-  };
-
   int traceBeginTrial(DagNode* subject, RewritingContext& context) const;
 
   Term* rhs;
@@ -63,18 +55,6 @@ private:
   LhsAutomaton* extLhsAutomaton;
   DagRoot lhsDag;  // for unification
 };
-
-inline bool
-Rule::isNarrowing() const
-{
-  return getFlag(NARROWING);
-}
-
-inline void
-Rule::setNarrowing()
-{
-  setFlags(NARROWING);
-}
 
 inline Term*
 Rule::getRhs() const

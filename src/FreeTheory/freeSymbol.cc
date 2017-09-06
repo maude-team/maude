@@ -315,7 +315,9 @@ FreeSymbol::normalizeAndComputeTrueSort(DagNode* subject, RewritingContext& cont
 void
 FreeSymbol::stackArguments(DagNode* subject,
 			   Vector<RedexPosition>& stack,
-			   int parentIndex)
+			   int parentIndex,
+			   bool respectFrozen,
+			   bool eagerContext)
 {
   int nrArgs = arity();
   if (nrArgs != 0)
@@ -325,8 +327,8 @@ FreeSymbol::stackArguments(DagNode* subject,
       for (int i = 0; i < nrArgs; i++)
 	{
 	  DagNode* d = args[i];
-	  if (!(frozen.contains(i)) && !(d->isUnstackable()))
-	    stack.append(RedexPosition(args[i], parentIndex, i, eagerArgument(i)));
+	  if (!(respectFrozen && frozen.contains(i)) && !(d->isUnstackable()))
+	    stack.append(RedexPosition(args[i], parentIndex, i, eagerContext & eagerArgument(i)));
 	}
     }
 }

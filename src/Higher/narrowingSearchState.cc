@@ -69,7 +69,10 @@ NarrowingSearchState::NarrowingSearchState(RewritingContext* context,
   DagNode* target = context->root();
   Module* module = target->symbol()->getModule();
   int firstTargetSlot = module->getMinimumSubstitutionSize();
-
+  //
+  //	Indexing the variables will convert any persistent representations into
+  //	regular representations suitable for unification and instantiation.
+  //
   context->root()->indexVariables(variableInfo, firstTargetSlot);
   //cout << context->root() << " has " << variableInfo.getNrVariables() << " variables\n";
   /*

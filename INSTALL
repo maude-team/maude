@@ -93,6 +93,8 @@ installed in $(datadir). In order for the Maude binary to find the
 point to $(datadir). Alternatively you could move the .maude files to
 $(bindir).
 
+Note that if your CVC4 library is built using CLN then you must
+also link this library (-lcln).
 
 Note for Mac users
 ==================

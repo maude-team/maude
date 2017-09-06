@@ -125,7 +125,8 @@ am_libhigher_a_OBJECTS = libhigher_a-rewriteSearchState.$(OBJEXT) \
 	libhigher_a-variantFolder.$(OBJEXT) \
 	libhigher_a-variantSearch.$(OBJEXT) \
 	libhigher_a-variantUnificationProblem.$(OBJEXT) \
-	libhigher_a-narrowingSearchState2.$(OBJEXT)
+	libhigher_a-narrowingSearchState2.$(OBJEXT) \
+	libhigher_a-narrowingSequenceSearch2.$(OBJEXT)
 libhigher_a_OBJECTS = $(am_libhigher_a_OBJECTS)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -335,7 +336,8 @@ libhigher_a_SOURCES = \
 	variantFolder.cc \
 	variantSearch.cc \
 	variantUnificationProblem.cc \
-	narrowingSearchState2.cc
+	narrowingSearchState2.cc \
+	narrowingSequenceSearch2.cc
 
 noinst_HEADERS = \
 	assignmentConditionFragment.hh \
@@ -366,7 +368,8 @@ noinst_HEADERS = \
 	variantFolder.hh \
 	variantSearch.hh \
 	variantUnificationProblem.hh \
-	narrowingSearchState2.hh
+	narrowingSearchState2.hh \
+	narrowingSequenceSearch2.hh
 
 all: all-am
 
@@ -425,6 +428,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libhigher_a-narrowingSearchState.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libhigher_a-narrowingSearchState2.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libhigher_a-narrowingSequenceSearch.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libhigher_a-narrowingSequenceSearch2.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libhigher_a-narrowingUnificationProblem.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libhigher_a-pattern.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libhigher_a-positionState.Po@am__quote@
@@ -821,6 +825,20 @@ libhigher_a-narrowingSearchState2.obj: narrowingSearchState2.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='narrowingSearchState2.cc' object='libhigher_a-narrowingSearchState2.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libhigher_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libhigher_a-narrowingSearchState2.obj `if test -f 'narrowingSearchState2.cc'; then $(CYGPATH_W) 'narrowingSearchState2.cc'; else $(CYGPATH_W) '$(srcdir)/narrowingSearchState2.cc'; fi`
+
+libhigher_a-narrowingSequenceSearch2.o: narrowingSequenceSearch2.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libhigher_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libhigher_a-narrowingSequenceSearch2.o -MD -MP -MF $(DEPDIR)/libhigher_a-narrowingSequenceSearch2.Tpo -c -o libhigher_a-narrowingSequenceSearch2.o `test -f 'narrowingSequenceSearch2.cc' || echo '$(srcdir)/'`narrowingSequenceSearch2.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libhigher_a-narrowingSequenceSearch2.Tpo $(DEPDIR)/libhigher_a-narrowingSequenceSearch2.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='narrowingSequenceSearch2.cc' object='libhigher_a-narrowingSequenceSearch2.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libhigher_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libhigher_a-narrowingSequenceSearch2.o `test -f 'narrowingSequenceSearch2.cc' || echo '$(srcdir)/'`narrowingSequenceSearch2.cc
+
+libhigher_a-narrowingSequenceSearch2.obj: narrowingSequenceSearch2.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libhigher_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libhigher_a-narrowingSequenceSearch2.obj -MD -MP -MF $(DEPDIR)/libhigher_a-narrowingSequenceSearch2.Tpo -c -o libhigher_a-narrowingSequenceSearch2.obj `if test -f 'narrowingSequenceSearch2.cc'; then $(CYGPATH_W) 'narrowingSequenceSearch2.cc'; else $(CYGPATH_W) '$(srcdir)/narrowingSequenceSearch2.cc'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libhigher_a-narrowingSequenceSearch2.Tpo $(DEPDIR)/libhigher_a-narrowingSequenceSearch2.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='narrowingSequenceSearch2.cc' object='libhigher_a-narrowingSequenceSearch2.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libhigher_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libhigher_a-narrowingSequenceSearch2.obj `if test -f 'narrowingSequenceSearch2.cc'; then $(CYGPATH_W) 'narrowingSequenceSearch2.cc'; else $(CYGPATH_W) '$(srcdir)/narrowingSequenceSearch2.cc'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique

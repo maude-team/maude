@@ -37,9 +37,6 @@ public:
   bool eqRewrite(DagNode* subject, RewritingContext& context);
   void computeBaseSort(DagNode* subject);
   void normalizeAndComputeTrueSort(DagNode* subject, RewritingContext& context);
-  void stackArguments(DagNode* subject,
-		      Vector<RedexPosition>& stack,
-		      int parentIndex);
   bool isStable() const;
   //
   //	Hash cons stuff.

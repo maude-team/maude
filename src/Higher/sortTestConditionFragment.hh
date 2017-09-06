@@ -42,7 +42,7 @@ public:
   void compileMatch(VariableInfo& variableInfo, NatSet& boundUniquely);
   bool solve(bool findFirst,
 	     RewritingContext& solution,
-	     stack<ConditionState*>& state);
+	     Stack<ConditionState*>& state);
 
   Term* getLhs() const;
   Sort* getSort() const;

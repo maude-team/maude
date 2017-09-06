@@ -1,3 +1,9 @@
+2017-01-11  Steven Eker  <eker@install.csl.sri.com>
+
+	* stack.hh: created
+
+===================================Maude111b===========================================
+
 2016-10-12  Steven Eker  <eker@install.csl.sri.com>
 
 	* intSystem.cc (initializeUpperBounds): fix warning about

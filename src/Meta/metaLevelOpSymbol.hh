@@ -27,6 +27,8 @@
 #define _metaLevelOpSymbol_hh_
 #include "freeSymbol.hh"
 #include "sequenceSearch.hh"
+#include "metaModule.hh"
+#include "userLevelRewritingContext.hh"
 
 class MetaLevelOpSymbol : public FreeSymbol
 {
@@ -62,6 +64,7 @@ private:
 
   static DagNode* term2Dag(Term* t);
   static RewritingContext* term2RewritingContext(Term* term, RewritingContext& context);
+
   static bool getCachedRewriteSearchState(MetaModule* m,
 					  FreeDagNode* subject,
 					  RewritingContext& context,
@@ -91,12 +94,14 @@ private:
 						 Int64 solutionNr,
 						 SMT_RewriteSequenceSearch*& search,
 						 Int64& lastSolutionNr);
-  static bool getCachedNarrowingSearchState2(MetaModule* m,
-					     FreeDagNode* subject,
-					     RewritingContext& context,
-					     Int64 solutionNr,
-					     NarrowingSearchState2*& search,
-					     Int64& lastSolutionNr);
+
+  template<class T>
+  static bool getCachedStateObject(MetaModule* m,
+				   FreeDagNode* subject,
+				   RewritingContext& context,
+				   Int64 solutionNr,
+				   T*& state,
+				   Int64& lastSolutionNr);
 
   MatchSearchState* makeMatchSearchState(MetaModule* m,
 					 FreeDagNode* subject,
@@ -113,6 +118,9 @@ private:
   NarrowingSearchState2* makeNarrowingSearchState2(MetaModule* m,
 						   FreeDagNode* subject,
 						   RewritingContext& context) const;
+  NarrowingSequenceSearch2* makeNarrowingSequenceSearch2(MetaModule* m,
+							 FreeDagNode* subject,
+							 RewritingContext& context) const;
 
   bool metaUnify2(FreeDagNode* subject, RewritingContext& context, bool disjoint);
   bool metaGetVariant2(FreeDagNode* subject, RewritingContext& context, bool irredundant);
@@ -137,9 +145,9 @@ private:
   NarrowingSequenceSearch* makeNarrowingSequenceSearch(MetaModule* m,
 						       FreeDagNode* subject,
 						       RewritingContext& context) const;
-  NarrowingSequenceSearch* makeNarrowingSequenceSearch2(MetaModule* m,
-							FreeDagNode* subject,
-							RewritingContext& context) const;
+  NarrowingSequenceSearch* makeNarrowingSequenceSearchAlt(MetaModule* m,
+							  FreeDagNode* subject,
+							  RewritingContext& context) const;
 
   bool complexStrategy(DagNode* subject, RewritingContext& context);
 
@@ -171,6 +179,34 @@ MetaLevelOpSymbol::getMetaLevel() const
 {
   Assert(metaLevel != 0, "null metaLevel");
   return metaLevel;
+}
+
+template<class T>
+inline bool
+MetaLevelOpSymbol::getCachedStateObject(MetaModule* m,
+					FreeDagNode* subject,
+					RewritingContext& context,
+					Int64 solutionNr,
+					T*& state,
+					Int64& lastSolutionNr)
+{
+  CacheableState* cachedState;
+  if (m->remove(subject, cachedState, lastSolutionNr))
+    {
+      if (lastSolutionNr <= solutionNr)
+	{
+	  state = safeCast(T*, cachedState);
+	  //
+	  //	The parent context pointer of the root context in the
+	  //	state object is possibly stale.
+	  //
+	  safeCast(UserLevelRewritingContext*, state->getContext())->
+	    beAdoptedBy(safeCast(UserLevelRewritingContext*, &context));
+	  return true;
+	}
+      delete cachedState;
+    }
+  return false;
 }
 
 #endif

@@ -1017,3 +1017,29 @@ MetaLevel::upNarrowingFailure(bool incomplete)
 {
   return (incomplete ? narrowingFailureIncompleteSymbol : narrowingFailureSymbol)->makeDagNode();
 }
+
+DagNode*
+MetaLevel::upNarrowingSearchResult(DagNode* dagNode,
+				   const Vector<DagNode*>& unifier,
+				   const NarrowingVariableInfo& unifierVariableInfo,
+				   int variableFamilyName,
+				   int unifierVariableFamilyName,
+				   MixfixModule* m)
+{
+  PointerMap qidMap;
+  PointerMap dagNodeMap;
+  Vector<DagNode*> args(5);
+
+  args[0] = upDagNode(dagNode, m, qidMap, dagNodeMap);
+  args[1] = upType(dagNode->getSort(), qidMap);
+  args[2] = upSubstitution(unifier, unifierVariableInfo, unifier.size(), m, qidMap, dagNodeMap);
+  args[3] = upQid(variableFamilyName, qidMap);
+  args[4] = upQid(unifierVariableFamilyName, qidMap);
+  return narrowingSearchResultSymbol->makeDagNode(args);
+}
+
+DagNode*
+MetaLevel::upNarrowingSearchFailure(bool incomplete)
+{
+  return (incomplete ? narrowingSearchFailureIncompleteSymbol : narrowingSearchFailureSymbol)->makeDagNode();
+}

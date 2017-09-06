@@ -77,8 +77,11 @@ VariantNarrowingSearchState::VariantNarrowingSearchState(RewritingContext* conte
     blockerSubstitution.clear(originalVariables.getNrVariables());  // this ensures that any variables peculiar to blockerDags are cleared
   //
   //	Index all variables occuring in the variant term and the variant substitution.
-  //	These VariableDagNodes are coming from dags that are assumed to be protected by the caller and thus we assume
-  //	are safe from garbage collection.
+  //	These VariableDagNodes are coming from dags that are assumed to be protected by the
+  //	caller and thus we assume are safe from garbage collection.
+  //
+  //	Indexing the variables will convert any persistent representations into
+  //	regular representations suitable for unification and instantiation.
   //
   int firstTargetSlot = module->getMinimumSubstitutionSize();
   context->root()->indexVariables(variableInfo, firstTargetSlot);
@@ -262,6 +265,9 @@ VariantNarrowingSearchState::findNextVariant(DagNode*& newVariantTerm, Vector<Da
 	}
       {
 	Equation* eq = module->getEquations()[equationIndex];
+	//
+	//	Variant equations are compiled in such a way that all variable bindings are copied upto eager.
+	//
 	DagNode* replacement = eq->getRhsBuilder().construct(*survivor);
 	//
 	//	Any slots we touched while building at right hand instance we don't care about; they occur after the binding to
@@ -269,6 +275,9 @@ VariantNarrowingSearchState::findNextVariant(DagNode*& newVariantTerm, Vector<Da
 	//
 	int firstVariantVariable = module->getMinimumSubstitutionSize();
 	int lastVariantVariable = firstVariantVariable + variableInfo.getNrVariables() - 1;
+	//
+	//	rebuildAndInstantiateDag() will copy upto eager the unifier bindings.
+	//
 	newVariantTerm = rebuildAndInstantiateDag(replacement, *survivor, firstVariantVariable, lastVariantVariable, positionIndex);
 	//
 	//	However we still need to clear those slots because the unifier belongs to the UnifierFilter that will do GC protection on it.

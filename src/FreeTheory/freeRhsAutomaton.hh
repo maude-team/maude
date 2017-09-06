@@ -43,7 +43,11 @@ public:
   void dump(ostream& s, const VariableInfo& variableInfo, int indentLevel);
 #endif
 
-private:
+  //#define FREE_DAG_NODE_LOOP(s)	FreeDagNode(s)
+#define FREE_DAG_NODE_LOOP(s)	FreeDagNode(s, '\0')
+#define FREE_DAG_NODE(s)	FreeDagNode(s, '\0')
+
+protected:
   struct Instruction
     {
       Symbol* symbol;
@@ -51,10 +55,12 @@ private:
       Vector<int> sources;
     };
 
+private:
   static void fillOutArgs(const Instruction& instr,
 			  Substitution& matcher,
 			  FreeDagNode* d);
 
+protected:
   Vector<Instruction> instructions;
 };
 

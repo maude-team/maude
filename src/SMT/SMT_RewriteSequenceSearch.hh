@@ -40,6 +40,13 @@ class SMT_RewriteSequenceSearch :
   private SimpleRootContainer
 {
 public:
+  //
+  //	Takes responsibility for deleting:
+  //	  inital
+  //	  target
+  //	  condition fragments in condition
+  //	  engine
+  //
   SMT_RewriteSequenceSearch(RewritingContext* initial,
 			    SearchType searchType,
 			    Term* target,
@@ -170,5 +177,10 @@ SMT_RewriteSequenceSearch::getStateParent(int stateNr) const
   return states[stateNr]->parent;
 }
 
+inline Rule*
+SMT_RewriteSequenceSearch::getStateRule(int stateNr) const
+{
+  return states[stateNr]->rule;
+}
 
 #endif

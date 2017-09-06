@@ -71,9 +71,15 @@ MixfixModule::parseTerm(const Vector<Token>& bubble,
 	  t1->symbol()->fillInSortInfo(t1);
 	  t2->symbol()->fillInSortInfo(t2);
 	}
+      /*
       IssueWarning(LineNumber(bubble[0].lineNumber()) <<
 		   ": ambiguous term, two parses are:\n" << t1 <<
 		   "\n-versus-\n" << t2 <<
+		   "\n\nArbitrarily taking the first as correct.");
+      */
+      IssueWarning(LineNumber(bubble[0].lineNumber()) <<
+		   ": ambiguous term, two parses are:\n" << t1->getSort() << " : " <<  t1 <<
+		   "\n-versus-\n" << t2->getSort() << " : " << t2 <<
 		   "\n\nArbitrarily taking the first as correct.");
       t2->deepSelfDestruct();
     }

@@ -218,22 +218,6 @@ AU_DagNode::copyWithReplacement(Vector<RedexPosition>& redexStack,
 }
 
 void
-AU_DagNode::stackArguments(Vector<RedexPosition>& stack,
-			   int parentIndex,
-			   bool respectFrozen)
-{
-  if (respectFrozen && !(symbol()->getFrozen().empty()))
-    return;
-  int nrArgs = argArray.length();
-  for (int i = 0; i < nrArgs; i++)
-    {
-      DagNode* d = argArray[i];
-      if (!(d->isUnstackable()))
-	stack.append(RedexPosition(d, parentIndex, i));
-    }
-}
-
-void
 AU_DagNode::partialReplace(DagNode* replacement, ExtensionInfo* extensionInfo)
 {
   AU_ExtensionInfo* e = safeCast(AU_ExtensionInfo*, extensionInfo);
@@ -463,12 +447,15 @@ AU_DagNode::indexVariables2(NarrowingVariableInfo& indices, int baseIndex)
 }
 
 DagNode*
-AU_DagNode::instantiateWithReplacement(const Substitution& substitution, const Vector<DagNode*>& eagerCopies, int argIndex, DagNode* newDag)
+AU_DagNode::instantiateWithReplacement(const Substitution& substitution,
+				       const Vector<DagNode*>* eagerCopies,
+				       int argIndex,
+				       DagNode* newDag)
 {
   int nrArgs = argArray.length();
   AU_DagNode* n = new AU_DagNode(symbol(), nrArgs);
   ArgVec<DagNode*>& args2 = n->argArray;
-  bool eager = symbol()->getPermuteStrategy() == BinarySymbol::EAGER;
+  bool eager = (eagerCopies != 0) && symbol()->getPermuteStrategy() == BinarySymbol::EAGER;
   for (int i = 0; i < nrArgs; i++)
     {
       DagNode* d;
@@ -477,7 +464,7 @@ AU_DagNode::instantiateWithReplacement(const Substitution& substitution, const V
       else
 	{
 	  d = argArray[i];
-	  SAFE_INSTANTIATE(d, eager, substitution, eagerCopies);
+	  SAFE_INSTANTIATE(d, eager, substitution, *eagerCopies);
 	}
       args2[i] = d;
     }
@@ -504,23 +491,23 @@ AU_DagNode::instantiateWithCopies2(const Substitution& substitution, const Vecto
 	  //	Argument changed under instantiation - need to make a new
 	  //	dagnode.
 	  //
-	  bool ground = true;
+	  //bool ground = true;
 	  AU_DagNode* d = new AU_DagNode(s, nrArgs);
 	  //
 	  //	Copy the arguments we already looked at.
 	  //
 	  for (int j = 0; j < i; ++j)
 	    {
-	      if (!(argArray[j]->isGround()))
-		ground = false;
+	      //if (!(argArray[j]->isGround()))
+	      //	ground = false;
 	      d->argArray[j] = argArray[j];	
 	    }
 	  //
 	  //	Handle current argument.
 	  //
 	  d->argArray[i] = n;
-	  if (!(n->isGround()))
-	    ground = false;
+	  //if (!(n->isGround()))
+	  //  ground = false;
 	  //
 	  //	Handle remaining arguments.
 	  //
@@ -528,10 +515,22 @@ AU_DagNode::instantiateWithCopies2(const Substitution& substitution, const Vecto
 	    {
 	      DagNode* a = argArray[i];
 	      SAFE_INSTANTIATE(a, eager, substitution, eagerCopies);
-	      if (!(a->isGround()))
-		ground = false;
+	      //if (!(a->isGround()))
+	      //	ground = false;
 	      d->argArray[i] = a;
 	    }
+	  //
+	  //	Currently the only user of this function is PositionState::rebuildAndInstantiateDag()
+	  //	via instantiateWithCopies(), SAFE_INSTANTIATE() and instantiateWithReplacement(),
+	  //	and this is only used for various kinds of narrowing steps. These are followed
+	  //	by reduction so we don't need to worry about:
+	  //	  normal forms
+	  //	  sort computations
+	  //	  ground flags
+	  //
+	  //	If this changes in the future the following will be needed:
+	  //
+#if 0
 	  //
 	  //	Normalize the new dagnode. We pass the dumb flag as true to prevent deque
 	  //	formation. If it doesn't collapse and all its arguments are ground we
@@ -543,7 +542,8 @@ AU_DagNode::instantiateWithCopies2(const Substitution& substitution, const Vecto
 	      d->setGround();
 	    }
 	  Assert(d->isDeque() == false, "Oops we got a deque! " << d);
-	  return d;	
+	  return d;
+#endif	
 	}
     }
   return 0;  // unchanged

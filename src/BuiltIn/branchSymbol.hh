@@ -49,7 +49,9 @@ public:
   bool eqRewrite(DagNode* subject, RewritingContext& context);
   void stackArguments(DagNode* subject,
 		      Vector<RedexPosition>& stack,
-		      int parentIndex);
+		      int parentIndex,
+		      bool respectFrozen,
+		      bool eagerContext);
   //
   //	We need to insert some fake declarations to encode our sort
   //	structure and we disable sort based optimizations.

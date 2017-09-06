@@ -116,7 +116,7 @@ AssignmentConditionFragment::compileMatch(VariableInfo& variableInfo, NatSet& bo
 bool
 AssignmentConditionFragment::solve(bool findFirst,
 				   RewritingContext& solution,
-				   stack<ConditionState*>& state)
+				   Stack<ConditionState*>& state)
 {
   if (findFirst)
     {

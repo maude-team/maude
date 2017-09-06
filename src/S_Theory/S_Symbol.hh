@@ -43,7 +43,9 @@ public:
   DagNode* ruleRewrite(DagNode* subject, RewritingContext& context);
   void stackArguments(DagNode* subject,
 		      Vector<RedexPosition>& stack,
-		      int parentIndex);
+		      int parentIndex,
+		      bool respectFrozen,
+		      bool eagerContext);
   Term* termify(DagNode* dagNode);
   //
   //    Member function overiding default handling.

@@ -49,7 +49,8 @@ public:
       SEARCH,
       NARROW,
       XG_NARROW,
-      SMT_SEARCH
+      SMT_SEARCH,
+      VU_NARROW,
     };
 
   enum Flags
@@ -259,6 +260,11 @@ private:
 		   NarrowingSequenceSearch* state,
 		   int solutionCount,
 		   int limit);
+  void doNarrowing2(Timer& timer,
+		    VisibleModule* module,
+		    NarrowingSequenceSearch2* state,
+		    int solutionCount,
+		    int limit);
   void doExternalRewriting(UserLevelRewritingContext* context, Int64 limit);
   void doStrategicSearch(Timer& timer,
 			 VisibleModule* module,

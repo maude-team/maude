@@ -78,9 +78,15 @@ FreeRhsAutomaton::remapIndices(VariableInfo& variableInfo)
       Instruction& instr = instructions[i];
       instr.destination = variableInfo.remapIndex(instr.destination);
       int nrArgs = instr.sources.length();
+      //cout << "  " << nrArgs;
       for (int j = 0; j < nrArgs; j++)
-	instr.sources[j] = variableInfo.remapIndex(instr.sources[j]);
+	{
+	  instr.sources[j] = variableInfo.remapIndex(instr.sources[j]);
+	  //cout << "  " << instr.sources[j];
+	}
+      //cout << endl;
     }
+  //cout << endl;
 }
 
 local_inline void

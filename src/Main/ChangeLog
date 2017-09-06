@@ -1,3 +1,26 @@
+2017-03-14  Steven Eker  <eker@install.csl.sri.com>
+
+	* prelude.maude: changed order of parameters in NarrowingSearchResult
+	ctor to avoid ambiguity
+
+2017-03-10  Steven Eker  <eker@install.csl.sri.com>
+
+	* prelude.maude: added projection functions for NarrowingSearchResult
+
+2017-02-06  Steven Eker  <eker@install.csl.sri.com>
+
+	* prelude.maude: revert to NarrowingSearchResult, but this time use a
+	5 tuple to avoid a kind clash
+
+2017-02-03  Steven Eker  <eker@install.csl.sri.com>
+
+	* prelude.maude: added sorts NarrowingSearchResult, NarrowingSearchResult?;
+	ctors {_,_,_,_}, failure, failureIncomplete, descent function
+	metaNarrowingSearch()
+	Use Result4Tuple in place of NarrowingSearchResult
+
+===================================Maude111b===========================================
+
 2016-12-13  Steven Eker  <eker@install.csl.sri.com>
 
 	* prelude.maude: added projection functions for NarrowingResult

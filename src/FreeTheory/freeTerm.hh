@@ -111,7 +111,9 @@ private:
   void compileRhsAliens(RhsBuilder& rhsBuilder,
 			VariableInfo& variableInfo,
 			TermBag& availableTerms,
-			bool eagerContext);
+			bool eagerContext,
+			int& maxArity,
+			int& nrFree);
   int compileRhs3(FreeRhsAutomaton* automaton,
 		  RhsBuilder& rhsBuilder,
 		  VariableInfo& variableInfo,

@@ -95,7 +95,7 @@ endfm,
 rewrites: 1
 result Bool: false
 Warning: <standard input>, line 79: ambiguous term, two parses are:
-wellFormed(fmod 'FOO is
+[Bool] : wellFormed(fmod 'FOO is
   protecting 'FLOAT .
   sorts 'Foo ; 'Bar .
   subsort 'Bar < 'Foo .
@@ -104,7 +104,7 @@ wellFormed(fmod 'FOO is
   none
 endfm, (none).Substitution)
 -versus-
-wellFormed(fmod 'FOO is
+[Bool] : wellFormed(fmod 'FOO is
   protecting 'FLOAT .
   sorts 'Foo ; 'Bar .
   subsort 'Bar < 'Foo .

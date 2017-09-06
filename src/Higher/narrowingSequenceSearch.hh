@@ -111,7 +111,6 @@ NarrowingSequenceSearch::getState() const
 inline RewritingContext*
 NarrowingSequenceSearch::getContext() const
 {
-  Assert(stateStack.size() > 0, "once stack is empty initial has been deleted");
   return initial;
 }
 

@@ -365,7 +365,19 @@ SyntacticPreModule::processImports()
     FOR_EACH_CONST(i, Vector<Parameter>, parameters)
       {
 	if (ImportModule* fm = interpreter.makeModule(i->theory))
-	  flatModule->addParameter(i->name, interpreter.makeParameterCopy(i->name.code(), fm));  // HACK maybe pass Token
+	  {
+	    if (MixfixModule::canHaveAsParameter(getModuleType(), fm->getModuleType()))
+	      flatModule->addParameter(i->name, interpreter.makeParameterCopy(i->name.code(), fm));  // HACK maybe pass Token
+	    else
+	      {
+		IssueWarning(LineNumber(i->name.lineNumber()) <<
+			     ": parameterization of " << 
+			     QUOTE(MixfixModule::moduleTypeString(getModuleType())) <<
+			     " " << this << " by " <<
+			     QUOTE(MixfixModule::moduleTypeString(fm->getModuleType())) <<
+			     " " << fm << " is not allowed.");
+	      }
+	  }
       }
   }
   //

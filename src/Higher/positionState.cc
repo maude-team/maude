@@ -48,7 +48,7 @@ PositionState::PositionState(DagNode* top, int flags, int minDepth, int maxDepth
 {
   Assert(!(flags & SET_UNSTACKABLE) || (flags & RESPECT_FROZEN),
 	 "can't set unstackable if not respecting frozen");
-  positionQueue.append(RedexPosition(top, UNDEFINED, UNDEFINED));
+  positionQueue.append(RedexPosition(top, UNDEFINED, UNDEFINED, true));
   depth.append(0);
   extensionInfo = 0;
   extensionInfoValid = true;  // in case maxDepth = -1 for no extension
@@ -72,8 +72,9 @@ PositionState::exploreNextPosition()
       int ourDepth = depth[nextToExplore];
       if (ourDepth >= maxDepth)
 	return false;
-      DagNode* d = positionQueue[nextToExplore].node();
-      d->stackArguments(positionQueue, nextToExplore, flags & RESPECT_FROZEN);
+      const RedexPosition& rp = positionQueue[nextToExplore];
+      DagNode* d = rp.node();
+      d->symbol()->stackArguments(d, positionQueue, nextToExplore, flags & RESPECT_FROZEN, rp.isEager());
       int newFinish = positionQueue.length();
       if (finish < newFinish)
 	{
@@ -170,15 +171,20 @@ PositionState::rebuildAndInstantiateDag(DagNode* replacement,
       //	might rewrite between eager and lazy positions.
       //
       Vector<DagNode*> eagerCopies(lastVariable + 1);
+      //Vector<DagNode*> lazy(lastVariable + 1);  // there might be a more elegant way of doing this
       for (int j = firstVariable; j <= lastVariable; ++j)
-	eagerCopies[j] = substitution.value(j)->copyEagerUptoReduced();
+	{
+	  //lazy[j] = substitution.value(j);
+	  eagerCopies[j] = substitution.value(j)->copyEagerUptoReduced();
+	}
       for (int j = firstVariable; j <= lastVariable; ++j)
 	substitution.value(j)->clearCopyPointers();
 
        while (i != UNDEFINED)
 	 {
 	   const RedexPosition& rp = positionQueue[i];
-	   newDag = rp.node()->instantiateWithReplacement(substitution, eagerCopies, argIndex, newDag);
+	   const Vector<DagNode*>* bindings = rp.isEager() ? &eagerCopies : 0;
+	   newDag = rp.node()->instantiateWithReplacement(substitution, bindings, argIndex, newDag);
 	   argIndex = rp.argIndex();
 	   i = rp.parentIndex();
 	 }

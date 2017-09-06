@@ -91,6 +91,9 @@ NarrowingSearchState2::NarrowingSearchState2(RewritingContext* context,
   //	different from any that occurs in a variable occurring in a
   //	rule lhs.
   //
+  //	Indexing the variables will convert any persistent representations into
+  //	regular representations suitable for unification and instantiation.
+  //
   int firstTargetSlot = module->getMinimumSubstitutionSize();
   dagToNarrow->indexVariables(variableInfo, firstTargetSlot);
   int nrVariablesInDagToNarrow = variableInfo.getNrVariables();
@@ -174,8 +177,42 @@ NarrowingSearchState2::NarrowingSearchState2(RewritingContext* context,
   positionState = new PositionState(dagToNarrow, flags, minDepth, maxDepth);
 }
 
+NarrowingSearchState2::NarrowingSearchState2(RewritingContext* context,
+					     FreshVariableGenerator* freshVariableGenerator,
+					     int incomingVariableFamily,
+					     int label,
+					     int flags,
+					     int minDepth,
+					     int maxDepth)
+  : context(context),
+    freshVariableGenerator(freshVariableGenerator),
+    incomingVariableFamily(incomingVariableFamily),
+    label(label),
+    module(context->root()->symbol()->getModule())
+{
+  ruleIndex = -1;  // not yet started
+  incompleteFlag = false;
+  unificationProblem = 0;
+  reverseMapping = 0;
+
+  DagNode* dagToNarrow = context->root();
+  newContext = context;
+  //
+  //	Each variable occurring in the target dag needs an index
+  //	different from any that occurs in a variable occurring in a
+  //	rule lhs.
+  //
+  int firstTargetSlot = module->getMinimumSubstitutionSize();
+  dagToNarrow->indexVariables(variableInfo, firstTargetSlot);
+  //
+  //	Make a PositionState object to traverse it.
+  //
+  positionState = new PositionState(dagToNarrow, flags, minDepth, maxDepth);
+}
+
 NarrowingSearchState2::~NarrowingSearchState2()
 {
+  bool gcVarGen = positionState->getFlags() & GC_VAR_GEN;
   //
   //	Stuff we created.
   //
@@ -187,7 +224,8 @@ NarrowingSearchState2::~NarrowingSearchState2()
   //
   //	Stuff we took responsibility for deleting.
   //
-  delete freshVariableGenerator;
+  if (gcVarGen)
+    delete freshVariableGenerator;
   delete context;
 }
 
@@ -310,10 +348,21 @@ NarrowingSearchState2::getNarrowedDag(DagNode*& replacement, DagNode*& replaceme
   int nrSlots = module->getMinimumSubstitutionSize();
   for (int i = r->getNrProtectedVariables(); i < nrSlots; ++i)
     s.bind(i,0);
-
+  //
+  //	In order to return the context at when the narrowing happened we need to
+  //	make a copy of the original dag, with the replacement clone at the location of the
+  //	narrowing.
+  //
+  //	One complexity is we may have renamed the variables in the dag we actually traversed
+  //	in order to avoid variable clashes. If that happened, we use the reverseMapping
+  //	to renaming them back when we rebuild the context.
+  //
   replacementContext = reverseMapping ?
     positionState->rebuildAndInstantiateDag(replacement, *reverseMapping, nrSlots, nrSlots + variableInfo.getNrVariables() - 1) :
     positionState->rebuildDag(replacement).first;
-
+  //
+  //	Finally we compute the actual dag created by the narrowing step by rebuilding
+  //	using the unifier.
+  //
   return positionState->rebuildAndInstantiateDag(replacement, s, nrSlots, nrSlots + variableInfo.getNrVariables() - 1);
 }

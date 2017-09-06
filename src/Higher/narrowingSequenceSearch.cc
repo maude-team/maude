@@ -258,6 +258,7 @@ NarrowingSequenceSearch::findNextInterestingState()
 	      if (context->traceAbort())
 		return false;
 	    }
+	  initial->incrementNarrowingCount();
 
 	  RewritingContext* newContext = initial->makeSubcontext(narrowedDag);
 	  newContext->reduce();

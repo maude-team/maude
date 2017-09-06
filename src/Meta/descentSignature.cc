@@ -76,3 +76,4 @@
   MACRO(metaCheck, 2)
   MACRO(metaSmtSearch, 8)
   MACRO(metaNarrowingApply, 6)
+  MACRO(metaNarrowingSearch, 8)

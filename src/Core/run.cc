@@ -21,12 +21,6 @@
 */
 
 void
-RewritingContext::reduce()
-{
-  rootNode->reduce(*this);
-}
-
-void
 RewritingContext::ruleRewrite(Int64 limit)
 {
   Vector<RedexPosition> redexStack;
@@ -36,7 +30,7 @@ RewritingContext::ruleRewrite(Int64 limit)
       if (nrRewrites == limit)
 	return;
       redexStack.contractTo(0);
-      redexStack.append(RedexPosition(rootNode, UNDEFINED, UNDEFINED));
+      redexStack.append(RedexPosition(rootNode, UNDEFINED, UNDEFINED, true));
 
       int nextToExplore = 0;
       int finish = redexStack.length();
@@ -57,8 +51,7 @@ RewritingContext::ruleRewrite(Int64 limit)
 				" unrewritable = " << d->isUnrewritable() <<
 				" unstackable = " << d->isUnstackable());
 		  */
-		  d->stackArguments(redexStack, nextToExplore, true);
-		     
+		  d->symbol()->stackArguments(d, redexStack, nextToExplore);
 		  ++nextToExplore;
 		  int len = redexStack.length();
 		  if (len > finish)

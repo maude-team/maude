@@ -166,7 +166,7 @@ VariantSearch::VariantSearch(RewritingContext* context,
   //	we no longer care about in place rewriting on ground terms.
   //
   RewritingContext* redContext = context->makeSubcontext(newDag);
-  redContext->reduce();
+  redContext->reduce();  // BUG - this can replace subterms of ground terms that will no longer be flagged as such
 
   DagNode* r = redContext->root();
   if (unificationMode)

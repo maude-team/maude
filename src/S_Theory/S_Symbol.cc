@@ -298,11 +298,13 @@ S_Symbol::normalizeAndComputeTrueSort(DagNode* subject, RewritingContext& contex
 void
 S_Symbol::stackArguments(DagNode* subject,
 			 Vector<RedexPosition>& stack,
-			 int parentIndex)
+			 int parentIndex,
+			 bool respectFrozen,
+			 bool eagerContext)
 {
   DagNode* arg = safeCast(S_DagNode*, subject)->arg;
-  if (!(getFrozen().contains(0)) && !(arg->isUnstackable()))
-    stack.append(RedexPosition(arg, parentIndex, 0, eagerArgument(0)));
+  if (!(respectFrozen && getFrozen().contains(0)) && !(arg->isUnstackable()))
+    stack.append(RedexPosition(arg, parentIndex, 0, eagerContext && eagerArgument(0)));
 }
 
 bool

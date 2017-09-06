@@ -1,3 +1,36 @@
+2017-03-13  Steven Eker  <eker@install.csl.sri.com>
+
+	* process.cc (processImports): don't add illegal parameters, since
+	even the creation of the illegal parameter copies can cause issues
+
+2017-03-10  Steven Eker  <eker@install.csl.sri.com>
+
+	* search.cc (doNarrowing2): added incompleteness warning; took out
+	extra newline print
+
+2017-02-28  Steven Eker  <eker@install.csl.sri.com>
+
+	* search.cc (doNarrowing2): added
+	(search): use doNarrowing2() to implement vu-narrow
+
+	* interpreter.hh (ViewDatabase): added decl for doNarrowing2()
+
+2017-02-27  Steven Eker  <eker@install.csl.sri.com>
+
+	* search.cc (search): added stub code for vu-narrow
+
+2017-02-24  Steven Eker  <eker@install.csl.sri.com>
+
+	* interpreter.hh (ViewDatabase): added VU_NARROW to enum SearchKind
+
+	* commands.yy (search): added KW_VU_NARROW to search
+
+	* lexer.ll: added keyword vu-narrow
+
+	* top.yy: added token KW_VU_NARROW
+
+===================================Maude111b===========================================
+
 2017-01-06  Steven Eker  <eker@install.csl.sri.com>
 
 	* banner.cc (printBanner): fix copyright year

@@ -125,22 +125,6 @@ ACU_TreeDagNode::copyWithReplacement(Vector<RedexPosition>& redexStack,
   return treeToArgVec(this)->copyWithReplacement(redexStack, first, last);
 }
 
-void
-ACU_TreeDagNode::stackArguments(Vector<RedexPosition>& stack,
-				int parentIndex,
-				bool respectFrozen)
-{
-  if (respectFrozen && !(symbol()->getFrozen().empty()))
-    return;
-  int j = 0;
-  for (ACU_FastIter i(tree); i.valid(); i.next(), ++j)
-    {
-      DagNode* d = i.getDagNode();
-      if (!(d->isUnstackable()))
-	stack.append(RedexPosition(d, parentIndex, j));
-    }
-}
-
 bool
 ACU_TreeDagNode::matchVariableWithExtension(int index,
 				const Sort* sort,

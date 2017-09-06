@@ -26,6 +26,7 @@
 
 #include "equalityConditionFragment.hh"
 #include "SMT_RewriteSequenceSearch.hh"
+#include "narrowingSequenceSearch2.hh"
 
 void
 Interpreter::printSearchTiming(const Timer& timer,  RewriteSequenceSearch* state)
@@ -50,7 +51,7 @@ Interpreter::search(const Vector<Token>& bubble, Int64 limit, Int64 depth, Searc
   //
   //	Narrowing does not support conditions.
   //
-  if ((searchKind == NARROW ||  searchKind == XG_NARROW) && !condition.empty())
+  if ((searchKind == NARROW ||  searchKind == XG_NARROW || searchKind == VU_NARROW) && !condition.empty())
     {
       IssueWarning(*target << ": conditions are not currently supported for narrowing.");
       return;  // FIXME we should probably deep self destruct initial and condition here.
@@ -70,6 +71,8 @@ Interpreter::search(const Vector<Token>& bubble, Int64 limit, Int64 depth, Searc
       if (!(fm->validForSMT_Rewriting()))
 	return;
     }
+  else if (searchKind == VU_NARROW)
+    ;  // don't need a Pattern object for variant unification narrowing
   else
     pattern = new Pattern(target, false, condition);
 
@@ -91,7 +94,7 @@ Interpreter::search(const Vector<Token>& bubble, Int64 limit, Int64 depth, Searc
   static const char* searchTypeSymbol[] = { "=>1", "=>+", "=>*", "=>!" };
   if (getFlag(SHOW_COMMAND))
     {
-      static const char* searchKindName[] = { "search", "narrow", "xg-narrow", "smt-search" };
+      static const char* searchKindName[] = { "search", "narrow", "xg-narrow", "smt-search", "vu-narrow" };
 
       UserLevelRewritingContext::beginCommand();
       cout << searchKindName[searchKind] << ' ';
@@ -161,19 +164,97 @@ Interpreter::search(const Vector<Token>& bubble, Int64 limit, Int64 depth, Searc
       delete smtSearch;  // will take initial and vg with it
       UserLevelRewritingContext::clearDebug();
     }
+  else if (searchKind == VU_NARROW)
+    {
+      target = target->normalize(true);  // we don't really need to normalize but we do need to set hash values
+      DagNode* goal = target->term2Dag();
+      target->deepSelfDestruct();
+
+      NarrowingSequenceSearch2* state =
+	new NarrowingSequenceSearch2(new UserLevelRewritingContext(subjectDag),
+				     static_cast<NarrowingSequenceSearch::SearchType>(searchType),  // HACK
+				     goal,
+				     UNDEFINED,
+				     depth,
+				     NarrowingSearchState2::ALLOW_NONEXEC,
+				     new FreshVariableSource(fm),
+				     0);
+      Timer timer(getFlag(SHOW_TIMING));
+      doNarrowing2(timer, fm, state, 0, limit);
+    }
   else
     {
-      NarrowingSequenceSearch* state = new NarrowingSequenceSearch(new UserLevelRewritingContext(subjectDag),
-								   static_cast<NarrowingSequenceSearch::SearchType>(searchType),  // HACK
-								   pattern,
-								   depth,
-								   (searchKind == XG_NARROW ?
-								    NarrowingSearchState::ALLOW_NONEXEC | NarrowingSearchState::SINGLE_POSITION :
-								    NarrowingSearchState::ALLOW_NONEXEC),
-								   new FreshVariableSource(fm));
+
+      NarrowingSequenceSearch* state =
+	new NarrowingSequenceSearch(new UserLevelRewritingContext(subjectDag),
+				    static_cast<NarrowingSequenceSearch::SearchType>(searchType),  // HACK
+				    pattern,
+				    depth,
+				    (searchKind == XG_NARROW ?
+				     NarrowingSearchState::ALLOW_NONEXEC | NarrowingSearchState::SINGLE_POSITION :
+				     NarrowingSearchState::ALLOW_NONEXEC),
+				    new FreshVariableSource(fm));
       Timer timer(getFlag(SHOW_TIMING));
       doNarrowing(timer, fm, state, 0, limit);
     }
+}
+
+
+void
+Interpreter::doNarrowing2(Timer& timer,
+			  VisibleModule* module,
+			  NarrowingSequenceSearch2* state,
+			  int solutionCount,
+			  int limit)
+{
+  RewritingContext* context = state->getContext();
+  int i = 0;
+  for (; i != limit; i++)
+    {
+      bool result = state->findNextUnifier();
+      if (UserLevelRewritingContext::aborted())
+	break;  // HACK: Is this safe - shouldn't we destroy context?
+      if (!result)
+	{
+	  cout << ((solutionCount == 0) ? "\nNo solution.\n" : "\nNo more solutions.\n");
+	  printStats(timer, *context, getFlag(SHOW_TIMING));
+	  if (state->isIncomplete())
+	    IssueWarning("Some solutions may have been missed due to incomplete unification algorithm(s).");
+	  break;
+	}
+
+      ++solutionCount;
+      cout << "\nSolution " << solutionCount << "\n";
+      printStats(timer, *context, getFlag(SHOW_TIMING));
+
+      DagNode* d = state->getStateDag();
+      cout << "state: " << d << endl;
+
+      const NarrowingVariableInfo& variableInfo = state->getVariableInfo();
+      const Vector<DagNode*>* unifier = state->getUnifier();
+      int nrVariables = unifier->size();
+      for (int i = 0; i < nrVariables; ++i)
+	{
+	  DagNode* v = variableInfo.index2Variable(i);
+	  cout << v << " --> " << (*unifier)[i] << endl;
+	}
+      //cout << endl;
+      if (UserLevelRewritingContext::interrupted())
+	break;
+    }
+
+#ifdef QUANTIFY_REWRITING
+  quantify_stop_recording_data();
+#endif
+
+  clearContinueInfo();  // just in case debugger left info
+  //state->getContext()->clearCount();
+  //savedRewriteSequenceSearch = state;
+  //savedSolutionCount = solutionCount;
+  //savedModule = module;
+  //if (i == limit)  // possible to continue
+  //  continueFunc = &Interpreter::searchCont;
+  UserLevelRewritingContext::clearDebug();
 }
 
 void

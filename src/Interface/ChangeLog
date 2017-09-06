@@ -1,3 +1,24 @@
+2017-02-21  Steven Eker  <eker@install.csl.sri.com>
+
+	* dagNode.hh (D): updated decl for instantiateWithReplacement()
+
+2017-02-17  Steven Eker  <eker@install.csl.sri.com>
+
+	* dagNode.hh (D): deleted virtual function stackArguments()
+
+	* symbol.cc (stackArguments): added
+	(termify): deleted commented out function
+
+	* symbol.hh (MemoTable): added respectFrozen and eagerContext flags to
+	stackArguments()
+
+===================================Maude111b===========================================
+
+2017-02-13  Steven Eker  <eker@install.csl.sri.com>
+
+	* dagNode.hh (indexVariables): don't trust ground flag because reduction
+	may have gone on below.
+
 2016-11-10  Steven Eker  <eker@install.csl.sri.com>
 
 	* dagNode.hh (D): added decl for copyAll2()

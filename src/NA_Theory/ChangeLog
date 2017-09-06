@@ -1,3 +1,15 @@
+2017-02-17  Steven Eker  <eker@install.csl.sri.com>
+
+	* NA_DagNode.cc (stackArguments): deleted
+
+	* NA_DagNode.hh (DagNode): deleted decl for stackArguments()
+
+	* NA_Symbol.hh (Symbol): deleted decl for stackArguments()
+
+	* NA_Symbol.cc (stackArguments): deleted
+
+===================================Maude111b===========================================
+
 2016-11-11  Steven Eker  <eker@install.csl.sri.com>
 
 	* NA_DagNode.hh (DagNode): added decl for copyAll2()
