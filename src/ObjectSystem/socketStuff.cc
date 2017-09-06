@@ -66,7 +66,7 @@ bool
 SocketManagerSymbol::setNonblockingFlag(int fd, FreeDagNode* message, ObjectSystemRewritingContext& context)
 {
   //
-  //	Set nonblocking flag for a nascent socket; since its not yet an external object we
+  //	Set nonblocking flag for a nascent socket; since it is not yet an external object we
   //	can just close it and generate an error reply if things don't work out.
   //
   int flags = fcntl(fd, F_GETFL);
@@ -197,21 +197,38 @@ SocketManagerSymbol::createServerTcpSocket(FreeDagNode* message, ObjectSystemRew
       //
       if (!setNonblockingFlag(fd, message, context))
 	return true;
-      //
-      //	Bind it to the local port.
-      //
-      sockaddr_in sockName;
-      sockName.sin_family = AF_INET;
-      sockName.sin_port = htons(port);
-      sockName.sin_addr.s_addr = htonl(INADDR_ANY);  // HACK - what is the portable way to set this?
-      if (bind(fd, reinterpret_cast<sockaddr*>(&sockName), sizeof(sockName)) == -1)
-	{
-	  const char* errText = strerror(errno);
-	  DebugAdvisory("unexpected bind() error: " << errText);
-	  errorReply(errText, message, context);
-	  close(fd);
-	  return true;
-	}
+      {
+	//
+	//	Set SO_REUSEADDR so port can be immediately reused following the close()
+	//	of this socket.
+	//
+	int value = 1;
+	if (setsockopt(fd, SOL_SOCKET,  SO_REUSEADDR,  &value, sizeof(value)) == -1)
+	  {
+	    const char* errText = strerror(errno);
+	    DebugAdvisory("setsockopt(SO_REUSEADDR) failed: " << errText);
+	    errorReply(errText, message, context);
+	    close(fd);
+	    return true;
+	  }
+      }
+      {
+	//
+	//	Bind it to the local port.
+	//
+	sockaddr_in sockName;
+	sockName.sin_family = AF_INET;
+	sockName.sin_port = htons(port);
+	sockName.sin_addr.s_addr = htonl(INADDR_ANY);  // HACK - what is the portable way to set this?
+	if (bind(fd, reinterpret_cast<sockaddr*>(&sockName), sizeof(sockName)) == -1)
+	  {
+	    const char* errText = strerror(errno);
+	    DebugAdvisory("unexpected bind() error with fd " << fd << ": " << errText);
+	    errorReply(errText, message, context);
+	    close(fd);
+	    return true;
+	  }
+      }
       //
       //	Start listening for connections.
       //

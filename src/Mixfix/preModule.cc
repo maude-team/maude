@@ -65,6 +65,7 @@
 #include "token.hh"
 #include "loopSymbol.hh"
 #include "visibleModule.hh"
+#include "view.hh"
 #include "preModule.hh"
 #include "interpreter.hh"
 #include "maudemlBuffer.hh"
@@ -109,9 +110,9 @@ PreModule::~PreModule()
 }
 
 void
-PreModule::regretToInform(ImportModule* doomedModule)
+PreModule::regretToInform(Entity* doomedEntity)
 {
-  Assert(doomedModule == flatModule, "module pointer error");
+  Assert(doomedEntity == flatModule, "module pointer error");
   flatModule = 0;
 #ifdef COMPILER
   interpreter.invalidate(this);
@@ -196,6 +197,15 @@ PreModule::OpDef::OpDef()
 }
 
 void
+PreModule::addParameter(Token name, ModuleExpression* theory)
+{
+  int nrParameters = parameters.length();
+  parameters.resize(nrParameters + 1);
+  parameters[nrParameters].name = name;
+  parameters[nrParameters].theory = theory;
+}
+
+void
 PreModule::addImport(Token mode, ModuleExpression* expr)
 {
   int nrImports = imports.length();
@@ -225,7 +235,7 @@ PreModule::addStatement(const Vector<Token>& statement)
   if (statement[1].code() == leftBracket &&
       statement[3].code() == rightBracket &&
       statement[4].code() == colon)
-    (void) labels.insert(statement[2].code());
+    (void) potentialLabels.insert(statement[2].code());
 
   int i = statement.length() - 1;
   if (statement[i].code() == rightBracket)
@@ -241,7 +251,7 @@ PreModule::addStatement(const Vector<Token>& statement)
 		break;
 	    }
 	  else if (t == label)
-	    labels.insert(statement[i+1].code());
+	    potentialLabels.insert(statement[i+1].code());
 	  else if (t == rightBracket)
 	    ++bracketCount;
 	}

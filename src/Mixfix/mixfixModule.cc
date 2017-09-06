@@ -27,7 +27,6 @@
 //      utility stuff
 #include "macros.hh"
 #include "vector.hh"
-#include "intSet.hh"
 #include "pointerSet.hh"
 #include "tty.hh"
 
@@ -145,6 +144,12 @@ Vector<int> MixfixModule::gatherPrefixPrefix(2);
 Vector<int> MixfixModule::gatherAny0(2);
 
 inline int
+MixfixModule::newNonTerminal()
+{
+  return --nextNonTerminal;
+}
+
+inline int
 MixfixModule::domainComponentIndex(const Symbol* symbol, int argNr)
 {
   return symbol->domainComponent(argNr)->getIndexWithinModule();
@@ -159,13 +164,7 @@ MixfixModule::nonTerminal(int componentIndex, NonTerminalType type)
 inline int
 MixfixModule::nonTerminal(const Sort* sort, NonTerminalType type)
 {
-  return nonTerminal(sort->component()->getIndexWithinModule(), TERM_TYPE);
-}
-
-inline int
-MixfixModule::iterSymbolNonTerminal(int iterSymbolIndex)
-{
-  return componentNonTerminalBase - 1 - iterSymbolIndex;
+  return nonTerminal(sort->component()->getIndexWithinModule(), type);
 }
 
 //	our stuff

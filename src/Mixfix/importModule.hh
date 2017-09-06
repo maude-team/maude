@@ -26,10 +26,15 @@
 #ifndef _importModule_hh_
 #define _importModule_hh_
 #include <set>
+#include <map>
 #include "mixfixModule.hh"
+#include "entity.hh"
 #include "fileTable.hh"
 
-class ImportModule : public MixfixModule
+class ImportModule
+  : public MixfixModule,
+    public Entity,
+    public Entity::User
 {
   NO_COPYING(ImportModule);
 
@@ -41,18 +46,14 @@ public:
     INCLUDING
   };
 
-  class Parent
-  {
-  public:
-    virtual void regretToInform(ImportModule* doomedModule) = 0;
-  };
-
-  ImportModule(int name, ModuleType moduleType, Parent* parent = 0);
+  ImportModule(int name, ModuleType moduleType, Entity::User* parent = 0);
   ~ImportModule();
 
   void addImport(ImportModule* importedModule,
 		 ImportMode mode,
 		 LineNumber lineNumber);
+  void addParameter(const Token parameterName,
+		    ImportModule* parameterTheory);
   void closeSortSet();
   void closeSignature();
   void deepSelfDestruct();
@@ -66,6 +67,9 @@ public:
   void protect();
   bool unprotect();
 
+  int getNrParameters() const;
+  int getNrFreeParameters() const;
+  ImportModule* getParameterTheory(int index) const;
   int getNrImportedSorts() const;
   int getNrUserSorts() const;
   int getNrImportedSubsorts(int sortIndex) const;
@@ -79,8 +83,9 @@ public:
   int getNrOriginalRules() const;
   const set<int>& getLabels() const;
   ImportModule* makeRenamedCopy(int name, Renaming* canonical, ModuleCache* moduleCache);
-
-  bool hasDependents() const;
+  ImportModule* makeParameterCopy(int moduleName, int parameterName, ModuleCache* moduleCache);
+  ImportModule* makeInstantiation(int moduleName, const Vector<View*>& arguments, const Vector<int>& parameterArgs, ModuleCache* moduleCache);
+  int findParameterIndex(int name) const;
 
 private:
   enum Phase
@@ -93,13 +98,15 @@ private:
     DOOMED
   };
 
+  typedef map<int,int> ParameterMap;
+
   static Sort* localSort(ImportModule* copy, Renaming* renaming, const Sort* sort);
   static Sort* localSort2(ImportModule* copy, Renaming* renaming, const Sort* sort);
   static void deepCopyCondition(ImportTranslation* importTranslation,
 				const Vector<ConditionFragment*>& original,
 				Vector<ConditionFragment*>& copy);
 
-  void removeDependent(ImportModule* dependent);
+  void regretToInform(Entity* doomedEntity);
   void donateSorts(ImportModule* importer);
   void donateSorts2(ImportModule* copy, Renaming* renaming = 0);
   void donateOps(ImportModule* importer);
@@ -109,18 +116,20 @@ private:
   void donateStatements(ImportModule* importer);
   void donateStatements2(ImportModule* importer, ImportTranslation& importTranslation);
   void resetImportPhase();
+  void finishCopy(ImportModule* copy, Renaming* canonical);
 
-  Parent* const parent;
-  //
-  //	If we are destroyed all our immediate dependents need to know
-  //	so that they are no longer current.
-  //
-  Vector<ImportModule*> dependentModules;
-  //
-  //	These are the modules we directly import.
-  //
-  Vector<ImportModule*> importedModules;
   Phase importPhase;
+  //
+  //	These are the theories and modules we directly import.
+  //
+  //	0,...,nrBoundParameters - 1				bound parameters
+  //	nrBoundParameters,..., parameterNames.size() - 1	free parameters
+  //	parameterNames.size(),..., importedModules.size() - 1	regular imports
+  //
+  int nrBoundParameters;
+  Vector<int> parameterNames;
+  //  Vector<ImportModule*> parameterTheories;
+  Vector<ImportModule*> importedModules;
   //
   //	If we are a renaming of another module we need to store this info.
   //
@@ -175,6 +184,25 @@ ImportModule::getNrImportedSorts() const
   //	Sorts with index < this value were imported.
   //
   return nrImportedSorts;
+}
+
+inline int
+ImportModule::getNrParameters() const
+{
+  return parameterNames.size();
+}
+
+inline int
+ImportModule::getNrFreeParameters() const
+{
+  return parameterNames.size() - nrBoundParameters;
+}
+
+inline ImportModule*
+ImportModule::getParameterTheory(int index) const
+{
+  Assert(index < getNrParameters(), "bad parameter index " << index);
+  return importedModules[index]->baseModule;
 }
 
 inline int
@@ -271,12 +299,6 @@ inline const set<int>&
 ImportModule::getLabels() const
 {
   return labels;
-}
-
-inline bool
-ImportModule::hasDependents() const
-{
-  return !dependentModules.empty();
 }
 
 #endif

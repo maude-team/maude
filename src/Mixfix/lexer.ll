@@ -103,8 +103,9 @@ in					RETURN(KW_IN)
 }
 
 <INITIAL>{
-th|fth|mod|fmod|obj			RETURN(KW_MOD)
+th|fth|mod|fmod|obj			RETURN(KW_MOD)  // need to know which one we saw
 omod					RETURN(KW_OMOD)
+view					RETURN(KW_VIEW);
 load					return KW_LOAD;
 pwd					return KW_PWD;
 cd					return KW_CD;
@@ -138,7 +139,7 @@ advise|advisory|advisories		return KW_ADVISE;
 verbose					return KW_VERBOSE;
 do					return KW_DO;
 clear					return KW_CLEAR;
-context					return KW_CONTEXT;
+body					return KW_BODY;
 whole					return KW_WHOLE;
 select					return KW_SELECT;
 deselect				return KW_DESELECT;
@@ -162,6 +163,7 @@ cmd|command				return KW_CMD;
 all					return KW_ALL;
 modules					return KW_MODULES;
 module					return KW_MODULE;
+views					return KW_VIEWS;
 sort|sorts				return KW_SORTS;
 op|ops					return KW_OPS;
 var|vars				return KW_VARS;
@@ -224,6 +226,7 @@ rat|rational				return KW_RAT;
   */
 <ID_MODE>{
 to					RETURN(KW_TO)
+from					RETURN(KW_FROM)
 label					RETURN(KW_LABEL)
 assoc|associative			RETURN(KW_ASSOC)
 comm|commutative			RETURN(KW_COMM)
@@ -266,12 +269,14 @@ ceq|cq					RETURN(KW_CEQ)
 rl					RETURN(KW_RL)
 crl					RETURN(KW_CRL)
 end(th|fth|m|fm|om|o)|jbo		RETURN(KW_ENDM)
+endv					RETURN(KW_ENDV)
 "->"					RETURN(KW_ARROW)
 "=>"					RETURN(KW_ARROW2)
 "~>"					RETURN(KW_PARTIAL)
-[:()\[\].,<=|+*]			RETURN(*yytext)
+"::"					RETURN(KW_COLON2)
+[:()\[\]{}.,<=|+*]			RETURN(*yytext)
 {maudeId}"."				FIX_UP(ENDS_IN_DOT)
-{maudeId}|[{}]				FIX_UP(IDENTIFIER)
+{maudeId}				FIX_UP(IDENTIFIER)
 }
 
 <FILE_NAME_MODE>{

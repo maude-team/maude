@@ -126,8 +126,9 @@ MetaModuleCache::flush()
 }
 
 void
-MetaModuleCache::regretToInform(ImportModule* doomedModule)
+MetaModuleCache::regretToInform(Entity* doomedEntity)
 {
+  ImportModule* doomedModule = static_cast<ImportModule*>(doomedEntity);
   //
   //	Must remove doomed module from cache if it's there.
   //

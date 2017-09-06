@@ -48,7 +48,7 @@
 #include "userLevelRewritingContext.hh"
 #include "visibleModule.hh"
 
-VisibleModule::VisibleModule(int name, ModuleType moduleType, Parent* parent)
+VisibleModule::VisibleModule(int name, ModuleType moduleType, Entity::User* parent)
   : ImportModule(name, moduleType, parent)
 {
 }
@@ -419,9 +419,21 @@ VisibleModule::showPolymorphAttributes(ostream& s, int index) const
 	    const Vector<Sort*>& domainAndRange =
 	      op->getOpDeclarations()[0].getDomainAndRange();
 	    int nrSorts = domainAndRange.length() - 1;
+	    //
+	    //	We don't use operator<< for sorts in an op-hook since they
+	    //	should always be printed as single tokens.
+	    //
 	    for (int j = 0; j < nrSorts; j++)
-	      s << hookSort(domainAndRange[j]) << ' ';
-	    s << "~> " << hookSort(domainAndRange[nrSorts]) << ')';
+	      {
+		Sort* sort = domainAndRange[j];
+		if (sort->index() == Sort::KIND)
+		  sort = sort->component()->sort(1);
+		s << Token::name(sort->id()) << ' ';
+	      }
+	    Sort* sort = domainAndRange[nrSorts];
+	    if (sort->index() == Sort::KIND)
+	      sort = sort->component()->sort(1);
+	    s << "~> " << Token::name(sort->id()) << ')';
 	  }
       }
       {
@@ -719,18 +731,21 @@ VisibleModule::showAttributes(ostream& s, Symbol* symbol, int opDeclIndex) const
 	    const Vector<Sort*>& domainAndRange =
 	      op->getOpDeclarations()[0].getDomainAndRange();
 	    int nrSorts = domainAndRange.length() - 1;
+	    //
+	    //	We don't use operator<< for sorts in an op-hook since they
+	    //	should always be printed as single tokens.
+	    //
 	    for (int j = 0; j < nrSorts; j++)
 	      {
 		Sort* sort = domainAndRange[j];
 		if (sort->index() == Sort::KIND)
 		  sort = sort->component()->sort(1);
-		s << sort << ' ';
+		s << Token::name(sort->id()) << ' ';
 	      }
-	    s << "~> ";
 	    Sort* sort = domainAndRange[nrSorts];
 	    if (sort->index() == Sort::KIND)
 	      sort = sort->component()->sort(1);
-	    s << sort << ')';
+	    s << "~> " << Token::name(sort->id()) << ')';
 	  }
       }
       purposes.clear();

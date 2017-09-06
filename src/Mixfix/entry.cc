@@ -277,11 +277,6 @@ MixfixModule::addOpDeclaration(Token prefixName,
 	  iflags |= PSEUDO_RAT;
 	}
     }
-  else if (nrArgs == 1)
-    {
-      if (symbolType.hasFlag(SymbolType::ITER))
-	iterSymbols.insert(name);
-    }
 
   int nrSymbols = symbolInfo.length();
   symbolInfo.expandBy(1);

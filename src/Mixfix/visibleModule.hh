@@ -32,7 +32,7 @@ class VisibleModule : public ImportModule
   NO_COPYING(VisibleModule);
 
 public:
-  VisibleModule(int name, ModuleType moduleType, Parent* parent = 0);
+  VisibleModule(int name, ModuleType moduleType, Entity::User* parent = 0);
 
   void showSummary(ostream& s);
   void showKinds(ostream& s) const;

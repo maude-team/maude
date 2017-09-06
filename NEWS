@@ -1,3 +1,14 @@
+Overview of Changes in Maude alpha86
+====================================
+* fixed loop mode \/ bug
+* metaPrettyPrint() now supports options
+* preregularity and constructor consistancy errors now produce a
+  single informative warning
+* set trace rewrite and set trace body options
+* fixed metaXmatch() kind clash bug
+* SO_REUSEADDR flag set on server sockets
+* first attempt at parameterization in module system
+
 Overview of Changes in Maude alpha85a
 =====================================
 * fixed more sufficient completeness issues in the prelude
@@ -14,7 +25,7 @@ Overview of Changes in Maude alpha85
 * glbSorts() now handles kinds
 * show profile now includes percentages
 * show path labels command added
-* metaSearchPath() added
+* metaSearchPath(),  added
 * set clear rules on/off command added
 * maximalAritySet() added
 

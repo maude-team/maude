@@ -109,7 +109,7 @@ public:
   bool downSaturate(DagNode* metaBound, int& bound) const;
   bool downBound64(DagNode* metaBound, Int64& bound) const;
   bool downSaturate64(DagNode* metaBound, Int64& bound) const;
-
+  bool downPrintOptionSet(DagNode* metaPrintOptionSet, int& printFlags) const;
   bool downBool(DagNode* metaBool, bool& value);
   bool downQid(DagNode* metaQid, int& id);
   MetaModule* downModule(DagNode* metaModule);
@@ -278,6 +278,8 @@ private:
 		      MetaModule* m,
 		      Symbol* topSymbol,
 		      int& bubbleSpecIndex);
+
+  bool downPrintOption(DagNode* metaPrintOption, int& printFlags) const;
 
   void checkHookList(DagNode* metaHookList, SymbolType& symbolType);
   void checkHook(DagNode* metaIdHook, SymbolType& symbolType);

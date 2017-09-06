@@ -234,5 +234,8 @@ eq 'getType['`{_`,_`,_`,_`}['T:Term,'T:Type,'S:Substitution,'C:Context]] =
     'T:Type [none] .
 eq 'getType['`{_`,_`,_`}['T:Term,'T:Type,'S:Substitution]] = 'T:Type [none] .
 eq 'getType['`{_`,_`}['T:Term,'T:Type]] = 'T:Type [none] .
+eq 'metaPrettyPrint['M:Module,'T:Term] = 'metaPrettyPrint['M:Module,'T:Term,
+    '__['mixfix.PrintOption,'__['flat.PrintOption,'__['format.PrintOption,'__[
+    'number.PrintOption,'rat.PrintOption]]]]] [none] .
 eq 'not_['A:Bool] = '_xor_['true.Bool,'A:Bool] [none] .
 Maude> Bye.

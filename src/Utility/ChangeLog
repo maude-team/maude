@@ -1,3 +1,13 @@
+2005-03-10  Steven Eker  <eker@goo.csl.sri.com>
+
+	* macros.hh (enum SpecialConstants): added GARBAGE to enum SpecialConstants
+
+2005-01-11  Steven Eker  <eker@goo.csl.sri.com>
+
+	* macros.hh (ComplexWarning): added
+	
+===================================Maude86===========================================
+
 2004-12-15  Steven Eker  <eker@goo.csl.sri.com>
 
 	* macros.hh (DebugAdvisory): print debug advisories in red

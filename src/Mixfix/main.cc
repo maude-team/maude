@@ -192,7 +192,7 @@ main(int argc, char* argv[])
 	  else if (strcmp(arg, "--version") == 0)
 	    printVersion();
 	  else if (strcmp(arg, "-no-mixfix") == 0)
-	    MixfixModule::setPrintMixfix(false);
+	    interpreter.setPrintFlag(Interpreter::PRINT_MIXFIX, false);
 	  else if (strcmp(arg, "-ansi-color") == 0)
 	    ansiColor = true;
 	  else if (strcmp(arg, "-no-ansi-color") == 0)

@@ -35,6 +35,7 @@
 
 //	front end class definitions
 #include "renaming.hh"
+#include "view.hh"
 #include "moduleCache.hh"
 #include "fileTable.hh"
 
@@ -43,8 +44,9 @@ ModuleCache::ModuleCache()
 }
 
 void
-ModuleCache::regretToInform(ImportModule* doomedModule)
+ModuleCache::regretToInform(Entity* doomedEntity)
 {
+  ImportModule* doomedModule = static_cast<ImportModule*>(doomedEntity);
   ModuleMap::iterator pos = moduleMap.find(doomedModule->id());
   Assert(pos != moduleMap.end(), "could find self-destructing module");
   DebugAdvisory("removing module " << doomedModule << " from cache");
@@ -56,7 +58,7 @@ ModuleCache::makeRenamedCopy(ImportModule* module, Renaming* renaming)
 {
   //
   //	Step 1
-  //	Build a  canonical renaming based on modules signature.
+  //	Build a canonical renaming based on modules signature.
   //	If empty, just return ourselves.
   //
   Renaming* canonical = renaming->makeCanonicalVersion(module);
@@ -85,6 +87,83 @@ ModuleCache::makeRenamedCopy(ImportModule* module, Renaming* renaming)
   //
   DebugAdvisory("making " << name);
   ImportModule* copy = module->makeRenamedCopy(t, canonical, this);
+  moduleMap[t] = copy;
+  return copy;
+}
+
+ImportModule*
+ModuleCache::makeParameterCopy(int parameterName, ImportModule* module)
+{
+  //
+  //	Make the name of the module we want.
+  //
+  crope name(Token::name(parameterName));
+  name += " :: ";
+  name += Token::name(module->id());
+  int t = Token::encode(name.c_str());
+  //
+  //	Check if we already have a parameter copy in cache.
+  //	If so, just return it.
+  //
+  ModuleMap::const_iterator c = moduleMap.find(t);
+  if (c != moduleMap.end())
+    {
+      DebugAdvisory("using existing copy of " << name);
+      return c->second;
+    }
+  //
+  //	Create new module; and insert it in cache.
+  //
+  DebugAdvisory("making " << name);
+  ImportModule* copy = module->makeParameterCopy(t, parameterName, this);
+  moduleMap[t] = copy;
+  return copy;
+}
+
+ImportModule*
+ModuleCache::makeInstatiation(ImportModule* module, const Vector<View*>& views, const Vector<int>& parameterArgs)
+{
+  //
+  //	Make the name of the module we want.
+  //
+  crope name(Token::name(module->id()));
+  const char* sep = "{";
+  int nrParameters = views.size();
+  for (int i = 0; i < nrParameters; ++i)
+    {
+      name += sep;
+      sep = ", ";
+      View* v = views[i];
+      if (v == 0)
+	{
+	  //
+	  //	Place brackets around parameter arguments so that we don't confuse
+	  //	them with views having the same name.
+	  //
+	  name += '[';
+	  name += Token::name(parameterArgs[i]);
+	  name += ']';
+	}
+      else
+	name += Token::name(v->id());
+    }
+  name += "}";
+  int t = Token::encode(name.c_str());
+  //
+  //	Check if we already have an instantiation in cache.
+  //	If so, just return it.
+  //
+  ModuleMap::const_iterator c = moduleMap.find(t);
+  if (c != moduleMap.end())
+    {
+      DebugAdvisory("using existing copy of " << name);
+      return c->second;
+    }
+  //
+  //	Create new module; and insert it in cache.
+  //
+  DebugAdvisory("making " << name);
+  ImportModule* copy = module->makeInstantiation(t, views, parameterArgs, this);
   moduleMap[t] = copy;
   return copy;
 }
@@ -168,15 +247,15 @@ ModuleCache::destructUnusedModules()
   //	simple. If the number of cached modules grows beyond a few hundred
   //	a more complex O(n) solution based on keeping a linked list of
   //	candidates would be appropriate. We would need a call back from
-  //	ImportModule to tell us when a module loses its last dependent.
+  //	ImportModule to tell us when a module loses its last user.
   //
  restart:
   {
     FOR_EACH_CONST(i, ModuleMap, moduleMap)
       {
-	if (!(i->second->hasDependents()))
+	if (!(i->second->hasUsers()))
 	  {
-	    DebugAdvisory("module " << i->second << " has no dependents");
+	    DebugAdvisory("module " << i->second << " has no users");
 	    i->second->deepSelfDestruct();  // invalidates i
 	    goto restart;
 	  }    

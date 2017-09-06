@@ -222,9 +222,20 @@ command		:	KW_SELECT		{ lexerCmdMode(); clear(); }
 			  if (interpreter.setCurrentModule(bubble))
 			    interpreter.showModule(true);
 			}
+		|	KW_SHOW KW_VIEW		{ lexerCmdMode(); clear(); }
+			cTokensBarDot '.'
+			{
+			  lexerInitialMode();
+			  if (interpreter.setCurrentView(bubble))
+			    interpreter.showView();
+			}
 		|	KW_SHOW KW_MODULES '.'
 			{
 			  interpreter.showModules(true);
+			}
+		|	KW_SHOW KW_VIEWS '.'
+			{
+			  interpreter.showNamedViews();
 			}
 		|	KW_SHOW KW_SORTS	{ lexerCmdMode(); clear(); }
 			cTokensBarDot '.'
@@ -336,81 +347,13 @@ command		:	KW_SELECT		{ lexerCmdMode(); clear(); }
 			{
 			  MemoryCell::setShowGC($4);
 			}
-		|	KW_SET KW_PRINT KW_MIXFIX polarity '.'
+		|	KW_SET KW_PRINT printOption polarity '.'
 			{
-			  MixfixModule::setPrintMixfix($4);
+			  interpreter.setPrintFlag($3, $4);
 			}
-		|	KW_SET KW_PRINT KW_FLAT polarity '.'
+		|	KW_SET KW_TRACE traceOption polarity '.'
 			{
-			  MixfixModule::setPrintFlat($4);
-			}
-		|	KW_SET KW_PRINT KW_WITH KW_ALIASES polarity '.'
-			{
-			  MixfixModule::setPrintWithAliases($5);
-			}
-		|	KW_SET KW_PRINT KW_WITH KW_PARENS polarity '.'
-			{
-			  MixfixModule::setPrintWithParens($5);
-			}
-		|	KW_SET KW_PRINT KW_GRAPH polarity '.'
-			{
-			  MixfixModule::setPrintGraph($4);
-			}
-		|	KW_SET KW_PRINT KW_CONCEAL polarity '.'
-			{
-			  MixfixModule::setPrintConceal($4);
-			}
-		|	KW_SET KW_PRINT KW_NUMBER polarity '.'
-			{
-			  interpreter.setFlag(Interpreter::PRINT_NUMBER, $4);
-			}
-		|	KW_SET KW_PRINT KW_RAT polarity '.'
-			{
-			  interpreter.setFlag(Interpreter::PRINT_RAT, $4);
-			}
-		|	KW_SET KW_PRINT KW_COLOR polarity '.'
-			{
-			  interpreter.setFlag(Interpreter::PRINT_COLOR, $4);
-			}
-		|	KW_SET KW_PRINT KW_FORMAT polarity '.'
-			{
-			  MixfixModule::setPrintFormat($4);
-			}
-		|	KW_SET KW_TRACE polarity '.'
-			{
-			  interpreter.setFlag(Interpreter::TRACE, $3);
-			}
-		|	KW_SET KW_TRACE KW_CONDITION polarity '.'
-			{
-			  UserLevelRewritingContext::setTraceConditionFlag($4);
-			}
-		|	KW_SET KW_TRACE KW_CONTEXT polarity '.'
-			{
-			// ??? what is this supposed to do?
-			}
-		|	KW_SET KW_TRACE KW_WHOLE polarity '.'
-			{
-			  UserLevelRewritingContext::setTraceWholeFlag($4);
-			}
-		|	KW_SET KW_TRACE KW_SUBSTITUTION polarity '.'
-			{
-			  UserLevelRewritingContext::setTraceSubstitutionFlag($4);
-			}
-		|	KW_SET KW_TRACE KW_SELECT polarity '.'
-			{
-			  UserLevelRewritingContext::setTraceSelectFlag($4);
-			}
-		|	KW_SET KW_TRACE KW_MBS polarity '.'
-			{
-			  UserLevelRewritingContext::setTraceScFlag($4);
-			}
-		|	KW_SET KW_TRACE KW_EQS polarity '.'
-			{
-			  UserLevelRewritingContext::setTraceEqFlag($4);
-			}
-		|	KW_SET KW_TRACE KW_RLS polarity '.'
-			{
-			  UserLevelRewritingContext::setTraceRuleFlag($4);
+			  interpreter.setFlag($3, $4);
 			}
 		|	KW_SET KW_BREAK polarity '.'
 			{
@@ -492,6 +435,30 @@ command		:	KW_SELECT		{ lexerCmdMode(); clear(); }
 /*
  *	Options
  */
+printOption	:	KW_MIXFIX		{ $$ = Interpreter::PRINT_MIXFIX; }
+		|	KW_FLAT			{ $$ = Interpreter::PRINT_FLAT; }
+		|	KW_WITH KW_ALIASES	{ $$ = Interpreter::PRINT_WITH_ALIASES; }
+		|	KW_WITH KW_PARENS	{ $$ = Interpreter::PRINT_WITH_PARENS; }
+		|	KW_GRAPH		{ $$ = Interpreter::PRINT_GRAPH; }
+		|	KW_CONCEAL		{ $$ = Interpreter::PRINT_CONCEAL; }
+		|	KW_NUMBER		{ $$ = Interpreter::PRINT_NUMBER; }
+		|	KW_RAT			{ $$ = Interpreter::PRINT_RAT; }
+		|	KW_COLOR		{ $$ = Interpreter::PRINT_COLOR; }
+		|	KW_FORMAT		{ $$ = Interpreter::PRINT_FORMAT; }
+		;
+
+traceOption	:				{ $$ = Interpreter::TRACE; }
+		|	KW_CONDITION		{ $$ = Interpreter::TRACE_CONDITION; }
+		|	KW_WHOLE		{ $$ = Interpreter::TRACE_WHOLE; }
+		|	KW_SUBSTITUTION		{ $$ = Interpreter::TRACE_SUBSTITUTION; }
+		|	KW_SELECT		{ $$ = Interpreter::TRACE_SELECT; }
+		|	KW_MBS			{ $$ = Interpreter::TRACE_MB; }
+		|	KW_EQS			{ $$ = Interpreter::TRACE_EQ; }
+		|	KW_RLS			{ $$ = Interpreter::TRACE_RL; }
+		|	KW_REWRITE		{ $$ = Interpreter::TRACE_REWRITE; }
+		|	KW_BODY			{ $$ = Interpreter::TRACE_BODY; }
+		;
+
 polarity	:	KW_ON			{ $$ = true; }
 		|	KW_OFF			{ $$ = false; }
 		;

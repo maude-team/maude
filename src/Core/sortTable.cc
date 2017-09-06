@@ -28,7 +28,6 @@
 #include "macros.hh"
 #include "vector.hh"
 #include "indent.hh"
-#include "intSet.hh"
  
 //      forward declarations
 #include "interface.hh"
@@ -45,6 +44,7 @@
 #endif
 
 #include "ctorDiagram.cc"
+#include "sortErrorAnalysis.cc"
 
 /*
 void
@@ -235,7 +235,10 @@ SortTable::buildSortDiagram()
   if (nrArgs == 0)
     {
       sortDiagram.expandTo(1);
-      int sortIndex = findMinSortIndex(all);
+      bool unique;
+      int sortIndex = findMinSortIndex(all, unique);
+      WarningCheck(unique, "sort declarations for constant " << QUOTE(safeCast(Symbol*, this)) <<
+		   " do not have an unique least sort.");
       sortDiagram[0] = sortIndex;
       singleNonErrorSort = componentVector[0]->sort(sortIndex);
       return;
@@ -248,6 +251,7 @@ SortTable::buildSortDiagram()
   int singleNonErrorSortIndex = UNINITIALIZED;
   Vector<NatSet> nextStates;
   int currentBase = 0;
+  set<int> badTerminals;
   for (int i = 0; i < nrArgs; i++)
     {
       const ConnectedComponent* component = componentVector[i];
@@ -274,8 +278,11 @@ SortTable::buildSortDiagram()
 	      int index = currentBase + k * nrSorts + j;
 	      if (nrNextSorts == 0)
 		{
-		  int sortIndex = findMinSortIndex(nextState);
+		  bool unique;
+		  int sortIndex = findMinSortIndex(nextState, unique);
 		  sortDiagram[index] = sortIndex;
+		  if (!unique)
+		    badTerminals.insert(index);
 		  if (sortIndex > 0)
 		    {
 		      if (singleNonErrorSortIndex == UNINITIALIZED)
@@ -299,6 +306,8 @@ SortTable::buildSortDiagram()
     }
   if (singleNonErrorSortIndex > 0)
     singleNonErrorSort = componentVector[nrArgs]->sort(singleNonErrorSortIndex);
+  if (!(badTerminals.empty()))
+    sortErrorAnalysis(true, badTerminals);
 }
 
 int
@@ -315,7 +324,7 @@ SortTable::findStateNumber(Vector<NatSet>& stateSet, const NatSet& state)
 }
 
 int
-SortTable::findMinSortIndex(const NatSet& state)
+SortTable::findMinSortIndex(const NatSet& state, bool& unique)
 {
   Sort* minSort = componentVector[nrArgs]->sort(Sort::ERROR_SORT);  // start with error sort
   NatSet infSoFar(minSort->getLeqSorts());
@@ -331,10 +340,7 @@ SortTable::findMinSortIndex(const NatSet& state)
 	    minSort = result;
         }
     }
-  WarningCheck(infSoFar == minSort->getLeqSorts(),
-               "sort declarations for operator " <<
-	       QUOTE(static_cast<const Symbol*>(this)) <<  // HACK
-               " failed preregularity check.");
+  unique = (infSoFar == minSort->getLeqSorts());
   return minSort->index();
 }
 
@@ -404,7 +410,7 @@ SortTable::dumpSortDiagram(ostream& s, int indentLevel)
     return;  // HACK
   s << Indent(indentLevel) << "Begin{SortDiagram}";
   indentLevel += 2;
-  IntSet nodes;
+  set<int> nodes;
   nodes.insert(0);
   ConnectedComponent* range = componentVector[nrArgs];
   if (nrArgs == 0)
@@ -417,11 +423,10 @@ SortTable::dumpSortDiagram(ostream& s, int indentLevel)
     {
       ConnectedComponent* component = componentVector[i];
       int nrSorts = component->nrSorts();
-      IntSet nextNodes;
-      int nrNodes = nodes.cardinality();
-      for (int j = 0; j < nrNodes; j++)
+      set<int>  nextNodes;
+      FOR_EACH_CONST(j, set<int>, nodes)
 	{
-	  int n = nodes.index2Int(j);
+	  int n = *j;
 	  s << '\n' << Indent(indentLevel - 1) << "Node " << n <<
 	    " (testing argument " << i << ")\n";
 	  for (int k = 0; k < nrSorts; k++)
@@ -441,8 +446,9 @@ SortTable::dumpSortDiagram(ostream& s, int indentLevel)
 		}
 	    }
 	}
-      nodes = nextNodes;
+      nodes.swap(nextNodes);
     }
   s << Indent(indentLevel - 2) << "End{SortDiagram}\n";
 }
+
 #endif

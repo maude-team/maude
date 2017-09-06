@@ -21,43 +21,30 @@
 */
 
 //
-//      Class for modules created on the fly at the meta level.
+//      Class to hold database of views.
 //
-#ifndef _metaModule_hh_
-#define _metaModule_hh_
-#include "importModule.hh"
-#include "metaOpCache.hh"
+#ifndef _viewDatabase_hh_
+#define _viewDatabase_hh_
+#include <map>
 
-class MetaModule : public ImportModule, public MetaOpCache
+class ViewDatabase
 {
-  NO_COPYING(MetaModule);
+  NO_COPYING(ViewDatabase);
 
 public:
-  MetaModule(int name, ModuleType moduleType, Entity::User* parent);
+  ViewDatabase(){}
+  ~ViewDatabase();
 
-  void addComplexSymbol(int type, int index, DagNode* identity, DagNode* fixUpInfo);
-  void addComplexSymbol(int type,
-			int index,
-			DagNode* identity,
-			DagNode* fixUpInfo,
-			const Vector<Sort*>& domainAndRange);
-  bool removeComplexSymbol(int& type,
-			   int& index,
-			   DagNode*& identity,
-			   DagNode*& fixUpInfo,
-			   Vector<Sort*>& domainAndRange);
+  bool insertView(int name, View* view);  // true if existing view displaced
+  View* getView(int name) const;  // 0 if doesn't exist
+  bool deleteView(int name);  // true if view deleted
+
+  void showNamedViews() const;
 
 private:
-  struct ComplexSymbol
-  {
-    int type;
-    int index;
-    DagNode* identity;
-    DagNode* fixUpInfo;
-    Vector<Sort*> domainAndRange;
-  };
+  typedef map<int, View*> ViewMap;
 
-  Vector<ComplexSymbol> complexSymbols;
+  ViewMap viewMap;
 };
 
 #endif

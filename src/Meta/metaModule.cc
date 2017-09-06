@@ -38,7 +38,7 @@
 #include "metaModule.hh"
 
 
-MetaModule::MetaModule(int name, ModuleType moduleType, Parent* parent)
+MetaModule::MetaModule(int name, ModuleType moduleType, Entity::User* parent)
   : ImportModule(name, moduleType, parent)
 {
 }

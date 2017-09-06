@@ -1,3 +1,37 @@
+2005-01-19  Steven Eker  <eker@goo.csl.sri.com>
+
+	* sortTable.cc (dumpSortDiagram): rewritten to use set<int> in
+	place of IntSet
+
+2005-01-11  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ctorDiagram.cc (containsConstructor): take unique arg
+	(buildCtorDiagram): keep track of badTerminals and call
+	sortErrorAnalysis() if needed
+
+	* sortErrorAnalysis.cc (sortErrorAnalysis): use ComplexWarning()
+
+	* sortTable.hh (class SortTable): updated decl for findMinSortIndex()
+
+	* sortTable.cc (buildSortDiagram): keep track of badTerminals and
+	call sortErrorAnalysis() if needed
+	(findMinSortIndex): take unique argument
+
+	* sortErrorAnalysis.cc (sortErrorAnalysis): take prereg argument
+	rather than diagram argument
+
+	* sortTable.hh (class SortTable): added decl for sortErrorAnalysis()
+	(class SortTable): added decls for struct Node
+
+	* sortErrorAnalysis.cc (sortErrorAnalysis): fix terminal case
+	(sortErrorAnalysis): generate warning
+
+2005-01-10  Steven Eker  <eker@goo.csl.sri.com>
+
+	* sortErrorAnalysis.cc: created
+
+===================================Maude86===========================================
+
 2004-12-23  Steven Eker  <eker@goo.csl.sri.com>
 
 	* run.cc (ruleRewrite): added extra isUnrewritable() test and

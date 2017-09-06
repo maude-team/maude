@@ -27,7 +27,6 @@
 //      utility stuff
 #include "macros.hh"
 #include "vector.hh"
-#include "intSet.hh"
 #include "pointerSet.hh"
 
 //      forward declarations

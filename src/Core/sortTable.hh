@@ -25,6 +25,7 @@
 //
 #ifndef _sortTable_hh_
 #define _sortTable_hh_
+#include <set>
 #include "opDeclaration.hh"
 #include "fullCompiler.hh"
 #include "connectedComponent.hh"
@@ -73,18 +74,23 @@ protected:
 #endif
 
 private:
+  struct Node;
+  struct SpanningTree;
+
   void buildSortDiagram();
   void buildCtorDiagram();
+  void sortErrorAnalysis(bool preregProblem,
+			 const set<int>& badTerminals);
   void computeMaximalOpDeclSetTable();
   bool domainSubsumes(int subsumer, int victim) const;
   int findStateNumber(Vector<NatSet>& stateSet, const NatSet& state);
-  int findMinSortIndex(const NatSet& state);
+  int findMinSortIndex(const NatSet& state, bool& unique);
   bool partiallySubsumes(int subsumer, int victim, int argNr);
   void minimize(NatSet& alive, int argNr);
 
   // void panic() const;  // HACK
 
-  int containsConstructor(const NatSet& state);
+  bool containsConstructor(const NatSet& state, bool& unique);
   static bool partlyMoreGeneral(const OpDeclaration& subsumer,
 				const OpDeclaration& victim,
 				int argNr);

@@ -1,3 +1,18 @@
+2005-03-15  Steven Eker  <eker@goo.csl.sri.com>
+
+	* socketStuff.cc (createServerTcpSocket): set SO_REUSEADDR flag
+	
+2005-03-14  Steven Eker  <eker@goo.csl.sri.com>
+
+	* socketStuff.cc (createServerTcpSocket): make DebugAdvisory()
+	more elaborate
+
+	* objectSystemRewritingContext.cc (ObjectSystemRewritingContext):
+	added DebugAdvisory() to check for server sockets not being closed
+	after ^C
+	
+===================================Maude86===========================================
+
 2004-12-23  Steven Eker  <eker@goo.csl.sri.com>
 
 	* socketAsync.cc (doError): use getsockopt() for more accurate

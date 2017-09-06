@@ -3,7 +3,7 @@
 #
 #	Initialize autoconf stuff.
 #
-AC_INIT(Maude, alpha85a, [maude-bugs@maude.cs.uiuc.edu])
+AC_INIT(Maude, alpha86, [maude-bugs@maude.cs.uiuc.edu])
 #
 #	Allow directory names that look like macros.
 #
@@ -16,7 +16,7 @@ AC_CANONICAL_HOST
 #
 #	Initialize automake stuff.
 #
-AM_INIT_AUTOMAKE(Maude, alpha85a)
+AM_INIT_AUTOMAKE(Maude, alpha86)
 #
 #	Cause defines to be put in a header file rather than passed as
 #	compiler flags.
@@ -237,8 +237,8 @@ case $host in
   *-darwin*)
     AC_DEFINE([DARWIN], [], [enable Darwin specific fixes])
 #
-#	Doug Lea's is unstable on Darwin - presumably because of
-#	brk()/sbrk() issues.
+#	Doug Lea's malloc() is unstable on Darwin - presumably because
+#	of brk()/sbrk() issues.
 #    
     WITH_DLMALLOC=no
     ;;

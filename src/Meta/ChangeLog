@@ -1,3 +1,56 @@
+2005-03-17  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaModuleCache.cc (regretToInform): removed removeUser() hack
+
+2005-03-16  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaModuleCache.cc (regretToInform): call removeUser()
+
+	* metaModule.cc (MetaModule): Parent* -> User*
+	(MetaModule): User* -> Entity::User*
+
+	* metaModule.hh (class MetaModule): Parent* -> User*
+
+	* metaModuleCache.cc (regretToInform): need to cast doomedEntity
+
+	* metaModuleCache.hh (User): derive from Entity::User rather than
+	ImportModule::Parent; update decl for regretToInform()
+
+2005-03-07  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaDownRenamings.cc (downRenamingType): handle
+	AUX_PARAMETERIZED_SORT
+
+	* metaDown.cc (downType2): handle AUX_PARAMETERIZED_SORT
+
+2005-02-16  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaMatch.cc (makeMatchSearchState2): use downTermPair() to
+	simplify and fix bug where pattern and subject are in different
+	kinds
+
+2005-01-07  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaDown.cc (downPrintOption): support ratSymbol
+
+	* metaLevelSignature.cc (MACRO): added ratSymbol
+
+2005-01-06  Steven Eker  <eker@goo.csl.sri.com>
+
+	* descentSignature.cc (MACRO): metaPrettyPrint now takes 3 arguments
+
+	* metaLevel.hh (class MetaLevel): added decls for
+	downPrintOptionSet() and downPrintOption()
+
+	* metaDown.cc (downPrintOptionSet): added
+	(downPrintOption): added
+
+	* descentFunctions.cc (metaPrettyPrint): handle print options argument
+
+	* metaLevelSignature.cc (MACRO): added print option constructors
+
+===================================Maude86===========================================
+
 2004-12-08  Steven Eker  <eker@goo.csl.sri.com>
 
 	* metaUpModule.cc (upPolymorphDecl): handle metadata

@@ -44,6 +44,7 @@
 //	front end class definitions
 #include "token.hh"
 #include "renaming.hh"
+#include "view.hh"
 #include "moduleExpression.hh"
 #include "fileTable.hh"
 #include "directoryManager.hh"
@@ -53,12 +54,15 @@
 #include "interpreter.hh"
 
 #include "main.hh"
-#define clear()		bubble.contractTo(0);
-#define store(token)	bubble.append(token)
+#define clear()			bubble.contractTo(0);
+#define store(token)		bubble.append(token)
+#define fragClear()		fragments.contractTo(0);
+#define fragStore(token)	fragments.append(token)
 #define YYPARSE_PARAM	parseResult
 #define PARSE_RESULT	(*((UserLevelRewritingContext::ParseResult*) parseResult))
 
 #define CM		interpreter.getCurrentModule()
+#define CV		interpreter.getCurrentView()
 
 void lexerInitialMode();
 void lexerIdMode();
@@ -71,6 +75,7 @@ bool includeFile(const string& directory, const string& fileName, bool silent, i
 void eatComment(bool firstNonWhite);
 
 Vector<Token> bubble;
+Vector<Token> fragments;
 Vector<Token> moduleExpr;
 stack<ModuleExpression*> moduleExpressions;
 Renaming* currentRenaming = 0;
@@ -92,6 +97,8 @@ void cleanUpParser();
   const char* yyString;
   Token yyToken;
   ImportModule::ImportMode yyImportMode;
+  Interpreter::Flags yyFlags;
+  Interpreter::PrintFlags yyPrintFlags;
 }
 
 %{
@@ -102,17 +109,17 @@ int yylex(YYSTYPE* lvalp);
 /*
  *	Inert keywords: these are only recognized by lexer when in initial mode.
  */
-%token <yyToken> KW_MOD KW_OMOD
+%token <yyToken> KW_MOD KW_OMOD KW_VIEW
 %token KW_PARSE KW_NORMALIZE KW_REDUCE KW_REWRITE
 %token KW_LOOP KW_NARROW KW_MATCH KW_XMATCH KW_UNIFY KW_XUNIFY
 %token KW_EREWRITE KW_FREWRITE KW_OREWRITE
 %token KW_CONTINUE KW_SEARCH
 %token KW_SET KW_SHOW KW_ON KW_OFF 
-%token KW_TRACE KW_CONTEXT KW_WHOLE KW_SELECT KW_DESELECT KW_CONDITION KW_SUBSTITUTION
+%token KW_TRACE KW_BODY KW_WHOLE KW_SELECT KW_DESELECT KW_CONDITION KW_SUBSTITUTION
 %token KW_PRINT KW_GRAPH KW_MIXFIX KW_FLAT
 %token KW_WITH KW_PARENS KW_ALIASES KW_GC KW_TIME KW_STATS KW_TIMING
 %token KW_CMD KW_BREAKDOWN KW_BREAK KW_PATH
-%token KW_MODULE KW_MODULES KW_ALL KW_SORTS KW_OPS KW_VARS
+%token KW_MODULE KW_MODULES KW_VIEWS KW_ALL KW_SORTS KW_OPS KW_VARS
 %token KW_MBS KW_EQS KW_RLS KW_SUMMARY KW_KINDS KW_ADVISE KW_VERBOSE
 %token KW_DO KW_CLEAR
 %token KW_PROTECT KW_EXTEND KW_INCLUDE KW_EXCLUDE
@@ -125,23 +132,24 @@ int yylex(YYSTYPE* lvalp);
 /*
  *	Start keywords: signal end of mixfix statement if following '.'.
  */
-%token <yyToken> KW_ENDM KW_IMPORT
+%token <yyToken> KW_ENDM KW_IMPORT KW_ENDV
 %token <yyToken> KW_SORT KW_SUBSORT KW_OP KW_OPS KW_MSGS KW_VAR KW_CLASS KW_SUBCLASS
 %token <yyToken> KW_MB KW_CMB KW_EQ KW_CEQ KW_RL KW_CRL
 
 /*
  *	Mid keywords: need to be recognized in the middle of mixfix syntax.
  */
-%token <yyToken> KW_IS
+%token <yyToken> KW_IS KW_FROM
 %token <yyToken> KW_ARROW KW_ARROW2 KW_PARTIAL KW_IF
 %type <yyToken> ':' '=' '(' ')' '.' '<' '[' ']' ',' '|'
 
 /*
  *	Module expression keywords.
  */
-%token <yyToken> KW_LABEL KW_TO
+%token <yyToken> KW_LABEL KW_TO KW_COLON2
 %left <yyToken> '+'
 %left <yyToken> '*'
+%type <yyToken> '{' '}'
 
 /*
  *	Attribute keywords need to be recognized when parsing attributes.
@@ -165,7 +173,7 @@ int yylex(YYSTYPE* lvalp);
 /*
  *	Nonterminals that return tokens.
  */
-%type <yyToken> identifier startKeyword startKeyword2 midKeyword attrKeyword attrKeyword2
+%type <yyToken> identifier inert startKeyword startKeyword2 midKeyword attrKeyword attrKeyword2
 %type <yyToken> token endToken endsInDot
 %type <yyToken> tokenBarColon tokenBarEqual tokenBarIf tokenBarArrow2
 %type <yyToken> tokenBarColonTo tokenBarCommaLeft
@@ -174,7 +182,7 @@ int yylex(YYSTYPE* lvalp);
 %type <yyToken> cTokenBarLeftIn cTokenBarDotNumber cTokenBarDotRight
 %type <yyToken> cSimpleTokenBarDot
 %type <yyToken> cTokenBarDotCommaRight
-%type <yyToken> sortToken startModule
+%type <yyToken> sortName sortToken startModule sortDot
 
 /*
  *	Nonterminals that return bool.
@@ -188,6 +196,14 @@ int yylex(YYSTYPE* lvalp);
  *	Nonterminals that return ImportMode.
  */
 %type <yyImportMode> importMode
+/*
+ *	Nonterminals that return Flags.
+ */
+%type <yyFlags> traceOption
+/*
+ *	Nonterminals that return PrintFlags.
+ */
+%type <yyPrintFlags> printOption
 
 %start top
 
@@ -201,6 +217,7 @@ top		:	item { YYACCEPT; }
 		;
 
 item		:	module
+		|	view
 		|	directive
 		|	command
 		;

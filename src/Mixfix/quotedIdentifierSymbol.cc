@@ -153,6 +153,7 @@ QuotedIdentifierSymbol::determineSort(int idIndex)
 	break;
       }
     case Token::AUX_SORT:
+    case Token::AUX_PARAMETERIZED_SORT:
       {
 	if (sortSort != 0)
 	  return sortSort;

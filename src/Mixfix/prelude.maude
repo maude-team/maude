@@ -22,7 +22,7 @@
 
 ***
 ***	Maude interpreter standard prelude.
-***	Version Alpha 85a
+***	Version Alpha 86
 ***
 ***	Some of the overall structure is taken from the OBJ3
 ***	interpreter standard prelude.
@@ -101,6 +101,10 @@ fmod IDENTICAL is
 		  term-hook equalTerm (false)
 		  term-hook notEqualTerm (true))] .
 endfm
+
+***
+***	Builtin data types.
+***
 
 fmod NAT is
   sorts Zero NzNat Nat .
@@ -661,7 +665,7 @@ fmod FLOAT is
   op pi : -> FiniteFloat .
   eq pi = 3.1415926535897931 .
 
-  op _=[_]_ : Float FiniteFloat Float -> Bool [prec 51] .
+  op _=[_]_ : Float FiniteFloat Float -> Bool [prec 51 format (d d d d d s d)] .
   var X Y : Float .
   var Z : FiniteFloat .
   eq X =[Z] Y = abs(X - Y) < Z .
@@ -804,13 +808,6 @@ fmod RANDOM is
 		  op-hook succSymbol (s_ : Nat ~> NzNat))] .
 endfm
 
-mod COUNTER is
-  protecting NAT .
-  op counter : -> [Nat]
-	[special (id-hook CounterSymbol
-		  op-hook succSymbol (s_ : Nat ~> NzNat))] .
-endm
-
 fmod QID is
   protecting STRING .
   sort Qid .
@@ -826,6 +823,387 @@ fmod QID is
 		  op-hook quotedIdentifierSymbol (<Qids> : ~> Qid)
 		  op-hook stringSymbol (<Strings> : ~> String))] .
 endfm
+
+***
+***	Standard theories and views.
+***
+
+fth TRIV is
+  sort Elt .
+endfth
+
+view Bool from TRIV to BOOL is
+  sort Elt to Bool .
+endv
+
+view Nat from TRIV to NAT is
+  sort Elt to Nat .
+endv
+
+view Int from TRIV to INT is
+  sort Elt to Int .
+endv
+
+view Rat from TRIV to RAT is
+  sort Elt to Rat .
+endv
+
+view Float from TRIV to FLOAT is
+  sort Elt to Float .
+endv
+
+view String from TRIV to STRING is
+  sort Elt to String .
+endv
+
+view Qid from TRIV to QID is
+  sort Elt to Qid .
+endv
+
+fth TAO-SET is
+  protecting BOOL .
+  including TRIV .
+  op _<_ : Elt Elt -> Bool .
+  vars X Y Z : Elt .
+  ceq X < Z = true if X < Y and Y < Z [nonexec label transitive] .
+  ceq X = Y if X < Y /\ Y < X [nonexec label antisymmetric] .
+endfth
+
+view TAO-SET from TRIV to TAO-SET is endv
+
+view Nat< from TAO-SET to NAT is
+  sort Elt to Nat .
+endv
+
+view Int< from TAO-SET to INT is
+  sort Elt to Int .
+endv
+
+view Rat< from TAO-SET to RAT is
+  sort Elt to Rat .
+endv
+
+view Float< from TAO-SET to FLOAT is
+  sort Elt to Float .
+endv
+
+view String< from TAO-SET to STRING is
+  sort Elt to String .
+endv
+
+***
+***	Container data types defined in Maude.
+***
+
+fmod LIST{X :: TRIV} is
+  protecting NAT .
+  sorts NeList{X} List{X} .
+  subsort X$Elt < NeList{X} < List{X} .
+  op nil : -> List{X} [ctor] .
+  op __ : List{X} List{X} -> List{X} [ctor assoc id: nil prec 25] .
+  op __ : NeList{X} List{X} -> NeList{X} [ctor ditto] .
+  op __ : List{X} NeList{X} -> NeList{X} [ctor ditto] .
+
+  var E E' : X$Elt .
+  vars A L : List{X} .
+  var C : Nat .
+
+  op append : List{X} List{X} -> List{X} .
+  op append : NeList{X} List{X} -> NeList{X} .
+  op append : List{X} NeList{X} -> NeList{X} .
+  eq append(A, L) = A L .
+
+  op head : NeList{X} -> X$Elt .
+  eq head(E L) = E .
+
+  op tail : NeList{X} -> List{X} .
+  eq tail(E L) = L .
+
+  op last : NeList{X} -> X$Elt .
+  eq last(L E) = E .
+
+  op front : NeList{X} -> List{X} .
+  eq front(L E) = L .
+
+  op occurs : X$Elt List{X} -> Bool .
+  eq occurs(E, nil) = false .
+  eq occurs(E, E' L) = if E == E' then true else occurs(E, L) fi .
+
+  op reverse : List{X} -> List{X} .
+  op reverse : NeList{X} -> NeList{X} .
+  eq reverse(L) = $reverse(L, nil) .
+
+  op $reverse : List{X} List{X} -> List{X} .
+  eq $reverse(nil, A) = A .
+  eq $reverse(E L, A) = $reverse(L, E A).
+
+  op length : List{X} -> Nat .
+  op length : NeList{X} -> NzNat .
+  eq length(L) = $length(L, 0) .
+
+  op $length : List{X} Nat -> Nat .
+  eq $length(nil, C) = C .
+  eq $length(E L, C) = $length(L, C + 1) .
+endfm
+
+fmod SORTABLE-LIST{X :: TAO-SET} is
+  protecting LIST{TAO-SET}{X} .
+  sort $Split{X} .
+
+  vars E E' : X$Elt .
+  vars A A' L L' : List{X} .
+  var N : NeList{X} .
+
+  op sort : List{X} -> List{X} .
+  op sort : NeList{X} -> NeList{X} .
+  eq sort(nil) = nil .
+  eq sort(E) = E .
+  eq sort(E N) = $sort($split(E N, nil, nil)) .
+
+  op $sort : $Split{X} -> List{X} .
+  eq $sort($split(nil, L, L')) = $merge(sort(L), sort(L'), nil) .
+
+  op $split : List{X} List{X} List{X} -> $Split{X} [ctor] .
+  eq $split(E, A, A') = $split(nil, A E, A') .
+  eq $split(E L E', A, A') = $split(L, A E, E' A') .
+
+  op merge : List{X} List{X} -> List{X} .
+  op merge : NeList{X} List{X} -> NeList{X} .
+  op merge : List{X} NeList{X} -> NeList{X} .
+  eq merge(L, L') = $merge(L, L', nil) .
+
+  op $merge : List{X} List{X} List{X} -> List{X} .
+  eq $merge(L, nil, A) = A L .
+  eq $merge(nil, L, A) = A L .
+  eq $merge(E L, E' L', A) =
+      if E < E' == true then $merge(L, E' L', A E)
+      else $merge(E L, L', A E')
+      fi .
+endfm
+
+fmod SET{X :: TRIV} is
+  protecting NAT .
+  sorts NeSet{X} Set{X} .
+  subsort X$Elt < NeSet{X} < Set{X} .
+  op empty : -> Set{X} [ctor] .
+  op _,_ : Set{X} Set{X} -> Set{X} [ctor assoc comm id: empty prec 121 format (d r os d)] .
+  op _,_ : NeSet{X} Set{X} -> NeSet{X} [ctor ditto] .
+
+  var E : X$Elt .
+  var N : NeSet{X} .
+  vars A S S' : Set{X} .
+  var C : Nat .
+
+  eq N, N = N .
+  
+  op insert : X$Elt Set{X} -> Set{X} .
+  eq insert(E, S) = E, S .
+
+  op delete : X$Elt Set{X} -> Set{X} .
+  eq delete(E, (E, S)) = delete(E, S) .
+  eq delete(E, S) = S [owise] .
+
+  op _in_ : X$Elt Set{X} -> Bool .
+  eq E in (E, S) = true .
+  eq E in S = false [owise] .
+
+  op |_| : Set{X} -> Nat .
+  op |_| : NeSet{X} -> NzNat .
+  eq | S | = $card(S, 0) .
+
+  op $card : Set{X} Nat -> Nat .
+  eq $card(empty, C) = C .
+  eq $card((N, N, S), C) = $card((N, S), C) .
+  eq $card((E, S), C) = $card(S, C + 1) [owise] .
+
+  op union : Set{X} Set{X} -> Set{X} .
+  op union : NeSet{X} Set{X} -> NeSet{X} .
+  op union : Set{X} NeSet{X} -> NeSet{X} .
+  eq union(S, S') = S, S' .
+
+  op intersection : Set{X} Set{X} -> Set{X} .
+  eq intersection(S, empty) = empty .
+  eq intersection(S, N) = $intersect(S, N, empty) .
+
+  op $intersect : Set{X} Set{X} Set{X} -> Set{X} .
+  eq $intersect(empty, S', A) = A .
+  eq $intersect((E, S), S', A) = $intersect(S, S', if E in S' then E, A else A fi) .
+
+  op _\_ : Set{X} Set{X} -> Set{X}  [gather (E e)].
+  eq S \ empty = S .
+  eq S \ N = $diff(S, N, empty) .
+
+  op $diff : Set{X} Set{X} Set{X} -> Set{X} .
+  eq $diff(empty, S', A) = A .
+  eq $diff((E, S), S', A) = $diff(S, S', if E in S' then A else E, A fi) .
+endfm
+
+fmod LIST*{X :: TRIV} is
+  protecting NAT .
+  sorts Item{X} PreList{X} NeList{X} List{X} .
+  subsort X$Elt List{X} < Item{X} < PreList{X} .
+  subsort NeList{X} < List{X} .
+
+  op __ : PreList{X} PreList{X} -> PreList{X} [ctor assoc prec 25] .
+  op [_] : PreList{X} -> NeList{X} [ctor] .
+  op [] : -> List{X} [ctor] .
+
+  vars A P : PreList{X} .
+  var L : List{X} .
+  var E E' : Item{X} .
+  var C : Nat .
+
+  op append : List{X} List{X} -> List{X} .
+  op append : NeList{X} List{X} -> NeList{X} .
+  op append : List{X} NeList{X} -> NeList{X} .
+  eq append([], L) = L .
+  eq append(L, []) = L .
+  eq append([P], [A]) = [P A] .
+
+  op head : NeList{X} -> X$Elt .
+  eq head([E]) = E .
+  eq head([E P]) = E .
+
+  op tail : NeList{X} -> List{X} .
+  eq tail([E]) = [] .
+  eq tail([E P]) = [P] .
+
+  op last : NeList{X} -> X$Elt .
+  eq last([E]) = E .
+  eq last([P E]) = E .
+
+  op front : NeList{X} -> List{X} .
+  eq front([E]) = [] .
+  eq front([P E]) = [P] .
+
+  op occurs : X$Elt List{X} -> Bool .
+  eq occurs(E, []) = false .
+  eq occurs(E, [E']) = (E == E') .
+  eq occurs(E, [E' P]) = if E == E' then true else occurs(E, [P]) fi .
+
+  op reverse : List{X} -> List{X} .
+  op reverse : NeList{X} -> NeList{X} .
+  eq reverse([]) = [] .
+  eq reverse([E]) = [E] .
+  eq reverse([E P]) = [$reverse(P, E)] .
+
+  op $reverse : PreList{X} PreList{X} -> PreList{X} .
+  eq $reverse(E, A) = E A .
+  eq $reverse(E P, A) = $reverse(P, E A).
+
+  op length : List{X} -> Nat .
+  op length : NeList{X} -> NzNat .
+  eq length([]) = 0 .
+  eq length([P]) = $length(P, 0) .
+
+  op $length : PreList{X} Nat -> NzNat .
+  eq $length(E, C) = C + 1 .
+  eq $length(E P, C) = $length(P, C + 1) .
+endfm
+
+fmod SET*{X :: TRIV} is
+  protecting NAT .
+  sorts Element{X} PreSet{X} NeSet{X} Set{X} .
+  subsort X$Elt Set{X} < Element{X} < PreSet{X} .
+  subsort NeSet{X} < Set{X} .
+
+  op _,_ : PreSet{X} PreSet{X} -> PreSet{X} [ctor assoc comm prec 120] .
+  op {_} : PreSet{X} -> NeSet{X} [ctor] .
+  op {} : -> Set{X} [ctor] .
+
+  vars P Q : PreSet{X} .
+  vars A S : Set{X} .
+  var E : Element{X} .
+  var N : NeSet{X} .
+  var C : Nat .
+
+  eq {P, P} = {P} .
+  eq {P, P, Q} = {P, Q} .
+
+  op insert : Element{X} Set{X} -> Set{X} .
+  eq insert(E, {}) = {E} .
+  eq insert(E, {P}) = {E, P} .
+
+  op delete : Element{X} Set{X} -> Set{X} .
+  eq delete(E, {E}) = {} .
+  eq delete(E, {E, P}) = delete(E, {P}) .
+  eq delete(E, S) = S [owise] .
+
+  op _in_ : Element{X} Set{X} -> Bool .
+  eq E in {E} = true .
+  eq E in {E, P} = true .
+  eq E in S = false [owise] .
+
+  op |_| : Set{X} -> Nat .
+  op |_| : NeSet{X} -> NzNat .
+  eq | {} | = 0 .
+  eq | {P} | = $card(P, 0) .
+
+  op $card : PreSet{X} Nat -> Nat .
+  eq $card(E, C) = C + 1 .
+  eq $card((N, N, P), C) = $card((N, P), C) .
+  eq $card((E, P), C) = $card(P, C + 1) [owise] .
+
+  op union : Set{X} Set{X} -> Set{X} .
+  op union : NeSet{X} Set{X} -> NeSet{X} .
+  op union : Set{X} NeSet{X} -> NeSet{X} .
+  eq union({}, S) = S .
+  eq union(S, {}) = S .
+  eq union({P}, {Q}) = {P, Q} .
+
+  op intersection : Set{X} Set{X} -> Set{X} .
+  eq intersection({}, S) = {} .
+  eq intersection(S, {}) = {} .
+  eq intersection({P}, N) = $intersect(P, N, {}) .
+
+  op $intersect : PreSet{X} Set{X} Set{X} -> Set{X} .
+  eq $intersect(E, S, A) = if E in S then insert(E, A) else A fi .
+  eq $intersect((E, P), S, A) = $intersect(P, S, $intersect(E, S, A)) .
+
+  op _\_ : Set{X} Set{X} -> Set{X} [gather (E e)] .
+  eq {} \ S = {} .
+  eq S \ {} = S .
+  eq {P} \ N = $diff(P, N, {}) .
+
+  op $diff : PreSet{X} Set{X} Set{X} -> Set{X} .
+  eq $diff(E, S, A) = if E in S then A else insert(E, A) fi .
+  eq $diff((E, P), S, A) = $diff(P, S, $diff(E, S, A)) .
+
+  op 2^_ : Set{X} -> Set{X} .
+  eq 2^{} = {{}} .
+  eq 2^{E} = {{}, {E}} .
+  eq 2^{E, P} = union(2^{P}, $augment(2^{P}, E, {})) .
+
+  op $augment : NeSet{X} Element{X} Set{X} -> Set{X} .
+  eq $augment({S}, E, A) = insert(insert(E, S), A) .
+  eq $augment({S, P}, E, A) = $augment({P}, E, $augment({S}, E, A)) .
+endfm
+
+fmod MAP{X :: TRIV, Y :: TRIV} is
+  sorts Entry{X,Y} Map{X,Y} .
+  subsort Entry{X,Y} < Map{X,Y} .
+
+  op _|->_ : X$Elt Y$Elt -> Entry{X,Y} [ctor] .
+  op empty : -> Map{X,Y} [ctor] .
+  op _,_ : Map{X,Y} Map{X,Y} -> Map{X,Y} [ctor assoc comm id: empty prec 120] .
+  op undefined : -> [Y$Elt] [ctor] .
+
+  var D : X$Elt .
+  vars R R' : Y$Elt .
+  var M : Map{X,Y} .
+
+  op insert : X$Elt Y$Elt Map{X,Y} -> Map{X,Y} .
+  eq insert(D, R, (M, D |-> R')) = (M, D |-> R) .
+  eq insert(D, R, M) = (M, D |-> R) [owise].
+
+  op _[_] : Map{X,Y} X$Elt -> [Y$Elt] .
+  eq (M, D |-> R)[D] = R .
+  eq M[D] = undefined [owise] .
+endfm
+
+***
+***	The Metalevel.
+***
 
 fmod QID-LIST is
   protecting QID .
@@ -1160,6 +1538,13 @@ fmod META-LEVEL is
   subsort Type < Type? .
   op anyType : -> Type? [ctor] .
 
+*** options for metaPrettyPrint()
+  sorts PrintOption PrintOptionSet .
+  subsort PrintOption < PrintOptionSet .
+  ops mixfix with-parens flat format number rat : -> PrintOption [ctor] .
+  op none : -> PrintOptionSet [ctor] .
+  op __ : PrintOptionSet PrintOptionSet -> PrintOptionSet [ctor assoc comm id: none] .
+
 *** success results
   sorts ResultPair ResultTriple Result4Tuple MatchPair TraceStep Trace .
   subsort TraceStep < Trace .
@@ -1366,6 +1751,15 @@ fmod META-LEVEL is
 	op-hook noMatchPairSymbol	(noMatch : ~> MatchPair?)
  	op-hook failureTraceSymbol	(failure : ~> Trace?)
 
+        op-hook mixfixSymbol		(mixfix : ~> PrintOption)
+        op-hook withParensSymbol	(with-parens : ~> PrintOption)
+        op-hook flatSymbol		(flat : ~> PrintOption)
+        op-hook formatPrintOptionSymbol	(format : ~> PrintOption)
+        op-hook numberSymbol		(number : ~> PrintOption)
+        op-hook ratSymbol		(rat : ~> PrintOption)
+	op-hook emptyPrintOptionSetSymbol	(none : ~> PrintOptionSet)
+	op-hook printOptionSetSymbol	(__ : PrintOptionSet PrintOptionSet ~> PrintOptionSet)
+
 	term-hook trueTerm		(true)
 	term-hook falseTerm		(false))] .
 
@@ -1444,7 +1838,7 @@ fmod META-LEVEL is
 	   id-hook MetaLevelOpSymbol	(metaParse)
 	   op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .
 
-  op metaPrettyPrint : Module Term ~> QidList
+  op metaPrettyPrint : Module Term PrintOptionSet ~> QidList
 	[special (
 	   id-hook MetaLevelOpSymbol	(metaPrettyPrint)
 	   op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .
@@ -1540,7 +1934,22 @@ fmod META-LEVEL is
          special (
 	   id-hook MetaLevelOpSymbol	(metaDownTerm)
 	   op-hook shareWith		(metaReduce : Module Term ~> ResultPair))] .
+
+*** backward compatibility
+  op metaPrettyPrint : Module Term ~> QidList .
+  eq metaPrettyPrint(M:Module, T:Term) = metaPrettyPrint(M:Module, T:Term, mixfix flat format number rat) .
 endfm
+
+***
+***	System modules.
+***
+
+mod COUNTER is
+  protecting NAT .
+  op counter : -> [Nat]
+	[special (id-hook CounterSymbol
+		  op-hook succSymbol (s_ : Nat ~> NzNat))] .
+endm
 
 mod LOOP-MODE is
   protecting QID-LIST .

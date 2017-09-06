@@ -53,7 +53,7 @@ moduleExpr	:	moduleExpr2
 			}
 		;
 
-moduleExpr2	:	'(' moduleExpr ')' {}
+moduleExpr2	:	moduleExpr3
 		|	moduleExpr2 '*' renaming
 			{
 			  ModuleExpression* m = moduleExpressions.top();
@@ -61,10 +61,24 @@ moduleExpr2	:	'(' moduleExpr ')' {}
 			  moduleExpressions.push(new ModuleExpression(m, currentRenaming));
 			  currentRenaming = 0;
 			}
+		;
+
+moduleExpr3	:	'(' moduleExpr ')' {}	
+		|	moduleExpr3 '{'			{ clear(); }
+			argList '}'
+			{
+			  ModuleExpression* m = moduleExpressions.top();
+			  moduleExpressions.pop();
+			  moduleExpressions.push(new ModuleExpression(m, bubble));
+			}
 		|	token
 			{
 			  moduleExpressions.push(new ModuleExpression($1));
 			}
+		;
+
+argList		:	argList ',' token		{ store($3); }
+		|	token				{ store($1); }
 		;
 
 /*
@@ -81,7 +95,7 @@ mappingList	:	mappingList ',' mapping
 		|	mapping
 		;
 
-mapping		:	KW_SORT sortToken KW_TO sortToken
+mapping		:	KW_SORT sortName KW_TO sortName
 			{
 			  currentRenaming->addSortMapping($2, $4);
 			}
@@ -112,14 +126,14 @@ fromTypeList	:	fromTypeList fromType
 		|
 		;
 
-fromType	:	sortToken
+fromType	:	sortName
 			{
 			  clear();
 			  bubble.append($1);
 			  currentRenaming->addType(bubble);
 			}
 		|	'['			{ clear(); }
-			sortTokens ']'
+			sortNames ']'
 			{
 			  currentRenaming->addType(bubble);
 			}
@@ -149,19 +163,69 @@ toAttribute	:	KW_PREC IDENTIFIER	{ currentRenaming->setPrec($2); }
 		;
 
 /*
- *	Modules.
+ *	Views.
+ */
+view		:	KW_VIEW			{ lexerIdMode(); }
+			token KW_FROM moduleExpr
+			{
+			  fileTable.beginModule($1, $3);
+			  interpreter.setCurrentView(new View($3));
+			  CV->addFrom(moduleExpressions.top());
+			  moduleExpressions.pop();
+			}
+			KW_TO moduleExpr
+			{
+			  CV->addTo(moduleExpressions.top());
+			  moduleExpressions.pop();
+			  currentRenaming = CV;  // trick to reuse renaming fromOpName, fromSpec syntax
+			}
+			KW_IS viewDecList KW_ENDV
+			{
+			  lexerInitialMode();
+			  fileTable.endModule(lineNumber);
+			  CV->finishView();
+			  interpreter.insertView(($3).code(), CV);
+			  currentRenaming = 0;
+			}
+		;
+
+viewDecList	:	viewDecList viewDeclaration
+		|
+		;
+
+viewDeclaration	:	KW_SORT sortName KW_TO sortDot
+			{
+			  CV->addSortMapping($2, $4);
+			}
+		|	KW_OP fromOpName fromSpec KW_TO	{ clear(); }
+			endStatement			{ CV->addOpTarget(bubble); }
+		;
+
+sortDot		:	sortName '.'		{ $$ = $1; }
+		|	ENDS_IN_DOT
+			{
+			  IssueWarning(LineNumber($1.lineNumber()) <<
+                                       ": missing space before period.");
+			  Token t;
+			  t.dropChar($1);
+			  $$ = t;
+			}
+		;
+
+/*
+ *	Modules and Theories.
  */
 module		:	startModule		{ lexerIdMode(); }
-			token KW_IS
+			token
 			{
 			  interpreter.setCurrentModule(new PreModule($1, $3));
 			  fileTable.beginModule($1, $3);
 			}
-			decList KW_ENDM
+			parameters KW_IS decList KW_ENDM
 			{
 			  lexerInitialMode();
 			  fileTable.endModule(lineNumber);
-			  CM->finishModule($7);
+			  CM->finishModule($8);
 			}
 		;
 
@@ -173,6 +237,22 @@ dot		:	'.' {}
 			  Token t;
 			  t.dropChar($1);
 			  store(t);
+			}
+		;
+
+parameters	:	'{' parameterList '}' {}
+		|
+		;
+
+parameterList	:	parameterList ',' parameter
+		|	parameter
+		;
+
+parameter	:	token KW_COLON2 moduleExpr
+			{
+			  ModuleExpression* me = moduleExpressions.top();
+			  moduleExpressions.pop();
+			  CM->addParameter($1, me);
 			}
 		;
 
@@ -188,7 +268,7 @@ badType		:	ENDS_IN_DOT
 			}
 		;
 
-typeDot		:	type '.'
+typeDot		:	typeName '.'
 		|	badType
 		;
 
@@ -218,7 +298,7 @@ declaration	:	KW_IMPORT moduleExprDot
 			}
 
 		|	KW_SORT			{ clear(); }
-			sortTokenList dot	{ CM->addSortDecl(bubble); }
+			sortNameList dot	{ CM->addSortDecl(bubble); }
 
 		|	KW_SUBSORT		{ clear(); }
 			subsortList dot		{ CM->addSubsortDecl(bubble); }
@@ -331,7 +411,7 @@ domainRangeAttr	:	':' typeList arrow typeAttr
 			}
 		;
 
-typeAttr	:	type attributes '.'
+typeAttr	:	typeName attributes '.'
 		|	badType
 		;
 
@@ -339,25 +419,25 @@ arrow		:	KW_ARROW      		{ $$ = false; }
 		|	KW_PARTIAL	       	{ $$ = true; }
 		;
 
-typeList	:	typeList type
+typeList	:	typeList typeName
 		|
 		;
 
-type		:	sortToken
+typeName	:	sortName
 			{
 			  clear();
 			  store($1);
 			  CM->addType(false, bubble);
 			}
 		|	'['			{ clear(); }
-			sortTokens ']'
+			sortNames ']'
 			{
 			  CM->addType(true, bubble);
 			}
 		;
 
-sortTokens	:	sortTokens ',' sortToken	{ store($3); }
-		|	sortToken			{ store($1); }
+sortNames	:	sortNames ',' sortName		{ store($3); }
+		|	sortName			{ store($1); }
 		;
 
 attributes	:	'[' attributeList ']'	{}
@@ -482,14 +562,14 @@ hook		:	KW_ID_HOOK token
 /*
  *	Sort and subsort lists.
  */
-sortTokenList	:	sortTokenList sortToken	{ store($2); }
+sortNameList	:	sortNameList sortName	{ store($2); }
 		|
 		;
 
-subsortList	:	subsortList sortToken	{ store($2); }
+subsortList	:	subsortList sortName	{ store($2); }
 		|	subsortList '<'		{ store($2); }
-		|	sortToken		{ store($1); }
-			sortTokenList '<'	{ store($4); }
+		|	sortName		{ store($1); }
+			sortNameList '<'	{ store($4); }
 		;
 
 /*
@@ -552,6 +632,31 @@ noTrailingDot	:	'('			{ store($1); }
 		;
 
 /*
+ *	Sort names
+ */
+sortName	:	sortNameFrag
+			{
+			  Token t;
+			  if (fragments.size() == 1)
+			    t = fragments[0];
+			  else
+			    t.tokenize(Token::bubbleToPrefixNameCode(fragments), fragments[0].lineNumber());
+			  fragClear();
+			  $$ = t;
+			}
+		;
+
+sortNameFrag	:	sortToken		{ fragStore($1); }
+		|	sortNameFrag '{'	{ fragStore($2); }
+			sortNameFrags '}'	{ fragStore($5); }
+		;
+
+sortNameFrags	:	sortNameFrags ','	{ fragStore($2); }
+			sortNameFrag		{}
+		|	sortNameFrag		{}
+		;
+
+/*
  *	Special trees
  */
 identity	:	identityChunk		{ store($1); }
@@ -569,36 +674,36 @@ identityChunk	:	identifier | startKeyword2 | midKeyword | '.'
 token		:	identifier | startKeyword | midKeyword | attrKeyword | '.'
 		;
 
-tokenBarDot	:	IDENTIFIER | ',' | '|' | KW_LABEL | KW_TO | '+' | '*'
+tokenBarDot	:	inert | ',' | KW_TO
 		|	startKeyword | midKeyword | attrKeyword
 		;
 
-endToken	:	IDENTIFIER | ',' | '|' | KW_LABEL | KW_TO | '+' | '*'
+endToken	:	inert | ',' | KW_TO
 		|	midKeyword | attrKeyword
 		;
 
 tokenBarArrow2	:	identifier | startKeyword | attrKeyword | '.'
-		|	'<' | ':' | KW_ARROW | KW_PARTIAL | '=' | KW_IF | KW_IS
+		|	'<' | ':' | KW_ARROW | KW_PARTIAL | '=' | KW_IF
 		;
 
 tokenBarEqual	:	identifier | startKeyword | attrKeyword | '.'
-		|	'<' | ':' | KW_ARROW | KW_PARTIAL | KW_ARROW2 | KW_IF | KW_IS
+		|	'<' | ':' | KW_ARROW | KW_PARTIAL | KW_ARROW2 | KW_IF
 		;
 
 tokenBarIf	:	identifier | startKeyword | attrKeyword | '.'
-		|	'<' | ':' | KW_ARROW | KW_PARTIAL | '=' | KW_ARROW2 | KW_IS
+		|	'<' | ':' | KW_ARROW | KW_PARTIAL | '=' | KW_ARROW2
 		;
 
 tokenBarColon	:	identifier | startKeyword | attrKeyword | '.'
-		|	'<' | KW_ARROW | KW_PARTIAL | '=' | KW_ARROW2 | KW_IF | KW_IS
+		|	'<' | KW_ARROW | KW_PARTIAL | '=' | KW_ARROW2 | KW_IF
 		;
 
-tokenBarColonTo	:	IDENTIFIER | ENDS_IN_DOT | ',' | '|' | KW_LABEL | '+' | '*'
+tokenBarColonTo	:	inert | ENDS_IN_DOT | ','
 		|	startKeyword | attrKeyword | '.'
-		|	'<' | KW_ARROW | KW_PARTIAL | '=' | KW_ARROW2 | KW_IF | KW_IS
+		|	'<' | KW_ARROW | KW_PARTIAL | '=' | KW_ARROW2 | KW_IF
 		;
 
-tokenBarCommaLeft	:	IDENTIFIER | ENDS_IN_DOT | '|' | KW_LABEL | KW_TO | '+' | '*'
+tokenBarCommaLeft	:	inert | ENDS_IN_DOT | KW_TO
 			|	startKeyword | attrKeyword2 | '.' | ']' | midKeyword
 			;
 
@@ -613,7 +718,11 @@ endsInDot	:	'.' | ENDS_IN_DOT
 /*
  *	Keywords (in id mode).
  */
-identifier	:	IDENTIFIER | ENDS_IN_DOT | ',' | '|' | KW_LABEL | KW_TO | '+' | '*'
+inert		:	IDENTIFIER | '{' | '}' | '+' | '*' | '|' | KW_COLON2 | KW_LABEL
+		|	KW_FROM | KW_IS
+		;
+
+identifier	:	inert | ENDS_IN_DOT | ',' | KW_TO
 		;
 
 startKeyword	:	KW_MSG | startKeyword2
@@ -621,10 +730,10 @@ startKeyword	:	KW_MSG | startKeyword2
 
 startKeyword2	:	KW_IMPORT | KW_SORT | KW_SUBSORT | KW_OP | KW_OPS | KW_VAR
 		|	KW_MSGS | KW_CLASS | KW_SUBCLASS
-		|	KW_MB | KW_CMB | KW_EQ | KW_CEQ | KW_RL | KW_CRL | KW_ENDM
+		|	KW_MB | KW_CMB | KW_EQ | KW_CEQ | KW_RL | KW_CRL | KW_ENDM | KW_ENDV
 		;
 
-midKeyword	:	'<' | ':' | KW_ARROW | KW_PARTIAL | '=' | KW_ARROW2 | KW_IF | KW_IS
+midKeyword	:	'<' | ':' | KW_ARROW | KW_PARTIAL | '=' | KW_ARROW2 | KW_IF
 		;
 
 attrKeyword	:	'[' | ']' | attrKeyword2

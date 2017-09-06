@@ -196,6 +196,8 @@ maude_LDADD = \
 
 maude_SOURCES = \
 	renaming.cc \
+	view.cc \
+	entity.cc \
 	moduleCache.cc \
 	moduleExpression.cc \
 	importModule.cc \
@@ -216,6 +218,7 @@ maude_SOURCES = \
 	maudemlBuffer.cc \
 	interpreter.cc \
 	moduleDatabase.cc \
+	viewDatabase.cc \
 	profileModule.cc \
 	mixfixParser.cc \
 	visibleModule.cc \
@@ -248,6 +251,7 @@ EXTRA_DIST = \
 	specialSymbolTypes.cc \
 	doParse.cc \
 	makeGrammar.cc \
+	auxProperty.cc \
 	termPrint.cc \
 	dagNodePrint.cc \
 	sharedPrint.cc \
@@ -271,6 +275,8 @@ EXTRA_DIST = \
 
 noinst_HEADERS = \
 	renaming.hh \
+	view.hh \
+	entity.hh \
 	moduleCache.hh \
 	moduleExpression.hh \
 	commonTokens.hh \
@@ -288,6 +294,7 @@ noinst_HEADERS = \
 	mixfixModule.hh \
 	mixfixParser.hh \
 	moduleDatabase.hh \
+	viewDatabase.hh \
 	preModule.hh \
 	profileModule.hh \
 	quotedIdentifierDagNode.hh \
@@ -308,17 +315,19 @@ CONFIG_CLEAN_FILES =
 bin_PROGRAMS = maude$(EXEEXT)
 PROGRAMS = $(bin_PROGRAMS)
 
-am__maude_SOURCES_DIST = renaming.cc moduleCache.cc moduleExpression.cc \
-	importModule.cc importTranslation.cc fileTable.cc loopSymbol.cc \
-	quotedIdentifierSymbol.cc quotedIdentifierDagNode.cc \
-	quotedIdentifierTerm.cc quotedIdentifierOpSymbol.cc \
-	mixfixModule.cc token.cc main.cc userLevelRewritingContext.cc \
-	preModule.cc symbolType.cc xmlBuffer.cc maudemlBuffer.cc \
-	interpreter.cc moduleDatabase.cc profileModule.cc \
-	mixfixParser.cc visibleModule.cc commonTokens.cc \
-	metadataStore.cc banner.cc lexer.cc surface.cc compiler.cc
+am__maude_SOURCES_DIST = renaming.cc view.cc entity.cc moduleCache.cc \
+	moduleExpression.cc importModule.cc importTranslation.cc \
+	fileTable.cc loopSymbol.cc quotedIdentifierSymbol.cc \
+	quotedIdentifierDagNode.cc quotedIdentifierTerm.cc \
+	quotedIdentifierOpSymbol.cc mixfixModule.cc token.cc main.cc \
+	userLevelRewritingContext.cc preModule.cc symbolType.cc \
+	xmlBuffer.cc maudemlBuffer.cc interpreter.cc moduleDatabase.cc \
+	viewDatabase.cc profileModule.cc mixfixParser.cc \
+	visibleModule.cc commonTokens.cc metadataStore.cc banner.cc \
+	lexer.cc surface.cc compiler.cc
 @BUILD_COMPILER_TRUE@am__objects_1 = maude-compiler.$(OBJEXT)
-am_maude_OBJECTS = maude-renaming.$(OBJEXT) maude-moduleCache.$(OBJEXT) \
+am_maude_OBJECTS = maude-renaming.$(OBJEXT) maude-view.$(OBJEXT) \
+	maude-entity.$(OBJEXT) maude-moduleCache.$(OBJEXT) \
 	maude-moduleExpression.$(OBJEXT) maude-importModule.$(OBJEXT) \
 	maude-importTranslation.$(OBJEXT) maude-fileTable.$(OBJEXT) \
 	maude-loopSymbol.$(OBJEXT) \
@@ -331,10 +340,11 @@ am_maude_OBJECTS = maude-renaming.$(OBJEXT) maude-moduleCache.$(OBJEXT) \
 	maude-preModule.$(OBJEXT) maude-symbolType.$(OBJEXT) \
 	maude-xmlBuffer.$(OBJEXT) maude-maudemlBuffer.$(OBJEXT) \
 	maude-interpreter.$(OBJEXT) maude-moduleDatabase.$(OBJEXT) \
-	maude-profileModule.$(OBJEXT) maude-mixfixParser.$(OBJEXT) \
-	maude-visibleModule.$(OBJEXT) maude-commonTokens.$(OBJEXT) \
-	maude-metadataStore.$(OBJEXT) maude-banner.$(OBJEXT) \
-	maude-lexer.$(OBJEXT) maude-surface.$(OBJEXT) $(am__objects_1)
+	maude-viewDatabase.$(OBJEXT) maude-profileModule.$(OBJEXT) \
+	maude-mixfixParser.$(OBJEXT) maude-visibleModule.$(OBJEXT) \
+	maude-commonTokens.$(OBJEXT) maude-metadataStore.$(OBJEXT) \
+	maude-banner.$(OBJEXT) maude-lexer.$(OBJEXT) \
+	maude-surface.$(OBJEXT) $(am__objects_1)
 maude_OBJECTS = $(am_maude_OBJECTS)
 @BUILD_COMPILER_FALSE@@USE_DLMALLOC_TRUE@maude_DEPENDENCIES = \
 @BUILD_COMPILER_FALSE@@USE_DLMALLOC_TRUE@	../Meta/libmeta.a \
@@ -428,6 +438,7 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/maude-banner.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/maude-commonTokens.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/maude-compiler.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/maude-entity.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/maude-fileTable.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/maude-importModule.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/maude-importTranslation.Po \
@@ -453,6 +464,8 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/maude-symbolType.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/maude-token.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/maude-userLevelRewritingContext.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/maude-view.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/maude-viewDatabase.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/maude-visibleModule.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/maude-xmlBuffer.Po
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
@@ -516,6 +529,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-banner.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-commonTokens.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-compiler.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-entity.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-fileTable.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-importModule.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-importTranslation.Po@am__quote@
@@ -541,6 +555,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-symbolType.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-token.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-userLevelRewritingContext.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-view.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-viewDatabase.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-visibleModule.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maude-xmlBuffer.Po@am__quote@
 
@@ -587,6 +603,50 @@ maude-renaming.obj: renaming.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/maude-renaming.Po' tmpdepfile='$(DEPDIR)/maude-renaming.TPo' @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-renaming.obj `if test -f 'renaming.cc'; then $(CYGPATH_W) 'renaming.cc'; else $(CYGPATH_W) '$(srcdir)/renaming.cc'; fi`
+
+maude-view.o: view.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-view.o -MD -MP -MF "$(DEPDIR)/maude-view.Tpo" \
+@am__fastdepCXX_TRUE@	  -c -o maude-view.o `test -f 'view.cc' || echo '$(srcdir)/'`view.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-view.Tpo" "$(DEPDIR)/maude-view.Po"; \
+@am__fastdepCXX_TRUE@	else rm -f "$(DEPDIR)/maude-view.Tpo"; exit 1; \
+@am__fastdepCXX_TRUE@	fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='view.cc' object='maude-view.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/maude-view.Po' tmpdepfile='$(DEPDIR)/maude-view.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-view.o `test -f 'view.cc' || echo '$(srcdir)/'`view.cc
+
+maude-view.obj: view.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-view.obj -MD -MP -MF "$(DEPDIR)/maude-view.Tpo" \
+@am__fastdepCXX_TRUE@	  -c -o maude-view.obj `if test -f 'view.cc'; then $(CYGPATH_W) 'view.cc'; else $(CYGPATH_W) '$(srcdir)/view.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-view.Tpo" "$(DEPDIR)/maude-view.Po"; \
+@am__fastdepCXX_TRUE@	else rm -f "$(DEPDIR)/maude-view.Tpo"; exit 1; \
+@am__fastdepCXX_TRUE@	fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='view.cc' object='maude-view.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/maude-view.Po' tmpdepfile='$(DEPDIR)/maude-view.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-view.obj `if test -f 'view.cc'; then $(CYGPATH_W) 'view.cc'; else $(CYGPATH_W) '$(srcdir)/view.cc'; fi`
+
+maude-entity.o: entity.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-entity.o -MD -MP -MF "$(DEPDIR)/maude-entity.Tpo" \
+@am__fastdepCXX_TRUE@	  -c -o maude-entity.o `test -f 'entity.cc' || echo '$(srcdir)/'`entity.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-entity.Tpo" "$(DEPDIR)/maude-entity.Po"; \
+@am__fastdepCXX_TRUE@	else rm -f "$(DEPDIR)/maude-entity.Tpo"; exit 1; \
+@am__fastdepCXX_TRUE@	fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='entity.cc' object='maude-entity.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/maude-entity.Po' tmpdepfile='$(DEPDIR)/maude-entity.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-entity.o `test -f 'entity.cc' || echo '$(srcdir)/'`entity.cc
+
+maude-entity.obj: entity.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-entity.obj -MD -MP -MF "$(DEPDIR)/maude-entity.Tpo" \
+@am__fastdepCXX_TRUE@	  -c -o maude-entity.obj `if test -f 'entity.cc'; then $(CYGPATH_W) 'entity.cc'; else $(CYGPATH_W) '$(srcdir)/entity.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-entity.Tpo" "$(DEPDIR)/maude-entity.Po"; \
+@am__fastdepCXX_TRUE@	else rm -f "$(DEPDIR)/maude-entity.Tpo"; exit 1; \
+@am__fastdepCXX_TRUE@	fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='entity.cc' object='maude-entity.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/maude-entity.Po' tmpdepfile='$(DEPDIR)/maude-entity.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-entity.obj `if test -f 'entity.cc'; then $(CYGPATH_W) 'entity.cc'; else $(CYGPATH_W) '$(srcdir)/entity.cc'; fi`
 
 maude-moduleCache.o: moduleCache.cc
 @am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-moduleCache.o -MD -MP -MF "$(DEPDIR)/maude-moduleCache.Tpo" \
@@ -1027,6 +1087,28 @@ maude-moduleDatabase.obj: moduleDatabase.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/maude-moduleDatabase.Po' tmpdepfile='$(DEPDIR)/maude-moduleDatabase.TPo' @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-moduleDatabase.obj `if test -f 'moduleDatabase.cc'; then $(CYGPATH_W) 'moduleDatabase.cc'; else $(CYGPATH_W) '$(srcdir)/moduleDatabase.cc'; fi`
+
+maude-viewDatabase.o: viewDatabase.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-viewDatabase.o -MD -MP -MF "$(DEPDIR)/maude-viewDatabase.Tpo" \
+@am__fastdepCXX_TRUE@	  -c -o maude-viewDatabase.o `test -f 'viewDatabase.cc' || echo '$(srcdir)/'`viewDatabase.cc; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-viewDatabase.Tpo" "$(DEPDIR)/maude-viewDatabase.Po"; \
+@am__fastdepCXX_TRUE@	else rm -f "$(DEPDIR)/maude-viewDatabase.Tpo"; exit 1; \
+@am__fastdepCXX_TRUE@	fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='viewDatabase.cc' object='maude-viewDatabase.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/maude-viewDatabase.Po' tmpdepfile='$(DEPDIR)/maude-viewDatabase.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-viewDatabase.o `test -f 'viewDatabase.cc' || echo '$(srcdir)/'`viewDatabase.cc
+
+maude-viewDatabase.obj: viewDatabase.cc
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-viewDatabase.obj -MD -MP -MF "$(DEPDIR)/maude-viewDatabase.Tpo" \
+@am__fastdepCXX_TRUE@	  -c -o maude-viewDatabase.obj `if test -f 'viewDatabase.cc'; then $(CYGPATH_W) 'viewDatabase.cc'; else $(CYGPATH_W) '$(srcdir)/viewDatabase.cc'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/maude-viewDatabase.Tpo" "$(DEPDIR)/maude-viewDatabase.Po"; \
+@am__fastdepCXX_TRUE@	else rm -f "$(DEPDIR)/maude-viewDatabase.Tpo"; exit 1; \
+@am__fastdepCXX_TRUE@	fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='viewDatabase.cc' object='maude-viewDatabase.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/maude-viewDatabase.Po' tmpdepfile='$(DEPDIR)/maude-viewDatabase.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o maude-viewDatabase.obj `if test -f 'viewDatabase.cc'; then $(CYGPATH_W) 'viewDatabase.cc'; else $(CYGPATH_W) '$(srcdir)/viewDatabase.cc'; fi`
 
 maude-profileModule.o: profileModule.cc
 @am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(maude_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT maude-profileModule.o -MD -MP -MF "$(DEPDIR)/maude-profileModule.Tpo" \
