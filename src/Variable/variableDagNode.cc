@@ -170,7 +170,6 @@ VariableDagNode::computeSolvedForm2(DagNode* rhs, UnificationContext& solution, 
   return rhs->computeSolvedForm2(this, solution, pending);
 }
 
-
 bool
 VariableDagNode::safeVirtualReplacement(VariableDagNode* oldVar, VariableDagNode* newVar, UnificationContext& solution, PendingUnificationStack& pending)
 {

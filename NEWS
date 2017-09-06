@@ -1,3 +1,8 @@
+Overview of Changes in alpha106
+===============================
+* improvements to linear associative unification integration
+* fixed bug in SequenceAssignment code (low level associative unification code)
+
 Overview of Changes in alpha105
 ===============================
 * experimental support for multi-step search modulo SMT
@@ -39,7 +44,7 @@ Overview of Changes in alpha100a
 * code cleaning to remove unused code and avoid many compiler warnings
 
 Overview of Changes in Maude alpha100 (source trees 97, 98, 99 abandoned)
-==========================================================================
+=========================================================================
 * added crude Maude VM based interpreter (sreduce)
 
 Overview of Changes in Maude alpha96c

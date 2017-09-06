@@ -67,6 +67,10 @@ NarrowingUnificationProblem::NarrowingUnificationProblem(PreEquation* preEquatio
     freshVariableGenerator(freshVariableGenerator),
     odd(odd)
 {
+  DebugAdvisory(Tty(Tty::MAGENTA) << "==== NarrowingUnificationProblem ====" << Tty(Tty::RESET));
+  DebugAdvisory("preEquation->getLhsDag() = " << preEquation->getLhsDag());
+  DebugAdvisory("target = " << target);
+  DebugAdvisory(Tty(Tty::MAGENTA) << "=========================================" << Tty(Tty::RESET));
   //
   //	This is the normal constructor where we are trying to narrow target with a rule or equation
   //	given by preEquation.
@@ -109,6 +113,10 @@ NarrowingUnificationProblem::NarrowingUnificationProblem(DagNode* lhs,
     freshVariableGenerator(freshVariableGenerator),
     odd(odd)
 {
+  DebugAdvisory(Tty(Tty::GREEN) << "==== NarrowingUnificationProblem ====" << Tty(Tty::RESET));
+  DebugAdvisory("lhs = " << lhs);
+  DebugAdvisory("rhs = " << rhs);
+  DebugAdvisory(Tty(Tty::GREEN) << "=========================================" << Tty(Tty::RESET));
   //
   //	This is a special constructor used for the final lhs =? rhs step in variant unification.
   //	There is no rule or equation here. However we have indexed dagnodes rather than terms, and

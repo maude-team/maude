@@ -1,3 +1,13 @@
+2014-11-17  Steven Eker  <eker@ape.csl.sri.com>
+
+	* sequenceAssignment.cc (computeBoundSum): instrumented
+	(checkAndMakeMove): instrumented
+	(SequenceAssignment): fixed nasty bug: need to start
+	lhsCount[0]/rhsCount[0] at 1 since there is already an implicit 1-1
+	match before the first move.
+
+===================================Maude106===========================================
+
 2014-04-01  Steven Eker  <eker@ape.csl.sri.com>
 
 	* sequenceAssignment.cc (findNextSolution): fix a bug where we

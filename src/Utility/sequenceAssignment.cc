@@ -47,14 +47,29 @@ SequenceAssignment::SequenceAssignment(int nrLhsVariables, int nrRhsVariables)
       rhsBounds[i] = NONE;
       rhsCount[i] = 0;
     }
+  //
+  //	Before the first move is made, there is already an implicit assignment to
+  //	the first variables on each side.
+  //
+  lhsCount[0] = 1;
+  rhsCount[0] = 1;
 }
 
 void
 SequenceAssignment::computeBoundSum(const IntVec& bounds, IntVec& boundSum)
 {
+#ifndef NO_ASSERT
+  if (globalAdvisoryFlag)
+    cerr << Tty(Tty::GREEN) << "SequenceAssignment::computeBoundSum()";
+#endif
+
   int sum = 0;
   for (int i = bounds.size() - 1; i >= 0; --i)
     {
+#ifndef NO_ASSERT
+      if (globalAdvisoryFlag)
+	cerr << "    " << bounds[i];
+#endif
       if (sum != NONE)
 	{
 	  int bound = bounds[i];
@@ -65,6 +80,11 @@ SequenceAssignment::computeBoundSum(const IntVec& bounds, IntVec& boundSum)
 	}
       boundSum[i] = sum;
     }
+
+#ifndef NO_ASSERT
+  if (globalAdvisoryFlag)
+    cerr << Tty(Tty::RESET) << endl;
+#endif
 }
 
 bool
@@ -80,6 +100,15 @@ SequenceAssignment::checkAndMakeMove(int move, int& lIndex, int& rIndex)
 
   int remainingLhsVariables = nrLhsVariables - newLhsIndex;
   int remainingRhsVariables = nrRhsVariables - newRhsIndex;
+
+#ifndef NO_ASSERT
+  if (globalAdvisoryFlag)
+    {
+      cerr << Tty(Tty::GREEN) << "SequenceAssignment::checkAndMakeMove() move is " << move <<
+	"    lDelta is " << lDelta <<
+	"    rDelta is " << rDelta << Tty(Tty::RESET) << endl;
+    }
+#endif
 
   if (lDelta == 1)
     {
@@ -99,6 +128,14 @@ SequenceAssignment::checkAndMakeMove(int move, int& lIndex, int& rIndex)
     }
   else
     {
+#ifndef NO_ASSERT
+      if (globalAdvisoryFlag)
+	{
+	  cerr << Tty(Tty::RED) << "rIndex = " << rIndex <<
+	    "    rhsBounds[rIndex] = " << rhsBounds[rIndex] <<
+	    "    rhsCount[rIndex] = " << rhsCount[rIndex] << Tty(Tty::RESET) << endl;
+	}
+#endif
       if (rhsBounds[rIndex] != NONE && rhsBounds[rIndex] == rhsCount[rIndex])
 	return false;  // rhs variable can't take another binding
     }
@@ -116,6 +153,7 @@ SequenceAssignment::checkAndMakeMove(int move, int& lIndex, int& rIndex)
       if (rhsCapacityBound < remainingLhsVariables)
 	return false;  //  can't advance to next lhs variable since we don't have enought capacity for rhs variables
     }
+  DebugAdvisory("move OK");
 
   //
   //	Move is OK.
