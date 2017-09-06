@@ -33,8 +33,7 @@
 #include "interface.hh"
 #include "core.hh"
 #include "variable.hh"
- 
- 
+
 //      interface class definitions
 #include "binarySymbol.hh"
 #include "dagNode.hh"
@@ -42,6 +41,7 @@
 
 //      core class definitions
 #include "sortConstraint.hh"
+#include "argumentIterator.hh"
 
 //	variable class definitions
 #include "variableSymbol.hh"
@@ -50,6 +50,7 @@ BinarySymbol::BinarySymbol(int id, bool memoFlag, Term* identity)
   : Symbol(id, 2, memoFlag),
     identityTerm(identity)
 {
+  cyclicIdentity = (identity == 0) ? 0 : UNDECIDED;
 }
 
 bool
@@ -252,7 +253,7 @@ BinarySymbol::rightIdentitySortCheck()
 	 " has right identity and right argument is different sort components");
   int nrSorts = component->nrSorts();
   //
-  //	Ccheck all collapses are to less or equal sorts.
+  //	Check all collapses are to less or equal sorts.
   //
   int idIndex = id->getSortIndex();
   for (int i = 1; i < nrSorts; i++)
@@ -284,4 +285,43 @@ BinarySymbol::idempotentSortCheck()
 		   " to sort " << QUOTE(component->sort(i)) <<
 		   " (collapsing to a larger or incomparable sort is illegal).");
     } 
+}
+
+bool
+BinarySymbol::lookForCycle(Term* term, NatSet& examinedIds) const
+{
+  DebugAdvisory("BinarySymbol::lookForCycle() looking at " << term);
+  //
+  //	Check if we've cycled back.
+  //
+  Symbol* s = term->symbol();
+  if (s == this)
+    return true;
+
+  //
+  //	If we've reached symbol which has an identity we haven't explored, see
+  //	if we can reach a cycle through it.
+  //
+  if (BinarySymbol* bs = dynamic_cast<BinarySymbol*>(s))
+    {
+      if (Term* id = bs->getIdentity())
+	{
+	  int index = bs->getIndexWithinModule();
+	  if (!examinedIds.contains(index))
+	    {
+	      examinedIds.insert(index);
+	      if (lookForCycle(id, examinedIds))
+		return true;
+	    }
+	}
+    }
+  //
+  //	Finally explore the arguments.
+  //
+  for (ArgumentIterator a(*term); a.valid(); a.next())
+    {
+      if (lookForCycle(a.argument(), examinedIds))
+	return true;
+    }
+  return false;
 }

@@ -49,7 +49,8 @@ libcore_a_SOURCES = \
 	unificationContext.cc \
 	protectedDagNodeSet.cc \
 	pendingUnificationStack.cc \
-	unificationSubproblemDisjunction.cc
+	unificationSubproblemDisjunction.cc \
+	compoundCycleSubproblem.cc
 
 EXTRA_DIST = \
 	run.cc \
@@ -120,4 +121,5 @@ noinst_HEADERS = \
 	protectedDagNodeSet.hh \
 	pendingUnificationStack.hh \
 	environment.hh \
-	unificationSubproblemDisjunction.hh
+	unificationSubproblemDisjunction.hh \
+	compoundCycleSubproblem.hh

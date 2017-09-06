@@ -42,6 +42,7 @@
 //      core class definitions
 #include "substitution.hh"
 #include "pendingUnificationStack.hh"
+#include "unificationContext.hh"
 
 //	variable class definitions
 #include "variableSymbol.hh"
@@ -480,16 +481,6 @@ DagNode::ReturnResult
 ACU_DagNode::computeBaseSortForGroundSubterms()
 {
   ACU_Symbol* s = symbol();
-  /* HACK: allow identity case to run
-  if (s->getIdentity() != 0)
-    {
-      //
-      //	We only support unification for AC at the moment
-      //	so let the backstop version handle it.
-      //
-      return DagNode::computeBaseSortForGroundSubterms();
-    }
-  */
   bool ground = true;
   int nrArgs = argArray.length();
   for (int i = 0; i < nrArgs; ++i)
@@ -521,35 +512,26 @@ ACU_DagNode::computeSolvedForm2(DagNode* rhs, UnificationContext& solution, Pend
   if (symbol() == rhs->symbol())
     {
       //
-      //	AC unification problems with the same top symbol need to be collected and solved
+      //	ACU unification problems with the same top symbol need to be collected and solved
       //	simultaneously for termination reasons.
       //
       pending.push(symbol(), this, rhs);
       return true;
     }
-  //
-  //	If the rhs is a variable, switch sides and let the variable code handle it.
-  //
-  if (dynamic_cast<VariableDagNode*>(rhs))
-    return rhs->computeSolvedForm(this, solution, pending);
-  //
-  //	Theory clash - this case is only soluble if one side collapses.
-  //	We don't handle this yet - we need to insert a disjunction into the pending unification stack.
-  //	Also need to consider the case that the rhs could be our identity.
-  //
-  /*
-  {
-    //
-    //	Quick hack - assume we collapse. Nees a disjunction to consider the alternative.
-    //	Also we need to consider the alternative even if we don't have an identity.
-    //	What we really need is a general PendingUnificationStack::resolveTheoryClash()
-    //
-    if (symbol()->getIdentity() != 0)
+  if (VariableDagNode* v = dynamic_cast<VariableDagNode*>(rhs))
+    {
+      VariableDagNode* r = v->lastVariableInChain(solution);
+      if (DagNode* value = solution.value(r->getIndex()))
+	return computeSolvedForm2(value, solution, pending);
+      //
+      //	We now treat unification problems f(...) =? X where X's representative
+      //	variable is unbound as full ACU unification problems now that the variable
+      //	theory no longerresolves such problems and we require
+      //	purification.
+      //
       pending.push(symbol(), this, rhs);
-    return true;
-  }
-  return false;
-  */
+      return true;
+    }
   return pending.resolveTheoryClash(this, rhs);
 }
 

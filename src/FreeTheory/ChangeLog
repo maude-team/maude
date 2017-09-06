@@ -1,3 +1,34 @@
+2010-08-12  Steven Eker  <eker@rho>
+
+	* freeDagNode.hh (class FreeDagNode): updated decl for
+	purifyAndOccurCheck()
+
+	* freeDagNode.cc (FreeDagNode::purifyAndOccurCheck): take pending
+	argument; use computeSolvedForm() rather than bind() to avoid
+	binding the abstraction variable to an impure term that might
+	cause nontermination
+	(FreeDagNode::computeSolvedForm2): pass pending to
+	purifyAndOccurCheck()
+
+2010-08-11  Steven Eker  <eker@rho>
+
+	* freeDagNode.cc (FreeDagNode::computeSolvedForm2): call
+	computeSolvedForm() rather than computeSolvedForm2() since we may
+	get constant vs constant by looking at variables binding
+
+2010-08-10  Steven Eker  <eker@rho>
+
+	* freeDagNode.cc (FreeDagNode::computeSolvedForm2): code cleaning
+
+2010-08-03  Steven Eker  <eker@rho>
+
+	* freeDagNode.hh (class FreeDagNode): added enum
+	PurificationStatus; added decl for purifyAndOccurCheck()
+
+	* freeDagNode.cc (FreeDagNode::purifyAndOccurCheck): added
+	(FreeDagNode::computeSolvedForm2): rewritten using
+	purifyAndOccurCheck()
+
 2010-06-30  Steven Eker  <eker@rho>
 
 	* freeDagNode.cc (FreeDagNode::computeSolvedForm2): use

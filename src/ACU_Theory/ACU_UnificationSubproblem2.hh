@@ -31,6 +31,8 @@
 #include "unificationSubproblem.hh"
 #include "simpleRootContainer.hh"
 #include "natSet.hh"
+#include "bddUser.hh"
+#include "allSat.hh"
 #include "dagNode.hh"
 //#include "dagNodeSet.hh"
 #include "substitution.hh"
@@ -44,7 +46,7 @@ public:
   ACU_UnificationSubproblem2(ACU_Symbol* topSymbol);
   ~ACU_UnificationSubproblem2();
 
-  void addUnification(DagNode* lhs, DagNode* rhs);
+  void addUnification(DagNode* lhs, DagNode* rhs, bool marked, UnificationContext& solution);
   bool solve(bool findFirst, UnificationContext& solution, PendingUnificationStack& pending);
 
 #ifdef DUMP
@@ -66,10 +68,11 @@ private:
 
   void markReachableNodes();
 
-  void setMultiplicity(DagNode* dagNode, int multiplicity);
-  bool unsolve(int index, UnificationContext& solution);
-  void classify(UnificationContext& solution,
-		DagNode* subject,
+  int setMultiplicity(DagNode* dagNode, int multiplicity, UnificationContext& solution);
+  void unsolve(int index, UnificationContext& solution);
+
+  void classify(int subtermIndex,
+		UnificationContext& solution,
 		bool& canTakeIdentity,
 		int& upperBound,
 		Symbol*& stableSymbol);
@@ -77,6 +80,7 @@ private:
   bool nextSelection(bool findFirst);
   bool nextSelectionWithIdentity(bool findFirst);
   bool includable(Basis::const_iterator potential);
+  bdd computeLegalSelections();
   bool buildSolution(UnificationContext& solution, PendingUnificationStack& pending);
 
   ACU_Symbol* topSymbol;
@@ -100,11 +104,8 @@ private:
   //
   NatSetList old;
   NatSet selectionSet;
-  //
-  //	We only keep track of restricted subterms that have unstable top symbols.
-  //	This vector could contain duplicates.
-  //
-  Vector<DagNode*> restrictedSubterms;
+  AllSat* maximalSelections;
+  NatSet markedSubterms;  // indices of subterms that have been marked
 };
 
 #endif

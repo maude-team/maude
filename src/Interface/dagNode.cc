@@ -32,6 +32,7 @@
 //	forward declarations
 #include "interface.hh"
 #include "core.hh"
+#include "variable.hh"
 
 //	interface class definitions
 #include "symbol.hh"
@@ -47,6 +48,10 @@
 #include "module.hh"
 #include "rootContainer.hh"
 #include "sortBdds.hh"
+#include "unificationContext.hh"
+
+//	variable class definitions
+#include "variableDagNode.hh"
 
 #if 0
 //
@@ -244,8 +249,29 @@ DagNode::computeSolvedForm(DagNode* rhs, UnificationContext& solution, PendingUn
 }
 
 bool
-DagNode::computeSolvedForm2(DagNode* /* rhs */, UnificationContext& /* solution */, PendingUnificationStack& /* pending */)
+DagNode::computeSolvedForm2(DagNode* rhs, UnificationContext& solution, PendingUnificationStack& pending)
 {
+  DebugAdvisory("DagNode::computeSolvedForm2() " << this << " vs " << rhs);
+
+  if (isGround())
+    {
+      //
+      //	We handle the case
+      //	  <ground term> =? X
+      //	for unimplmented theories now that variable code no longer binds variables to nonvariables.
+      //
+      if (VariableDagNode* v = dynamic_cast<VariableDagNode*>(rhs))
+	{
+	  VariableDagNode* repVar = v->lastVariableInChain(solution);
+	  if (DagNode* value = solution.value(repVar->getIndex()))
+	    return computeSolvedForm(value, solution, pending);
+	  else
+	    {
+	      solution.unificationBind(repVar, this);  // bind variable to unpurified ground term
+	      return true;
+	    }
+	}
+    }
   IssueWarning("Unification modulo the theory of operator " << QUOTE(this->topSymbol) << " is not currently supported.");
   return false;
 }

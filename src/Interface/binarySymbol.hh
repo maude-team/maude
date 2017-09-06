@@ -54,6 +54,8 @@ public:
   void setPermuteFrozen(const NatSet& frozen);
   void setIdentity(Term* id);
   Term* getIdentity() const;
+  bool hasIdentity() const;
+  bool hasCyclicIdentity() const;
   DagNode* getIdentityDag();
   bool mightMatchOurIdentity(const Term* subterm) const;
   bool takeIdentity(const Sort* sort);
@@ -82,8 +84,11 @@ private:
     NORMALIZED
   };
 
+  bool lookForCycle(Term* term, NatSet& examinedIds) const;
+
   PermuteStrategy permuteStrategy;
   CachedDag identityTerm;
+  mutable int cyclicIdentity;  // used for breaking non-disjoint cycles in unification
 };
 
 inline BinarySymbol::PermuteStrategy
@@ -97,12 +102,30 @@ BinarySymbol::setIdentity(Term* id)
 {
   Assert(identityTerm.getTerm() == 0, "overwriting identity for " << this);
   identityTerm.setTerm(id);
+  cyclicIdentity = UNDECIDED;
 }
 
 inline Term*
 BinarySymbol::getIdentity() const
 {
   return identityTerm.getTerm();
+}
+
+inline bool
+BinarySymbol::hasIdentity() const
+{
+  return identityTerm.getTerm() != 0;
+}
+
+inline bool
+BinarySymbol::hasCyclicIdentity() const
+{
+  if (cyclicIdentity == UNDECIDED)
+    {
+      NatSet examinedIds;
+      cyclicIdentity = lookForCycle(getIdentity(), examinedIds);
+    }
+  return cyclicIdentity;
 }
 
 inline bool

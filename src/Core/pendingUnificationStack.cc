@@ -31,6 +31,7 @@
 //	forward declarations
 #include "interface.hh"
 #include "core.hh"
+#include "variable.hh"
 
 //	interface class definitions
 #include "symbol.hh"
@@ -38,8 +39,13 @@
 #include "unificationSubproblem.hh"
 
 //	core class definitions
+#include "unificationContext.hh"
 #include "unificationSubproblemDisjunction.hh"
+#include "compoundCycleSubproblem.hh"
 #include "pendingUnificationStack.hh"
+
+//	variable class definitions
+#include "variableDagNode.hh"
 
 PendingUnificationStack::PendingUnificationStack()
   : theoryTable(1)
@@ -75,15 +81,16 @@ PendingUnificationStack::markReachableNodes()
 }
 
 void
-PendingUnificationStack::push(Symbol* controllingSymbol, DagNode* lhs, DagNode* rhs)
+PendingUnificationStack::push(Symbol* controllingSymbol, DagNode* lhs, DagNode* rhs, bool marked)
 {
-  DebugAdvisory("push " << controllingSymbol << ": " << lhs << " =? " << rhs);
+  DebugAdvisory("push " << controllingSymbol << ": " << lhs << " =? " << rhs << "  marked = " << marked);
 
   int e = unificationStack.size();
   unificationStack.resize(e + 1);
   PendingUnification& p = unificationStack[e];
   p.lhs = lhs;
   p.rhs = rhs;
+  p.marked = marked;
   //
   //	We don't expect to handle too many distinct theories in a unification problem so
   //	we use a simple linear search.
@@ -131,6 +138,7 @@ PendingUnificationStack::resolveTheoryClash(DagNode* lhs, DagNode* rhs)
 	return false;  // unresolvable - fail
       swap(lhs, rhs);
     }
+  DebugAdvisory("push to resolve theory clash");
   push(controllingSymbol, lhs, rhs);
   return true;
 }
@@ -160,14 +168,14 @@ PendingUnificationStack::solve(bool findFirst, UnificationContext& solution)
 #ifndef NO_ASSERT
   //  dump(cerr);
 #endif
-  if (findFirst ? makeNewSubproblem() : !(subproblemStack.empty()))
+  if (findFirst ? makeNewSubproblem(solution) : !(subproblemStack.empty()))
     {
       for (;;)
 	{
 	  findFirst = subproblemStack[subproblemStack.size() - 1].subproblem->solve(findFirst, solution, *this);
 	  if (findFirst)
 	    {
-	      if (!makeNewSubproblem())
+	      if (!makeNewSubproblem(solution))
 		break;  // all done
 	    }
 	  else
@@ -182,7 +190,43 @@ PendingUnificationStack::solve(bool findFirst, UnificationContext& solution)
 }
 
 bool
-PendingUnificationStack::makeNewSubproblem()
+PendingUnificationStack::solve2(bool findFirst, UnificationContext& solution)
+{
+  //
+  //	Find a solution that has no cycles.
+  //
+  for (;;)
+    {
+      if (!solve(findFirst, solution))
+	return false;
+      int cycleStart = findCycle(solution);
+      if (cycleStart == NONE)
+	break;
+      cerr << "Cycle found\n";
+      for (int i = cycleStart;;)
+	{
+	  DagNode* variable = solution.getVariableDagNode(i);
+	  DagNode* value = solution.value(i);
+	  cerr << variable << " <- " << value << endl;
+	  i = variableStatus[i];
+	  if (i == cycleStart)
+	    break;
+	}
+      findFirst = false;
+    }
+  //
+  //	Instantiate bound variables.
+  //
+  FOR_EACH_CONST(i, Vector<int>, variableOrder)
+    {
+      if (DagNode* d = solution.value(*i)->instantiate(solution))
+	solution.bind(*i, d);
+    }
+  return true;
+}
+
+bool
+PendingUnificationStack::makeNewSubproblem(UnificationContext& solution)
 {
   DebugAdvisory("makeNewSubproblem()");
 #ifndef NO_ASSERT
@@ -199,12 +243,14 @@ PendingUnificationStack::makeNewSubproblem()
       if (j != NONE)
         {
 	  Symbol* controllingSymbol = theoryTable[i].controllingSymbol;
+	  DebugAdvisory("makeNewSubproblem() making subproblem for controlling symbol " <<
+			controllingSymbol);
           UnificationSubproblem* sp = (controllingSymbol == 0) ? new UnificationSubproblemDisjunction() :
 	    controllingSymbol->makeUnificationSubproblem();
           do
             {
               PendingUnification& p = unificationStack[j];
-              sp->addUnification(p.lhs, p.rhs);
+              sp->addUnification(p.lhs, p.rhs, p.marked, solution);
               j = p.nextProblemInTheory;
             }
           while (j != NONE);
@@ -218,7 +264,49 @@ PendingUnificationStack::makeNewSubproblem()
           return true;
         }
     }
-  return false;
+  //
+  //	All unification problems solve - now check for compound cycles.
+  //
+  int cycleStart = findCycle(solution);
+  if (cycleStart == NONE)
+    {
+      //
+      //	We're done so instantatiate bound variables.
+      //
+      FOR_EACH_CONST(i, Vector<int>, variableOrder)
+	{
+	  if (DagNode* d = solution.value(*i)->instantiate(solution))
+	    solution.bind(*i, d);
+	}
+      return false;  // no more subproblems to be solved
+    }
+  //
+  //	Create a new compound cycle subproblem.
+  //
+  DebugAdvisory("Cycle found");
+  CompoundCycleSubproblem* sp = new CompoundCycleSubproblem();
+  for (int i = cycleStart;;)
+    {
+      DagNode* value = solution.value(i);
+      if (dynamic_cast<VariableDagNode*>(value) == 0)
+	sp->addComponent(i);
+      else
+	DebugAdvisory("ignoring a variable->variable binding:");
+      DebugAdvisory(static_cast<DagNode*>(solution.getVariableDagNode(i)) << " <- " << value);
+      i = variableStatus[i];
+      if (i == cycleStart)
+	break;
+    }
+  //
+  //	Push the compound cycle subproblem on the stack.
+  //
+  int nrSubproblems = subproblemStack.size();
+  subproblemStack.resize(nrSubproblems + 1);
+  ActiveSubproblem& a = subproblemStack[nrSubproblems];
+  a.theoryIndex = COMPOUND_CYCLE;
+  a.savedFirstProblem = NONE;
+  a.subproblem = sp;
+  return true;
 }
 
 void
@@ -235,10 +323,69 @@ PendingUnificationStack::killTopSubproblem()
   int i = subproblemStack.size() - 1;
   ActiveSubproblem& a = subproblemStack[i];
   delete a.subproblem;
-  Assert(theoryTable[a.theoryIndex].firstProblemInTheory == NONE,
-	 "newer unification problems have not been retracted");
-  theoryTable[a.theoryIndex].firstProblemInTheory = a.savedFirstProblem;
+  if (a.theoryIndex != COMPOUND_CYCLE)
+    {
+      Assert(theoryTable[a.theoryIndex].firstProblemInTheory == NONE,
+	     "newer unification problems have not been retracted");
+      theoryTable[a.theoryIndex].firstProblemInTheory = a.savedFirstProblem;
+    }
   subproblemStack.resize(i);
+}
+
+int
+PendingUnificationStack::findCycle(UnificationContext& solution)
+{
+  int nrVariables = solution.nrFragileBindings();
+  variableStatus.resize(nrVariables);
+  for (int i = 0; i < nrVariables; ++i)
+    variableStatus[i] = UNEXPLORED;
+  //
+  //	We look for a dependency cycle reachable from original variables.
+  //	If we fail, to find a cycle we generate an instantiation ordering.
+  //
+  variableOrder.clear();
+  int nrOriginalVariables = solution.getNrOriginalVariables();
+  for (int i = 0; i < nrOriginalVariables; ++i)
+    {
+      int cycleStart = findCycleFrom(i, solution);
+      if (cycleStart != NONE)
+	return cycleStart;
+    }
+  return NONE;
+}
+
+int
+PendingUnificationStack::findCycleFrom(int index, UnificationContext& solution)
+{
+  int status = variableStatus[index];
+  if (status == UNEXPLORED)
+    {
+      DagNode* d = solution.value(index);
+      if (d == 0)
+	{
+	  variableStatus[index] = EXPLORED;
+	  return NONE;
+	}
+      NatSet occurs;
+      d->insertVariables(occurs);
+      FOR_EACH_CONST(i, NatSet, occurs)
+	{
+	  variableStatus[index] = *i;
+	  int cycleStart = findCycleFrom(*i, solution);
+	  if (cycleStart != NONE)
+	    return cycleStart;
+	}
+      variableStatus[index] = EXPLORED;
+      variableOrder.append(index);
+    }
+  else if (status != EXPLORED)
+    {
+      //
+      //	We hit index while we were exploring it - we must have a cycle.
+      //
+      return index;
+    }
+  return NONE;
 }
 
 void

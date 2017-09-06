@@ -1,3 +1,13 @@
+2010-07-20  Steven Eker  <eker@rho>
+
+	* unificationProblem.cc (UnificationProblem::findNextUnifier): use
+	solve()
+
+2010-07-16  Steven Eker  <eker@rho>
+
+	* unificationProblem.cc (UnificationProblem::findNextUnifier): use
+	solve2(); don't use extractUnifier()
+
 2010-05-21  Steven Eker  <eker@rho>
 
 	* rewriteConditionState.hh (class RewriteConditionState): use

@@ -1,3 +1,41 @@
+2010-08-12  Steven Eker  <eker@rho>
+
+	* metaDownFixUps.cc (MetaLevel::downOpHook): use downOpName()
+	instead of downQid() for operator name
+
+	* metaDown.cc (MetaLevel::downTerm): use downOpName() instead of
+	downQid() for operator name
+
+	* descentFunctions.cc (MetaLevelOpSymbol::metaMaximalAritySet):
+	use downOpName() instead of downQid()
+
+	* metaLevel.hh (class MetaLevel): added decl for downOpName()
+
+	* metaDown.cc (MetaLevel::downQid): use
+	Token::unBackQuoteSpecials() after all since metaParser want '`,
+	to be downed to ,
+	(MetaLevel::downOpName): added
+
+2010-08-10  Steven Eker  <eker@rho>
+
+	* metaDown.cc (MetaLevel::downQid): don't use
+	Token::unBackQuoteSpecials()
+
+2010-07-13  Steven Eker  <eker@rho>
+
+	* interpreterManagerSymbol.hh (class InterpreterManagerSymbol):
+	added decls for insertView() and showView()
+
+	* interpreterSignature.cc: added insertViewMsg/insertedViewMsg and
+	showViewMsg/showingViewMsg
+
+2010-07-06  Steven Eker  <eker@rho>
+
+	* descentFunctions.cc (MetaLevelOpSymbol::metaDownTerm): fix bug
+	where we were not checking the component of the down'd term
+
+===================================Maude94a===========================================
+
 2010-06-11  Steven Eker  <eker@rho>
 
 	* metaUpView.cc (MetaLevel::upOpMappings): fix bug where we were
