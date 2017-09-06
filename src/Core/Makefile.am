@@ -27,6 +27,7 @@ libcore_a_SOURCES = \
 	localBinding.cc \
 	subproblemSequence.cc \
 	subproblemDisjunction.cc \
+	unificationSubproblemDisjunction.cc \
 	sortCheckSubproblem.cc \
 	disjunctiveSubproblemAccumulator.cc \
 	preEquation.cc \
@@ -99,6 +100,7 @@ noinst_HEADERS = \
 	strategy.hh \
 	subproblemAccumulator.hh \
 	subproblemDisjunction.hh \
+	unificationSubproblemDisjunction.hh \
 	subproblemSequence.hh \
 	substitution.hh \
 	symbolMap.hh \

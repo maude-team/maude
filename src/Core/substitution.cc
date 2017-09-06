@@ -114,7 +114,7 @@ Substitution::unificationBind(int index, Sort* varSort, DagNode* value)
       //
       //	Check the sort of the ground term we are binding to.
       //
-      if (!leq(sortIndex, varSort))
+      if (varSort != 0 && !leq(sortIndex, varSort))
 	return false;
     }
   //
@@ -138,4 +138,40 @@ Substitution::unificationBind(int index, Sort* varSort, DagNode* value)
 	}
     }
   return true;
+}
+
+LocalBinding*
+Substitution::unificationDifference(const Substitution& original) const
+{
+  //
+  //	We allow the original and ourselves to have differing bindings for the
+  //	same variable as bindings can change under instantiation.
+  //	We are only interested in the variables for which we have a binding and the
+  //	original substitution does not. The converse case represents an inconsistancy.
+  //
+  int nrDiff = 0;
+  Vector<DagNode*>::const_iterator b = values.begin();
+  Vector<DagNode*>::const_iterator e = b + copySize;
+
+  Vector<DagNode*>::const_iterator j = original.values.begin();
+  for (Vector<DagNode*>::const_iterator i = b; i != e; ++i, ++j)
+    {
+      Assert(*j == 0 || *i != 0,
+	     "substitution inconsistency at index " << i - b);
+      if (*i != 0 && *j == 0)
+	++nrDiff;
+    }
+
+  if (nrDiff == 0)
+    return 0;
+  LocalBinding* result = new LocalBinding(nrDiff);
+
+  j = original.values.begin();
+  for (Vector<DagNode*>::const_iterator i = b; i != e; ++i, ++j)
+    {
+      DagNode* d = *i;
+      if (d != 0 && *j == 0)
+	result->addBinding(i - b, d);
+    }
+  return result;
 }

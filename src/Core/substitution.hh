@@ -33,7 +33,7 @@
 //	while the remaining entries may be used as temporaries by any function
 //	that cares to use them.
 //
-//	Special purpose substitutions of any may be created, with no temporary
+//	Special purpose substitutions of any size may be created, with no temporary
 //	storage.
 //
 #ifndef _substitution_hh_
@@ -66,6 +66,7 @@ public:
   //	eliminate the bound variable.
   //
   bool unificationBind(int index, Sort* varSort, DagNode* value);
+  LocalBinding* unificationDifference(const Substitution& original) const;
 
 private:
   static int allocateSize;
@@ -119,7 +120,7 @@ inline DagNode*
 Substitution::value(int index) const
 {
   Assert(index >= 0, "-ve index");
-  Assert(index < allocateSize, "index too big");
+  Assert(index < values.size(), "index too big");
   return values[index];
 }
 
@@ -127,7 +128,7 @@ inline void
 Substitution::bind(int index, DagNode* value)
 {
   Assert(index >= 0, "-ve index");
-  Assert(index < allocateSize, "index too big");
+  Assert(index < values.size(), "index too big");
   values[index] = value;
 }
 

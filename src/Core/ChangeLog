@@ -1,3 +1,52 @@
+2007-02-13  Steven Eker  <eker@goo.csl.sri.com>
+
+	* substitution.hh (value): check against valued.size() rather than
+	allocateSize so that we can use substitutions that are larger than
+	allocateSize
+	(bind): ditto
+
+2007-02-07  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unificationSubproblemDisjunction.cc (solve): simplify
+	(~UnificationSubproblemDisjunction): don't delete
+	savedSubstitution
+
+	* unificationSubproblemDisjunction.hh (class
+	UnificationSubproblemDisjunction): updated decl for
+	UnificationSubproblemDisjunction() 
+
+	* unificationSubproblemDisjunction.cc
+	(UnificationSubproblemDisjunction): take nrBinding arg
+
+2007-02-06  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unificationSubproblemDisjunction.hh (class
+	UnificationSubproblemDisjunction): added data members
+	savedSubstitution and assertionSubproblem
+
+	* substitution.cc (unificationDifference): added
+
+	* substitution.hh (class Substitution): added decl for
+	unificationDifference()
+
+	* localBinding.cc (unificationAssert): added
+
+	* localBinding.hh (class LocalBinding): added decl for
+	unificationAssert()
+
+	* unificationSubproblemDisjunction.cc: created
+
+	* unificationSubproblemDisjunction.hh: created
+
+2007-02-05  Steven Eker  <eker@goo.csl.sri.com>
+
+	* substitution.cc (unificationBind): allow varSort to be 0 in the
+	case that we don't know the sort of the variable we are binding to
+	- this needs to be fixed one the overall design of unification
+	with branching is clearer
+
+===================================Maude88f===========================================
+
 2007-02-02  Steven Eker  <eker@goo.csl.sri.com>
 
 	* substitution.hh (class Substitution): decl for unificationBind()
@@ -5,11 +54,13 @@
 
 	* substitution.cc (update): becomes unificationBind()
 
+===================================Maude88e===========================================
+
 2007-01-19  Steven Eker  <eker@goo.csl.sri.com>
 
 	* sortBdds.cc (SortBdds): reorganized
 
-	* sortBdds.hh (class SortBdds): delete decl for getSortBdd();
+	* sortBdds.hh (class SortBdds): delete decl for getSortBdd();*i != 0
 	delete data member sortIndexBdds
 	(getSortBdd): deleted
 

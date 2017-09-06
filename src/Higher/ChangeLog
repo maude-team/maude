@@ -1,3 +1,49 @@
+2007-02-13  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unificationProblem.cc (findOrderSortedUnifiers): use
+	sortedSolution
+	(~UnificationProblem): delete sortedSolution
+	(markReachableNodes): use sortedSolution
+	(findNextUnifier): use sortedSolution
+	(UnificationProblem): call Substitution::notify()
+
+	* unificationProblem.hh (class UnificationProblem): removed
+	Substitution as a base class
+	(class UnificationProblem): added data member sortedSolution
+	(getSolution): added
+
+2007-02-09  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unificationProblem.cc (findNextUnifier): use reset()
+
+	* unificationProblem.hh (class UnificationProblem): added reset
+	function to class FreshVariableGenerator
+
+	* unificationProblem.cc (findOrderSortedUnifiers): only do the
+	instantiation step if we actually have free variables
+
+2007-02-08  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unificationProblem.cc (findNextUnifier): second call to solve()
+	needs to have false flag
+	(findOrderSortedUnifiers): clear free variables from previous
+	unsorted unifier
+
+2007-02-07  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unificationProblem.cc (markReachableNodes): no need to mark
+	unsortedSolution now that it is a RewritingContext
+
+	* unificationProblem.hh (class UnificationProblem): added data
+	member unsortedSolution
+
+	* unificationProblem.cc (findOrderSortedUnifiers): clone
+	unsortedSolution
+	(findNextUnifier): handle looking for solutions to subproblems
+	(markReachableNodes): mark unsortedSolution
+	(UnificationProblem): build solution in unsortedSolution; don't
+	call findOrderSortedUnifiers()
+
 2007-01-30  Steven Eker  <eker@goo.csl.sri.com>
 
 	* unificationProblem.cc (UnificationProblem): use

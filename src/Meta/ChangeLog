@@ -1,3 +1,7 @@
+2007-02-13  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaUnify.cc (metaUnify): use getSolution()
+
 2007-01-17  Steven Eker  <eker@goo.csl.sri.com>
 
 	* metaLevel.hh (class MetaLevel): added decl for new version of

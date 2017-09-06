@@ -80,7 +80,7 @@ Interpreter::doUnification(Timer& timer,
       if (solutionCount == 1)
 	printDecisionTime(timer);
       cout << "\nSolution " << solutionCount << '\n';
-      UserLevelRewritingContext::printSubstitution(*problem, *problem);
+      UserLevelRewritingContext::printSubstitution(problem->getSolution(), *problem);
       if (UserLevelRewritingContext::interrupted())
 	break;
     }

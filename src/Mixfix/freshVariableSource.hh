@@ -33,7 +33,7 @@ public:
   FreshVariableSource(MixfixModule* module);
   int getFreshVariableName();
   Symbol* getBaseVariableSymbol(Sort* sort);
-
+  void reset();
 private:
   MixfixModule* const module;
   int counter;
