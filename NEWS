@@ -1,0 +1,8 @@
+Overview of Changes in Maude 2.0.1
+==================================
+* switched build system to autoconf/automake
+* many portability fixes
+* added --help and --version flags
+* fixed infinite recursion with unary empty syntax bug
+* internal ordering on Qids is now alphabetical
+* fixed serious bugs in the ACU matcher
