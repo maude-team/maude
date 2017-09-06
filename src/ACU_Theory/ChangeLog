@@ -1,3 +1,122 @@
+2010-08-11  Steven Eker  <eker@rho>
+
+	* ACU_DagNode.cc (ACU_DagNode::computeSolvedForm2): handle
+	unification agaist bound variable by unifying against variables
+	binding to avoid nontermination
+
+2010-08-04  Steven Eker  <eker@rho>
+
+	* ACU_UnificationSubproblem2.cc
+	(ACU_UnificationSubproblem2::buildSolution): handle <oldvar> =? d
+	the old way when the representative variable of <oldvar> is bound
+	to avoid generating problems of the same size as we solve
+	(ACU_UnificationSubproblem2::addUnification): handle variable rhs
+	even when we don't have an identity
+
+2010-08-03  Steven Eker  <eker@rho>
+
+	* ACU_DagNode.cc (ACU_DagNode::computeSolvedForm2): rewritten to
+	push problems of the form f(...) = X on the pending stack rather
+	than pass them to VariableDagNode::computeSolvedForm2()
+
+	* ACU_UnificationSubproblem2.hh (class
+	ACU_UnificationSubproblem2): updated decl for addUnification()
+
+	* ACU_UnificationSubproblem2.cc
+	(ACU_UnificationSubproblem2::addUnification): handle marked
+	argument
+
+2010-07-29  Steven Eker  <eker@rho>
+
+	* ACU_UnificationSubproblem2.hh (class
+	ACU_UnificationSubproblem2): updated decl for classify();
+	deleleted decl for isRestrictedSubterm(); updated decl for
+	unsolve(); updated decl for setMultiplicity()
+	(class ACU_UnificationSubproblem2): deleted data member
+	restrictedSubterms; added data member markedSubterms
+
+	* ACU_UnificationSubproblem2.cc
+	(ACU_UnificationSubproblem2::addUnification): take solution as
+	argument
+	(ACU_UnificationSubproblem2::addUnification): simplified; keep set
+	of indices for marked subterms
+	(ACU_UnificationSubproblem2::setMultiplicity): use representative
+	variable in a chain; return subterm index
+	(ACU_UnificationSubproblem2::unsolve): simplified; never fail - we
+	let Diophantine solver worry about pathological X = f(..., X,...)
+	case
+	(ACU_UnificationSubproblem2::solve): simplified using new
+	unsolve() symantics
+	(ACU_UnificationSubproblem2::classify): simplified - no longer
+	chase variable chains as we should only have representative
+	variables in our system
+	(ACU_UnificationSubproblem2::isRestrictedSubterm): deleted
+
+	* ACU_UnificationSubproblem2.hh (class
+	ACU_UnificationSubproblem2): updated decl for addUnification()
+
+2010-07-21  Steven Eker  <eker@rho>
+
+	* ACU_UnificationSubproblem2.cc
+	(ACU_UnificationSubproblem2::buildAndSolveDiophantineSystem):
+	comment out the case where with fail because we only have one
+	Diophantine variable since even with no basis elements we can
+	still get a unifier
+
+2010-07-20  Steven Eker  <eker@rho>
+
+	* ACU_UnificationSubproblem2.hh (class
+	ACU_UnificationSubproblem2): added decl for isRestrictedSubterm
+
+	* ACU_UnificationSubproblem2.cc
+	(ACU_UnificationSubproblem2::classify): use equal() rather than ==
+	for checking for restricted subterms
+	(ACU_UnificationSubproblem2::isRestrictedSubterm): added
+	(ACU_UnificationSubproblem2::classify): rewritten using
+	isRestrictedSubterm() to ensure that variables can be restricted
+
+2010-07-19  Steven Eker  <eker@rho>
+
+	* ACU_UnificationSubproblem2.cc
+	(ACU_UnificationSubproblem2::markReachableNodes): fix bug where we
+	were deleting maximalSelections here rather than in
+	~ACU_UnificationSubproblem2()
+
+2010-07-09  Steven Eker  <eker@rho>
+
+	* ACU_UnificationSubproblem2.cc
+	(ACU_UnificationSubproblem2::buildSolution): add an Assert to
+	detect trivial bounds violation
+	(ACU_UnificationSubproblem2::computeLegalSelections): use index
+	member of basis element rather than separately maintained index
+	which is incorrect
+
+2010-07-08  Steven Eker  <eker@rho>
+
+	* ACU_UnificationSubproblem2.cc
+	(ACU_UnificationSubproblem2::solve): set maximalSelections
+	(ACU_UnificationSubproblem2::ACU_UnificationSubproblem2): clear
+	maximalSelections
+
+	* ACU_UnificationSubproblem2.hh (class
+	ACU_UnificationSubproblem2): added data member maximalSelections
+
+	* ACU_UnificationSubproblem2.cc
+	(ACU_UnificationSubproblem2::addUnification): use hasIdentity()
+	(ACU_UnificationSubproblem2::unsolve): use hasIdentity()
+	(ACU_UnificationSubproblem2::solve): use hasIdentity()
+
+	* ACU_DagNode.cc (ACU_DagNode::computeBaseSortForGroundSubterms):
+	removed commented out code
+
+2010-07-07  Steven Eker  <eker@rho>
+
+	* ACU_UnificationSubproblem2.hh (class
+	ACU_UnificationSubproblem2): added decl for
+	computeLegalSelections()
+
+===================================Maude94a===========================================
+
 2010-06-29  Steven Eker  <eker@rho>
 
 	* ACU_Symbol.cc (ACU_Symbol::canResolveTheoryClash): added

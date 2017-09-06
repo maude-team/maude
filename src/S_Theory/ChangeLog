@@ -1,3 +1,17 @@
+2010-08-12  Steven Eker  <eker@rho>
+
+	* S_DagNode.cc (S_DagNode::computeSolvedForm2): use
+	computeSolvedForm() rather than unificationBind() to avoid
+	nontermination arising from binding the abstraction variable to an
+	impure term
+
+2010-08-10  Steven Eker  <eker@rho>
+
+	* S_DagNode.cc (S_DagNode::computeSolvedForm2): do variable
+	binding here; handle purification and local occurs check
+
+===================================Maude94a===========================================
+
 2010-06-30  Steven Eker  <eker@rho>
 
 	* S_DagNode.cc (S_DagNode::computeSolvedForm2): use

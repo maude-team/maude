@@ -401,7 +401,7 @@ ACU_Symbol::computeGeneralizedSort(const SortBdds& sortBdds,
     {
       Vector<Bdd> argGenSort;
       i->dagNode->computeGeneralizedSort(sortBdds, realToBdd, argGenSort);
-      Assert(argGenSort.size() == nrBdds, "nrBdds clash");
+      Assert((int) argGenSort.size() == nrBdds, "nrBdds clash");
       int multiplicity = i->multiplicity;
 
       if (firstArg)

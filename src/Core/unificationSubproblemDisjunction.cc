@@ -40,7 +40,7 @@
 #include "unificationSubproblemDisjunction.hh"
 
 void
-UnificationSubproblemDisjunction::addUnification(DagNode* lhs, DagNode* rhs)
+UnificationSubproblemDisjunction::addUnification(DagNode* lhs, DagNode* rhs, bool /* marked */, UnificationContext& /* solution */)
 {
   int nrProblems = problems.size();
   problems.expandBy(1);
@@ -72,7 +72,7 @@ UnificationSubproblemDisjunction::solve(bool findFirst, UnificationContext& /* s
 	      //
 	      pending.restore(p.savedPendingState);
 	      p.lhsControlling = false;
-	      pending.push(p.rhs->symbol(), p.rhs, p.lhs);  // swap lhs and rhs
+	      pending.push(p.rhs->symbol(), p.rhs, p.lhs, true);  // swap lhs and rhs
 	      ++i;
 	      break;
 	    }
@@ -94,7 +94,7 @@ UnificationSubproblemDisjunction::solve(bool findFirst, UnificationContext& /* s
       TheoryClash& p = problems[i];
       p.savedPendingState = pending.checkPoint();
       p.lhsControlling = true;
-      pending.push(p.lhs->symbol(), p.lhs, p.rhs);
+      pending.push(p.lhs->symbol(), p.lhs, p.rhs, true);
     }
   return true;
 }

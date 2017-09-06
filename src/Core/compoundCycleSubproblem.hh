@@ -21,25 +21,21 @@
 */
 
 //
-//      Class for disjunctions of subproblems.
+//      Class for breaking compound cycles arising during unification.
 //
-//	Disjunctions arise from theory clashes where both theories want to
-//	resolve the clash. We solve a sequence of such clashes by trying all
-//	combinations of controlling symbols.
-//
-#ifndef _unificationSubproblemDisjunction_hh_
-#define _unificationSubproblemDisjunction_hh_
+#ifndef _compoundCycleSubproblem_hh_
+#define _compoundCycleSubproblem_hh_
 #include "unificationSubproblem.hh"
-//#include "simpleRootContainer.hh"
-//#include "substitution.hh"
+#include "simpleRootContainer.hh"
 #include "pendingUnificationStack.hh"
 
-class UnificationSubproblemDisjunction : public UnificationSubproblem
+class CompoundCycleSubproblem : public UnificationSubproblem, private SimpleRootContainer
 {
 public:
-  UnificationSubproblemDisjunction();
+  CompoundCycleSubproblem();
 
-  void addUnification(DagNode* lhs, DagNode* rhs, bool marked, UnificationContext& solution);
+  void addUnification(DagNode* lhs, DagNode* rhs) { CantHappen("we don't take unification problems"); }
+  void addComponent(int variableIndex);
   bool solve(bool findFirst, UnificationContext& solution, PendingUnificationStack& pending);
 
 #ifdef DUMP
@@ -51,21 +47,25 @@ public:
 #endif
 
 private:
-  struct TheoryClash
-  {
-    DagNode* lhs;
-    DagNode* rhs;
-    PendingUnificationStack::Marker savedPendingState;
-    bool lhsControlling;
-  };
+  void markReachableNodes();
 
-  Vector<TheoryClash> problems;
+  Vector<int> cycle;
+  Substitution preBreakSubstitution;
+  PendingUnificationStack::Marker preBreakPendingState;
+  int currentEdgeIndex;
 };
 
 inline
-UnificationSubproblemDisjunction::UnificationSubproblemDisjunction()
+CompoundCycleSubproblem::CompoundCycleSubproblem()
+  : preBreakSubstitution(0)
 {
-  DebugAdvisory("Created  UnificationSubproblemDisjunction");
+  DebugAdvisory("Created  CompoundCycleSubproblem");
+}
+
+inline void
+CompoundCycleSubproblem::addComponent(int variableIndex)
+{
+  cycle.append(variableIndex);
 }
 
 #endif

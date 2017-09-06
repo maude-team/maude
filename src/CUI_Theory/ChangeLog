@@ -1,3 +1,34 @@
+2010-08-12  Steven Eker  <eker@rho>
+
+	* CUI_DagNode.cc (CUI_DagNode::computeSolvedForm2): use
+	computeSolvedForm() rather than unificationBind() to ensure we
+	don't bind the abstraction variable to an impure term
+	(CUI_DagNode::computeSolvedForm2): use equalt() rather than == for
+	comparing arguments during purification
+
+2010-08-10  Steven Eker  <eker@rho>
+
+	* CUI_DagNode.cc (CUI_DagNode::computeSolvedForm2): handle binding
+	of variables, purification and local occurs check
+
+2010-08-03  Steven Eker  <eker@rho>
+
+	* CUI_UnificationSubproblem.hh (class CUI_UnificationSubproblem):
+	updated decl for addUnification()
+
+	* CUI_UnificationSubproblem.cc
+	(CUI_UnificationSubproblem::addUnification): take marked arg
+
+2010-07-29  Steven Eker  <eker@rho>
+
+	* CUI_UnificationSubproblem.cc
+	(CUI_UnificationSubproblem::addUnification): take solution argument
+
+	* CUI_UnificationSubproblem.hh (class CUI_UnificationSubproblem):
+	updated decl for addUnification()
+
+===================================Maude94a===========================================
+
 2010-06-30  Steven Eker  <eker@rho>
 
 	* CUI_DagNode.cc (CUI_DagNode::computeSolvedForm2): use

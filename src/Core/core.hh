@@ -83,5 +83,6 @@ class PendingUnificationStack;
 class Environment;
 class HashConsSet;
 class UnificationSubproblemDisjunction;
+class CompoundCycleSubproblem;
 
 #endif

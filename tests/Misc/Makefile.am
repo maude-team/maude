@@ -6,6 +6,7 @@ TESTS = \
 	dataStructures \
 	parameterization \
 	unification \
+	unification2 \
 	attributes \
 	diophantine
 
@@ -17,6 +18,7 @@ MAUDE_FILES = \
 	dataStructures.maude \
 	parameterization.maude \
 	unification.maude \
+	unification2.maude \
 	attributes.maude \
 	diophantine.maude
 
@@ -29,6 +31,7 @@ RESULT_FILES = \
 	dataStructures.expected \
 	parameterization.expected \
 	unification.expected \
+	unification2.expected \
 	attributes.expected \
 	diophantine.expected
 

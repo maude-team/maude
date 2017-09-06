@@ -132,6 +132,57 @@ VariableDagNode::computeBaseSortForGroundSubterms()
   return NONGROUND;
 }
 
+
+bool
+VariableDagNode::computeSolvedForm2(DagNode* rhs, UnificationContext& solution, PendingUnificationStack& pending)
+{
+  //
+  //	In this version we only handle variable vs variable unfication and
+  //	punt on everything else.
+  //
+  if (VariableDagNode* v = dynamic_cast<VariableDagNode*>(rhs))
+    {
+      VariableDagNode* lv = lastVariableInChain(solution);
+      VariableDagNode* rv = v->lastVariableInChain(solution);
+      if (lv->equal(rv))
+	return true;
+      //
+      //	Not clear if it safe to leave existing bindings in place or should we unsolve
+      //	and re-solve them to take care of any occurs check issues.
+      //
+      //	Also we might want to make sure we don't map an original variable to a fresh variable.
+      //
+      DagNode* lt = solution.value(lv->index);
+      if (lt == 0)
+	{
+	  solution.unificationBind(lv, rv);
+	  return true;
+	}
+
+      DagNode* rt = solution.value(rv->index);
+      if (rt == 0)
+	{
+	  solution.unificationBind(rv, lv);
+	  return true;
+	}
+
+      solution.unificationBind(lv, rv);
+      //
+      //	Need to call computeSolvedForm() since lt and rt could be ground.
+      //	Safe to call computeSolvedForm() since neither lt nor rt are
+      //	variables so the problem can't be kicked back to us.
+      //
+      return lt->computeSolvedForm(rt, solution, pending);
+    }
+  //
+  //	Calling computeSolvedForm() would just kick the problem back to us if
+  //	rhs is ground, since this is a variable, and cause an infinite recursion.
+  //
+  return rhs->computeSolvedForm2(this, solution, pending);
+}
+
+/*
+
 bool
 VariableDagNode::computeSolvedForm2(DagNode* rhs, UnificationContext& solution, PendingUnificationStack& pending)
 {
@@ -202,6 +253,8 @@ VariableDagNode::computeSolvedForm2(DagNode* rhs, UnificationContext& solution, 
     solution.unificationBind(lv, rhs);
   return lt->computeSolvedForm(rhs, solution, pending);
 }
+
+*/
 
 mpz_class
 VariableDagNode::nonVariableSize()

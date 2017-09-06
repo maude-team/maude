@@ -1,3 +1,107 @@
+2010-08-11  Steven Eker  <eker@rho>
+
+	* unificationSubproblemDisjunction.cc
+	(UnificationSubproblemDisjunction::addUnification): take mark argument
+
+	* compoundCycleSubproblem.cc (CompoundCycleSubproblem::solve):
+	implement cyclic identity base cycle breaking
+
+2010-08-03  Steven Eker  <eker@rho>
+
+	* pendingUnificationStack.cc
+	(PendingUnificationStack::makeNewSubproblem): pass marked to
+	addUnification()
+
+	* compoundCycleSubproblem.cc (CompoundCycleSubproblem::solve):
+	pass marked = true to push()
+
+	* unificationSubproblemDisjunction.cc
+	(UnificationSubproblemDisjunction::solve): pass marked = true to
+	push()
+
+	* pendingUnificationStack.cc (PendingUnificationStack::push): take
+	marked arg
+
+	* pendingUnificationStack.hh (class PendingUnificationStack):
+	added marked field to struct PendingUnification
+	(class PendingUnificationStack): updated decl for push()
+
+	* unificationContext.hh (class UnificationContext): updated decl
+	for makeFreshVariable() again
+
+	* unificationContext.cc (UnificationContext::makeFreshVariable):
+	return VariableDagNode*
+
+	* unificationContext.hh (class UnificationContext): updated decl
+	for makeFreshVariable()
+
+	* unificationContext.cc (UnificationContext::makeFreshVariable):
+	make arg const
+
+2010-07-29  Steven Eker  <eker@rho>
+
+	* unificationSubproblemDisjunction.hh (class
+	UnificationSubproblemDisjunction): updated decl for addUnification()
+
+	* unificationSubproblemDisjunction.cc
+	(UnificationSubproblemDisjunction::addUnification): take solution arg
+
+	* pendingUnificationStack.cc
+	(PendingUnificationStack::makeNewSubproblem): pass solution to
+	addUnification()
+
+2010-07-20  Steven Eker  <eker@rho>
+
+	* compoundCycleSubproblem.cc (CompoundCycleSubproblem::solve): fix
+	nasty bug where we were looking at cycle; optimization: remove
+	binding that we have reposed as pending unifications
+
+	* pendingUnificationStack.cc
+	(PendingUnificationStack::makeNewSubproblem): ignore variable to
+	variable bindings when compiling cycle
+
+	* pendingUnificationStack.hh (class PendingUnificationStack):
+	updated decl for makeNewSubproblem()
+
+	* pendingUnificationStack.cc
+	(PendingUnificationStack::makeNewSubproblem): take
+	UnificationContext argument
+
+	* pendingUnificationStack.hh (class PendingUnificationStack):
+	added enum SpecialTheory
+
+	* pendingUnificationStack.cc
+	(PendingUnificationStack::makeNewSubproblem): look for cycles here
+	and create a new CompoundCycleSubproblem if one found
+	(PendingUnificationStack::killTopSubproblem): be
+	CompoundCycleSubproblem aware
+
+	* core.hh: added class CompoundCycleSubproblem
+
+2010-07-19  Steven Eker  <eker@rho>
+
+	* compoundCycleSubproblem.cc: created
+
+	* compoundCycleSubproblem.hh: created
+
+2010-07-16  Steven Eker  <eker@rho>
+
+	* pendingUnificationStack.hh (class PendingUnificationStack):
+	added decl for solve2()
+
+	* pendingUnificationStack.cc (PendingUnificationStack::findCycle)
+	(PendingUnificationStack::findCycleFrom)
+	(PendingUnificationStack::solve2): added
+
+	* pendingUnificationStack.hh (class PendingUnificationStack):
+	added enum Status, data members variableStatus, variabeOrder;
+	added decls for findCycle() and findCycleFrom()
+
+	* unificationContext.hh
+	(UnificationContext::getNrOriginalVariables): added
+
+===================================Maude94a===========================================
+
 2010-06-30  Steven Eker  <eker@rho>
 
 	* pendingUnificationStack.cc
@@ -30,6 +134,8 @@
 	(PendingUnificationStack::makeNewSubproblem): deleted commented
 	out code that look for theory with greatest number of pending
 	unifications
+
+===================================Maude94===========================================
 
 2010-03-19  Steven Eker  <eker@rho>
 
