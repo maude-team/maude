@@ -1,3 +1,11 @@
+2011-11-22  Steven Eker  <eker@rho>
+
+	* ACU_UnificationSubproblem2.cc (ACU_UnificationSubproblem2::solve): use restoreFromClone()
+	to make sure that sort and dagnode information for variable created on the branch we are
+	backtracking get purged from our UnificationContext object (4 places)
+
+===================================Maude95c===========================================
+
 2010-12-09  Steven Eker  <eker@rho>
 
 	* ACU_Symbol.cc (ACU_Symbol::postOpDeclarationPass): don't call

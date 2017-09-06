@@ -46,6 +46,8 @@ public:
   void unificationBind(VariableDagNode* variable, DagNode* value);
   VariableDagNode* getVariableDagNode(int index);
 
+  void restoreFromClone(const Substitution& substitutionClone);
+
 protected:
   //
   //	We make this protected so that a derived class can override it and then call

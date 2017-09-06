@@ -1,3 +1,9 @@
+2011-11-22  Steven Eker  <eker@rho>
+
+	* CUI_UnificationSubproblem.cc (CUI_UnificationSubproblem::solve): use restoreFromClone()
+	to make sure sort and dagnode information for fresh variables created on the path we
+	just backtrack from are properly cleared from our UnificationContext (2 places)
+
 2010-12-09  Steven Eker  <eker@rho>
 
 	* CUI_Symbol.cc (CUI_Symbol::postOpDeclarationPass): don't call

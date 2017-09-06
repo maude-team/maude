@@ -307,28 +307,34 @@ SocketManagerSymbol::send(FreeDagNode* message, ObjectSystemRewritingContext& co
       text.size() != 0)
     {
       ActiveSocket& as = activeSockets[socketId];
-      if ((as.state & ~WAITING_TO_READ) == 0)
+      if ((as.state & ~WAITING_TO_READ) == 0)  // check that all the state bits other than WAITING_TO_READ are clear
 	{
-	  as.text = text;
-	  as.unsent = text.c_str();
+	  //as.text = text;
+	  as.textArray = makeZeroTerminatedString(text);
+	  //as.unsent = as.text.c_str();
+	  as.unsent = as.textArray;
 	  as.nrUnsent = text.size();  // how to deal with empty message?
-
+	  //
+	  //	Write some characters to the socket; we might get interrupted and have to restart.
+	  //
 	  ssize_t n;
 	  do
 	    n = write(socketId, as.unsent, as.nrUnsent);
 	  while (n == -1 && errno == EINTR);
 
-	  if (n == -1 && errno == EAGAIN)
+	  if (n == -1 && (errno == EAGAIN || errno == EWOULDBLOCK))  // treat blocking situation as zero chars send
 	    n = 0;
 	  if (n >= 0)
 	    {
 	      as.nrUnsent -= n;
-	      if (as.nrUnsent == 0)
+	      if (as.nrUnsent == 0)  // done
 		{
 		  sentMsgReply(message, context);
 		  // clear  as.text
+		  delete [] as.textArray;
+		  as.textArray = 0;
 		}
-	      else
+	      else  // at least some characters pending
 		{
 		  as.state |= WAITING_TO_WRITE;
 		  as.lastMessage.setNode(message);
@@ -360,7 +366,7 @@ SocketManagerSymbol::receive(FreeDagNode* message, ObjectSystemRewritingContext&
   if (getActiveSocket(socketName, socketId))
     {
       ActiveSocket& as = activeSockets[socketId];
-      if ((as.state & ~WAITING_TO_WRITE) == 0)
+      if ((as.state & ~WAITING_TO_WRITE) == 0)  // check that all the state bits other than WAITING_TO_WRITE are clear
 	{
 	  char buffer[READ_BUFFER_SIZE];
 	  ssize_t n;
