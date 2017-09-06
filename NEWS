@@ -1,3 +1,10 @@
+Overview of Changes in Maude alpha95b
+=====================================
+* fixed a bug in the profiler provoked by condition fragments in a
+command or descent function invocation
+* more overparsing
+* avoid unnecessary right id sort checking for commutative symbols
+
 Overview of Changes in Maude alpha95a
 =====================================
 * fixed sort bug with new memo mechanism

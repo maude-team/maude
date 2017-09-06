@@ -1,3 +1,23 @@
+2010-12-09  Steven Eker  <eker@rho>
+
+	* modules.yy (skipStrayArrow): added
+	(viewDeclaration): use skipStrayArrow to overparse var X : -> Foo .
+	(declaration): ditto
+	(skipStrayArrow): get line number from stray token
+	(skipStrayColon): added
+
+2010-11-30  Steven Eker  <eker@rho>
+
+	* profileModule.cc (ProfileModule::profileFragment): added
+	Asserts() to check for bad ModuleInfo
+
+	* trial.cc (UserLevelRewritingContext::traceEndFragment): check
+	for undefined trialRef before calling the profiler since this
+	generally means we are tracing a Pattern (which doesn't belong to
+	a module and can't be profiled in the current implementation)
+
+===================================Maude95b===========================================
+
 2010-10-19  Steven Eker  <eker@rho>
 
 	* quotedIdentifierSymbol.cc

@@ -1,3 +1,10 @@
+2010-11-30  Steven Eker  <eker@rho>
+
+	* pattern.cc (Pattern::Pattern): call setModuleInfo() to set null
+	info so we can identify PreEquations that don't belong to modules
+
+===================================Maude95b===========================================
+
 2010-09-16  Steven Eker  <eker@rho>
 
 	* modelCheckerSymbol.cc (SystemAutomaton::checkProposition): reverted
@@ -350,7 +357,8 @@
 
 	* sequenceSearch.hh: derive from CacheableState
 
-	* unificationProblem.hh (class UnificationProblem): derive from CacheableState
+	* unificationProblem.hh (class UnificationProblem): derive from
+	CacheableState
 
 	* cacheableState.hh: created
 

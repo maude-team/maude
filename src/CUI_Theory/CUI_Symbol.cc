@@ -84,8 +84,15 @@ CUI_Symbol::postOpDeclarationPass()
   processIdentity();
   if (axioms & LEFT_ID)
     leftIdentitySortCheck();
-  if (axioms & RIGHT_ID)
-    rightIdentitySortCheck();
+  //
+  //	If we are commutative, a problem that shows up with rightIdentitySortCheck()
+  //	will already have shown up with leftIdentitySortCheck() and the latter is faster.
+  //
+  if (!(axioms & COMM))
+    {
+      if (axioms & RIGHT_ID)
+	rightIdentitySortCheck();
+    }
 }
 
 Term*
