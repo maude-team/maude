@@ -1,3 +1,8 @@
+Overview of Changes in Maude alpha89d
+=====================================
+* fixed bug where we were not reserving enough BDD variables for free
+  variable sorts
+
 Overview of Changes in Maude alpha89c
 =====================================
 * fixed bug iter theory matching with extension could return a match

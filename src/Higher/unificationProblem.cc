@@ -28,6 +28,7 @@
 #include "macros.hh"
 #include "vector.hh"
 #include "allSat.hh"
+#include "bddUser.hh"
 
 //	forward declarations
 #include "interface.hh"
@@ -305,6 +306,10 @@ UnificationProblem::findOrderSortedUnifiers()
 	  nextBddVariable += sortBdds->getNrVariables(sort->component()->getIndexWithinModule());
 	}
     }
+  //
+  //	Make sure BDD package has enough variables allocated.
+  //
+  BddUser::setNrVariables(nextBddVariable);
   //
   //	Now compute a BDD which tells us if a given assignment of sorts to free
   //	variables yields an order-sorted unifier.

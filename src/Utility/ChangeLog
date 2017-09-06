@@ -1,3 +1,9 @@
+2007-07-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* bddUser.hh (setNrVariables): moved here and made inline
+
+===================================Maude89d===========================================
+
 2007-01-22  Steven Eker  <eker@goo.csl.sri.com>
 
 	* bddUser.hh (class BddUser): added decl for gc_handler()
