@@ -97,7 +97,7 @@ DagNode::checkSort(const Sort* boundSort, RewritingContext& context)
 
 void
 DagNode::computeGeneralizedSort(const SortBdds& sortBdds,
-				const Vector<int> realToBdd,
+				const Vector<int>& realToBdd,
 				Vector<Bdd>& generalizedSort)
 {
   int sortIndex = getSortIndex();

@@ -1,3 +1,19 @@
+2007-03-16  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeDagNode.cc (unify, occurs2): deleted
+
+	* freeDagNode.hh (class FreeDagNode): deleted decls for unify()
+	and occurs2()
+
+2007-03-15  Steven Eker  <eker@goo.csl.sri.com>
+
+	* freeSymbol.cc (computeGeneralizedSort): pass realToBdd by ref
+
+	* freeSymbol.hh (class FreeSymbol): fix decl for
+	computeGeneralizedSort()
+
+===================================Maude89a===========================================
+
 2007-03-05  Steven Eker  <eker@goo.csl.sri.com>
 
 	* freeDagNode.cc (nonVariableSize): return mpz_class

@@ -1,3 +1,18 @@
+2007-03-16  Steven Eker  <eker@goo.csl.sri.com>
+
+	* dagNode.hh (class DagNode): deleted decls for unify(), occurs(),
+	occurs2()
+	(occurs): deleted
+
+2007-03-15  Steven Eker  <eker@goo.csl.sri.com>
+
+	* dagNode.cc (computeGeneralizedSort): pass realToBdd by reference
+
+	* dagNode.hh (class DagNode): pass realToBdd by reference rather
+	than by value in computeGeneralizedSort()
+
+===================================Maude89a==========================================
+
 2007-03-09  Steven Eker  <eker@goo.csl.sri.com>
 
 	* subproblem.hh (class Subproblem): added decl for unificationSolve()

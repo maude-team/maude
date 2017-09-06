@@ -77,5 +77,6 @@ class OpDeclaration;
 class SortBdds;
 class UnificationContext;
 class FreshVariableGenerator;
+class SolvedFormSubproblemDisjunction;
 
 #endif

@@ -1,3 +1,20 @@
+2007-03-16  Steven Eker  <eker@goo.csl.sri.com>
+
+	* variableDagNode.cc (occurs2, unify): deleted
+
+	* variableDagNode.hh (class VariableDagNode): deleted decls for
+	unify(), occurs2()
+
+2007-03-15  Steven Eker  <eker@goo.csl.sri.com>
+
+	* variableSymbol.cc (computeGeneralizedSort): pass realToBdd by
+	ref
+
+	* variableSymbol.hh (class VariableSymbol): fix decl for
+	computeGeneralizedSort()
+
+===================================Maude89a===========================================
+
 2007-02-27  Steven Eker  <eker@goo.csl.sri.com>
 
 	* variableDagNode.cc (insertVariables2): added

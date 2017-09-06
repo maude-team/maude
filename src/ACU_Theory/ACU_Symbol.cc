@@ -376,7 +376,7 @@ ACU_Symbol::stackArguments(DagNode* subject,
 
 void
 ACU_Symbol::computeGeneralizedSort(const SortBdds& sortBdds,
-				    const Vector<int> realToBdd,
+				    const Vector<int>& realToBdd,
 				    DagNode* subject,
 				    Vector<Bdd>& generalizedSort)
 {
@@ -388,6 +388,7 @@ ACU_Symbol::computeGeneralizedSort(const SortBdds& sortBdds,
 
   ArgVec<ACU_Pair>& args = safeCast(ACU_DagNode*, subject)->argArray;
   bool firstArg = true;
+  bddPair* argMap = bdd_newpair();
   FOR_EACH_CONST(i, ArgVec<ACU_Pair>, args)
     {
       Vector<Bdd> argGenSort;
@@ -407,7 +408,6 @@ ACU_Symbol::computeGeneralizedSort(const SortBdds& sortBdds,
 	  //
 	  //	Do a sort function application step.
 	  //
-	  bddPair* argMap = bdd_newpair();  // FIX: should be able to reuse pair
 	  for (int j = 0; j < nrBdds; ++j)
 	    {
 	      bdd_setbddpair(argMap, j, generalizedSort[j]);
@@ -415,7 +415,7 @@ ACU_Symbol::computeGeneralizedSort(const SortBdds& sortBdds,
 	    }
 	  for (int j = 0; j < nrBdds; ++j)
 	    generalizedSort[j] = bdd_veccompose(sortFunction[j], argMap);
-	  bdd_freepair(argMap);  // FIX: should be able to reuse pair
 	}
     }
+  bdd_freepair(argMap);
 }

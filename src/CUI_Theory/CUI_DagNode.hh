@@ -49,21 +49,13 @@ public:
   //
   //	Unification stuff.
   //
-  bool unify(DagNode* rhs,
-	     Substitution& solution,
-	     Subproblem*& returnedSubproblem,
-	     ExtensionInfo* extensionInfo = 0);
-  bool computeBaseSortForGroundSubterms();
-  DagNode* instantiate2(Substitution& substitution);
-  bool occurs2(int index);
-  //
-  //	Alternative interface for unification experiments.
-  //
   bool computeSolvedForm(DagNode* rhs,
 			 Substitution& solution,
 			 Subproblem*& returnedSubproblem);
   mpz_class nonVariableSize();
   void insertVariables2(NatSet& occurs);
+  bool computeBaseSortForGroundSubterms();
+  DagNode* instantiate2(Substitution& substitution);
   //
   //    Functions particular to CUI_DagNode.
   //

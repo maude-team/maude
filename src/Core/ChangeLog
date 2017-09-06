@@ -1,3 +1,29 @@
+2007-03-16  Steven Eker  <eker@goo.csl.sri.com>
+
+	* substitution.cc (unificationBind, unificationDifference):
+	deleted
+
+	* substitution.hh (class Substitution): deleted decls for
+	unificationBind() and unificationDifference()
+
+	* localBinding.cc (unificationAssert): deleted
+
+	* localBinding.hh (class LocalBinding): deleted decl for
+	unificationAssert()
+
+	* core.hh: added class SolvedFormSubproblemDisjunction
+
+	* unificationSubproblemDisjunction.cc: deleted
+
+	* unificationSubproblemDisjunction.hh: deleted
+
+2007-03-15  Steven Eker  <eker@goo.csl.sri.com>
+
+	* sortTable.hh (class SortTable): fix bug where we were passing
+	realToBdd by value rather than by reference
+
+===================================Maude89a===========================================
+
 2007-03-14  Steven Eker  <eker@goo.csl.sri.com>
 
 	* solvedFormSubproblemDisjunction.cc (markReachableNodes): added

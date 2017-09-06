@@ -311,7 +311,7 @@ FreeSymbol::stackArguments(DagNode* subject,
 
 void
 FreeSymbol::computeGeneralizedSort(const SortBdds& sortBdds,
-				   const Vector<int> realToBdd,
+				   const Vector<int>& realToBdd,
 				   DagNode* subject,
 				   Vector<Bdd>& generalizedSort)
 {

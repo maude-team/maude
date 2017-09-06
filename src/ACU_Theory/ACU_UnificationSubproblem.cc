@@ -76,12 +76,18 @@ ACU_UnificationSubproblem::~ACU_UnificationSubproblem()
 void
 ACU_UnificationSubproblem::markReachableNodes()
 {
+  //  cout << this << endl;
   int nrFragile = savedSubstitution.nrFragileBindings();
+  //  cout << "nrFragile = " << nrFragile << endl;
   for (int i = 0; i < nrFragile; i++)
     {
+      //      cout << i << endl;
       DagNode* d = savedSubstitution.value(i);
       if (d != 0)
-	d->mark();
+	{
+	  //	  cout << d << endl;
+	  d->mark();
+	}
     }
 }
 
@@ -125,6 +131,19 @@ ACU_UnificationSubproblem::unificationSolve(bool findFirst, UnificationContext& 
   if (findFirst)
     {
       savedSubstitution.clone(solution);
+      /*
+      cout << this << endl;
+      int nrFragile = savedSubstitution.nrFragileBindings();
+      cout << "2-nrFragile = " << nrFragile << endl;
+      for (int i = 0; i < nrFragile; i++)
+	{
+	  cout << i << " ";
+	  DagNode* d = savedSubstitution.value(i);
+	  if (d != 0)
+	    cout << d;
+	  cout << endl;
+	}
+      */
       initialize(solution);
     }
   else

@@ -1,3 +1,11 @@
+2007-03-16  Steven Eker  <eker@goo.csl.sri.com>
+
+	* renaming.cc (addOpMapping): give safe dummy values to name and
+	term fields to fail gracefully in the case where syntax error
+	prevents addOpTarget() from being called
+
+===================================Maude89a===========================================
+
 2007-03-14  Steven Eker  <eker@goo.csl.sri.com>
 
 	* lexerAux.hh: added decl for checkForPending()

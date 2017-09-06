@@ -105,27 +105,8 @@ public:
   virtual void stackArguments(Vector<RedexPosition>& redexStack,
 			      int parentIndex,
 			      bool respectFrozen) = 0;
-
   //
-  //	Temporary interface for unification experiments.
-  //
-  virtual bool unify(DagNode* rhs,
-		     Substitution& solution,
-		     Subproblem*& returnedSubproblem,
-		     ExtensionInfo* extensionInfo = 0) { CantHappen("Not implemented"); return false; }
-  virtual bool computeBaseSortForGroundSubterms() { CantHappen("Not implemented"); return false; }
-  //
-  //	instantiate() returns 0 if instantiation does not change term.
-  //
-  DagNode* instantiate(Substitution& substitution);
-  virtual DagNode* instantiate2(Substitution& substitution) { CantHappen("Not implemented"); return 0; }
-  bool occurs(int index);
-  virtual bool occurs2(int index) { CantHappen("Not implemented"); return true; }
-  void computeGeneralizedSort(const SortBdds& sortBdds,
-			      const Vector<int> realToBdd,  // first BDD variable for each free real variable
-			      Vector<Bdd>& generalizedSort);
-  //
-  //	Alternative interface for unification experiments.
+  //	Interface for unification.
   //
   virtual bool computeSolvedForm(DagNode* rhs,
 				 Substitution& solution,
@@ -133,6 +114,15 @@ public:
   virtual mpz_class nonVariableSize() { return 0; }
   void insertVariables(NatSet& occurs);
   virtual void insertVariables2(NatSet& occurs) {}
+  virtual bool computeBaseSortForGroundSubterms() { CantHappen("Not implemented"); return false; }
+  //
+  //	instantiate() returns 0 if instantiation does not change term.
+  //
+  DagNode* instantiate(Substitution& substitution);
+  virtual DagNode* instantiate2(Substitution& substitution) { CantHappen("Not implemented"); return 0; }
+  void computeGeneralizedSort(const SortBdds& sortBdds,
+			      const Vector<int>& realToBdd,  // first BDD variable for each free real variable
+			      Vector<Bdd>& generalizedSort);
   //
   //	These member functions must be defined for each derived class in theories
   //	that need extension
@@ -516,15 +506,6 @@ DagNode::instantiate(Substitution& substitution)
   //	If we know our sort we must be ground.
   //
   return (getSortIndex() == Sort::SORT_UNKNOWN) ? instantiate2(substitution) : 0;
-}
-
-inline bool
-DagNode::occurs(int index)
-{
-  //
-  //	If we know our sort we must be ground.
-  //
-  return (getSortIndex() == Sort::SORT_UNKNOWN) ? occurs2(index) : false;
 }
 
 inline void

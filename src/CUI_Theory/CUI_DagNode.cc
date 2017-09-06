@@ -47,7 +47,6 @@
 #include "substitution.hh"
 #include "rewritingContext.hh"
 #include "subproblemAccumulator.hh"
-#include "unificationSubproblemDisjunction.hh"
 #include "solvedFormSubproblemDisjunction.hh"
 
 //	variable class definitions
@@ -223,87 +222,6 @@ CUI_DagNode::normalizeAtTop()
 }
 
 bool
-CUI_DagNode::unify(DagNode* rhs,
-		   Substitution& solution,
-		   Subproblem*& returnedSubproblem,
-		   ExtensionInfo* extensionInfo)
-{
-  if (symbol() == rhs->symbol())
-    {
-      int nrBindings = solution.nrFragileBindings();
-      DagNode** rhsArgs = safeCast(CUI_DagNode*, rhs)->argArray;
-      {
-	//
-	//	Try in-order solution.
-	//
-	Substitution local(nrBindings);
-	local.copy(solution);
-	SubproblemAccumulator subproblems;
-	if (argArray[0]->unify(rhsArgs[0], local, returnedSubproblem, 0))
-	  {
-	    subproblems.add(returnedSubproblem);
-	    if (argArray[1]->unify(rhsArgs[1], local, returnedSubproblem, 0))
-	      {
-		subproblems.add(returnedSubproblem);
-		if (!(argArray[0]->equal(argArray[1])) && !(rhsArgs[0]->equal(rhsArgs[1])))
-		  {
-		    //
-		    //	We have one potential solution - now check the
-		    //	reverse order alternative.
-		    //
-		    Substitution local2(nrBindings);
-		    local2.copy(solution);
-		    SubproblemAccumulator subproblems2;
-		    if (argArray[0]->unify(rhsArgs[1], local2, returnedSubproblem, 0))
-		      {
-			subproblems2.add(returnedSubproblem);
-			if (argArray[1]->unify(rhsArgs[0], local2, returnedSubproblem, 0))
-			  {
-			    subproblems2.add(returnedSubproblem);
-			    //
-			    //	We have two potential solutions so we need to form a disjunction.
-			    //
-			    UnificationSubproblemDisjunction* disjunction = new UnificationSubproblemDisjunction(nrBindings);
-			    disjunction->addOption(local.unificationDifference(solution), subproblems.extractSubproblem());
-			    disjunction->addOption(local2.unificationDifference(solution), subproblems2.extractSubproblem());
-			    returnedSubproblem = disjunction;
-			    return true;
-			  }
-		      }
-		  }
-		//
-		//	Only the in-order solution is viable so return it.
-		//
-		solution.copy(local);
-		returnedSubproblem = subproblems.extractSubproblem();
-		return true;
-	      }
-	  }
-      }
-      if (!(argArray[0]->equal(argArray[1])) && !(rhsArgs[0]->equal(rhsArgs[1])))
-	{
-	  //
-	  //	Try reverse order solution.
-	  //
-	  SubproblemAccumulator subproblems;
-	  if (argArray[0]->unify(rhsArgs[1], solution, returnedSubproblem, 0))
-	    {
-	      subproblems.add(returnedSubproblem);
-	      if (argArray[1]->unify(rhsArgs[0], solution, returnedSubproblem, 0))
-		{
-		  returnedSubproblem = subproblems.extractSubproblem();
-		  return true;
-		}
-	    }
-	}
-      return false;
-    }
-  if (dynamic_cast<VariableDagNode*>(rhs))
-    return rhs->unify(this, solution, returnedSubproblem, 0);
-  return false;
-}
-
-bool
 CUI_DagNode::computeBaseSortForGroundSubterms()
 {
   //
@@ -357,12 +275,6 @@ CUI_DagNode::instantiate2(Substitution& substitution)
 }
 
 bool
-CUI_DagNode::occurs2(int index)
-{
-  return argArray[0]->occurs(index) || argArray[1]->occurs(index);
-}
-
-bool
 CUI_DagNode::computeSolvedForm(DagNode* rhs,
 			       Substitution& solution,
 			       Subproblem*& returnedSubproblem)
@@ -376,6 +288,8 @@ CUI_DagNode::computeSolvedForm(DagNode* rhs,
 	//	Try in-order solution.
 	//
 	Substitution local(nrBindings);
+	for (int i = 0; i < nrBindings; ++i)
+	  local.bind(i, 0);  // start with empty substitution
 	//local.copy(solution);
 	SubproblemAccumulator subproblems;
 	if (argArray[0]->computeSolvedForm(rhsArgs[0], local, returnedSubproblem))
@@ -391,6 +305,8 @@ CUI_DagNode::computeSolvedForm(DagNode* rhs,
 		    //	reverse order alternative.
 		    //
 		    Substitution local2(nrBindings);
+		    for (int i = 0; i < nrBindings; ++i)
+		      local2.bind(i, 0);  // start with empty substitution
 		    //local2.copy(solution);
 		    SubproblemAccumulator subproblems2;
 		    if (argArray[0]->computeSolvedForm(rhsArgs[1], local2, returnedSubproblem))

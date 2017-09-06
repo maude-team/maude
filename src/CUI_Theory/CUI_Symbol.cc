@@ -295,7 +295,7 @@ CUI_Symbol::setFrozen(const NatSet& frozen)
 
 void
 CUI_Symbol::computeGeneralizedSort(const SortBdds& sortBdds,
-				   const Vector<int> realToBdd,
+				   const Vector<int>& realToBdd,
 				   DagNode* subject,
 				   Vector<Bdd>& generalizedSort)
 {

@@ -260,37 +260,6 @@ FreeDagNode::stackArguments(Vector<RedexPosition>& stack,
 }
 
 bool
-FreeDagNode::unify(DagNode* rhs,
-		   Substitution& solution,
-		   Subproblem*& returnedSubproblem,
-		   ExtensionInfo* extensionInfo)
-{
-  if (symbol() == rhs->symbol())
-    {
-      int nrArgs = symbol()->arity();
-      if (nrArgs != 0)
-	{
-	  SubproblemAccumulator subproblems;
-	  DagNode** args = argArray();
-	  DagNode** rhsArgs = safeCast(FreeDagNode*, rhs)->argArray();
-	  for (int i = 0; i < nrArgs; ++i)
-	    {
-	      if (!(args[i]->unify(rhsArgs[i], solution, returnedSubproblem, 0)))
-		return false;
-	      subproblems.add(returnedSubproblem);
-	    }
-	  returnedSubproblem = subproblems.extractSubproblem();
-	}
-      else
-	returnedSubproblem = 0;
-      return true;
-    }
-  if (dynamic_cast<VariableDagNode*>(rhs))
-    return rhs->unify(this, solution, returnedSubproblem, 0);
-  return false;
-}
-
-bool
 FreeDagNode::computeBaseSortForGroundSubterms()
 {
   bool ground = true;
@@ -366,20 +335,6 @@ FreeDagNode::instantiate2(Substitution& substitution)
     }
   //  cout << "FreeDagNode::instantiate2 exit null" << endl;
   return 0;  // unchanged
-}
-
-bool
-FreeDagNode::occurs2(int index)
-{
-  int nrArgs = symbol()->arity();
-  Assert(nrArgs > 0, "we shouldn't be called on constants");
-  DagNode** p = argArray();
-  for (int i = nrArgs; i > 0; i--, p++)
-    {
-      if ((*p)->occurs(index))
-	return true;
-    }
-  return false;
 }
 
 bool

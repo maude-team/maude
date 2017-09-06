@@ -58,16 +58,9 @@ public:
   LocalBinding* operator-(const Substitution& original) const;
 
   int nrFragileBindings() const;
-
   //
-  //	unificationBind() instantiate value to which variable will be bound,
-  //	performs occurs check or sort check as neccessary and handles the case
-  //	where a variable is bound to itself. Other bindings are updated to
-  //	eliminate the bound variable.
+  //	These operations are used by unification.
   //
-  bool unificationBind(int index, Sort* varSort, DagNode* value);
-  LocalBinding* unificationDifference(const Substitution& original) const;
-
   LocalBinding* makeLocalBinding() const;
   bool merge(int index, DagNode* rhs, Subproblem*& returnedSubproblem);
   bool merge(const Substitution& other, SubproblemAccumulator& subproblems);
