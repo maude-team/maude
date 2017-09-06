@@ -29,45 +29,13 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
-
-void
-SocketManagerSymbol::doRead(int fd)
-{
-}
-
-void
-SocketManagerSymbol::doWrite(int fd)
-{
-}
-
-void
-SocketManagerSymbol::doError(int fd)
-{
-}
-
-void
-SocketManagerSymbol::doHungUp(int fd)
-{
-}
+#include <arpa/inet.h>
+#include <errno.h>
 
 bool
 SocketManagerSymbol::getPort(DagNode* portArg, int& port)
 {
   return succSymbol->getSignedInt(portArg, port) && port <= 65535;  // HACK
-}
-
-bool
-SocketManagerSymbol::getDomain(DagNode* domainArg, int& domain)
-{
-  if (domainArg->symbol() == stringSymbol)
-    {
-      if (safeCast(StringDagNode*, domainArg)->getValue() == crope("IPv4"))
-	{
-	  domain = PF_INET;
-	  return true;
-	}
-    }
-  return false;
 }
 
 bool
@@ -94,17 +62,31 @@ SocketManagerSymbol::getText(DagNode* textArg, crope& text)
   return false;
 }
 
-void
-SocketManagerSymbol::errorReply(const char* errorMessage,
-				FreeDagNode* originalMessage,
-				ObjectSystemRewritingContext& context)
+bool
+SocketManagerSymbol::setNonblockingFlag(int fd, FreeDagNode* message, ObjectSystemRewritingContext& context)
 {
-  Vector<DagNode*> reply(3);
-  reply[1] = originalMessage->getArgument(0);
-  reply[2] = new StringDagNode(stringSymbol, errorMessage);
-  DagNode* target = originalMessage->getArgument(1);
-  reply[0] = target;
-  context.bufferMessage(target, socketErrorMsg->makeDagNode(reply));
+  //
+  //	Set nonblocking flag for a nascent socket; since its not yet an external object we
+  //	can just close it and generate an error reply if things don't work out.
+  //
+  int flags = fcntl(fd, F_GETFL);
+  if (flags == -1)
+    {
+      const char* errText = strerror(errno);
+      DebugAdvisory("unexpected fcntl() GETFL: " << errText);
+      close(fd);
+      errorReply(errText, message, context);
+      return false;
+    }
+  if (fcntl(fd, F_SETFL, flags | O_NONBLOCK) == -1)
+    {
+      const char* errText = strerror(errno);
+      DebugAdvisory("unexpected fcntl() GETFL: " << errText);
+      close(fd);
+      errorReply(errText, message, context);
+      return false;
+    }
+  return true;
 }
 
 bool
@@ -113,11 +95,9 @@ SocketManagerSymbol::createClientTcpSocket(FreeDagNode* message, ObjectSystemRew
   Assert(message->getArgument(0)->symbol() == this, "misdirected message");
   int domain;
   int port;
-  DagNode* addressArg = message->getArgument(3);
+  DagNode* addressArg = message->getArgument(2);
 
-  if (getDomain(message->getArgument(2), domain) &&
-      getPort(message->getArgument(4), port) &&
-      addressArg->symbol() == stringSymbol)
+  if (getPort(message->getArgument(3), port) && addressArg->symbol() == stringSymbol)
     {
       //
       //	We accept the message.
@@ -127,37 +107,29 @@ SocketManagerSymbol::createClientTcpSocket(FreeDagNode* message, ObjectSystemRew
       //	Look up the address.
       //
       const crope& address = safeCast(StringDagNode*, addressArg)->getValue();
-      hostent* record = gethostbyname(address.c_str());  // HACK
+      hostent* record = gethostbyname(address.c_str());  // HACK - might block
       if (record == 0)
 	{
+	  DebugAdvisory("unexpected gethostbyname(() error: " << strerror(errno));
 	  errorReply("bad address", message, context);
 	  return true;
 	}
       //
       //	Create a socket.
       //
-      int fd = socket(domain, SOCK_STREAM, 0);
+      int fd = socket(PF_INET, SOCK_STREAM, 0);
       if (fd == -1)
 	{
-	  errorReply("system call problem", message, context);
+	  const char* errText = strerror(errno);
+	  DebugAdvisory("unexpected socket() error: " << errText);
+	  errorReply(errText, message, context);
 	  return true;
 	}
-      /*
       //
       //	Make it non-blocking.
       //
-      int flags = fcntl(fd, F_GETFL);
-      if (flags == -1)
-	{
-	  errorReply("system call problem", message, context);
-	  return true;
-	}
-      if (fcntl(fd, F_SETFL, flags | O_NONBLOCK) == -1)
-	{
-	  errorReply("system call problem", message, context);
-	  return true;
-	}
-      */
+      if (!setNonblockingFlag(fd, message, context))
+	return true;
       //
       //	Try to connect to host.
       //
@@ -166,47 +138,142 @@ SocketManagerSymbol::createClientTcpSocket(FreeDagNode* message, ObjectSystemRew
       sockName.sin_port = htons(port);
       sockName.sin_addr = *(reinterpret_cast<in_addr*>(record->h_addr_list[0]));  // HACK
       if (connect(fd, reinterpret_cast<sockaddr*>(&sockName), sizeof(sockName)) == 0)
+	createdSocketReply(fd, message, context);  // instant success
+      else if (errno == EINPROGRESS)
 	{
 	  //
-	  //	Instant success
+	  //	Incomplete transaction on an asynchronous socket, so save details
+	  //	so we know what to do when transaction completes.
 	  //
-	  activeSockets[fd].state = READY_TO_SEND;
-	  Vector<DagNode*> reply(1, 3);
-	  reply[0] = succSymbol->makeNatDag(fd);
-	  DagNode* socketName = socketOidSymbol->makeDagNode(reply);
-	  context.addExternalObject(socketName, this);
-	  reply.resize(3);
-	  reply[2] = socketName;
-	  reply[1] = message->getArgument(0);
-	  DagNode* target = message->getArgument(1);
-	  reply[0] = target;
-	  context.bufferMessage(target, createdSocketMsg->makeDagNode(reply));
-	  return true;
+	  ActiveSocket& as = activeSockets[fd];
+	  as.state = WAITING_TO_CONNECT;
+	  as.lastMessage.setNode(message);
+	  as.originalContext = &context;
+	  //
+	  //	Completion (could be success or failure) is indicated by the operation system
+	  //	making the socket writable.
+	  //
+	  wantTo(WRITE, fd);
 	}
-      /*
-      else if (errno == EINPROGRESS)
-	state = WAITING_TO_CONNECT;  // potential delayed success
-      */
       else
 	{
+	  //
+	  //	Connect failed, so report error and pretend that socket never existed.
+	  //
+	  DebugAdvisory("unexpected connect() error: " << strerror(errno));
 	  close(fd);
-	  errorReply("failed to connnect", message, context);
-	  return true;
+	  errorReply("failed to connect", message, context);
 	}
+      return true;
     }
-  return true;
+  DebugAdvisory("declined message: " << message);
+  return false;
 }
 
 bool
 SocketManagerSymbol::createServerTcpSocket(FreeDagNode* message, ObjectSystemRewritingContext& context)
 {
   Assert(message->getArgument(0)->symbol() == this, "misdirected message");
+  int port;
+  int backlog;
+
+  if (getPort(message->getArgument(2), port) &&
+      succSymbol->getSignedInt(message->getArgument(3), backlog) &&
+      backlog > 0)
+    {
+      //
+      //	Create a socket.
+      //
+      int fd = socket(PF_INET, SOCK_STREAM, 0);
+      if (fd == -1)
+	{
+	  const char* errText = strerror(errno);
+	  DebugAdvisory("unexpected socket() error: " << errText);
+	  errorReply(errText, message, context);
+	  return true;
+	}
+      //
+      //	Make it non-blocking.
+      //
+      if (!setNonblockingFlag(fd, message, context))
+	return true;
+      //
+      //	Bind it to the local port.
+      //
+      sockaddr_in sockName;
+      sockName.sin_family = AF_INET;
+      sockName.sin_port = htons(port);
+      sockName.sin_addr.s_addr = htonl(INADDR_ANY);  // HACK - what is the portable way to set this?
+      if (bind(fd, reinterpret_cast<sockaddr*>(&sockName), sizeof(sockName)) == -1)
+	{
+	  const char* errText = strerror(errno);
+	  DebugAdvisory("unexpected bind() error: " << errText);
+	  errorReply(errText, message, context);
+	  close(fd);
+	  return true;
+	}
+      //
+      //	Start listening for connections.
+      //
+      if (listen(fd, backlog) == -1)
+	{
+	  const char* errText = strerror(errno);
+	  DebugAdvisory("unexpected listen() error: " << errText);
+	  errorReply(errText, message, context);
+	  close(fd);
+	  return true;
+	}
+      //
+      //	Return a message now that we have a bound and listening server socket.
+      //
+      createdSocketReply(fd, message, context);
+      activeSockets[fd].state = LISTENING;  // HACK - already set to nominal
+     return true;
+    }
+  DebugAdvisory("declined message: " << message);
   return false;
 }
 
 bool
 SocketManagerSymbol::acceptClient(FreeDagNode* message, ObjectSystemRewritingContext& context)
 {
+  int socketId;
+  if (getActiveSocket(message->getArgument(0), socketId))
+    {
+      ActiveSocket& as = activeSockets[socketId];
+      if (as.state == LISTENING)
+	{
+	  sockaddr_in sockName;
+	  socklen_t addrLen = sizeof(sockName);
+	  int r;
+	  do
+	    r = accept(socketId, reinterpret_cast<sockaddr*>(&sockName), &addrLen);
+	  while (r == -1 && errno == EINTR);
+	  if (r >= 0)
+	    {
+	      if (setNonblockingFlag(r, message, context))
+		acceptedClientReply(inet_ntoa(sockName.sin_addr), r, message, context);
+	    }
+	  else if (errno == EAGAIN)
+	    {
+	      as.state = WAITING_TO_ACCEPT;
+	      as.lastMessage.setNode(message);
+	      as.originalContext = &context;
+	      wantTo(READ, socketId);
+	    }
+	  else
+	    {
+	      //
+	      //	What should we do with a socket that we failed to accept on?
+	      //
+	      const char* errText = strerror(errno);
+	      DebugAdvisory("unexpected accept() error: " << errText);
+	      errorReply(errText, message, context);
+	    }
+	  return true;
+	}
+    }
+  DebugAdvisory("declined message: " << message);
   return false;
 }
 
@@ -216,38 +283,51 @@ SocketManagerSymbol::send(FreeDagNode* message, ObjectSystemRewritingContext& co
   int socketId;
   crope text;
   if (getActiveSocket(message->getArgument(0), socketId) &&
-      getText(message->getArgument(2), text))
+      getText(message->getArgument(2), text) &&
+      text.size() != 0)
     {
-      ssize_t n = write(socketId, text.c_str(), text.size());  // need to check how much was written
-      if (n != text.size())
-	errorReply("read failed", message, context);
-      else
+      ActiveSocket& as = activeSockets[socketId];
+      if ((as.state & ~WAITING_TO_READ) == 0)
 	{
-	  Vector<DagNode*> reply(2);
-	  DagNode* target = message->getArgument(1);
-	  reply[0] = target;
-	  reply[1] = message->getArgument(0);
-	  context.bufferMessage(target, sentMsg->makeDagNode(reply));
-	}
-      return true;
-    }
-  return false;
-}
+	  as.text = text;
+	  as.unsent = text.c_str();
+	  as.nrUnsent = text.size();  // how to deal with empty message?
 
-void
-SocketManagerSymbol::closeSocket(DagNode* socketName,
-				 int socketId,
-				 DagNode* clientName,
-				 ObjectSystemRewritingContext& context)
-{
-  close(socketId);
-  context.deleteExternalObject(socketName);
-  activeSockets.erase(socketId);
-  Vector<DagNode*> reply(2);
-  reply[1] = socketName;
-  DagNode* target = clientName;
-  reply[0] = target;
-  context.bufferMessage(target, closedSocketMsg->makeDagNode(reply));
+	  ssize_t n;
+	  do
+	    n = write(socketId, as.unsent, as.nrUnsent);
+	  while (n == -1 && errno == EINTR);
+
+	  if (n == -1 && errno == EAGAIN)
+	    n = 0;
+	  if (n >= 0)
+	    {
+	      as.nrUnsent -= n;
+	      if (as.nrUnsent == 0)
+		{
+		  sentMsgReply(message, context);
+		  // clear  as.text
+		}
+	      else
+		{
+		  as.state |= WAITING_TO_WRITE;
+		  as.lastMessage.setNode(message);
+		  as.originalContext = &context;
+		  as.unsent += n;
+		  wantTo(WRITE, socketId);
+		}
+	    }
+	  else
+	    {
+	      const char* errText = strerror(errno);
+	      DebugAdvisory("unexpected write() error : " << errText);
+	      closedSocketReply(socketId, errText, message, context);
+	    }
+	  return true;
+	}
+    }
+  DebugAdvisory("declined message: " << message);
+  return false;
 }
 
 bool
@@ -255,26 +335,47 @@ SocketManagerSymbol::receive(FreeDagNode* message, ObjectSystemRewritingContext&
 {
   DagNode* socketName = message->getArgument(0);
   int socketId;
-  char buffer[4096];  // HACK
   if (getActiveSocket(socketName, socketId))
     {
-      ssize_t n = read(socketId, buffer, 4096);
-      if (n == -1)
-	errorReply("read failed", message, context);
-      else if (n == 0)
-	closeSocket(socketName, socketId, message->getArgument(1), context);
-      else
+      ActiveSocket& as = activeSockets[socketId];
+      if ((as.state & ~WAITING_TO_WRITE) == 0)
 	{
-	  crope text(buffer, n);
-	  Vector<DagNode*> reply(3);
-	  reply[1] = message->getArgument(0);
-	  reply[2] = new StringDagNode(stringSymbol, text);
-	  DagNode* target = message->getArgument(1);
-	  reply[0] = target;
-	  context.bufferMessage(target, receivedMsg->makeDagNode(reply));
+	  char buffer[READ_BUFFER_SIZE];
+	  ssize_t n;
+	  do
+	    n = read(socketId, buffer, READ_BUFFER_SIZE);
+	  while (n == -1 && errno == EINTR);
+
+	  if (n > 0)
+	    receivedMsgReply(buffer, n, message, context);
+	  else
+	    {
+	      if (n == -1)
+		{
+		  if (errno == EAGAIN)
+		    {
+		      as.state |= WAITING_TO_READ;
+		      as.lastMessage.setNode(message);
+		      as.originalContext = &context;
+		      wantTo(READ, socketId);
+		    }
+		  else
+		    {
+		      const char* errText = strerror(errno);
+		      DebugAdvisory("unexpected read() error: " << errText);
+		      closedSocketReply(socketId, errText, message, context);
+		    }
+		}
+	      else
+		{
+		  DebugAdvisory("read 0 bytes");
+		  closedSocketReply(socketId, "", message, context);
+		}
+	    }
+	  return true;
 	}
-      return true;
     }
+  DebugAdvisory("declined message: " << message);
   return false;
 }
 
@@ -285,9 +386,10 @@ SocketManagerSymbol::closeSocket(FreeDagNode* message, ObjectSystemRewritingCont
   int socketId;
   if (getActiveSocket(socketName, socketId))
     {
-      closeSocket(socketName, socketId, message->getArgument(1), context);
+      closedSocketReply(socketId, "", message, context);
       return true;
     }
+  DebugAdvisory("declined message: " << message);
   return false;
 }
 
@@ -300,6 +402,7 @@ SocketManagerSymbol::cleanUp(DagNode* objectId)
       DebugAdvisory("cleaning up " << objectId);
       close(socketId);
       activeSockets.erase(socketId);
+      PseudoThread::clearFlags(socketId);  // to avoid eventLoop() testing an invalid fd
     }
   else
     CantHappen("no socket for " << objectId);

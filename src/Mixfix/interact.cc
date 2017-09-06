@@ -54,6 +54,13 @@ UserLevelRewritingContext::clearDebug()
 }
 
 void
+UserLevelRewritingContext::clearInterrupt()
+{
+  setTraceStatus(interpreter.getFlag(Interpreter::EXCEPTION_FLAGS));
+  ctrlC_Flag =  false;
+}
+
+void
 UserLevelRewritingContext::setHandlers(bool handleCtrlC)
 {
 

@@ -83,7 +83,8 @@ void
 Interpreter::doLoop(DagNode* d, VisibleModule* module)
 {
   UserLevelRewritingContext* context = new UserLevelRewritingContext(d);
-  module->resetRules();
+  if (getFlag(AUTO_CLEAR_RULES))
+    module->resetRules();
 #ifdef QUANTIFY_REWRITING
   quantify_start_recording_data();
 #endif

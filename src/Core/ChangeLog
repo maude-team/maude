@@ -1,3 +1,21 @@
+2004-12-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* run.cc (ruleRewrite): added extra isUnrewritable() test and
+	detailed comment
+
+	* ruleTable.cc (applyRules): call setUnrewritable() in the case
+	that we can't do any rewrites
+
+2004-12-20  Steven Eker  <eker@goo.csl.sri.com>
+
+	* run.cc (ruleRewrite): remove setUnrewritable() call
+	(doRewriting): test isUnrewritable() before calling
+	setUnstackable(); don't call setUnrewritable(); update comments
+
+2004-12-06  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ruleTable.cc (RuleTable): clear nextRule
+
 2004-12-02  Steven Eker  <eker@goo.csl.sri.com>
 
 	* sortTable.hh (class SortTable): added decls for

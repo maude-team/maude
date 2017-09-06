@@ -220,6 +220,10 @@ mod FOO is
     id-hook ACU_NumberOpSymbol (&)
     op-hook succSymbol (s_ : Nat ~> NzNat)
     op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
+  op _&_ : Nat Int -> Nat [assoc comm prec 53 gather (e E) special (
+    id-hook ACU_NumberOpSymbol (&)
+    op-hook succSymbol (s_ : Nat ~> NzNat)
+    op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
   op _&_ : Int Int -> Int [assoc comm prec 53 gather (e E) special (
     id-hook ACU_NumberOpSymbol (&)
     op-hook succSymbol (s_ : Nat ~> NzNat)
@@ -484,10 +488,11 @@ fmod INT is
     id-hook ACU_NumberOpSymbol (xor)
     op-hook succSymbol (s_ : Nat ~> NzNat)
     op-hook minusSymbol (-_ : NzNat ~> Int))] .
-  op _&_ : Int Int -> Int [assoc comm prec 53 special (
+  op _&_ : Nat Int -> Nat [assoc comm prec 53 special (
     id-hook ACU_NumberOpSymbol (&)
     op-hook succSymbol (s_ : Nat ~> NzNat)
     op-hook minusSymbol (-_ : NzNat ~> Int))] .
+  op _&_ : Int Int -> Int [ditto] .
   op _|_ : NzInt Int -> NzInt [assoc comm prec 57 special (
     id-hook ACU_NumberOpSymbol (|)
     op-hook succSymbol (s_ : Nat ~> NzNat)
@@ -738,6 +743,10 @@ mod FOO is
     op-hook succSymbol (s_ : Nat ~> NzNat)
     op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
   op _&_ : Nat Nat -> Nat [assoc comm prec 53 gather (e E) special (
+    id-hook ACU_NumberOpSymbol (&)
+    op-hook succSymbol (s_ : Nat ~> NzNat)
+    op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
+  op _&_ : Nat Int -> Nat [assoc comm prec 53 gather (e E) special (
     id-hook ACU_NumberOpSymbol (&)
     op-hook succSymbol (s_ : Nat ~> NzNat)
     op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
@@ -1068,6 +1077,10 @@ mod FOO is
     op-hook succSymbol (s_ : Nat ~> NzNat)
     op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
   op _&_ : Nat Nat -> Nat [assoc comm prec 53 gather (e E) special (
+    id-hook ACU_NumberOpSymbol (&)
+    op-hook succSymbol (s_ : Nat ~> NzNat)
+    op-hook minusSymbol (-_ : NzNat ~> NzInt))] .
+  op _&_ : Nat Int -> Nat [assoc comm prec 53 gather (e E) special (
     id-hook ACU_NumberOpSymbol (&)
     op-hook succSymbol (s_ : Nat ~> NzNat)
     op-hook minusSymbol (-_ : NzNat ~> NzInt))] .

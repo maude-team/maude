@@ -24,7 +24,9 @@ EXTRA_DIST = \
 	objectMap.cc \
 	remainder.cc \
 	socketSignature.cc \
-	socketStuff.cc
+	socketStuff.cc \
+	socketAsync.cc \
+	socketOutcomes.cc
 
 noinst_HEADERS = \
 	configSymbol.hh \

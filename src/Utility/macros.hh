@@ -204,12 +204,12 @@ abort())
 #define \
 DebugAdvisoryCheck(condition, message) \
 if (!(condition) && globalAdvisoryFlag) \
-((cerr << "DEBUG ADVISORY: " << message << endl))
+((cerr << Tty(Tty::RED) << "DEBUG ADVISORY: " << Tty(Tty::RESET) << message << endl))
 
 #define \
 DebugAdvisory(message) \
 if (globalAdvisoryFlag) \
-(cerr << "DEBUG ADVISORY: " << message << endl)
+(cerr << Tty(Tty::RED) << "DEBUG ADVISORY: " << Tty(Tty::RESET) << message << endl)
 
 #else
 

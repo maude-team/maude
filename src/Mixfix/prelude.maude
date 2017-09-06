@@ -22,7 +22,7 @@
 
 ***
 ***	Maude interpreter standard prelude.
-***	Version Alpha 85
+***	Version Alpha 85a
 ***
 ***	Some of the overall structure is taken from the OBJ3
 ***	interpreter standard prelude.
@@ -333,11 +333,12 @@ fmod INT is
 		  op-hook succSymbol (s_ : Nat ~> NzNat)
 		  op-hook minusSymbol (-_ : NzNat ~> Int))] .
 
-  op _&_ : Int Int -> Int
+  op _&_ : Nat Int -> Nat
 	[assoc comm prec 53
 	 special (id-hook ACU_NumberOpSymbol (&)
 		  op-hook succSymbol (s_ : Nat ~> NzNat)
 		  op-hook minusSymbol (-_ : NzNat ~> Int))] .
+  op _&_ : Int Int -> Int [ditto] .
 
   op _|_ : NzInt Int -> NzInt
 	[assoc comm prec 57
@@ -923,7 +924,7 @@ fmod META-MODULE is
   sort TypeList .
   subsort Type < TypeList < QidList .
   op nil : -> TypeList [ctor] .
-  op __ : TypeList TypeList -> TypeList [ditto] .
+  op __ : TypeList TypeList -> TypeList [ctor ditto] .
   eq T:TypeList ; T:TypeList = T:TypeList .
 
 *** sets of type lists
@@ -1021,7 +1022,7 @@ fmod META-MODULE is
 *** conditions
   sorts EqCondition Condition .
   subsort EqCondition < Condition .
-  op nil : -> EqCondition .
+  op nil : -> EqCondition [ctor] .
   op _=_ : Term Term -> EqCondition [ctor prec 71] .
   op _:_ : Term Sort -> EqCondition [ctor prec 71] .
   op _:=_ : Term Term -> EqCondition [ctor prec 71] .
@@ -1555,21 +1556,15 @@ endm
 mod CONFIGURATION is
   sorts Attribute AttributeSet .
   subsort Attribute < AttributeSet .
-  op none : -> AttributeSet .
+  op none : -> AttributeSet  [ctor] .
   op _,_ : AttributeSet AttributeSet -> AttributeSet [ctor assoc comm id: none] .
 
-  sorts Oid Cid Object Msg Configuration Portal .
-  subsort Object Msg < Configuration .
+  sorts Oid Cid Object Msg Portal Configuration .
+  subsort Object Msg Portal < Configuration .
   op <_:_|_> : Oid Cid AttributeSet -> Object [ctor object] .
   op none : -> Configuration [ctor] .
   op __ : Configuration Configuration -> Configuration [ctor config assoc comm id: none] .
-***(
-  op {_} : Configuration -> Portal
-        [ctor special (
-           id-hook PortalSymbol
-           op-hook configurationSymbol		(__ : Configuration Configuration ~> Configuration)
-           op-hook emptyConfigurationSymbol	(none : ~> Configuration))].
-)
+  op <> : -> Portal [ctor] .
 endm
 
 set omod include CONFIGURATION on .

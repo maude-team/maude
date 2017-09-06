@@ -113,7 +113,8 @@ MetaLevel::downOpDecl(DagNode* metaOpDecl, MetaModule* m)
 						   ai.frozen,
 						   ai.prec,
 						   ai.gather,
-						   ai.format);
+						   ai.format,
+						   ai.metadata);
 	      m->addComplexSymbol(POLYMORPH, polymorphIndex, ai.identity, ai.fixUpInfo, domainAndRange);
 	    }
 	  else
@@ -131,6 +132,7 @@ MetaLevel::downOpDecl(DagNode* metaOpDecl, MetaModule* m)
 						       ai.prec,
 						       ai.gather,
 						       ai.format,
+						       ai.metadata,
 						       originator);
 		  if (ai.symbolType.getBasicType() == SymbolType::BUBBLE)
 		    {
@@ -345,6 +347,15 @@ MetaLevel::downAttr(DagNode* metaAttr, AttributeInfo& ai)
       int nrPolyArgs = polyList.length();
       for (int i = 0; i < nrPolyArgs; i++)
 	ai.polyArgs.insert(polyList[i]);  // FIX: NEED TO VALIDATE; maybe downNatSet?
+    }
+  else if (ma == metadataSymbol)
+    {
+       DagNode* metaStr = safeCast(FreeDagNode*, metaAttr)->getArgument(0);
+       if (metaStr->symbol() != stringSymbol)
+	 return false;
+       string str;
+       Token::ropeToString(safeCast(StringDagNode*, metaStr)->getValue(), str);
+       ai.metadata = Token::encode(str.c_str());
     }
   else if (ma == specialSymbol)
     {

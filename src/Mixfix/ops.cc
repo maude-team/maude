@@ -147,6 +147,22 @@ PreModule::setGather(const Vector<Token>& gather)
   opDef.symbolType.setFlags(SymbolType::GATHER);
 }
 
+void
+PreModule::setMetadata(Token metaDataTok)
+{
+  if (metaDataTok.specialProperty() == Token::STRING)
+    {
+      OpDef& opDef = opDefs[opDefs.length() - 1];
+      opDef.metadata = metaDataTok.code();
+      //opDef.symbolType.setFlags(SymbolType::METADATA);
+    }
+  else
+    {
+      IssueWarning(LineNumber(metaDataTok.lineNumber()) <<
+		   ": bad value " << QUOTE(metaDataTok) << " for metadata attribute.");
+    }
+}
+
 bool
 PreModule::checkFormatString(const char* string)
 {

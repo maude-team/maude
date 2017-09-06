@@ -51,7 +51,7 @@ private:
   void showPolymorphDecl(ostream& s, bool indent, int index) const;
   void showPolymorphAttributes(ostream& s, int index) const;
   void showDecls(ostream& s, bool indent, int index, bool all) const;
-  void showAttributes(ostream& s, Symbol* symbol, const OpDeclaration& decl) const;
+  void showAttributes(ostream& s, Symbol* symbol, int opDeclIndex) const;
 };
 
 #endif

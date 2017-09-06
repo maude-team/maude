@@ -335,7 +335,7 @@ Interpreter::eRewrite(const Vector<Token>& subject, Int64 limit, Int64 gas, bool
 	    }
 	  cout << "in " << currentModule << " : " << d << " .\n";
 	  if (xmlBuffer != 0)
-	    xmlBuffer->generateFrewrite(d, limit, gas);
+	    xmlBuffer->generateErewrite(d, limit, gas);
 	}
       UserLevelRewritingContext* context = new UserLevelRewritingContext(d);
       context->setObjectMode(ObjectSystemRewritingContext::EXTERNAL);
@@ -346,7 +346,25 @@ Interpreter::eRewrite(const Vector<Token>& subject, Int64 limit, Int64 gas, bool
 	fm->resetRules();
       beginRewriting(debug);
       Timer timer(getFlag(SHOW_TIMING));
-      context->fairRewrite(limit, (gas == NONE) ? 1 : gas);
+      for (;;)
+	{
+	  context->fairRewrite(NONE /* HACK: should be limit */, (gas == NONE) ? 1 : gas);
+	  DebugAdvisory("calling PseudoThread::eventLoop()");
+	  int r = PseudoThread::eventLoop();
+	  DebugAdvisory("PseudoThread::eventLoop() returned " << r);
+	  if (r != PseudoThread::EVENT_HANDLED)
+	    {
+	      if (r & PseudoThread::INTERRUPTED)
+		UserLevelRewritingContext::clearInterrupt();
+	      break;
+	    }
+	  //
+	  //	We must concretize the (potentially) virtual dag stored in
+	  //	our rewriting context before we can safely pass it to
+	  //	fairRewrite() again.
+	  //
+	  (void) context->root();  // force the virtual dag to be concretized
+	}
       endRewriting(timer, context, fm, &Interpreter::eRewriteCont);
     }
 }

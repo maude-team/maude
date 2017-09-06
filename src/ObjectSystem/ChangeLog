@@ -1,3 +1,151 @@
+2004-12-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* socketAsync.cc (doError): use getsockopt() for more accurate
+	error message
+
+	* socketStuff.cc (send): don't accept 0 length sends
+	(send): don't accept send unless socket is in a suitable state
+	(receive): don't accept receive unless socket is in a suitable
+	state
+
+2004-12-22  Steven Eker  <eker@goo.csl.sri.com>
+
+	* socketAsync.cc (doWrite): new closedSocketReply() convention
+	(doRead): new closedSocketReply() convention
+	(doError): new closedSocketReply() convention
+	(doHungUp): new closedSocketReply() convention
+
+	* socketStuff.cc (getDomain): deleted
+	(send): new closedSocketReply() convention
+	(receive): new closedSocketReply() convention
+
+	* socketManagerSymbol.hh (class SocketManagerSymbol): updated decl
+	for closedSocketReply()
+	(class SocketManagerSymbol): deleted decl for getDomain()
+
+	* socketOutcomes.cc (closedSocketReply): handle errorMessage arg
+
+	* socketStuff.cc (createClientTcpSocket): new message format
+	(createServerTcpSocket): new message format, check that backlog > 0
+
+	* socketSignature.cc: updated decls for createClientTcpSocketMsg,
+	createServer, TcpSocketMsg, receiveMsg, closedSocketMsg
+
+	* socketAsync.cc (doRead): handle accept case
+
+	* socketStuff.cc (createClientTcpSocket): use setonblockingFlag()
+	(createServerTcpSocket): use setNonblockingFlag()
+	(acceptClient): use setNonblockingFlag()
+
+	* socketManagerSymbol.hh (class SocketManagerSymbol): added decl
+	for setNonblockingFlag()
+
+	* socketStuff.cc (setNonblockingFlag): added
+
+	* socketManagerSymbol.hh (class SocketManagerSymbol): added decl
+	for acceptedClientReply()
+
+	* socketOutcomes.cc (acceptedClientReply): added
+
+2004-12-21  Steven Eker  <eker@goo.csl.sri.com>
+
+	* socketStuff.cc (acceptClient): implemented
+
+	* socketSignature.cc (MACRO): updated decls for
+	createServerTcpSocketMsg and acceptedClientMsg
+
+	* socketManagerSymbol.hh (class SocketManagerSymbol): added
+	LISTENING and WAITING_TO_ACCEPT to enum SocketState
+
+	* socketStuff.cc (createServerTcpSocket): implemented
+
+	* socketAsync.cc (doError): implemented
+	(doHungUp): implemented
+
+	* socketStuff.cc (cleanUp): call PseudoThread::clearFlags()
+
+2004-12-20  Steven Eker  <eker@goo.csl.sri.com>DebugAdvisory()
+
+	* socketStuff.cc (receive): handle async read
+	(send): hande async write
+	(createClientTcpSocket): allow nonblocking sockets
+
+	* socketAsync.cc (doWrite): handle async write
+
+	* socketManagerSymbol.hh (class SocketManagerSymbol): added decl
+	for sentMsgReply()
+
+	* socketOutcomes.cc (sentMsgReply): added
+
+	* socketManagerSymbol.hh (class SocketManagerSymbol): added text,
+	unsent and nrUnsent members to struct ActiveSocket
+
+	* socketAsync.cc (doRead): handle error and zero byte cases by
+	closing socket
+
+	* socketStuff.cc (receive): use strerror() in place of
+	sys_errlist[]
+	(createClientTcpSocket): DebugAdvisory() for unexpected connect()
+	error
+	(createClientTcpSocket): added DebugAdvisory() for declined
+	message
+	(closeSocket): added DebugAdvisory() for declined message
+	(receive): added DebugAdvisory() for declined message
+	(send): added DebugAdvisory() for declined message
+	(acceptClient, createServerTcpSocket): added DebugAdvisory() for
+	declined message
+	(createClientTcpSocket): added more DebugAdvisory()s
+
+2004-12-17  Steven Eker  <eker@goo.csl.sri.com>
+
+	* socketStuff.cc (receive): handle interrupts during read()
+	(receive): treat unrecognized error messages as a far end close
+
+	* socketAsync.cc (doRead): implemented
+
+	* socketStuff.cc (receive): use closedSocketReply()
+	(closeSocket): use closedSocketReply()
+
+	* socketOutcomes.cc (closedSocketReply): added
+
+	* socketManagerSymbol.hh (class SocketManagerSymbol): added enum Sizes
+
+	* socketStuff.cc (receive): use receivedMsgReply()
+
+	* socketManagerSymbol.hh (class SocketManagerSymbol): added decl
+	for receivedMsgReply()
+
+	* socketOutcomes.cc (receivedMsgReply): added
+
+	* socketManagerSymbol.hh (class SocketManagerSymbol): added
+	NOMINAL, WAITING_TO_READ, WAITING_TO_WRITE to enum SocketState,
+	removed READY_TO_SEND
+
+2004-12-16  Steven Eker  <eker@goo.csl.sri.com>
+
+	* socketAsync.cc (doWrite): handle async connects
+
+	* socketManagerSymbol.hh (class SocketManagerSymbol): added
+	WAITING_TO_CONNECT to enum SocketState
+
+	* socketAsync.cc (doRead, doWrite, doError, doHungUp): moved here
+
+	* socketStuff.cc (createClientTcpSocket): use createdSocketReply()
+	(createClientTcpSocket): don't accept badly formed messages
+
+	* socketManagerSymbol.hh (class SocketManagerSymbol): added decl
+	for createdSocketReply()
+
+	* socketOutcomes.cc (errorReply): moved here
+	(createdSocketReply): addded
+
+	* socketManagerSymbol.hh (class SocketManagerSymbol): added
+	lastMessage and context fields to struct ActiveSocket
+
+2004-12-06  Steven Eker  <eker@goo.csl.sri.com>
+
+	* socketStuff.cc: include netinet/in.h
+
 2004-10-08  Steven Eker  <eker@goo.csl.sri.com>
 
 	* pseudoThread.cc: added #include <errno.h>
@@ -5,7 +153,7 @@
 2004-08-03  Steven Eker  <eker@goo.csl.sri.com>
 
 	* configSymbol.cc (ruleRewrite): only do external stuff if mode is
-	external; put check for incomming external messages in second loop
+	external; put check for incoming external messages in second loop
 	rather than first
 
 	* socketManagerSymbol.hh (class SocketManagerSymbol): added decl

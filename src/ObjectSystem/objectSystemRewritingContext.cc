@@ -87,6 +87,7 @@ ObjectSystemRewritingContext::getExternalMessages(DagNode* target, list<DagNode*
 bool
 ObjectSystemRewritingContext::offerMessageExternally(DagNode* target, DagNode* message)
 {
+  //cerr << "offerMessageExternally(): saw " << message << endl;
   ObjectMap::iterator i = externalObjects.find(target);
   if (i != externalObjects.end())
     return i->second->handleMessage(message, *this);

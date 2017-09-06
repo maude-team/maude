@@ -48,6 +48,7 @@
 
 RuleTable::RuleTable()
 {
+  nextRule = 0;
 }
 
 void
@@ -136,5 +137,6 @@ RuleTable::applyRules(DagNode* subject,
 	}
       context.finished();
     }
+  subject->setUnrewritable();
   return 0;
 }

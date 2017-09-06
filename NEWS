@@ -1,3 +1,9 @@
+Overview of Changes in Maude alpha85a
+=====================================
+* fixed more sufficient completeness issues in the prelude
+* metadata attribute now allowed for operator declarations
+* added crude support for sockets as external objects
+
 Overview of Changes in Maude alpha85
 ====================================
 * added min/max functions to number hierarchy

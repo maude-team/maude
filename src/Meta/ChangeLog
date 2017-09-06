@@ -1,3 +1,26 @@
+2004-12-08  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaUpModule.cc (upPolymorphDecl): handle metadata
+
+	* metaDownOps.cc (downOpDecl): pass metadata to addPolymorph()
+
+	* metaUpModule.cc (upOpDecl): handle metadata
+
+	* metaDownOps.cc (downAttr): handle metadata
+
+	* metaLevel.hh (AttributeInfo): set metadata to NONE
+
+	* metaDownOps.cc (downOpDecl): pass metadata to addOpDeclaration()
+
+	* metaLevel.hh (class MetaLevel): added metadata field to struct AttributeInfo
+
+2004-12-07  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaDownOps.cc (downOpDecl): pass dummy metadata arg to
+	addOpDeclaration()
+
+===================================Maude85a===========================================
+
 2004-12-03  Steven Eker  <eker@goo.csl.sri.com>
 
 	* descentFunctions.cc (metaMaximalAritySet): use upTypeListSet()

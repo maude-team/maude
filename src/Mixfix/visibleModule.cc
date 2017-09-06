@@ -387,6 +387,11 @@ VisibleModule::showPolymorphAttributes(ostream& s, int index) const
 	}
       s << ')';
     }
+
+  int metadata = getPolymorphMetadata(index);
+  if (metadata != NONE)
+    s << " metadata " << Token::name(metadata);
+
   if (st.hasSpecial())
     {
       s << " special (";
@@ -509,24 +514,28 @@ VisibleModule::showDecls(ostream& s, bool indent, int index, bool all) const
       for (int j = 0; j < nrArgs; j++)
 	s << ' ' << dec[j];
       s << " -> " << dec[nrArgs];
-      showAttributes(s, symbol, opDecls[i]);
+      showAttributes(s, symbol, i);
       s << " .\n";
     }
 }
 
 void
-VisibleModule::showAttributes(ostream& s, Symbol* symbol, const OpDeclaration& decl) const
+VisibleModule::showAttributes(ostream& s, Symbol* symbol, int opDeclIndex) const
 {
   Vector<int> gather;
   getGather(symbol, gather);  // there will be a gather whenever there is mixfix syntax and args
   int gatherLength = gather.length();
   SymbolType st = getSymbolType(symbol);
+  const OpDeclaration& decl = symbol->getOpDeclarations()[opDeclIndex];
   bool ctor = decl.isConstructor();
+  int metadata = getMetadata(symbol, opDeclIndex);
+
 
   if (gatherLength == 0 &&
       st.getBasicType() == SymbolType::STANDARD &&
       !(st.hasFlag(SymbolType::ATTRIBUTES)) &&
-      !ctor)
+      !ctor &&
+      metadata == NONE)
     return;  // no attributes;
 
   const char* space = "";
@@ -670,6 +679,11 @@ VisibleModule::showAttributes(ostream& s, Symbol* symbol, const OpDeclaration& d
 	  s << Token::name(format[i]);
 	}
       s << ')';
+    }
+  if (metadata != NONE)
+    {
+      s << space << "metadata " << Token::name(metadata);
+      space = " ";
     }
   if (st.hasSpecial())
     {

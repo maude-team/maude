@@ -436,6 +436,10 @@ attribute	:	KW_ASSOC
 			{
 			  CM->setFlag(SymbolType::MESSAGE);
 			}
+		|	KW_METADATA IDENTIFIER
+			{
+			  CM->setMetadata($2);
+			}
 		|	KW_LATEX '('		{ lexerLatexMode(); }
 			LATEX_STRING ')'	{ CM->setLatexMacro($4); }
 		|	KW_SPECIAL '(' hookList ')'	{}
@@ -628,7 +632,7 @@ attrKeyword	:	'[' | ']' | attrKeyword2
 
 attrKeyword2	:	KW_ASSOC | KW_COMM | KW_ID | KW_IDEM | KW_ITER | KW_LEFT | KW_RIGHT
 		|	KW_PREC | KW_GATHER | KW_STRAT | KW_POLY | KW_MEMO | KW_CTOR
-		|	KW_LATEX | KW_SPECIAL | KW_FROZEN
+		|	KW_LATEX | KW_SPECIAL | KW_FROZEN | KW_METADATA
 		|	KW_CONFIG | KW_OBJ | KW_DITTO | KW_FORMAT
 		|	KW_ID_HOOK | KW_OP_HOOK | KW_TERM_HOOK
 		;

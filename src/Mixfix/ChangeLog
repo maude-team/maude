@@ -1,3 +1,128 @@
+2004-12-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* execute.cc (eRewrite): call clearInterrupt() after eventLoop()
+	exits with an interrupt
+
+	* userLevelRewritingContext.hh (class UserLevelRewritingContext):
+	added decl for clearInterrupt()
+
+	* interact.cc (clearInterrupt): added
+
+2004-12-22  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: added portal <> operator; made Portal a subsort
+	of Configuration
+
+	* socket.maude: removed Nat args from receive message; allowing
+	specification of min and max number of bytes we will deal with
+	seems more trouble than its worth
+	removed protocol family arg from createClientTcpSocket and
+	createServerTcpSocket; it seems unlikely we will support anything
+	other than IPv4 for the immediate future and we can always rewrite
+	outgoing messages for backwards compatibity if we go to a more
+	general interface
+	added reason arg to closedSocket message since sometimes we will
+	want to know if a socket closed naturally or because of a fatal
+	error
+
+2004-12-21  Steven Eker  <eker@goo.csl.sri.com>
+
+	* socket.maude: createServerTcpSocket now takes a backlog length;
+	acceptedClientMsg now passes back a client IP address
+
+	* execute.cc (eRewrite): call root() to force the virtual dag to
+	be concretized before doing another fairRewrite()
+
+2004-12-20  Steven Eker  <eker@goo.csl.sri.com>
+
+	* execute.cc (eRewrite): call eventLoop()
+
+2004-12-15  Steven Eker  <eker@goo.csl.sri.com>
+
+	* commands.yy (command): fixed nasty bug with optDebug KW_EREWRITE
+	where we were failing to initialize number2 to NONE
+
+	* execute.cc (eRewrite): call generateErewrite() rather than generateFrewrite()
+
+2004-12-09  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: added _&_ : Nat Int -> Nat since anding with a
+	nat will remove any high order 1s
+
+2004-12-08  Steven Eker  <eker@goo.csl.sri.com>
+
+	* number-sorts.maude: created
+
+	* visibleModule.cc (showPolymorphAttributes): handle metadata
+
+	* renameModule.cc (donateOps2): handle metadata in polymorphs
+
+	* process.cc (processOps): pass metadata to addPolymorph()
+
+	* mixfixModule.hh (CommonTokens): updated addPolymorph() decl
+	(getPolymorphMetadata): added
+
+	* entry.cc (addPolymorph): take and handle metadata arg
+
+	* mixfixModule.hh (CommonTokens): added metadata field to struct Polymorph
+
+	* renameModule.cc (donateOps2): copy metadata
+
+	* command.cc (printAttributes): handle metadata
+
+2004-12-07  Steven Eker  <eker@goo.csl.sri.com>
+
+	* visibleModule.hh (class VisibleModule): updated decl for showAttributes()
+
+	* visibleModule.cc (showAttributes): take declIndex rather than
+	decl; handle metadata
+	(showDecls): new showAttributes() convention
+
+	* entry.cc (addOpDeclaration): store metadata
+
+	* ops.cc (setMetadata): check that metadata is actually a string
+
+	* modules.yy (attrKeyword2): added KW_METADATA
+
+	* lexer.ll (ID_MODE): added metadata
+
+	* top.yy: added KW_METADATA
+
+	* preModule.hh (Parent): added decl for setMetadata()
+
+	* ops.cc (setMetadata): added
+
+	* modules.yy (attribute): allow metadata in operator attributes
+
+	* preModule.cc (OpDef): initialize metadata to NONE
+
+	* preModule.hh (Parent): added metadata field to struct OpDef
+
+	* renameModule.cc (donateOps2): pass dummy metadata arg to
+	addOpDeclaration()
+
+	* process.cc (processOps): pass metadata arg to addOpDeclaration()
+
+	* mixfixModule.hh (CommonTokens): updated decl for
+	addOpDeclaration()
+
+	* entry.cc (addOpDeclaration): added metadata arg
+
+	* metadataStore.cc (insertMetadata): added opdecl version
+	(getMetadata): added opdecl version
+
+	* metadataStore.hh (class MetadataStore): rewritten to handle
+	symbol/opdecls
+
+	* prelude.maude: fixed 3 missing ctors
+
+===================================Maude85a===========================================
+
+2004-12-06  Steven Eker  <eker@goo.csl.sri.com>
+
+	* loopMode.cc (doLoop): check AUTO_CLEAR_RULES before calling
+	resetRules()
+
 2004-12-02  Steven Eker  <eker@goo.csl.sri.com>
 
 	* prelude.maude: lift idempotence equation to TypeListSet

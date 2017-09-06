@@ -156,7 +156,8 @@ EXTRA_DIST = \
 	graphPrint.cc \
 	ansiEscapeSequences.cc \
 	prelude.maude \
-	model-checker.maude
+	model-checker.maude \
+	socket.maude
 
 noinst_HEADERS = \
 	renaming.hh \

@@ -65,6 +65,7 @@ public:
   void setFlag(int flag);
   void setPrec(Token range);
   void setGather(const Vector<Token>& gather);
+  void setMetadata(Token metaDataTok);
   void setFormat(const Vector<Token>& format);
   void setIdentity(const Vector<Token>& identity);
   void setStrat(const Vector<Token>& strategy);
@@ -137,6 +138,7 @@ private:
     int prec;
     Vector<int> gather;
     Vector<int> format;
+    int metadata;
     SymbolType symbolType;
     string latexMacro;
     //

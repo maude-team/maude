@@ -1,3 +1,13 @@
+2004-12-08  Steven Eker  <eker@goo.csl.sri.com>
+
+	* tests/Meta/Makefile.am: added metaMetadata
+
+	* tests/Meta/metaMetadata: created
+
+	* tests/Meta/metaMetadata.maude: created
+
+===================================Maude85a===========================================
+
 2004-12-03  Steven Eker  <eker@goo.csl.sri.com>
 
 	* tests/Meta/metaSort.maude: added maximalAritySet() test; added
