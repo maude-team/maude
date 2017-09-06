@@ -84,6 +84,10 @@
      MACRO(natListSymbol, Symbol, SymbolType::ASSOC, 2)
      MACRO(unboundedSymbol, Symbol, 0, 0)
      //
+     //	Parent constructor.
+     //
+     MACRO(noParentSymbol, Symbol, 0, 0)
+     //
      //	String constructor.
      //
      MACRO(stringSymbol, StringSymbol, SymbolType::STRING, 0)
@@ -222,7 +226,7 @@
      MACRO(matchPairSymbol, FreeSymbol, 0, 2)
      MACRO(unificationPairSymbol, FreeSymbol, 0, 2)
      MACRO(unificationTripleSymbol, FreeSymbol, 0, 3)
-     MACRO(variantSymbol, FreeSymbol, 0, 3)
+     MACRO(variantSymbol, FreeSymbol, 0, 5)
      MACRO(traceStepSymbol, FreeSymbol, 0, 3)
      MACRO(nilTraceSymbol, Symbol, 0, 0)
      MACRO(traceSymbol, Symbol, SymbolType::ASSOC, 2)

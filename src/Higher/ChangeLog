@@ -1,3 +1,84 @@
+2016-02-05  Steven Eker  <eker@install.csl.sri.com>
+
+	* variantSearch.cc (getLastReturnedVariant): pass pointers
+	rather than references to
+	VariantFolder::getLastReturnedVariant()
+	(getNextVariant): pass pointers rather than references to
+	VariantFolder::getLastReturnedVariant()
+
+	* variantSearch.hh (getLastReturnedUnifier): removed dummy
+	variables now that we've changed interface to
+	VariantFolder::getNextSurvivingVariant()
+
+	* variantSearch.cc (getNextUnifier): removed dummy variables
+	now that we've changed interface to
+	VariantFolder::getNextSurvivingVariant()
+
+	* variantFolder.hh (SimpleRootContainer): updated decls for
+	getNextSurvivingVariant() and getLastReturnedVariant()
+
+	* variantFolder.cc (getNextSurvivingVariant): variantNumber,
+	parentNumber and moreInLayer are now pointers rather than
+	references so that they can be null if the information
+	isn't wanted by the caller
+	(getLastReturnedVariant): symmetric changes to above, for
+	parentNumber and moreInLayer
+
+2016-02-04  Steven Eker  <eker@install.csl.sri.com>
+
+	* variantSearch.hh (getLastReturnedUnifier): pass dummy
+	args to VariantFolder::getLastReturnedVariant()
+
+	* variantSearch.cc (getLastReturnedVariant): added Assert()
+	to insist that there is actuualy a variant to return
+
+	* variantFolder.cc (getLastReturnedVariant): moved here; no
+	longer inline
+
+	* variantSearch.cc (getLastReturnedVariant): moved here; no
+	longer inline
+
+	* variantFolder.hh (getLastReturnedVariant): take parentNumber
+	and moreInLayer arguments
+
+	* variantSearch.hh (getLastReturnedVariant): take parentIndex
+	and moreInLayer args; updated decl for getNextVariant()
+
+	* variantSearch.cc (getNextVariant): return parentIndex and
+	moreInLayer
+
+2016-01-28  Steven Eker  <eker@install.csl.sri.com>
+
+	* variantFolder.hh (SimpleRootContainer): updated decl for
+	getNextSurvivingVariant()
+
+	* variantFolder.cc (getNextSurvivingVariant): pass back
+	variantNumber and variantIndex
+
+	* variantSearch.cc (getNextVariant): use new getNextSurvivingVariant()
+	convention; track nrVariantReturned
+	(getNextUnifier): use new getNextSurvivingVariant() convention
+
+	* variantSearch.hh (SimpleRootContainer): added data members
+	nrVariantsReturned, internalIndexToExternalIndex 
+
+2016-01-22  Steven Eker  <eker@install.csl.sri.com>
+
+	* variantSearch.cc (getNextUnifier, getNextVariant): pass dummy
+	argument to getNextSurvivingVariant()
+
+	* variantFolder.hh (SimpleRootContainer): updated decl for
+	getNextSurvivingVariant()
+
+	* variantFolder.cc (insertVariant): manage layerNumber field
+	(getNextSurvivingVariant): rewritten to check for a next variant in
+	the same layer as the one we just found
+
+	* variantFolder.hh (SimpleRootContainer): added layerNumber field to
+	struct RetainedVariant
+
+===================================Maude109===========================================
+
 2015-10-16  Steven Eker  <eker@ape.csl.sri.com>
 
 	* unifierFilter.cc (subsumes): symmetric change to below

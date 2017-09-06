@@ -1,3 +1,9 @@
+Overview of Changes in alpha109
+===============================
+* new metalevel interface for variant narrowing
+* large number of finite variant examples from Jose Meseuger added
+  to the test suite
+
 Overview of Changes in alpha108a
 ================================
 * fixed bug in variant narrowing where ground terms caused substitution size

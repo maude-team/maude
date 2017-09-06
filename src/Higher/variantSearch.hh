@@ -27,6 +27,7 @@
 //
 #ifndef _variantSearch_hh_
 #define _variantSearch_hh_
+#include <map>
 #include "cacheableState.hh"
 #include "simpleRootContainer.hh"
 #include "narrowingVariableInfo.hh"
@@ -50,20 +51,21 @@ public:
   ~VariantSearch();
 
   const NarrowingVariableInfo& getVariableInfo() const;
-  const Vector<DagNode*>* getNextVariant(int& nrFreeVariables);
+  const Vector<DagNode*>* getNextVariant(int& nrFreeVariables, int& parentIndex, bool& moreInLayer);
   const Vector<DagNode*>* getNextUnifier(int& nrFreeVariables);
   RewritingContext* getContext() const;
   bool isIncomplete() const;
   //
   //	Returns the last variant returned by getNextVariant().
   //
-  const Vector<DagNode*>* getLastReturnedVariant(int& nrFreeVariables);
+  const Vector<DagNode*>* getLastReturnedVariant(int& nrFreeVariables, int& parentIndex, bool& moreInLayer);
   //
   //	Returns the last unifier returned by getNextUnifier().
   //
   const Vector<DagNode*>* getLastReturnedUnifier(int& nrFreeVariables);
 
 private:
+  typedef map<int, int> IntMap;
   typedef Vector<int> VariantIndexVec;
 
   void markReachableNodes();
@@ -89,6 +91,10 @@ private:
   int currentIndex;
   bool odd;
 
+  int nrVariantsReturned;
+  IntMap internalIndexToExternalIndex;
+
+
   Vector<DagNode*> protectedVariant;
 };
 
@@ -102,12 +108,6 @@ inline RewritingContext*
 VariantSearch::getContext() const
 {
   return context;
-}
-
-inline const Vector<DagNode*>*
-VariantSearch::getLastReturnedVariant(int& nrFreeVariables)
-{
-  return variantCollection.getLastReturnedVariant(nrFreeVariables);
 }
 
 inline const Vector<DagNode*>*

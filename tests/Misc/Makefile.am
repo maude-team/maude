@@ -12,6 +12,7 @@ TESTS = \
 	diophantine \
 	variantUnification \
 	variantNarrowing \
+	meseguerFiniteVariant \
 	CU_Unification \
 	assocUnification \
 	sreduce \
@@ -31,6 +32,7 @@ MAUDE_FILES = \
 	diophantine.maude \
 	variantUnification.maude \
 	variantNarrowing.maude \
+	meseguerFiniteVariant.maude \
 	CU_Unification.maude \
 	assocUnification.maude \
 	sreduce.maude \
@@ -50,6 +52,7 @@ RESULT_FILES = \
 	diophantine.expected \
 	variantUnification.expected \
 	variantNarrowing.expected \
+	meseguerFiniteVariant.expected \
 	CU_Unification.expected \
 	assocUnification.expected \
 	sreduce.expected \

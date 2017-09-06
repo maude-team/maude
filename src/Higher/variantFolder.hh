@@ -51,12 +51,17 @@ public:
   //
   const Vector<DagNode*>* getVariant(int index) const;
 
-  const Vector<DagNode*>* getNextSurvivingVariant(int& nrFreeVariables);
+  const Vector<DagNode*>* getNextSurvivingVariant(int& nrFreeVariables,
+						  int* variantNumber = 0,
+						  int* parentNumber = 0,
+						  bool* moreInLayer = 0);
   //
   //	Returns the last variant returned by the above function, as long as
   //	no intervening call to insertVariant() has taken place (which could purge it).
   //
-  const Vector<DagNode*>* getLastReturnedVariant(int& nrFreeVariables);
+  const Vector<DagNode*>* getLastReturnedVariant(int& nrFreeVariables,
+						 int* parentNumber = 0,
+						 bool* moreInLayer = 0);
 
 private:
   struct RetainedVariant
@@ -71,6 +76,7 @@ private:
     Vector<DagNode*> variant;
     Vector<Term*> terms;
     Vector<LhsAutomaton*> matchingAutomata;
+    int layerNumber;
   };
 
   typedef map<int, RetainedVariant*> RetainedVariantMap;
@@ -88,15 +94,6 @@ VariantFolder::getVariant(int index) const
   RetainedVariantMap::const_iterator i = mostGeneralSoFar.find(index);
   if (i == mostGeneralSoFar.end())
     return 0;  // purged
-  return &(i->second->variant);
-}
-
-inline const Vector<DagNode*>*
-VariantFolder::getLastReturnedVariant(int& nrFreeVariables)
-{
-  RetainedVariantMap::const_iterator i = mostGeneralSoFar.find(currentVariantIndex);
-  Assert(i != mostGeneralSoFar.end(), "current variant purged");
-  nrFreeVariables = i->second->nrFreeVariables;
   return &(i->second->variant);
 }
 

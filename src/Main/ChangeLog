@@ -1,3 +1,10 @@
+2016-01-29  Steven Eker  <eker@install.csl.sri.com>
+
+	* prelude.maude: update variant ctor; added Parent sort with
+	none ctor
+
+===================================Maude109===========================================
+
 2015-12-23  Steven Eker  <eker@ape.csl.sri.com>
 
 	* main.cc (main): add a tie between cout and cerr so streams don't

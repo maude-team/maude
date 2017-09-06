@@ -462,7 +462,9 @@ Interpreter::getVariants(const Vector<Token>& bubble, Int64 limit, bool irredund
       int counter = 0;
       const Vector<DagNode*>* variant;
       int nrFreeVariables;
-      while (counter != limit && (variant = vs.getNextVariant(nrFreeVariables)))
+      int parentIndex;
+      bool moreInLayer;
+      while (counter != limit && (variant = vs.getNextVariant(nrFreeVariables, parentIndex, moreInLayer)))
 	{
 	  ++counter;
 	  cout << "Variant #" << counter << endl;
