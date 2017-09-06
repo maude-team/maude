@@ -86,8 +86,30 @@ UnificationContext::makeFreshVariable(const ConnectedComponent* component)
   freshVariableSorts[freshVariableNr] = s;
   int name = freshVariableGenerator->getFreshVariableName(freshVariableNr);
   VariableDagNode* v = new VariableDagNode(vs, name, index);
+  DebugAdvisory("created " << safeCast(DagNode*, v) << " with index = " << index);
   //cout << "created " << v << endl;
   return v;
+}
+
+void
+UnificationContext::restoreFromClone(const Substitution& substitutionClone)
+{
+  //
+  //	We are backtracking and restoring our substitution contexts from a previously saved clone.
+  //
+  clone(substitutionClone);
+  //
+  //	We need to discard information about sorts of fresh variable that we have accumulated since
+  //	the clone was made.
+  //
+  int nrVariables = nrFragileBindings();
+  int nrFreshVariablesLeft = nrVariables - nrOriginalVariables;
+  freshVariableSorts.resize(nrFreshVariablesLeft);
+  //
+  //	We need to discard information about dagnodes for fresh variables that we have accumulated since
+  //	the clone was made.
+  //
+  variableDagNodes.resize(nrVariables);
 }
 
 void

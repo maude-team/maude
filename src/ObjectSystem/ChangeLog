@@ -1,3 +1,17 @@
+2011-12-31  Steven Eker  <eker@rho>
+
+	* socketManagerSymbol.cc (ActiveSocket): added
+
+	* socketManagerSymbol.hh (class SocketManagerSymbol): replace text with textArray in struct
+	ActiveSocket
+
+	* socketStuff.cc (SocketManagerSymbol::send): fix bug where we were extracting a c_str() from
+	a rope that then went out of scope, potentially before we were finished with the const char*
+	from c_str()
+	(SocketManagerSymbol::send): check errno == EWOULDBLOCK for POSIX compliance
+
+===================================Maude95c===========================================
+
 2009-01-29  Steven Eker  <eker@goo.csl.sri.com>
 
 	* socketManagerSymbol.cc (attachData, attachSymbol, copyAttachments) 

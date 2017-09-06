@@ -81,6 +81,8 @@ private:
 
   struct ActiveSocket
   {
+    ~ActiveSocket();
+
     int state;
     //
     //	If we are in a waiting state, we need to keep pointers to the last message
@@ -94,9 +96,10 @@ private:
     //
     ObjectSystemRewritingContext* originalContext;
     //
-    //	Outgoing text
+    //	Outgoing text.
     //
-    crope text;
+    //crope text;
+    char* textArray;
     const char* unsent;
     crope::size_type nrUnsent;
   };

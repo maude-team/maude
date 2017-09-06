@@ -1,3 +1,15 @@
+2011-12-31  Steven Eker  <eker@rho>
+
+	* stringOpSymbol.cc (StringOpSymbol::eqRewrite): use makeZeroTerminatedString()
+	in place of c_str()
+	(StringOpSymbol::ropeToNumber): use makeZeroTerminatedString() in place of c_str()
+	(2 places)
+
+	* matrixOpSymbol.cc (MatrixOpSymbol::downAlgorithm): use makeZeroTerminatedString()
+	instead of c_str() since we now distrust the latter
+
+===================================Maude95c===========================================
+
 2010-10-19  Steven Eker  <eker@rho>
 
 	* stringSymbol.cc

@@ -1,3 +1,47 @@
+2011-11-22  Steven Eker  <eker@rho>
+
+	* unificationContext.cc (UnificationContext::restoreFromClone): added
+
+	* unificationContext.hh (class UnificationContext): added decl for restoreFromClone()
+	(class UnificationContext): added decl for restoreFromClone()
+
+	* substitution.cc (Substitution::clone): moved here from .hh file
+
+2011-01-06  Steven Eker  <eker@rho>
+
+	* sortTable.cc (SortTable::linearComputeSortFunctionBdds): use
+	applyLeqRelation()
+	(SortTable::computeSortFunctionBdds): call both
+	recursiveComputeSortFunctionBdds() and
+	linearComputeSortFunctionBdds() and do a consistancy check
+
+	* sortTable.hh (class SortTable): added dec for
+	recursiveComputeSortFunctionBdds()
+
+	* sortTable.cc (SortTable::recursiveComputeSortFunctionBdds): added
+
+	* sortBdds.hh (class SortBdds): added decl for applyLeqRelation()
+
+	* sortBdds.cc (SortBdds::applyLeqRelation): added
+
+	* sortTable.cc (SortTable::linearComputeSortFunctionBdds): use
+	getRemappedLeqRelation()
+
+	* sortBdds.cc (getRemappedLeqRelation): added
+
+2011-01-05  Steven Eker  <eker@rho>
+
+	* sortTable.cc (SortTable::linearComputeSortFunctionBdds): added
+
+	* sortTable.hh (class SortTable): added decl for
+	linearComputeSortFunctionBdds()
+
+	* sortTable.cc (SortTable::computeMaximalOpDeclSetTable)
+	(SortTable::minimize, SortTable::buildSortDiagram): add comments
+	(SortTable::findMinSortIndex): rewriten using FOR_EACH_CONST
+
+===================================Maude95c===========================================
+
 2010-10-20  Steven Eker  <eker@rho>
 
 	* hashConsSet.cc (HashConsSet::insert): use upgradeSortIndex() to

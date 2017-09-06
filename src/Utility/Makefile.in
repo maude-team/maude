@@ -59,7 +59,8 @@ am_libutility_a_OBJECTS = macros.$(OBJEXT) preVector.$(OBJEXT) \
 	pointerMap.$(OBJEXT) sequencePartition.$(OBJEXT) \
 	indent.$(OBJEXT) binBuf.$(OBJEXT) decBuf.$(OBJEXT) \
 	bddUser.$(OBJEXT) tty.$(OBJEXT) bdd.$(OBJEXT) timer.$(OBJEXT) \
-	mpzSystem.$(OBJEXT) intSystem.$(OBJEXT) allSat.$(OBJEXT)
+	ropeStuff.$(OBJEXT) mpzSystem.$(OBJEXT) intSystem.$(OBJEXT) \
+	allSat.$(OBJEXT)
 libutility_a_OBJECTS = $(am_libutility_a_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
@@ -200,6 +201,7 @@ libutility_a_SOURCES = \
 	tty.cc \
 	bdd.cc \
 	timer.cc \
+	ropeStuff.cc \
 	mpzSystem.cc \
 	intSystem.cc \
 	allSat.cc
@@ -307,6 +309,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pointerMap.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pointerSet.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/preVector.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ropeStuff.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sequencePartition.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stringTable.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/timer.Po@am__quote@

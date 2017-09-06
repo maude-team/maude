@@ -49,4 +49,8 @@
 //
 #include <rope>
 #endif
+
+char* makeZeroTerminatedString(const crope& original);
+
 #endif
+

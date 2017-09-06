@@ -236,7 +236,7 @@ ACU_UnificationSubproblem2::solve(bool findFirst, UnificationContext& solution, 
 	  //
 	  //	Restore current solution and fail.
 	  //
-	  solution.clone(preSolveSubstitution);
+	  solution.restoreFromClone(preSolveSubstitution);
 	  return false;
 	}
       if (topSymbol->hasIdentity())
@@ -297,7 +297,7 @@ ACU_UnificationSubproblem2::solve(bool findFirst, UnificationContext& solution, 
       //	any fresh variables we introduced.
       //
       pending.restore(savedPendingState);
-      solution.clone(savedSubstitution);
+      solution.restoreFromClone(savedSubstitution);
     }
   while (topSymbol->hasIdentity() ? nextSelectionWithIdentity(findFirst) : nextSelection(findFirst))
     {
@@ -310,9 +310,9 @@ ACU_UnificationSubproblem2::solve(bool findFirst, UnificationContext& solution, 
       //	any fresh variables we introduced.
       //
       pending.restore(savedPendingState);
-      solution.clone(savedSubstitution);
+      solution.restoreFromClone(savedSubstitution);
     }
-  solution.clone(preSolveSubstitution);
+  solution.restoreFromClone(preSolveSubstitution);
   return false;
 }
 

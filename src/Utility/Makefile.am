@@ -20,6 +20,7 @@ libutility_a_SOURCES = \
 	tty.cc \
 	bdd.cc \
 	timer.cc \
+	ropeStuff.cc \
 	mpzSystem.cc \
 	intSystem.cc \
 	allSat.cc

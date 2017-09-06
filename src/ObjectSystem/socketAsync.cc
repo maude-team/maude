@@ -152,6 +152,8 @@ SocketManagerSymbol::doWrite(int fd)
 	    {
 	      as.state = NOMINAL;
 	      // clear  as.text
+	      delete [] as.textArray;
+	      as.textArray = 0;
 	      sentMsgReply(message, context);
 	      as.lastMessage.setNode(0);  // allow GC of last message
 	    }

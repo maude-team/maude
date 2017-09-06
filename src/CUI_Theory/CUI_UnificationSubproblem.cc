@@ -123,7 +123,7 @@ CUI_UnificationSubproblem::solve(bool findFirst, UnificationContext& solution, P
 	      //
 	      //	Restore the state to what it was before we solved this problem the first time.
 	      //
-	      solution.clone(p.savedSubstitution);
+	      solution.restoreFromClone(p.savedSubstitution);
 	      pending.restore(p.savedPendingState);
 	      if (p.lhs->getArgument(0)->computeSolvedForm(p.rhs->getArgument(1), solution, pending) &&
 		  p.lhs->getArgument(1)->computeSolvedForm(p.rhs->getArgument(0), solution, pending))
@@ -139,7 +139,7 @@ CUI_UnificationSubproblem::solve(bool findFirst, UnificationContext& solution, P
   //	Restore initial state.
   //
   Problem& p = problems[0];
-  solution.clone(p.savedSubstitution);
+  solution.restoreFromClone(p.savedSubstitution);
   pending.restore(p.savedPendingState);
   return false;
 }
