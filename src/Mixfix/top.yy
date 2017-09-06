@@ -141,7 +141,7 @@ int yylex(YYSTYPE* lvalp);
  *	Attribute keywords need to be recognized when parsing attributes.
  */
 %token <yyToken> KW_ASSOC KW_COMM KW_ID KW_IDEM KW_ITER
-%token <yyToken> KW_LEFT KW_RIGHT KW_PREC KW_GATHER KW_STRAT
+%token <yyToken> KW_LEFT KW_RIGHT KW_PREC KW_GATHER KW_STRAT KW_POLY
 %token <yyToken> KW_MEMO KW_FROZEN KW_CTOR KW_LATEX KW_SPECIAL KW_CONFIG KW_OBJ KW_MSG
 %token <yyToken> KW_DITTO KW_FORMAT
 %token <yyToken> KW_ID_HOOK KW_OP_HOOK KW_TERM_HOOK

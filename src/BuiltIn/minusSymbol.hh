@@ -35,6 +35,9 @@ public:
   bool attachData(const Vector<Sort*>& opDeclaration,
 		  const char* purpose,
 		  const Vector<const char*>& data);
+  void getDataAttachments(const Vector<Sort*>& opDeclaration,
+			  Vector<const char*>& purposes,
+			  Vector<Vector<const char*> >& data);
   //
   //	Functions special to MinusSymbol.
   //

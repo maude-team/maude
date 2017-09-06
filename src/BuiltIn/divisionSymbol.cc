@@ -85,6 +85,24 @@ DivisionSymbol::copyAttachments(Symbol* original, SymbolMap* map)
   FreeSymbol::copyAttachments(original, map);
 }
 
+void
+DivisionSymbol::getDataAttachments(const Vector<Sort*>& opDeclaration,
+				   Vector<const char*>& purposes,
+				   Vector<Vector<const char*> >& data)
+{
+  APPEND_DATA(purposes, data, DivisionSymbol);
+  FreeSymbol::getDataAttachments(opDeclaration, purposes, data);
+}
+
+void
+DivisionSymbol::getSymbolAttachments(Vector<const char*>& purposes,
+				     Vector<Symbol*>& symbols)
+{
+  APPEND_SYMBOL(purposes, symbols, succSymbol);
+  APPEND_SYMBOL(purposes, symbols, minusSymbol);
+  FreeSymbol::getSymbolAttachments(purposes, symbols);
+}
+
 bool
 DivisionSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
 {

@@ -47,26 +47,60 @@
 #include "freeDagNode.hh"
  
 //	built in class definitions
+#include "bindingMacros.hh"
 #include "equalitySymbol.hh"
 
 //	full compiler classes
 #include "compilationContext.hh"
 #include "variableName.hh"
 
-EqualitySymbol::EqualitySymbol(int id,
-			       Term* eq,
-			       Term* neq,
-			       const Vector<int>& strategy)
-  : FreeSymbol(id, 2, strategy),
-    equalTerm(eq),
-    notEqualTerm(neq)
+EqualitySymbol::EqualitySymbol(int id, const Vector<int>& strategy)
+  : FreeSymbol(id, 2, strategy)
 {
 }
 
-EqualitySymbol::~EqualitySymbol()
+bool
+EqualitySymbol::attachData(const Vector<Sort*>& opDeclaration,
+			   const char* purpose,
+			   const Vector<const char*>& data)
 {
-  equalTerm.setTerm(0);  // HACK to avoid deep self destructing it
-  notEqualTerm.setTerm(0);  // HACK to avoid deep self destructing it
+  NULL_DATA(purpose, EqualitySymbol, data);
+  return FreeSymbol::attachData(opDeclaration, purpose, data);
+}
+
+bool
+EqualitySymbol::attachTerm(const char* purpose, Term* term)
+{
+  BIND_TERM(purpose, term, equalTerm);
+  BIND_TERM(purpose, term, notEqualTerm);
+  return FreeSymbol::attachTerm(purpose, term);
+}
+
+void
+EqualitySymbol::copyAttachments(Symbol* original, SymbolMap* map)
+{
+  EqualitySymbol* orig = safeCast(EqualitySymbol*, original);
+  COPY_TERM(orig, equalTerm, map);
+  COPY_TERM(orig, notEqualTerm, map);
+  FreeSymbol::copyAttachments(original, map);
+}
+
+void
+EqualitySymbol::getDataAttachments(const Vector<Sort*>& opDeclaration,
+				   Vector<const char*>& purposes,
+				   Vector<Vector<const char*> >& data)
+{
+  APPEND_DATA(purposes, data, EqualitySymbol);
+  FreeSymbol::getDataAttachments(opDeclaration, purposes, data);
+}
+
+void
+EqualitySymbol::getTermAttachments(Vector<const char*>& purposes,
+				   Vector<Term*>& terms)
+{
+  APPEND_TERM(purposes, terms, equalTerm);
+  APPEND_TERM(purposes, terms, notEqualTerm);
+  FreeSymbol::getTermAttachments(purposes, terms);
 }
 
 void

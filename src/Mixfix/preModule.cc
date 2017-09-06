@@ -97,6 +97,9 @@ PreModule::~PreModule()
 {
   if (flatModule != 0)
     flatModule->deepSelfDestruct();
+  int nrImports = imports.length();
+  for (int i = 0; i < nrImports; i++)
+    delete imports[i].expr;  // HACK
 }
 
 void

@@ -68,6 +68,8 @@ protected:
   static int nonexec;
   static int otherwise;
   static int owise;
+  static int lessThan;
+  static int partial;
 };
 
 #endif

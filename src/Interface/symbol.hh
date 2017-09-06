@@ -111,6 +111,13 @@ public:
   virtual bool attachSymbol(const char* purpose, Symbol* symbol);
   virtual bool attachTerm(const char* purpose, Term* term);
   virtual void copyAttachments(Symbol* original, SymbolMap* map);
+  virtual void getDataAttachments(const Vector<Sort*>& opDeclaration,
+				  Vector<const char*>& purposes,
+				  Vector<Vector<const char*> >& data);
+  virtual void getSymbolAttachments(Vector<const char*>& purposes,
+				    Vector<Symbol*>& symbols);
+  virtual void getTermAttachments(Vector<const char*>& purposes,
+				  Vector<Term*>& terms);
   //
   //	This function might be redefined to provide better performance
   //	or special constructor semantics.

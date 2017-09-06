@@ -47,6 +47,7 @@
 #include "freeDagNode.hh"
 
 //      built in stuff
+#include "bindingMacros.hh"
 #include "succSymbol.hh"
 #include "numberOpSymbol.hh"
 #include "minusSymbol.hh"
@@ -70,6 +71,19 @@ MinusSymbol::attachData(const Vector<Sort*>& opDeclaration,
       return NumberOpSymbol::attachData(opDeclaration, "NumberOpSymbol", t);
     }
   return NumberOpSymbol::attachData(opDeclaration, purpose, data);
+}
+
+void
+MinusSymbol::getDataAttachments(const Vector<Sort*>& opDeclaration,
+				Vector<const char*>& purposes,
+				Vector<Vector<const char*> >& data)
+{
+  APPEND_DATA(purposes, data, MinusSymbol);
+  //
+  //	Need to bypass NumberOpSymbol::getDataAttachments() in order to
+  //	avoid getting a NumberOpSymbol id hook.
+  //
+  FreeSymbol::getDataAttachments(opDeclaration, purposes, data);
 }
 
 DagNode*

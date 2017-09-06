@@ -247,6 +247,7 @@ Interpreter::showModule(bool all) const
 void
 Interpreter::showOps(bool all) const
 {
+  currentModule->getFlatModule()->showPolymorphs(cout, false, all);
   currentModule->getFlatModule()->showOps(cout, false, all);
 }
 

@@ -39,6 +39,14 @@ public:
   bool attachSymbol(const char* purpose, Symbol* symbol);
   bool attachTerm(const char* purpose, Term* term);
   void copyAttachments(Symbol* original, SymbolMap* map);
+  void getDataAttachments(const Vector<Sort*>& opDeclaration,
+			  Vector<const char*>& purposes,
+			  Vector<Vector<const char*> >& data);
+  void getSymbolAttachments(Vector<const char*>& purposes,
+			    Vector<Symbol*>& symbols);
+  void getTermAttachments(Vector<const char*>& purposes,
+			  Vector<Term*>& terms);
+
   void postInterSymbolPass();
   void reset();
   bool eqRewrite(DagNode* subject, RewritingContext& context);

@@ -147,17 +147,37 @@ void
 PreModule::printAttributes(ostream& s, const OpDef& opDef)
 {
   SymbolType st = opDef.symbolType;
-  if (!(st.hasFlag(SymbolType::ATTRIBUTES | SymbolType::CTOR | SymbolType::DITTO)))
+  if (!(st.hasFlag(SymbolType::ATTRIBUTES | SymbolType::CTOR |
+		   SymbolType::POLY | SymbolType::DITTO)) &&
+      opDef.special.empty())
     return;
 
   const char* space = "";
   s << '[';
+  if (st.hasFlag(SymbolType::POLY))
+    {
+      s << "poly (";
+      FOR_EACH_CONST(i, NatSet, opDef.polyArgs)
+	{
+	  if  (*i != 0)
+	    {
+	      s << space << *i;
+	      space = " ";
+	    }
+	}
+      if (opDef.polyArgs.contains(0))
+	{
+	  s << space << '0';
+	  space = " ";
+	}
+      s << ')';
+   }
   //
   //	Theory attributes.
   //
   if (st.hasFlag(SymbolType::ASSOC))
     {
-      s << "assoc";
+      s << space << "assoc";
       space = " ";
     }
   if (st.hasFlag(SymbolType::COMM))
@@ -269,6 +289,20 @@ PreModule::printAttributes(ostream& s, const OpDef& opDef)
 	  if (i != 0)
 	    s << ' ';
 	  s << Token::name(opDef.format[i]);
+	}
+      s << ')';
+    }
+  if (!(opDef.special.empty()))
+    {
+      s << space << "special (";
+      space = " ";
+      FOR_EACH_CONST(i, Vector<Hook>, opDef.special)
+	{
+	  static const char* hookTypes[] = {
+	    "id-hook", "op-hook", "term-hook"
+	  };
+	  s << "\n    " << hookTypes[i->type] << ' ' <<
+	    Token::name(i->name) << " (" << i->details << ')';
 	}
       s << ')';
     }

@@ -68,6 +68,8 @@ int CommonTokens::metadata;
 int CommonTokens::nonexec;
 int CommonTokens::otherwise;
 int CommonTokens::owise;
+int CommonTokens::lessThan;
+int CommonTokens::partial;
 
 CommonTokens::CommonTokens()
 {
@@ -109,5 +111,7 @@ CommonTokens::CommonTokens()
       nonexec = Token::encode("nonexec");
       otherwise = Token::encode("otherwise");
       owise = Token::encode("owise");
+      lessThan = Token::encode("<");
+      partial = Token::encode("~>");
     }
 }

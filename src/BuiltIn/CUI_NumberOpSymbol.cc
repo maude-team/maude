@@ -82,6 +82,34 @@ CUI_NumberOpSymbol::copyAttachments(Symbol* original, SymbolMap* map)
   CUI_Symbol::copyAttachments(original, map);
 }
 
+void
+CUI_NumberOpSymbol::getDataAttachments(const Vector<Sort*>& opDeclaration,
+				       Vector<const char*>& purposes,
+				       Vector<Vector<const char*> >& data)
+{
+  int nrDataAttachments = purposes.length();
+  purposes.resize(nrDataAttachments + 1);
+  purposes[nrDataAttachments] = "NumberOpSymbol";
+  data.resize(nrDataAttachments + 1);
+  data[nrDataAttachments].resize(1);
+  const char*& d = data[nrDataAttachments][0];
+  switch (op)
+    {
+    CODE_CASE(d, 's', 'd', "sd")
+    default:
+      CantHappen("bad number op");
+    }
+  CUI_Symbol::getDataAttachments(opDeclaration, purposes, data);
+}
+
+void
+CUI_NumberOpSymbol::getSymbolAttachments(Vector<const char*>& purposes,
+					 Vector<Symbol*>& symbols)
+{
+  APPEND_SYMBOL(purposes, symbols, succSymbol);
+  CUI_Symbol::getSymbolAttachments(purposes, symbols);
+}
+
 bool
 CUI_NumberOpSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
 {

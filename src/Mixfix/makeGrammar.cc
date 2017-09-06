@@ -603,8 +603,7 @@ MixfixModule::makeVariableProductions()
     {
       rhs[0] = (*i).first;
       Sort* sort = (*i).second;
-      int termNt = nonTerminal(sort->component()->getIndexWithinModule(), TERM_TYPE);
-      parser->insertProduction(termNt, rhs, 0, emptyGather,
+      parser->insertProduction(nonTerminal(sort, TERM_TYPE), rhs, 0, emptyGather,
 			       MixfixParser::MAKE_VARIABLE_FROM_ALIAS, sort->getIndexWithinModule());
     }
 }
@@ -619,7 +618,7 @@ MixfixModule::makeBoolProductions()
 
   if (trueSymbol != 0)
     {
-      int rangeNt = nonTerminal(boolSort->component()->getIndexWithinModule(), TERM_TYPE);
+      int rangeNt = nonTerminal(boolSort, TERM_TYPE);
       //
       //	Add extra syntactic sugar to allow a condition fragment to just be a bool.
       //
@@ -837,27 +836,27 @@ MixfixModule::makePolymorphProductions()
   for (int i = 0; i < nrPolymorphs; i++)
     {
       Polymorph& p = polymorphs[i];
+      //cerr << Token::name(p.name) << ' ' << p.polyArgs << endl;
       int nrArgs = p.domainAndRange.length() - 1;
       int type = p.symbolInfo.symbolType.getBasicType();
-      int specialIndex = 0;
-      if (type == SymbolType::EQUALITY_SYMBOL)
-	specialIndex = 2;
-      else if (type == SymbolType::UP_SYMBOL)
-	specialIndex = 1;
-      Sort* specialSort = p.domainAndRange[specialIndex];
-      int specialNt = nonTerminal(specialSort->component()->getIndexWithinModule(), TERM_TYPE);
       //
       //	Prefix syntax.
       //
       rhs.resize(1);
-      rhs[0] = p.name;
-      rhs.append(leftParen);
-      gather.contractTo(0);
-      for (int j = 0; j < nrArgs; j++)
+      rhs[0] = p.name.code();
+      gather.resize(nrArgs);
+      if (nrArgs > 0)
 	{
-	  gather.append(PREFIX_GATHER);
-	  rhs.append(specialNt);
-	  rhs.append(j == nrArgs - 1 ? rightParen : comma);
+	  rhs.resize(2 + 2 * nrArgs);
+	  rhs[1] = leftParen;
+	  for (int j = 0; j < nrArgs; j++)
+	    {
+	      gather[j] = PREFIX_GATHER;
+	      const Sort* s = p.domainAndRange[j];
+	      if (s != 0)
+		rhs[2 + 2 * j] = nonTerminal(s, TERM_TYPE);
+	      rhs[3 + 2 * j] = (j == nrArgs - 1) ? rightParen : comma;
+	    }
 	}
       //
       //	Mixfix syntax.
@@ -872,7 +871,9 @@ MixfixModule::makePolymorphProductions()
 	      int t = p.symbolInfo.mixfixSyntax[j];
 	      if (t == underscore)
 		{
-		  mixfixRhs[j] = specialNt;
+		  const Sort* s = p.domainAndRange[underscores.length()];
+		  if (s != 0)
+		    mixfixRhs[j] = nonTerminal(s, TERM_TYPE);
 		  underscores.append(j);
 		}
 	      else
@@ -882,31 +883,33 @@ MixfixModule::makePolymorphProductions()
       //
       //	Now duplicate syntax in each connected component.
       //
-      int first = 0;
-      if (type == SymbolType::BRANCH_SYMBOL || type == SymbolType::DOWN_SYMBOL)
-	first = 1;
-      for (int j = 0; j < nrComponents; j++)
+     for (int j = 0; j < nrComponents; j++)
 	{
 	  if (!(bubbleComponents.contains(j)))
 	    {
 	      int termNt = nonTerminal(j, TERM_TYPE);
-	      int rangeNt = (type == SymbolType::BRANCH_SYMBOL ||
-			     type == SymbolType::DOWN_SYMBOL) ? termNt : specialNt;
-	      for (int k = first; k < nrArgs; k++)
-		rhs[2 + 2 * k] = termNt;
+	      const Sort* s = p.domainAndRange[nrArgs];
+	      int rangeNt = (s == 0) ? termNt : nonTerminal(s, TERM_TYPE);
+	      for (int k = 0; k < nrArgs; k++)
+		{
+		  if (p.domainAndRange[k] == 0)
+		    rhs[2 + 2 * k] = termNt;
+		}
 	      parser->insertProduction(rangeNt, rhs, 0, gather,
 				       MixfixParser::MAKE_POLYMORPH, j, i);
 	      if (nrItems > 0)
 		{
-		  for (int k = first; k < nrArgs; k++)
-		    mixfixRhs[underscores[k]] = termNt;
+		  for (int k = 0; k < nrArgs; k++)
+		    {
+		      if (p.domainAndRange[k] == 0)
+			mixfixRhs[underscores[k]] = termNt;
+		    }
 		  parser->insertProduction(rangeNt,
 					   mixfixRhs,
 					   p.symbolInfo.prec,
 					   p.symbolInfo.gather,
 					   MixfixParser::MAKE_POLYMORPH,
-					   j,
-					   i);
+					   j, i);
 		}
 	    }
 	}

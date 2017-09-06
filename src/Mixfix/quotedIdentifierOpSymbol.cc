@@ -103,11 +103,44 @@ QuotedIdentifierOpSymbol::copyAttachments(Symbol* original, SymbolMap* map)
   FreeSymbol::copyAttachments(original, map);
 }
 
+void
+QuotedIdentifierOpSymbol::getDataAttachments(const Vector<Sort*>& opDeclaration,
+					     Vector<const char*>& purposes,
+					     Vector<Vector<const char*> >& data)
+{
+  int nrDataAttachments = purposes.length();
+  purposes.resize(nrDataAttachments + 1);
+  purposes[nrDataAttachments] = "QuotedIdentifierOpSymbol";
+  data.resize(nrDataAttachments + 1);
+  data[nrDataAttachments].resize(1);
+  const char*& d = data[nrDataAttachments][0];
+  switch (op)
+    {
+    CODE_CASE(d, 's', 't', "string")
+    CODE_CASE(d, 'q', 'i', "qid")
+#ifdef MOS
+    CODE_CASE(d, 'm', 'o', "mo")
+#endif
+    default:
+      CantHappen("bad qid op");
+    }
+  FreeSymbol::getDataAttachments(opDeclaration, purposes, data);
+}
+
+void
+QuotedIdentifierOpSymbol::getSymbolAttachments(Vector<const char*>& purposes,
+					       Vector<Symbol*>& symbols)
+{
+  APPEND_SYMBOL(purposes, symbols, quotedIdentifierSymbol);
+  APPEND_SYMBOL(purposes, symbols, stringSymbol);
+  FreeSymbol::getSymbolAttachments(purposes, symbols);
+}
+
 bool
 QuotedIdentifierOpSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
 {
   Assert(this == subject->symbol(), "bad symbol");
-  FreeDagNode* d = static_cast<FreeDagNode*>(subject);
+  FreeDagNode* d = safeCast(FreeDagNode*, subject);
   //
   //	Evaluate our arguments.
   //

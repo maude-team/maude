@@ -82,9 +82,22 @@ public:
 		   const Vector<Sort*>& domainAndRange,
 		   SymbolType symbolType,
 		   const Vector<int>& strategy,
+		   const NatSet& frozen,
 		   int prec,
 		   const Vector<int>& gather,
 		   const Vector<int>& format);
+  void addIdentityToPolymorph(int polymorphIndex,
+			      Term* identity);
+  void addIdHookToPolymorph(int polymorphIndex,
+			    int purpose,
+			    const Vector<int>& data);
+  void addOpHookToPolymorph(int polymorphIndex,
+			    int purpose,
+			    Symbol* symbol);
+  void addTermHookToPolymorph(int polymorphIndex,
+			      int purpose,
+			      Term* term);
+
   //
   //	Functions to make things.
   //
@@ -137,6 +150,16 @@ public:
   const Vector<int>& getFormat(Symbol* symbol) const;
   const AliasMap& getVariableAliases() const;
   void getParserStats(int& nrNonterminals, int& nrTerminals, int& nrProductions);
+  void getDataAttachments(Symbol* symbol,
+			  const Vector<Sort*>& opDeclaration,
+			  Vector<const char*>& purposes,
+			  Vector<Vector<const char*> >& data) const;
+  void getSymbolAttachments(Symbol* symbol,
+			    Vector<const char*>& purposes,
+			    Vector<Symbol*>& symbols) const;
+  void getTermAttachments(Symbol* symbol,
+			  Vector<const char*>& purposes,
+			  Vector<Term*>& terms) const;
   //
   //	Find functions.
   //
@@ -151,8 +174,6 @@ public:
   //
   //	Polymorph functions.
   //
-  void fixUpPolymorph(int polymorphIndex, const Vector<Term*>& specialTerms);
-  void fixUpPolymorph(int polymorphIndex, Symbol* shareWithSymbol);
   void copyFixUpPolymorph(int polymorphIndex,
 			  const MixfixModule* originalModule,
 			  int originalPolymorphIndex,
@@ -160,6 +181,18 @@ public:
   int copyPolymorph(const MixfixModule* originalModule,
 		    int originalPolymorphIndex);
   int getNrPolymorphs() const;
+  Token getPolymorphName(int index) const;
+  SymbolType getPolymorphType(int index) const;
+  const Vector<Sort*>& getPolymorphDomainAndRange(int index) const;
+  Term* getPolymorphIdentity(int index) const;
+  const Vector<int>& getPolymorphStrategy(int index) const;
+  const NatSet& getPolymorphFrozen(int index) const;
+  int getPolymorphPrec(int index) const;
+  void getPolymorphGather(int index, Vector<int>& gather) const;
+  const Vector<int>& getPolymorphFormat(int index) const;
+  bool getPolymorphDataAttachment(int index, int nr, int& purpose, Vector<int>& items) const;
+  bool getPolymorphSymbolAttachment(int index, int nr, int& purpose, Symbol*& op) const;
+  bool getPolymorphTermAttachment(int index, int nr, int& purpose, Term*& term) const;
   //
   //	Bubble functions.
   //
@@ -181,6 +214,11 @@ public:
   //	Pretty print functions.
   //
   void bufferPrint(Vector<int>& buffer, Term* term);
+  static Sort* disambiguatorSort(const Term* term);
+  //
+  //	Misc.
+  //
+  static Sort* hookSort(Sort* sort);
 
 protected:
   static int findMatchingParen(const Vector<Token>& tokens, int pos);
@@ -296,13 +334,34 @@ private:
     int next;
   };
 
+  struct IdHook
+  {
+    int purpose;
+    Vector<int> data;
+  };
+
+  struct OpHook
+  {
+    int purpose;
+    Symbol* symbol;
+  };
+
+  struct TermHook
+  {
+    int purpose;
+    Term* term;
+  };
+
   struct Polymorph
   {
-    int name;
+    Token name;
     Vector<Sort*> domainAndRange;
     Vector<int> strategy;
-    Vector<Term*> specialTerms;
-    Symbol* shareWithSymbol;
+    NatSet frozen;
+    Term* identity;
+    Vector<IdHook> idHooks;
+    Vector<OpHook> opHooks;
+    Vector<TermHook> termHooks;
     Vector<Symbol*> instantiations;
     SymbolInfo symbolInfo;
   };
@@ -325,6 +384,7 @@ private:
   };
 
   int nonTerminal(int componentIndex, NonTerminalType type);
+  int nonTerminal(const Sort* sort, NonTerminalType type);
   int iterSymbolNonTerminal(int iterSymbolIndex);
 
   static int domainComponentIndex(const Symbol* symbol, int argNr);
@@ -471,7 +531,7 @@ private:
     Vector<int> excludedTokens;
   };
 
-  BubbleSpec& findBubbleSpec(Symbol* topSymbol);
+  int findBubbleSpecIndex(Symbol* topSymbol) const;
 
   IntSet labels;
   IntSet bubbleComponents;
@@ -652,6 +712,60 @@ MixfixModule::getSymbolType(Symbol* symbol) const
   return symbolInfo[symbol->getIndexWithinModule()].symbolType;
 }
 
+inline Token
+MixfixModule::getPolymorphName(int index) const
+{
+  return polymorphs[index].name;
+}
+
+inline SymbolType
+MixfixModule::getPolymorphType(int index) const
+{
+  return polymorphs[index].symbolInfo.symbolType;
+}
+
+inline const Vector<Sort*>&
+MixfixModule::getPolymorphDomainAndRange(int index) const
+{
+  return polymorphs[index].domainAndRange;
+}
+
+inline Term*
+MixfixModule::getPolymorphIdentity(int index) const
+{
+  return polymorphs[index].identity;
+}
+
+inline const Vector<int>&
+MixfixModule::getPolymorphStrategy(int index) const
+{
+  return polymorphs[index].strategy;
+}
+
+inline const NatSet&
+MixfixModule::getPolymorphFrozen(int index) const
+{
+  return polymorphs[index].frozen;
+}
+
+inline int
+MixfixModule::getPolymorphPrec(int index) const
+{
+  return polymorphs[index].symbolInfo.prec;
+}
+
+inline void
+MixfixModule::getPolymorphGather(int index, Vector<int>& gather) const
+{
+  polymorphs[index].symbolInfo.revertGather(gather);
+}
+
+inline const Vector<int>&
+MixfixModule::getPolymorphFormat(int index) const
+{
+  return polymorphs[index].symbolInfo.format;
+}
+
 inline int
 MixfixModule::getPrec(Symbol* symbol) const
 {
@@ -697,6 +811,12 @@ inline int
 MixfixModule::findIterSymbolIndex(int opName)
 {
   return iterSymbols.int2Index(opName);
+}
+
+inline Sort*
+MixfixModule::hookSort(Sort* sort)
+{
+  return (sort->index() == Sort::KIND) ? sort->component()->sort(1) : sort;
 }
 
 #endif

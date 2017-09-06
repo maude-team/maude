@@ -87,6 +87,7 @@
 #include "S_Term.hh"
 
 //	builtin class definitions
+#include "bindingMacros.hh"
 #include "branchSymbol.hh"
 #include "equalitySymbol.hh"
 #include "sortTestSymbol.hh"
@@ -152,6 +153,12 @@ MixfixModule::nonTerminal(int componentIndex, NonTerminalType type)
 }
 
 inline int
+MixfixModule::nonTerminal(const Sort* sort, NonTerminalType type)
+{
+  return nonTerminal(sort->component()->getIndexWithinModule(), TERM_TYPE);
+}
+
+inline int
 MixfixModule::iterSymbolNonTerminal(int iterSymbolIndex)
 {
   return componentNonTerminalBase - 1 - iterSymbolIndex;
@@ -207,13 +214,10 @@ MixfixModule::~MixfixModule()
   int nrPolymorphs = polymorphs.length();
   for (int i = 0; i < nrPolymorphs; i++)
     {
-      Vector<Term*>& specialTerms = polymorphs[i].specialTerms;
-      int nrSpecialTerms = specialTerms.length();
-      for (int j = 0; j < nrSpecialTerms; j++)
-	{
-	  if (Term* t = specialTerms[j])
-	    t->deepSelfDestruct();
-	}
+      Vector<TermHook>& termHooks = polymorphs[i].termHooks;
+      int nrTermHooks = termHooks.length();
+      for (int j = 0; j < nrTermHooks; j++)
+	termHooks[j].term->deepSelfDestruct();
     }
   delete parser;
 }
@@ -329,11 +333,51 @@ MixfixModule::findSymbol(int name,
   for (int i = 0; i < nrPolymorphs; i++)
     {
       Polymorph& p = polymorphs[i];
-      if (p.name == name && p.domainAndRange.length() - 1 == nrArgs)
+      if (p.name.code() == name && p.domainAndRange.length() - 1 == nrArgs)
 	{
-	  int t = p.symbolInfo.symbolType.getBasicType();
-	  int detArgNr = (t == SymbolType::BRANCH_SYMBOL || t == SymbolType::DOWN_SYMBOL) ? 1 : 0;
-	  return instantiatePolymorph(i, domainComponents[detArgNr]->getIndexWithinModule());
+	  //
+	  //	Check range component.
+	  //
+	  const ConnectedComponent* c = 0;
+	  if (rangeComponent != 0)
+	    {
+	      const Sort* s = p.domainAndRange[nrArgs];
+	      if (s == 0)
+		c = rangeComponent;
+	      else if (s->component() != rangeComponent)
+		continue;
+	    }
+	  //
+	  //	Check domain components.
+	  //
+	  for (int j = 0; j < nrArgs; j++)
+	    {
+	      const Sort* s = p.domainAndRange[j];
+	      const ConnectedComponent* d = domainComponents[j];
+	      if (s == 0)
+		{
+		  if (c == 0)
+		    c = d;
+		  else
+		    {
+		      if (c != d)
+			{
+			  c = 0;
+			  break;
+			}
+		    }
+		}
+	      else
+		{
+		  if (s->component() != d)
+		    {
+		      c = 0;
+		      break;
+		    }
+		}
+	    }
+	  if (c != 0)
+	    return instantiatePolymorph(i, c->getIndexWithinModule());
 	}
     }
   //
@@ -495,53 +539,74 @@ MixfixModule::instantiatePolymorph(int polymorphIndex, int kindIndex)
   Symbol* symbol = p.instantiations[kindIndex];
   if (symbol == 0)
     {
-      Sort* s = getConnectedComponents()[kindIndex]->sort(Sort::KIND);
-      bool isConstructor = p.symbolInfo.symbolType.hasFlag(SymbolType::CTOR);
-      switch (p.symbolInfo.symbolType.getBasicType())
+      SymbolType symbolType = p.symbolInfo.symbolType;
+      Vector<Sort*> domainAndRange(p.domainAndRange);
+      {
+	Sort* s = getConnectedComponents()[kindIndex]->sort(Sort::KIND);
+	int len = domainAndRange.length();
+	for (int i = 0; i < len; i++)
+	  {
+	    if (domainAndRange[i] == 0)
+	      domainAndRange[i] = s;
+	  }
+      }
+      symbol = newFancySymbol(p.name, domainAndRange, symbolType, p.strategy);
+      if (symbol == 0)
 	{
-	case SymbolType::BRANCH_SYMBOL:
-	  {
-	    symbol = new BranchSymbol(p.name, p.specialTerms);
-	    p.domainAndRange[1] = s;
-	    p.domainAndRange[2] = s;
-	    p.domainAndRange[3] = s;
-	    symbol->addOpDeclaration(p.domainAndRange, isConstructor);
-	    break;
-	  }
-	case SymbolType::EQUALITY_SYMBOL:
-	  {
-	    symbol = new EqualitySymbol(p.name, p.specialTerms[0], p.specialTerms[1], p.strategy);
-	    p.domainAndRange[0] = s;
-	    p.domainAndRange[1] = s;
-	    symbol->addOpDeclaration(p.domainAndRange, isConstructor);
-	    break;
-	  }
-	case SymbolType::UP_SYMBOL:
-	  {
-	    symbol = new MetaLevelOpSymbol(p.name, 1);
-	    p.domainAndRange[0] = s;
-	    symbol->addOpDeclaration(p.domainAndRange, isConstructor);
-	    Vector<const char*> data(1);
-	    data[0] = "metaUpTerm";
-	    symbol->attachData(p.domainAndRange, "", data);
-	    symbol->attachSymbol("shareWith", p.shareWithSymbol);
-	    break;
-	  }
-	case SymbolType::DOWN_SYMBOL:
-	  {
-	    symbol = new MetaLevelOpSymbol(p.name, 2);
-	    p.domainAndRange[1] = s;
-	    p.domainAndRange[2] = s;
-	    symbol->addOpDeclaration(p.domainAndRange, isConstructor);
-	    Vector<const char*> data(1);
-	    data[0] = "metaDownTerm";
-	    symbol->attachData(p.domainAndRange, "", data);
-	    symbol->attachSymbol("shareWith", p.shareWithSymbol);
-	    break;
-	  }
-	default:
-	  CantHappen("bad basic type for polymorph");
+	  
+	  symbol = FreeSymbol::newFreeSymbol(p.name.code(),
+					     domainAndRange.length() - 1,
+					     p.strategy,
+					     symbolType.hasFlag(SymbolType::MEMO));
+	  symbolType.clearFlags(SymbolType::AXIOMS);
 	}
+      symbol->setLineNumber(p.name.lineNumber());
+      symbol->addOpDeclaration(domainAndRange, symbolType.hasFlag(SymbolType::CTOR));
+      //
+      //	Deal with fixups.
+      //
+      if (p.identity != 0)
+	{
+	  if (BinarySymbol* b = dynamic_cast<BinarySymbol*>(symbol))
+	    b->setIdentity(p.identity->deepCopy());
+	}
+      if (symbolType.hasAttachments())
+	{
+	  {
+	    int nrIdHooks = p.idHooks.length();
+	    for (int i = 0; i < nrIdHooks; i++)
+	      {
+		const IdHook& idHook = p.idHooks[i];
+		const char* purpose = Token::name(idHook.purpose);
+		int len = idHook.data.length();
+		Vector<const char*> data(len);
+		for (int j = 0; j < len; j++)
+		  data[j] = Token::name(idHook.data[j]);
+		if (!(symbol->attachData(domainAndRange, purpose, data)))
+		  ;  // HACK
+	      }
+	  }
+	  {
+	    int nrOpHooks = p.opHooks.length();
+	    for (int i = 0; i < nrOpHooks; i++)
+	      {
+		const char* purpose = Token::name(p.opHooks[i].purpose);
+		if (!(symbol->attachSymbol(purpose, p.opHooks[i].symbol)))
+		  ;  // HACK
+	      }
+	  }
+	  {
+	    int nrTermHooks = p.termHooks.length();
+	    for (int i = 0; i < nrTermHooks; i++)
+	      {
+		const char* purpose = Token::name(p.termHooks[i].purpose);
+		Term* copy = p.termHooks[i].term->deepCopy();
+		if (!(symbol->attachTerm(purpose, copy)))
+		  copy->deepSelfDestruct();  // HACK
+	      }
+	  }
+	}
+      
       int nrSymbols = symbolInfo.length();
       symbolInfo.expandBy(1);
       symbolInfo[nrSymbols] = p.symbolInfo;  // deep copy
@@ -579,15 +644,100 @@ MixfixModule::findFloatSymbol(const ConnectedComponent* component) const
 }
 
 void
-MixfixModule::fixUpPolymorph(int polymorphIndex, const Vector<Term*>& specialTerms)
+MixfixModule::addIdentityToPolymorph(int polymorphIndex,
+				     Term* identity)
 {
-  polymorphs[polymorphIndex].specialTerms = specialTerms;  // deep copy
+  polymorphs[polymorphIndex].identity = identity;
 }
 
 void
-MixfixModule::fixUpPolymorph(int polymorphIndex, Symbol* shareWithSymbol)
+MixfixModule::addIdHookToPolymorph(int polymorphIndex,
+				   int purpose,
+				   const Vector<int>& data)
 {
-  polymorphs[polymorphIndex].shareWithSymbol = shareWithSymbol;
+  Vector<IdHook>& idHooks = polymorphs[polymorphIndex].idHooks;
+  int nrIdHooks = idHooks.length();
+  idHooks.resize(nrIdHooks + 1);
+  IdHook& idHook = idHooks[nrIdHooks];
+  idHook.purpose = purpose;
+  idHook.data = data;  // deep copy
+}
+
+void
+MixfixModule::addOpHookToPolymorph(int polymorphIndex,
+				   int purpose,
+				   Symbol* symbol)
+{
+  Vector<OpHook>& opHooks = polymorphs[polymorphIndex].opHooks;
+  int nrOpHooks = opHooks.length();
+  opHooks.resize(nrOpHooks + 1);
+  OpHook& opHook = opHooks[nrOpHooks];
+  opHook.purpose = purpose;
+  opHook.symbol = symbol;
+}
+
+void
+MixfixModule::addTermHookToPolymorph(int polymorphIndex,
+				     int purpose,
+				     Term* term)
+{
+  Vector<TermHook>& termHooks = polymorphs[polymorphIndex].termHooks;
+  int nrTermHooks = termHooks.length();
+  termHooks.resize(nrTermHooks + 1);
+  TermHook& termHook = termHooks[nrTermHooks];
+  termHook.purpose = purpose;
+  termHook.term = term;
+}
+
+bool
+MixfixModule::getPolymorphDataAttachment(int index,
+					 int nr,
+					 int& purpose,
+					 Vector<int>& items) const
+{
+  const Vector<IdHook>& idHooks = polymorphs[index].idHooks;
+  if (nr < idHooks.length())
+    {
+      const IdHook& idHook = idHooks[nr];
+      purpose = idHook.purpose;
+      items = idHook.data;  // deep copy
+      return true;
+    }
+  return false;
+}
+
+bool
+MixfixModule::getPolymorphSymbolAttachment(int index,
+					   int nr,
+					   int& purpose,
+					   Symbol*& op) const
+{
+  const Vector<OpHook>& opHooks = polymorphs[index].opHooks;
+  if (nr < opHooks.length())
+    {
+      const OpHook& opHook = opHooks[nr];
+      purpose = opHook.purpose;
+      op = opHook.symbol;
+      return true;
+    }
+  return false;
+}
+
+bool
+MixfixModule::getPolymorphTermAttachment(int index,
+					 int nr,
+					 int& purpose,
+					 Term*& term) const
+{
+  const Vector<TermHook>& termHooks = polymorphs[index].termHooks;
+  if (nr < termHooks.length())
+    {
+      const TermHook& termHook = termHooks[nr];
+      purpose = termHook.purpose;
+      term = termHook.term;
+      return true;
+    }
+  return false;
 }
 
 void
@@ -596,16 +746,44 @@ MixfixModule::copyFixUpPolymorph(int polymorphIndex,
 				 int originalPolymorphIndex,
 				 SymbolMap* map)
 {
-  const Vector<Term*>& originalSpecialTerms =
-    originalModule->polymorphs[originalPolymorphIndex].specialTerms;
-  int nrSpecialTerms = originalSpecialTerms.length();
-  Vector<Term*>& specialTerms = polymorphs[polymorphIndex].specialTerms;
-  specialTerms.expandTo(nrSpecialTerms);
-  for (int i = 0; i < nrSpecialTerms; i++)
-    specialTerms[i] = originalSpecialTerms[i]->deepCopy(map);
-  Symbol* shareWithSymbol = originalModule->polymorphs[originalPolymorphIndex].shareWithSymbol;
-  if (shareWithSymbol != 0)
-    polymorphs[polymorphIndex].shareWithSymbol = map->translate(shareWithSymbol);
+  {
+    Term* identity =  originalModule->polymorphs[originalPolymorphIndex].identity;
+    polymorphs[polymorphIndex].identity = (identity == 0) ? 0 :
+      identity->deepCopy(map);
+  }
+  {
+    const Vector<IdHook>& originalIdHooks =
+      originalModule->polymorphs[originalPolymorphIndex].idHooks;
+    int nrIdHooks = originalIdHooks.length();
+    Vector<IdHook>& idHooks = polymorphs[polymorphIndex].idHooks;
+    idHooks.resize(nrIdHooks);
+    for (int i = 0; i < nrIdHooks; i++)
+      idHooks[i] = originalIdHooks[i];  // deep copy
+  }
+  {
+    const Vector<OpHook>& originalOpHooks =
+      originalModule->polymorphs[originalPolymorphIndex].opHooks;
+    int nrOpHooks = originalOpHooks.length();
+    Vector<OpHook>& opHooks = polymorphs[polymorphIndex].opHooks;
+    opHooks.resize(nrOpHooks);
+    for (int i = 0; i < nrOpHooks; i++)
+      {
+	opHooks[i].purpose = originalOpHooks[i].purpose;
+	opHooks[i].symbol = map->translate(originalOpHooks[i].symbol);
+      }
+  }
+  {
+    const Vector<TermHook>& originalTermHooks =
+      originalModule->polymorphs[originalPolymorphIndex].termHooks;
+    int nrTermHooks = originalTermHooks.length();
+    Vector<TermHook>& termHooks = polymorphs[polymorphIndex].termHooks;
+    termHooks.resize(nrTermHooks);
+    for (int i = 0; i < nrTermHooks; i++)
+      {
+	termHooks[i].purpose = originalTermHooks[i].purpose;
+	termHooks[i].term = originalTermHooks[i].term->deepCopy(map);
+      }
+  }
 }
 
 int
@@ -617,38 +795,19 @@ MixfixModule::copyPolymorph(const MixfixModule* originalModule,
   Polymorph& p = polymorphs[nrPolymorphs];
   const Polymorph& original = originalModule->polymorphs[originalPolymorphIndex];
   p.name = original.name;
-  p.shareWithSymbol = 0;
-  SymbolType symbolType = original.symbolInfo.symbolType;
-  switch (symbolType.getBasicType())
+  p.identity = 0;
+
+  int domainAndRangeLength = original.domainAndRange.length();
+  p.domainAndRange.resize(domainAndRangeLength);
+  for (int i = 0; i < domainAndRangeLength; i++)
     {
-    case SymbolType::BRANCH_SYMBOL:
-      {
-	p.domainAndRange.expandTo(4);
-	p.domainAndRange[0] = findSort(original.domainAndRange[0]->id());
-	break;
-      }
-    case SymbolType::EQUALITY_SYMBOL:
-      {
-	p.domainAndRange.expandTo(3);
-	p.domainAndRange[2] = findSort(original.domainAndRange[2]->id());
-	break;
-      }
-    case SymbolType::UP_SYMBOL:
-      {
-	p.domainAndRange.expandTo(2);
-	p.domainAndRange[1] = findSort(original.domainAndRange[1]->id());
-	break;
-      }
-    case SymbolType::DOWN_SYMBOL:
-      {
-	p.domainAndRange.expandTo(3);
-	p.domainAndRange[0] = findSort(original.domainAndRange[0]->id());
-	break;
-      }
-    default:
-      CantHappen("bad basic type for polymorph");
+      Sort* s = original.domainAndRange[i];
+      p.domainAndRange[i] = (s == 0) ? 0 : findSort(s->id());
     }
+
+  SymbolType symbolType = original.symbolInfo.symbolType;
   p.strategy = original.strategy;  // deep copy
+  p.frozen = original.frozen;  // deep copy
   p.symbolInfo.mixfixSyntax = original.symbolInfo.mixfixSyntax;  // deep copy
   p.symbolInfo.prec = symbolType.hasFlag(SymbolType::PREC) ? original.symbolInfo.prec : DEFAULT;
   if (symbolType.hasFlag(SymbolType::GATHER))
@@ -661,8 +820,8 @@ MixfixModule::copyPolymorph(const MixfixModule* originalModule,
   return nrPolymorphs;
 }
 
-MixfixModule::BubbleSpec&
-MixfixModule::findBubbleSpec(Symbol* topSymbol)
+int
+MixfixModule::findBubbleSpecIndex(Symbol* topSymbol) const
 {
   int nrBubbleSpecs = bubbleSpecs.length();
   int i = 0;
@@ -671,13 +830,13 @@ MixfixModule::findBubbleSpec(Symbol* topSymbol)
       if (bubbleSpecs[i].topSymbol == topSymbol)
 	break;
     }
-  return bubbleSpecs[i];
+  return i;
 }
 
 void
 MixfixModule::copyFixUpBubbleSpec(Symbol* newSymbol, SymbolMap* map)
 {
-  BubbleSpec& b = findBubbleSpec(newSymbol);
+  BubbleSpec& b = bubbleSpecs[findBubbleSpecIndex(newSymbol)];
   b.qidSymbol = dynamic_cast<QuotedIdentifierSymbol*>(b.qidSymbol ?
 						      map->translate(b.qidSymbol) : 0);
   b.nilQidListSymbol = b.nilQidListSymbol ? map->translate(b.nilQidListSymbol) : 0;
@@ -690,7 +849,7 @@ MixfixModule::copyBubbleSpec(MixfixModule* originalModule,
 			     Symbol* newSymbol)
 {
   int nrBubbleSpecs = bubbleSpecs.length();
-  bubbleSpecs.append(originalModule->findBubbleSpec(originalSymbol));  // deep copy
+  bubbleSpecs.append(bubbleSpecs[originalModule->findBubbleSpecIndex(originalSymbol)]);  // deep copy
   BubbleSpec& b = bubbleSpecs[nrBubbleSpecs];
   b.topSymbol = newSymbol;
   const Vector<Sort*>& domainAndRange =
@@ -698,6 +857,105 @@ MixfixModule::copyBubbleSpec(MixfixModule* originalModule,
   b.componentIndex =
     domainAndRange[domainAndRange.length() - 1]->component()->getIndexWithinModule();
   bubbleComponents.insert(b.componentIndex);
+}
+
+void
+MixfixModule::getDataAttachments(Symbol* symbol,
+				 const Vector<Sort*>& opDeclaration,
+				 Vector<const char*>& purposes,
+				 Vector<Vector<const char*> >& data) const
+{
+  if (symbol == trueSymbol)
+    {
+      APPEND_DATA(purposes, data, SystemTrue);
+    }
+  else if (symbol == falseSymbol)
+    {
+      APPEND_DATA(purposes, data, SystemFalse);
+    }
+  else
+    {
+      switch (getSymbolType(symbol).getBasicType())
+	{
+	case SymbolType::BUBBLE:
+	  {
+	    const BubbleSpec& b = bubbleSpecs[findBubbleSpecIndex(symbol)];
+	    {
+	      purposes.append("Bubble");
+	      int nrAttachments = data.length();
+	      data.resize(nrAttachments + 1);
+	      Vector<const char*>& items = data[nrAttachments];
+	      items.append(Token::name(Token::encode(int64ToString(b.lowerBound))));
+	      items.append(Token::name(Token::encode(int64ToString(b.upperBound))));
+	      if (b.leftParenToken != NONE)
+		{
+		  items.append(Token::name(b.leftParenToken));
+		  items.append(Token::name(b.rightParenToken));
+		}
+	    }
+	    int nrExcluded = b.excludedTokens.length();
+	    if (nrExcluded > 0)
+	      {
+		purposes.append("Exclude");
+		int nrAttachments = data.length();
+		data.resize(nrAttachments + 1);
+		Vector<const char*>& items = data[nrAttachments];
+		items.resize(nrExcluded);
+		for (int i = 0; i < nrExcluded; i++)
+		  items[i] = Token::name(b.excludedTokens[i]);
+	      }
+	    break;
+	  }
+	case SymbolType::FLOAT:
+	  {
+	    APPEND_DATA(purposes, data, FloatSymbol);
+	    break;
+	  }
+	case SymbolType::STRING:
+	  {
+	    APPEND_DATA(purposes, data, StringSymbol);
+	    break;
+	  }
+	default:
+	  symbol->getDataAttachments(opDeclaration, purposes, data);
+	}
+    }
+}
+
+void
+MixfixModule::getSymbolAttachments(Symbol* symbol,
+				   Vector<const char*>& purposes,
+				   Vector<Symbol*>& symbols) const
+{
+  if (getSymbolType(symbol).getBasicType() == SymbolType::BUBBLE)
+    {
+      const BubbleSpec& b = bubbleSpecs[findBubbleSpecIndex(symbol)];
+      if (b.qidSymbol != 0)
+	{
+	  purposes.append("qidSymbol");
+	  symbols.append(b.qidSymbol);
+	}
+      if (b.nilQidListSymbol != 0)
+	{
+	  purposes.append("nilQidListSymbol");
+	  symbols.append(b.nilQidListSymbol);
+	}
+      if (b.qidListSymbol != 0)
+	{
+	  purposes.append("qidListSymbol");
+	  symbols.append(b.qidListSymbol);
+	}
+    }
+  else
+    symbol->getSymbolAttachments(purposes, symbols);
+}
+
+void
+MixfixModule::getTermAttachments(Symbol* symbol,
+				 Vector<const char*>& purposes,
+				 Vector<Term*>& terms) const
+{
+  symbol->getTermAttachments(purposes, terms);
 }
 
 void

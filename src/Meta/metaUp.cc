@@ -139,21 +139,9 @@ MetaLevel::upDagNode(DagNode* dagNode,
 	  d = upConstant(s->id(), dagNode->getSort(), qidMap);
 	else
 	  {
-	    int id = s->id();
-	    if (m->getSymbolType(s).hasFlag(SymbolType::ITER))
-	      {
-		const mpz_class& number = safeCast(S_DagNode*, dagNode)->getNumber();
-		if (number > 1)
-		  {
-		    string tmp(Token::name(id));
-		    tmp += '^';
-		    char* str = mpz_get_str(0, 10, number.get_mpz_t());
-		    tmp += str;
-		    free(str);
-		    id = Token::encode(tmp.c_str());
-		  }
-	      }
-	    args[0] = upQid(id, qidMap);
+	    args[0] = upQid(m->getSymbolType(s).hasFlag(SymbolType::ITER) ?
+			    iterToken(dagNode) : s->id(),
+			    qidMap);
 	    DagArgumentIterator a(*dagNode);
 	    if (nrArgs == 1)
 	      args[1] = upDagNode(a.argument(), m, qidMap, dagNodeMap);
@@ -189,29 +177,29 @@ MetaLevel::upTerm(const Term* term, MixfixModule* m, PointerMap& qidMap)
     case SymbolType::QUOTED_IDENTIFIER:
       {
 	int id = static_cast<const QuotedIdentifierTerm*>(term)->getIdIndex();
-	return upConstant(Token::quoteNameCode(id), term->getSort(), qidMap);
+	return upConstant(Token::quoteNameCode(id), MixfixModule::disambiguatorSort(term), qidMap);
       }
     case SymbolType::STRING:
       {
 	string result;
 	Token::ropeToString(static_cast<const StringTerm*>(term)->getValue(), result);
-	return upConstant(Token::encode(result.c_str()), term->getSort(), qidMap);
+	return upConstant(Token::encode(result.c_str()), MixfixModule::disambiguatorSort(term), qidMap);
       }
     case SymbolType::FLOAT:
       {
 	double mf = static_cast<const FloatTerm*>(term)->getValue();
-	return upConstant(Token::doubleToCode(mf), term->getSort(), qidMap);
+	return upConstant(Token::doubleToCode(mf), MixfixModule::disambiguatorSort(term), qidMap);
       }
     case SymbolType::VARIABLE:
       {
 	int id = static_cast<const VariableTerm*>(term)->id();
-	return upVariable(id, term->getSort(), qidMap);
+	return upVariable(id, MixfixModule::disambiguatorSort(term), qidMap);
       }
     default:
       {
 	int nrArgs = s->arity();
 	if (nrArgs == 0)
-	  return upConstant(s->id(), term->getSort(), qidMap);
+	  return upConstant(s->id(), MixfixModule::disambiguatorSort(term), qidMap);
 	else
 	  {
 	    int id = s->id();
@@ -245,6 +233,21 @@ MetaLevel::upTerm(const Term* term, MixfixModule* m, PointerMap& qidMap)
     }
 }
 
+int
+MetaLevel::iterToken(DagNode* dagNode)
+{
+  int id = dagNode->symbol()->id();
+  const mpz_class& number = safeCast(S_DagNode*, dagNode)->getNumber();
+  if (number == 1)
+    return id;
+  string tmp(Token::name(id));
+  tmp += '^';
+  char* str = mpz_get_str(0, 10, number.get_mpz_t());
+  tmp += str;
+  free(str);
+  return Token::encode(tmp.c_str());
+}
+    
 DagNode*
 MetaLevel::upContext(DagNode* dagNode,
 		     MixfixModule* m,
@@ -271,10 +274,12 @@ MetaLevel::upContext(DagNode* dagNode,
   if (nrArgs == 0)
     return upDagNode(dagNode, m, qidMap, dagNodeMap);
   //
-  //	Usually case.
+  //	Usual case.
   //
   Vector<DagNode*> args(2);  // can't be static!
-  args[0] = upQid(s->id(), qidMap);
+  args[0] = upQid(m->getSymbolType(s).hasFlag(SymbolType::ITER) ?
+		  iterToken(dagNode) : s->id(),
+		  qidMap);
   DagArgumentIterator a(*dagNode);
   if (nrArgs == 1)
     args[1] = upContext(a.argument(), m, hole, qidMap, dagNodeMap);
@@ -461,24 +466,6 @@ MetaLevel::upBool(bool value)
 }
 
 DagNode*
-MetaLevel::upSortSet(const Vector<Sort*>& sorts)
-{
-  int nrSorts = sorts.length();
-  if (nrSorts == 0)
-    return new FreeDagNode(emptySortSetSymbol);
-  if (nrSorts == 1)
-    return new QuotedIdentifierDagNode(qidSymbol,
-				       Token::backQuoteSpecials(sorts[0]->id()));
-  Vector<DagNode*> args(nrSorts);
-  for (int i = 0; i < nrSorts; i++)
-    {
-      args[i] = new QuotedIdentifierDagNode(qidSymbol,
-					    Token::backQuoteSpecials(sorts[i]->id()));
-    }
-  return sortSetSymbol->makeDagNode(args);
-}
-
-DagNode*
 MetaLevel::upKindSet(const Vector<ConnectedComponent*>& kinds)
 {
   int nrKinds = kinds.length();
@@ -494,14 +481,43 @@ MetaLevel::upKindSet(const Vector<ConnectedComponent*>& kinds)
 }
 
 DagNode*
+MetaLevel::upSortSet(const Vector<Sort*>& sorts)
+{
+  PointerMap qidMap;
+  return upSortSet(sorts, 0, sorts.length(), qidMap);
+}
+
+DagNode*
+MetaLevel::upSortSet(const Vector<Sort*>& sorts,
+		     int begin,
+		     int nrSorts,
+		     PointerMap& qidMap)
+{
+  if (nrSorts == 0)
+    return new FreeDagNode(emptySortSetSymbol);
+  if (nrSorts == 1)
+    return upQid(sorts[begin]->id(), qidMap);
+  Vector<DagNode*> args(nrSorts);
+  for (int i = 0; i < nrSorts; i++, begin++)
+    args[i] = upQid(sorts[begin]->id(), qidMap);
+  return sortSetSymbol->makeDagNode(args);
+}
+
+DagNode*
 MetaLevel::upQidList(const Vector<int>& ids)
+{
+  PointerMap qidMap;
+  return upQidList(ids, qidMap);
+}
+
+DagNode*
+MetaLevel::upQidList(const Vector<int>& ids, PointerMap& qidMap)
 {
   int nrIds = ids.length();
   if (nrIds == 0)
     return new FreeDagNode(nilQidListSymbol);
   if (nrIds == 1)
     return new QuotedIdentifierDagNode(qidSymbol, Token::backQuoteSpecials(ids[0]));
-  PointerMap qidMap;
   Vector<DagNode*> args(nrIds);
   for (int i = 0; i < nrIds; i++)
     args[i] = upQid(ids[i], qidMap);

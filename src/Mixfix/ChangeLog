@@ -1,3 +1,351 @@
+2003-11-12  Steven Eker  <eker@goo.csl.sri.com>
+
+	* preModule.cc (PreModule): delete module expressions in imports
+
+2003-11-11  Steven Eker  <eker@goo.csl.sri.com>
+
+	* command.cc: added support for special and poly attributes
+
+2003-11-10  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: added format attributes to meta hook ops
+
+	* termPrint.cc (disambiguatorSort): added
+	(prettyPrint): use suffix
+	(suffix): use disambiguatorSort()
+
+2003-11-07  Steven Eker  <eker@goo.csl.sri.com>
+
+	* ops.cc (addHook): only set basic type if it is not STANDARD;
+	this fixes the object level Bubble Exclude bug
+
+	* mixfixModule.hh (CommonTokens): findBubbleSpecIndex() decl
+	replaces findBubbleSpec() decl
+
+	* mixfixModule.cc (copyFixUpBubbleSpec): use findBubbleSpecIndex()
+	(findBubbleSpecIndex): was findBubbleSpec()
+	(copyBubbleSpec): use findBubbleSpecIndex()
+	(getDataAttachments): use findBubbleSpecIndex()
+	(getSymbolAttachments): use findBubbleSpecIndex()
+
+	* mixfixModule.hh (CommonTokens): updated decl for findBubbleSpec()
+
+	* mixfixModule.cc (getSymbolAttachments): handle bubbles
+	(getDataAttachments): handle bubbles
+	(findBubbleSpec): made const
+
+	* visibleModule.cc (showAttributes): use MixfixModule versions of
+	getDataAttachments(), getSymbolAttachments(), getTermAttachments()
+
+	* mixfixModule.cc (getDataAttachments): added
+	(getSymbolAttachments): added
+	(getTermAttachments): added
+
+	* mixfixModule.hh (CommonTokens): added decls for
+	getDataAttachments(), getSymbolAttachments(), getTermAttachments()
+
+	* visibleModule.cc (showAttributes): use hasSpecial() rather than
+	hasAttachments()
+	(showPolymorphAttributes): use hasSpecial() rather than
+	hasAttachments()
+
+	* symbolType.hh (hasSpecial): added
+
+2003-11-06  Steven Eker  <eker@goo.csl.sri.com>
+
+	* mixfixModule.cc (getPolymorphDataAttachment): added
+	(getPolymorphSymbolAttachment): added
+	(getPolymorphTermAttachment): added
+
+	* mixfixModule.hh (CommonTokens): added decls for
+	getPolymorphDataAttachment(), getPolymorphSymbolAttachment(),
+	getPolymorphTermAttachment()
+
+	* visibleModule.cc: simplified using hookSort()
+	(showPolymorphAttributes): handle attachments
+
+	* mixfixModule.hh (hookSort): added
+
+	* symbolType.hh (class SymbolType): reordered enum BasicTypes to
+	make those that are instantiated with the special attribute
+	contiguous
+
+	* visibleModule.hh (class VisibleModule): updated showDecls() decl
+
+	* visibleModule.cc (showOps): don't print internally created
+	symbols, even in "all" case
+	(showDecls): don't print internally created decls; take index
+	rather than sort
+	(showOps): new  showDecls() convention
+
+2003-11-05  Steven Eker  <eker@goo.csl.sri.com>
+
+	* quotedIdentifierOpSymbol.cc (getDataAttachments): use CODE_CASE()
+
+	* loopSymbol.cc (getDataAttachments): use APPEND_DATA()
+
+	* visibleModule.cc (showAttributes): changed formatting of
+	specials
+
+	* loopSymbol.cc (getDataAttachments): added
+	(getSymbolAttachments): added
+
+	* quotedIdentifierOpSymbol.cc (getSymbolAttachments): call
+	FreeSymbol::getSymbolAttachments() for cleaness
+
+	* loopSymbol.hh (class LoopSymbol): added decls for
+	getDataAttachments() and getSymbolAttachments()
+
+2003-11-04  Steven Eker  <eker@goo.csl.sri.com>
+
+	* visibleModule.cc (showDecls): use new showAttributes() calling
+	convention
+
+	* visibleModule.hh (class VisibleModule): updated decl for
+	showAttributes()
+
+	* visibleModule.cc (showAttributes): handle attachments; take
+	OpDeclaration arg
+
+2003-11-03  Steven Eker  <eker@goo.csl.sri.com>
+
+	* quotedIdentifierOpSymbol.cc (eqRewrite): use safeCast()
+	(getDataAttachments): added
+	(getSymbolAttachments): added
+
+	* quotedIdentifierOpSymbol.hh (class QuotedIdentifierOpSymbol):
+	added decls for getDataAttachments() and getSymbolAttachments()
+
+	* quotedIdentifierSymbol.cc (getDataAttachments): added
+
+	* quotedIdentifierSymbol.hh (class QuotedIdentifierSymbol): added
+	decl for getDataAttachments()
+
+2003-10-29  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: added upOpDecls(), upImports()
+
+	* preModule.hh (getNrAutoImports): added
+	(getNrImports): added
+	(getAutoImport): added
+	(getImportMode): added
+	(getImport): added
+
+2003-10-28  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: added upSorts(), upSubsortDecls()
+
+	* visibleModule.cc (showAttributes): code cleaning
+
+	* mixfixModule.hh (getPolymorphPrec): added
+	(getPolymorphGather): added
+	(getPolymorphFormat): added
+
+	* visibleModule.cc (showPolymorphAttributes): added handling for
+	prec, gather and format
+
+	* mixfixModule.hh (getPolymorphIdentity): added
+	(getPolymorphStrategy): added
+	(getPolymorphFrozen): added
+
+	* visibleModule.cc (showPolymorphAttributes): added handling for
+	identity, strategy and frozen
+
+2003-10-27  Steven Eker  <eker@goo.csl.sri.com>
+
+	* visibleModule.hh (class VisibleModule): added decl for
+	showPolymorphAttributes()
+
+	* visibleModule.cc (showModule): call showPolymorphs()
+	(showPolymorphAttributes): added
+
+	* interpreter.cc (showOps): call showPolymorphs()
+
+	* mixfixModule.hh (getPolymorphName): added
+	(getPolymorphDomainAndRange): added
+
+	* visibleModule.hh (class VisibleModule): added decls for
+	showPolymorphs() and showPolymorphDecl()
+
+	* visibleModule.cc (showVars): rewritten using FOR_EACH_CONST()
+	(showSummary): split symbols into user symbols and total symbols;
+	print number of polymorphic operators
+	(showPolymorphDecl): added
+	(showPolymorphs): added
+
+	* mixfixModule.cc (copyFixUpPolymorph): don't copy specialTerms
+	(~MixfixModule): deepSelfDestruct() term hook terms rather than
+	specialTerms
+
+	* mixfixModule.hh (CommonTokens): deleted decls for
+	fixUpPolymorph()
+	(CommonTokens): deleted specialTerms and shareWithSymbol from
+	struct Polymorph
+
+	* entry.cc (addPolymorph): don't clear shareWithSymbol
+
+	* mixfixModule.cc (fixUpPolymorph): deleted both versions
+	(copyFixUpPolymorph): deleted support for shareWithSymbol
+	(copyPolymorph): don't clear shareWithSymbol
+
+	* importModule.hh (getNrImportedPolymorphs): added
+
+2003-10-24  Steven Eker  <eker@goo.csl.sri.com>
+
+	* mixfixModule.hh (getPolymorphType): added
+
+	* mixfixModule.cc (instantiatePolymorph): no need to create Token
+	from name
+	(instantiatePolymorph): set symbol line number
+
+	* entry.cc (addPolymorph): copy name Token
+
+	* mixfixModule.hh (CommonTokens): made Polymorph name field into a
+	Token
+
+2003-10-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* entry.cc (newFancySymbol): don't pass term args to
+	EqualitySymbol() or BranchSymbol()
+	(addPolymorph): set overloaded flags in symbolInfo.iflags
+
+2003-10-22  Steven Eker  <eker@goo.csl.sri.com>
+
+	* mixfixModule.cc (instantiatePolymorph): deep copy term hooks
+
+	* fixUp.cc (fixUpSymbols): handle identities for polymorphs
+	(fixUpSymbols): fixed warning messages for bad special
+
+	* process.cc (processSorts): use lessThan from CommonTokens
+
+	* fixUp.cc (findHookSymbol): use colon and partial from
+	CommonTokens
+
+	* commonTokens.hh (class CommonTokens): added lessThan and partial
+
+	* commonTokens.cc (CommonTokens): added lessThan and partial
+
+2003-10-20  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: added op poly : NatList -> Attr [ctor] and
+	polySymbol hook
+
+	* specialSymbolTypes.cc (MACRO): deleted UP_SYMBOL, DOWN_SYMBOL
+	instantiations
+
+	* symbolType.hh (class SymbolType): deleted UP_SYMBOL, DOWN_SYMBOL
+	from enum BasicTypes
+
+2003-10-17  Steven Eker  <eker@goo.csl.sri.com>
+
+	* mixfixModule.cc (instantiatePolymorph): fixed bug where we were
+	using idHooks purpose for attaching an opHook
+
+	* prelude.maude: updated definitions of if_then_else_fi, upTerm
+	and downTerm
+
+2003-10-16  Steven Eker  <eker@goo.csl.sri.com>
+
+	* fixUp.cc (fixUpSymbols): rewritten
+
+	* preModule.hh (Parent): added decl for polymorph version of
+	defaultFixUp()
+
+	* fixUp.cc (defaultFixUp): added polymorph version
+
+	* mixfixModule.cc (instantiatePolymorph): rewritten to use
+	standardized method for polymorphs
+
+2003-10-15  Steven Eker  <eker@goo.csl.sri.com>
+
+	* entry.cc (addPolymorph): zero polymorph identity
+
+	* mixfixModule.cc (addIdHookToPolymorph): added
+	(addOpHookToPolymorph): added
+	(addTermHookToPolymorph): added
+	(copyFixUpPolymorph): copy identity and hooks
+	(addIdentityToPolymorph): added
+	(copyPolymorph): zero polymorph identity
+
+	* mixfixModule.hh (CommonTokens): added structs IdHook, OpHook and
+	TermHook
+	(CommonTokens): added identity, idHooks, opHooks, termHooks to
+	struct Polymorph
+
+	* entry.cc (newFancySymbol): handle BRANCH_SYMBOL and
+	EQUALITY_SYMBOL
+
+	* symbolType.hh (hasAttachments): BRANCH_SYMBOL and
+	EQUALITY_SYMBOL now are treated as having attachments
+
+	* fixUp.cc (fixUpSymbols): check for polymorphs using POLY flag;
+	reorganized
+
+2003-10-14  Steven Eker  <eker@goo.csl.sri.com>
+
+	* mixfixModule.cc (findSymbol): rewritten to handle polymorphs in
+	a generic way and to be more picky about matching components
+	(instantiatePolymorph): must not change original polymorph
+	domainAndRange now that we rely on it to know which arguments are
+	polymorphic - make a copy
+
+2003-10-13  Steven Eker  <eker@goo.csl.sri.com>
+
+	* process.cc (processOps): don't pass polyArgs to addPolymorph()
+
+	* entry.cc (addPolymorph): don't take polyArgs argument
+
+	* mixfixModule.hh (CommonTokens): removed polyArgs from struct
+	Polymorph
+	(CommonTokens): updated decl for addPolymorph()
+
+	* mixfixModule.cc (copyPolymorph): use domainAndRange to  decide
+	how to copy sorts; copy frozen
+
+	* makeGrammar.cc (makeVariableProductions): use new nonTerminal()
+	(makeBoolProductions): use new nonTerminal()
+	(makePolymorphProductions): rewritten to use new nonTerminal() and
+	polyArgs
+	(makePolymorphProductions): use domainAndRange instead of polyArgs
+
+	* mixfixModule.cc (nonTerminal): added Sort* version
+
+	* mixfixModule.hh (CommonTokens): added decl for Sort* version of
+	nonTerminal()
+
+	* entry.cc (addPolymorph): handle frozen and polyArgs atrguments
+
+	* mixfixModule.hh (CommonTokens): updated decl for addPolymorph()
+	(CommonTokens): added polyArgs and frozen to struct Polymorph
+
+	* symbolType.hh (isPolymorph): deleted
+	(isCreatedOnTheFly): don't use isPolymorph()
+
+	* process.cc (checkOpTypes): rewritten using polyArgs
+	(computeOpTypes): rewritten using polyArgs
+	(processOps): don't use isPolymorph(); use new addPolymorph()
+	convention
+
+	* ops.cc (setLatexMacro): set LATEX flag
+
+2003-10-10  Steven Eker  <eker@goo.csl.sri.com>
+
+	* preModule.hh (Parent): added polyArgs to struct OpDef; added
+	decl for setPoly()
+
+	* ops.cc (setPoly): added
+
+	* symbolType.hh (class SymbolType): added POLY to enum Flags
+
+	* modules.yy (attrKeyword): added KW_POLY
+	(attribute): added KW_POLY
+
+	* top.yy: added decl for KW_POLY
+
+	* lexer.ll (id): added keywords poly, polymorphic
+	
+===================================Maude83===========================================
+
 2003-10-09  Steven Eker  <eker@goo.csl.sri.com>
 
 	* command.cc (printAttributes): need to check for DITTO in first if

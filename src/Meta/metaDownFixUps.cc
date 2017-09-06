@@ -29,29 +29,33 @@ MetaLevel::downFixUps(MetaModule* m)
 {
   int type;
   int index;
+  DagNode* identity;
   DagNode* fixUpInfo;
   Vector<Sort*> domainAndRange;
-  while (m->removeComplexSymbol(type, index, fixUpInfo, domainAndRange))
+  while (m->removeComplexSymbol(type, index, identity, fixUpInfo, domainAndRange))
     {
       switch (type)
 	{
-	case IDENTITY_SYMBOL:
+	case REGULAR_SYMBOL:
 	  {
-	    if (!fixUpIdentitySymbol(fixUpInfo,
-				     m,
-				     safeCast(BinarySymbol*, m->getSymbols()[index])))
+	    Symbol* s = m->getSymbols()[index];
+	    SymbolType st = m->getSymbolType(s);
+	    if (identity != 0 && !handleIdentity(identity, m, safeCast(BinarySymbol*, s)))
 	      return false;
-	    break;
-	  }
-	case SPECIAL_SYMBOL:
-	  {
-	    if (!fixUpSpecialSymbol(fixUpInfo, m, m->getSymbols()[index], domainAndRange))
+	    if (fixUpInfo != 0 &&
+		st.hasAttachments() &&
+		!handleSpecial(fixUpInfo, m, s, domainAndRange))
 	      return false;
 	    break;
 	  }
 	case POLYMORPH:
 	  {
-	    if (!fixUpPolymorph(fixUpInfo, m, index))
+	    SymbolType st = m->getPolymorphType(index);
+	    if (identity != 0 && !handleIdentity(identity, m, index, domainAndRange))
+	      return false;
+	    if (fixUpInfo != 0 &&
+		st.hasAttachments() &&
+		!handleSpecial(fixUpInfo, m, index))
 	      return false;
 	    break;
 	  }
@@ -67,7 +71,31 @@ MetaLevel::downFixUps(MetaModule* m)
 }
 
 bool
-MetaLevel::fixUpIdentitySymbol(DagNode* metaIdentity, MetaModule* m, BinarySymbol* s)
+MetaLevel::handleIdentity(DagNode* metaIdentity,
+			  MetaModule* m,
+			  int index,
+			  const Vector<Sort*>& domainAndRange)
+{
+  if (Term* id = downTerm(metaIdentity, m))
+    {
+      const ConnectedComponent* c = id->symbol()->rangeComponent();
+      SymbolType symbolType = m->getPolymorphType(index);
+
+      if ((!symbolType.hasFlag(SymbolType::LEFT_ID) ||
+	   (domainAndRange[0] != 0 && domainAndRange[0]->component() == c)) &&
+	  (!symbolType.hasFlag(SymbolType::RIGHT_ID) ||
+	   (domainAndRange[1] != 0 && domainAndRange[1]->component() == c)))
+	{
+	  m->addIdentityToPolymorph(index, id);
+	  return true;
+	}
+      id->deepSelfDestruct();
+    }
+  return false;
+}
+
+bool
+MetaLevel::handleIdentity(DagNode* metaIdentity, MetaModule* m, BinarySymbol* s)
 {
   if (Term* id = downTerm(metaIdentity, m))
     {
@@ -94,10 +122,73 @@ MetaLevel::fixUpIdentitySymbol(DagNode* metaIdentity, MetaModule* m, BinarySymbo
 }
 
 bool
-MetaLevel::fixUpSpecialSymbol(DagNode* metaHookList,
-			      MetaModule* m,
-			      Symbol* symbol,
-			      const Vector<Sort*>& domainAndRange)
+MetaLevel::handleSpecial(DagNode* metaHookList, MetaModule* m, int index)
+{
+  if (metaHookList->symbol() == hookListSymbol)
+    {
+      for (DagArgumentIterator i(metaHookList); i.valid(); i.next())
+	{
+	  if (!downHook(i.argument(), m, index))
+	    return false;
+	}
+      return true;
+    }
+  return downHook(metaHookList, m, index);
+}
+
+bool
+MetaLevel::downHook(DagNode* metaHook, MetaModule* m, int index)
+{
+  Symbol* mh = metaHook->symbol();
+  if (mh == idHookSymbol)
+    {
+      int purpose;
+      FreeDagNode* f = safeCast(FreeDagNode*, metaHook);
+      if (downQid(f->getArgument(0), purpose))
+	{
+	  Vector<int> items;
+	  if (downQidList(f->getArgument(1), items))
+	    {
+	      int nrItems = items.length();
+	      Vector<const char*> strings(nrItems);
+	      for (int i = 0; i < nrItems; i++)
+		strings[i] = Token::name(items[i]);
+	      m->addIdHookToPolymorph(index, purpose, items);
+	      return true;
+	    }
+	}
+    }
+  else if (mh == termHookSymbol)
+    {
+      int purpose;
+      FreeDagNode* f = safeCast(FreeDagNode*, metaHook);
+      if (downQid(f->getArgument(0), purpose))
+	{
+	  if (Term* ht = downTerm(f->getArgument(1), m))
+	    {
+	      m->addTermHookToPolymorph(index, purpose, ht);
+		return true;
+	    }
+	}
+    }
+  else
+    {
+      int purpose;
+      Symbol* op;
+      if (downOpHook(metaHook, m, purpose, op))
+	{
+	  m->addOpHookToPolymorph(index, purpose, op);
+	  return true;
+	}
+    }
+  return false;
+}
+
+bool
+MetaLevel::handleSpecial(DagNode* metaHookList,
+			 MetaModule* m,
+			 Symbol* symbol,
+			 const Vector<Sort*>& domainAndRange)
 {
   if (metaHookList->symbol() == hookListSymbol)
     {
@@ -139,9 +230,10 @@ MetaLevel::downHook(DagNode* metaHook,
   else if (mh == termHookSymbol)
     {
       int purpose;
-      if (downQid(static_cast<FreeDagNode*>(metaHook)->getArgument(0), purpose))
+      FreeDagNode* f = safeCast(FreeDagNode*, metaHook);
+      if (downQid(f->getArgument(0), purpose))
 	{
-	  if (Term* ht = downTerm(static_cast<FreeDagNode*>(metaHook)->getArgument(1), m))
+	  if (Term* ht = downTerm(f->getArgument(1), m))
 	    {
 	      if (symbol->attachTerm(Token::name(purpose), ht))
 		return true;
@@ -165,7 +257,7 @@ MetaLevel::downOpHook(DagNode* metaOpHook, MetaModule* m, int& purpose, Symbol*&
   Symbol* mo = metaOpHook->symbol();
   if (mo == opHookSymbol)
     {
-      FreeDagNode* f = static_cast<FreeDagNode*>(metaOpHook);
+      FreeDagNode* f = safeCast(FreeDagNode*, metaOpHook);
       int id;
       Vector<Sort*> domain;
       Sort* range;
@@ -208,7 +300,7 @@ MetaLevel::fixUpBubble(DagNode* metaHookList, MetaModule* m, int bubbleSpecIndex
 	    return false;
 	  const char* string = Token::name(purpose);
 	  if (strcmp(string, "qidSymbol") == 0)
-	    qidSymbol = static_cast<QuotedIdentifierSymbol*>(s);
+	    qidSymbol = safeCast(QuotedIdentifierSymbol*, s);
 	  else if (strcmp(string, "nilQidListSymbol") == 0)
 	    nilQidListSymbol = s;
 	  else if (strcmp(string, "qidListSymbol") == 0)
@@ -220,56 +312,4 @@ MetaLevel::fixUpBubble(DagNode* metaHookList, MetaModule* m, int bubbleSpecIndex
     }
   m->fixUpBubbleSpec(bubbleSpecIndex, qidSymbol, nilQidListSymbol, qidListSymbol);
   return true;
-}
-
-bool
-MetaLevel::fixUpPolymorph(DagNode* metaHookList, MetaModule* m, int polymorphIndex)
-{
-  // HACK no way to know which kind of polymorph we have
-  if (metaHookList->symbol() != hookListSymbol)
-    return false;
-  static Vector<Term*> terms(2);
-  terms[0] = 0;
-  terms[1] = 0;
-  for (DagArgumentIterator i(metaHookList); i.valid(); i.next())
-    {
-      int purpose;
-      Symbol* op;
-      DagNode* metaHook = i.argument();
-      if (metaHook->symbol() == termHookSymbol)
-	{
-	  FreeDagNode* f = safeCast(FreeDagNode*, metaHook);
-	  if (downQid(f->getArgument(0), purpose))
-	    {
-	      int index = NONE;
-	      const char* string = Token::name(purpose);
-	      if (strcmp(string, "trueTerm") == 0)
-		index = 0;
-	      else if (strcmp(string, "falseTerm") == 0)
-		index = 1;
-	      else if (strcmp(string, "equalTerm") == 0)
-		index = 0;
-	      else if (strcmp(string, "notEqualTerm") == 0)
-		index = 1;
-	      else
-		return false;  // potential memory leak
-	      if (terms[index] == 0)
-		terms[index] = downTerm(f->getArgument(1), m);
-	      else
-		return false;  // potential memory leak
-	    }
-	}
-      else if (downOpHook(metaHook, m, purpose, op) &&
-	       strcmp(Token::name(purpose), "shareWith") == 0)
-	{
-	  m->fixUpPolymorph(polymorphIndex, op);
-	  return true;
-	}
-    }
-  if (terms[0] != 0 && terms[1] != 0)
-    {
-      m->fixUpPolymorph(polymorphIndex, terms);
-      return true;
-    }
-  return false;
 }

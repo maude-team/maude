@@ -107,6 +107,25 @@ LoopSymbol::copyAttachments(Symbol* original, SymbolMap* map)
   FreeSymbol::copyAttachments(original, map);
 }
 
+void
+LoopSymbol::getDataAttachments(const Vector<Sort*>& opDeclaration,
+			       Vector<const char*>& purposes,
+			       Vector<Vector<const char*> >& data)
+{
+  APPEND_DATA(purposes, data, LoopSymbol);
+  FreeSymbol::getDataAttachments(opDeclaration, purposes, data);
+}
+
+void
+LoopSymbol::getSymbolAttachments(Vector<const char*>& purposes,
+				 Vector<Symbol*>& symbols)
+{
+  APPEND_SYMBOL(purposes, symbols, qidSymbol);
+  APPEND_SYMBOL(purposes, symbols, nilQidListSymbol);
+  APPEND_SYMBOL(purposes, symbols, qidListSymbol);
+  FreeSymbol::getSymbolAttachments(purposes, symbols);
+}
+
 DagNode*
 LoopSymbol::injectInput(DagNode* loopNode, const Vector<Token>& bubble)
 {

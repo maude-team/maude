@@ -44,7 +44,7 @@ MetaLevel::downOpDecls(DagNode* metaOpDecls, MetaModule* m)
 bool
 MetaLevel::downPolymorphTypeList(DagNode* metaTypeList,
 				 MixfixModule* m,
-				 int wanted,
+				 const NatSet& polyArgs,
 				 Vector<Sort*>& typeList)
 {
   typeList.clear();
@@ -52,32 +52,31 @@ MetaLevel::downPolymorphTypeList(DagNode* metaTypeList,
   Sort* t;
   if (mt == qidListSymbol)
     {
-      int pos = 0;
+      int pos = 1;
       for (DagArgumentIterator i(metaTypeList); i.valid(); i.next(), pos++)
 	{
-	  if (pos == wanted)
+	  if (!(polyArgs.contains(pos)))
 	    {
 	      if (!downType(i.argument(), m, t))
 		return false;
 	      typeList.append(t);
-	      wanted = NONE;
 	    }
 	  else
 	    typeList.append(0);
 	}
+      return polyArgs.max() < pos;
     }
-  else if (mt == nilQidListSymbol)
-    ;
-  else if (wanted == 0)
+  if (mt == nilQidListSymbol)
+    return polyArgs.max() <= 0;
+  if (!(polyArgs.contains(1)))
     {
       if (!downType(metaTypeList, m, t))
 	return false;
       typeList.append(t);
-      wanted = NONE;
     }
   else
     typeList.append(0);
-  return wanted == NONE;
+  return polyArgs.max() <= 1;
 }
 
 bool
@@ -94,61 +93,28 @@ MetaLevel::downOpDecl(DagNode* metaOpDecl, MetaModule* m)
 	{
 	  Token prefixName;
 	  prefixName.tokenize(name, FileTable::META_LEVEL_CREATED);
-	  if (ai.symbolType.isPolymorph())
+	  if (ai.symbolType.hasFlag(SymbolType::POLY))
 	    {
-	      switch (ai.symbolType.getBasicType())
+	      if (!downPolymorphTypeList(f->getArgument(1), m, ai.polyArgs, domainAndRange))
+		goto fail;
+	      if (ai.polyArgs.contains(0))
+		domainAndRange.append(0);
+	      else
 		{
-		case SymbolType::EQUALITY_SYMBOL:
-		  {
-		    Sort* t;
-		    if (downPolymorphTypeList(f->getArgument(1), m, NONE, domainAndRange) &&
-			domainAndRange.length() == 2 &&
-			downType(f->getArgument(2), m, t))
-		      domainAndRange.append(t);
-		    else 
-		      goto fail;
-		    break;
-		  }
-		case SymbolType::BRANCH_SYMBOL:
-		  {
-		    if (downPolymorphTypeList(f->getArgument(1), m, 0, domainAndRange) &&
-			domainAndRange.length() >= 3)
-		      domainAndRange.append(0);
-		    else 
-		      goto fail;
-		    break;
-		  }
-		case SymbolType::UP_SYMBOL:
-		  {
-		    Sort* t;
-		    if (downPolymorphTypeList(f->getArgument(1), m, NONE, domainAndRange) &&
-			domainAndRange.length() == 1 &&
-			downType(f->getArgument(2), m, t))
-		      domainAndRange.append(t);
-		    else 
-		      goto fail;
-		    break;
-		  }
-		case SymbolType::DOWN_SYMBOL:
-		  {
-		    if (downPolymorphTypeList(f->getArgument(1), m, 0, domainAndRange) &&
-			domainAndRange.length() == 2)
-		      domainAndRange.append(0);
-		    else 
-		      goto fail;
-		    break;
-		  }
-		default:
-		  CantHappen("bad basic type for polymorph");
+		  Sort* t;
+		  if (!downType(f->getArgument(2), m, t))
+		    goto fail;
+		  domainAndRange.append(t);
 		}
 	      int polymorphIndex = m->addPolymorph(prefixName,
 						   domainAndRange,
 						   ai.symbolType,
 						   ai.strategy,
+						   ai.frozen,
 						   ai.prec,
 						   ai.gather,
 						   ai.format);
-	      m->addComplexSymbol(POLYMORPH, polymorphIndex, ai.fixUpInfo);
+	      m->addComplexSymbol(POLYMORPH, polymorphIndex, ai.identity, ai.fixUpInfo, domainAndRange);
 	    }
 	  else
 	    {
@@ -166,23 +132,18 @@ MetaLevel::downOpDecl(DagNode* metaOpDecl, MetaModule* m)
 						       ai.gather,
 						       ai.format,
 						       originator);
-		  if (ai.identity != 0)
-		    {
-		      m->addComplexSymbol(IDENTITY_SYMBOL,
-					  symbol->getIndexWithinModule(),
-					  ai.identity);
-		    }
 		  if (ai.symbolType.getBasicType() == SymbolType::BUBBLE)
 		    {
 		      int bubbleSpecIndex;
 		      if (!downBubbleSpec(ai.fixUpInfo, m, symbol, bubbleSpecIndex))
 			return false;
-		      m->addComplexSymbol(BUBBLE, bubbleSpecIndex, ai.fixUpInfo);
+		      m->addComplexSymbol(BUBBLE, bubbleSpecIndex, ai.identity, ai.fixUpInfo);
 		    }
-		  else if (ai.fixUpInfo != 0 && ai.symbolType.hasAttachments())
+		  else if (ai.identity != 0 || ai.fixUpInfo != 0)
 		    {
-		      m->addComplexSymbol(SPECIAL_SYMBOL,
+		      m->addComplexSymbol(REGULAR_SYMBOL,
 					  symbol->getIndexWithinModule(),
+					  ai.identity,
 					  ai.fixUpInfo,
 					  domainAndRange);
 		    }
@@ -342,7 +303,7 @@ MetaLevel::downAttr(DagNode* metaAttr, AttributeInfo& ai)
     }
   else if (ma == formatSymbol)
     {
-      if (!downQidList(static_cast<FreeDagNode*>(metaAttr)->getArgument(0), ai.format))
+      if (!downQidList(safeCast(FreeDagNode*, metaAttr)->getArgument(0), ai.format))
 	return false;
       int formatLength = ai.format.length();
       for (int i = 0; i < formatLength; i++)
@@ -375,9 +336,19 @@ MetaLevel::downAttr(DagNode* metaAttr, AttributeInfo& ai)
       for (int i = 0; i < nrFrozenArgs; i++)
 	ai.frozen.insert(frozenList[i] - 1);  // FIX: NEED TO VALIDATE
     }
+  else if (ma == polySymbol)
+    {
+      Vector<int> polyList;
+      if (!downNatList(safeCast(FreeDagNode*, metaAttr)->getArgument(0), polyList))
+	return false;
+      ai.symbolType.setFlags(SymbolType::POLY);
+      int nrPolyArgs = polyList.length();
+      for (int i = 0; i < nrPolyArgs; i++)
+	ai.polyArgs.insert(polyList[i]);  // FIX: NEED TO VALIDATE; maybe downNatSet?
+    }
   else if (ma == specialSymbol)
     {
-      ai.fixUpInfo = static_cast<FreeDagNode*>(metaAttr)->getArgument(0);
+      ai.fixUpInfo = safeCast(FreeDagNode*, metaAttr)->getArgument(0);
       checkHookList(ai.fixUpInfo, ai.symbolType);
     }
   else
@@ -390,7 +361,7 @@ MetaLevel::downAttr(DagNode* metaAttr, AttributeInfo& ai)
 	ai.symbolType.setFlags(SymbolType::LEFT_ID | SymbolType::RIGHT_ID);
       else
 	return false;
-      ai.identity = static_cast<FreeDagNode*>(metaAttr)->getArgument(0);
+      ai.identity = safeCast(FreeDagNode*, metaAttr)->getArgument(0);
     }
   return true;
 }
@@ -414,7 +385,7 @@ MetaLevel::checkHook(DagNode* metaIdHook, SymbolType& symbolType)
   if (mi == idHookSymbol)
     {
       int id;
-      if (downQid(static_cast<FreeDagNode*>(metaIdHook)->getArgument(0), id))
+      if (downQid(safeCast(FreeDagNode*, metaIdHook)->getArgument(0), id))
 	{
 	  int t = SymbolType::specialNameToBasicType(Token::name(id));
 	  if (t != 0)

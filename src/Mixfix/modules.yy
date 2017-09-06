@@ -326,6 +326,8 @@ attribute	:	KW_ASSOC
 			idList ')'		{ CM->setFormat(bubble); }
 		|	KW_STRAT '('		{ clear(); }
 			idList ')'		{ CM->setStrat(bubble); }
+		|	KW_POLY '('		{ clear(); }
+			idList ')'		{ CM->setPoly(bubble); }
 		|	KW_MEMO
 			{
 			  CM->setFlag(SymbolType::MEMO);
@@ -516,7 +518,7 @@ attrKeyword	:	'[' | ']' | attrKeyword2
 		;
 
 attrKeyword2	:	KW_ASSOC | KW_COMM | KW_ID | KW_IDEM | KW_ITER | KW_LEFT | KW_RIGHT
-		|	KW_PREC | KW_GATHER | KW_STRAT | KW_MEMO | KW_CTOR
+		|	KW_PREC | KW_GATHER | KW_STRAT | KW_POLY | KW_MEMO | KW_CTOR
 		|	KW_LATEX | KW_SPECIAL | KW_FROZEN
 		|	KW_CONFIG | KW_OBJ | KW_DITTO | KW_FORMAT
 		|	KW_ID_HOOK | KW_OP_HOOK | KW_TERM_HOOK

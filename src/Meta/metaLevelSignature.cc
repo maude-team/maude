@@ -105,6 +105,7 @@
      MACRO(formatSymbol, FreeSymbol, 0, 1)
      MACRO(ctorSymbol, Symbol, 0, 0)
      MACRO(frozenSymbol, Symbol, 0, 1)
+     MACRO(polySymbol, Symbol, 0, 1)
      MACRO(configSymbol, Symbol, 0, 0)
      MACRO(objectSymbol, Symbol, 0, 0)
      MACRO(msgSymbol, Symbol, 0, 0)

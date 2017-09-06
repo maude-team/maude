@@ -30,8 +30,19 @@
 class BranchSymbol : public FreeSymbol
 {
 public:
-  BranchSymbol(int id, Vector<Term*>& testValues);
+  BranchSymbol(int id, int nrArgs);
   ~BranchSymbol();
+
+  bool attachData(const Vector<Sort*>& opDeclaration,
+		  const char* purpose,
+		  const Vector<const char*>& data);
+  bool attachTerm(const char* purpose, Term* term);
+  void copyAttachments(Symbol* original, SymbolMap* map);
+  void getDataAttachments(const Vector<Sort*>& opDeclaration,
+			  Vector<const char*>& purposes,
+			  Vector<Vector<const char*> >& data);
+  void getTermAttachments(Vector<const char*>& purposes,
+			  Vector<Term*>& terms);
 
   void fillInSortInfo(Term* subject);
   bool eqRewrite(DagNode* subject, RewritingContext& context);

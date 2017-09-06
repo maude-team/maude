@@ -89,6 +89,41 @@ ACU_NumberOpSymbol::copyAttachments(Symbol* original, SymbolMap* map)
   ACU_Symbol::copyAttachments(original, map);
 }
 
+void
+ACU_NumberOpSymbol::getDataAttachments(const Vector<Sort*>& opDeclaration,
+				       Vector<const char*>& purposes,
+				       Vector<Vector<const char*> >& data)
+{
+  int nrDataAttachments = purposes.length();
+  purposes.resize(nrDataAttachments + 1);
+  purposes[nrDataAttachments] = "NumberOpSymbol";
+  data.resize(nrDataAttachments + 1);
+  data[nrDataAttachments].resize(1);
+  const char*& d = data[nrDataAttachments][0];
+  switch (op)
+    {
+    CODE_CASE(d, '+', 0, "+")
+    CODE_CASE(d, '*', 0, "*")
+    CODE_CASE(d, '|', 0, "|")
+    CODE_CASE(d, '&', 0, "&")
+    CODE_CASE(d, 'x', 'o', "xor")
+    CODE_CASE(d, 'g', 'c', "gcd")
+    CODE_CASE(d, 'l', 'c', "lcm")
+    default:
+      CantHappen("bad number op");
+    }
+  ACU_Symbol::getDataAttachments(opDeclaration, purposes, data);
+}
+
+void
+ACU_NumberOpSymbol::getSymbolAttachments(Vector<const char*>& purposes,
+					 Vector<Symbol*>& symbols)
+{
+  APPEND_SYMBOL(purposes, symbols, succSymbol);
+  APPEND_SYMBOL(purposes, symbols, minusSymbol);
+  ACU_Symbol::getSymbolAttachments(purposes, symbols);
+}
+
 bool
 ACU_NumberOpSymbol::eqRewrite(DagNode* subject, RewritingContext& context)
 {

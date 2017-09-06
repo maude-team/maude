@@ -373,27 +373,52 @@ Symbol::computePossibleDomainSorts(const NatSet& rangeSorts,
 
 bool
 Symbol::attachData(const Vector<Sort*>& /* opDeclaration */,
-		   const char* /* purpose */,
+		   const char* purpose,
 		   const Vector<const char*>& /* data */)
 {
+  IssueWarning(*this <<": failed to attach id-hook " << QUOTE(purpose) <<
+	       " to " << QUOTE(this) << '.');
   return false;
 }
 
 bool
-Symbol::attachSymbol(const char* /* purpose */, Symbol* /* symbol */)
+Symbol::attachSymbol(const char* purpose, Symbol* symbol)
 {
+  IssueWarning(*this <<": failed to attach op-hook " << QUOTE(purpose) <<
+	       ' ' << QUOTE(symbol) << " to " << QUOTE(this) << '.');
   return false;
 }
 
 bool
-Symbol::attachTerm(const char* /* purpose */, Term* term)
+Symbol::attachTerm(const char* purpose, Term* term)
 {
+  IssueWarning(*this <<": failed to attach term-hook " << QUOTE(purpose) <<
+	       ' ' << QUOTE(term) << " to " << QUOTE(this) << '.');
   term->deepSelfDestruct();
   return false;
 }
 
 void
 Symbol::copyAttachments(Symbol* /* original */, SymbolMap* /* map */)
+{
+}
+
+void
+Symbol::getDataAttachments(const Vector<Sort*>& /* opDeclaration */,
+			   Vector<const char*>& /* purposes */,
+			   Vector<Vector<const char*> >& /* data */)
+{
+}
+
+void
+Symbol::getSymbolAttachments(Vector<const char*>& /* purposes */,
+			     Vector<Symbol*>& /* symbols */)
+{
+}
+
+void
+Symbol::getTermAttachments(Vector<const char*>& /* purposes */,
+			   Vector<Term*>& /* terms */)
 {
 }
 

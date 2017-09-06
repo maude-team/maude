@@ -80,6 +80,23 @@ SuccSymbol::copyAttachments(Symbol* original, SymbolMap* map)
 }
 
 void
+SuccSymbol::getDataAttachments(const Vector<Sort*>& opDeclaration,
+			       Vector<const char*>& purposes,
+			       Vector<Vector<const char*> >& data)
+{
+  APPEND_DATA(purposes, data, SuccSymbol);
+  S_Symbol::getDataAttachments(opDeclaration, purposes, data);
+}
+
+void
+SuccSymbol::getTermAttachments(Vector<const char*>& purposes,
+			       Vector<Term*>& terms)
+{
+  APPEND_TERM(purposes, terms, zeroTerm);
+  S_Symbol::getTermAttachments(purposes, terms);
+}
+
+void
 SuccSymbol::postInterSymbolPass()
 {
   PREPARE_TERM(zeroTerm);

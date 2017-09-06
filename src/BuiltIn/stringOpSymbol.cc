@@ -119,6 +119,63 @@ StringOpSymbol::copyAttachments(Symbol* original, SymbolMap* map)
 }
 
 void
+StringOpSymbol::getDataAttachments(const Vector<Sort*>& opDeclaration,
+				   Vector<const char*>& purposes,
+				   Vector<Vector<const char*> >& data)
+{
+  int nrDataAttachments = purposes.length();
+  purposes.resize(nrDataAttachments + 1);
+  purposes[nrDataAttachments] = "StringOpSymbol";
+  data.resize(nrDataAttachments + 1);
+  data[nrDataAttachments].resize(1);
+  const char*& d = data[nrDataAttachments][0];
+  switch (op)
+    {
+    CODE_CASE(d, 'f', 'l', "float")
+    CODE_CASE(d, 'l', 'e', "length")
+    CODE_CASE(d, 'a', 's', "ascii")
+    CODE_CASE(d, '+', 0, "+")
+    CODE_CASE(d, '<', 0, "<")
+    CODE_CASE(d, '<', '=', "<=")
+    CODE_CASE(d, '>', 0, ">")
+    CODE_CASE(d, '>', '=', ">=")
+    CODE_CASE(d, 'r', 'a', "rat")
+    CODE_CASE(d, 's', 'u', "substr")
+    CODE_CASE(d, 'f', 'i', "find")
+    CODE_CASE(d, 'r', 'f', "rfind")
+    CODE_CASE(d, 's', 't', "string")
+    CODE_CASE(d, 'd', 'e', "decFloat")
+    CODE_CASE(d, 'c', 'h', "char")
+    default:
+      CantHappen("bad string op");
+    }
+  FreeSymbol::getDataAttachments(opDeclaration, purposes, data);
+}
+
+void
+StringOpSymbol::getSymbolAttachments(Vector<const char*>& purposes,
+				     Vector<Symbol*>& symbols)
+{
+  APPEND_SYMBOL(purposes, symbols, stringSymbol);
+  APPEND_SYMBOL(purposes, symbols, succSymbol);
+  APPEND_SYMBOL(purposes, symbols, minusSymbol);
+  APPEND_SYMBOL(purposes, symbols, divisionSymbol);
+  APPEND_SYMBOL(purposes, symbols, floatSymbol);
+  APPEND_SYMBOL(purposes, symbols, decFloatSymbol);
+  FreeSymbol::getSymbolAttachments(purposes, symbols);
+}
+
+void
+StringOpSymbol::getTermAttachments(Vector<const char*>& purposes,
+				   Vector<Term*>& terms)
+{
+  APPEND_TERM(purposes, terms, trueTerm);
+  APPEND_TERM(purposes, terms, falseTerm);
+  APPEND_TERM(purposes, terms, notFoundTerm);
+  FreeSymbol::getTermAttachments(purposes, terms);
+}
+
+void
 StringOpSymbol::postInterSymbolPass()
 {
   PREPARE_TERM(trueTerm);

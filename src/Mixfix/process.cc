@@ -123,7 +123,6 @@ PreModule::processSorts()
   //
   //	Handle subsorts.
   //
-  int leqCode = Token::encode("<");
   int nrSubsortDecls = subsortDecls.length();
   Vector<Sort*> smaller;
   Vector<Sort*> bigger;
@@ -137,7 +136,7 @@ PreModule::processSorts()
 	  for (; j < len; j++)
 	    {
 	      Token& token = subsortDecl[j];
-	      if (bigger.length() > 0 && token.code() == leqCode)
+	      if (bigger.length() > 0 && token.code() == lessThan)
 		{
 		  ++j;
 		  WarningCheck(j < len,
@@ -188,31 +187,14 @@ PreModule::checkOpTypes()
   for (int i = 0; i < nrOpDefs; i++)
     {
       OpDef& def = opDefs[i];
-      switch (def.symbolType.getBasicType())
+      int nrTypes = def.types.length();
+      for (int j = 0; j < nrTypes; j++)
 	{
-	case SymbolType::BRANCH_SYMBOL:
-	case SymbolType::DOWN_SYMBOL:
-	  {
-	    checkType(def.types[0]);
-	    break;
-	  }
-	case SymbolType::EQUALITY_SYMBOL:
-	  {
-	    checkType(def.types[2]);
-	    break;
-	  }
-	case SymbolType::UP_SYMBOL:
-	  {
-	    checkType(def.types[1]);
-	    break;
-	  }
-	default:
-	  {
-	    int nrTypes = def.types.length();
-	    for (int j = 0; j < nrTypes; j++)
-	      checkType(def.types[j]);
-	    break;
-	  }
+	  int k = j + 1;
+	  if (k == nrTypes)
+	    k = 0;
+	  if (!(def.polyArgs.contains(k)))
+	    checkType(def.types[j]);
 	}
     }
 }
@@ -234,35 +216,13 @@ PreModule::computeOpTypes()
       OpDef& def = opDefs[i];
       int nrTypes = def.types.length();
       def.domainAndRange.expandTo(nrTypes);
-      switch (def.symbolType.getBasicType())
+      for (int j = 0; j < nrTypes; j++)
 	{
-	case SymbolType::BRANCH_SYMBOL:
-	case SymbolType::DOWN_SYMBOL:
-	  {
-	    def.domainAndRange[0] = computeType(def.types[0]);
-	    for (int j = 1; j < nrTypes; j++)
-	      def.domainAndRange[j] = 0;
-	    break;
-	  }
-	case SymbolType::EQUALITY_SYMBOL:
-	  {
-	    def.domainAndRange[0] = 0;
-	    def.domainAndRange[1] = 0;
-	    def.domainAndRange[2] = computeType(def.types[2]);
-	    break;
-	  }
-	case SymbolType::UP_SYMBOL:
-	  {
-	    def.domainAndRange[0] = 0;
-	    def.domainAndRange[1] = computeType(def.types[1]);
-	    break;
-	  }
-	default:
-	  {
-	    for (int j = 0; j < nrTypes; j++)
-	      def.domainAndRange[j] = computeType(def.types[j]);
-	    break;
-	  }
+	  int k = j + 1;
+	  if (k == nrTypes)
+	    k = 0;
+	  def.domainAndRange[j] = def.polyArgs.contains(k) ? 0 :
+	    computeType(def.types[j]);
 	}
     }
 }
@@ -308,12 +268,13 @@ PreModule::processOps()
     {
       OpDecl& opDecl = opDecls[i];
       OpDef& opDef = opDefs[opDecl.defIndex];
-      if (opDef.symbolType.isPolymorph())
+      if (opDef.symbolType.hasFlag(SymbolType::POLY))
 	{
 	  opDecl.polymorphIndex = flatModule->addPolymorph(opDecl.prefixName,
 							   opDef.domainAndRange,
 							   opDef.symbolType,
 							   opDef.strategy,
+							   opDef.frozen,
 							   opDef.prec,
 							   opDef.gather,
 							   opDef.format);

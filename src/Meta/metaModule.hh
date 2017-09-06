@@ -35,13 +35,15 @@ class MetaModule : public ImportModule, public MetaOpCache
 public:
   MetaModule(int name, ModuleType moduleType, Parent* parent);
 
-  void addComplexSymbol(int type, int index, DagNode* fixUpInfo);
+  void addComplexSymbol(int type, int index, DagNode* identity, DagNode* fixUpInfo);
   void addComplexSymbol(int type,
 			int index,
+			DagNode* identity,
 			DagNode* fixUpInfo,
 			const Vector<Sort*>& domainAndRange);
   bool removeComplexSymbol(int& type,
 			   int& index,
+			   DagNode*& identity,
 			   DagNode*& fixUpInfo,
 			   Vector<Sort*>& domainAndRange);
 
@@ -50,6 +52,7 @@ private:
   {
     int type;
     int index;
+    DagNode* identity;
     DagNode* fixUpInfo;
     Vector<Sort*> domainAndRange;
   };

@@ -86,7 +86,7 @@ QuotedIdentifierSymbol::attachData(const Vector<Sort*>& opDeclaration,
 	}
       return false;
     }
-  return Symbol::attachData(opDeclaration, purpose, data);
+  return NA_Symbol::attachData(opDeclaration, purpose, data);
 }
 
 #define COPY_SORT(original, name, mapping) \
@@ -105,7 +105,28 @@ QuotedIdentifierSymbol::copyAttachments(Symbol* original, SymbolMap* map)
   COPY_SORT(orig, variableSort, mapping);
   COPY_SORT(orig, sortSort, mapping);
   COPY_SORT(orig, kindSort, mapping);
-  Symbol::copyAttachments(original, map);
+  NA_Symbol::copyAttachments(original, map);
+}
+
+void
+QuotedIdentifierSymbol::getDataAttachments(const Vector<Sort*>& opDeclaration,
+					   Vector<const char*>& purposes,
+					   Vector<Vector<const char*> >& data)
+{
+  int nrDataAttachments = purposes.length();
+  purposes.resize(nrDataAttachments + 1);
+  purposes[nrDataAttachments] = "QuotedIdentifierSymbol";
+  data.resize(nrDataAttachments + 1);
+  Vector<const char*>& d = data[nrDataAttachments];
+  if (opDeclaration[0] == constantSort)
+    d.append("constantQid");
+  else if(opDeclaration[0] == variableSort)
+    d.append("variableQid");
+  else if(opDeclaration[0] == sortSort)
+    d.append("sortQid");
+  else if(opDeclaration[0] == kindSort)
+    d.append("kindQid");
+  NA_Symbol::getDataAttachments(opDeclaration, purposes, data);
 }
 
 Sort*

@@ -1,7 +1,15 @@
+Overview of Changes in Maude alpha83
+====================================
+* made polymorphs explicit with poly attribute
+* added many new metalevel functions
+* fixed meta-context iter bug
+* fixed object level Bubble-Exclude bug
+* show all/show module now prints specials
+
 Overview of Changes in Maude alpha82
 ====================================
 * fixed crash that occurred when printing redeclaration of sort error
-from the metalevel
+  from the metalevel
 * extended quo/rem/gcd/lcm/divides to Rats
 * made constructor coloring work corectly for iter operators
 * changed operational semantics of owise equations wrt nondefault

@@ -73,11 +73,10 @@ SatSolverSymbol::SatSolverSymbol(int id)
 
 bool
 SatSolverSymbol::attachData(const Vector<Sort*>& opDeclaration,
-			const char* purpose,
-			const Vector<const char*>& data)
+			    const char* purpose,
+			    const Vector<const char*>& data)
 {
-  if (strcmp(purpose, "SatSolverSymbol") == 0)
-    return data.length() == 0;
+  NULL_DATA(purpose, SatSolverSymbol, data);
   return  TemporalSymbol::attachData(opDeclaration, purpose, data);
 }
 
@@ -107,6 +106,33 @@ SatSolverSymbol::copyAttachments(Symbol* original, SymbolMap* map)
 
   COPY_TERM(orig, falseTerm, map);
   TemporalSymbol::copyAttachments(original, map);
+}
+
+void
+SatSolverSymbol::getDataAttachments(const Vector<Sort*>& opDeclaration,
+				       Vector<const char*>& purposes,
+				       Vector<Vector<const char*> >& data)
+{
+  APPEND_DATA(purposes, data, SatSolverSymbol);
+  TemporalSymbol::getDataAttachments(opDeclaration, purposes, data);
+}
+
+void
+SatSolverSymbol::getSymbolAttachments(Vector<const char*>& purposes,
+					 Vector<Symbol*>& symbols)
+{
+  APPEND_SYMBOL(purposes, symbols, formulaListSymbol);
+  APPEND_SYMBOL(purposes, symbols, nilFormulaListSymbol);
+  APPEND_SYMBOL(purposes, symbols, modelSymbol);
+  TemporalSymbol::getSymbolAttachments(purposes, symbols);
+}
+
+void
+SatSolverSymbol::getTermAttachments(Vector<const char*>& purposes,
+				       Vector<Term*>& terms)
+{
+  APPEND_TERM(purposes, terms, falseTerm);
+  TemporalSymbol::getTermAttachments(purposes, terms);
 }
 
 void
