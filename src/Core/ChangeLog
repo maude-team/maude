@@ -1,3 +1,7 @@
+2016-06-27  Steven Eker  <eker@install.csl.sri.com>
+
+	* pendingUnificationStack.hh (flagAsIncomplete): fixed typo
+
 2016-04-07  Steven Eker  <eker@install.csl.sri.com>
 
 	* pendingUnificationStack.cc (findCycle): added comment

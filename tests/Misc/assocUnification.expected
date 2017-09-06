@@ -1661,7 +1661,7 @@ Solution 1
 A --> #1:List #2:List
 B --> #1:List
 C --> #2:List #1:List
-Warning: Unification modulo the theory of operator __ has encoutered an
+Warning: Unification modulo the theory of operator __ has encountered an
     instance for which it may not be complete.
 
 Solution 2
@@ -75476,7 +75476,7 @@ unify in FOO : X X =? E Y b b Y E .
 No unifier.
 ==========================================
 unify in FOO : X Y =? Y X .
-Warning: Unification modulo the theory of operator __ has encoutered an
+Warning: Unification modulo the theory of operator __ has encountered an
     instance for which it may not be complete.
 
 Solution 1
@@ -75491,7 +75491,7 @@ Solution 1
 X --> #1:Foo
 Y --> #2:Foo #1:Foo #1:Foo #2:Foo
 Z --> #1:Foo #2:Foo #1:Foo
-Warning: Unification modulo the theory of operator __ has encoutered an
+Warning: Unification modulo the theory of operator __ has encountered an
     instance for which it may not be complete.
 
 Solution 2
@@ -75502,7 +75502,7 @@ Warning: Some unifiers may have been missed due to incomplete unification
     algorithm(s).
 ==========================================
 unify in FOO : X X =? Y a a Y .
-Warning: Unification modulo the theory of operator __ has encoutered an
+Warning: Unification modulo the theory of operator __ has encountered an
     instance for which it may not be complete.
 
 Solution 1
@@ -75512,7 +75512,7 @@ Warning: Some unifiers may have been missed due to incomplete unification
     algorithm(s).
 ==========================================
 unify in FOO : X Y =? Y X .
-Warning: Unification modulo the theory of operator __ has encoutered an
+Warning: Unification modulo the theory of operator __ has encountered an
     instance for which it may not be complete.
 
 Solution 1

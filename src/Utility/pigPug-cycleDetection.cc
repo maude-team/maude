@@ -194,7 +194,7 @@ PigPug::arrive(const CombinedWord& word)
 	  if (s.onLivePath && incompletenessFlag == 0)
 	    {
 	      incompletenessFlag = INCOMPLETE;
-	      Verbose("Associative unfication algorithm detected an infinite family of unifiers.");
+	      Verbose("Associative unification algorithm detected an infinite family of unifiers.");
 	    }
 	  if (stateNr == index)
 	    break;
@@ -246,7 +246,7 @@ PigPug::confirmedLive()
       if (s.onCycle && incompletenessFlag == 0)
 	{
 	  incompletenessFlag = INCOMPLETE;
-	  Verbose("Associative unfication algorithm detected an infinite family of unifiers.");
+	  Verbose("Associative unification algorithm detected an infinite family of unifiers.");
 	}
     }
 }
