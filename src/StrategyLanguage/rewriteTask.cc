@@ -65,7 +65,7 @@ RewriteTask::RewriteTask(StrategicSearch& searchObject,
 			 int fragmentNr,
 			 const Vector<StrategyExpression*>& strategies,
 			 int strategyNr,
-			 const StrategyStack& pending,
+			 StrategyStackManager::StackId pending,
 			 StrategicExecution* taskSibling,
 			 StrategicProcess* insertionPoint)
   : StrategicTask(taskSibling),
@@ -99,11 +99,14 @@ RewriteTask::RewriteTask(StrategicSearch& searchObject,
   //	called.
   //
   newContext->clone(*substitutionSoFar);
-  //StrategicSearch& searchObject,StrategicSearch& searchObject,
+  //
   //	Start a new search from the result of evaluating L, using a substrategy.
   //
   StrategyExpression* substrategy = strategies[strategyNr];
-  (void) new DecompositionProcess(newContext->root(), substrategy, getDummyExecution(), insertionPoint);
+  (void) new DecompositionProcess(newContext->root(),
+				  searchObject.push(StrategyStackManager::EMPTY_STACK, substrategy),
+				  getDummyExecution(),
+				  insertionPoint);
 }
 
 RewriteTask::~RewriteTask()

@@ -26,16 +26,13 @@
 #ifndef _decompositionProcess_hh_
 #define _decompositionProcess_hh_
 #include "strategicProcess.hh"
+#include "strategyStackManager.hh"
 
 class DecompositionProcess : public StrategicProcess
 {
 public:
   DecompositionProcess(DagNode* dag,
-		       StrategyExpression* strategy,
-		       StrategicExecution* taskSibling,
-		       StrategicProcess* other);
-  DecompositionProcess(DagNode* dag,
-		       const StrategyStack& pending,
+		       StrategyStackManager::StackId pending,
 		       StrategicExecution* taskSibling,
 		       StrategicProcess* other);
   //
@@ -45,23 +42,22 @@ public:
   DecompositionProcess(DecompositionProcess* original);
 
   Survival run(StrategicSearch& searchObject);
-  void pushStrategy(StrategyExpression* strategy);
-  const StrategyStack& getPending() const;
+  void pushStrategy(StrategyStackManager& stackManager, StrategyExpression* strategy);
+  StrategyStackManager::StackId getPending() const;
   DagNode* getDag();
-
 
 private:
   DagNode* const dag;
-  StrategyStack pending;
+  StrategyStackManager::StackId pending;
 };
 
 inline void
-DecompositionProcess::pushStrategy(StrategyExpression* strategy)
+DecompositionProcess::pushStrategy(StrategyStackManager& stackManager, StrategyExpression* strategy)
 {
-  pending.push(strategy);
+  pending = stackManager.push(pending, strategy);
 }
 
-inline const StrategicExecution::StrategyStack&
+inline StrategyStackManager::StackId
 DecompositionProcess::getPending() const
 {
   return pending;

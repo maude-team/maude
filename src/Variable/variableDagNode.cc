@@ -36,6 +36,9 @@
 #include "symbol.hh"
 #include "dagNode.hh"
 
+//      core class definitions
+#include "substitution.hh"
+
 //	variable class definitions
 #include "variableDagNode.hh"
 
@@ -66,7 +69,7 @@ VariableDagNode::markArguments()
 DagNode*
 VariableDagNode::copyEagerUptoReduced2()
 {
-  return new VariableDagNode(symbol(), id());
+  return new VariableDagNode(symbol(), id(), index);
 }
 
 void
@@ -78,7 +81,7 @@ void
 VariableDagNode::overwriteWithClone(DagNode* old)
 {
   
-  VariableDagNode* d = new(old) VariableDagNode(symbol(), id());
+  VariableDagNode* d = new(old) VariableDagNode(symbol(), id(), index);
   d->copySetRewritingFlags(this);
   d->setSortIndex(getSortIndex());
 }
@@ -86,7 +89,7 @@ VariableDagNode::overwriteWithClone(DagNode* old)
 DagNode*
 VariableDagNode::makeClone()
 {
-  VariableDagNode* d = new VariableDagNode(symbol(), id());
+  VariableDagNode* d = new VariableDagNode(symbol(), id(), index);
   d->copySetRewritingFlags(this);
   d->setSortIndex(getSortIndex());
   return d;
@@ -113,4 +116,38 @@ VariableDagNode::stackArguments(Vector<RedexPosition>& /* stack */,
 				int /* parentIndex */,
 				bool /* respectFrozen */)
 {
+}
+
+bool
+VariableDagNode::unify(DagNode* rhs,
+		       Substitution& solution,
+		       Subproblem*& returnedSubproblem,
+		       ExtensionInfo* extensionInfo)
+{
+  DagNode* b = solution.value(index);
+  if (b == 0)
+    {
+      if (equal(rhs))
+	return true;
+      DagNode* n = rhs->instantiate(solution);
+      if (n == 0)
+	n = rhs;
+      if (n->occurs(index))
+	return false;
+      solution.update(index, n);
+      return true;
+    }
+  return b->unify(rhs, solution, returnedSubproblem, extensionInfo);
+}
+
+DagNode*
+VariableDagNode::instantiate(Substitution& substitution)
+{
+  return substitution.value(index);
+}
+
+bool
+VariableDagNode::occurs(int index)
+{
+  return index == this->index;
 }

@@ -45,6 +45,9 @@
 //	core class definitions
 #include "rewritingContext.hh"
 
+//	variable class definitions
+#include "variableDagNode.hh"
+
 //	free theory class definitions
 #include "freeNet.hh"
 #include "freeSymbol.hh"
@@ -253,4 +256,73 @@ FreeDagNode::stackArguments(Vector<RedexPosition>& stack,
 	    stack.append(RedexPosition(d, parentIndex, i));
 	}
     }
+}
+
+bool
+FreeDagNode::unify(DagNode* rhs,
+		   Substitution& solution,
+		   Subproblem*& returnedSubproblem,
+		   ExtensionInfo* extensionInfo)
+{
+  if (symbol() == rhs->symbol())
+    {
+      int nrArgs = symbol()->arity();
+      if (nrArgs != 0)
+	{
+	  DagNode** args = argArray();
+	  DagNode** rhsArgs = safeCast(FreeDagNode*, rhs)->argArray();
+	  for (int i = 0; i < nrArgs; ++i)
+	    {
+	      if (!(args[i]->unify(rhsArgs[i], solution, returnedSubproblem, extensionInfo)))
+		return false;
+	    }
+	}
+      return true;
+    }
+  else
+    {
+      if (dynamic_cast<VariableDagNode*>(rhs))
+	return rhs->unify(this, solution, returnedSubproblem, extensionInfo);
+    }
+  return false;
+}
+
+DagNode*
+FreeDagNode::instantiate(Substitution& substitution)
+{
+  Symbol* s = symbol();
+  int nrArgs = s->arity();
+  DagNode** args = argArray();
+  for (int i = 0; i < nrArgs; ++i)
+    {
+      if (DagNode* n = args[i]->instantiate(substitution))
+	{
+	  FreeDagNode* d = new FreeDagNode(s);
+	  DagNode** args2 = d->argArray();
+	  for (int j = 0; j < i; ++j)
+	    args2[j] = args[j];
+	  args2[i] = n;
+	  for (++i; i < nrArgs; ++i)
+	    {
+	      DagNode* original = args[i];
+	      DagNode* n = original->instantiate(substitution);
+	      args2[i] = n ? n : original;
+	    }
+	  return d;	
+	}
+    }
+  return 0;  // unchanged
+}
+
+bool
+FreeDagNode::occurs(int index)
+{
+  int nrArgs = symbol()->arity();
+  DagNode** p = argArray();
+  for (int i = nrArgs; i > 0; i--, p++)
+    {
+      if ((*p)->occurs(index))
+	return true;
+    }
+  return false;
 }

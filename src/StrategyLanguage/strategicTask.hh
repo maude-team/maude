@@ -25,7 +25,9 @@
 //
 #ifndef _stategicTask_hh_
 #define _stategicTask_hh_
+#include <set>
 #include "strategicExecution.hh"
+#include "strategyStackManager.hh"
 
 class StrategicTask : public StrategicExecution
 {
@@ -41,16 +43,21 @@ public:
   virtual Survival executionSucceeded(DagNode* result, StrategicProcess* insertionPoint) = 0;
   virtual Survival executionsExhausted(StrategicProcess* insertionPoint) = 0;
 
+  bool alreadySeen(int dagIndex, StrategyStackManager::StackId stackId);
+
 protected:
   StrategicExecution* getDummyExecution();
 
 private:
+  typedef pair<int, StrategyStackManager::StackId> State;
+  typedef set<State> SeenSet;
   //
   //	To simplify coding, the head and tail of our list of slaves
   //	(processes and tasks working for us) is stored as a dummy
   //	execution, essentially forming a circular list.
   //
   StrategicExecution slaveList;
+  SeenSet seenSet;
 };
 
 inline StrategicExecution*

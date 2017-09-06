@@ -1,3 +1,103 @@
+2007-01-23  Steven Eker  <eker@goo.csl.sri.com>
+
+	* strategicTask.cc (alreadySeen): ugly hack to avoid a UMR in
+	purify
+
+2006-12-15  Steven Eker  <eker@goo.csl.sri.com>
+
+	* decompositionProcess.cc (run): check if we've been here before
+	on behalf of the same task
+	(run): need to call finished if we are goind to die because of
+	redundancy
+
+	* strategicExecution.hh (getOwner): added
+
+	* strategicTask.cc (alreadySeen): added
+
+	* strategicTask.hh (class StrategicTask): added typedefs State and
+	SeenSet and data member seenSet and decl for alreadySeen()
+
+2006-12-14  Steven Eker  <eker@goo.csl.sri.com>
+
+	* decompositionProcess.hh (class DecompositionProcess): deleted
+	decl for non-stack verison of DecompositionProcess()
+
+	* decompositionProcess.cc (DecompositionProcess): deleted
+	non-stack version
+
+	* strategyStackManager.cc (push): fix missing return statement bug
+
+	* rewriteTask.cc (RewriteTask): pass a StackId to
+	DecompositionProcess()
+
+	* strategicSearch.cc (StrategicSearch): pass a StackId to
+	DecompositionProcess()
+
+	* rewriteTask.cc (RewriteTask): update pending argument
+
+	* rewriteTask.hh (class RewriteTask): use StrategyStackManager for
+	pending
+
+	* matchProcess.cc (MatchProcess): update pending argument
+
+	* matchProcess.hh (class MatchProcess): use StrategyStackManager
+	for pending
+
+	* branchTask.cc (BranchTask): initialize strategyStackManager; use
+	a push() in order to call stack version of DecompositionProcess()
+	(executionsExhausted, executionSucceeded): use
+	strategyStackManager
+	(executionSucceeded): pass strategyStackManager to our ctor
+
+	* branchTask.hh (class BranchTask): added strategyStackManager
+	data member
+
+	* unionStrategy.cc (decompose): update now that we need to pass
+	strategy manager to pushStrategy()
+
+	* concatenationStrategy.cc (decompose): update now that we need to
+	pass strategy manager to pushStrategy()
+
+	* iterationStrategy.cc (decompose): update now that we need to
+	pass strategy manager to pushStrategy()
+
+	* branchStrategy.cc (decompose): pass strategyStackManager arg
+
+	* branchTask.hh (class BranchTask): update decls as pending is now
+	a StrategyStackManager::StackId
+
+	* applicationProcess.cc: rewritten using class
+	StrategyStackManager
+
+	* applicationProcess.hh (class ApplicationProcess): update decls
+	as pending is now a StrategyStackManager::StackId
+
+	* decompositionProcess.cc (run): rewritten using
+	StrategyStackManager
+
+	* strategyStackManager.hh (class StrategyStackManager): added enum
+	Constants
+
+	* strategicExecution.hh (class StrategicExecution): deleted
+	typedef StrategyStack
+
+	* decompositionProcess.hh (class DecompositionProcess): update
+	decls as pending is now a StrategyStackManager::StackId
+	(pushStrategy): rewritten
+
+	* strategicSearch.hh (class StrategicSearch): derive from StrategyStackManager
+
+	* strategyLanguage.hh: added fwd decl for class
+	StrategyStackManager
+
+2006-12-13  Steven Eker  <eker@goo.csl.sri.com>
+
+	* strategyStackManager.hh: created
+
+	* strategyStackManager.cc: created
+
+===================================Maude88d===========================================
+
 2006-11-10  Steven Eker  <eker@goo.csl.sri.com>
 
 	* strategicSearch.hh (class StrategicSearch): added data member

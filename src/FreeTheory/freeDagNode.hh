@@ -45,6 +45,13 @@ public:
   void stackArguments(Vector<RedexPosition>& stack,
 		      int parentIndex,
 		      bool respectFrozen);
+
+  bool unify(DagNode* rhs,
+	     Substitution& solution,
+	     Subproblem*& returnedSubproblem,
+	     ExtensionInfo* extensionInfo);
+  DagNode* instantiate(Substitution& substitution);
+  bool occurs(int index);
   //
   //	Fast theory specific access to argument list
   //

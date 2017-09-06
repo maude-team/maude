@@ -27,6 +27,7 @@
 #define _applicationProcess_hh_
 #include "strategicProcess.hh"
 #include "sharedRewriteSearchState.hh"
+#include "strategyStackManager.hh"
 
 class ApplicationProcess : public StrategicProcess
 {
@@ -36,7 +37,7 @@ public:
   ApplicationProcess(StrategicSearch& searchObject,
 		     DagNode* start,
 		     ApplicationStrategy* strategy,
-		     const StrategyStack& pending,
+		     StrategyStackManager::StackId pending,
 		     StrategicExecution* taskSibling,
 		     StrategicProcess* insertionPoint);
 
@@ -52,7 +53,7 @@ public:
 				       int fragmentNr,
 				       const Vector<StrategyExpression*>& strategies,
 				       int strategyNr,
-				       const StrategyStack& pending,
+				       StrategyStackManager::StackId pending,
 				       StrategicExecution* taskSibling,
 				       StrategicProcess* other);
 
@@ -65,7 +66,7 @@ private:
 			    Rule* rule);
 
   SharedRewriteSearchState::Ptr rewriteState;
-  const StrategyStack pending;
+  StrategyStackManager::StackId pending;
   ApplicationStrategy* strategy;
 };
 

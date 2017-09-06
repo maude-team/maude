@@ -140,6 +140,9 @@ public:
 			 Term*& pattern,
 			 Term*& subject,
 			 Vector<ConditionFragment*>& condition);
+  bool parseUnifyCommand(const Vector<Token>& bubble,
+			 Term*& lhs,
+			 Term*& rhs);
   bool parseStrategyCommand(const Vector<Token>& bubble,
 			    Term*& subject,
 			    StrategyExpression*& strategy);
@@ -331,7 +334,10 @@ private:
 
     STRATEGY_LIST = -39,
 
-    COMPLEX_BASE = -40
+    UNIFY_PAIR = -40,
+    UNIFY_COMMAND = -41,
+
+    COMPLEX_BASE = -42
   };
 
   enum NonTerminalType

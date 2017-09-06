@@ -36,6 +36,7 @@
   MACRO(metaXapply, 7)
   MACRO(metaMatch, 5)
   MACRO(metaXmatch, 7)
+  MACRO(metaUnify, 4)
   MACRO(metaSearch, 7)
   MACRO(metaSearchPath, 7)
   MACRO(metaSortLeq, 3)

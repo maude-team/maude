@@ -1,3 +1,9 @@
+Overview of Changes in Maude alpha88d
+=====================================
+* set trace builtin on/off command
+* state caching in strategy language
+* first suppport for unification
+
 Overview of Changes in Maude alpha88c
 =====================================
 * extra advisories in metalevel

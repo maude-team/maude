@@ -48,5 +48,6 @@ class BranchTask;
 class RewriteTask;
 
 class SharedRewriteSearchState;
+class StrategyStackManager;
 
 #endif

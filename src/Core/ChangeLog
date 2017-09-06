@@ -1,3 +1,135 @@
+2007-01-19  Steven Eker  <eker@goo.csl.sri.com>
+
+	* sortBdds.cc (SortBdds): reorganized
+
+	* sortBdds.hh (class SortBdds): delete decl for getSortBdd();
+	delete data member sortIndexBdds
+	(getSortBdd): deleted
+
+2007-01-18  Steven Eker  <eker@goo.csl.sri.com>
+
+	* sortBdds.cc (SortBdds): compute gt only using active BDD
+	variables; use makeIndexBdd()
+
+2007-01-16  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unificationProblem.cc (markReachableNodes): mark lhsDag and rhsDag
+	(findOrderSortedUnifiers): handle the convention that instantiate
+	can return 0 if nothing changed
+	(UnificationProblem): new viable convention
+	(findNextUnifier): new viable convention
+	(findOrderSortedUnifiers): return early if unifier goes to false
+
+	* unificationProblem.hh (class UnificationProblem): updated decl
+	for ctor
+	(class UnificationProblem): deleted data member module; added data
+	members lhsDag and rhsDag
+	(class UnificationProblem): deleted data member mgu
+
+	* unificationProblem.cc (UnificationProblem): no need for module argument
+
+2007-01-15  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unificationProblem.hh (class UnificationProblem): added decl for
+	findOrderSortedUnifiers()
+	(class UnificationProblem): deleted struct FreeVariable
+
+	* unificationProblem.cc (findOrderSortedUnifiers): added
+
+2007-01-10  Steven Eker  <eker@goo.csl.sri.com>
+
+	* sortBdds.cc (makeVariableBdd): added
+
+	* sortBdds.hh (class SortBdds): added decl for makeVariableBdd()
+
+2007-01-09  Steven Eker  <eker@goo.csl.sri.com>
+
+	* sortBdds.cc (SortBdds): fill out leqRelations
+
+2007-01-05  Steven Eker  <eker@goo.csl.sri.com>
+
+	* sortBdds.cc (makeIndexVector): use bddtrue constant
+	(SortBdds): fill out sortFunctions
+
+2007-01-04  Steven Eker  <eker@goo.csl.sri.com>
+
+	* sortBdds.cc (makeVariableVector): added
+
+	* sortBdds.hh (class SortBdds): added decl for makeVariableVector()
+
+	* sortTable.hh (class SortTable): added decl for virtual function
+	computeGeneralizedSort()
+
+	* sortTable.cc (computeBddVector): fix the bug that nodes
+	corresponding to last argument in sort diagrams contain sort
+	indices rather than node indices and must be handled as such
+	(computeSortFunctionBdds): fix bug that we were falling into
+	non-constant case from constant case
+
+2007-01-03  Steven Eker  <eker@goo.csl.sri.com>
+
+	* sortBdds.cc (makeIndexVector): added
+	(makeIndexBdd): added
+
+	* sortBdds.hh (class SortBdds): added decls for makeIndexVector()
+	and makeIndexBdd()
+
+	* sortTable.hh (class SortTable): adde decl for
+	computeBddVector(); added typedefs BddVector and BddTable
+
+	* sortTable.cc (computeSortFunctionBdds): implemented
+	(computeBddVector): added
+
+2007-01-02  Steven Eker  <eker@goo.csl.sri.com>
+
+	* sortTable.cc (computeSortFunctionBdds): added as stub
+
+	* sortTable.hh (class SortTable): added decl for
+	computeSortFunctionBdds()
+
+	* unificationProblem.cc (markReachableNodes): added
+
+	* unificationProblem.hh (class UnificationProblem): derive from
+	SimpleRootContainer; added decl for markReachableNodes()
+
+2006-12-22  Steven Eker  <eker@goo.csl.sri.com>
+
+	* unificationProblem.hh: created
+
+	* unificationProblem.cc: created
+
+	* sortBdds.hh (getSortFunction): added
+	(class SortBdds): added data member sortFunctions
+	(getLeqRelation): added
+	(class SortBdds): added data member leqRelations
+
+2006-12-20  Steven Eker  <eker@goo.csl.sri.com>
+
+	* sortBdds.cc (SortBdds): calculate gtRelation
+
+	* module.cc (Module): initialize sortBdds to 0
+	(~Module): delete sortBdds
+	(getSortBdds): added
+
+	* module.hh (class Module): added data member sortBdds
+	(class Module): added decl for getSortBdds()
+
+	* core.hh: added class SortBdds
+
+2006-12-19  Steven Eker  <eker@goo.csl.sri.com>
+
+	* sortBdds.cc: created
+
+	* sortBdds.hh: created
+
+2006-12-11  Steven Eker  <eker@goo.csl.sri.com>
+
+	* substitution.hh (class Substitution): added decl for update()
+
+	* substitution.cc (update): added
+
+===================================Maude88d===========================================
+
 2006-11-17  Steven Eker  <eker@goo.csl.sri.com>
 
 	* rewritingContext.hh (class RewritingContext): update decl for

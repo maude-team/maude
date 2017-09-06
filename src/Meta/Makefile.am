@@ -37,6 +37,7 @@ EXTRA_DIST = \
 	ascentFunctions.cc \
 	metaApply.cc \
 	metaMatch.cc \
+	metaUnify.cc \
 	metaSearch.cc \
 	descentSignature.cc
 

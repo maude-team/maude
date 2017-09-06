@@ -51,7 +51,7 @@ StrategicSearch::StrategicSearch(RewritingContext* initial, StrategyExpression* 
   Assert(initial->root() != 0, "null root");
   Assert(strategy != 0, "null strategy");
   nextToRun = new DecompositionProcess(initial->root(),
-				       strategy,
+				       push(EMPTY_STACK, strategy),
 				       getDummyExecution(),
 				       0);
   exhausted = false;

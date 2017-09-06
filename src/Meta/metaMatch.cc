@@ -21,7 +21,7 @@
 */
 
 //
-//	Code for metaMatch and metaXmatch descent functions.
+//	Code for metaMatch() and metaXmatch() descent functions.
 //
 
 local_inline bool
@@ -208,7 +208,7 @@ MetaLevelOpSymbol::metaXmatch(FreeDagNode* subject, RewritingContext& context)
 	    Substitution* substitution = state->getContext();
 	    Sort* sort = pattern->getLhs()->getSort();  // HACK
 	    VariableSymbol* vs = safeCast(VariableSymbol*, m->instantiateVariable(sort));
-	    DagNode* hole = new VariableDagNode(vs, 0);
+	    DagNode* hole = new VariableDagNode(vs, 0, UNDEFINED);
 	    RewriteSearchState::DagPair top = state->rebuildDag(hole);
 	    result = metaLevel->upMatchPair(*substitution,
 					    *pattern,

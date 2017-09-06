@@ -64,7 +64,7 @@ MatchProcess::MatchProcess(SharedRewriteSearchState::Ptr rewriteState,
 			   int fragmentNr,
 			   const Vector<StrategyExpression*>& strategies,
 			   int strategyNr,
-			   const StrategyStack& pending,
+			   StrategyStackManager::StackId pending,
 			   StrategicExecution* taskSibling,
 			   StrategicProcess* insertionPoint)
   : StrategicProcess(taskSibling, insertionPoint),

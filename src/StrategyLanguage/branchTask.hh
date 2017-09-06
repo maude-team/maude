@@ -28,6 +28,7 @@
 #define _branchTask_hh_
 #include "strategicTask.hh"
 #include "branchStrategy.hh"
+#include "strategyStackManager.hh"
 
 class BranchTask : public StrategicTask
 {
@@ -35,14 +36,15 @@ class BranchTask : public StrategicTask
 
 
 public:
-  BranchTask(StrategicExecution* sibling,
+  BranchTask(StrategyStackManager& strategyStackManager,
+	     StrategicExecution* sibling,
 	     DagNode* startDag,
 	     StrategyExpression* initialStrategy,
 	     BranchStrategy::Action successAction,
 	     StrategyExpression* successStrategy,
 	     BranchStrategy::Action failureAction,
 	     StrategyExpression* failureStrategy,
-	     const StrategyStack& pending,
+	     StrategyStackManager::StackId pending,
 	     StrategicProcess* insertionPoint);
   //
   //	Call-backs for interesting events.
@@ -51,13 +53,14 @@ public:
   virtual Survival executionsExhausted(StrategicProcess* insertionPoint);
 
 private:
+  StrategyStackManager& strategyStackManager;
   DagNode* const startDag;
   StrategyExpression* const initialStrategy;
   BranchStrategy::Action successAction;
   StrategyExpression* const successStrategy;
   BranchStrategy::Action failureAction;
   StrategyExpression* const failureStrategy;
-  StrategyStack pending;
+  StrategyStackManager::StackId pending;
   bool success;
 };
 

@@ -36,6 +36,7 @@
 //	strategy language class definitions
 #include "iterationStrategy.hh"
 #include "decompositionProcess.hh"
+#include "strategicSearch.hh"
 
 IterationStrategy::IterationStrategy(StrategyExpression* child, bool zeroAllowed)
   : child(child),
@@ -49,15 +50,15 @@ IterationStrategy::~IterationStrategy()
 }
 
 StrategicExecution::Survival
-IterationStrategy::decompose(StrategicSearch& /* searchObject */, DecompositionProcess* remainder)
+IterationStrategy::decompose(StrategicSearch& searchObject, DecompositionProcess* remainder)
 {
   if (star)  // + case; push * subexpression
-    remainder->pushStrategy(star);
+    remainder->pushStrategy(searchObject, star);
   else  // * case
     {
       (void) new DecompositionProcess(remainder);  // idle alternative
-      remainder->pushStrategy(this);
+      remainder->pushStrategy(searchObject, this);
     }
-  remainder->pushStrategy(child);
+  remainder->pushStrategy(searchObject, child);
   return StrategicExecution::SURVIVE;  // remainder should not request deletion
 }

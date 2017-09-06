@@ -41,10 +41,14 @@
 #include "term.hh"
 #include "extensionInfo.hh"
 
+//      core class definitions
+#include "unificationProblem.hh"
+
 //	higher class definitions
 #include "pattern.hh"
 #include "matchSearchState.hh"
 #include "rewriteSequenceSearch.hh"
+#include "unificationProblem.hh"
 
 //	object system class definitions
 #include "pseudoThread.hh"
@@ -61,11 +65,14 @@
 #include "view.hh"
 #include "visibleModule.hh"
 #include "loopSymbol.hh"
+#include "freshVariableSource.hh"
+#include "freshVariableSource.hh"
 #include "interpreter.hh"
 
 //	our stuff
 #include "execute.cc"
 #include "match.cc"
+#include "unify.cc"
 #include "search.cc"
 #include "loopMode.cc"
 #include "erewrite.cc"
@@ -83,7 +90,9 @@ Interpreter::Interpreter()
 
   savedContext = 0;
   savedMatchSearchState = 0;
+  savedUnificationProblem = 0;
   savedRewriteSequenceSearch = 0;
+  savedStrategicSearch = 0;
   savedModule = 0;
   continueFunc = 0;
 }

@@ -59,6 +59,12 @@ public:
 
   int nrFragileBindings() const;
 
+  //
+  //	Update does a bind, followed by instantiating the bindings of all
+  //	the other bound variables.
+  //
+  void update(int index, DagNode* value);
+
 private:
   static int allocateSize;
 

@@ -59,7 +59,7 @@
 ApplicationProcess::ApplicationProcess(StrategicSearch& searchObject,
 				       DagNode* start,
 				       ApplicationStrategy* strategy,
-				       const StrategyStack& pending,
+				       StrategyStackManager::StackId pending,
 				       StrategicExecution* taskSibling,
 				       StrategicProcess* insertionPoint)
 
@@ -224,7 +224,7 @@ ApplicationProcess::resolveRemainingConditionFragments(StrategicSearch& searchOb
 						       int fragmentNr,
 						       const Vector<StrategyExpression*>& strategies,
 						       int strategyNr,
-						       const StrategyStack& pending,
+						       StrategyStackManager::StackId pending,
 						       StrategicExecution* taskSibling,
 						       StrategicProcess* other)
 {
