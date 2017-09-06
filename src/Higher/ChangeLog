@@ -1,3 +1,72 @@
+2007-12-04  Steven Eker  <eker@goo.csl.sri.com>
+
+	* narrowingSequenceSearch.hh (getVariableCounter) 
+	(setVariableCounter): deleted
+	(getVariableTotalForPreviouslyReturnedStates): added
+
+	* narrowingSequenceSearch.cc (findNextMatch): do variableTotal
+	accounting
+	(NarrowingSequenceSearch): clear
+	variableTotalForPreviouslyReturnedStates and
+	variableTotalForAllReturnedStates
+
+	* narrowingSequenceSearch.hh (class NarrowingSequenceSearch):
+	deleted data member variableCounter
+
+	* narrowingSearchState.hh (getNrOfVariablesInSubject): added
+
+	* narrowingSearchState.cc (NarrowingSearchState): comment out
+	whole info loop
+
+	* narrowingSequenceSearch.hh (getStateDag): use stateStack and
+	getContext() in place of contextStack()
+
+	* narrowingSearchState.hh (getContext): added
+
+	* narrowingSequenceSearch.hh (class NarrowingSequenceSearch):
+	deleted data member context stack
+	(getContext): added Assert() to protect against empty stack
+
+	* narrowingSequenceSearch.cc (NarrowingSequenceSearch): don't use
+	contextStack
+	(NarrowingSequenceSearch): don't delete stuff from contextStack
+	(findNextNormalForm, findNextInterestingState): don't use
+	contextStack
+
+	* narrowingSearchState.hh (class NarrowingSearchState): added data
+	member context
+
+	* narrowingSearchState.cc (NarrowingSearchState): save context
+	(NarrowingSearchState): delete context
+
+	* narrowingSequenceSearch.cc (findNextInterestingState): fix bug
+	where we weren't deleting state and context afte during
+	backtracking
+
+	* narrowingSearchState.cc (findNextNarrowing): fix bug where we
+	weren't deleting a UnificationProblem after it fails to provide
+	another solution
+
+2007-12-03  Steven Eker  <eker@goo.csl.sri.com>
+
+	* narrowingSequenceSearch.hh (getFreshVariableGenerator): added
+	(class NarrowingSequenceSearch): added data member variableCounter
+	(getVariableCounter, setVariableCounter): added
+
+	* narrowingSequenceSearch.cc (findNextMatch): handle null goal
+
+2007-11-29  Steven Eker  <eker@goo.csl.sri.com>
+
+	* higher.hh: added class CacheableState
+
+	* searchState.hh (class SearchState): derive from CacheableState
+
+	* sequenceSearch.hh: derive from CacheableState
+
+	* unificationProblem.hh (class UnificationProblem): derive from CacheableState
+
+	* cacheableState.hh: created
+
 2007-11-21  Steven Eker  <eker@goo.csl.sri.com>
 
 	* narrowingSearchState.cc (findNextNarrowing): pass 0 as

@@ -1,3 +1,94 @@
+2007-12-07  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaLevel.cc (MetaLevel): need to clear variableGenerator in
+	renaming version of constructor 
+
+2007-12-05  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaUp.cc (upVariable): deleted variable mapping code
+
+	* metaNarrow.cc (metaNarrow2): correct variableBase by
+	m->getMinimumSubstitutionSize()
+
+	* metaLevel.hh (class MetaLevel): data member variableCounter
+	replaced by variableBase
+	(startVariableMapping): variableCounter replaced by variableBase
+
+	* metaUp.cc (upDagNode): do variable name mapping here based on
+	the index in the VariableDagNode
+
+2007-12-04  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaLevel.hh (startVariableMapping, stopVariableMapping): added
+
+	* metaUp.cc (upVariable): handle variable mapping
+
+	* metaLevel.cc (MetaLevel): clear variableGenerator
+
+	* metaLevel.hh (class MetaLevel): added data members
+	variableCounter and variableGenerator
+
+	* metaNarrow.cc (makeNarrowingSequenceSearch2): don't bother with
+	Bool argument or setVariableCounter()
+
+	* metaLevelSignature.cc (MACRO): added failure2Symbol
+
+	* metaLevel.hh (class MetaLevel): added decl for upFailurePair()
+
+	* metaUp.cc (upFailurePair): added
+
+	* descentSignature.cc (MACRO): added metaNarrow2
+
+	* metaLevelOpSymbol.hh (class MetaLevelOpSymbol): added decl for
+	makeNarrowingSequenceSearch2()
+
+	* metaNarrow.cc (makeNarrowingSequenceSearch): comment out dead
+	code
+	(makeNarrowingSequenceSearch2): added
+	(metaNarrow2): added
+
+2007-11-30  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaApply.cc (getCachedRewriteSearchState): use new
+	remove() semantics; changed test from < to <=
+
+	* metaMatch.cc (getCachedMatchSearchState): use new
+	remove() semantics; changed test from < to <=
+
+2007-11-29  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaNarrow.cc (getCachedNarrowingSequenceSearch): use new
+	remove() semantics; changed test from < to <=
+
+	* metaUnify.cc (getCachedUnificationProblem): use new remove()
+	semantics 
+
+	* metaOpCache.cc (remove): collapse 4 versions to a single
+	simplified version
+	(clear): make local_inline
+
+	* metaOpCache.hh (class MetaOpCache): replaced decls for insert()
+	and remove()
+
+	* metaOpCache.cc (clear): simplified
+	(insert): collapse 4 versions to a single simplified version
+
+	* metaOpCache.hh (class MetaOpCache): use CachableState* rather
+	than the various specialized classes in struct Item
+
+2007-11-27  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaUnify.cc (getCachedUnificationProblem): changed test from <
+	to <=
+
+	* metaOpCache.cc (insert): fix failure to clear unused entries bug
+	in all four versions
+
+	* metaOpCache.hh (class MetaOpCache): bumped default cache size to 40
+
+	* metaUnify.cc (metaUnify2): added DebugAdvisoryCheck() to report
+	unexpected jumps in solution number
+
 2007-11-19  Steven Eker  <eker@goo.csl.sri.com>
 
 	* metaLevelOpSymbol.hh (class MetaLevelOpSymbol): added decls for

@@ -57,6 +57,7 @@ NarrowingSearchState::NarrowingSearchState(RewritingContext* context,
 					   int minDepth,
 					   int maxDepth)
   : PositionState(context->root(), flags, minDepth, maxDepth),
+    context(context),
     freshVariableGenerator(freshVariableGenerator),    
     label(label),
     withExtension(maxDepth >= 0)
@@ -68,41 +69,22 @@ NarrowingSearchState::NarrowingSearchState(RewritingContext* context,
   int firstTargetSlot = module->getMinimumSubstitutionSize();
 
   context->root()->indexVariables(variableInfo, firstTargetSlot);
+  //cout << context->root() << " has " << variableInfo.getNrVariables() << " variables\n";
+  /*
   int nrVariables = variableInfo.getNrVariables();
   for (int i = 0; i < nrVariables; ++i)
     {
       VariableDagNode* v = variableInfo.index2Variable(i);
-      ////cout << i << '\t' << static_cast<DagNode*>(v) << '\t' << v->getIndex() << endl;
-    }
-
-  unificationProblem = 0;
-  /*
-  findNextPosition();
-
-  const Vector<Rule*>& rules = getDagNode()->symbol()->getRules();
-  Rule* rl = rules[0];
-  
-  NarrowingUnificationProblem p(rl, getDagNode(), variableInfo, freshVariableGenerator, 0);
-
-  while (p.findNextUnifier())
-    {
-      const Substitution& s = p.getSolution();
-      for (int i = 0; i < s.nrFragileBindings(); ++i)
-	{
-	  cout << i << '\t';
-	  if (s.value(i) != 0)
-	    cout << s.value(i) << endl;
-	  else
-	    cout << "unbound\n";
-	}
+      cout << i << '\t' << static_cast<DagNode*>(v) << '\t' << v->getIndex() << endl;
     }
   */
-  
+  unificationProblem = 0;
 }
 
 NarrowingSearchState::~NarrowingSearchState()
 {
   delete unificationProblem;
+  delete context;
 }
 
 bool
@@ -116,6 +98,7 @@ NarrowingSearchState::findNextNarrowing()
       //
       if (unificationProblem->findNextUnifier())
 	return true;
+      delete unificationProblem;
     }
   else
     {

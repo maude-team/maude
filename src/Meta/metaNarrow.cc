@@ -34,11 +34,21 @@ MetaLevelOpSymbol::getCachedNarrowingSequenceSearch(MetaModule* m,
 {
   if (solutionNr > 0)
     {
-      if (m->remove(subject, context, search, lastSolutionNr))
+      CacheableState* cachedState;
+      if (m->remove(subject, cachedState, lastSolutionNr))
 	{
-	  if (lastSolutionNr < solutionNr)
-	    return true;
-	  delete search;
+	  if (lastSolutionNr <= solutionNr)
+	    {
+	      search = safeCast(NarrowingSequenceSearch*, cachedState);
+	      //
+	      //	The parent context pointer of the root context in the
+	      //	NarrowingSequenceSearch is possibly stale.
+	      //
+	      safeCast(UserLevelRewritingContext*, search->getContext())->
+		beAdoptedBy(safeCast(UserLevelRewritingContext*, &context));
+	      return true;
+	    }
+	  delete cachedState;
 	}
     }
   return false;
@@ -66,9 +76,10 @@ MetaLevelOpSymbol::makeNarrowingSequenceSearch(MetaModule* m,
 					     searchType,
 					     goal,
 					     maxDepth,
-					     new FreshVariableSource(m, 0));	   
-	  g->deepSelfDestruct();
-	  s->deepSelfDestruct();
+					     new FreshVariableSource(m, 0));
+	  // not needed unless we support conditions
+	  //g->deepSelfDestruct();
+	  //s->deepSelfDestruct();
 	}
     }
   return 0;
@@ -115,6 +126,82 @@ MetaLevelOpSymbol::metaNarrow(FreeDagNode* subject, RewritingContext& context)
 					       *(state->getGoal()),
 					       m);
 	  }
+	fail:
+	  (void) m->unprotect();
+	  return context.builtInReplace(subject, result);
+	}
+    }
+  return false;
+}
+
+NarrowingSequenceSearch*
+MetaLevelOpSymbol::makeNarrowingSequenceSearch2(MetaModule* m,
+						FreeDagNode* subject,
+						RewritingContext& context) const
+{
+  RewriteSequenceSearch::SearchType searchType;
+  int maxDepth;
+  if (downSearchType(subject->getArgument(2), searchType) &&
+      metaLevel->downBound(subject->getArgument(3), maxDepth))
+    {
+      if (Term* s = metaLevel->downTerm(subject->getArgument(1), m))
+	{
+	  m->protect();
+	  RewritingContext* subjectContext = term2RewritingContext(s, context);
+	  context.addInCount(*subjectContext);
+	  return new NarrowingSequenceSearch(subjectContext,
+					     searchType,
+					     0,
+					     maxDepth,
+					     new FreshVariableSource(m, 0));
+	}
+    }
+  return 0;
+}
+
+bool
+MetaLevelOpSymbol::metaNarrow2(FreeDagNode* subject, RewritingContext& context)
+{
+  //
+  //	op metaNarrow : Module Term Qid Bound Nat ~> ResultPair? .
+  //
+  if (MetaModule* m = metaLevel->downModule(subject->getArgument(0)))
+    {
+      Int64 solutionNr;
+      if (metaLevel->downSaturate64(subject->getArgument(4), solutionNr) &&
+	  solutionNr >= 0)
+	{
+	  NarrowingSequenceSearch* state;
+	  Int64 lastSolutionNr;
+	  if (getCachedNarrowingSequenceSearch(m, subject, context, solutionNr, state, lastSolutionNr))
+	    m->protect();  // Use cached state
+	  else if ((state = makeNarrowingSequenceSearch2(m, subject, context)))
+	    lastSolutionNr = -1;
+	  else
+	    return false;
+
+	  DagNode* result;
+	  while (lastSolutionNr < solutionNr)
+	    {
+	      bool success = state->findNextMatch();
+	      //state->transferCount(context);
+	      if (!success)
+		{
+		  delete state;
+		  result = metaLevel->upFailurePair();
+		  goto fail;
+		}
+	      ++lastSolutionNr;
+	    }
+	  m->insert(subject, state, solutionNr);
+	  //
+	  //	We up the dag using variable mapping so each result gets previously unused variables.
+	  //
+	  metaLevel->startVariableMapping(state->getVariableTotalForPreviouslyReturnedStates() - m->getMinimumSubstitutionSize(),
+					  state->getFreshVariableGenerator());
+	  result = metaLevel->upResultPair(state->getStateDag(), m);
+	  metaLevel->stopVariableMapping();
+
 	fail:
 	  (void) m->unprotect();
 	  return context.builtInReplace(subject, result);

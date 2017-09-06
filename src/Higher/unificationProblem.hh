@@ -25,16 +25,20 @@
 //
 #ifndef _unificationProblem_hh_
 #define _unificationProblem_hh_
+#include "cacheableState.hh"
+#include "simpleRootContainer.hh"
 #include "variableInfo.hh"
 #include "substitution.hh"
-#include "simpleRootContainer.hh"
 
-class UnificationProblem : private SimpleRootContainer
+class UnificationProblem : public CacheableState, private SimpleRootContainer
 {
   NO_COPYING(UnificationProblem);
 
 public:
-  UnificationProblem(Vector<Term*>& lhs, Vector<Term*>& rhs, FreshVariableGenerator* freshVariableGenerator, bool withExtension = false);
+  UnificationProblem(Vector<Term*>& lhs,
+		     Vector<Term*>& rhs,
+		     FreshVariableGenerator* freshVariableGenerator,
+		     bool withExtension = false);
   ~UnificationProblem();
 
   bool problemOK() const;

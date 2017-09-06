@@ -45,7 +45,7 @@
 
 //	higher class definitions
 #include "pattern.hh"
-#include "narrowingSearchState.hh"
+//#include "narrowingSearchState.hh"
 #include "narrowingSequenceSearch.hh"
 #include "freshVariableGenerator.hh"
 
@@ -64,14 +64,18 @@ NarrowingSequenceSearch::NarrowingSequenceSearch(RewritingContext* initial,
 
   matchState = 0;
 
+  //
+  //	initialState becomes responsible for deleting initial.
+  //
   NarrowingSearchState* initialState = new NarrowingSearchState(initial, freshVariableGenerator);
   stateStack.append(initialState);
-  contextStack.append(initial);
 
   needToTryInitialState = (searchType == ANY_STEPS);
   //reachingInitialStateOK = (searchType == AT_LEAST_ONE_STEP || searchType == ONE_STEP);
   normalFormNeeded = (searchType == NORMAL_FORM);
   topOfStackFresh = true;
+  variableTotalForPreviouslyReturnedStates = 0;
+  variableTotalForAllReturnedStates = 0;
 }
 
 NarrowingSequenceSearch::~NarrowingSequenceSearch()
@@ -79,15 +83,8 @@ NarrowingSequenceSearch::~NarrowingSequenceSearch()
   delete matchState;
   delete goal;
   delete freshVariableGenerator;
-  //
-  //	initial get deleted as the 0th element in contextStack.
-  //
-  int nrPendingStates = stateStack.size();
-  for (int i = 0; i < nrPendingStates; ++i)
-    {
-      delete stateStack[i];
-      delete contextStack[i];
-    }
+  FOR_EACH_CONST(i, Vector<NarrowingSearchState*>, stateStack)
+    delete *i;
 }
 
 bool
@@ -100,20 +97,32 @@ NarrowingSequenceSearch::findNextMatch()
     {
       if (!(normalFormNeeded ? findNextNormalForm() : findNextInterestingState()))
 	break;
-      {
-	matchState = new MatchSearchState(initial->makeSubcontext(getStateDag()),
-					  goal,
-					  MatchSearchState::GC_CONTEXT);
-      }
+      if (goal == 0)
+	{
+	  //
+	  //	No pattern case: we do some extra accounting needed by metalevel.
+	  //
+	  variableTotalForPreviouslyReturnedStates = variableTotalForAllReturnedStates;
+	  variableTotalForAllReturnedStates += stateStack[stateStack.size() - 1]->getNrOfVariablesInSubject();
+	  /*
+	  cout << variableTotalForPreviouslyReturnedStates << '\n' <<
+	    variableTotalForAllReturnedStates << '\n' <<
+	    stateStack[stateStack.size() - 1]->getNrOfVariablesInSubject() << '\n';
+	  */
+	  return true;  // no pattern case
+	}
+      matchState = new MatchSearchState(initial->makeSubcontext(getStateDag()),  // CHECK: could we just use existing context?
+					goal,
+					MatchSearchState::GC_CONTEXT);
     tryMatch:
       bool foundMatch = matchState->findNextMatch();
       //matchState->transferCount(*(getContext()));
       if (foundMatch)
 	return true;
       delete matchState;
+      matchState = 0;
     }
 
-  matchState = 0;
   return false;
 }
 
@@ -130,9 +139,7 @@ NarrowingSequenceSearch::findNextNormalForm()
       //	Backtrack.
       //
       delete stateStack[currentIndex];
-      delete contextStack[currentIndex];
       stateStack.resize(currentIndex);
-      contextStack.resize(currentIndex);
       --currentIndex;
       if (currentIndex < 0)
 	return false;
@@ -158,7 +165,6 @@ NarrowingSequenceSearch::findNextNormalForm()
       seenSet.insert(newContext->root());
       currentState = new NarrowingSearchState(newContext, freshVariableGenerator);
       stateStack.append(currentState);
-      contextStack.append(newContext);
       ++currentIndex;
       topOfStackFresh = true;
     }
@@ -200,12 +206,14 @@ NarrowingSequenceSearch::findNextInterestingState()
 	    }
 	  seenSet.insert(newContext->root());
 	  stateStack.append(new NarrowingSearchState(newContext, freshVariableGenerator));
-	  contextStack.append(newContext);
 	  return true;
 	}
+      //
+      //	Backtrack.
+      //
+      delete stateStack[currentIndex];
       stateStack.resize(currentIndex);
-      contextStack.resize(currentIndex);
-      --currentIndex;
+       --currentIndex;
     }
   return false;
 }
