@@ -62,6 +62,7 @@ public:
   void tokenize(const char* tokenString, int lineNumber);
   void tokenize(int code, int lineNumber);
   void fixUp(const char* tokenString, int& lineNumber);
+  void dropChar(const Token& original);
 
   void makePrefixName(const Vector<Token>& opBubble);
   const char* name() const;

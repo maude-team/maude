@@ -997,14 +997,85 @@ MixfixModule::getTermAttachments(Symbol* symbol,
 
 void
 MixfixModule::fixUpBubbleSpec(int bubbleSpecIndex,
-			      QuotedIdentifierSymbol *qidSymbol,
+			      Symbol* qidSymbol,
 			      Symbol* nilQidListSymbol,
 			      Symbol* qidListSymbol)
 {
   BubbleSpec& b =  bubbleSpecs[bubbleSpecIndex];
-  b.qidSymbol = qidSymbol;
   b.nilQidListSymbol = nilQidListSymbol;
   b.qidListSymbol = qidListSymbol;
+  //
+  //	Check that needed symbols exist and have the right properties/arities/sorts.
+  //
+  if (qidSymbol == 0)
+    {
+      IssueWarning(*(b.topSymbol) << ": qidSymbol hook needed for bubble.");
+      markAsBad();
+      return;
+    }
+  b.qidSymbol = dynamic_cast<QuotedIdentifierSymbol*>(qidSymbol);
+  if (b.qidSymbol == 0)
+    {
+      IssueWarning(*(b.topSymbol) << ": inappropriate symbol " << QUOTE(qidSymbol) <<
+		   " for qidSymbol hook.");
+      markAsBad();
+      return;
+    }
+  if (b.lowerBound < 1)
+    {
+      if (nilQidListSymbol == 0)
+	{
+	  IssueWarning(*(b.topSymbol) << ": nilQidListSymbol hook needed for bubble.");
+	  markAsBad();
+	}
+      else
+	{
+	  if (nilQidListSymbol->arity() != 0 ||  // not perfect - might be special symbol
+	      nilQidListSymbol->rangeComponent() != qidSymbol->rangeComponent())
+	    {
+	      IssueWarning(*(b.topSymbol) << ": inappropriate symbol " << QUOTE(nilQidListSymbol) <<
+			   " for nilQidListSymbol hook.");
+	      markAsBad();
+	    }
+	}
+    }
+  if (b.upperBound > 1)
+    {
+      if (qidListSymbol == 0)
+	{
+	  IssueWarning(*(b.topSymbol) << ": qidListSymbol hook needed for bubble.");
+	  markAsBad();
+	  return;
+	}
+      if (getSymbolType(qidListSymbol).hasFlag(SymbolType::ASSOC))
+	{
+	  if (qidListSymbol->rangeComponent() == qidSymbol->rangeComponent())
+	    return;  // OK
+	}
+      else
+	{
+	  int nrArgs = qidListSymbol->arity();
+	  if (b.upperBound == nrArgs &&
+	      (b.upperBound == b.lowerBound ||
+	       (b.upperBound == 2 && qidListSymbol->rangeComponent() == qidSymbol->rangeComponent())))
+	    {
+	      for (int i = 0; i < nrArgs; i++)
+		{
+		  if (qidListSymbol->domainComponent(i) != qidSymbol->rangeComponent())
+		    {
+		      IssueWarning(*(b.topSymbol) << ": bad domain kind in symbol " <<
+				   QUOTE(qidListSymbol) << " for qidListSymbol hook.");
+		      markAsBad();
+		      return;
+		    }
+		}
+	      return;  // OK
+	    }
+	}
+      IssueWarning(*(b.topSymbol) << ": inappropriate symbol " << QUOTE(qidListSymbol) <<
+		   " for qidListSymbol hook.");
+      markAsBad();
+    }
 }
 
 int

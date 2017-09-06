@@ -23,10 +23,26 @@
 /*
  *	Module expressions.
  */
-moduleExpr	:	token
+moduleExprDot	:	moduleExpr2 '.'
+		|	moduleExpr '+' moduleExprDot
 			{
-			  moduleExpressions.push(new ModuleExpression($1));
+			  ModuleExpression* m1 = moduleExpressions.top();
+			  moduleExpressions.pop();
+			  ModuleExpression* m2 = moduleExpressions.top();
+			  moduleExpressions.pop();
+			  moduleExpressions.push(new ModuleExpression(m1, m2));
 			}
+		|	ENDS_IN_DOT
+			{
+			  IssueWarning(LineNumber($1.lineNumber()) <<
+                                       ": missing space before period.");
+			  Token t;
+			  t.dropChar($1);
+			  moduleExpressions.push(new ModuleExpression(t));
+			}
+		;
+
+moduleExpr	:	moduleExpr2
 		|	moduleExpr '+' moduleExpr
 			{
 			  ModuleExpression* m1 = moduleExpressions.top();
@@ -35,16 +51,25 @@ moduleExpr	:	token
 			  moduleExpressions.pop();
 			  moduleExpressions.push(new ModuleExpression(m1, m2));
 			}
-		|	moduleExpr '*' renaming
+		;
+
+moduleExpr2	:	'(' moduleExpr ')' {}
+		|	moduleExpr2 '*' renaming
 			{
 			  ModuleExpression* m = moduleExpressions.top();
 			  moduleExpressions.pop();
 			  moduleExpressions.push(new ModuleExpression(m, currentRenaming));
 			  currentRenaming = 0;
 			}
-		|	'(' moduleExpr ')' {}
+		|	token
+			{
+			  moduleExpressions.push(new ModuleExpression($1));
+			}
 		;
 
+/*
+ *	Renamings.
+ */
 renaming	:	'('
 			{
 			  currentRenaming = new Renaming;
@@ -56,11 +81,11 @@ mappingList	:	mappingList ',' mapping
 		|	mapping
 		;
 
-mapping		:	KW_SORT token KW_TO token
+mapping		:	KW_SORT sortToken KW_TO sortToken
 			{
 			  currentRenaming->addSortMapping($2, $4);
 			}
-		|	KW_LABEL identifier KW_TO identifier
+		|	KW_LABEL token KW_TO token
 			{
 			  currentRenaming->addLabelMapping($2, $4);
 			}
@@ -68,9 +93,15 @@ mapping		:	KW_SORT token KW_TO token
 		;
 
 fromOpName	:	token			{ clear(); store($1); }
-			tokensBarColonTo	{ currentRenaming->addOpMapping(bubble); }
+			tokensBarColonTo
+			{
+			  currentRenaming->addOpMapping(bubble);
+			}
 		|	'(' 			{ clear(); }
-			tokens ')'		{ currentRenaming->addOpMapping(bubble); }
+			tokens ')'
+			{
+			  currentRenaming->addOpMapping(bubble);
+			}
 		;
 
 fromSpec	:	':' fromTypeList arrow fromType {}
@@ -101,8 +132,8 @@ toOpName	:	token			{ clear(); store($1); }
 		;
 
 toAttributes	:	'[' toAttributeList ']'	{}
-			|
-			;
+		|
+		;
 
 toAttributeList	:	toAttributeList toAttribute
 		|	toAttribute
@@ -120,93 +151,66 @@ toAttribute	:	KW_PREC IDENTIFIER	{ currentRenaming->setPrec($2); }
 /*
  *	Modules.
  */
-module		:	KW_FMOD			{ lexerIdMode(); }
+module		:	startModule		{ lexerIdMode(); }
 			token KW_IS
 			{
-			  interpreter.
-			    setCurrentModule(new PreModule($3, MixfixModule::FUNCTIONAL_MODULE));
+			  interpreter.setCurrentModule(new PreModule($1, $3));
 			  fileTable.beginModule($1, $3);
 			}
-			fDecList endfm
+			decList KW_ENDM
 			{
 			  lexerInitialMode();
 			  fileTable.endModule(lineNumber);
-			  CM->finishModule();
-			}
-		|	KW_MOD			{ lexerIdMode(); }
-			token KW_IS
-			{
-			  interpreter.
-			    setCurrentModule(new PreModule($3, MixfixModule::SYSTEM_MODULE));
-			  fileTable.beginModule($1, $3);
-			}
-			decList endm
-			{
-			  lexerInitialMode();
-			  fileTable.endModule(lineNumber);
-			  CM->finishModule();
-			}
-		|	KW_OMOD			{ lexerIdMode(); }
-			token KW_IS
-			{
-			  interpreter.
-			    setCurrentModule(new PreModule($3, MixfixModule::SYSTEM_MODULE));
-			  fileTable.beginModule($1, $3);
-			}
-			oDecList endom
-			{
-			  lexerInitialMode();
-			  fileTable.endModule(lineNumber);
-			  CM->finishModule();
+			  CM->finishModule($7);
 			}
 		;
 
-endfm		:	KW_ENDFM	{}
-		|	notEndfm
+dot		:	'.' {}
+		|	ENDS_IN_DOT
 			{
-			  IssueWarning(LineNumber(lineNumber) <<
-			               ": fmod ended by " << $1 << '.');
+			  IssueWarning(LineNumber($1.lineNumber()) <<
+                                       ": missing space before period.");
+			  Token t;
+			  t.dropChar($1);
+			  store(t);
 			}
 		;
 
-notEndfm	:	KW_ENDM | KW_ENDOM
-		;
-
-endm		:	KW_ENDM	{}
-		|	notEndm
+badType		:	ENDS_IN_DOT
 			{
-			  IssueWarning(LineNumber(lineNumber) <<
-			               ": mod ended by " << $1 << '.');
+			  IssueWarning(LineNumber($1.lineNumber()) <<
+                                       ": missing space before period.");
+			  Token t;
+			  t.dropChar($1);
+			  clear();
+			  store(t);
+			  CM->addType(false, bubble);
 			}
 		;
 
-notEndm		:	KW_ENDFM | KW_ENDOM
+typeDot		:	type '.'
+		|	badType
 		;
 
-endom		:	KW_ENDOM	{}
-		|	notEndom
+endStatement	:	endTokens dot
+		|	ENDS_IN_DOT
 			{
-			  IssueWarning(LineNumber(lineNumber) <<
-			               ": omod ended by " << $1 << '.');
+			  IssueWarning(LineNumber($1.lineNumber()) <<
+                                       ": missing space before period.");
+			  Token t;
+			  t.dropChar($1);
+			  store(t);
 			}
 		;
 
-notEndom	:	KW_ENDFM | KW_ENDM
-		;
-
-fDecList	:	fDecList fDeclaration
-		|
+startModule	:	KW_MOD | KW_OMOD
 		;
 
 decList		:	decList declaration
 		|
 		;
 
-oDecList	:	oDecList oDeclaration
-		|
-		;
-
-fDeclaration	:	KW_IMPORT moduleExpr '.'
+declaration	:	KW_IMPORT moduleExprDot
 			{
 			  ModuleExpression* me = moduleExpressions.top();
 			  moduleExpressions.pop();
@@ -214,35 +218,63 @@ fDeclaration	:	KW_IMPORT moduleExpr '.'
 			}
 
 		|	KW_SORT			{ clear(); }
-			listBarDot '.'		{ CM->addSortDecl(bubble); }
+			sortTokenList dot	{ CM->addSortDecl(bubble); }
 
-		|	KW_SUBSORT token	{ clear(); store($2); }
-			listBarLt '<'		{ store($5); }
-			listBarDot '.'		{ CM->addSubsortDecl(bubble); }
+		|	KW_SUBSORT		{ clear(); }
+			subsortList dot		{ CM->addSubsortDecl(bubble); }
 
 		|	KW_OP opName domainRangeAttr {}
 
 		|	KW_OPS opNameList domainRangeAttr {}
 
-		|	KW_VAR varNameList ':' type '.' {}
+		|	KW_VAR varNameList ':' typeDot {}
 
 		|	KW_MB			{ clear(); store($1); }
 			tokensBarColon ':'	{ store($4); }
-			endTokens '.'		{ CM->addStatement(bubble); }
+			endStatement		{ CM->addStatement(bubble); }
 
 		|	KW_CMB			{ clear(); store($1); }
 			tokensBarColon ':'	{ store($4); }
 			tokensBarIf KW_IF	{ store($7); }
-			endTokens '.'		{ CM->addStatement(bubble); }
+			endStatement		{ CM->addStatement(bubble); }
 
 		|	KW_EQ			{ clear(); store($1); }
 			tokensBarEqual '='	{ store($4); }
-			endTokens '.'		{ CM->addStatement(bubble); }
+			endStatement		{ CM->addStatement(bubble); }
 
 		|	KW_CEQ			{ clear(); store($1); }
 			tokensBarEqual '='	{ store($4); }
 			tokensBarIf KW_IF		{ store($7); }
-			endTokens '.'		{ CM->addStatement(bubble); }
+			endStatement		{ CM->addStatement(bubble); }
+
+		|	KW_RL			{ clear(); store($1); }
+			tokensBarArrow2 KW_ARROW2  { store($4); }
+			endStatement		{ CM->addStatement(bubble); }
+
+		|	KW_CRL			{ clear(); store($1); }
+			tokensBarArrow2 KW_ARROW2	{ store($4); }
+			tokensBarIf KW_IF		{ store($7); }
+			endStatement		{ CM->addStatement(bubble); }
+
+		|	KW_MSG opName domainRangeAttr
+			{
+			  CM->setFlag(SymbolType::MESSAGE);
+			}
+
+		|	KW_MSGS opNameList domainRangeAttr
+			{
+			  CM->setFlag(SymbolType::MESSAGE);
+			}
+
+		|	KW_CLASS token
+			{
+			}
+			classDef '.'
+			{
+			}
+
+		|	KW_SUBCLASS		{ clear(); }
+			subsortList dot		{ CM->addSubsortDecl(bubble); }
 
 		|	error '.'
 		        {
@@ -253,37 +285,6 @@ fDeclaration	:	KW_IMPORT moduleExpr '.'
 			  cleanUpModuleExpression();
 			  CM->makeOpDeclsConsistent();
 			}
-		;
-
-declaration	:	fDeclaration
-		|	KW_RL			{ clear(); store($1); }
-			tokensBarArrow2 KW_ARROW2  { store($4); }
-			endTokens '.'		{ CM->addStatement(bubble); }
-
-		|	KW_CRL			{ clear(); store($1); }
-			tokensBarArrow2 KW_ARROW2	{ store($4); }
-			tokensBarIf KW_IF		{ store($7); }
-			endTokens '.'		{ CM->addStatement(bubble); }
-		;
-
-oDeclaration	:	declaration
-		|	KW_MSG opName domainRangeAttr
-			{
-			  CM->setFlag(SymbolType::MESSAGE);
-			}
-		|	KW_MSGS opNameList domainRangeAttr
-			{
-			  CM->setFlag(SymbolType::MESSAGE);
-			}
-		|	KW_CLASS token
-			{
-			}
-			classDef '.'
-			{
-			}
-		|	KW_SUBCLASS token	{ clear(); store($2); }
-			listBarLt '<'		{ store($5); }
-			listBarDot '.'		{ CM->addSubsortDecl(bubble); }
 		;
 
 classDef	:	'|' {}
@@ -323,11 +324,15 @@ simpleOpName	:	tokenBarColon
 			tokens ')'		{ CM->addOpDecl(bubble); }
 		;
 
-domainRangeAttr	:	':' typeList arrow type attributes '.'
+domainRangeAttr	:	':' typeList arrow typeAttr
 			{
 			  if ($3)
 			    CM->convertSortsToKinds();
 			}
+		;
+
+typeAttr	:	type attributes '.'
+		|	badType
 		;
 
 arrow		:	KW_ARROW      		{ $$ = false; }
@@ -341,7 +346,7 @@ typeList	:	typeList type
 type		:	sortToken
 			{
 			  clear();
-			  bubble.append($1);
+			  store($1);
 			  CM->addType(false, bubble);
 			}
 		|	'['			{ clear(); }
@@ -471,14 +476,16 @@ hook		:	KW_ID_HOOK token
 		;
 
 /*
- *	Token lists.
+ *	Sort and subsort lists.
  */
-listBarLt	:	listBarLt tokenBarLt	{ store($2); }
+sortTokenList	:	sortTokenList sortToken	{ store($2); }
 		|
 		;
 
-listBarDot	:	listBarDot tokenBarDot	{ store($2); }
-		|
+subsortList	:	subsortList sortToken	{ store($2); }
+		|	subsortList '<'		{ store($2); }
+		|	sortToken		{ store($1); }
+			sortTokenList '<'	{ store($4); }
 		;
 
 /*
@@ -527,8 +534,8 @@ tokensBarIf	:	tokensBarIf '('		{ store($2); }
 		;
 
 endTokens	:	noTrailingDot
-		|	endTokens '.'		{ store($2); }
-		|	'.'			{ store($1); }
+		|	endTokens endsInDot	{ store($2); }
+		|	endsInDot		{ store($1); }
 		;
 
 noTrailingDot	:	'('			{ store($1); }
@@ -558,43 +565,51 @@ identityChunk	:	identifier | startKeyword2 | midKeyword | '.'
 token		:	identifier | startKeyword | midKeyword | attrKeyword | '.'
 		;
 
-tokenBarDot	:	identifier | startKeyword | midKeyword | attrKeyword
+tokenBarDot	:	IDENTIFIER | ',' | '|' | KW_LABEL | KW_TO | '+' | '*'
+		|	startKeyword | midKeyword | attrKeyword
 		;
 
-endToken	:	identifier | midKeyword | attrKeyword
+endToken	:	IDENTIFIER | ',' | '|' | KW_LABEL | KW_TO | '+' | '*'
+		|	midKeyword | attrKeyword
 		;
 
 tokenBarArrow2	:	identifier | startKeyword | attrKeyword | '.'
 		|	'<' | ':' | KW_ARROW | KW_PARTIAL | '=' | KW_IF | KW_IS
 		;
+
 tokenBarEqual	:	identifier | startKeyword | attrKeyword | '.'
 		|	'<' | ':' | KW_ARROW | KW_PARTIAL | KW_ARROW2 | KW_IF | KW_IS
 		;
+
 tokenBarIf	:	identifier | startKeyword | attrKeyword | '.'
 		|	'<' | ':' | KW_ARROW | KW_PARTIAL | '=' | KW_ARROW2 | KW_IS
 		;
+
 tokenBarColon	:	identifier | startKeyword | attrKeyword | '.'
 		|	'<' | KW_ARROW | KW_PARTIAL | '=' | KW_ARROW2 | KW_IF | KW_IS
 		;
-tokenBarLt	:	identifier | startKeyword | attrKeyword | '.'
-		|	':' | KW_ARROW | KW_PARTIAL | '=' | KW_ARROW2 | KW_IF | KW_IS
-		;
-tokenBarColonTo	:	IDENTIFIER | ',' | '|' | KW_LABEL | '+' | '*'
+
+tokenBarColonTo	:	IDENTIFIER | ENDS_IN_DOT | ',' | '|' | KW_LABEL | '+' | '*'
 		|	startKeyword | attrKeyword | '.'
 		|	'<' | KW_ARROW | KW_PARTIAL | '=' | KW_ARROW2 | KW_IF | KW_IS
 		;
-tokenBarCommaLeft	:	IDENTIFIER | '|' | KW_LABEL | KW_TO | '+' | '*'
+
+tokenBarCommaLeft	:	IDENTIFIER | ENDS_IN_DOT | '|' | KW_LABEL | KW_TO | '+' | '*'
 			|	startKeyword | attrKeyword2 | '.' | ']' | midKeyword
 			;
 
-sortToken	:	identifier | startKeyword | attrKeyword2 | '='
-		|	KW_ARROW2 | KW_IF | KW_IS
+sortToken	:	IDENTIFIER | startKeyword | attrKeyword2
+		|	'=' | '|' | '+' | '*'
+		|	KW_ARROW2 | KW_IF | KW_IS | KW_LABEL | KW_TO
+		;
+
+endsInDot	:	'.' | ENDS_IN_DOT
 		;
 
 /*
  *	Keywords (in id mode).
  */
-identifier	:	IDENTIFIER | ',' | '|' | KW_LABEL | KW_TO | '+' | '*'
+identifier	:	IDENTIFIER | ENDS_IN_DOT | ',' | '|' | KW_LABEL | KW_TO | '+' | '*'
 		;
 
 startKeyword	:	KW_MSG | startKeyword2
@@ -602,8 +617,7 @@ startKeyword	:	KW_MSG | startKeyword2
 
 startKeyword2	:	KW_IMPORT | KW_SORT | KW_SUBSORT | KW_OP | KW_OPS | KW_VAR
 		|	KW_MSGS | KW_CLASS | KW_SUBCLASS
-		|	KW_MB | KW_CMB | KW_EQ | KW_CEQ | KW_RL | KW_CRL
-		|	KW_ENDFM | KW_ENDM | KW_ENDOM
+		|	KW_MB | KW_CMB | KW_EQ | KW_CEQ | KW_RL | KW_CRL | KW_ENDM
 		;
 
 midKeyword	:	'<' | ':' | KW_ARROW | KW_PARTIAL | '=' | KW_ARROW2 | KW_IF | KW_IS

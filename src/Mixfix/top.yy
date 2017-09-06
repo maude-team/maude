@@ -91,7 +91,7 @@ void cleanUpParser();
   Int64 yyInt64;
   const char* yyString;
   Token yyToken;
-  ModuleDatabase::ImportMode yyImportMode;
+  ImportModule::ImportMode yyImportMode;
 }
 
 %{
@@ -102,7 +102,7 @@ int yylex(YYSTYPE* lvalp);
 /*
  *	Inert keywords: these are only recognized by lexer when in initial mode.
  */
-%token <yyToken> KW_FMOD KW_MOD KW_OMOD
+%token <yyToken> KW_MOD KW_OMOD
 %token KW_PARSE KW_NORMALIZE KW_REDUCE KW_REWRITE
 %token KW_LOOP KW_NARROW KW_MATCH KW_XMATCH KW_UNIFY KW_XUNIFY
 %token KW_EREWRITE KW_FREWRITE KW_OREWRITE
@@ -125,8 +125,8 @@ int yylex(YYSTYPE* lvalp);
 /*
  *	Start keywords: signal end of mixfix statement if following '.'.
  */
-%token <yyToken> KW_ENDFM KW_ENDM KW_ENDOM
-%token <yyToken> KW_IMPORT KW_SORT KW_SUBSORT KW_OP KW_OPS KW_MSGS KW_VAR KW_CLASS KW_SUBCLASS
+%token <yyToken> KW_ENDM KW_IMPORT
+%token <yyToken> KW_SORT KW_SUBSORT KW_OP KW_OPS KW_MSGS KW_VAR KW_CLASS KW_SUBCLASS
 %token <yyToken> KW_MB KW_CMB KW_EQ KW_CEQ KW_RL KW_CRL
 
 /*
@@ -160,22 +160,21 @@ int yylex(YYSTYPE* lvalp);
 /*
  *	Special tokens.
  */
-%token <yyToken> IDENTIFIER NUMERIC_ID
+%token <yyToken> IDENTIFIER NUMERIC_ID ENDS_IN_DOT
 
 /*
  *	Nonterminals that return tokens.
  */
 %type <yyToken> identifier startKeyword startKeyword2 midKeyword attrKeyword attrKeyword2
-%type <yyToken> token endToken
-%type <yyToken> tokenBarLt tokenBarColon tokenBarEqual tokenBarIf tokenBarArrow2
+%type <yyToken> token endToken endsInDot
+%type <yyToken> tokenBarColon tokenBarEqual tokenBarIf tokenBarArrow2
 %type <yyToken> tokenBarColonTo tokenBarCommaLeft
 %type <yyToken> identityChunk tokenBarDot
 %type <yyToken> cToken cTokenBarDot cTokenBarDotColon cTokenBarIn
 %type <yyToken> cTokenBarLeftIn cTokenBarDotNumber cTokenBarDotRight
 %type <yyToken> cSimpleTokenBarDot
 %type <yyToken> cTokenBarDotCommaRight
-%type <yyToken> sortToken
-%type <yyToken> notEndfm notEndm notEndom
+%type <yyToken> sortToken startModule
 
 /*
  *	Nonterminals that return bool.

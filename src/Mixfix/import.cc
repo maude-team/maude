@@ -27,27 +27,48 @@
 void
 PreModule::processImports()
 {
+  //
+  //	Automatic imports.
+  //
   FOR_EACH_CONST(i, ModuleDatabase::ImportMap, autoImports)
     {
       if (ImportModule* fm = getModule(i->first, *this))
-	flatModule->addImport(fm);
-    }
-
+	flatModule->addImport(fm, i->second, *this);
+   }
+  //
+  //	Explicit imports.
+  //
   int nrImports = imports.length();
   for (int i = 0; i < nrImports; i++)
     {
       Import import = imports[i];
-      WarningCheck(import.mode.code() != Token::encode("us") &&
-		   import.mode.code() != Token::encode("using"), 
-		   LineNumber(import.mode.lineNumber()) <<
-		   ": importation mode " << QUOTE("using") <<
-		   " not supported - treating it like " <<
-		   QUOTE("including") << '.');
-
       if (ImportModule* fm = makeModule(import.expr))
-	flatModule->addImport(fm);
+	{
+	  Import import = imports[i];
+	  ImportModule::ImportMode mode;
+	  int code = import.mode.code();
+	  LineNumber lineNumber(import.mode.lineNumber());
+	  if (code == Token::encode("pr") || code == Token::encode("protecting"))
+	    mode = ImportModule::PROTECTING;
+	  else if (code == Token::encode("ex") || code == Token::encode("extending"))
+	    mode = ImportModule::EXTENDING;
+	  else if (code == Token::encode("inc") || code == Token::encode("including"))
+	    mode = ImportModule::INCLUDING;
+	  else if (code == Token::encode("us") || code == Token::encode("using"))
+	    {
+	      IssueWarning(lineNumber <<
+			   ": importation mode " << QUOTE("using") <<
+			   " not supported - treating it like " <<
+			   QUOTE("including") << '.');
+	      mode = ImportModule::INCLUDING;
+	    }
+	  flatModule->addImport(fm, mode, lineNumber);
+	}
     }
-  interpreter.destructUnusedModules();  // house keeping
+  //
+  //	House keeping.
+  //
+  interpreter.destructUnusedModules();
 }
 
 ImportModule*
@@ -73,9 +94,12 @@ PreModule::getModule(int name, const LineNumber& lineNumber)
 	  else
 	    return fm;
 	}
-      IssueWarning(lineNumber <<
-		   ": mutually recursive import of module " <<
-		   QUOTE(m) << " ignored.");
+      else
+	{
+	  IssueWarning(lineNumber <<
+		       ": mutually recursive import of module " <<
+		       QUOTE(m) << " ignored.");
+	}
     }
   else
     {

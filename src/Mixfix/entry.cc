@@ -150,14 +150,33 @@ MixfixModule::addOpDeclaration(Token prefixName,
 			{
 			  IssueWarning(LineNumber(prefixName.lineNumber()) <<
 				       ": declaration for " << QUOTE(s) <<
-				       " clashes declaration on " << *s <<
+				       " clashes with declaration on " << *s <<
 				       " because of associativity.");
 			  overloadType =
 			    ADHOC_OVERLOADED | DOMAIN_OVERLOADED | RANGE_OVERLOADED;
 			}
 		    }
 		  else
-		    overloadType = ADHOC_OVERLOADED | DOMAIN_OVERLOADED;
+		    {
+		      if (nrArgs > 0)
+			{
+			  if (nrArgs == iNrArgs)
+			    {
+			      IssueWarning(LineNumber(prefixName.lineNumber()) <<
+					   ": declaration for " << QUOTE(s) <<
+					   " has the same domain kinds as the declaration on " <<
+					   *s << " but a different range kind.");
+			    }
+			  else
+			    {
+			      IssueWarning(LineNumber(prefixName.lineNumber()) <<
+					   ": declaration for " << QUOTE(s) <<
+					   " clashes with declaration on " << *s <<
+					   ", which has a different range kind, because of associativity.");
+			    }
+			}
+		      overloadType = ADHOC_OVERLOADED | DOMAIN_OVERLOADED;
+		    }
 		}
 	      else
 		{

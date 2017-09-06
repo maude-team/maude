@@ -36,6 +36,7 @@
 //	front end class definitions
 #include "renaming.hh"
 #include "moduleCache.hh"
+#include "fileTable.hh"
 
 ModuleCache::ModuleCache()
 {
@@ -135,8 +136,9 @@ ModuleCache::makeSummation(const Vector<ImportModule*>& modules)
   for (++i; i != e; ++i)
     moduleType = MixfixModule::join(moduleType, (*i)->getModuleType());
   ImportModule* sum = new ImportModule(t, moduleType, this);
+  LineNumber lineNumber(FileTable::AUTOMATIC);
   for (Vector<ImportModule*>::const_iterator i = local.begin(); i != e; i++)
-    sum->addImport(*i);
+    sum->addImport(*i, ImportModule::INCLUDING, lineNumber);
 
   sum->importSorts();
   sum->closeSortSet();

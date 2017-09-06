@@ -27,20 +27,14 @@
 #define _moduleDatabase_hh_
 #include <map>
 #include "intSet.hh"
+#include "importModule.hh"
 
 class ModuleDatabase
 {
   NO_COPYING(ModuleDatabase);
 
 public:
-  enum ImportMode
-  {
-    PROTECTING,
-    EXTENDING,
-    INCLUDING
-  };
-
-  typedef map<int, ImportMode> ImportMap;
+  typedef map<int, ImportModule::ImportMode> ImportMap;
 
   ModuleDatabase(){}
   ~ModuleDatabase();
@@ -49,7 +43,7 @@ public:
   PreModule* getModule(int name) const;  // 0 if doesn't exist
   bool deleteModule(int name);  // true if module deleted
 
-  void setAutoImport(ImportMode importMode, Token name, bool polarity);
+  void setAutoImport(ImportModule::ImportMode importMode, Token name, bool polarity);
   void setOmodInclude(Token name, bool polarity);
   const ImportMap& getAutoImports() const;
   const IntSet& getOmodIncludes() const;

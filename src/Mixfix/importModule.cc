@@ -75,8 +75,19 @@ ImportModule::~ImportModule()
 }
 
 void
-ImportModule::addImport(ImportModule* importedModule)
+ImportModule::addImport(ImportModule* importedModule,
+			ImportMode mode,
+			LineNumber lineNumber)
 {
+  ModuleType t = importedModule->getModuleType();
+  WarningCheck(!(isTheory(t) && mode != INCLUDING),
+	       lineNumber << ": theories may only be imported using the " <<
+	       QUOTE("including") << " importation mode.");
+  WarningCheck(canImport(getModuleType(), t),
+	       lineNumber <<": importation of " <<
+	       QUOTE(moduleTypeString(t)) << " by " <<
+	       QUOTE(moduleTypeString(getModuleType())) <<
+	       " not allowed."); 
   importedModules.append(importedModule);
   importedModule->dependentModules.append(this);
 }

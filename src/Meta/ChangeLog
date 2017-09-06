@@ -1,3 +1,26 @@
+2004-05-24  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaDownFixUps.cc (fixUpBubble): use new fixUpBubbleSpec()
+	convention
+
+2004-05-18  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaUpModule.cc (upModule): handle theories
+
+	* metaDown.cc (downImport): create line number as a temporary
+
+2004-05-17  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaUpModule.cc (upImports): PROTECTING and EXTENDING now belong
+	to ImportModule
+
+	* metaDown.cc (downModule): handle theories
+	(downImport): handle import modes and new addImport() conventions
+
+	* metaLevelSignature.cc (MACRO): added fthSymbol and thSymbol
+	
+===================================Maude84b===========================================
+
 2004-04-27  Steven Eker  <eker@goo.csl.sri.com>
 
 	* metaUpModule.cc (upImports): use getAutoImports() and handle
