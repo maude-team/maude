@@ -8,6 +8,7 @@ Overview of Changes in Maude 2.1.1
 * warnings added for illegal ad hoc overloading
 * rudimentary checking for bubble hooks
 * fixed missing id importation bug
+* fixed AU sort calculation bug
 
 Overview of Changes in Maude 2.1
 ================================
