@@ -831,42 +831,6 @@ MixfixModule::copyFixUpPolymorph(int polymorphIndex,
   }
 }
 
-/*
-int
-MixfixModule::copyPolymorph(const MixfixModule* originalModule,
-			    int originalPolymorphIndex)
-{
-  int nrPolymorphs = polymorphs.length();
-  polymorphs.expandBy(1);
-  Polymorph& p = polymorphs[nrPolymorphs];
-  const Polymorph& original = originalModule->polymorphs[originalPolymorphIndex];
-  p.name = original.name;
-  p.identity = 0;
-
-  int domainAndRangeLength = original.domainAndRange.length();
-  p.domainAndRange.resize(domainAndRangeLength);
-  for (int i = 0; i < domainAndRangeLength; i++)
-    {
-      Sort* s = original.domainAndRange[i];
-      p.domainAndRange[i] = (s == 0) ? 0 : findSort(s->id());
-    }
-
-  SymbolType symbolType = original.symbolInfo.symbolType;
-  p.strategy = original.strategy;  // deep copy
-  p.frozen = original.frozen;  // deep copy
-  p.symbolInfo.mixfixSyntax = original.symbolInfo.mixfixSyntax;  // deep copy
-  p.symbolInfo.prec = symbolType.hasFlag(SymbolType::PREC) ? original.symbolInfo.prec : DEFAULT;
-  if (symbolType.hasFlag(SymbolType::GATHER))
-    original.symbolInfo.revertGather(p.symbolInfo.gather);
-  if (symbolType.hasFlag(SymbolType::FORMAT))
-    p.symbolInfo.gather = original.symbolInfo.format;
-  p.symbolInfo.symbolType = symbolType;
-  p.symbolInfo.iflags = original.symbolInfo.iflags;
-  p.symbolInfo.next = NONE;
-  return nrPolymorphs;
-}
-*/
-
 int
 MixfixModule::findBubbleSpecIndex(Symbol* topSymbol) const
 {

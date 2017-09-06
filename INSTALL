@@ -52,6 +52,10 @@ build Maude with the commands:
 ./configure
 make
 
+A very basic test suite can be run using the command:
+
+make check
+
 If you installed any of the 3rd party packages in non-standard places
 you can indicate where the header files are by setting CPPFLAGS and
 where the library files by setting LDFLAGS. If you have multiple
@@ -62,8 +66,8 @@ GMP_LIBS	(defaults to -lgmpxx -lgmp)
 TECLA_LIBS	(defaults to -ltecla -lcurses)
 BUDDY_LIB	(defaults to -lbuddy)
 
-A more realistic configure to make and install a static binary using a
-separate build tree might look something like:
+A more realistic configure to make, check and install a static binary
+using a separate build tree might look something like:
 
 mkdir Build
 cd Build
@@ -74,6 +78,7 @@ LDFLAGS="-static -L/home/me/lib" \
 GMP_LIBS="/home/me/lib/libgmpxx.a /home/me/lib/libgmp.a"
 
 make
+make check
 make install
 
 The maude binary is installed in $(bindir) and the .maude files are

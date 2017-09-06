@@ -37,7 +37,7 @@ public:
   ImportModule* makeRenamedCopy(ImportModule* module, Renaming* renaming);
   ImportModule* makeSummation(const Vector<ImportModule*>& modules);
   void destructUnusedModules();
-  void showModules() const;
+  void showCreatedModules() const;
 
 private:
   typedef map<int, ImportModule*> ModuleMap;

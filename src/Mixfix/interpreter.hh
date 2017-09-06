@@ -26,10 +26,11 @@
 #ifndef _interpreter_hh_
 #define _interpreter_hh_
 #include "moduleDatabase.hh"
+#include "moduleCache.hh"
 #include "compiler.hh"
 #include "intSet.hh"
 
-class Interpreter : public ModuleDatabase
+class Interpreter : public ModuleDatabase, public ModuleCache
 #ifdef COMPILER
 , public Compiler
 #endif

@@ -52,7 +52,6 @@
 #include "preModule.hh"
 #include "visibleModule.hh"
 #include "loopSymbol.hh"
-#include "moduleCache.hh"
 #include "interpreter.hh"
 
 //	our stuff
@@ -60,8 +59,6 @@
 #include "match.cc"
 #include "search.cc"
 #include "loopMode.cc"
-
-extern ModuleCache moduleCache;  // HACK
 
 Interpreter::Interpreter()
 {
@@ -252,9 +249,9 @@ Interpreter::showModules(bool all) const
 {
   showNamedModules();
   if (all)
-    moduleCache.showModules();
+    showCreatedModules();
 }
-    
+
 void
 Interpreter::showOps(bool all) const
 {

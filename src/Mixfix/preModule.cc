@@ -66,13 +66,9 @@
 #include "loopSymbol.hh"
 #include "visibleModule.hh"
 #include "preModule.hh"
-
-#include "moduleCache.hh"
-
 #include "interpreter.hh"
 #include "maudemlBuffer.hh"
 #include "main.hh"  // HACK shouldn't be accessing global variables
-
 
 #ifdef QUANTIFY_PROCESSING
 #include "quantify.h"

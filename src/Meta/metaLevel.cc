@@ -107,9 +107,6 @@
 #include "renaming.hh"
 #include "main.hh"  // HACK to access global module database
 
-#include "moduleCache.hh"
-extern ModuleCache moduleCache;  // HACK
-
 //	our stuff
 #include "metaDown.cc"
 #include "metaDownRenamings.cc"

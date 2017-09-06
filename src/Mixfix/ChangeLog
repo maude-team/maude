@@ -1,3 +1,41 @@
+2004-03-10  Steven Eker  <eker@goo.csl.sri.com>
+
+	* modules.yy (fDeclaration): fixed nasty bug where we were not
+	popping the final module expression from the stack with the result
+	that syntax errors caused the deletion of live module expressions
+	via cleanUpModuleExpression() with resulting memory corruption
+
+2004-03-03  Steven Eker  <eker@goo.csl.sri.com>
+
+	* prelude.maude: strats for _and-then_ and _or-else_ become (1 0)
+
+2004-02-27  Steven Eker  <eker@goo.csl.sri.com>
+
+	* main.cc (main): added -no-banner option
+	(printHelp): added -no-banner option
+
+	* interpreter.cc: removed extern ModuleCache moduleCache hack
+
+	* import.cc: deleted moduleCache global variable
+	(processImports): use interpreter instead of moduleCache
+
+	* interpreter.cc (showModules): don't use moduleCache
+
+	* interpreter.hh (endif): inherit from ModuleCache
+
+	* interpreter.cc (showModules): use showCreatedModules()
+
+	* moduleCache.cc (showModules): becomes showCreatedModules()
+
+	* moduleCache.hh (Parent): showModules() -> showCreatedModules()
+
+	* mixfixModule.cc (copyPolymorph): deleted
+
+	* mixfixModule.hh (CommonTokens): deleted commented out decl for
+	copyPolymorph()
+	
+===================================Maude84===========================================
+
 2004-02-25  Steven Eker  <eker@goo.csl.sri.com>
 
 	* commands.yy (command): remove show all modules . as it conflicts

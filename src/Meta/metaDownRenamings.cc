@@ -61,7 +61,7 @@ MetaLevel::downModuleExpression(DagNode* metaExpr, ImportModule*& m)
 		return false;
 	      fms.append(m);
 	    }
-	  return moduleCache.makeSummation(fms);
+	  return interpreter.makeSummation(fms);
 	}
       else if (me == renamingSymbol)
 	{
@@ -70,7 +70,7 @@ MetaLevel::downModuleExpression(DagNode* metaExpr, ImportModule*& m)
 	  if (downRenamings(f->getArgument(1), &renaming) &&
 	      downModuleExpression(f->getArgument(0), m))
 	    {
-	      m = moduleCache.makeRenamedCopy(m, &renaming);
+	      m = interpreter.makeRenamedCopy(m, &renaming);
 	      return true;
 	    }
 	}

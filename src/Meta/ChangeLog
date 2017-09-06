@@ -1,3 +1,17 @@
+2004-02-27  Steven Eker  <eker@goo.csl.sri.com>
+
+	* metaDownRenamings.cc (downModuleExpression): use interpreter
+	inplace of moduleCache (2 places)
+
+	* metaDown.cc (downModule): use interpreter inplace of moduleCache
+	(2 places)
+
+	* metaLevel.cc: removed moduleCache hack
+
+	* metaDown.cc (downImport): removed old commented out code
+	
+===================================Maude84===========================================
+
 2004-02-23  Steven Eker  <eker@goo.csl.sri.com>
 
 	* metaDownFixUps.cc (handleIdentity): (polymorph version) handle
@@ -81,6 +95,8 @@
 	expression constructors
 
 	* metaUpModule.cc (upImports): use new getModuleName() semantics
+	
+===================================Maude83a===========================================
 
 2003-11-10  Steven Eker  <eker@goo.csl.sri.com>
 

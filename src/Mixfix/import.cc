@@ -24,8 +24,6 @@
 //	Code for handling importation.
 //
 
-ModuleCache moduleCache;  // HACK
-
 void
 PreModule::processImports()
 {
@@ -55,7 +53,7 @@ PreModule::processImports()
       if (ImportModule* fm = makeModule(import.expr))
 	flatModule->addImport(fm);
     }
-  moduleCache.destructUnusedModules();  // house keeping
+  interpreter.destructUnusedModules();  // house keeping
 }
 
 ImportModule*
@@ -109,7 +107,7 @@ PreModule::makeModule(const ModuleExpression* expr)
     case ModuleExpression::RENAMING:
       {
 	if (ImportModule* fm = makeModule(expr->getModule()))
-	  return moduleCache.makeRenamedCopy(fm, expr->getRenaming());
+	  return interpreter.makeRenamedCopy(fm, expr->getRenaming());
 	break;
       }
     case ModuleExpression::SUMMATION:
@@ -122,7 +120,7 @@ PreModule::makeModule(const ModuleExpression* expr)
 	      fms.append(fm);
 	  }
 	if (!fms.empty())
-	  return moduleCache.makeSummation(fms);
+	  return interpreter.makeSummation(fms);
 	break;
       }
     default:

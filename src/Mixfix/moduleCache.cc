@@ -183,7 +183,7 @@ ModuleCache::destructUnusedModules()
 }
 
 void
-ModuleCache::showModules() const
+ModuleCache::showCreatedModules() const
 {
   FOR_EACH_CONST(i, ModuleMap, moduleMap)
     {
