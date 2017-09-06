@@ -217,4 +217,82 @@ reduce in META-LEVEL : metaNarrowingApply(['BAR], 'g['f['Y:Foo,'Z:Foo,'Z:Foo]],
     'nar, empty, '#, 4) .
 rewrites: 2
 result NarrowingResult?: (failureIncomplete).NarrowingResult?
+==========================================
+reduce in META-LEVEL : metaNarrowingApply(['XOR-TEST], 'f['g['_+_['W:Expr,
+    'b.Elt]],'Z:Expr], 'nar, '_+_['W:Expr,'b.Elt], '#, 0) .
+rewrites: 9
+result NarrowingResult: {'f['h['_+_['b.Elt,'@1:Expr]],'@2:Expr],'Expr,
+	'W:Expr <- '_+_['a.Elt,'@1:Expr] ; 
+	'Z:Expr <- '@2:Expr,
+	'Y:Expr <- '_+_['b.Elt,'@1:Expr],
+'f[[],'Z:Expr],'@}
+==========================================
+reduce in META-LEVEL : metaNarrowingApply(['XOR-TEST], 'f['g['_+_['W:Expr,
+    'b.Elt]],'Z:Expr], 'nar, '_+_['W:Expr,'b.Elt], '#, 1) .
+rewrites: 3
+result NarrowingResult: {'f['h['b.Elt],'@1:Expr],'Expr,
+	'W:Expr <- 'a.Elt ; 
+	'Z:Expr <- '@1:Expr,
+	'Y:Expr <- 'b.Elt,
+'f[[],'Z:Expr],'@}
+==========================================
+reduce in META-LEVEL : metaNarrowingApply(['XOR-TEST], 'f['g['_+_['W:Expr,
+    'b.Elt]],'Z:Expr], 'nar, '_+_['W:Expr,'b.Elt], '#, 2) .
+rewrites: 3
+result NarrowingResult: {'f['h['_+_['a.Elt,'b.Elt,'%1:Expr]],'%2:Expr],'Expr,
+	'W:Expr <- '%1:Expr ; 
+	'Z:Expr <- '%2:Expr,
+	'Y:Expr <- '_+_['a.Elt,'b.Elt,'%1:Expr],
+'f[[],'Z:Expr],'%}
+==========================================
+reduce in META-LEVEL : metaNarrowingApply(['XOR-TEST], 'f['g['_+_['W:Expr,
+    'b.Elt]],'Z:Expr], 'nar, '_+_['W:Expr,'b.Elt], '#, 3) .
+rewrites: 8
+result NarrowingResult?: (failure).NarrowingResult?
+==========================================
+reduce in META-LEVEL : metaNarrowingApply(['XOR-TEST], 'f['g['_+_['W:Expr,
+    'b.Elt]],'Z:Expr], 'nar, '_+_['X:Expr,'b.Elt], '#, 0) .
+rewrites: 33
+result NarrowingResult: {'f['h['_+_['b.Elt,'@1:Expr]],'@2:Expr],'Expr,
+	'W:Expr <- '_+_['a.Elt,'@1:Expr] ; 
+	'Z:Expr <- '@2:Expr,
+	'Y:Expr <- '_+_['b.Elt,'@1:Expr],
+'f[[],'Z:Expr],'@}
+==========================================
+reduce in META-LEVEL : metaNarrowingApply(['XOR-TEST], 'f['g['_+_['W:Expr,
+    'b.Elt]],'Z:Expr], 'nar, '_+_['X:Expr,'b.Elt], '#, 11) .
+rewrites: 45
+result NarrowingResult: {'f['g['h['_+_['a.Elt,'@1:Expr]]],'@2:Expr],'Expr,
+	'W:Expr <- '_+_['b.Elt,'g['@1:Expr]] ; 
+	'Z:Expr <- '@2:Expr,
+	'Y:Expr <- '_+_['a.Elt,'@1:Expr],
+'f['g[[]],'Z:Expr],'@}
+==========================================
+reduce in META-LEVEL : metaNarrowingApply(['XOR-TEST], 'f['g['_+_['W:Expr,
+    'b.Elt]],'Z:Expr], 'nar, '_+_['X:Expr,'b.Elt], '#, 12) .
+rewrites: 5
+result NarrowingResult?: (failure).NarrowingResult?
+==========================================
+reduce in META-LEVEL : metaNarrowingApply(['XOR-TEST], 'f['g['_+_['#1:Expr,
+    'b.Elt]],'#2:Expr], 'nar, '_+_['#3:Expr,'b.Elt], '#, 0) .
+rewrites: 33
+result NarrowingResult: {'f['h['_+_['b.Elt,'@1:Expr]],'@2:Expr],'Expr,
+	'#1:Expr <- '_+_['a.Elt,'@1:Expr] ; 
+	'#2:Expr <- '@2:Expr,
+	'Y:Expr <- '_+_['b.Elt,'@1:Expr],
+'f[[],'#2:Expr],'@}
+==========================================
+reduce in META-LEVEL : metaNarrowingApply(['XOR-TEST], 'f['g['_+_['#1:Expr,
+    'b.Elt]],'#2:Expr], 'nar, '_+_['#3:Expr,'b.Elt], '#, 11) .
+rewrites: 45
+result NarrowingResult: {'f['g['h['_+_['a.Elt,'@1:Expr]]],'@2:Expr],'Expr,
+	'#1:Expr <- '_+_['b.Elt,'g['@1:Expr]] ; 
+	'#2:Expr <- '@2:Expr,
+	'Y:Expr <- '_+_['a.Elt,'@1:Expr],
+'f['g[[]],'#2:Expr],'@}
+==========================================
+reduce in META-LEVEL : metaNarrowingApply(['XOR-TEST], 'f['g['_+_['#1:Expr,
+    'b.Elt]],'#2:Expr], 'nar, '_+_['#3:Expr,'b.Elt], '#, 12) .
+rewrites: 5
+result NarrowingResult?: (failure).NarrowingResult?
 Maude> Bye.

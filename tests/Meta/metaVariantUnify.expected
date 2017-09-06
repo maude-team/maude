@@ -181,8 +181,13 @@ rewrites: 7
 result UnificationTriple: {
 	'X:XOR <- '_+_['cst2.Elem,'%11:XOR],
 	'X:XOR <- '_+_['cst1.Elem,'%11:XOR],11}
-Warning: <standard input>, line 169: bad token metaVariantUDisjointnify.
-Warning: <standard input>, line 169: no parse for term.
+==========================================
+reduce in META-TEST : metaVariantDisjointUnify(['XOR], upTerm(cst1 + X:XOR) =?
+    upTerm(cst2 + X:XOR), upTerm(cst1 + X:XOR), 0, 1) .
+rewrites: 4
+result UnificationTriple: {
+	'X:XOR <- 'cst2.Elem,
+	'X:XOR <- 'cst1.Elem,(0).Zero}
 ==========================================
 reduce in META-TEST : metaVariantDisjointUnify(['XOR], upTerm(cst1 + X:XOR) =?
     upTerm(cst2 + X:XOR), upTerm(cst1 + X:XOR), 0, 2) .

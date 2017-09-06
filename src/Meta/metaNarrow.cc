@@ -351,7 +351,8 @@ MetaLevelOpSymbol::metaNarrowingApply(FreeDagNode* subject, RewritingContext& co
 	    //	with other variables in the dag being narrowed.
 	    //
 	    DagNode* hole;
-	    DagNode* narrowedDag = state->getNarrowedDag(hole);
+	    DagNode* replacementContext;
+	    DagNode* narrowedDag = state->getNarrowedDag(hole, replacementContext);
 	    //
 	    //	If we're going to trace, we show the trace of the narrowing
 	    //	step before any reductions we do on it.
@@ -388,7 +389,7 @@ MetaLevelOpSymbol::metaNarrowingApply(FreeDagNode* subject, RewritingContext& co
 	    //
 	    PointerMap qidMap;
 	    PointerMap dagNodeMap;
-	    DagRoot metaContext(metaLevel->upContext(narrowedDag, m, hole, qidMap, dagNodeMap));
+	    DagRoot metaContext(metaLevel->upContext(replacementContext, m, hole, qidMap, dagNodeMap));
 	    //
 	    //	Need to reduce narrowedDag.
 	    //
