@@ -1,3 +1,13 @@
+2010-10-19  Steven Eker  <eker@rho>
+
+	* freeSymbol.hh (class FreeSymbol):
+	makeCanonicalCopyEagerUptoReduced() -> makeCanonicalCopy()
+
+	* freeSymbol.cc (FreeSymbol::makeCanonicalCopyEagerUptoReduced):
+	becomes makeCanonicalCopy(); semantics change
+
+===================================Maude95a===========================================
+
 2010-09-29  Steven Eker  <eker@rho>
 
 	* freeSymbol.cc (FreeSymbol::makeCanonicalCopyEagerUptoReduced):

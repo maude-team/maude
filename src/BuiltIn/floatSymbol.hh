@@ -40,8 +40,6 @@ public:
 		      RewritingContext& context,
 		      double result);
 
-  DagNode* makeCanonicalCopyEagerUptoReduced(DagNode* original, HashConsSet* /* hcs */);
-
 private:
   Sort* sort;
   Sort* finiteSort;

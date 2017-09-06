@@ -125,7 +125,7 @@ VariableSymbol::makeCanonical(DagNode* original, HashConsSet* /* hcs */)
 }
 
 DagNode*
-VariableSymbol::makeCanonicalCopyEagerUptoReduced(DagNode* original, HashConsSet* /* hcs */)
+VariableSymbol::makeCanonicalCopy(DagNode* original, HashConsSet* /* hcs */)
 {
   //
   //	We have a unreduced node - copy forced -  in principle variable could rewrite to something else!

@@ -66,6 +66,8 @@ public:
   void setGround();
   bool isGround() const;
   void copySetRewritingFlags(const DagNode* other);
+  void copySortIndex(const DagNode* other);
+  void upgradeSortIndex(const DagNode* other);
   Byte getTheoryByte() const;
   void setTheoryByte(Byte value);
 
@@ -240,6 +242,30 @@ DagNode::copySetRewritingFlags(const DagNode* other)
 {
   getMemoryCell()->copySetFlags(REDUCED | UNREWRITABLE | UNSTACKABLE | GROUND_FLAG,
 				other->getMemoryCell());
+}
+
+inline void
+DagNode::copySortIndex(const DagNode* other)
+{
+  getMemoryCell()->setHalfWord(other->getMemoryCell()->getHalfWord());
+}
+
+inline void
+DagNode::upgradeSortIndex(const DagNode* other)
+{
+  //
+  //	We set the sort to best of original and other sorts; that is:
+  //	  SORT_UNKNOWN, SORT_UNKNOWN -> SORT_UNKNOWN
+  //	  SORT_UNKNOWN, valid-sort -> valid-sort
+  //	  valid-sort, SORT_UNKNOWN -> valid-sort
+  //	  valid-sort,  valid-sort -> valid-sort
+  //
+  //	We can do it with a bitwise AND trick because valid sorts should
+  //	always be in agreement and SORT_UNKNOWN is represented by -1, i.e.
+  //	all 1 bits.
+  //
+  getMemoryCell()->setHalfWord(getMemoryCell()->getHalfWord() &
+			       other->getMemoryCell()->getHalfWord());
 }
 
 inline void

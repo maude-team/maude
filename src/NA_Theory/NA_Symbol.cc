@@ -102,3 +102,12 @@ NA_Symbol::makeCanonical(DagNode* original, HashConsSet* /* hcs */)
   //
   return original;
 }
+
+DagNode*
+NA_Symbol::makeCanonicalCopy(DagNode* original, HashConsSet* /* hcs */)
+{
+  //
+  //	Copy forced.
+  //
+  return original->makeClone();
+}

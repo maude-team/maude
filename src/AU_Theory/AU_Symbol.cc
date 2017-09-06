@@ -532,16 +532,15 @@ AU_Symbol::makeCanonical(DagNode* original, HashConsSet* hcs)
 }
 
 DagNode*
-AU_Symbol::makeCanonicalCopyEagerUptoReduced(DagNode* original, HashConsSet* hcs)
+AU_Symbol::makeCanonicalCopy(DagNode* original, HashConsSet* hcs)
 {
   //
   //	We have a unreduced node - copy forced.
   //
-  bool eager = getPermuteStrategy() == BinarySymbol::EAGER;
   if (safeCast(AU_BaseDagNode*, original)->isDeque())
     {
       //
-      //	Never use deque form as canonical.
+      //	Never use deque form as canonical for unreduced.
       //
       const AU_DequeDagNode* d = safeCast(const AU_DequeDagNode*, original);
       const AU_Deque& deque = d->getDeque();
@@ -550,7 +549,7 @@ AU_Symbol::makeCanonicalCopyEagerUptoReduced(DagNode* original, HashConsSet* hcs
       n->setSortIndex(original->getSortIndex());
       ArgVec<DagNode*>::iterator j = n->argArray.begin();
       for (AU_DequeIter i(deque); i.valid(); i.next(), ++j)
-	*j = hcs->getCanonicalCopyEagerUptoReduced(eager, i.getDagNode());
+	*j = hcs->getCanonical(hcs->insert(i.getDagNode()));
       n->setProducedByAssignment();  // deque form must be theory normal
       return n;
     }
@@ -561,7 +560,7 @@ AU_Symbol::makeCanonicalCopyEagerUptoReduced(DagNode* original, HashConsSet* hcs
   n->copySetRewritingFlags(original);
   n->setSortIndex(original->getSortIndex());
   for (int i = 0; i < nrArgs; i++)
-    n->argArray[i] = hcs->getCanonicalCopyEagerUptoReduced(eager, d->argArray[i]);
+    n->argArray[i] = hcs->getCanonical(hcs->insert(d->argArray[i]));
   n->setProducedByAssignment();  // only theory normal dags will be hash cons'd
   return n;
 }

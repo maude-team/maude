@@ -420,13 +420,13 @@ S_Symbol::makeCanonical(DagNode* original, HashConsSet* hcs)
 }
 
 DagNode*
-S_Symbol::makeCanonicalCopyEagerUptoReduced(DagNode* original, HashConsSet* hcs)
+S_Symbol::makeCanonicalCopy(DagNode* original, HashConsSet* hcs)
 {
   //
   //	We have a unreduced node - copy forced.
   //
   S_DagNode* s = safeCast(S_DagNode*, original);
-  DagNode* c = hcs->getCanonicalCopyEagerUptoReduced(standardStrategy(), s->getArgument());
+  DagNode* c = hcs->getCanonical(hcs->insert(s->getArgument()));
   S_DagNode* n = new S_DagNode(this, s->getNumber(), c);
   n->copySetRewritingFlags(original);
   n->setSortIndex(original->getSortIndex());

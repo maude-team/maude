@@ -491,12 +491,11 @@ ACU_Symbol::makeCanonical(DagNode* original, HashConsSet* hcs)
 }
 
 DagNode*
-ACU_Symbol::makeCanonicalCopyEagerUptoReduced(DagNode* original, HashConsSet* hcs)
+ACU_Symbol::makeCanonicalCopy(DagNode* original, HashConsSet* hcs)
 {
   //
   //	We have a unreduced node - copy forced.
   //
-  bool eager = getPermuteStrategy() == BinarySymbol::EAGER;
   if (safeCast(ACU_BaseDagNode*, original)->isTree())
     {
       //
@@ -509,7 +508,7 @@ ACU_Symbol::makeCanonicalCopyEagerUptoReduced(DagNode* original, HashConsSet* hc
       ArgVec<ACU_DagNode::Pair>::iterator j = n->argArray.begin();
       for (ACU_FastIter i(d->tree); i.valid(); i.next(), ++j)
 	{
-	  j->dagNode = hcs->getCanonicalCopyEagerUptoReduced(eager, i.getDagNode());
+	  j->dagNode = hcs->getCanonical(hcs->insert(i.getDagNode()));
 	  j->multiplicity = i.getMultiplicity();
 	}
       return n;
@@ -522,7 +521,7 @@ ACU_Symbol::makeCanonicalCopyEagerUptoReduced(DagNode* original, HashConsSet* hc
   n->setSortIndex(original->getSortIndex());
   for (int i = 0; i < nrArgs; i++)
     {
-      n->argArray[i].dagNode = hcs->getCanonicalCopyEagerUptoReduced(eager, d->argArray[i].dagNode);
+      n->argArray[i].dagNode = hcs->getCanonical(hcs->insert(d->argArray[i].dagNode));
       n->argArray[i].multiplicity = d->argArray[i].multiplicity;
     }
   return n;

@@ -1,3 +1,13 @@
+2010-10-19  Steven Eker  <eker@rho>
+
+	* CUI_Symbol.cc (CUI_Symbol::makeCanonicalCopyEagerUptoReduced):
+	becomes makeCanonicalCopy() with a change of semantics
+
+	* CUI_Symbol.hh (class CUI_Symbol):
+	makeCanonicalCopyEagerUptoReduced() -> makeCanonicalCopy()
+
+===================================Maude95a===========================================
+
 2010-09-29  Steven Eker  <eker@rho>
 
 	* CUI_Symbol.cc (CUI_Symbol::makeCanonicalCopyEagerUptoReduced):

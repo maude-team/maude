@@ -1,3 +1,8 @@
+Overview of Changes in Maude alpha95a
+=====================================
+* fixed sort bug with new memo mechanism
+* added MAUDE_META_MODULE_CACHE_SIZE environment variable
+
 Overview of Changes in Maude alpha95
 ====================================
 * fixed bug where tokens starting in . that followed a . that might

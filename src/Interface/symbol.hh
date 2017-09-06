@@ -146,7 +146,10 @@ public:
   //	Interface for hash consing.
   //
   virtual DagNode* makeCanonical(DagNode* original, HashConsSet* hcs) = 0;
-  virtual DagNode* makeCanonicalCopyEagerUptoReduced(DagNode* original, HashConsSet* hcs) = 0;
+  //
+  //	Same as above but copying is forced - original can never be the canonical dagnode.
+  //
+  virtual DagNode* makeCanonicalCopy(DagNode* original, HashConsSet* hcs) = 0;
 
 #ifdef COMPILER
   void fullCompile(CompilationContext& context, bool inLine) const;
