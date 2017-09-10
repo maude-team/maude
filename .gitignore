@@ -1,0 +1,34 @@
+# metadata files
+*~
+*.sw*
+.DS_Store
+
+# build products (when using automake)
+/autom4te.cache
+/src/Main/maude
+/test-driver
+/aclocal.m4
+/configure
+/config.*
+/.build
+stamp-*
+.dirstamp
+Makefile
+Makefile.in
+.deps
+lib*.a
+
+# testing files
+*.log
+*.out
+*.trs
+
+# generated parser files
+/src/Mixfix/lexer.cc
+/src/Mixfix/surface.h
+/src/Mixfix/surface.output
+/src/Mixfix/surface.yy
+
+# some of the versions of Maude do not correctly sync src/Mixfix/surface.* with the files it's built from
+# until this is fixed, these files will not be ignored
+# src/Mixfix/surface.*
