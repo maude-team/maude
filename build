@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 export CXXFLAGS="-std=c++14 -Wall $CFLAGS"
+export PATH="/usr/lib/ccache/bin:$PATH"
+export PATH="/usr/lib/ccache:$PATH"
 
 automake --add-missing
 
