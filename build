@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+./configure
+
+make
+
+git checkout -- src/Mixfix/surface.cc
+
+make
