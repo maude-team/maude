@@ -1,9 +1,16 @@
 #!/usr/bin/env bash
 
-./configure
+export CXXFLAGS="-std=c++14 -Wall $CFLAGS"
 
-make
+automake --add-missing
+
+aclocal \
+    && autoconf \
+    && autoheader \
+    && automake \
+    && ./configure \
+    && make -s -j4
 
 git checkout -- src/Mixfix/surface.cc
 
-make
+make -s -j4
