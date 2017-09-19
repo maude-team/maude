@@ -8,6 +8,7 @@
 #ifndef BDDUTIL_HH_
 #define BDDUTIL_HH_
 #include "bdd.hh"
+#include <functional>
 
 namespace modelChecker {
 
