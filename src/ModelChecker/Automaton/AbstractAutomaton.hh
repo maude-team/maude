@@ -7,6 +7,7 @@
 
 #ifndef ABSTRACTAUTOMATON_HH_
 #define ABSTRACTAUTOMATON_HH_
+#include <vector>
 
 /**
  * A place holder for an automaton, an interface for model checkers.

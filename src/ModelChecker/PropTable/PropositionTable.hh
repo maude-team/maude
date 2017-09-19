@@ -8,6 +8,7 @@
 #ifndef PROPOSITIONTABLE_HH_
 #define PROPOSITIONTABLE_HH_
 #include <memory>
+#include <vector>
 #include "protectedDagNodeSet.hh"
 #include "Interface/PropInterpreter.hh"
 

@@ -8,6 +8,7 @@
 #ifndef COMPOSITEFAIRNESSTABLE_HH_
 #define COMPOSITEFAIRNESSTABLE_HH_
 #include <memory>
+#include <vector>
 #include "AbstractFairnessTable.hh"
 
 namespace modelChecker {

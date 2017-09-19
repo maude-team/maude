@@ -8,6 +8,8 @@
 #ifndef PARAMSUBSTITUTION_HH_
 #define PARAMSUBSTITUTION_HH_
 
+#include <vector>
+
 namespace modelChecker {
 
 class ParamSubstitutionBuilder;
