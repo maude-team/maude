@@ -7,6 +7,7 @@
 
 #ifndef DEFAULTSTATEDAGCONTAINER_HH_
 #define DEFAULTSTATEDAGCONTAINER_HH_
+#include <vector>
 #include "hashConsSet.hh"
 #include "dagNode.hh"
 
