@@ -1,0 +1,51 @@
+Maude> 
+	    Full Maude 2.7 June 18th 2014
+
+
+	    Logical Model Checker January 10th 2012
+
+Introduced module READERS-WRITERS
+
+Introduced module READERS-WRITERS-PROPS
+
+logical model check in READERS-WRITERS-PROPS :
+  < N:Nat,0 > |= []one-writer-atmost?
+result:
+  no counterexample found within bound 10
+
+logical folding model check in READERS-WRITERS-PROPS :
+  < N:Nat,0 > |= []one-writer-atmost?
+result:
+  true (complete with depth 3)
+
+logical folding model check in READERS-WRITERS-PROPS :
+  < N:Nat,0 > |= <> ~ one-writer-atmost?
+result:
+  counterexample found at depth 3
+  
+prefix
+  nil
+loop
+  {< #1:Nat,0 >,'#1 <- s(#3:Nat); '#2 <- #3:Nat,'leave-r}  
+
+logical model check in READERS-WRITERS-PROPS :
+  < N:Nat,0 > |= <> ~ one-writer-atmost?
+result:
+  counterexample found at depth 3
+  
+prefix
+  nil
+loop
+  {< #1:Nat,0 >,'#1 <- s(#3:Nat); '#2 <- #3:Nat,'leave-r}  
+
+logical model check in READERS-WRITERS-PROPS :
+  < N:Nat,0 > |= []exclusion?
+result:
+  no counterexample found within bound 10
+
+logical folding model check in READERS-WRITERS-PROPS :
+  < N:Nat,0 > |= []exclusion?
+result:
+  true (complete with depth 3)
+
+Maude> Bye.

@@ -1,0 +1,10 @@
+#!/bin/sh
+
+MAUDE_LIB=$srcdir/../../../src/Main
+export MAUDE_LIB
+
+../../../src/Main/maude \
+  < $srcdir/rw-shared.maude -no-banner -no-advise \
+  > rw-shared.out 2>&1
+
+diff $srcdir/rw-shared.expected rw-shared.out > /dev/null 2>&1

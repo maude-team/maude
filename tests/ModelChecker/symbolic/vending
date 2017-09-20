@@ -1,0 +1,10 @@
+#!/bin/sh
+
+MAUDE_LIB=$srcdir/../../../src/Main
+export MAUDE_LIB
+
+../../../src/Main/maude \
+  < $srcdir/vending.maude -no-banner -no-advise \
+  > vending.out 2>&1
+
+diff $srcdir/vending.expected vending.out > /dev/null 2>&1

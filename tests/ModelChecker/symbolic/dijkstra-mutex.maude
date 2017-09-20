@@ -1,0 +1,267 @@
+
+--- The Dijkstra's mutual exclusion algorithms in Maude
+--- From: Nancy Ann Lynch, Distributed algorithms, Morgan Kaufmann, 1996
+---
+--- l0: repeat
+--- l1:   flag[i] := 1
+--- l2:   while turn != i do 
+---         if flag[turn] = 0 then turn := i
+--- l3:   flag[i] := 2
+--- l4:   for j != i do
+---         if flag[j] = 2 then goto l1
+--- crit:
+--- l5:   flag[i] := 0
+
+fmod DIJKSTRA-DATA is
+  sorts Flag InitFlag WaitFlag .
+  subsorts InitFlag < WaitFlag < Flag .
+  op 0 : -> InitFlag [ctor] .
+  op 1 : -> WaitFlag [ctor] .
+  op 2 : -> Flag [ctor] .
+
+  sorts Status L1Status NL15Status NL1Status NL5Status NCrtStatus .
+  subsorts L1Status < NL15Status < NL1Status NL5Status < NCrtStatus < Status .
+  op l1 : -> L1Status [ctor] .
+  op l2 : -> NL5Status [ctor] .
+  ops l3 l4 : -> NL15Status [ctor] .
+  op l5 : -> NL1Status [ctor] .
+  op crit : -> Status [ctor] .
+
+  sorts Turn CTurn .
+  subsort Turn < CTurn .
+  op ! : -> CTurn [ctor] .
+  op - : -> Turn [ctor] .
+endfm
+
+
+fmod DIJKSTRA-MUTEX-PROC is
+  pr DIJKSTRA-DATA .
+
+  sorts Proc NCrtProc WaitProc WNCrProc .
+  subsorts WNCrProc < NCrtProc WaitProc < Proc .
+  op {_,_,_} : Flag Status Turn -> Proc [ctor] .
+  op {_,_,_} : WaitFlag Status Turn -> WaitProc [ctor] .
+  op {_,_,_} : Flag NCrtStatus Turn -> NCrtProc [ctor] .
+  op {_,_,_} : WaitFlag NCrtStatus Turn -> WNCrProc [ctor] .
+
+  sorts InitProc NL15Proc NL1Proc NL5Proc WNL15Proc WNL1Proc  WNL5Proc .
+  subsorts InitProc < WNL15Proc < NL15Proc .
+  subsort WNL1Proc < NL1Proc .
+  subsort WNL5Proc < NL5Proc .
+  subsorts NL15Proc < NL1Proc NL5Proc .
+  subsorts WNL15Proc < WNL1Proc WNL5Proc .
+  subsorts NL1Proc NL5Proc < NCrtProc .
+  subsorts WNL1Proc WNL5Proc < WNCrProc .
+  op {_,_,_} : InitFlag L1Status Turn -> InitProc [ctor] .
+  op {_,_,_} : Flag NL15Status Turn -> NL15Proc [ctor] .
+  op {_,_,_} : Flag NL1Status Turn -> NL1Proc [ctor] .
+  op {_,_,_} : Flag NL5Status Turn -> NL5Proc [ctor] .
+  op {_,_,_} : WaitFlag NL15Status Turn -> WNL15Proc [ctor] .
+  op {_,_,_} : WaitFlag NL1Status Turn -> WNL1Proc [ctor] .
+  op {_,_,_} : WaitFlag NL5Status Turn -> WNL5Proc [ctor] .
+
+  sort CProc CNCrtProc CWaitProc CWNCrProc .
+  subsort Proc < CProc .
+  subsort WaitProc < CWaitProc .
+  subsort NCrtProc < CNCrtProc .
+  subsort WNCrProc < CWNCrProc .
+  subsorts CWNCrProc < CNCrtProc CWaitProc < CProc .
+  op {_,_,_} : Flag Status CTurn -> CProc [ctor] .
+  op {_,_,_} : WaitFlag Status CTurn -> CWaitProc [ctor] .
+  op {_,_,_} : Flag NCrtStatus CTurn -> CNCrtProc [ctor] .
+  op {_,_,_} : WaitFlag NCrtStatus CTurn -> CWNCrProc [ctor] .
+
+  sorts CInitProc CNL15Proc CNL1Proc CNL5Proc CWNL15Proc CWNL1Proc CWNL5Proc .
+  subsort InitProc < CInitProc .
+  subsort NL15Proc < CNL15Proc .
+  subsort NL1Proc < CNL1Proc .
+  subsort NL5Proc < CNL5Proc .
+  subsort WNL15Proc < CWNL15Proc .
+  subsort WNL1Proc < CWNL1Proc .
+  subsort WNL5Proc < CWNL5Proc .
+  subsorts CInitProc < CWNL15Proc < CNL15Proc .
+  subsort CWNL1Proc < CNL1Proc .
+  subsort CWNL5Proc < CNL5Proc .
+  subsorts CNL15Proc < CNL1Proc CNL5Proc .
+  subsorts CWNL15Proc < CWNL1Proc CWNL5Proc .
+  subsorts CNL1Proc CNL5Proc < CNCrtProc .
+  subsorts CWNL1Proc CWNL5Proc < CWNCrProc .
+  op {_,_,_} : InitFlag L1Status CTurn -> CInitProc [ctor] .
+  op {_,_,_} : Flag NL15Status CTurn -> CNL15Proc [ctor] .
+  op {_,_,_} : Flag NL1Status CTurn -> CNL1Proc [ctor] .
+  op {_,_,_} : Flag NL5Status CTurn -> CNL5Proc [ctor] .
+  op {_,_,_} : WaitFlag NL15Status CTurn -> CWNL15Proc [ctor] .
+  op {_,_,_} : WaitFlag NL1Status CTurn -> CWNL1Proc [ctor] .
+  op {_,_,_} : WaitFlag NL5Status CTurn -> CWNL5Proc [ctor] .
+endfm
+
+mod DIJKSTRA-MUTEX-PROCSET is
+  pr DIJKSTRA-MUTEX-PROC .
+
+  sort ProcSet NCrtProcSet WaitProcSet WNCrProcSet .
+  subsort Proc < ProcSet .
+  subsort WaitProc < WaitProcSet .
+  subsort NCrtProc < NCrtProcSet .
+  subsort WNCrProc < WNCrProcSet .
+  subsorts WNCrProcSet < WaitProcSet NCrtProcSet < ProcSet .
+  op __ : ProcSet ProcSet -> ProcSet [ctor comm assoc id: none] .
+  op __ : WaitProcSet WaitProcSet -> WaitProcSet [ctor ditto] .
+  op __ : NCrtProcSet NCrtProcSet -> NCrtProcSet [ctor ditto] .
+  op __ : WNCrProcSet WNCrProcSet -> WNCrProcSet [ctor ditto] .
+
+  sorts InitProcSet NL15ProcSet NL1ProcSet NL5ProcSet WNL15ProcSet WNL1ProcSet  WNL5ProcSet .
+  subsort InitProc < InitProcSet .
+  subsort NL15Proc < NL15ProcSet .
+  subsort NL1Proc < NL1ProcSet .
+  subsort NL5Proc < NL5ProcSet .
+  subsort WNL15Proc < WNL15ProcSet .
+  subsort WNL1Proc < WNL1ProcSet .
+  subsort WNL5Proc < WNL5ProcSet .
+  subsorts InitProcSet < WNL15ProcSet < NL15ProcSet .
+  subsort WNL1ProcSet < NL1ProcSet .
+  subsort WNL5ProcSet < NL5ProcSet .
+  subsorts NL15ProcSet < NL1ProcSet NL5ProcSet .
+  subsorts WNL15ProcSet < WNL1ProcSet WNL5ProcSet .
+  subsorts NL1ProcSet NL5ProcSet < NCrtProcSet .
+  subsorts WNL1ProcSet WNL5ProcSet < WNCrProcSet .
+  op none : -> InitProcSet [ctor] .
+  op __ : InitProcSet InitProcSet -> InitProcSet [ctor ditto] .
+  op __ : NL15ProcSet NL15ProcSet -> NL15ProcSet [ctor ditto] .
+  op __ : NL1ProcSet NL1ProcSet -> NL1ProcSet [ctor ditto] .
+  op __ : NL5ProcSet NL5ProcSet -> NL5ProcSet [ctor ditto] .
+  op __ : WNL15ProcSet WNL15ProcSet -> WNL15ProcSet [ctor ditto] .
+  op __ : WNL1ProcSet WNL1ProcSet -> WNL1ProcSet [ctor ditto] .
+  op __ : WNL5ProcSet WNL5ProcSet -> WNL5ProcSet [ctor ditto] .
+
+  sort CProcSet CNCrtProcSet CWaitProcSet CWNCrProcSet .
+  subsort CProc < CProcSet .
+  subsort CNCrtProc < CNCrtProcSet .
+  subsort CWaitProc < CWaitProcSet .
+  subsort CWNCrProc < CWNCrProcSet .
+  subsort ProcSet < CProcSet .
+  subsort WaitProcSet < CWaitProcSet .
+  subsort NCrtProcSet < CNCrtProcSet .
+  subsort WNCrProcSet < CWNCrProcSet .
+  subsorts CWNCrProcSet < CNCrtProcSet CWaitProcSet < CProcSet .
+  op __ : ProcSet CProcSet -> CProcSet [ctor ditto] .
+  op __ : CProcSet ProcSet -> CProcSet [ctor ditto] .
+  op __ : CWaitProcSet WaitProcSet -> CWaitProcSet [ctor ditto] .
+  op __ : WaitProcSet CWaitProcSet -> CWaitProcSet [ctor ditto] .
+  op __ : CNCrtProcSet NCrtProcSet -> CNCrtProcSet [ctor ditto] .
+  op __ : NCrtProcSet CNCrtProcSet -> CNCrtProcSet [ctor ditto] .
+  op __ : CWNCrProcSet WNCrProcSet -> CWNCrProcSet [ctor ditto] .
+  op __ : WNCrProcSet CWNCrProcSet -> CWNCrProcSet [ctor ditto] .
+
+  sorts CInitProcSet CNL15ProcSet CNL1ProcSet CNL5ProcSet CWNL15ProcSet CWNL1ProcSet CWNL5ProcSet .
+  subsort CInitProc < CInitProcSet .
+  subsort CNL15Proc < CNL15ProcSet .
+  subsort CNL1Proc < CNL1ProcSet .
+  subsort CNL5Proc < CNL5ProcSet .
+  subsort CWNL15Proc < CWNL15ProcSet .
+  subsort CWNL1Proc < CWNL1ProcSet .
+  subsort CWNL5Proc < CWNL5ProcSet .
+  subsort InitProcSet < CInitProcSet .
+  subsort NL15ProcSet < CNL15ProcSet .
+  subsort NL1ProcSet < CNL1ProcSet .
+  subsort NL5ProcSet < CNL5ProcSet .
+  subsort WNL15ProcSet < CWNL15ProcSet .
+  subsort WNL1ProcSet < CWNL1ProcSet .
+  subsort WNL5ProcSet < CWNL5ProcSet .
+  subsorts CInitProcSet < CWNL15ProcSet < CNL15ProcSet .
+  subsort CWNL1ProcSet < CNL1ProcSet .
+  subsort CWNL5ProcSet < CNL5ProcSet .
+  subsorts CNL15ProcSet < CNL1ProcSet CNL5ProcSet .
+  subsorts CWNL15ProcSet < CWNL1ProcSet CWNL5ProcSet .
+  subsorts CNL1ProcSet CNL5ProcSet < CNCrtProcSet .
+  subsorts CWNL1ProcSet CWNL5ProcSet < CWNCrProcSet .
+  op __ : CInitProcSet InitProcSet -> CInitProcSet [ctor ditto] .
+  op __ : InitProcSet CInitProcSet -> CInitProcSet [ctor ditto] .
+  op __ : CNL15ProcSet NL15ProcSet -> CNL15ProcSet [ctor ditto] .
+  op __ : NL15ProcSet CNL15ProcSet -> CNL15ProcSet [ctor ditto] .
+  op __ : CNL1ProcSet NL1ProcSet -> CNL1ProcSet [ctor ditto] .
+  op __ : NL1ProcSet CNL1ProcSet -> CNL1ProcSet [ctor ditto] .
+  op __ : CNL5ProcSet NL5ProcSet -> CNL5ProcSet [ctor ditto] .
+  op __ : NL5ProcSet CNL5ProcSet -> CNL5ProcSet [ctor ditto] .
+  op __ : CWNL15ProcSet WNL15ProcSet -> CWNL15ProcSet [ctor ditto] .
+  op __ : WNL15ProcSet CWNL15ProcSet -> CWNL15ProcSet [ctor ditto] .
+  op __ : CWNL1ProcSet WNL1ProcSet -> CWNL1ProcSet [ctor ditto] .
+  op __ : WNL1ProcSet CWNL1ProcSet -> CWNL1ProcSet [ctor ditto] .
+  op __ : CWNL5ProcSet WNL5ProcSet -> CWNL5ProcSet [ctor ditto] .
+  op __ : WNL5ProcSet CWNL5ProcSet -> CWNL5ProcSet [ctor ditto] .
+endm
+
+mod DIJKSTRA-MUTEX is
+  including DIJKSTRA-MUTEX-PROCSET .
+
+  var F : Flag . var S : Status . 
+  var CPS : CProcSet . var PS : ProcSet . 
+  var CWS : CWaitProcSet . var WS : WaitProcSet .
+
+  sort Conf .
+  op <_> : CProcSet -> Conf [ctor] .
+
+  rl [l1]  : < {F,l1,-} CPS >          => < {1,l2,-} CPS > .
+  rl [l1]  : < {F,l1,!} PS >           => < {1,l2,!} PS > .
+
+  rl [l2]  : < {F,l2,-} {0,S,!} PS >   => < {F,l2,!} {0,S,-} PS > .
+  rl [l2]  : < {F,l2,!} PS >           => < {F,l3,!} PS > .
+
+  rl [l3]  : < {F,l3,-} CPS >          => < {2,l4,-} CPS > .
+  rl [l3]  : < {F,l3,!} PS >           => < {2,l4,!} PS > .
+
+  rl [l4]  : < {F,l4,-} CWS >          => < {F,crit,-} CWS > .
+  rl [l4]  : < {F,l4,!} WS >           => < {F,crit,!} WS > .
+  rl [l4]  : < {F,l4,-} {2,S,-} CPS >  => < {F,l1,-} {2,S,-} CPS > .
+  rl [l4]  : < {F,l4,!} {2,S,-} PS >   => < {F,l1,!} {2,S,-} PS > .
+  rl [l4]  : < {F,l4,-} {2,S,!} PS >   => < {F,l1,-} {2,S,!} PS > .
+
+  rl [l5]  : < {F,crit,-} CPS >        => < {0,l1,-} CPS > .
+  rl [l5]  : < {F,crit,!} PS >         => < {0,l1,!} PS > .
+endm
+
+---(
+search < {0,l1,-} {0,l1,-} {0,l1,!} > =>* < CPS > .
+---)
+
+load symbolic-checker
+
+(mod DIJKSTRA-MUTEX-SATISFACTION is
+  pr SYMBOLIC-CHECKER .
+  pr DIJKSTRA-MUTEX .
+
+  subsort Conf < State .
+
+  ops ex? : -> Prop . 
+
+  vars F F' : Flag . var S : Status . 
+  var CPS : CProcSet .     var PS : ProcSet . 
+  var CNS : CNCrtProcSet . var NS : NCrtProcSet .
+  var CIS : CInitProcSet .
+
+  eq < CNS >                        |= ex? = true  [variant] .
+  eq < {F,crit,-} CNS >             |= ex? = true  [variant] .
+  eq < {F,crit,!} NS >              |= ex? = true  [variant] .
+  eq < {F,crit,-} {F',crit,-} CPS > |= ex? = false [variant] .
+  eq < {F,crit,!} {F',crit,-} PS >  |= ex? = false [variant] .
+  eq < {F,crit,-} {F',crit,!} PS >  |= ex? = false [variant] .
+endm)
+
+---(
+(lfmc [20] < CIS > |= [] ex? .)
+---)
+
+(mod DIJKSTRA-MUTEX-SATISFACTION-WIDENING is
+  pr DIJKSTRA-MUTEX-SATISFACTION .
+
+  var F : Flag .  var CIS : CInitProcSet .  var CPS : CProcSet .
+
+--- bisimilar equational abstraction
+  eq < {F,l2,-} {F,l2,-} CPS > = < {F,l2,-} CPS > [variant] .
+
+endm)
+
+set verbose on .
+
+---   true (complete with depth 16)
+(lfmc < CIS > |= [] ex?  .)
+

@@ -1,0 +1,18 @@
+Maude> 
+	    Full Maude 2.7 June 18th 2014
+
+
+	    Logical Model Checker January 10th 2012
+
+Introduced module RW-PROPS
+
+SymbolicModelCheckerSymbol: examined 1 logical state in bound 1.
+SymbolicModelCheckerSymbol: examined 2 logical states in bound 2.
+SymbolicModelCheckerSymbol: examined 6 logical states in bound 3.
+SymbolicModelCheckerSymbol: examined 6 logical states.
+logical folding model check in RW-PROPS :
+  < 0,true | IS:ProcIdleSet > |= []ex?
+result:
+  true (complete with depth 3)
+
+Maude> Bye.

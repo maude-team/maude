@@ -1,0 +1,31 @@
+Maude> 
+	    Full Maude 2.7 June 18th 2014
+
+
+	    Logical Model Checker January 10th 2012
+
+Introduced module TOKEN-MUTEX-SATISFACTION
+
+logical folding model check in TOKEN-MUTEX-SATISFACTION :
+  < N:Number,{M:Number}WF:ConfWait > |= []ex?
+result:
+  true (complete with depth 3)
+
+logical folding model check in TOKEN-MUTEX-SATISFACTION :
+  < N:Number,WTF:ConfTWait > |= []ex?
+result:
+  counterexample found at depth 5
+  
+prefix
+  {< #1:Number,#2:ConfTWait >,'#1 <- #10:Number ; '#2 <- #11:ConfTWait{
+    #12:Number}[#12:Number,wait]; '#5 <- #12:Number ; '#9 <- #11:ConfTWait,
+    'enter}
+  {< #10:Number,#11:ConfTWait[#12:Number,crit]>,'#10 <- #16:Number ; '#11 <-{
+    #18:Number}[#18:Number,wait]; '#12 <- #17:Number ; '#15 <- #18:Number,
+    'enter}
+  {< #16:Number,[#18:Number,crit][#17:Number,crit]>,'#16 <- s #19:Number ; '#17
+    <- #20:Number ; '#18 <- #19:Number,'exit2}
+loop
+  nil  
+
+Maude> Bye.
