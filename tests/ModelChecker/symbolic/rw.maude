@@ -1,0 +1,57 @@
+
+load symbolic-checker
+
+--- The readers-writers problem in Maude
+--- From: All About Maude - A High-Performance Logical Framework.
+(mod READERS-WRITERS is 
+  sort Nat . 
+  op 0 : -> Nat [ctor] . 
+  op s : Nat -> Nat [ctor] .  
+  sort Config . 
+  op <_`,_> : Nat Nat -> Config [ctor] .
+
+  vars R W : Nat .
+
+  rl [enter-w] : < 0, 0 > => < 0, s(0) > . 
+  rl [leave-w] : < R, s(W) > => < R, W > . 
+  rl [enter-r] : < R, 0 > => < s(R), 0 > . 
+  rl [leave-r] : < s(R), W > => < R, W > .
+endm)
+
+(mod READERS-WRITERS-PROPS is
+  pr READERS-WRITERS .
+  pr SYMBOLIC-CHECKER * (sort Nat to Nat') .
+
+  subsort Config < State .
+
+  vars N M : Nat .
+
+  ops one-writer-atmost? exclusion? : -> Prop .
+
+  eq < N, 0       > |= one-writer-atmost? = true [variant] .
+  eq < N, s(0)    > |= one-writer-atmost? = true [variant] .
+  eq < N, s(s(M)) > |= one-writer-atmost? = false [variant] .
+  
+  eq < 0,    M    > |= exclusion? = true [variant] .
+  eq < N,    0    > |= exclusion? = true [variant] .
+  eq < s(N), s(M) > |= exclusion? = false [variant] .
+endm)
+
+--- result: no counterexample
+(lmc [10] < N:Nat, 0 > |= [] one-writer-atmost? .)
+
+--- result: true
+(lfmc < N:Nat, 0 > |= [] one-writer-atmost? .)
+
+--- result: possibly spurious counterexample
+(lfmc < N:Nat, 0 > |= <> ~ one-writer-atmost? .)
+
+--- result: false (with counterexample)
+(lmc < N:Nat, 0 > |= <> ~ one-writer-atmost? .)
+
+--- result: no counterexample
+(lmc [10] < N:Nat, 0 > |= [] exclusion? .)
+
+--- result: true
+(lfmc < N:Nat, 0 > |= [] exclusion? .)
+

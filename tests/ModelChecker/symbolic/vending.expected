@@ -1,0 +1,19 @@
+Maude> 
+	    Full Maude 2.7 June 18th 2014
+
+
+	    Logical Model Checker January 10th 2012
+
+Introduced module NARROWING-VENDING-MACHINE
+
+search [,4] in NARROWING-VENDING-MACHINE : < M:Money > ~>* < a c > .
+
+Solution 1
+M:Money --> $ q q q
+
+Solution 2
+M:Money --> q q q q q q q
+
+No more solutions.
+
+Maude> Bye.

@@ -1,0 +1,137 @@
+Maude> 
+	    Full Maude 2.7 June 18th 2014
+
+
+	    Logical Model Checker January 10th 2012
+
+Introduced module BAKERY-SATISFACTION1
+
+SymbolicModelCheckerSymbol: examined 1 logical state in bound 1.
+SymbolicModelCheckerSymbol: examined 3 logical states in bound 2.
+SymbolicModelCheckerSymbol: examined 5 logical states in bound 3.
+SymbolicModelCheckerSymbol: examined 9 logical states in bound 4.
+SymbolicModelCheckerSymbol: examined 11 logical states in bound 5.
+SymbolicModelCheckerSymbol: examined 11 logical states.
+logical folding model check in BAKERY-SATISFACTION1 :
+  N:Name ; N:Name ;[idle][idle] |= [](ever-wait? -> <> ever-crit?)
+result:
+  true (complete with depth 5)
+
+SymbolicModelCheckerSymbol: examined 1 logical state in bound 1.
+SymbolicModelCheckerSymbol: examined 5 logical states in bound 2.
+SymbolicModelCheckerSymbol: examined 9 logical states in bound 3.
+SymbolicModelCheckerSymbol: examined 20 logical states in bound 4.
+SymbolicModelCheckerSymbol: examined 36 logical states.
+logical folding model check in BAKERY-SATISFACTION1 :
+  N:Name ; M:Name ; IS:ProcIdleSet |= [](ever-wait? -> <> ever-crit?)
+result:
+  counterexample found at depth 5
+  
+prefix
+  {(s %5:Name); 0 ; %4:ProcIdleSet,'#11 <- #15:ProcIdleSet ; '#12 <- #14:Name ;
+    '#13 <- #15:ProcIdleSet ; '%4 <- #15:ProcIdleSet[idle]; '%5 <- #14:Name,
+    'wake}
+  {(s s #14:Name); 0 ; #15:ProcIdleSet[wait(s #14:Name)],'#14 <- #16:Name ;
+    '#15 <- #16:Name ; '#15 <-[idle],'wake}
+loop
+  {(s s s #16:Name); 0 ;[wait(s #16:Name)][wait(s s #16:Name)],none,deadlock}  
+
+SymbolicModelCheckerSymbol: examined 1 logical state in bound 1.
+SymbolicModelCheckerSymbol: examined 5 logical states in bound 2.
+SymbolicModelCheckerSymbol: examined 9 logical states.
+logical folding model check in BAKERY-SATISFACTION1 :
+  N:Name ; M:Name ; WS:ProcWaitSet |= [](ever-wait? -> <> ever-crit?)
+result:
+  counterexample found at depth 3
+  
+prefix
+  {(s %5:Name); 0 ; %4:ProcWaitSet,'#11 <- #15:ProcWaitSet ; '#12 <- #14:Name ;
+    '#13 <- #15:ProcWaitSet ; '%4 <- #15:ProcWaitSet[idle]; '%5 <- #14:Name,
+    'wake}
+loop
+  {(s %5:Name); 0 ; %4:ProcWaitSet,'#11 <- #15:ProcWaitSet ; '#12 <- #14:Name ;
+    '#13 <- #15:ProcWaitSet ; '%4 <- #15:ProcWaitSet[idle]; '%5 <- #14:Name,
+    'wake}  
+
+Introduced module BAKERY-SATISFACTION2
+
+SymbolicModelCheckerSymbol: examined 1 logical state in bound 1.
+SymbolicModelCheckerSymbol: examined 2 logical states in bound 2.
+SymbolicModelCheckerSymbol: examined 3 logical states in bound 3.
+SymbolicModelCheckerSymbol: examined 5 logical states in bound 4.
+SymbolicModelCheckerSymbol: examined 7 logical states in bound 5.
+SymbolicModelCheckerSymbol: examined 8 logical states in bound 6.
+SymbolicModelCheckerSymbol: examined 10 logical states in bound 7.
+SymbolicModelCheckerSymbol: examined 12 logical states in bound 8.
+SymbolicModelCheckerSymbol: examined 13 logical states in bound 9.
+SymbolicModelCheckerSymbol: examined 15 logical states.
+logical model check in BAKERY-SATISFACTION2 :
+  N:Name ; N:Name ;[idle][idle] |= []ex?
+result:
+  no counterexample found within bound 10
+
+SymbolicModelCheckerSymbol: examined 1 logical state in bound 1.
+SymbolicModelCheckerSymbol: examined 2 logical states in bound 2.
+SymbolicModelCheckerSymbol: examined 3 logical states in bound 3.
+SymbolicModelCheckerSymbol: examined 5 logical states in bound 4.
+SymbolicModelCheckerSymbol: examined 6 logical states in bound 5.
+SymbolicModelCheckerSymbol: examined 6 logical states.
+logical folding model check in BAKERY-SATISFACTION2 :
+  N:Name ; N:Name ;[idle][idle] |= []ex?
+result:
+  true (complete with depth 5)
+
+SymbolicModelCheckerSymbol: examined 1 logical state in bound 1.
+SymbolicModelCheckerSymbol: examined 2 logical states in bound 2.
+SymbolicModelCheckerSymbol: examined 3 logical states in bound 3.
+SymbolicModelCheckerSymbol: examined 5 logical states in bound 4.
+SymbolicModelCheckerSymbol: examined 9 logical states.
+logical folding model check in BAKERY-SATISFACTION2 :
+  N:Name ; M:Name ; WS:ProcWaitSet |= []ex?
+result:
+  counterexample found at depth 5
+  
+prefix
+  {#1:Name ; #2:Name ; #3:ProcWaitSet,'#10 <- #13:ProcWaitSet ; '#1 <- #11:Name
+    ; '#2 <- #12:Name ; '#3 <- #13:ProcWaitSet[wait(#12:Name)],'crit}
+  {#11:Name ; #12:Name ; #13:ProcWaitSet[crit(#12:Name)],'#11 <- #13:Name ;
+    '#12 <- #14:Name ; '#13 <-[wait(#14:Name)],'crit}
+  {#13:Name ; #14:Name ;[crit(#14:Name)][crit(#14:Name)],'#13 <- #15:Name ;
+    '#14 <- #16:Name,'exit}
+loop
+  nil  
+
+SymbolicModelCheckerSymbol: examined 1 logical state in bound 1.
+SymbolicModelCheckerSymbol: examined 2 logical states in bound 2.
+SymbolicModelCheckerSymbol: examined 6 logical states in bound 3.
+SymbolicModelCheckerSymbol: examined 16 logical states in bound 4.
+SymbolicModelCheckerSymbol: examined 32 logical states.
+logical folding model check in BAKERY-SATISFACTION2 :
+  N:Name ; N:Name ; WS:ProcWaitSet |= []ex?
+result:
+  counterexample found at depth 5
+  
+prefix
+  {#1:Name ; #1:Name ; #2:ProcWaitSet,'#1 <- #9:Name ; '#2 <- #10:ProcWaitSet[
+    wait(#9:Name)]; '#8 <- #10:ProcWaitSet,'crit}
+  {#9:Name ; #9:Name ; #10:ProcWaitSet[crit(#9:Name)],'#10 <-[wait(#10:Name)];
+    '#9 <- #10:Name,'crit}
+  {#10:Name ; #10:Name ;[crit(#10:Name)][crit(#10:Name)],'#10 <- #11:Name,
+    'exit}
+loop
+  nil  
+
+Introduced module BAKERY-SATISFACTION2-ABS
+
+SymbolicModelCheckerSymbol: examined 1 logical state in bound 1.
+SymbolicModelCheckerSymbol: examined 2 logical states in bound 2.
+SymbolicModelCheckerSymbol: examined 4 logical states in bound 3.
+SymbolicModelCheckerSymbol: examined 8 logical states in bound 4.
+SymbolicModelCheckerSymbol: examined 10 logical states in bound 5.
+SymbolicModelCheckerSymbol: examined 10 logical states.
+logical folding model check in BAKERY-SATISFACTION2-ABS :
+  N:Name ; N:Name ; IS:ProcIdleSet |= []ex?
+result:
+  true (complete with depth 5)
+
+Maude> Bye.

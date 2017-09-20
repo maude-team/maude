@@ -1,0 +1,24 @@
+Maude> Maude> 
+	    Full Maude 2.7 June 18th 2014
+
+
+	    Logical Model Checker January 10th 2012
+
+Introduced module DIJKSTRA-MUTEX-SATISFACTION
+
+Introduced module DIJKSTRA-MUTEX-SATISFACTION-WIDENING
+
+SymbolicModelCheckerSymbol: examined 1 logical state in bound 1.
+SymbolicModelCheckerSymbol: examined 2 logical states in bound 2.
+SymbolicModelCheckerSymbol: examined 4 logical states in bound 3.
+SymbolicModelCheckerSymbol: examined 7 logical states in bound 4.
+SymbolicModelCheckerSymbol: examined 10 logical states in bound 5.
+SymbolicModelCheckerSymbol: examined 13 logical states in bound 6.
+SymbolicModelCheckerSymbol: examined 15 logical states in bound 7.
+SymbolicModelCheckerSymbol: examined 15 logical states.
+logical folding model check in DIJKSTRA-MUTEX-SATISFACTION-WIDENING :
+  < CIS:CInitProcSet > |= []ex?
+result:
+  true (complete with depth 7)
+
+Maude> Bye.
