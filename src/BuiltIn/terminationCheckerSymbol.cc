@@ -577,7 +577,7 @@ TerminationCheckerSymbol::readToolsFile(map<crope, pair<crope, crope> > **mp)
   if (findPrelude(directory, fileName)){
     string fullPathFileName = directory + "/" + fileName;
     ifstream f(fullPathFileName.c_str());
-    if (f == 0){
+    if (f.fail()){
       cerr << "Error opening file " << fullPathFileName << endl;
       return;
     }
