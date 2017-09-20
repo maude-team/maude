@@ -1,0 +1,171 @@
+Maude> ==========================================
+rewrite [3] in DINING-PHILOSOPHERS : p(0, think) || c(0) || c(1) || p(1, think)
+    .
+rewrites: 25
+result Conf: p(0, eat) || p(1, think)
+==========================================
+search in DINING-PHILOSOPHERS : p(0, think) || c(0) || c(1) || p(1, think) =>!
+    C .
+
+Solution 1 (state 15)
+states: 17  rewrites: 287
+C --> p(0, wait1) || p(1, wait1)
+
+No more solutions.
+states: 17  rewrites: 294
+==========================================
+reduce in DINING-PHILOSOPHERS-PROP : modelCheck(init, <> eating(0)) .
+ModelChecker: a system graph may compute only state propositions..
+ModelChecker: LTL model checking with a state-based algorithm.
+ModelChecker: Use the NDFS algorithm with a Buchi automaton (1 states).
+ModelChecker: Examined 10 system states and 10 transitions.
+rewrites: 82
+result ModelCheckResult: counterexample(
+{ c(0) || c(1) || p(0, think) || p(1, think),{'wake} } 
+{ c(0) || c(1) || p(0, wait0) || p(1, think),{'grabF} } 
+{ c(1) || p(0, wait1) || p(1, think),{'wake} } 
+{ c(1) || p(0, wait1) || p(1, wait0),{'grabF} }, 
+{ p(0, wait1) || p(1, wait1),deadlock })
+==========================================
+reduce in DINING-PHILOSOPHERS-PROP : modelCheck(init, []~ deadlock -> <>
+    eating(0)) .
+ModelChecker: a system graph may compute state and event propositions..
+ModelChecker: LTLR model checking with a state/event-based algorithm.
+ModelChecker: Use the NDFS algorithm with a Buchi automaton (1 states).
+ModelChecker: Examined 13 system states and 23 transitions.
+rewrites: 294
+result ModelCheckResult: counterexample(
+{ c(0) || c(1) || p(0, think) || p(1, think),{'wake : 'I \ 0} }, 
+{ c(0) || c(1) || p(0, wait0) || p(1, think),{'wake : 'I \ 1} } 
+{ c(0) || c(1) || p(0, wait0) || p(1, wait0),{'grabF : 'I \ 1 ; 'J \ 0} } 
+{ c(1) || p(0, wait0) || p(1, wait1),{'grabS : 'I \ 1 ; 'J \ 1} } 
+{ p(0, wait0) || p(1, eat),{'stop : 'I \ 1} })
+==========================================
+reduce in DINING-PHILOSOPHERS-PROP : modelCheck(init, (<> []enabled({'wake : 'I
+    \ 0}) -> []<> {'wake : 'I \ 0}) /\ ([]<> enabled({'grabF : 'I \ 0}) -> []<>
+    {'grabF : 'I \ 0}) -> <> eating(0)) .
+ModelChecker: a system graph may compute state, event, and enabled
+    propositions..
+ModelChecker: LTLR model checking with a state/event-based algorithm.
+ModelChecker: Use the NDFS algorithm with a Buchi automaton (12 states).
+ModelChecker: Examined 16 system states and 20 transitions.
+rewrites: 393
+result ModelCheckResult: counterexample(
+{ c(0) || c(1) || p(0, think) || p(1, think),{'wake : 'I \ 0} } 
+{ c(0) || c(1) || p(0, wait0) || p(1, think),{'grabF : 'I \ 0 ; 'J \ 0} } 
+{ c(1) || p(0, wait1) || p(1, think),{'wake : 'I \ 1} } 
+{ c(1) || p(0, wait1) || p(1, wait0),{'grabF : 'I \ 1 ; 'J \ 1} }, 
+{ p(0, wait1) || p(1, wait1),deadlock })
+==========================================
+reduce in DINING-PHILOSOPHERS-PROP : modelCheck(init, (<> []enabled({'wake : 'I
+    \ 0}) -> []<> {'wake : 'I \ 0}) /\ ([]<> enabled({'grabF : 'I \ 0}) -> []<>
+    {'grabF : 'I \ 0}) -> []~ deadlock -> <> eating(0)) .
+ModelChecker: a system graph may compute state, event, and enabled
+    propositions..
+ModelChecker: LTLR model checking with a state/event-based algorithm.
+ModelChecker: Use the NDFS algorithm with a Buchi automaton (12 states).
+ModelChecker: Examined 17 system states and 35 transitions.
+rewrites: 384
+result Bool: true
+==========================================
+reduce in DINING-PHILOSOPHERS-PROP : modelCheckFair(init, <> eating(0), just({
+    'wake : 'I \ I}) ; fair({'grabF : 'I \ I}) ; fair({'grabS : 'I \ I})) .
+ModelChecker: a system graph may compute state, event, and enabled
+    propositions..
+ModelChecker: LTL model checking with a state-based algorithm.
+ModelChecker: Use the Streett algorithm with a gen-Buchi automaton (1 states).
+ModelChecker: Examined 10 system states and 10 transitions.
+rewrites: 291
+result ModelCheckResult: counterexample(
+{ c(0) || c(1) || p(0, think) || p(1, think),{'wake : 'I \ 0} } 
+{ c(0) || c(1) || p(0, wait0) || p(1, think),{'grabF : 'I \ 0 ; 'J \ 0} } 
+{ c(1) || p(0, wait1) || p(1, think),{'wake : 'I \ 1} } 
+{ c(1) || p(0, wait1) || p(1, wait0),{'grabF : 'I \ 1 ; 'J \ 1} }, 
+{ p(0, wait1) || p(1, wait1),deadlock })
+==========================================
+reduce in DINING-PHILOSOPHERS-PROP : modelCheckFair(init, []~ deadlock -> <>
+    eating(0), just({'wake : 'I \ I}) ; fair({'grabF : 'I \ I}) ; fair({'grabS
+    : 'I \ I})) .
+ModelChecker: a system graph may compute state, event, and enabled
+    propositions..
+ModelChecker: LTLR model checking with a state/event-based algorithm.
+ModelChecker: Use the Streett algorithm with a gen-Buchi automaton (1 states).
+ModelChecker: Examined 17 system states and 35 transitions.
+rewrites: 421
+result Bool: true
+
+	    Full Maude 2.7 June 18th 2014
+
+
+	    LTLR Fairness Model Checker December 10th 2011
+
+Introduced module DINING-PHILOSOPHERS-FULL
+
+Introduced module DINING-PHILOSOPHERS-PROP-FULL
+
+ModelChecker: a system graph may compute only state propositions..
+ModelChecker: LTL model checking with a state-based algorithm.
+ModelChecker: Use the NDFS algorithm with a Buchi automaton (1 states).
+ModelChecker: Examined 10 system states and 10 transitions.
+ltlr model check in DINING-PHILOSOPHERS-PROP-FULL :
+  init |= <> eating(0)
+result ModelCheckResult :
+  counterexample(
+{ c(0)|| c(1)|| p(0,think)|| p(1,think),{'wake} }
+{ c(0)|| c(1)|| p(0,wait0)|| p(1,think),{'grabF} }
+{ c(1)|| p(0,wait1)|| p(1,think),{'wake} }
+{ c(1)|| p(0,wait1)|| p(1,wait0),{'grabF} },
+{ p(0,wait1)|| p(1,wait1),deadlock })
+
+ModelChecker: a system graph may compute state and event propositions..
+ModelChecker: LTLR model checking with a state/event-based algorithm.
+ModelChecker: Use the NDFS algorithm with a Buchi automaton (1 states).
+ModelChecker: Examined 13 system states and 23 transitions.
+ltlr model check in DINING-PHILOSOPHERS-PROP-FULL :
+  init |= []~ deadlock -> <> eating(0)
+result ModelCheckResult :
+  counterexample(
+{ c(0)|| c(1)|| p(0,think)|| p(1,think),{'wake : 'I \ 0} },
+{ c(0)|| c(1)|| p(0,wait0)|| p(1,think),{'wake : 'I \ 1} }
+{ c(0)|| c(1)|| p(0,wait0)|| p(1,wait0),{'grabF : 'I \ 1 ; 'J \ 0} }
+{ c(1)|| p(0,wait0)|| p(1,wait1),{'grabS : 'I \ 1 ; 'J \ 1} }
+{ p(0,wait0)|| p(1,eat),{'stop : 'I \ 1} })
+
+ModelChecker: a system graph may compute state, event, and enabled
+    propositions..
+ModelChecker: LTL model checking with a state-based algorithm.
+ModelChecker: Use the Streett algorithm with a gen-Buchi automaton (1 states).
+ModelChecker: Examined 10 system states and 10 transitions.
+ltlr model check under localized fairness in DINING-PHILOSOPHERS-PROP-FULL :
+  init |= <> eating(0)
+result ModelCheckResult :
+  counterexample(
+{ c(0)|| c(1)|| p(0,think)|| p(1,think),{'wake : 'I \ 0} }
+{ c(0)|| c(1)|| p(0,wait0)|| p(1,think),{'grabF : 'I \ 0 ; 'J \ 0} }
+{ c(1)|| p(0,wait1)|| p(1,think),{'wake : 'I \ 1} }
+{ c(1)|| p(0,wait1)|| p(1,wait0),{'grabF : 'I \ 1 ; 'J \ 1} },
+{ p(0,wait1)|| p(1,wait1),deadlock })
+
+ModelChecker: a system graph may compute state, event, and enabled
+    propositions..
+ModelChecker: LTLR model checking with a state/event-based algorithm.
+ModelChecker: Use the Streett algorithm with a gen-Buchi automaton (1 states).
+ModelChecker: Examined 17 system states and 35 transitions.
+ltlr model check under localized fairness in DINING-PHILOSOPHERS-PROP-FULL :
+  init |= []~ deadlock -> <> eating(0)
+result Bool :
+  true
+
+ModelChecker: a system graph may compute state, event, and enabled
+    propositions..
+ModelChecker: LTLR model checking with a state/event-based algorithm.
+ModelChecker: Use the Streett algorithm with a gen-Buchi automaton (1 states).
+ModelChecker: Examined 17 system states and 35 transitions.
+ltlr model check in DINING-PHILOSOPHERS-PROP-FULL :
+  init |= []~ deadlock -> <> eating(0)
+under fairness :
+  just(wake(I:Nat)); fair(grabF(I:Nat)); fair(grabS(I:Nat))
+result Bool :
+  true
+
+Maude> Bye.

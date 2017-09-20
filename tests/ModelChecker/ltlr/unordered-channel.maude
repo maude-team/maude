@@ -1,0 +1,87 @@
+set show timing off .
+
+mod UNORDERED-CHANNEL is
+  protecting NAT .
+  vars N M J K : Nat .      vars L P : List .  var  C : Conf .
+
+--- list
+  sort List .
+  op nil : -> List [ctor] .
+  op _;_ : Nat List -> List [ctor] .   *** list constructor
+  op _@_ : List List -> List .      *** list append
+
+  eq nil @ L = L .
+  eq (N ; L) @ P = N ; (L @ P) . 
+
+--- conf
+  sort Conf .
+  op null : -> Conf [ctor] .
+  op __ : Conf Conf -> Conf [ctor assoc comm id: null] .
+
+--- msg
+  sort Msg .
+  subsort Msg < Conf .
+  op [_,_] : Nat Nat -> Msg [ctor] .
+  op ack : Nat -> Msg [ctor] .
+
+--- state
+  sort ChannelState .
+  op {_,_|_|_,_} : List Nat Conf List Nat -> ChannelState [ctor] .
+
+--- rules
+  rl [snd]: {N ; L, M | C | P, K} => {N ; L, M | [N, M] C | P, K} .
+  rl [rec]: {L, M | [N, J] C | P, J}  
+         => {L, M | ack(J) C | P @ (N ; nil), s(J)}  .
+  rl [ack]: {N ; L, J | ack(J) C | P, M}  => {L, s(J) | C | P, M} .
+endm
+
+mod UNORDERED-CHANNEL-ABS is
+  including UNORDERED-CHANNEL .
+  vars N M J K : Nat .      vars L P : List .  var  C : Conf .
+
+  eq {L, M | [N, J] [N, J] C | P, K} = {L, M | [N, J] C | P, K} .
+
+  rl [rec]: {L, M | [N, J] C | P, J} 
+         => {L, M | [N, J] ack(J) C | P @ (N ; nil), s(J)} .
+endm
+
+load ltlr-checker
+
+mod UNORDERED-CHANNEL-PREDS is
+  protecting UNORDERED-CHANNEL-ABS .
+  protecting LTLR-MODEL-CHECKER .
+  including SPATIAL-ACTION-PATTERN .
+
+  vars M N K P : Nat . vars L L1 L2 : List . var  C : Conf . var  B : Bool . 
+
+  subsort ChannelState < State .
+
+  op prefix : List -> Prop .
+  eq {L1, N | C | K ; L2, P} |= prefix(M ; L) 
+   = (M == K) and  ({L1, N | C | L2, P} |=  prefix(L)) .
+  eq {L1, N | C | nil, K} |=  prefix(L) = true .
+  eq {L1, N | C | M ; L2, K} |=  prefix(nil) = false .
+
+  op rec-q : List -> Prop .
+  eq {L1, N | C | L2, K} |=  rec-q(L) = L == L2 .
+
+  op init : -> State .
+  eq init = {0 ; 1 ; 2 ; nil , 0 | null | nil , 0} .
+endm
+
+set verbose on .
+
+--- true
+red modelCheck(init, [] prefix(0 ; 1 ; 2 ; nil)) .
+
+--- false
+red modelCheck(init, <> rec-q(0 ; 1 ; 2 ; nil)) .
+
+--- true
+red modelCheck(init, ([]<> ~ {'snd}) -> <> rec-q(0 ; 1 ; 2 ; nil)) .
+
+--- true
+red modelCheckFair(init, <> rec-q(0 ; 1 ; 2 ; nil),
+    (just : {'snd} => False)) .
+
+

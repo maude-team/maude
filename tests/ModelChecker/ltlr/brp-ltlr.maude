@@ -1,0 +1,136 @@
+*** The Bounded Retransmission Protocol
+*** Author: Kyungmin Bae <kbae4@cs.uiuc.edu>
+
+*** The protocol description is adapted from: 
+*** P. Abdulla, L. Annichini and A. Bouajjani, Symbolic verification of lossy channel systems: Application to the bounded retransmission protocol, In: TACAS'99, LNCS 1579, Springer (1999) 208-222
+
+set show timing off .
+
+--- load LTLR model checker
+load ltlr-checker
+
+fmod BRP-SYNTAX is 
+  protecting BOOL .
+
+  sorts Sender Receiver . 
+
+  --- the sender's status
+  --- snd(m) : the sender is sending a msg m
+  --- acc(m) : the sender gets an acknowledgement of the acceptance of a msg m
+  --- set(m) : the sender is about to send a msg m
+  op idle : -> Sender [ctor] .
+  ops set snd acc : Msg -> Sender [ctor] .
+
+  --- the receiver's status
+  --- rec(m) : the receiver gets a message m
+  op wait : -> Receiver [ctor] .
+  op rec : Msg -> Receiver [ctor] .
+
+  --- list of messages
+  --- first: the first datum, last: the last datum, 0/1: the alternating bit
+  sorts Msg MsgL . 
+  subsort Msg < MsgL .
+  ops 0 1 first last : -> Msg [ctor] . 
+  op nil : -> MsgL [ctor] . 
+  op _;_ : MsgL MsgL -> MsgL [ctor assoc id: nil] .
+
+  --- state representation
+  sort Conf .
+  op <_,_,_,_,_,_> : Sender Bool MsgL MsgL Bool Receiver -> Conf [ctor] . 
+endfm
+
+
+mod BRP is
+  protecting BRP-SYNTAX .
+
+  var S : Sender .  var R : Receiver . var B : Bool .
+  var M M' : Msg .  vars K L : MsgL .  vars A T : Bool . 
+
+--- client side
+  rl [req] : < idle,	   A,     nil,   nil,    false, R >
+          => < set(first), false, nil,   nil,    false, R > . 
+  rl [snd] : < snd(M),     A,     K,     L,      T,    R >
+          => < snd(M),     A,     K ; M, L,      T,    R > .
+ crl [acc] : < snd(M),     A,     K,     M' ; L, T,    R >
+          => < S,          A,     K,     L,      T,    R > 
+    if S := (if M == M' then acc(M) else snd(M) fi) .
+ crl [los] : < snd(M),     A,     K,     nil,    T,    R >
+          => < idle,       true,  K,     nil,    T,    R > 
+    if M =/= first .
+
+  eq < set(M), A, K,     L, T, R > 
+   = < snd(M), A, K ; M, L, T, R > .
+
+  rl [sel] : acc(first) => set(0) .  rl [sel] : acc(first) => set(last) .
+  rl [sel] : acc(0)     => set(1) .  rl [sel] : acc(0) => set(last) .
+  rl [sel] : acc(1)     => set(0) .  rl [sel] : acc(1) => set(last) .
+  rl [sel] : acc(last)  => idle .
+
+--- server side
+  crl [rec]  : < S, false, M ; K, L,     T, R >
+            => < S, false, K,     L ; M, B, rec(M) > 
+     if R =/= rec(M) /\ B := (if M == first then true else T fi).
+  rl  [ign]  : < S, A,     M ; K, L,     T,     rec(M) >
+            => < S, A,     K,     L ; M, T,     rec(M) > .
+  crl [nil]  : < S, A,     nil,   L,     T,     rec(M) >
+            => < S, A,     nil,   L,     false,  wait   >
+   if M == last or A == true .
+endm
+
+mod BRP-ABS is
+  inc BRP .
+
+  var S : Sender . var R : Receiver . vars M M' : Msg .   
+  vars K L KL : MsgL . vars A T B : Bool .
+
+--- abstraction
+  eq < S, A, KL ; M ; M ; K, L, T, R >
+   = < S, A, KL ; M ; K,     L, T, R > .
+  eq < S, A, K, KL ; M ; M ; L, T, R >
+   = < S, A, K, KL ; M ; L,     T, R > .
+
+--- coherence completion
+ crl [acc] : < snd(M), A,     K,     M' ; L, T,  R >
+          => < S,      A,     K,     M' ; L, T,  R >
+    if S := (if M == M' then acc(M) else snd(M) fi) .
+ crl [rec] : < S,      false, M ; K, L,      T, R >
+          => < S,      false, M ; K, L ; M,  B, rec(M) > 
+     if R =/= rec(M) /\ B := (if M == first then true else T fi).
+  rl [ign] : < S,      A,     M ; K, L,      T,     rec(M) >
+          => < S,      A,     M ; K, L ; M,  T,     rec(M) > .
+endm
+
+mod BRP-CHECK is
+  protecting BRP-ABS .
+  inc LTLR-MODEL-CHECKER .
+
+  subsort Conf < State .
+---  subsorts Context$Conf < StateContext .   --- no context used
+
+  var M : Msg .  var CXT : StateContext .  var SUB : StateSubstitution .
+
+  ops req sok snok sdnk rfst rinc rok rnok : -> Action .
+  eq  {CXT | 'req : SUB}              |= req  = true .
+  eq  {CXT | 'acc : 'M \ last ; 
+                    'M' \ last ; SUB} |= sok  = true .
+  ceq {CXT | 'los : 'M \ M ; SUB}     |= snok = true if M =/= last .
+  eq  {CXT | 'los : 'M \ last ; SUB}  |= sdnk = true .
+  eq  {CXT | 'rec : 'M \ first ; SUB} |= rfst = true .
+  ceq {CXT | 'rec : 'M \ M ; SUB}     |= rinc = true if M == 0 or M == 1 .
+  eq  {CXT | 'rec : 'M \ last ; SUB}  |= rok  = true .
+  ceq {CXT | 'nil : 'M \ M ; SUB}     |= rnok = true if M =/= last .
+
+endm
+
+set verbose on .
+
+--- false
+red modelCheck(< idle, false, nil, nil, false, wait >,
+    [] ( req -> <> sok)) .
+
+--- true
+red modelCheck(< idle, false, nil, nil, false, wait >,
+    [] ( req -> O (~ req W (sok \/ snok \/ sdnk) )) /\
+    [] ( rfst -> (~ req W (rok \/ rnok))) /\
+    [] ( req -> (~ sok W rok)) /\
+    [] ( req -> (~ rnok W (snok \/ sdnk) ))) .

@@ -1,0 +1,119 @@
+*** The Fault-tolerant client-server communication
+*** Author: Kyungmin Bae <kbae4@cs.uiuc.edu>
+
+set show timing off .
+
+mod CLIENT-SERVER-SYNTAX is
+  protecting NAT .
+  sorts Oid Nat? Cnts Conf .
+  subsort Nat < Nat? .
+  subsort Cnts < Conf .
+
+  op nil : -> Nat? [ctor] .
+  ops a b c d e f g : -> Oid [ctor] .
+  op f : Oid Oid Nat -> Nat [ctor] .
+  op `{_`,_`} : Oid Nat -> Cnts [ctor] .
+
+  op `[_`] : Oid -> Conf [ctor] .                        *** servers
+  op _<-_ : Oid Cnts -> Conf [ctor prec 0] .	         *** messages
+  op `[_`,_`,_`,_`] : Oid Oid Nat Nat? -> Conf [ctor] .  *** clients
+
+  op null : -> Conf [ctor] .
+  op __ : Conf Conf -> Conf [ctor assoc comm id: null] .
+endm
+
+mod CLIENT-SERVER is
+  including CLIENT-SERVER-SYNTAX .
+
+  vars C S I J : Oid .  vars N M : Nat .
+
+  rl [req]  : [C,S,N,nil] 
+           => [C,S,N,nil] S <-{C,N} [metadata "just(C)"] .
+  rl [reply]: S <-{C,N} [S] 
+           => [S] C <-{S,f(S,C,N)}  [metadata "fair(S,C)"] .
+  rl [rec]  : C <-{S,M} [C,S,N,nil] 
+           => [C,S,N,M]             [metadata "fair(C)"] .
+
+  rl [dupl] : I <-{J,M} => I <-{J,M} I <-{J,M} .
+  rl [loss] : I <-{J,M} => null  .
+endm
+
+
+mod CLIENT-SERVER-ABS is
+    including CLIENT-SERVER .
+  vars C S I J : Oid .  vars N M : Nat .
+
+    *** abstraction
+    eq I <-{J,N} I <-{J,N} = I <-{J,N} .
+
+    *** extra rules below added by coherence completion
+    rl [reply]: S <-{C,N} [S]         
+             => S <-{C,N} [S] C <-{S,f(S,C,N)}  [metadata "fair(S,C)"] .
+
+    rl [rec]  : C <-{S,M} [C,S,N,nil] 
+             => C <-{S,M} [C,S,N,M]             [metadata "fair(C)"] .
+
+    rl [loss] : I <-{C,N} => (I <-{C,N}) .
+endm
+
+load ltlr-checker
+
+mod CLIENT-SERVER-CHECK is
+    protecting CLIENT-SERVER-ABS .
+    inc LTLR-MODEL-CHECKER .
+    subsort Conf < State .
+
+    vars C S : Oid . vars N M : Nat . var CF : Conf .
+
+    op answered : Oid -> Prop .
+    eq [C,S,N,M] CF |= answered(C) = true .
+    eq CF |= answered(C) = false [owise]  .
+
+    op init : -> State .
+    eq init = [a] [b,a,1,nil] [c,a,0,nil] .
+endm
+
+set verbose on .
+
+--- false
+red modelCheck(init, <> answered(b)) .
+
+--------------- ---------------
+--- Full Maude commands
+
+load ltlr-interface
+
+(mod CLIENT-SERVER-CHECK-CONTEXT is
+  including LTLR-MODEL-CHECKER .
+  protecting CLIENT-SERVER-CHECK . 
+  protecting CONTEXT[CLIENT-SERVER] .   --- generate context signature
+  subsort Context$Conf < StateContext . --- declare state context sort
+endm)
+
+(select CLIENT-SERVER-CHECK .)
+
+--- false
+(mc init |= <> answered(b) .)
+
+--- false (plus context information)
+(mc in CLIENT-SERVER-CHECK-CONTEXT : init |= [] (req(b) -> <> answered(b)) .)
+
+
+--- true
+(pfmc init |= <> answered(b) .)
+
+--- false
+(mc init |= <> answered(b) under
+   just(req(C:Oid)) ; just(rec(b))  .)
+
+--- false
+(mc init |= <> answered(b) under
+   just(req(C:Oid)) ; just(rec(C:Oid)) ; fair(reply(S:Oid,C:Oid))  .)
+
+--- true
+(mc init |= <> answered(b) under
+   just(req(b)) ; fair(rec(C:Oid)) ; fair(reply(S:Oid,b))  .)
+
+--- true
+(mc init |= <> answered(b) under
+   just(req(C:Oid)) ; fair(rec(C:Oid)) ; fair(reply(S:Oid,C:Oid))  .)

@@ -1,0 +1,10 @@
+#!/bin/sh
+
+MAUDE_LIB=$srcdir/../../../src/Main
+export MAUDE_LIB
+
+../../../src/Main/maude \
+  < $srcdir/philo-dynamic.maude -no-banner -no-advise \
+  > philo-dynamic.out 2>&1
+
+diff $srcdir/philo-dynamic.expected philo-dynamic.out > /dev/null 2>&1

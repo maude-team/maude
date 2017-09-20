@@ -1,0 +1,71 @@
+Maude> 
+	    Full Maude 2.7 June 18th 2014
+
+
+	    LTLR Fairness Model Checker December 10th 2011
+
+Introduced module POSITION-MODEL-PRED
+
+ModelChecker: a system graph may compute only state propositions..
+ModelChecker: LTL model checking with a state-based algorithm.
+ModelChecker: Use the NDFS algorithm with a Buchi automaton (1 states).
+ModelChecker: Examined 14 system states and 19 transitions.
+ltlr model check in POSITION-MODEL-PRED :
+  [2] |= <> reach(b)
+result ModelCheckResult :
+  counterexample(
+{ f(f(a,a),f(a,a)),{'tob} }
+{ f(f(b,a),f(a,a)),{'tob} }
+{ f(b,f(a,a)),{'toa} }
+{ f(a,f(a,a)),{'tob} },
+{ f(a,f(b,a)),{'tob} }
+{ f(b,f(b,a)),{'toa} })
+
+ModelChecker: a system graph may compute state, event, and enabled
+    propositions..
+ModelChecker: LTL model checking with a state-based algorithm.
+ModelChecker: Use the Streett algorithm with a gen-Buchi automaton (1 states).
+ModelChecker: Examined 4 system states and 4 transitions.
+ltlr model check in POSITION-MODEL-PRED :
+  [2] |= <> reach(b)
+under fairness :
+  fair({'tob})
+result ModelCheckResult :
+  counterexample(nil,
+{ f(f(a,a),f(a,a)),{f(f([],a),f(a,a))| 'tob} }
+{ f(f(b,a),f(a,a)),{f(f([],a),f(a,a))| 'toa} })
+
+ModelChecker: a system graph may compute state, event, and enabled
+    propositions..
+ModelChecker: LTL model checking with a state-based algorithm.
+ModelChecker: Use the Streett algorithm with a gen-Buchi automaton (1 states).
+ModelChecker: Examined 17 system states and 26 transitions.
+ltlr model check in POSITION-MODEL-PRED :
+  [2] |= <> reach(b)
+under fairness :
+  fair(pos('tob,P:Pos))
+result ModelCheckResult :
+  counterexample(
+{ f(f(a,a),f(a,a)),{f(f([],a),f(a,a))| 'tob} }
+{ f(f(b,a),f(a,a)),{f(f(b,[]),f(a,a))| 'tob} }
+{ f(b,f(a,a)),{f([],f(a,a))| 'toa} }
+{ f(a,f(a,a)),{f(a,f([],a))| 'tob} }
+{ f(a,f(b,a)),{f(a,f(b,[]))| 'tob} },
+{ f(a,b),{f(a,[])| 'toa} }
+{ f(a,a),{f([],a)| 'tob} }
+{ f(b,a),{f([],a)| 'toa} }
+{ f(a,a),{f(a,[])| 'tob} })
+
+ModelChecker: a system graph may compute state, event, and enabled
+    propositions..
+ModelChecker: LTL model checking with a state-based algorithm.
+ModelChecker: Use the Streett algorithm with a gen-Buchi automaton (1 states).
+ModelChecker: Examined 25 system states and 78 transitions.
+ltlr model check in POSITION-MODEL-PRED :
+  [2] |= <> reach(b)
+under fairness :
+  fair({CXT:StateContext | 'tob})
+result Bool :
+  true
+
+Maude> Bye.

@@ -1,0 +1,46 @@
+Maude> ==========================================
+reduce in UNORDERED-CHANNEL-PREDS : modelCheck(init, []prefix(0 ; 1 ; 2 ; nil))
+    .
+ModelChecker: a system graph may compute only state propositions..
+ModelChecker: LTL model checking with a state-based algorithm.
+ModelChecker: Use the NDFS algorithm with a Buchi automaton (2 states).
+ModelChecker: Examined 36 system states and 64 transitions.
+rewrites: 380
+result Bool: true
+==========================================
+reduce in UNORDERED-CHANNEL-PREDS : modelCheck(init, <> rec-q(0 ; 1 ; 2 ; nil))
+    .
+ModelChecker: a system graph may compute only state propositions..
+ModelChecker: LTL model checking with a state-based algorithm.
+ModelChecker: Use the NDFS algorithm with a Buchi automaton (1 states).
+ModelChecker: Examined 14 system states and 20 transitions.
+rewrites: 87
+result ModelCheckResult: counterexample(
+{ {0 ; 1 ; 2 ; nil,0 | null | nil,0},{'snd} } 
+{ {0 ; 1 ; 2 ; nil,0 | [0,0] | nil,0},{'rec} } 
+{ {0 ; 1 ; 2 ; nil,0 | ack(0) [0,0] | 0 ; nil,1},{'ack} } 
+{ {1 ; 2 ; nil,1 | [0,0] | 0 ; nil,1},{'snd} } 
+{ {1 ; 2 ; nil,1 | [0,0] [1,1] | 0 ; nil,1},{'rec} } 
+{ {1 ; 2 ; nil,1 | ack(1) [0,0] [1,1] | 0 ; 1 ; nil,2},{'ack} } 
+{ {2 ; nil,2 | [0,0] [1,1] | 0 ; 1 ; nil,2},{'snd} }, 
+{ {2 ; nil,2 | [0,0] [1,1] [2,2] | 0 ; 1 ; nil,2},{'snd} })
+==========================================
+reduce in UNORDERED-CHANNEL-PREDS : modelCheck(init, []<> ~ {'snd} -> <> rec-q(
+    0 ; 1 ; 2 ; nil)) .
+ModelChecker: a system graph may compute state and event propositions..
+ModelChecker: LTLR model checking with a state/event-based algorithm.
+ModelChecker: Use the NDFS algorithm with a Buchi automaton (2 states).
+ModelChecker: Examined 28 system states and 40 transitions.
+rewrites: 179
+result Bool: true
+==========================================
+reduce in UNORDERED-CHANNEL-PREDS : modelCheckFair(init, <> rec-q(0 ; 1 ; 2 ;
+    nil), just : {'snd} => False) .
+ModelChecker: a system graph may compute state and event propositions..
+ModelChecker: LTL model checking with a state-based algorithm.
+ModelChecker: Use the SCC-Buchi algorithm with a gen-Buchi automaton (1
+    states).
+ModelChecker: Examined 28 system states and 40 transitions.
+rewrites: 193
+result Bool: true
+Maude> Bye.

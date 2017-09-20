@@ -1,0 +1,34 @@
+Maude> ==========================================
+reduce in BRP-CHECK : modelCheck(< idle,false,nil,nil,false,wait >, [](req ->
+    <> sok)) .
+ModelChecker: a system graph may compute state and event propositions..
+ModelChecker: LTLR model checking with an event-based algorithm.
+ModelChecker: Use the NDFS algorithm with a Buchi automaton (2 states).
+ModelChecker: Examined 17 system states and 25 transitions.
+rewrites: 140
+result ModelCheckResult: counterexample(
+{ < idle,false,nil,nil,false,wait >,{'req : 'A \ false ; 'R \ wait} } 
+{ < snd(first),false,first,nil,false,wait >,{'rec : 'K \ (nil).MsgL ; 'L \ (
+    nil).MsgL ; 'M \ first ; 'B \ true ; 'T \ false ; 'R \ wait ; 'S \ snd(
+    first)} } 
+{ < snd(first),false,nil,first,true,rec(first) >,{'acc : 'K \ (nil).MsgL ; 'L \
+    (nil).MsgL ; 'M \ first ; 'M' \ first ; 'A \ false ; 'T \ true ; 'R \ rec(
+    first) ; 'S \ acc(first)} } 
+{ < acc(first),false,nil,first,true,rec(first) >,{'sel} } 
+{ < snd(0),false,0,first,true,rec(first) >,{'acc : 'K \ (0).Msg ; 'L \ (
+    nil).MsgL ; 'M \ (0).Msg ; 'M' \ first ; 'A \ false ; 'T \ true ; 'R \ rec(
+    first) ; 'S \ snd(0)} } 
+{ < snd(0),false,0,nil,true,rec(first) >,{'los : 'K \ (0).Msg ; 'M \ (0).Msg ;
+    'A \ false ; 'T \ true ; 'R \ rec(first)} }, 
+{ < idle,true,0,nil,true,rec(first) >,deadlock })
+==========================================
+reduce in BRP-CHECK : modelCheck(< idle,false,nil,nil,false,wait >, [](req -> ~
+    rnok W snok \/ sdnk) /\ ([](req -> ~ sok W rok) /\ ([](req -> O (~ req W
+    sdnk \/ (sok \/ snok))) /\ [](rfst -> ~ req W rok \/ rnok)))) .
+ModelChecker: a system graph may compute state and event propositions..
+ModelChecker: LTLR model checking with an event-based algorithm.
+ModelChecker: Use the NDFS algorithm with a Buchi automaton (9 states).
+ModelChecker: Examined 122 system states and 341 transitions.
+rewrites: 1258
+result Bool: true
+Maude> Bye.

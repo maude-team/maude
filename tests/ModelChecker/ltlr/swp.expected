@@ -1,0 +1,101 @@
+Maude> 
+	    Full Maude 2.7 June 18th 2014
+
+
+	    LTLR Fairness Model Checker December 10th 2011
+
+Introduced module SLIDING-WINDOW-ABSTRACTION-CHECK
+
+ModelChecker: a system graph may compute only state propositions..
+ModelChecker: LTL model checking with a state-based algorithm.
+ModelChecker: Use the NDFS algorithm with a Buchi automaton (2 states).
+ModelChecker: Examined 1780 system states and 12045 transitions.
+ltlr model check in SLIDING-WINDOW-ABSTRACTION-CHECK :
+  initial(1,4) |= [](S-correct(p)/\ S-correct(q)/\ S>=A'(p)/\ S>=A'(q)/\
+    recv-correct(p)/\ recv-correct(q)/\ ~ wrong-data-in-fifo(p)/\ ~
+    wrong-data-in-fifo(q))
+result Bool :
+  true
+
+ModelChecker: a system graph may compute only state propositions..
+ModelChecker: LTL model checking with a state-based algorithm.
+ModelChecker: Use the NDFS algorithm with a Buchi automaton (1 states).
+ModelChecker: Examined 113 system states and 226 transitions.
+ltlr model check in SLIDING-WINDOW-ABSTRACTION-CHECK :
+  initial(1,3) |= <> success
+result ModelCheckResult :
+  counterexample(
+{ [p : 0,0,1,1,[0,'C];[1,'B];[2,'A],empty,empty]&[q : 0,0,1,1,[0,'X];[1,'Y];[2,
+    'Z],empty,empty],{'send} }
+{ [p : 0,0,1,1,[0,'C];[1,'B];[2,'A],empty,[0,'X]]&[q : 0,0,1,1,[0,'X];[1,'Y];[
+    2,'Z],empty,empty],{'send} }
+{ [p : 0,0,1,1,[0,'C];[1,'B];[2,'A],empty,[0,'X]]&[q : 0,0,1,1,[0,'X];[1,'Y];[
+    2,'Z],empty,[0,'C]],{'recv} }
+{ [p : 1,0,1,1,[0,'C];[1,'B];[2,'A],[0,'X],empty]&[q : 0,0,1,1,[0,'X];[1,'Y];[
+    2,'Z],empty,[0,'C]],{'send} }
+{ [p : 1,0,1,1,[0,'C];[1,'B];[2,'A],[0,'X],[0,'X]]&[q : 0,0,1,1,[0,'X];[1,'Y];[
+    2,'Z],empty,[0,'C]],{'send} }
+{ [p : 1,0,1,1,[0,'C];[1,'B];[2,'A],[0,'X],[0,'X]]&[q : 0,0,1,1,[0,'X];[1,'Y];[
+    2,'Z],empty,[0,'C];[1,'B]],{'recv} }
+{ [p : 1,0,1,1,[0,'C];[1,'B];[2,'A],[0,'X],[0,'X]]&[q : 1,0,1,1,[0,'X];[1,'Y];[
+    2,'Z],[0,'C],[1,'B]],{'send} }
+{ [p : 1,0,1,1,[0,'C];[1,'B];[2,'A],[0,'X],[0,'X];[1,'Y]]&[q : 1,0,1,1,[0,'X];[
+    1,'Y];[2,'Z],[0,'C],[1,'B]],{'send} }
+{ [p : 1,0,1,1,[0,'C];[1,'B];[2,'A],[0,'X],[0,'X];[1,'Y]]&[q : 1,0,1,1,[0,'X];[
+    1,'Y];[2,'Z],[0,'C],[0,'C];[1,'B]],{'recv} }
+{ [p : 1,0,1,1,[0,'C];[1,'B];[2,'A],[0,'X],[1,'Y]]&[q : 1,0,1,1,[0,'X];[1,'Y];[
+    2,'Z],[0,'C],[0,'C];[1,'B]],{'recv} }
+{ [p : 2,1,1,1,[0,'C];[1,'B];[2,'A],[0,'X];[1,'Y],empty]&[q : 1,0,1,1,[0,'X];[
+    1,'Y];[2,'Z],[0,'C],[0,'C];[1,'B]],{'send} }
+{ [p : 2,1,1,1,[0,'C];[1,'B];[2,'A],[0,'X];[1,'Y],empty]&[q : 1,0,1,1,[0,'X];[
+    1,'Y];[2,'Z],[0,'C],[0,'C];[1,'B];[2,'A]],{'send} }
+{ [p : 2,1,1,1,[0,'C];[1,'B];[2,'A],[0,'X];[1,'Y],[1,'Y]]&[q : 1,0,1,1,[0,'X];[
+    1,'Y];[2,'Z],[0,'C],[0,'C];[1,'B];[2,'A]],{'recv} }
+{ [p : 2,1,1,1,[0,'C];[1,'B];[2,'A],[0,'X];[1,'Y],[1,'Y]]&[q : 1,0,1,1,[0,'X];[
+    1,'Y];[2,'Z],[0,'C],[1,'B];[2,'A]],{'recv} }
+{ [p : 2,1,1,1,[0,'C];[1,'B];[2,'A],[0,'X];[1,'Y],[1,'Y]]&[q : 2,1,1,1,[0,'X];[
+    1,'Y];[2,'Z],[0,'C];[1,'B],[2,'A]],{'send} }
+{ [p : 2,1,1,1,[0,'C];[1,'B];[2,'A],[0,'X];[1,'Y],[1,'Y];[2,'Z]]&[q : 2,1,1,1,[
+    0,'X];[1,'Y];[2,'Z],[0,'C];[1,'B],[2,'A]],{'recv} }
+{ [p : 3,2,1,1,[0,'C];[1,'B];[2,'A],[0,'X];[1,'Y];[2,'Z],[1,'Y]]&[q : 2,1,1,1,[
+    0,'X];[1,'Y];[2,'Z],[0,'C];[1,'B],[2,'A]],{'send} }
+{ [p : 3,2,1,1,[0,'C];[1,'B];[2,'A],[0,'X];[1,'Y];[2,'Z],[1,'Y];[2,'Z]]&[q : 2,
+    1,1,1,[0,'X];[1,'Y];[2,'Z],[0,'C];[1,'B],[2,'A]],{'loss} },
+{ [p : 3,2,1,1,[0,'C];[1,'B];[2,'A],[0,'X];[1,'Y];[2,'Z],[1,'Y];[2,'Z]]&[q : 2,
+    1,1,1,[0,'X];[1,'Y];[2,'Z],[0,'C];[1,'B],empty],{'recv} }
+{ [p : 3,2,1,1,[0,'C];[1,'B];[2,'A],[0,'X];[1,'Y];[2,'Z],[2,'Z]]&[q : 2,1,1,1,[
+    0,'X];[1,'Y];[2,'Z],[0,'C];[1,'B],empty],{'send} })
+
+ModelChecker: a system graph may compute state, event, and enabled
+    propositions..
+ModelChecker: LTL model checking with a state-based algorithm.
+ModelChecker: Use the Streett algorithm with a gen-Buchi automaton (1 states).
+ModelChecker: Examined 420 system states and 4232 transitions.
+ltlr model check in SLIDING-WINDOW-ABSTRACTION-CHECK :
+  initial(1,3) |= <> success
+under fairness :
+  just(send(P:Pid,I:Nat,W:Qid)); fair(recv(P:Pid,I:Nat,W:Qid))
+result Bool :
+  true
+
+ModelChecker: a system graph may compute state, event, and enabled
+    propositions..
+ModelChecker: LTL model checking with a state-based algorithm.
+ModelChecker: Use the Streett algorithm with a gen-Buchi automaton (1 states).
+ModelChecker: Examined 420 system states and 4232 transitions.
+ltlr model check under localized fairness in SLIDING-WINDOW-ABSTRACTION-CHECK :
+  initial(1,3) |= <> success
+result Bool :
+  true
+
+ModelChecker: a system graph may compute state, event, and enabled
+    propositions..
+ModelChecker: LTL model checking with a state-based algorithm.
+ModelChecker: Use the Streett algorithm with a gen-Buchi automaton (1 states).
+ModelChecker: Examined 32256 system states and 596170 transitions.
+ltlr model check under localized fairness in SLIDING-WINDOW-ABSTRACTION-CHECK :
+  initial(2,5) |= <> success
+result Bool :
+  true
+
+Maude> Bye.

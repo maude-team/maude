@@ -1,0 +1,31 @@
+Maude> 
+	    Full Maude 2.7 June 18th 2014
+
+
+	    LTLR Fairness Model Checker December 10th 2011
+
+Introduced module SK-PROP
+
+Maude> Introduced module SK-FORMULA
+
+ModelChecker: a system graph may compute only state propositions..
+ModelChecker: LTL model checking with a state-based algorithm.
+ModelChecker: Use the NDFS algorithm with a Buchi automaton (2 states).
+ModelChecker: Examined 20769 system states and 73357 transitions.
+ltlr model check in SK-FORMULA :
+  ic |= mutex
+result Bool :
+  true
+
+ModelChecker: a system graph may compute state, event, and enabled
+    propositions..
+ModelChecker: LTL model checking with a state-based algorithm.
+ModelChecker: Use the SCC-Buchi algorithm with a gen-Buchi automaton (6
+    states).
+ModelChecker: Examined 20769 system states and 75875 transitions.
+ltlr model check under localized fairness in SK-FORMULA :
+  ic |= lofree
+result Bool :
+  true
+
+Maude> Bye.

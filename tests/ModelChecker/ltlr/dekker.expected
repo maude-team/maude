@@ -1,0 +1,238 @@
+Maude> 
+	    Full Maude 2.7 June 18th 2014
+
+
+	    LTLR Fairness Model Checker December 10th 2011
+
+Introduced module DEKKER-CHECK
+
+ModelChecker: a system graph may compute only state propositions..
+ModelChecker: LTL model checking with a state-based algorithm.
+ModelChecker: Use the NDFS algorithm with a Buchi automaton (2 states).
+ModelChecker: Examined 152 system states and 334 transitions.
+ltlr model check in DEKKER-CHECK :
+  init |= []~(in-crit(1)/\ in-crit(2))
+result Bool :
+  true
+
+ModelChecker: a system graph may compute only state propositions..
+ModelChecker: LTL model checking with a state-based algorithm.
+ModelChecker: Use the NDFS algorithm with a Buchi automaton (6 states).
+ModelChecker: Examined 16 system states and 20 transitions.
+ltlr model check in DEKKER-CHECK :
+  init |= (~ <>[]in-rem(1)->[]<> in-crit(1))/\(~ <>[]in-rem(2)->[]<> in-crit(
+    2))
+result ModelCheckResult :
+  counterexample(
+{ {[1,repeat 'c1 := 1 ; while 'c2 = 1 do if 'turn = 2 then 'c1 := 0 ; while
+    'turn = 2 do skip od ; 'c1 := 1 fi od ; crit ; 'turn := 2 ; 'c1 := 0 ; rem
+    forever]|[2,repeat 'c2 := 1 ; while 'c1 = 1 do if 'turn = 1 then 'c2 := 0 ;
+    while 'turn = 1 do skip od ; 'c2 := 1 fi od ; crit ; 'turn := 1 ; 'c2 := 0
+    ; rem forever],['c1,0]['c2,0]['turn,1]},{'rept} }
+{ {[1,'c1 := 1 ; while 'c2 = 1 do if 'turn = 2 then 'c1 := 0 ; while 'turn = 2
+    do skip od ; 'c1 := 1 fi od ; crit ; 'turn := 2 ; 'c1 := 0 ; rem ; repeat
+    'c1 := 1 ; while 'c2 = 1 do if 'turn = 2 then 'c1 := 0 ; while 'turn = 2 do
+    skip od ; 'c1 := 1 fi od ; crit ; 'turn := 2 ; 'c1 := 0 ; rem forever]|[2,
+    repeat 'c2 := 1 ; while 'c1 = 1 do if 'turn = 1 then 'c2 := 0 ; while 'turn
+    = 1 do skip od ; 'c2 := 1 fi od ; crit ; 'turn := 1 ; 'c2 := 0 ; rem
+    forever],['c1,0]['c2,0]['turn,1]},{'asgn} }
+{ {[1,while 'c2 = 1 do if 'turn = 2 then 'c1 := 0 ; while 'turn = 2 do skip od
+    ; 'c1 := 1 fi od ; crit ; 'turn := 2 ; 'c1 := 0 ; rem ; repeat 'c1 := 1 ;
+    while 'c2 = 1 do if 'turn = 2 then 'c1 := 0 ; while 'turn = 2 do skip od ;
+    'c1 := 1 fi od ; crit ; 'turn := 2 ; 'c1 := 0 ; rem forever]|[2,repeat 'c2
+    := 1 ; while 'c1 = 1 do if 'turn = 1 then 'c2 := 0 ; while 'turn = 1 do
+    skip od ; 'c2 := 1 fi od ; crit ; 'turn := 1 ; 'c2 := 0 ; rem forever],[
+    'c1,1]['c2,0]['turn,1]},{'rept} }
+{ {[1,while 'c2 = 1 do if 'turn = 2 then 'c1 := 0 ; while 'turn = 2 do skip od
+    ; 'c1 := 1 fi od ; crit ; 'turn := 2 ; 'c1 := 0 ; rem ; repeat 'c1 := 1 ;
+    while 'c2 = 1 do if 'turn = 2 then 'c1 := 0 ; while 'turn = 2 do skip od ;
+    'c1 := 1 fi od ; crit ; 'turn := 2 ; 'c1 := 0 ; rem forever]|[2,'c2 := 1 ;
+    while 'c1 = 1 do if 'turn = 1 then 'c2 := 0 ; while 'turn = 1 do skip od ;
+    'c2 := 1 fi od ; crit ; 'turn := 1 ; 'c2 := 0 ; rem ; repeat 'c2 := 1 ;
+    while 'c1 = 1 do if 'turn = 1 then 'c2 := 0 ; while 'turn = 1 do skip od ;
+    'c2 := 1 fi od ; crit ; 'turn := 1 ; 'c2 := 0 ; rem forever],['c1,1]['c2,
+    0]['turn,1]},{'asgn} }
+{ {[1,while 'c2 = 1 do if 'turn = 2 then 'c1 := 0 ; while 'turn = 2 do skip od
+    ; 'c1 := 1 fi od ; crit ; 'turn := 2 ; 'c1 := 0 ; rem ; repeat 'c1 := 1 ;
+    while 'c2 = 1 do if 'turn = 2 then 'c1 := 0 ; while 'turn = 2 do skip od ;
+    'c1 := 1 fi od ; crit ; 'turn := 2 ; 'c1 := 0 ; rem forever]|[2,while 'c1 =
+    1 do if 'turn = 1 then 'c2 := 0 ; while 'turn = 1 do skip od ; 'c2 := 1 fi
+    od ; crit ; 'turn := 1 ; 'c2 := 0 ; rem ; repeat 'c2 := 1 ; while 'c1 = 1
+    do if 'turn = 1 then 'c2 := 0 ; while 'turn = 1 do skip od ; 'c2 := 1 fi od
+    ; crit ; 'turn := 1 ; 'c2 := 0 ; rem forever],['c1,1]['c2,1]['turn,1]},{
+    'whil} }
+{ {[1,while 'c2 = 1 do if 'turn = 2 then 'c1 := 0 ; while 'turn = 2 do skip od
+    ; 'c1 := 1 fi od ; crit ; 'turn := 2 ; 'c1 := 0 ; rem ; repeat 'c1 := 1 ;
+    while 'c2 = 1 do if 'turn = 2 then 'c1 := 0 ; while 'turn = 2 do skip od ;
+    'c1 := 1 fi od ; crit ; 'turn := 2 ; 'c1 := 0 ; rem forever]|[2,if 'turn =
+    1 then 'c2 := 0 ; while 'turn = 1 do skip od ; 'c2 := 1 fi ; while 'c1 = 1
+    do if 'turn = 1 then 'c2 := 0 ; while 'turn = 1 do skip od ; 'c2 := 1 fi od
+    ; crit ; 'turn := 1 ; 'c2 := 0 ; rem ; repeat 'c2 := 1 ; while 'c1 = 1 do
+    if 'turn = 1 then 'c2 := 0 ; while 'turn = 1 do skip od ; 'c2 := 1 fi od ;
+    crit ; 'turn := 1 ; 'c2 := 0 ; rem forever],['c1,1]['c2,1]['turn,1]},{
+    'cond} }
+{ {[1,while 'c2 = 1 do if 'turn = 2 then 'c1 := 0 ; while 'turn = 2 do skip od
+    ; 'c1 := 1 fi od ; crit ; 'turn := 2 ; 'c1 := 0 ; rem ; repeat 'c1 := 1 ;
+    while 'c2 = 1 do if 'turn = 2 then 'c1 := 0 ; while 'turn = 2 do skip od ;
+    'c1 := 1 fi od ; crit ; 'turn := 2 ; 'c1 := 0 ; rem forever]|[2,'c2 := 0 ;
+    while 'turn = 1 do skip od ; 'c2 := 1 ; while 'c1 = 1 do if 'turn = 1 then
+    'c2 := 0 ; while 'turn = 1 do skip od ; 'c2 := 1 fi od ; crit ; 'turn := 1
+    ; 'c2 := 0 ; rem ; repeat 'c2 := 1 ; while 'c1 = 1 do if 'turn = 1 then 'c2
+    := 0 ; while 'turn = 1 do skip od ; 'c2 := 1 fi od ; crit ; 'turn := 1 ;
+    'c2 := 0 ; rem forever],['c1,1]['c2,1]['turn,1]},{'asgn} },
+{ {[1,while 'c2 = 1 do if 'turn = 2 then 'c1 := 0 ; while 'turn = 2 do skip od
+    ; 'c1 := 1 fi od ; crit ; 'turn := 2 ; 'c1 := 0 ; rem ; repeat 'c1 := 1 ;
+    while 'c2 = 1 do if 'turn = 2 then 'c1 := 0 ; while 'turn = 2 do skip od ;
+    'c1 := 1 fi od ; crit ; 'turn := 2 ; 'c1 := 0 ; rem forever]|[2,while 'turn
+    = 1 do skip od ; 'c2 := 1 ; while 'c1 = 1 do if 'turn = 1 then 'c2 := 0 ;
+    while 'turn = 1 do skip od ; 'c2 := 1 fi od ; crit ; 'turn := 1 ; 'c2 := 0
+    ; rem ; repeat 'c2 := 1 ; while 'c1 = 1 do if 'turn = 1 then 'c2 := 0 ;
+    while 'turn = 1 do skip od ; 'c2 := 1 fi od ; crit ; 'turn := 1 ; 'c2 := 0
+    ; rem forever],['c1,1]['c2,0]['turn,1]},{'whil} })
+
+ModelChecker: a system graph may compute state, event, and enabled
+    propositions..
+ModelChecker: LTL model checking with a state-based algorithm.
+ModelChecker: Use the SCC-Buchi algorithm with a gen-Buchi automaton (4
+    states).
+ModelChecker: Examined 85 system states and 135 transitions.
+ltlr model check in DEKKER-CHECK :
+  init |= (~ <>[]in-rem(1)->[]<> in-crit(1))/\(~ <>[]in-rem(2)->[]<> in-crit(
+    2))
+under fairness :
+  just(exec(1))
+result ModelCheckResult :
+  counterexample(
+{ {[1,repeat 'c1 := 1 ; while 'c2 = 1 do if 'turn = 2 then 'c1 := 0 ; while
+    'turn = 2 do skip od ; 'c1 := 1 fi od ; crit ; 'turn := 2 ; 'c1 := 0 ; rem
+    forever]|[2,repeat 'c2 := 1 ; while 'c1 = 1 do if 'turn = 1 then 'c2 := 0 ;
+    while 'turn = 1 do skip od ; 'c2 := 1 fi od ; crit ; 'turn := 1 ; 'c2 := 0
+    ; rem forever],['c1,0]['c2,0]['turn,1]},{'rept : 'I \ 1 ; 'S \[2,repeat 'c2
+    := 1 ; while 'c1 = 1 do if 'turn = 1 then 'c2 := 0 ; while 'turn = 1 do
+    skip od ; 'c2 := 1 fi od ; crit ; 'turn := 1 ; 'c2 := 0 ; rem forever]; 'P
+    \('c1 := 1 ; while 'c2 = 1 do if 'turn = 2 then 'c1 := 0 ; while 'turn = 2
+    do skip od ; 'c1 := 1 fi od ; crit ; 'turn := 2 ; 'c1 := 0 ; rem); 'R \
+    skip ; 'M \['c1,0]['c2,0]['turn,1]} }
+{ {[1,'c1 := 1 ; while 'c2 = 1 do if 'turn = 2 then 'c1 := 0 ; while 'turn = 2
+    do skip od ; 'c1 := 1 fi od ; crit ; 'turn := 2 ; 'c1 := 0 ; rem ; repeat
+    'c1 := 1 ; while 'c2 = 1 do if 'turn = 2 then 'c1 := 0 ; while 'turn = 2 do
+    skip od ; 'c1 := 1 fi od ; crit ; 'turn := 2 ; 'c1 := 0 ; rem forever]|[2,
+    repeat 'c2 := 1 ; while 'c1 = 1 do if 'turn = 1 then 'c2 := 0 ; while 'turn
+    = 1 do skip od ; 'c2 := 1 fi od ; crit ; 'turn := 1 ; 'c2 := 0 ; rem
+    forever],['c1,0]['c2,0]['turn,1]},{'asgn : 'E \ 1 ; 'I \ 1 ; 'Q \ 'c1 ; 'X?
+    \ 0 ; 'S \[2,repeat 'c2 := 1 ; while 'c1 = 1 do if 'turn = 1 then 'c2 := 0
+    ; while 'turn = 1 do skip od ; 'c2 := 1 fi od ; crit ; 'turn := 1 ; 'c2 :=
+    0 ; rem forever]; 'R \(while 'c2 = 1 do if 'turn = 2 then 'c1 := 0 ; while
+    'turn = 2 do skip od ; 'c1 := 1 fi od ; crit ; 'turn := 2 ; 'c1 := 0 ; rem
+    ; repeat 'c1 := 1 ; while 'c2 = 1 do if 'turn = 2 then 'c1 := 0 ; while
+    'turn = 2 do skip od ; 'c1 := 1 fi od ; crit ; 'turn := 2 ; 'c1 := 0 ; rem
+    forever); 'M \['c2,0]['turn,1]} }
+{ {[1,while 'c2 = 1 do if 'turn = 2 then 'c1 := 0 ; while 'turn = 2 do skip od
+    ; 'c1 := 1 fi od ; crit ; 'turn := 2 ; 'c1 := 0 ; rem ; repeat 'c1 := 1 ;
+    while 'c2 = 1 do if 'turn = 2 then 'c1 := 0 ; while 'turn = 2 do skip od ;
+    'c1 := 1 fi od ; crit ; 'turn := 2 ; 'c1 := 0 ; rem forever]|[2,repeat 'c2
+    := 1 ; while 'c1 = 1 do if 'turn = 1 then 'c2 := 0 ; while 'turn = 1 do
+    skip od ; 'c2 := 1 fi od ; crit ; 'turn := 1 ; 'c2 := 0 ; rem forever],[
+    'c1,1]['c2,0]['turn,1]},{'rept : 'I \ 2 ; 'S \[1,while 'c2 = 1 do if 'turn
+    = 2 then 'c1 := 0 ; while 'turn = 2 do skip od ; 'c1 := 1 fi od ; crit ;
+    'turn := 2 ; 'c1 := 0 ; rem ; repeat 'c1 := 1 ; while 'c2 = 1 do if 'turn =
+    2 then 'c1 := 0 ; while 'turn = 2 do skip od ; 'c1 := 1 fi od ; crit ;
+    'turn := 2 ; 'c1 := 0 ; rem forever]; 'P \('c2 := 1 ; while 'c1 = 1 do if
+    'turn = 1 then 'c2 := 0 ; while 'turn = 1 do skip od ; 'c2 := 1 fi od ;
+    crit ; 'turn := 1 ; 'c2 := 0 ; rem); 'R \ skip ; 'M \['c1,1]['c2,0]['turn,
+    1]} }
+{ {[1,while 'c2 = 1 do if 'turn = 2 then 'c1 := 0 ; while 'turn = 2 do skip od
+    ; 'c1 := 1 fi od ; crit ; 'turn := 2 ; 'c1 := 0 ; rem ; repeat 'c1 := 1 ;
+    while 'c2 = 1 do if 'turn = 2 then 'c1 := 0 ; while 'turn = 2 do skip od ;
+    'c1 := 1 fi od ; crit ; 'turn := 2 ; 'c1 := 0 ; rem forever]|[2,'c2 := 1 ;
+    while 'c1 = 1 do if 'turn = 1 then 'c2 := 0 ; while 'turn = 1 do skip od ;
+    'c2 := 1 fi od ; crit ; 'turn := 1 ; 'c2 := 0 ; rem ; repeat 'c2 := 1 ;
+    while 'c1 = 1 do if 'turn = 1 then 'c2 := 0 ; while 'turn = 1 do skip od ;
+    'c2 := 1 fi od ; crit ; 'turn := 1 ; 'c2 := 0 ; rem forever],['c1,1]['c2,
+    0]['turn,1]},{'asgn : 'E \ 1 ; 'I \ 2 ; 'Q \ 'c2 ; 'X? \ 0 ; 'S \[1,while
+    'c2 = 1 do if 'turn = 2 then 'c1 := 0 ; while 'turn = 2 do skip od ; 'c1 :=
+    1 fi od ; crit ; 'turn := 2 ; 'c1 := 0 ; rem ; repeat 'c1 := 1 ; while 'c2
+    = 1 do if 'turn = 2 then 'c1 := 0 ; while 'turn = 2 do skip od ; 'c1 := 1
+    fi od ; crit ; 'turn := 2 ; 'c1 := 0 ; rem forever]; 'R \(while 'c1 = 1 do
+    if 'turn = 1 then 'c2 := 0 ; while 'turn = 1 do skip od ; 'c2 := 1 fi od ;
+    crit ; 'turn := 1 ; 'c2 := 0 ; rem ; repeat 'c2 := 1 ; while 'c1 = 1 do if
+    'turn = 1 then 'c2 := 0 ; while 'turn = 1 do skip od ; 'c2 := 1 fi od ;
+    crit ; 'turn := 1 ; 'c2 := 0 ; rem forever); 'M \['c1,1]['turn,1]} },
+{ {[1,while 'c2 = 1 do if 'turn = 2 then 'c1 := 0 ; while 'turn = 2 do skip od
+    ; 'c1 := 1 fi od ; crit ; 'turn := 2 ; 'c1 := 0 ; rem ; repeat 'c1 := 1 ;
+    while 'c2 = 1 do if 'turn = 2 then 'c1 := 0 ; while 'turn = 2 do skip od ;
+    'c1 := 1 fi od ; crit ; 'turn := 2 ; 'c1 := 0 ; rem forever]|[2,while 'c1 =
+    1 do if 'turn = 1 then 'c2 := 0 ; while 'turn = 1 do skip od ; 'c2 := 1 fi
+    od ; crit ; 'turn := 1 ; 'c2 := 0 ; rem ; repeat 'c2 := 1 ; while 'c1 = 1
+    do if 'turn = 1 then 'c2 := 0 ; while 'turn = 1 do skip od ; 'c2 := 1 fi od
+    ; crit ; 'turn := 1 ; 'c2 := 0 ; rem forever],['c1,1]['c2,1]['turn,1]},{
+    'whil : 'I \ 1 ; 'S \[2,while 'c1 = 1 do if 'turn = 1 then 'c2 := 0 ; while
+    'turn = 1 do skip od ; 'c2 := 1 fi od ; crit ; 'turn := 1 ; 'c2 := 0 ; rem
+    ; repeat 'c2 := 1 ; while 'c1 = 1 do if 'turn = 1 then 'c2 := 0 ; while
+    'turn = 1 do skip od ; 'c2 := 1 fi od ; crit ; 'turn := 1 ; 'c2 := 0 ; rem
+    forever]; 'P \ if 'turn = 2 then 'c1 := 0 ; while 'turn = 2 do skip od ;
+    'c1 := 1 fi ; 'R \(crit ; 'turn := 2 ; 'c1 := 0 ; rem ; repeat 'c1 := 1 ;
+    while 'c2 = 1 do if 'turn = 2 then 'c1 := 0 ; while 'turn = 2 do skip od ;
+    'c1 := 1 fi od ; crit ; 'turn := 2 ; 'c1 := 0 ; rem forever); 'M \['c1,1][
+    'c2,1]['turn,1]; 'T \ 'c2 = 1} }
+{ {[1,if 'turn = 2 then 'c1 := 0 ; while 'turn = 2 do skip od ; 'c1 := 1 fi ;
+    while 'c2 = 1 do if 'turn = 2 then 'c1 := 0 ; while 'turn = 2 do skip od ;
+    'c1 := 1 fi od ; crit ; 'turn := 2 ; 'c1 := 0 ; rem ; repeat 'c1 := 1 ;
+    while 'c2 = 1 do if 'turn = 2 then 'c1 := 0 ; while 'turn = 2 do skip od ;
+    'c1 := 1 fi od ; crit ; 'turn := 2 ; 'c1 := 0 ; rem forever]|[2,while 'c1 =
+    1 do if 'turn = 1 then 'c2 := 0 ; while 'turn = 1 do skip od ; 'c2 := 1 fi
+    od ; crit ; 'turn := 1 ; 'c2 := 0 ; rem ; repeat 'c2 := 1 ; while 'c1 = 1
+    do if 'turn = 1 then 'c2 := 0 ; while 'turn = 1 do skip od ; 'c2 := 1 fi od
+    ; crit ; 'turn := 1 ; 'c2 := 0 ; rem forever],['c1,1]['c2,1]['turn,1]},{
+    'cond : 'I \ 1 ; 'S \[2,while 'c1 = 1 do if 'turn = 1 then 'c2 := 0 ; while
+    'turn = 1 do skip od ; 'c2 := 1 fi od ; crit ; 'turn := 1 ; 'c2 := 0 ; rem
+    ; repeat 'c2 := 1 ; while 'c1 = 1 do if 'turn = 1 then 'c2 := 0 ; while
+    'turn = 1 do skip od ; 'c2 := 1 fi od ; crit ; 'turn := 1 ; 'c2 := 0 ; rem
+    forever]; 'P \('c1 := 0 ; while 'turn = 2 do skip od ; 'c1 := 1); 'R \(
+    while 'c2 = 1 do if 'turn = 2 then 'c1 := 0 ; while 'turn = 2 do skip od ;
+    'c1 := 1 fi od ; crit ; 'turn := 2 ; 'c1 := 0 ; rem ; repeat 'c1 := 1 ;
+    while 'c2 = 1 do if 'turn = 2 then 'c1 := 0 ; while 'turn = 2 do skip od ;
+    'c1 := 1 fi od ; crit ; 'turn := 2 ; 'c1 := 0 ; rem forever); 'M \['c1,1][
+    'c2,1]['turn,1]; 'T \ 'turn = 2} })
+
+ModelChecker: a system graph may compute state, event, and enabled
+    propositions..
+ModelChecker: LTL model checking with a state-based algorithm.
+ModelChecker: Use the SCC-Buchi algorithm with a gen-Buchi automaton (4
+    states).
+ModelChecker: Examined 152 system states and 336 transitions.
+ltlr model check in DEKKER-CHECK :
+  init |= (~ <>[]in-rem(1)->[]<> in-crit(1))/\(~ <>[]in-rem(2)->[]<> in-crit(
+    2))
+under fairness :
+  just(exec(1)); just(exec(2))
+result Bool :
+  true
+
+ModelChecker: a system graph may compute state, event, and enabled
+    propositions..
+ModelChecker: LTL model checking with a state-based algorithm.
+ModelChecker: Use the SCC-Buchi algorithm with a gen-Buchi automaton (4
+    states).
+ModelChecker: Examined 152 system states and 336 transitions.
+ltlr model check in DEKKER-CHECK :
+  init |= (~ <>[]in-rem(1)->[]<> in-crit(1))/\(~ <>[]in-rem(2)->[]<> in-crit(
+    2))
+under fairness :
+  just(exec(I:Pid))
+result Bool :
+  true
+
+ModelChecker: a system graph may compute state, event, and enabled
+    propositions..
+ModelChecker: LTL model checking with a state-based algorithm.
+ModelChecker: Use the SCC-Buchi algorithm with a gen-Buchi automaton (4
+    states).
+ModelChecker: Examined 152 system states and 336 transitions.
+ltlr model check under localized fairness in DEKKER-CHECK :
+  init |= (~ <>[]in-rem(1)->[]<> in-crit(1))/\(~ <>[]in-rem(2)->[]<> in-crit(
+    2))
+result Bool :
+  true
+
+Maude> Bye.

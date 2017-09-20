@@ -1,0 +1,10 @@
+#!/bin/sh
+
+MAUDE_LIB=$srcdir/../../../src/Main
+export MAUDE_LIB
+
+../../../src/Main/maude \
+  < $srcdir/simple-dp.maude -no-banner -no-advise \
+  > simple-dp.out 2>&1
+
+diff $srcdir/simple-dp.expected simple-dp.out > /dev/null 2>&1

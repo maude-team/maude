@@ -1,0 +1,517 @@
+Maude> 
+	    Full Maude 2.7 June 18th 2014
+
+
+	    LTLR Fairness Model Checker December 10th 2011
+
+Introduced module PHILO-CHECK
+
+ModelChecker: a system graph may compute only state propositions..
+ModelChecker: LTL model checking with a state-based algorithm.
+ModelChecker: Use the NDFS algorithm with a Buchi automaton (1 states).
+ModelChecker: Examined 377 system states and 377 transitions.
+ltlr model check in PHILO-CHECK :
+  init(97) |= <> eating(1)
+result ModelCheckResult :
+  counterexample(
+{ < 97,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 292,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 146,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 73,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 220,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 110,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 55,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 166,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 83,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 250,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 125,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 376,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 188,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 94,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 47,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 142,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 71,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 214,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 107,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 322,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 161,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 484,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 242,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 121,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 364,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 182,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 91,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 274,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 137,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 412,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 206,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 103,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 310,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 155,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 466,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 233,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 700,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 350,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 175,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 526,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 263,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 790,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 395,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 1186,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 593,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 1780,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 890,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 445,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 1336,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 668,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 334,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 167,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 502,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 251,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 754,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 377,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 1132,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 566,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 283,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 850,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 425,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 1276,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 638,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 319,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 958,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 479,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 1438,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 719,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 2158,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 1079,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 3238,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 1619,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 4858,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 2429,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 7288,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 3644,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 1822,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 911,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 2734,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 1367,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 4102,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 2051,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 6154,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 3077,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 9232,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 4616,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 2308,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 1154,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 577,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 1732,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 866,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 433,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 1300,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 650,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 325,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 976,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 488,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 244,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 122,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 61,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 184,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 92,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 46,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 23,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 70,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 35,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 106,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 53,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 160,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 80,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 40,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 20,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 10,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 5,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 16,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 8,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 4,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 2,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve} }
+{ < 1,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'wake} }
+{ < 1,2,stk(1); stk(2); ph(1,hungry,0); ph(2,think,0)>,{'grab} }
+{ < 1,2,stk(2); ph(1,hungry,1); ph(2,think,0)>,{'wake} }
+{ < 1,2,stk(2); ph(1,hungry,1); ph(2,hungry,0)>,{'grab} },
+{ < 1,2,ph(1,hungry,1); ph(2,hungry,1)>,deadlock })
+
+ModelChecker: a system graph may compute state and event propositions..
+ModelChecker: LTLR model checking with a state/event-based algorithm.
+ModelChecker: Use the NDFS algorithm with a Buchi automaton (1 states).
+ModelChecker: Examined 380 system states and 390 transitions.
+ltlr model check in PHILO-CHECK :
+  init(97) |= []~ deadlock -> <> eating(1)
+result ModelCheckResult :
+  counterexample(
+{ < 97,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 95 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 292,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 290 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 146,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 144 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 73,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 71 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 220,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 218 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 110,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 108 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 55,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 53 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 166,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 164 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 83,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 81 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 250,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 248 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 125,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 123 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 376,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 374 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 188,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 186 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 94,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 92 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 47,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 45 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 142,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 140 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 71,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 69 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 214,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 212 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 107,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 105 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 322,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 320 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 161,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 159 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 484,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 482 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 242,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 240 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 121,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 119 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 364,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 362 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 182,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 180 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 91,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 89 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 274,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 272 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 137,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 135 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 412,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 410 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 206,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 204 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 103,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 101 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 310,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 308 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 155,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 153 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 466,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 464 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 233,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 231 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 700,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 698 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 350,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 348 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 175,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 173 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 526,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 524 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 263,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 261 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 790,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 788 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 395,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 393 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 1186,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N
+    \ 2 ; 'P \ 1184 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 593,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 591 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 1780,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N
+    \ 2 ; 'P \ 1778 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 890,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 888 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 445,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 443 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 1336,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N
+    \ 2 ; 'P \ 1334 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 668,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 666 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 334,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 332 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 167,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 165 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 502,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 500 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 251,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 249 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 754,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 752 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 377,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 375 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 1132,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N
+    \ 2 ; 'P \ 1130 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 566,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 564 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 283,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 281 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 850,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 848 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 425,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 423 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 1276,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N
+    \ 2 ; 'P \ 1274 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 638,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 636 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 319,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 317 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 958,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 956 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 479,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 477 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 1438,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N
+    \ 2 ; 'P \ 1436 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 719,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 717 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 2158,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N
+    \ 2 ; 'P \ 2156 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 1079,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N
+    \ 2 ; 'P \ 1077 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 3238,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N
+    \ 2 ; 'P \ 3236 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 1619,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N
+    \ 2 ; 'P \ 1617 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 4858,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N
+    \ 2 ; 'P \ 4856 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 2429,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N
+    \ 2 ; 'P \ 2427 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 7288,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N
+    \ 2 ; 'P \ 7286 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 3644,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N
+    \ 2 ; 'P \ 3642 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 1822,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N
+    \ 2 ; 'P \ 1820 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 911,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 909 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 2734,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N
+    \ 2 ; 'P \ 2732 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 1367,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N
+    \ 2 ; 'P \ 1365 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 4102,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N
+    \ 2 ; 'P \ 4100 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 2051,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N
+    \ 2 ; 'P \ 2049 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 6154,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N
+    \ 2 ; 'P \ 6152 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 3077,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N
+    \ 2 ; 'P \ 3075 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 9232,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N
+    \ 2 ; 'P \ 9230 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 4616,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N
+    \ 2 ; 'P \ 4614 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 2308,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N
+    \ 2 ; 'P \ 2306 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 1154,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N
+    \ 2 ; 'P \ 1152 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 577,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 575 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 1732,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N
+    \ 2 ; 'P \ 1730 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 866,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 864 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 433,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 431 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 1300,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N
+    \ 2 ; 'P \ 1298 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 650,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 648 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 325,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 323 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 976,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 974 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 488,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 486 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 244,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 242 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 122,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 120 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 61,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 59 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 184,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 182 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 92,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 90 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 46,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 44 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 23,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 21 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 70,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 68 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 35,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 33 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 106,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 104 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 53,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 51 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 160,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 158 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 80,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 78 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 40,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 38 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 20,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 18 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 10,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 8 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 5,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \ 2
+    ; 'P \ 3 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 16,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 14 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 8,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \ 2
+    ; 'P \ 6 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 4,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \ 2
+    ; 'P \ 2 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 2,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \ 2
+    ; 'P \ 0 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 1,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'wake : 'I \ 1} },
+{ < 1,2,stk(1); stk(2); ph(1,hungry,0); ph(2,think,0)>,{'wake : 'I \ 2} }
+{ < 1,2,stk(1); stk(2); ph(1,hungry,0); ph(2,hungry,0)>,{'grab : 'C \ 0 ; 'I \
+    2 ; 'J \ 1 ; 'N \ 2 ; 'P \ 1 ; 'CF \ stk(2); ph(1,hungry,0)} }
+{ < 1,2,stk(2); ph(1,hungry,0); ph(2,hungry,1)>,{'grab : 'C \ 1 ; 'I \ 2 ; 'J \
+    2 ; 'N \ 2 ; 'P \ 1 ; 'CF \ ph(1,hungry,0)} }
+{ < 1,2,ph(1,hungry,0); ph(2,hungry,2)>,{'stop : 'I \ 2 ; 'N \ 2 ; 'P \ 1 ; 'CF
+    \ ph(1,hungry,0)} })
+
+ModelChecker: a system graph may compute state, event, and enabled
+    propositions..
+ModelChecker: LTLR model checking with a state/event-based algorithm.
+ModelChecker: Use the Streett algorithm with a gen-Buchi automaton (1 states).
+ModelChecker: Examined 909300 system states and 6563535 transitions.
+ltlr model check under localized fairness in PHILO-CHECK :
+  init(97) |= []~ deadlock -> <> eating(1)
+result Bool :
+  true
+
+ModelChecker: a system graph may compute state and event propositions..
+ModelChecker: LTLR model checking with a state/event-based algorithm.
+ModelChecker: Use the NDFS algorithm with a Buchi automaton (1 states).
+ModelChecker: Examined 39 system states and 49 transitions.
+reduce in PHILO-CHECK :
+  modelCheck(init(6),[]~ deadlock -> <> eating(1))
+result ModelCheckResult :
+  counterexample(
+{ < 6,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \ 2
+    ; 'P \ 4 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 3,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \ 2
+    ; 'P \ 1 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 10,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 8 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 5,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \ 2
+    ; 'P \ 3 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 16,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 14 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 8,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \ 2
+    ; 'P \ 6 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 4,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \ 2
+    ; 'P \ 2 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 2,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \ 2
+    ; 'P \ 0 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 1,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'wake : 'I \ 1} },
+{ < 1,2,stk(1); stk(2); ph(1,hungry,0); ph(2,think,0)>,{'wake : 'I \ 2} }
+{ < 1,2,stk(1); stk(2); ph(1,hungry,0); ph(2,hungry,0)>,{'grab : 'C \ 0 ; 'I \
+    2 ; 'J \ 1 ; 'N \ 2 ; 'P \ 1 ; 'CF \ stk(2); ph(1,hungry,0)} }
+{ < 1,2,stk(2); ph(1,hungry,0); ph(2,hungry,1)>,{'grab : 'C \ 1 ; 'I \ 2 ; 'J \
+    2 ; 'N \ 2 ; 'P \ 1 ; 'CF \ ph(1,hungry,0)} }
+{ < 1,2,ph(1,hungry,0); ph(2,hungry,2)>,{'stop : 'I \ 2 ; 'N \ 2 ; 'P \ 1 ; 'CF
+    \ ph(1,hungry,0)} })
+
+ModelChecker: a system graph may compute state, event, and enabled
+    propositions..
+ModelChecker: LTL model checking with a state-based algorithm.
+ModelChecker: Use the Streett algorithm with a gen-Buchi automaton (1 states).
+ModelChecker: Examined 36 system states and 36 transitions.
+reduce in ACTION`[PHILO-CHECK`] :
+  modelCheckFair(init(6),<> eating(1),just(wake(I:NzNat)); fair(grab(I:NzNat)))
+result ModelCheckResult :
+  counterexample(
+{ < 6,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \ 2
+    ; 'P \ 4 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 3,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \ 2
+    ; 'P \ 1 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 10,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 8 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 5,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \ 2
+    ; 'P \ 3 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 16,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 14 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 8,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \ 2
+    ; 'P \ 6 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 4,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \ 2
+    ; 'P \ 2 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 2,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \ 2
+    ; 'P \ 0 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 1,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'wake : 'I \ 1} }
+{ < 1,2,stk(1); stk(2); ph(1,hungry,0); ph(2,think,0)>,{'grab : 'C \ 0 ; 'I \ 1
+    ; 'J \ 1 ; 'N \ 2 ; 'P \ 1 ; 'CF \ stk(2); ph(2,think,0)} }
+{ < 1,2,stk(2); ph(1,hungry,1); ph(2,think,0)>,{'wake : 'I \ 2} }
+{ < 1,2,stk(2); ph(1,hungry,1); ph(2,hungry,0)>,{'grab : 'C \ 0 ; 'I \ 2 ; 'J \
+    2 ; 'N \ 2 ; 'P \ 1 ; 'CF \ ph(1,hungry,1)} },
+{ < 1,2,ph(1,hungry,1); ph(2,hungry,1)>,deadlock })
+
+ModelChecker: a system graph may compute state, event, and enabled
+    propositions..
+ModelChecker: LTLR model checking with a state/event-based algorithm.
+ModelChecker: Use the SCC-Buchi algorithm with a gen-Buchi automaton (1
+    states).
+ModelChecker: Examined 40 system states and 50 transitions.
+reduce in ACTION`[PHILO-CHECK`] :
+  modelCheckFair(init(6),[]~ deadlock -> <> eating(1),just(wake(I:NzNat));
+    just(grab(I:NzNat)))
+result ModelCheckResult :
+  counterexample(
+{ < 6,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \ 2
+    ; 'P \ 4 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 3,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \ 2
+    ; 'P \ 1 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 10,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 8 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 5,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \ 2
+    ; 'P \ 3 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 16,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \
+    2 ; 'P \ 14 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 8,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \ 2
+    ; 'P \ 6 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 4,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \ 2
+    ; 'P \ 2 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 2,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'solve : 'I \ 1 ; 'N \ 2
+    ; 'P \ 0 ; 'CF \ stk(1); stk(2); ph(2,think,0)} }
+{ < 1,2,stk(1); stk(2); ph(1,think,0); ph(2,think,0)>,{'wake : 'I \ 1} },
+{ < 1,2,stk(1); stk(2); ph(1,hungry,0); ph(2,think,0)>,{'wake : 'I \ 2} }
+{ < 1,2,stk(1); stk(2); ph(1,hungry,0); ph(2,hungry,0)>,{'grab : 'C \ 0 ; 'I \
+    2 ; 'J \ 1 ; 'N \ 2 ; 'P \ 1 ; 'CF \ stk(2); ph(1,hungry,0)} }
+{ < 1,2,stk(2); ph(1,hungry,0); ph(2,hungry,1)>,{'grab : 'C \ 1 ; 'I \ 2 ; 'J \
+    2 ; 'N \ 2 ; 'P \ 1 ; 'CF \ ph(1,hungry,0)} }
+{ < 1,2,ph(1,hungry,0); ph(2,hungry,2)>,{'stop : 'I \ 2 ; 'N \ 2 ; 'P \ 1 ; 'CF
+    \ ph(1,hungry,0)} })
+
+ModelChecker: a system graph may compute state, event, and enabled
+    propositions..
+ModelChecker: LTLR model checking with a state/event-based algorithm.
+ModelChecker: Use the Streett algorithm with a gen-Buchi automaton (1 states).
+ModelChecker: Examined 8948 system states and 46715 transitions.
+reduce in ACTION`[PHILO-CHECK`] :
+  modelCheckFair(init(6),[]~ deadlock -> <> eating(1),just(wake(I:NzNat));
+    fair(grab(I:NzNat)))
+result Bool :
+  true
+
+Maude> Bye.
