@@ -364,6 +364,9 @@ AC_CONFIG_FILES([Makefile
 		 tests/BuiltIn/Makefile
 		 tests/Meta/Makefile
 		 tests/Misc/Makefile
+		 tests/ModelChecker/Makefile
+		 tests/ModelChecker/ltlr/Makefile
+		 tests/ModelChecker/symbolic/Makefile
 		 tests/ResolvedBugs/Makefile
 ])
 
