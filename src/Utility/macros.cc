@@ -181,9 +181,9 @@ doubleToString(double d)
   if (!finite(d))
     {
       if (isnan(d))
-	return "NaN";
+	    return "NaN";
       else
-	return (d < 0) ? "-Infinity" : "Infinity";
+	    return (d < 0) ? "-Infinity" : "Infinity";
     }
   if (d == 0.0)
     return "0.0";
