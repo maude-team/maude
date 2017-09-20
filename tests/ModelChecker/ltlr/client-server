@@ -1,0 +1,10 @@
+#!/bin/sh
+
+MAUDE_LIB=$srcdir/../../../src/Main
+export MAUDE_LIB
+
+../../../src/Main/maude \
+  < $srcdir/client-server.maude -no-banner -no-advise \
+  > client-server.out 2>&1
+
+diff $srcdir/client-server.expected client-server.out > /dev/null 2>&1

@@ -1,0 +1,10 @@
+#!/bin/sh
+
+MAUDE_LIB=$srcdir/../../../src/Main
+export MAUDE_LIB
+
+../../../src/Main/maude \
+  < $srcdir/brp-ltlr.maude -no-banner -no-advise \
+  > brp-ltlr.out 2>&1
+
+diff $srcdir/brp-ltlr.expected brp-ltlr.out > /dev/null 2>&1

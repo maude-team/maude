@@ -1,0 +1,10 @@
+#!/bin/sh
+
+MAUDE_LIB=$srcdir/../../../src/Main
+export MAUDE_LIB
+
+../../../src/Main/maude \
+  < $srcdir/swp.maude -no-banner -no-advise \
+  > swp.out 2>&1
+
+diff $srcdir/swp.expected swp.out > /dev/null 2>&1

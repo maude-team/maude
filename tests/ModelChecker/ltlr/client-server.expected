@@ -1,0 +1,175 @@
+Maude> ==========================================
+reduce in CLIENT-SERVER-CHECK : modelCheck(init, <> answered(b)) .
+ModelChecker: a system graph may compute only state propositions..
+ModelChecker: LTL model checking with a state-based algorithm.
+ModelChecker: Use the NDFS algorithm with a Buchi automaton (1 states).
+ModelChecker: Examined 30 system states and 52 transitions.
+rewrites: 160
+result ModelCheckResult: counterexample(
+{ [a] [b,a,1,nil] [c,a,0,nil],{'req} } 
+{ [a] a <- {b,1} [b,a,1,nil] [c,a,0,nil],{'reply} } 
+{ [a] b <- {a,f(a, b, 1)} [b,a,1,nil] [c,a,0,nil],{'req} } 
+{ [a] a <- {c,0} b <- {a,f(a, b, 1)} [b,a,1,nil] [c,a,0,nil],{'reply} } 
+{ [a] b <- {a,f(a, b, 1)} c <- {a,f(a, c, 0)} [b,a,1,nil] [c,a,0,nil],{'rec} },
+    
+{ [a] b <- {a,f(a, b, 1)} [b,a,1,nil] [c,a,0,f(a, c, 0)],{'loss} } 
+{ [a] [b,a,1,nil] [c,a,0,f(a, c, 0)],{'req} } 
+{ [a] a <- {b,1} [b,a,1,nil] [c,a,0,f(a, c, 0)],{'reply} } 
+{ [a] a <- {b,1} b <- {a,f(a, b, 1)} [b,a,1,nil] [c,a,0,f(a, c, 0)],{'reply} })
+
+	    Full Maude 2.7 June 18th 2014
+
+
+	    LTLR Fairness Model Checker December 10th 2011
+
+Introduced module CLIENT-SERVER-CHECK-CONTEXT
+
+The CLIENT-SERVER-CHECK has been set as current module.
+
+ModelChecker: a system graph may compute only state propositions..
+ModelChecker: LTL model checking with a state-based algorithm.
+ModelChecker: Use the NDFS algorithm with a Buchi automaton (1 states).
+ModelChecker: Examined 40 system states and 65 transitions.
+ltlr model check in CLIENT-SERVER-CHECK :
+  init |= <> answered(b)
+result ModelCheckResult :
+  counterexample(
+{ [a][b,a,1,nil][c,a,0,nil],{'req} }
+{ [a]a <-{b,1}[b,a,1,nil][c,a,0,nil],{'reply} }
+{ [a]b <-{a,f(a,b,1)}[b,a,1,nil][c,a,0,nil],{'req} }
+{ [a]a <-{c,0}b <-{a,f(a,b,1)}[b,a,1,nil][c,a,0,nil],{'reply} }
+{ [a]a <-{c,0}b <-{a,f(a,b,1)}c <-{a,f(a,c,0)}[b,a,1,nil][c,a,0,nil],{'rec} }
+{ [a]a <-{c,0}b <-{a,f(a,b,1)}c <-{a,f(a,c,0)}[b,a,1,nil][c,a,0,f(a,c,0)],{
+    'reply} }
+{ [a]b <-{a,f(a,b,1)}c <-{a,f(a,c,0)}[b,a,1,nil][c,a,0,f(a,c,0)],{'loss} },
+{ [a]b <-{a,f(a,b,1)}[b,a,1,nil][c,a,0,f(a,c,0)],{'loss} })
+
+ModelChecker: a system graph may compute state and event propositions..
+ModelChecker: LTLR model checking with a state/event-based algorithm.
+ModelChecker: Use the NDFS algorithm with a Buchi automaton (2 states).
+ModelChecker: Examined 28 system states and 53 transitions.
+ltlr model check in CLIENT-SERVER-CHECK-CONTEXT :
+  init |= [](req(b)-> <> answered(b))
+result ModelCheckResult :
+  counterexample(
+{ [a][b,a,1,nil][c,a,0,nil],{[][a][c,a,0,nil]| 'req : 'C \ b ; 'S \ a ; 'N \ 1}
+    }
+{ [a]a <-{b,1}[b,a,1,nil][c,a,0,nil],{[][a][b,a,1,nil][c,a,0,nil]| 'loss : 'I \
+    a ; 'J \ b ; 'M \ 1} }
+{ [a][b,a,1,nil][c,a,0,nil],{[][a][b,a,1,nil]| 'req : 'C \ c ; 'S \ a ; 'N \ 0}
+    }
+{ [a]a <-{c,0}[b,a,1,nil][c,a,0,nil],{[][b,a,1,nil][c,a,0,nil]| 'reply : 'C \ c
+    ; 'S \ a ; 'N \ 0} }
+{ [a]a <-{c,0}c <-{a,f(a,c,0)}[b,a,1,nil][c,a,0,nil],{[][a]a <-{c,0}[b,a,1,
+    nil]| 'rec : 'C \ c ; 'S \ a ; 'M \ f(a,c,0); 'N \ 0} }
+{ [a]a <-{c,0}c <-{a,f(a,c,0)}[b,a,1,nil][c,a,0,f(a,c,0)],{[]c <-{a,f(a,c,0)}[
+    b,a,1,nil][c,a,0,f(a,c,0)]| 'reply : 'C \ c ; 'S \ a ; 'N \ 0} }
+{ [a]c <-{a,f(a,c,0)}[b,a,1,nil][c,a,0,f(a,c,0)],{[][a][b,a,1,nil][c,a,0,f(a,c,
+    0)]| 'loss : 'I \ c ; 'J \ a ; 'M \ f(a,c,0)} }
+{ [a][b,a,1,nil][c,a,0,f(a,c,0)],{[][a][c,a,0,f(a,c,0)]| 'req : 'C \ b ; 'S \ a
+    ; 'N \ 1} }
+{ [a]a <-{b,1}[b,a,1,nil][c,a,0,f(a,c,0)],{[][b,a,1,nil][c,a,0,f(a,c,0)]|
+    'reply : 'C \ b ; 'S \ a ; 'N \ 1} },
+{ [a]b <-{a,f(a,b,1)}[b,a,1,nil][c,a,0,f(a,c,0)],{[][a][b,a,1,nil][c,a,0,f(a,c,
+    0)]| 'loss : 'C \ a ; 'I \ b ; 'N \ f(a,b,1)} })
+
+ModelChecker: a system graph may compute state, event, and enabled
+    propositions..
+ModelChecker: LTL model checking with a state-based algorithm.
+ModelChecker: Use the Streett algorithm with a gen-Buchi automaton (1 states).
+ModelChecker: Examined 64 system states and 254 transitions.
+ltlr model check under localized fairness in CLIENT-SERVER-CHECK :
+  init |= <> answered(b)
+result Bool :
+  true
+
+ModelChecker: a system graph may compute state, event, and enabled
+    propositions..
+ModelChecker: LTL model checking with a state-based algorithm.
+ModelChecker: Use the SCC-Buchi algorithm with a gen-Buchi automaton (1
+    states).
+ModelChecker: Examined 40 system states and 70 transitions.
+ltlr model check in CLIENT-SERVER-CHECK :
+  init |= <> answered(b)
+under fairness :
+  just(req(C:Oid)); just(rec(b))
+result ModelCheckResult :
+  counterexample(
+{ [a][b,a,1,nil][c,a,0,nil],{'req : 'C \ b ; 'S \ a ; 'N \ 1} }
+{ [a]a <-{b,1}[b,a,1,nil][c,a,0,nil],{'reply : 'C \ b ; 'S \ a ; 'N \ 1} }
+{ [a]b <-{a,f(a,b,1)}[b,a,1,nil][c,a,0,nil],{'req : 'C \ c ; 'S \ a ; 'N \ 0} }
+{ [a]a <-{c,0}b <-{a,f(a,b,1)}[b,a,1,nil][c,a,0,nil],{'reply : 'C \ c ; 'S \ a
+    ; 'N \ 0} }
+{ [a]a <-{c,0}b <-{a,f(a,b,1)}c <-{a,f(a,c,0)}[b,a,1,nil][c,a,0,nil],{'rec : 'C
+    \ c ; 'S \ a ; 'M \ f(a,c,0); 'N \ 0} }
+{ [a]a <-{c,0}b <-{a,f(a,b,1)}c <-{a,f(a,c,0)}[b,a,1,nil][c,a,0,f(a,c,0)],{
+    'reply : 'C \ c ; 'S \ a ; 'N \ 0} }
+{ [a]b <-{a,f(a,b,1)}c <-{a,f(a,c,0)}[b,a,1,nil][c,a,0,f(a,c,0)],{'loss : 'I \
+    c ; 'J \ a ; 'M \ f(a,c,0)} },
+{ [a]b <-{a,f(a,b,1)}[b,a,1,nil][c,a,0,f(a,c,0)],{'loss : 'C \ a ; 'I \ b ; 'N
+    \ f(a,b,1)} }
+{ [a]b <-{a,f(a,b,1)}[b,a,1,nil][c,a,0,f(a,c,0)],{'req : 'C \ b ; 'S \ a ; 'N \
+    1} }
+{ [a]a <-{b,1}b <-{a,f(a,b,1)}[b,a,1,nil][c,a,0,f(a,c,0)],{'loss : 'I \ b ; 'J
+    \ a ; 'M \ f(a,b,1)} }
+{ [a]a <-{b,1}[b,a,1,nil][c,a,0,f(a,c,0)],{'reply : 'C \ b ; 'S \ a ; 'N \ 1} }
+{ [a]a <-{b,1}b <-{a,f(a,b,1)}[b,a,1,nil][c,a,0,f(a,c,0)],{'reply : 'C \ b ; 'S
+    \ a ; 'N \ 1} })
+
+ModelChecker: a system graph may compute state, event, and enabled
+    propositions..
+ModelChecker: LTL model checking with a state-based algorithm.
+ModelChecker: Use the Streett algorithm with a gen-Buchi automaton (1 states).
+ModelChecker: Examined 40 system states and 78 transitions.
+ltlr model check in CLIENT-SERVER-CHECK :
+  init |= <> answered(b)
+under fairness :
+  just(req(C:Oid)); just(rec(C:Oid)); fair(reply(S:Oid,C:Oid))
+result ModelCheckResult :
+  counterexample(
+{ [a][b,a,1,nil][c,a,0,nil],{'req : 'C \ b ; 'S \ a ; 'N \ 1} }
+{ [a]a <-{b,1}[b,a,1,nil][c,a,0,nil],{'reply : 'C \ b ; 'S \ a ; 'N \ 1} }
+{ [a]b <-{a,f(a,b,1)}[b,a,1,nil][c,a,0,nil],{'req : 'C \ c ; 'S \ a ; 'N \ 0} }
+{ [a]a <-{c,0}b <-{a,f(a,b,1)}[b,a,1,nil][c,a,0,nil],{'reply : 'C \ c ; 'S \ a
+    ; 'N \ 0} }
+{ [a]a <-{c,0}b <-{a,f(a,b,1)}c <-{a,f(a,c,0)}[b,a,1,nil][c,a,0,nil],{'rec : 'C
+    \ c ; 'S \ a ; 'M \ f(a,c,0); 'N \ 0} }
+{ [a]a <-{c,0}b <-{a,f(a,b,1)}c <-{a,f(a,c,0)}[b,a,1,nil][c,a,0,f(a,c,0)],{
+    'reply : 'C \ c ; 'S \ a ; 'N \ 0} }
+{ [a]b <-{a,f(a,b,1)}c <-{a,f(a,c,0)}[b,a,1,nil][c,a,0,f(a,c,0)],{'loss : 'I \
+    c ; 'J \ a ; 'M \ f(a,c,0)} },
+{ [a]b <-{a,f(a,b,1)}[b,a,1,nil][c,a,0,f(a,c,0)],{'loss : 'C \ a ; 'I \ b ; 'N
+    \ f(a,b,1)} }
+{ [a]b <-{a,f(a,b,1)}[b,a,1,nil][c,a,0,f(a,c,0)],{'req : 'C \ b ; 'S \ a ; 'N \
+    1} }
+{ [a]a <-{b,1}b <-{a,f(a,b,1)}[b,a,1,nil][c,a,0,f(a,c,0)],{'loss : 'I \ b ; 'J
+    \ a ; 'M \ f(a,b,1)} }
+{ [a]a <-{b,1}[b,a,1,nil][c,a,0,f(a,c,0)],{'reply : 'C \ b ; 'S \ a ; 'N \ 1} }
+{ [a]a <-{b,1}b <-{a,f(a,b,1)}[b,a,1,nil][c,a,0,f(a,c,0)],{'reply : 'C \ b ; 'S
+    \ a ; 'N \ 1} })
+
+ModelChecker: a system graph may compute state, event, and enabled
+    propositions..
+ModelChecker: LTL model checking with a state-based algorithm.
+ModelChecker: Use the Streett algorithm with a gen-Buchi automaton (1 states).
+ModelChecker: Examined 64 system states and 230 transitions.
+ltlr model check in CLIENT-SERVER-CHECK :
+  init |= <> answered(b)
+under fairness :
+  just(req(b)); fair(rec(C:Oid)); fair(reply(S:Oid,b))
+result Bool :
+  true
+
+ModelChecker: a system graph may compute state, event, and enabled
+    propositions..
+ModelChecker: LTL model checking with a state-based algorithm.
+ModelChecker: Use the Streett algorithm with a gen-Buchi automaton (1 states).
+ModelChecker: Examined 64 system states and 254 transitions.
+ltlr model check in CLIENT-SERVER-CHECK :
+  init |= <> answered(b)
+under fairness :
+  just(req(C:Oid)); fair(rec(C:Oid)); fair(reply(S:Oid,C:Oid))
+result Bool :
+  true
+
+Maude> Bye.

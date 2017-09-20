@@ -1,0 +1,244 @@
+
+****************************
+*** Basic Data Structure ***
+****************************
+
+fmod APT-MAP{Y :: TRIV} is 
+  protecting MAP{Nat,Y} * (op  _|->_ to ([_,_]) , op (_,_) to _;_) .
+  protecting INT .
+
+  vars I J K : Nat .
+  var M M' :  Map{Nat,Y} .
+  var X : Y$Elt .
+
+  op 1st-undef : Map{Nat,Y} -> Nat .            *** first index for which map undefined
+  op 1st-undef-aux : Map{Nat,Y} Nat -> Nat .            
+  eq 1st-undef(M) = 1st-undef-aux(M,0) .
+  eq 1st-undef-aux((M ; [I,X]),I) = if $hasMapping(M,I) 
+                                          then I else 1st-undef-aux((M),s(I)) fi .
+  eq 1st-undef-aux(M,I) = I [owise] .
+
+  op max-index : Map{Nat,Y} -> Int .            *** biggest index for which map defined
+  eq max-index(empty) = -1 .
+  eq max-index(M ; [I,X]) = max(I,max-index(M)) .
+
+
+  op _|_ :  Map{Nat,Y} Nat ->  Map{Nat,Y} .  *** restriction to indices smaller than 2nd argument
+  ceq (M ; [I,X]) | J = M | J if J <= I .
+  eq M | J = M [owise] .
+
+  op _<=_ :  Map{Nat,Y} Map{Nat,Y} -> Bool .  *** map containment
+  eq M <= M ; M' = true .
+  eq M <= M' = false [owise] .
+
+  op _in_ : Entry{Nat,Y} Map{Nat,Y} -> Bool .  *** membership in a map 
+  eq [I,X] in [I,X] ; M = true .
+  eq [I,X] in  M = false [owise] .
+endfm
+
+fmod APT-QID-MAP is protecting APT-MAP{Qid} . 
+  op p : Nat -> NzNat .
+  vars N M : Nat .
+  eq p(s(N)) = N .
+endfm
+
+view Entry from TRIV to APT-QID-MAP is sort Elt to Entry{Nat,Qid} . endv
+
+fmod QID-ARRAY&LIST is protecting LIST{Entry} .
+  op _[_:_] : Map{Nat,Qid} Nat Nat -> List{Entry} . *** extracts from a map a list between two indices
+  vars I J K : Nat .
+  var M :  Map{Nat,Qid} .
+  var W : Qid .
+  ceq M[I : J] = nil if I > J .
+  ceq (M ; [I,W]) [I : J] =  if $hasMapping(M,I) then (M ; [I,W]) [s(I) : J]
+                                                else [I,W] (M[s(I) : J]) fi if  I <= J .  
+  eq  M[I : J] = M[s(I) : J] [owise] .
+
+  op _<_:_> : Map{Nat,Qid} Nat Nat -> Map{Nat,Qid} . *** extracts a submap between two indices
+  ceq M < I : J > = empty if I > J .
+  ceq (M ; [I,W]) < I : J > =  if $hasMapping(M,I) then (M ; [I,W]) < s(I) : J >
+                                                else [I,W] ; (M < s(I) : J >) fi if  I <= J .  
+  eq  M < I : J > = M < s(I) : J > [owise] .
+endfm
+
+****************************
+*** Sliding Window Model ***
+****************************
+
+mod SLIDING-WINDOW is 
+  protecting INT .
+  protecting QID-ARRAY&LIST .  
+
+  sorts Pid NodeQState GlobalState .
+  op [_:_,_,_,_,_,_,_] : Pid Nat Nat NzNat NzNat Map{Nat,Qid} Map{Nat,Qid} List{Entry} -> NodeQState [ctor] .
+  op _&_ : NodeQState NodeQState -> GlobalState [comm ctor] .
+
+  vars P Q : Pid .  var W : Qid .
+  vars J SP SQ AP AQ : Nat .  vars LP LQ : NzNat .
+  vars IP OP IQ OQ ARRAY : Map{Nat,Qid} .
+  vars FP FQ L G : List{Entry} .
+
+  crl [send] : 
+         [P : SP,AP,LP,LQ,IP,OP,FP] & [Q : SQ,AQ,LQ,LP,IQ,OQ,FQ] 
+      => [P : SP,AP,LP,LQ,IP,OP,FP] & [Q : SQ,AQ,LQ,LP,IQ,OQ,FQ[J,W]] 
+   if SP + LP > AP /\ [J,W] ; ARRAY := IP < AP : p(SP + LP)>  
+   [metadata "just(P,J,W)"] .
+
+
+  rl [recv] : 
+        [P : SP,AP,LP,LQ,IP,OP,[J,W]FP] 
+     => if $hasMapping(OP,J) then
+         [P : SP,AP,LP,LQ,IP,OP,FP] 
+        else
+         [P : 1st-undef(OP ;[J,W]),max(AP,(J - LQ)+ 1),LP,LQ,IP,OP ;[J,W],FP] 
+        fi  [metadata "fair(P,J,W)"] .
+
+  rl [loss] : [P : SP,AP,LP,LQ,IP,OP,L [J,W] G] => [P : SP,AP,LP,LQ,IP,OP,L G] .
+endm
+
+
+************************
+*** Abstracted Model ***
+************************
+
+mod SLIDING-WINDOW-ABSTRACTION is 
+  protecting INT .
+  protecting QID-ARRAY&LIST .  
+
+  sorts Pid NodeQState GlobalState .
+  *** The fifo queues are now abstracted into bags, implicitly adding a commutativity equation,
+  op [_:_,_,_,_,_,_,_] : Pid Nat Nat NzNat NzNat Map{Nat,Qid} Map{Nat,Qid} Map{Nat,Qid} -> NodeQState [ctor] .
+
+  op _&_ : NodeQState NodeQState -> GlobalState [comm ctor] .
+
+  vars P Q : Pid .  var W : Qid .
+  vars J SP SQ AP AQ : Nat .  vars LP LQ : NzNat .
+  vars IP OP IQ OQ ARRAY FP FQ L G : Map{Nat,Qid} .
+
+*** Furthermore, duplicated messages in transit are removed by the following abstraction equation:
+  eq  [P : SP,AP,LP,LQ,IP,OP,FP ; [J,W] ; [J,W]] = [P : SP,AP,LP,LQ,IP,OP,FP ; [J,W]] .
+
+  crl [send]: 
+         [P : SP,AP,LP,LQ,IP,OP,FP] & [Q : SQ,AQ,LQ,LP,IQ,OQ,FQ] 
+      => [P : SP,AP,LP,LQ,IP,OP,FP] & [Q : SQ,AQ,LQ,LP,IQ,OQ,FQ ; [J,W]] 
+   if SP + LP > AP /\ [J,W] ; ARRAY := IP < AP : p(SP + LP)>  
+   [metadata "just(P,J,W)"] .
+   
+
+  rl [recv]: 
+        [P : SP,AP,LP,LQ,IP,OP,[J,W] ; FP] 
+     => if $hasMapping(OP,J) then
+         [P : SP,AP,LP,LQ,IP,OP,FP] 
+        else
+         [P : 1st-undef(OP ;[J,W]),max(AP,(J - LQ)+ 1),LP,LQ,IP,OP ;[J,W],FP] 
+        fi  [metadata "fair(P,J,W)"] .
+
+
+  rl [loss] : [P : SP,AP,LP,LQ,IP,OP,L ; [J,W]] => [P : SP,AP,LP,LQ,IP,OP,L] .
+
+*** New rules added for coherence reasons.
+  rl [recv]: 
+        [P : SP,AP,LP,LQ,IP,OP,[J,W] ; FP] 
+     => if $hasMapping(OP,J) then
+         [P : SP,AP,LP,LQ,IP,OP,[J,W] ; FP] 
+        else
+         [P : 1st-undef(OP ;[J,W]),max(AP,(J - LQ)+ 1),LP,LQ,IP,OP ;[J,W],FP]
+        fi  [metadata "fair(P,J,W)"] .
+
+  rl [loss]: [P : SP,AP,LP,LQ,IP,OP,L ; [J,W]] 
+          => [P : SP,AP,LP,LQ,IP,OP,L ; [J,W]] .
+endm
+
+load ltlr-interface
+
+************************************
+*** Propositions for abstraction ***
+************************************
+
+(mod SLIDING-WINDOW-ABSTRACTION-CHECK is 
+  protecting SLIDING-WINDOW-ABSTRACTION .  
+  including LTLR-MODEL-CHECKER .
+
+  subsort GlobalState < State .
+  ops p q : -> Pid .
+
+  vars P Q : Pid .  var W : Qid .
+  vars I J SP SQ AP AQ : Nat .  vars LP LQ : NzNat .
+  vars IP OP IQ OQ ARRAY M N FP FQ L G : Map{Nat,Qid} .
+
+---- propositions
+  op S-correct : Pid -> Prop .
+  op S>=A' : Pid -> Prop .
+  op recv-correct : Pid -> Prop .
+  op wrong-data-in-fifo : Pid -> Prop .   *** not a fifo anymore, but name kept
+  op success : -> Prop .
+  op in-fifo : Pid Nat Qid -> Prop .     *** not a fifo anymore, but name kept
+  op in-recv : Pid Nat Qid -> Prop .
+
+
+  eq [P : SP,AP,LP,LQ,IP,OP,FP]&[Q : SQ,AQ,LQ,LP,IQ,OQ,FQ] |= S-correct(P) 
+   = (SP == 1st-undef(OP)) .
+
+  eq [P : SP,AP,LP,LQ,IP,OP,FP]&[Q : SQ,AQ,LQ,LP,IQ,OQ,FQ] |= S>=A'(P) 
+   = (SP >= AQ) .
+
+  eq [P : SP,AP,LP,LQ,IP,OP,FP]&[Q : SQ,AQ,LQ,LP,IQ,OQ,FQ] |= recv-correct(P) 
+   = (OP <= IQ) and (AP > max-index(OP) - LQ) .
+
+  ceq [P : SP,AP,LP,LQ,IP,OP,L ; [J,W]]&[Q : SQ,AQ,LQ,LP,IQ,OQ,FQ] 
+   |= wrong-data-in-fifo(P) = true 
+   if (([J,W] in IQ == false) or (J >= SQ + LQ)) .
+
+  eq [P : SP,AP,LP,LQ,IP,IQ,FP]&[Q : SQ,AQ,LQ,LP,IQ,IP,FQ] 
+  |=  success = true .
+
+  eq [P : SP,AP,LP,LQ,IP,OP,L ; [J,W]]&[Q : SQ,AQ,LQ,LP,IQ,OQ,FQ] 
+  |= in-fifo(P,J,W) = true .
+
+  eq [P : SP,AP,LP,LQ,IP,M ; [J,W] ; N,FP]&[Q : SQ,AQ,LQ,LP,IQ,OQ,FQ] 
+  |= in-recv(P,J,W) = true .
+
+--- generate messages
+  op msg : Nat Pid -> Map{Nat,Qid} .
+  op msg : Nat Nat Pid -> Map{Nat,Qid} .
+  eq msg(I, P) = msg(I, I, P) .
+  eq msg(I, s(J), p) = [J, qid(char((65 + I) - s(J)))] ; msg(I, J, p) .
+  eq msg(I, s(J), q) = [J, qid(char((90 - I) + s(J)))] ; msg(I, J, q) .
+  eq msg(I, 0, P) = empty .
+
+--- initial (window_size, msg_size)
+  op initial : Nat Nat -> GlobalState .
+  eq initial(LP,LQ) = 
+      [p : 0,0,LP,LP,msg(LQ,p),empty,empty]& [q : 0,0,LP,LP,msg(LQ,q),empty,empty] .
+endm)
+
+
+set verbose on .
+
+----------------
+--- safety
+
+*** true
+(mc initial(1,4) |=
+    [] (S-correct(p) /\ S-correct(q) /\ S>=A'(p) /\ S>=A'(q) /\ 
+        recv-correct(p) /\ recv-correct(q) /\ 
+        (~ wrong-data-in-fifo(p)) /\ (~ wrong-data-in-fifo(q))) .)
+
+
+----------------
+--- liveness
+
+*** false
+(mc initial(1,3) |= <> success .)
+
+*** true
+(mc initial(1,3) |= <> success under
+     just(send(P:Pid,I:Nat,W:Qid)) ; fair(recv(P:Pid,I:Nat,W:Qid))
+.)
+
+*** true
+(pfmc initial(1,3) |= <> success .)
+
+*** true
+(pfmc initial(2,5) |= <> success .)
+

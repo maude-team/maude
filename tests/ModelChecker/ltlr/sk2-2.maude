@@ -1,0 +1,356 @@
+
+***
+*** The Suzuki-Kasami Distributed Mutual Exclusion Protocol
+***
+
+fmod NODEID is
+  pr NAT .
+  sort NodeID .
+  subsort NzNat < NodeID .
+--- Parameters  
+  op N : -> NzNat .   --- the number of nodes
+  op M : -> NzNat .   --- the number of requests each node makes
+---
+  eq N = 3 .
+  eq M = 1 .
+endfm
+
+fmod QUEUE is
+  pr NODEID .
+  sorts NeQueue Queue .
+  subsort NeQueue < Queue .
+  op empty : -> Queue [ctor] .
+  op _|_ : NodeID Queue -> NeQueue [ctor] .
+  op top : NeQueue -> NodeID .
+  op put : Queue NodeID -> Queue .
+  op get : Queue -> Queue .
+  op _\in_ : NodeID Queue -> Bool .
+  op empty? : Queue -> Bool .
+  vars I J : NodeID .
+  var Q : Queue .
+  eq top(I | Q) = I .
+  eq put(empty,I) = I | empty .
+  eq put(J | Q,I) = J | put(Q,I) .
+  eq get(empty) = empty .
+  eq get(I | Q) = Q .
+  eq I \in (I | Q) = true .
+  eq I \in Q = false [owise] .
+  eq empty?(empty) = true .
+  eq empty?(I | Q) = false .
+endfm
+
+fmod ARRAY is
+  pr NODEID .
+  sorts AElm Array .
+  subsort AElm < Array .
+  op ia : -> Array [ctor] .
+  op _:_ : NodeID Nat -> AElm [ctor] .
+  op _`,_ : Array Array -> Array [ctor assoc comm id: ia] .
+  op _`[_`] : Array NodeID -> Nat .
+  op _`[_`]:=_ : Array NodeID Nat -> Array .
+  var A : Array .
+  vars I J : NodeID .
+  vars X Y : Nat .
+  eq ((I : X) , A)[I] = X .
+  eq A[I] = 0 [owise] .
+  eq (((I : X) , A)[I] := Y) = (I : Y) , A .
+  eq (A[I] := Y) = (I : Y) , A [owise] .
+
+endfm
+
+
+
+fmod REQUEST is
+  pr NODEID .
+  sort Request .
+  op req : NodeID Nat -> Request [ctor] .
+  op node : Request -> NodeID .
+  op sn : Request -> Nat .
+  var J : NodeID .
+  var X : Nat .
+  eq node(req(J,X)) = J .
+  eq sn(req(J,X)) = X .
+endfm
+
+fmod PRIVILEGE is
+  pr QUEUE .
+  pr ARRAY .
+  sort Privilege .
+  op priv : Queue Array -> Privilege [ctor] .
+  op q : Privilege -> Queue .
+  op ln : Privilege -> Array .
+  var Q : Queue .
+  var A : Array .
+  eq q(priv(Q,A)) = Q .
+  eq ln(priv(Q,A)) = A .
+endfm
+
+fmod MESSAGE is
+  pr REQUEST .
+  pr PRIVILEGE .
+  sort Message .
+  op msg : NodeID Request -> Message [ctor] .
+  op msg : NodeID Privilege -> Message [ctor] .
+endfm
+
+fmod NETWORK is
+  pr MESSAGE .
+  sort Network .
+  subsort Message < Network .
+  op void : -> Network [ctor] .
+  op __ : Network Network -> Network [ctor assoc comm id: void] .
+  op _\in_ : Message Network -> Bool .
+  op del : Network Message -> Network .
+  var M : Message .
+  var N : Network .
+  eq M \in (M N) = true .
+  eq M \in N = false [owise] .
+  eq del((M N),M) = N .
+  eq del(N,M) = N [owise] .
+endfm
+
+fmod LABEL is
+  sort Label .
+  ops rem l1 l2 l3 l4 l5 cs l6 l7 l8 l9 l10 : -> Label [ctor] .
+endfm
+
+fmod TRAN is
+  pr NODEID .
+  sort Tran .
+  op notran : -> Tran [ctor] .
+  op try : NodeID -> Tran [ctor] .
+  op setReq : NodeID -> Tran [ctor] .
+  op checkPriv : NodeID -> Tran [ctor] .
+  op incReqNo : NodeID -> Tran [ctor] .
+  op sendReq : NodeID -> Tran [ctor] .
+  op waitPriv : NodeID -> Tran [ctor] .
+  op exit : NodeID -> Tran [ctor] .
+  op completeReq : NodeID -> Tran [ctor] .
+  op updateQueue : NodeID -> Tran [ctor] .
+  op checkQueue : NodeID -> Tran [ctor] .
+  op transferPriv : NodeID -> Tran [ctor] .
+  op resetReq : NodeID -> Tran [ctor] .
+  op receiveReq : NodeID -> Tran [ctor] .
+endfm
+
+
+fmod OCOM is
+    pr NETWORK .
+    pr LABEL .
+    pr TRAN .
+    sort OCom .
+    op #req`[_`]:_   : NodeID Nat   -> OCom . 
+    op pc`[_`]:_         : NodeID Label -> OCom .
+    op requesting`[_`]:_ : NodeID Bool  -> OCom .
+    op havePriv`[_`]:_   : NodeID Bool  -> OCom .
+    op rn`[_`]:_         : NodeID Array -> OCom .
+    op ln`[_`]:_         : NodeID Array -> OCom .
+    op queue`[_`]:_      : NodeID Queue -> OCom .
+    op idx`[_`]:_        : NodeID NzNat -> OCom .
+    op nw:_            : Network      -> OCom .
+endfm
+
+    
+fmod CONFIG is
+    pr OCOM .
+    sort Config .
+    subsort OCom < Config .
+    op __ : Config Config -> Config [ctor assoc comm] .
+endfm
+
+fmod INIT-CONFIG is
+    pr CONFIG .
+    op node : NodeID -> Config .
+    op ic : -> Config .
+    var I : NodeID .
+    eq node(I) = (#req[I]: 0)
+        (pc[I]: rem)
+        (requesting[I]: false)
+        (havePriv[I]: (I == 1))
+        (rn[I]: ia) 
+        (ln[I]: ia)
+        (queue[I]: empty)
+        (idx[I]: 1) .
+    eq ic = node(1) node(2) node(3) (nw: void) .
+endfm
+    
+mod SK is
+    pr CONFIG .
+    --- Maude variables
+    vars I J : NodeID . 
+    vars X Max : Nat .
+    var K : NzNat .
+    vars F F' C : Bool .
+    vars RN LN LN' : Array .
+    vars Q Q' : Queue .
+  var NW : Network .
+    var L : Label .
+    --- try
+    rl [tryI] : 
+	(#req[I]: X)
+	(pc[I]: rem)
+      => (#req[I]: (if X < M then X + 1 else X fi))
+	(pc[I]: (if X < M then l1 else rem fi)) [metadata "just(I)"] .
+--- setReq
+    rl [setReqI] : 
+	(pc[I]: l1) 
+	(requesting[I]: F) 
+    => (pc[I]: l2) 
+	(requesting[I]: true) [metadata "just(I)"] .
+    --- checkPriv
+    rl [checkPrivI] :
+	(pc[I]: l2) 
+	(havePriv[I]: F)
+      => (pc[I]: (if F then cs else l3 fi)) 
+       (havePriv[I]: F) [metadata "just(I)"] .
+    --- incReqNo
+    rl [incReqNoI] :
+	(pc[I]: l3) 
+	(rn[I]: RN) 
+    (idx[I]: K) 
+      => (pc[I]: l4) 
+	(rn[I]: RN[I] := (RN[I]) + 1)
+	(idx[I]: 1) [metadata "just(I)"] .
+    --- sendReq
+  rl [sendReqI] :
+	(pc[I]: l4) 
+    (idx[I]: K) 
+    (rn[I]: RN) 
+    (nw: NW)
+    => (pc[I]: if K == N then l5 else l4 fi)
+       (idx[I]: if K == N then 1 else K + 1 fi) 
+       (rn[I]: RN) 
+       (nw: (if K == I then NW else msg(K,req(I,RN[I])) NW fi)) [metadata "just(I)"] .
+--- waitPriv
+  rl [waitPrivI] :
+    (pc[I]: l5)
+    (havePriv[I]: F)
+    (ln[I]: LN')
+    (queue[I]: Q')
+    (nw: (msg(I,priv(Q,LN)) NW))
+    => (pc[I]: cs)
+       (havePriv[I]: true)
+       (ln[I]: LN)
+       (queue[I]: Q)
+       (nw: NW) [metadata "just(I)"] .
+--- exit
+  rl [exitI] :
+    (pc[I]: cs)
+    => (pc[I]: l6) [metadata "just(I)"] .
+--- completeReq
+  rl [completeReqI] :
+    (pc[I]: l6)
+    (rn[I]: RN)
+    (ln[I]: LN)
+    (idx[I]: K)
+    => (pc[I]: l7)
+       (rn[I]: RN)
+       (ln[I]: LN[I] := RN[I])
+       (idx[I]: 1) [metadata "just(I)"] .
+--- updateQueue
+  rl [updateQueueI] :
+    (pc[I]: l7)
+    (idx[I]: K)
+    (rn[I]: RN)
+    (ln[I]: LN)
+    (queue[I]: Q)
+    => (pc[I]: if K == N then l8 else l7 fi)
+       (idx[I]: if K == N then 1 else K + 1 fi)
+       (rn[I]: RN)
+       (ln[I]: LN)
+       (queue[I]: if K =/= I and not(K \in Q)
+                                and (RN[K] == (LN[K]) + 1)
+                  then put(Q,K)
+                  else Q
+                  fi) [metadata "just(I)"] .
+--- checkQueue
+  rl [checkQueueI] :
+    (pc[I]: l8)
+    (queue[I]: Q)
+    => (pc[I]: if empty?(Q) then l10 else l9 fi)
+       (queue[I]: Q) [metadata "just(I)"] .
+--- transferPriv
+  rl [transferPrivI] :
+    (pc[I]: l9)
+    (havePriv[I]: F)
+    (ln[I]: LN)
+    (queue[I]: Q)
+    (nw: NW)
+    => (pc[I]: l10)
+       (havePriv[I]: false)
+       (ln[I]: LN)
+       (queue[I]: Q)
+       (nw: (msg(top(Q),priv(get(Q),LN)) NW)) [metadata "just(I)"] .
+--- resetReq
+  rl [resetReqI] :
+    (pc[I]: l10)
+    (requesting[I]: F)
+    => (pc[I]: rem)
+       (requesting[I]: false) [metadata "just(I)"] .
+--- receiveReq
+  crl [receiveReqI] :
+    (pc[I]: L)
+    (requesting[I]: F)
+    (havePriv[I]: F')
+    (rn[I]: RN)
+    (ln[I]: LN)
+    (queue[I]: Q)
+    (nw: (msg(I,req(J,X)) NW))
+    => (pc[I]: L)
+       (requesting[I]: F)
+       (havePriv[I]: if C then false else F' fi)
+       (rn[I]: RN[J] := Max)
+       (ln[I]: LN)
+       (queue[I]: Q)
+       (nw: if C then (msg(J,priv(Q,LN)) NW) else NW fi)
+    if I =/= J /\ L =/= l10 /\ L =/= l8 /\ L =/= l7 /\
+       Max := if (RN[J]) < X then X else RN[J] fi /\
+       C := F' and not(F) and Max == (LN[J]) + 1  [metadata "just(I)"] .
+endm
+
+
+load ltlr-interface
+
+(mod SK-PROP is
+    pr SK .
+    inc SATISFACTION .
+    subsort Config < State .
+    
+    op want : NodeID -> Prop .
+    op crit : NodeID -> Prop .
+    vars I : NodeID .
+    var C : Config .
+    var PR : Prop .
+
+    eq (pc[I]: l1) C |= want(I) = true .
+    eq (pc[I]: cs) C |= crit(I) = true .
+    eq C |= PR = false [owise] .
+endm)
+
+    
+(mod SK-FORMULA is
+    pr SK-PROP .
+    pr INIT-CONFIG .
+    inc LTLR-MODEL-CHECKER .
+    *** inc LTL-SIMPLIFIER .
+    
+    op mutex : -> Formula .
+    op lofree : -> Formula .
+    eq mutex = [] (~(crit(1) /\ crit(2)) /\
+          ~(crit(1) /\ crit(3)) /\
+          ~(crit(2) /\ crit(3)) ) .
+    eq lofree = (want(1) |-> crit(1)) /\
+        (want(2) |-> crit(2)) /\
+        (want(3) |-> crit(3)) .
+endm)
+    
+set verbose on .
+
+*** do model checking in Full maude
+*** for safety property mutual exclusion 
+(mc ic |= mutex .)
+    
+
+*** for liveness property : lock freedom 
+(pfmc ic |= lofree .)
+

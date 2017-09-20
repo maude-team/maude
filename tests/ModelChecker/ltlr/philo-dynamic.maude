@@ -1,0 +1,124 @@
+*** The Evolving Dining Philosophers problem
+*** Author: Kyungmin Bae <kbae4@cs.uiuc.edu>
+
+fmod PHILO-SYNTAX is
+  protecting NAT .
+
+  --- philosopher and chopstick
+  sorts Philo Status Chopstick .
+  op ph : Nat Status Nat -> Philo [ctor] .
+  ops think hungry : -> Status [ctor] .
+  op stk : Nat -> Chopstick [ctor] .
+
+  --- configuration
+  sort Conf PState .
+  subsorts Philo Chopstick < Conf .
+  op none : -> Conf [ctor] .
+  op _;_ : Conf Conf -> Conf [ctor comm assoc id: none] .
+  op <_`,_`,_> : Nat Nat Conf -> PState [ctor] .
+endfm
+
+mod PHILO-STATIC is 
+  protecting PHILO-SYNTAX .
+
+  vars P N C : Nat .  var I J : NzNat . var CF : Conf .
+
+--- equations
+  op left : Nat -> Nat .
+  eq left(I) = I .
+
+  op right : Nat Nat -> Nat .
+  eq right(I, N) = s(I rem N) .
+
+--- rules
+  rl [wake]: ph(I, think, 0) => ph(I, hungry, 0) [metadata "just(I)"] . 
+
+  crl [grab]: < P, N, ph(I, hungry, C) ; stk(J) ; CF >
+           => < P, N, ph(I, hungry, C + 1) ; CF > 
+   if J == left(I) or J == right(I, N) [metadata "fair(I)"] .
+
+  rl [stop]: < P, N, ph(I, hungry, 2) ; CF > 
+          => < P, N, ph(I, think, 0) ; stk(left(I)) ; stk(right(I,N)) ; CF > .
+endm
+
+mod PHILO-DYNAMIC is
+  protecting PHILO-STATIC .
+
+  vars P N C : Nat .  var I J : NzNat . var CF : Conf .
+
+--- collatz function
+  op collatz : Nat -> Nat .
+  eq collatz(P) = if P rem 2 == 0 then P quo 2 else 3 * P + 1 fi .
+
+--- rules
+  rl [solve]: < s s P, N, ph(I, think, 0) ; CF >
+	  =>  < collatz(s s P), N, ph(I, think, 0) ; CF > .
+
+  crl [join]: < P, N, ph(N, think, 0) ; CF > 
+           => < P, s N, ph(N, think, 0) ; CF ; ph(s N, think, 0) ; stk(s N) > 
+   if (N rem 3 == 0) or (P rem (4 * N) == 0) .
+
+  rl [leave]: < P, s s s N, CF ; ph(s s s N, think, 0) ; stk(s s s N) > 
+           => < P, s s N, CF > .
+endm
+
+--- Full Maude interface
+load ltlr-interface
+
+--- the following module defines the state sort for the model checking
+--- and extra state predicates.
+
+(mod PHILO-CHECK is
+  inc PHILO-DYNAMIC .
+  inc LTLR-MODEL-CHECKER .
+  subsort PState < State .
+  vars P N : Nat .  var I : NzNat . var CF : Conf .
+
+  op eating : Nat -> Prop [ctor] .
+  eq < P, N, ph(I, hungry, 2) ; CF > |= eating(I) = true .
+
+  op init : Nat -> PState .
+  eq init(P) = < P, 2, ph(1, think, 0) ; stk(1) ; ph(2, think, 0) ; stk(2) > .
+endm)
+
+set verbose on .
+
+-------------------------
+--- Full Maude commands
+
+--- false
+(mc init(97) |= <> eating(1) .)
+
+--- false
+(mc init(97) |= [] ~ deadlock -> <> eating(1) .)
+
+--- true
+--- Examined 909300 system states and 6563535 transitions.
+(pfmc init(97) |= [] ~ deadlock -> <> eating(1) .)
+
+
+-------------------------
+--- Core Maude commands
+
+--- false
+(red modelCheck(init(6), [] ~ deadlock -> <> eating(1)) .)
+
+--- false
+--- NOTE: the module expression ACTION[...] declares the syntax of 
+--- simplified action patterns from the given rule attributes.
+(red in ACTION[PHILO-CHECK]: modelCheckFair(init(6), 
+     <> eating(1),
+     just(wake(I:NzNat)) ; fair(grab(I:NzNat))
+) .)
+
+--- false
+(red in ACTION[PHILO-CHECK]: modelCheckFair(init(6), 
+     [] ~ deadlock -> <> eating(1),
+     just(wake(I:NzNat)) ; just(grab(I:NzNat))
+) .)
+
+--- true
+(red in ACTION[PHILO-CHECK]: modelCheckFair(init(6), 
+     [] ~ deadlock -> <> eating(1),
+     just(wake(I:NzNat)) ; fair(grab(I:NzNat))
+) .)
