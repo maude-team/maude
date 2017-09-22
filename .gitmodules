@@ -1,0 +1,3 @@
+[submodule "src/SMT/cvc4"]
+	path = src/SMT/cvc4
+	url = https://github.com/cvc4/cvc4
