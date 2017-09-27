@@ -8,6 +8,16 @@ build_dir="$top_dir/.build"
 include_dir="$build_dir/include"
 lib_dir="$build_dir/lib"
 
+git submodule update --init
+
+( cd src/SMT/cvc4 \
+    && ./autogen.sh \
+    && ./contrib/get-antlr-3.4 \
+    && ./configure --prefix=$build_dir \
+                   --with-antlr-dir=$(pwd)/antlr-3.4 ANTLR=$(pwd)/antlr-3.4/bin/antlr3 \
+    && make -s -j4 \
+    && make -s install )
+
 automake --add-missing
 
 aclocal \
