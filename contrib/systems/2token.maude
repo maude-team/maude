@@ -1,0 +1,24 @@
+set include BOOL off .
+
+mod 2TOKEN is
+  sorts Name Proc Token Conf State .
+  subsorts Proc Token < Conf .
+  op {_}      : Conf      -> State [ctor] .
+  op none     :           -> Conf  [ctor] .
+  ops * $     :           -> Token [ctor] .
+  ops a b     :           -> Name  [ctor] .
+  op __       : Conf Conf -> Conf  [assoc comm id: none] .
+  op [_,wait] : Name      -> Proc  [ctor] .
+  op [_,crit] : Name      -> Proc  [ctor] .
+  var C : Conf .
+  rl [a-enter] : { $ [a,wait] C } => { [a,crit]   C } .
+  rl [b-enter] : { * [b,wait] C } => { [b,crit]   C } .
+  rl [a-exit]  : {   [a,crit] C } => { [a,wait] * C } .
+  rl [b-exit]  : {   [b,crit] C } => { [b,wait] $ C } .
+endm
+
+mod 2TOKEN-stop is protecting 2TOKEN .
+  op [_] : Conf -> State .
+  var C  : Conf .
+  rl [done] : { C } => [ C ] .
+endm

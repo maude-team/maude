@@ -1,0 +1,22 @@
+load ../tools/varsat/numbers.maude
+
+set include BOOL off .
+
+mod R&W is
+  sorts Nat Config .
+  op 0 : -> Nat [ctor] .
+  op s : Nat -> Nat [ctor] .
+  op <_,_> : Nat Nat -> Config [ctor] . --- readers/writers
+  op [_,_] : Nat Nat -> Config [ctor] . --- terminating states
+  op done  : -> Config .
+  vars R W : Nat .
+  rl [write+] : < 0    , 0    > => < 0    , s(0) > .
+  rl [write-] : < R    , s(W) > => < R    , W    > .
+  rl [read+ ] : < R    , 0    > => < s(R) , 0    > .
+  rl [read- ] : < s(R) , W    > => < R    , W    > .
+endm
+
+mod R&W-stop is pr R&W .
+  vars R W : Nat .
+  rl [finish] : < R , W > => [ R , W ] .
+endm

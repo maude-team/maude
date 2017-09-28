@@ -1,0 +1,35 @@
+load imp.maude
+
+---(
+mod REACH-EX is
+  pr IMP-TEST-BASE .
+  op  imp  : -> Module .
+  op  run  : -> ReachForm .
+  var E : Env .
+  --- The module used
+  eq imp = upModule('IMP-SEMANTICS,true) .
+
+  --- Example 1 --- ground
+  --- In this example, we consider the program:
+  ---
+  ---   while(x < 2) {
+  ---      t = t + 1;
+  ---      x = x + 1;
+  ---   }
+  ---
+  --- with initial memory state x |-> 1 * t |-> 2; it finally reduces to done with memory state x |-> 5 * t |-> 6
+  eq run     = upTerm(< while (x <: 5) {t = t +: 1 ; (x = x +: 1 ;)} ~> done | x |-> 1 * t |-> 2 >) | mtForm =>A
+               upTerm(< done                                                 | x |-> 5 * t |-> 6 >) | mtForm .
+endm
+
+--- Debugging statements
+--- set break on .
+--- break select step&subsume axiom axiom-done .
+
+--- Format output for better readability
+set print conceal on .
+print conceal fmod_is_sorts_.____endfm mod_is_sorts_._____endm axiom _;_ __ .
+
+--- Example 1 --- no axioms needed
+rew init(imp,mtrfs,run,term(E)) .
+---)

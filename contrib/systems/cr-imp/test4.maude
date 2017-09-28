@@ -1,0 +1,44 @@
+load imp.maude
+
+---(
+mod REACH-EX is
+  pr IMP-TEST-BASE .
+  op  imp  : -> Module .
+  op  pgm  : -> Stmt .
+  op  prop : Nat* Nat* Nat* Nat* Nat* -> ReachForm .
+  op  inv  : Nat* Nat* Nat* Nat* Nat* Nat* -> ReachForm .
+  op  term     : Env -> MatchForm .
+  var X  Y  X'  Y'  Z  Z'  : Nat* . var E : Env .
+  var X1 Y1 X1' Y1' Z1 Z1' : Nat* . 
+  var X2 Y2 X2' Y2' Z2 Z2' : Nat* .
+  --- The module used
+  eq imp = upModule('IMP-SEMANTICS,true) .
+
+  eq pgm = while (!((!(0 <: y)) &&: (!(0 <: x)))) {x = x -: 1 ; (y = y -: 1 ; (z = z +: 1 ;))} .
+  ---
+  eq prop(X,Y,X',Y',Z) = upTerm(< pgm ~> done | x |-> X  * y |-> Y  * z |-> 0 >) | mtForm
+                            =>A
+                        (upTerm(< done        | x |-> X' * y |-> Y' * z |-> Z >) | (upTerm(X) ?= upTerm(Z) /\ upTerm(Y <=Nat X) ?= 'tt.Bool*)) U
+                         upTerm(< done        | x |-> X' * y |-> Y' * z |-> Z >) | (upTerm(Y) ?= upTerm(Z) /\ upTerm(X <=Nat Y) ?= 'tt.Bool*) .
+
+  eq inv (X,Y,X',Y',Z,Z') = upTerm(< pgm ~> done | x |-> X  * y |-> Y  * z |-> Z  >) | mtForm
+                              =>A
+                           (upTerm(< done        | x |-> X' * y |-> Y' * z |-> Z' >) | (upTerm(Z') ?= upTerm(X :+ Z) /\ upTerm(Y <=Nat X) ?= 'tt.Bool*)) U
+                            upTerm(< done        | x |-> X' * y |-> Y' * z |-> Z' >) | (upTerm(Z') ?= upTerm(Y :+ Z) /\ upTerm(X <=Nat Y) ?= 'tt.Bool*) .
+endm
+
+--- Debugging statements
+set break on .
+break select step&subsume axiom .
+
+--- Format output for better readability
+set print conceal on .
+print conceal fmod_is_sorts_.____endfm mod_is_sorts_._____endm axiom _;_ __ .
+
+--- Turn on goal trace
+--- set print attribute on .
+
+--- Example 2 --- we split the proof into two goals: prove inv with inv as an axiom and prop with inv as an axiom
+rew init(imp,inv(X2,Y2,X2',Y2',Z2,Z2'), inv(X1,Y1,X1',Y1',Z1,Z1'),term(E)) .
+--- rew init(imp,inv(X2,Y2,X2',Y2',Z2,Z2'),prop(X1,Y1,X1',Y1',Z1),    term(E)) .
+---)

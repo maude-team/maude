@@ -1,0 +1,68 @@
+load imp.maude
+
+---(
+mod SWAP is pr IMP-SEMANTICS .
+  op swap : -> Stmt .
+  eq swap = while y < o do x := x - 1 ; y := y + 1 od ; skip .
+endm
+
+load ../../rltool.maude
+
+---(
+(select SWAP .)
+(def-term-set (skip | M:Memory) | true .)
+(add-goal   (swap | [x,X:Nat]  [y,Y:Nat]  [o,O:Nat]) | (Y:Nat <=Nat O:Nat) = (true) /\ (O:Nat <=Nat X:Nat + Y:Nat) = (true) =>A
+            (skip | [x,X':Nat] [y,Y':Nat] [o,O:Nat]) | (X':Nat + Y':Nat) = (X:Nat + Y:Nat) /\ (Y':Nat) = (O:Nat) .)
+(start-proof .)
+(step* .)
+(add-goal   (swap | [x,X:Nat]  [y,Y:Nat]  [o,X:Nat]) | (Y:Nat <=Nat X:Nat) = (true) =>A
+            (skip | [x,X':Nat] [y,Y':Nat] [o,X:Nat]) | (X':Nat) = (Y:Nat) /\ (Y':Nat) = (X:Nat) .)
+(add-axiom  (swap | [x,X:Nat]  [y,Y:Nat]  [o,O:Nat]) | (Y:Nat <=Nat O:Nat) = (true) /\ (O:Nat <=Nat X:Nat + Y:Nat) = (true) =>A
+            (skip | [x,X':Nat] [y,Y':Nat] [o,O:Nat]) | (X':Nat + Y':Nat) = (X:Nat + Y:Nat) /\ (Y':Nat) = (O:Nat) .)
+(start-proof .)
+break select step&subsume axiom .
+set break on .
+(step* .)
+---)
+
+(select SWAP .)
+(def-term-set (skip | M:Memory) | true .)
+(add-goal   (swap | [x,X:Nat]  [y,Y:Nat]  [o,O:Nat]) | (Y:Nat <=Nat O:Nat) = (true) /\ (O:Nat <=Nat X:Nat + Y:Nat) = (true) =>A
+            (skip | [x,X':Nat] [y,Y':Nat] [o,O:Nat]) | (X':Nat + Y':Nat) = (X:Nat + Y:Nat) /\ (Y':Nat) = (O:Nat) .)
+(add-goal   (swap | [x,X:Nat]  [y,Y:Nat]  [o,X:Nat]) | (Y:Nat <=Nat X:Nat) = (true) =>A
+            (skip | [x,X':Nat] [y,Y':Nat] [o,X:Nat]) | (X':Nat) = (Y:Nat) /\ (Y':Nat) = (X:Nat) .)
+(start-proof .)
+(step* .)
+
+---( Proof Transcript
+(set echo on .)
+(select SWAP .)
+RLTL>  SWAP has been set as current module
+(def-term-set(skip | M:Memory)| tt .)
+RLTL>  Set Terminating State: (skip | M:Memory  |  tt)
+(add-goal(swap |[x,X:Nat][y,Y:Nat][o,O:Nat])|(Y:Nat <=Nat O:Nat)=(true)/\(O:Nat <=Nat X:Nat + Y:Nat)=(true)=>A(skip |[x,X':Nat][y,Y':Nat][o,O:Nat])|(
+    X':Nat + Y':Nat)=(X:Nat + Y:Nat)/\(Y':Nat)=(O:Nat).)
+RLTL>  Added Goal:  [while y <= o do x :=(x - 1); y := 1 + y od ; skip |[o,O:Nat][x,X:Nat][y,Y:Nat] |  Y:Nat <=Nat O:Nat ==? true /\ O:Nat <=Nat X:Nat + Y:Nat
+    ==? true  =>A  skip |[o,O:Nat][x,X':Nat][y,Y':Nat] |  X':Nat + Y':Nat ==? X:Nat + Y:Nat /\ Y':Nat ==? O:Nat]
+(start-proof .)
+RLTL>  New Proof State:
+       [1,while y <= o do x :=(x - 1); y := 1 + y od ; skip |[o,O@10:Nat][x,X@11:Nat][y,Y@12:Nat] |  Y@12:Nat <=Nat O@10:Nat ==? true /\ O@10:Nat <=Nat
+    X@11:Nat + Y@12:Nat ==? true  =>A  skip |[o,O@10:Nat][x,X'@13:Nat][y,Y'@14:Nat] |  X'@13:Nat + Y'@14:Nat ==? X@11:Nat + Y@12:Nat /\ Y'@14:Nat ==?
+    O@10:Nat]
+(step* .)
+RLTL>  Goals Proved
+(add-goal(swap |[x,X:Nat][y,Y:Nat][o,X:Nat])|(Y:Nat <=Nat X:Nat)=(true)=>A(skip |[x,X':Nat][y,Y':Nat][o,X:Nat])|(X':Nat)=(Y:Nat)/\(Y':Nat)=(X:Nat).)
+RLTL>  Added Goal:  [while y <= o do x :=(x - 1); y := 1 + y od ; skip |[o,X:Nat][x,X:Nat][y,Y:Nat] |  Y:Nat <=Nat X:Nat ==? true  =>A  skip |[o,X:Nat][x,
+    X':Nat][y,Y':Nat] |  Y':Nat ==? X:Nat /\ X':Nat ==? Y:Nat]
+(add-axiom(swap |[x,X:Nat][y,Y:Nat][o,O:Nat])|(Y:Nat <=Nat O:Nat)=(true)/\(O:Nat <=Nat X:Nat + Y:Nat)=(true)=>A(skip |[x,X':Nat][y,Y':Nat][o,O:Nat])|(
+    X':Nat + Y':Nat)=(X:Nat + Y:Nat)/\(Y':Nat)=(O:Nat).)
+RLTL>  Added Axiom: [while y <= o do x :=(x - 1); y := 1 + y od ; skip |[o,O:Nat][x,X:Nat][y,Y:Nat] |  Y:Nat <=Nat O:Nat ==? true /\ O:Nat <=Nat X:Nat + Y:Nat
+    ==? true  =>A  skip |[o,O:Nat][x,X':Nat][y,Y':Nat] |  X':Nat + Y':Nat ==? X:Nat + Y:Nat /\ Y':Nat ==? O:Nat]
+(start-proof .)
+RLTL>  New Proof State:
+       [1,while y <= o do x :=(x - 1); y := 1 + y od ; skip |[o,X@15:Nat][x,X@15:Nat][y,Y@16:Nat] |  Y@16:Nat <=Nat X@15:Nat ==? true  =>A  skip |[o,
+    X@15:Nat][x,X'@17:Nat][y,Y'@18:Nat] |  Y'@18:Nat ==? X@15:Nat /\ X'@17:Nat ==? Y@16:Nat]
+(step* .)
+RLTL>  Goals Proved
+---)
+---)

@@ -1,0 +1,26 @@
+load ../base.maude
+
+fmod TEST-PRESDM is
+  pr PRESBURGER-NAT-TO-NAT .
+  pr VAR-SAT .
+  op nat : -> Module .
+  op red-test : Form -> Bool .
+  var U V W X Y Z : Nat* .
+  var F : Form .
+  eq nat = upModule('NAT*,true) . 
+  eq red-test(F) = var-sat(nat,F) == var-sat(nat,reduce(F)) .
+endfm
+
+red red-test(upTerm(X <Nat  Y) ==? 'tt.Bool*) .
+red red-test(upTerm(X <=Nat Y) ==? 'tt.Bool*) .
+red red-test(upTerm(X <Nat  Y) ==? 'tt.Bool* /\ upTerm(Y <=Nat Z) ==? 'tt.Bool*) .
+red red-test(upTerm(X <Nat  Y) ==? 'tt.Bool* \/ upTerm(Y <=Nat Z) ==? 'tt.Bool*) .
+red red-test(upTerm(X <Nat  Y) ==? 'tt.Bool* /\ upTerm(Y <Nat  X) ==? 'tt.Bool*) .
+red red-test(upTerm(X <Nat  Y) ==? 'tt.Bool* \/ upTerm(Y <Nat  X) ==? 'tt.Bool*) .
+red red-test(upTerm(X <Nat  Y) ==? 'tt.Bool* /\ upTerm(Y <Nat  Z) ==? 'tt.Bool* /\ upTerm(Z <Nat  X) ==? 'tt.Bool*) .
+
+
+red red-test(--- '_<=Nat_['_:+_['@4:Nat*,'@2:Nat*],'@6:Nat*] ==? 'tt.Bool*           /\
+             '_<Nat_['@2:Nat*,'_:+_['@4:Nat*,'@5:Nat*]] ==? 'tt.Bool*            /\
+             '_<Nat_['@5:Nat*,'@2:Nat*] ==? 'tt.Bool*  ) . ---                          /\
+             ---- '_<Nat_['_:+_['@4:Nat*,'@4:Nat*, '@5:Nat*],'@6:Nat*] ==? 'tt.Bool*) .

@@ -1,0 +1,28 @@
+load imp.maude
+load ../../rltool.maude
+
+--- set break on .
+--- break select setmod .
+--- print reveal mod_is_sorts_._____endm .
+(select     IMP-SEMANTICS  .)
+(select-fvp IMP-SYNTAX     .)
+(select-cc  IMP-SYNTAX+MUL .)
+(def-term-set (< done | E:Env >) | true .)
+(declare-vars (X:Nat*) U (Y:Nat*) U (S:Nat*) U (X':Nat*) U (S':Nat*) .)
+--- double induction: [1] induction on while loop derivation
+(add-goal (< while (0 <: x) {x,, = x,, +: x, ; x = x -: 1 ;} ~> done | x |-> X  *  x, |-> Y * x,, |-> S  >) | true =>A
+          (< done                                                    | x |-> X' *  x, |-> Y * x,, |-> S' >) | (X') = (0) /\ (S') = (S :+ (X :* Y)) .) --- x = 0 abstracted b/c otherwise match fails
+(start-proof .)
+(step 29 .)
+--- [2] natural number induction: case analysis lets us expose the underlying inductive structure
+(case 1 1 1 2 1 1 3 1 3 1 1 1 1 1 1 1 2 1 1 3 1 2 1 1 1 1 3 1 2 1 on @26:Nat* by (0) U (1 :+ N:Nat*) .)
+(step .)
+---
+(def-term-set (< done | E:Env >) | true .)
+(declare-vars (X:Nat*) U (Y:Nat*) U (S:Nat*) U (X':Nat*) U (S':Nat*) .)
+(add-axiom (< while (0 <: x) {x,, = x,, +: x, ; x = x -: 1 ;} ~> done | x |-> X  *  x, |-> Y * x,, |-> S  >) | true =>A
+           (< done                                                    | x |-> X' *  x, |-> Y * x,, |-> S' >) | (X') = (0) /\ (S') = (S :+ (X :* Y)) .) --- x = 0 abstracted b/c otherwise match fails
+(add-goal  (< while (0 <: x) {x,, = x,, +: x, ; x = x -: 1 ;} ~> done | x |-> X  *  x, |-> Y * x,, |-> 0  >) | true =>A
+           (< done                                                    | x |-> X' *  x, |-> Y * x,, |-> S  >) | (S) = (X :* Y) /\ (X') = (0) .)         --- x = 0 abstracted b/c otherwise match fails
+(start-proof .)
+(step* .)

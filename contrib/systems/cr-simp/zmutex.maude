@@ -1,0 +1,223 @@
+load imp.maude
+
+---(
+mod MUTUAL-EXCLUSION is pr THREADED-IMP-SEMANTICS .
+  ops crit rest  : -> TermStmt [ctor] .
+  op [_]   : State -> State .
+  op [_,_] : ThreadSet Memory -> State [ctor] .
+  var TS : ThreadSet . var M : Memory .
+  eq [TS | M] = [TS,M] .
+  rl TS | M => [TS,M] .
+endm
+
+mod PETERSON is pr MUTUAL-EXCLUSION .
+  ops p1 p2 : -> Thread .
+  op init-mem : -> Memory .
+  eq init-mem = [a,0] [b,0] [t,0] .
+
+  eq p1 = {repeat
+            a := 1 ;
+            t := 1 ;
+            while b = 1 && t = 1 do skip od ;
+            crit ;
+            a := 0
+           forever ;
+           rest ;
+           skip} .
+  eq p2 = {repeat
+            b := 1 ;
+            t := 0 ;
+            while a = 1 && t = 0 do skip od ;
+            crit ;
+            b := 0
+           forever ;
+           rest ;
+           skip} .
+endm
+
+---(
+--- NOTE: This is an exmaple of the WRONG way to go about this...
+---       Matching against every code fragment is way too tedious...
+mod PETERSON-PRED is pr PETERSON .
+  op  i : Stmt Stmt Nat Nat Nat -> State .
+  ops a1 a2 a3 a4 a5 a6 b1 b2 b3 b4 b5 b6 : -> Stmt .
+  var S S' : Stmt . var A B T : Nat .
+
+  eq i(S,S',A,B,T) = {repeat S forever ; skip} {repeat S' forever ; skip} | [a,A] [b,B] [t,T] .
+
+  eq a1 = a := 1 ; t := 1 ; while b = 1 && t = 1 do skip od ; crit ; a := 0 ; rest .
+  eq a2 = t := 1 ; while b = 1 && t = 1 do skip od ; crit ; a := 0 ; rest .
+
+  eq a3 = while b = 1 && t = 1 do skip od ; crit ; a := 0 ; rest .
+  eq a4 = if b = 1 && t = 1 then skip fi ; while b = 1 && t = 1 do skip od ; crit ; a := 0 ; rest .
+  eq a5 = if B then skip fi ; while b = 1 && t = 1 do skip od ; crit ; a := 0 ; rest .
+  eq a6 = skip ; while b = 1 && t = 1 do skip od ; crit ; a := 0 ; rest .
+
+  eq a7 = crit ; a := 0 ; rest .
+  eq a8 = a := 0 ; rest .
+  eq a9 = rest .
+
+  eq b1 = b := 1 ; t := 0 ; while a = 1 && t = 0 do skip od ; crit ; b := 0 ; rest .
+  eq b2 = t := 0 ; while a = 1 && t = 0 do skip od ; crit ; b := 0 ; rest .
+
+  eq b3 = while a = 1 && t = 0 do skip od ; crit ; b := 0 ; rest .
+  eq b4 = if a = 1 && t = 0 then skip fi ; while a = 1 && t = 0 do skip od ; crit ; b := 0 ; rest .
+  eq b5 = if B then skip fi ; while a = 1 && t = 0 do skip od ; crit ; b := 0 ; rest .
+  eq b7 = skip ; while a = 1 && t = 0 do skip od ; crit ; b := 0 ; rest .
+
+  eq b8 = crit ; b := 0 ; rest .
+  eq b9 = b := 0 ; rest .
+endm
+
+load ../../rltool.maude
+(select PETERSON-PRED .)
+(add-goal
+          ( i(a1,b1,A:Nat,B:Nat,T:Nat) ) | (A:Nat) = (0:Nat) /\ (B:Nat) = (0:Nat) /\ (T:Nat <= 1:Nat) = (true) \/
+          ( i(a1,b2,A:Nat,B:Nat,T:Nat) ) | (A:Nat) = (0:Nat) /\ (B:Nat) = (1:Nat) /\ (T:Nat <= 1:Nat) = (true) \/
+          ( i(a1,b3,A:Nat,B:Nat,T:Nat) ) | (A:Nat) = (0:Nat) /\ (B:Nat) = (1:Nat) /\ (T:Nat <= 1:Nat) = (true) \/
+          ( i(a1,b4,A:Nat,B:Nat,T:Nat) ) | (A:Nat) = (0:Nat) /\ (B:Nat) = (1:Nat) /\ (T:Nat <= 1:Nat) = (true) \/
+      =>A
+          ([i(a1,b1,A:Nat,B:Nat,T:Nat)]) | (A:Nat) = (0:Nat) /\ (B:Nat) = (0:Nat) /\ (T:Nat <= 1:Nat) = (true) \/
+          ([i(a1,b2,A:Nat,B:Nat,T:Nat)]) | (A:Nat) = (0:Nat) /\ (B:Nat) = (1:Nat) /\ (T:Nat <= 1:Nat) = (true)
+.)
+---)
+
+mod PETERSON-PRED2 is pr PETERSON .
+  ops acode bcode acode2 bocde2 acode3 bocde3 : -> Stmt .
+  ops a1 b1 a2 b2 : -> Stmt .
+  ops a3 b3 : Stmt -> Stmt .
+  op  m : Nat Nat Nat -> Memory .
+  var S : Stmt . var A B T : Nat .
+  eq acode     = a := 1 ; t := 1 ; while b = 1 && t = 1 do skip od ; crit ; a := 0 ; rest .
+  eq bcode     = b := 1 ; t := 0 ; while a = 1 && t = 0 do skip od ; crit ; b := 0 ; rest .
+  eq as        = repeat acode forever ; skip .
+  eq bs        = repeat bcode forever ; skip .
+  eq ae(S)     = S ; repeat acode forever ; skip .
+  eq be(S)     = S ; repeat bcode forever ; skip .
+  eq m(A,B,T)  = [a,A] [b,B] [t,T] .
+
+  eq a2        = t := 1 ; while b = 1 && t = 1 do skip od ; crit ; a := 0 ; rest .
+  eq a3        = if b = 1 && t = 1 then skip fi ; while b = 1 && t = 1 do skip od ; crit ; a := 0 ; rest .
+  eq a4(L)     = if BL then skip fi ; while b = 1 && t = 1 do skip od ; crit ; a := 0 ; rest .
+  eq a5        = skip ; while b = 1 && t = 1 do skip od ; crit ; a := 0 ; rest .
+
+  eq b2        = t := 0 ; while a = 1 && t = 0 do skip od ; crit ; b := 0 ; rest .
+  eq b3        = if a = 1 && t = 0 then skip fi ; while a = 1 && t = 0 do skip od ; crit ; b := 0 ; rest .
+  eq b4(L)     = if L then skip fi ; while a = 1 && t = 0 do skip od ; crit ; b := 0 ; rest .
+  eq b5        = skip ; while a = 1 && t = 0 do skip od ; crit ; b := 0 ; rest .
+
+  --- 0 states
+  ---    repeat code forever ; skip
+  ---    code ; repeat code forever ; skip
+  ---    rest ; repeat code forever ; skip
+  eq a0-1 = as .
+  eq a0-2 = ae(acode) .
+  eq a0-3 = ae(rest) .
+  eq b0-1 = bs .
+  eq b0-2 = be(bcode) .
+  eq b0-3 = be(rest) .
+  --- 1 non-crit states
+  ---    assign t := 0/1, while, if bred, if true, skip while
+  eq a1-1 = ae(t := 1 ; while b = 1 && t = 1 do skip od ; crit ; a := 0 ; rest) .
+  eq b1-1 = be(t := 0 ; while a = 1 && t = 0 do skip od ; crit ; b := 0 ; rest) .
+  eq a1-2 = ae(while b = 1 && t = 1 do skip od ; crit ; a := 0 ; rest) .
+  eq b1-2 = be(while a = 1 && t = 0 do skip od ; crit ; b := 0 ; rest) .
+  eq a1-3 = ae(if b = 1 && t = 1 then skip ; while b = 1 && t = 1 do skip od fi ; crit ; a := 0 ; rest) .
+  eq b1-3 = be(if a = 1 && t = 0 then skip ; while a = 1 && t = 0 do skip od fi ; crit ; b := 0 ; rest) .
+  eq a1-4 = ae(if true then skip ; while b = 1 && t = 1 do skip od fi ; crit ; a := 0 ; rest) .
+  eq b1-4 = be(if true then skip ; while a = 1 && t = 0 do skip od fi ; crit ; b := 0 ; rest) .
+  eq a1-5 = ae(skip ; while b = 1 && t = 1 do skip od ; crit ; a := 0 ; rest) .
+  eq b1-5 = be(skip ; while a = 1 && t = 0 do skip od ; crit ; b := 0 ; rest) .
+  --- 1 crit states
+  ---    if false, crit, assign a/b := 0
+  eq ac-1 = if false then skip ; while b = 1 && t = 1 do skip od fi ; crit ; a := 0 ; rest .
+  eq ac-2 = crit ; a := 0 ; rest .
+  eq ac-3 = a := 0 ; rest .
+  eq bc-1 = if false then skip ; while a = 1 && t = 0 do skip od fi ; crit ; b := 0 ; rest .
+  eq bc-2 = crit ; b := 0 ; rest .
+  eq bc-3 = b := 0 ; rest .
+endm
+
+--- start
+--- LOOP1 INV
+--- while,    state0   | A: 1, B: 0, T: 0/1 \/  while,    state1   | A: 1, B: 1, T: 0/1 =>A endwhile, notcrit  | A: 1,   B: 0/1, T: 0/1
+--- LOOP2 INV
+--- state0,   while    | A: 0, B: 1, T: 0/1 \/  state1,   while    | A: 1, B: 1, T: 1   =>A noncrit,  endwhile | A: 0/1, B: 1,   T: 0/1
+
+---(
+(add-goal
+          ( a0-1 b0-1 | m(0,0,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a0-1 b0-2 | m(0,0,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a0-1 b0-3 | m(0,0,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a0-1 b1-1 | m(0,1,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a0-1 b1-2 | m(0,1,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a0-1 b1-3 | m(0,1,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a0-1 b1-4 | m(0,1,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a0-1 b1-5 | m(0,1,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ---
+          ( a0-2 b0-1 | m(0,0,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a0-2 b0-2 | m(0,0,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a0-2 b0-3 | m(0,0,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a0-2 b1-1 | m(0,1,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a0-2 b1-2 | m(0,1,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a0-2 b1-3 | m(0,1,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a0-2 b1-4 | m(0,1,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a0-2 b1-5 | m(0,1,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ---
+          ( a0-3 b0-1 | m(0,0,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a0-3 b0-2 | m(0,0,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a0-3 b0-3 | m(0,0,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a0-3 b1-1 | m(0,1,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a0-3 b1-2 | m(0,1,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a0-3 b1-3 | m(0,1,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a0-3 b1-4 | m(0,1,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a0-3 b1-5 | m(0,1,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ---
+          ( a1-1 b0-1 | m(1,0,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a1-1 b0-2 | m(1,0,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a1-1 b0-3 | m(1,0,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a1-1 b1-1 | m(1,1,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a1-1 b1-2 | m(1,1,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a1-1 b1-3 | m(1,1,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a1-1 b1-4 | m(1,1,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a1-1 b1-5 | m(1,1,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ---
+          ( a1-2 b0-1 | m(1,0,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a1-2 b0-2 | m(1,0,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a1-2 b0-3 | m(1,0,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a1-2 b1-1 | m(1,1,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a1-2 b1-2 | m(1,1,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a1-2 b1-3 | m(1,1,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a1-2 b1-4 | m(1,1,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a1-2 b1-5 | m(1,1,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ---
+          ( a1-3 b0-1 | m(1,0,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a1-3 b0-2 | m(1,0,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a1-3 b0-3 | m(1,0,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a1-3 b1-1 | m(1,1,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a1-3 b1-2 | m(1,1,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a1-3 b1-3 | m(1,1,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a1-3 b1-4 | m(1,1,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a1-3 b1-5 | m(1,1,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ---
+          ( a1-4 b0-1 | m(1,0,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a1-4 b0-2 | m(1,0,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a1-4 b0-3 | m(1,0,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a1-4 b1-1 | m(1,1,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a1-4 b1-2 | m(1,1,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a1-4 b1-3 | m(1,1,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a1-4 b1-4 | m(1,1,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a1-4 b1-5 | m(1,1,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ---
+          ( a1-5 b0-1 | m(1,0,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a1-5 b0-2 | m(1,0,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a1-5 b0-3 | m(1,0,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a1-5 b1-1 | m(1,1,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a1-5 b1-2 | m(1,1,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a1-5 b1-3 | m(1,1,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a1-5 b1-4 | m(1,1,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ( a1-5 b1-5 | m(1,1,T:Nat) ) | (T:Nat <= 1) = (true) \/
+          ---
+)
+---)
+---)

@@ -1,0 +1,41 @@
+fmod QLOCK-STATE is
+  sort Bool* Nat* .
+  op  tt   :           -> Bool* [ctor] .
+  ops 1 0  :           -> Nat*  [ctor] .
+  op  _:+_ : Nat* Nat* -> Nat*  [assoc comm ctor id: 0] .
+
+  sort Soup .
+  subsort Nat* < Soup .
+  op mt :              -> Soup [ctor] .
+  op __ : Soup Soup    -> Soup [ctor assoc comm id: mt] .
+
+  sort NeQueue Queue .
+  subsort Nat* < NeQueue < Queue .
+  op nil :                 -> Queue   [ctor] .
+  op _@_ : NeQueue NeQueue -> NeQueue [ctor assoc] .
+
+  sort Conf State .
+  op _|_|_|_ : Soup Soup Soup Queue -> Conf  [ctor] .
+  op <_>     : Conf                 -> State [ctor] .
+  op [_]     : Conf                 -> State [ctor] .
+
+  sort Pred .
+  op true    : -> Pred          [ctor] .
+  op _=/=_ : Pred Pred -> Bool* [ctor] .
+  op _in_  : Nat* Soup -> Pred  [ctor] .
+  op dupl  : Soup -> Pred       [ctor] .
+  var N : Nat* . var S : Soup .
+  eq N in N      = true [variant] .
+  eq N in N S    = true [variant] .
+  eq dupl(N N)   = true [variant] .
+  eq dupl(N N S) = true [variant] .
+endfm
+
+load ../../debug.maude
+
+set break on .
+break select toSet .
+red sem-sub-form(upModule('QLOCK-STATE,true), true, '`[_`]['_|_|_|_['@31:Soup,'@32:Soup,'mt.Soup,'@33:Queue]] | 'true.Pred != 'dupl['__['@31:Soup,'@32:Soup]],
+    '`[_`]['_|_|_|_['I'@12:Soup,'W'@13:Soup,'N'@14:Nat*,'M'@15:Nat*]] | 'M'@15:Nat* ?= 'N'@14:Nat* U
+    '`[_`]['_|_|_|_['I'@12:Soup,'W'@13:Soup,'N'@14:Nat*,'_@_['M'@15:Nat*,'Q'@16:NeQueue]]] | 'M'@15:Nat* ?= 'N'@14:Nat* U 
+    '`[_`]['_|_|_|_['I'@12:Soup,'W'@13:Soup,'mt.Soup,'EQ@17:Queue]] | mtForm) .

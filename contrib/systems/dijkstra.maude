@@ -1,0 +1,78 @@
+load ../tools/varsat/numbers.maude
+
+fmod DIJKSTRA-DATA is
+  pr BOOL* .
+
+  --- Processes
+  sort WProc 2Proc NCProc CProc Proc .
+  subsort WProc 2Proc < NCProc < Proc .
+  subsort CProc < Proc .
+  --- Process Sets
+  sort WProcSet 2ProcSet NCProcSet ProcSet .
+  subsort WProcSet 2ProcSet < NCProcSet < ProcSet .
+  subsort NCProc < NCProcSet .
+  subsort WProc < WProcSet < NCProcSet .
+  subsort 2Proc < 2ProcSet < NCProcSet .
+  subsort Proc  < ProcSet  .
+
+  --- Waiting Process
+  op {0,try} : -> WProc [ctor] .
+  op {1,try} : -> WProc [ctor] .
+  op {1,upt} : -> WProc [ctor] .
+  op {1,upf} : -> WProc [ctor] .
+  --- Precrit Process
+  op {2,chf} : -> 2Proc [ctor] .
+  op {2,ext} : -> 2Proc [ctor] .
+  --- Critical Process
+  op {2,crt} : -> CProc [ctor] .
+
+  --- Process Sets
+  op  __     : WProcSet WProcSet   -> WProcSet  [ctor assoc comm id: mt] .
+  op  __     : 2ProcSet WProcSet   -> 2ProcSet  [ctor assoc comm id: mt] .
+  op  __     : 2ProcSet 2ProcSet   -> 2ProcSet  [ctor assoc comm id: mt] .
+  op  __     : NCProcSet NCProcSet -> NCProcSet [ctor assoc comm id: mt] .
+  op  __     : ProcSet  ProcSet    -> ProcSet   [ctor assoc comm id: mt] .
+  op  mt     : -> WProcSet .
+
+  --- Auxiliary Operators
+  op _==_     : Bool* Bool* -> Bool* .
+  op safe? : ProcSet -> Bool* .
+  ---
+  eq safe?(P:WProcSet)       = tt .
+  eq safe?(P:2ProcSet)       = ff .
+  eq safe?(P:ProcSet C:Proc) = ff .
+endfm
+
+mod DIJKSTRA is
+  pr DIJKSTRA-DATA .
+
+  --- System State
+  sort Conf State .
+  op _|_ : Proc ProcSet -> Conf [ctor] .
+  op <_> : Conf -> State [ctor] .
+  op [_] : Conf -> State [ctor] .
+
+  var P   : Proc .
+  var PS  : ProcSet .
+  var 2PS : 2ProcSet .
+  var WPS : WProcSet .
+
+  rl [start1]     : <  P      | {0,try} PS  > => <  P      | {1,try} PS > .
+  rl [chk-turn1]  : < {0,try} | {1,try} PS  > => < {0,try} | {1,upt} PS > .
+  rl [set-turn1]  : <  P      | {1,upt} PS  > => < {1,upf} |  P      PS > .
+  rl [set-flag1]  : <  P      | {1,upf} PS  > => <  P      | {2,chf} PS > .
+ crl [go-crit1]   : <  P      | {2,chf} PS  > => <  P      | {2,crt} PS > if (safe?(P PS) == tt) = tt .
+ crl [fail-crit1] : <  P      | {2,chf} PS  > => <  P      | {2,ext} PS > if (safe?(P PS) == ff) = tt .
+  rl [done-crit1] : <  P      | {2,crt} PS  > => <  P      | {2,ext} PS > .
+  rl [exit-crit1] : <  P      | {2,ext} PS  > => <  P      | {0,try} PS > .
+
+  rl [start2]     : < {0,try} |         PS  > => < {1,try} |         PS > .
+  rl [chk-turn2]  : < {1,try} |         PS  > => < {1,upf} |         PS > .
+  rl [set-flag2]  : < {1,upf} |         PS  > => < {2,chf} |         PS > .
+  rl [go-crit2]   : < {2,chf} |         WPS > => < {2,crt} |        WPS > .
+  rl [fail-crit2] : < {2,chf} |         2PS > => < {2,ext} |        2PS > .
+  rl [done-crit2] : < {2,crt} |         PS  > => < {2,ext} |         PS > .
+  rl [exit-crit2] : < {2,ext} |         PS  > => < {0,try} |         PS > .
+
+  rl [stop]       : < P | PS > => [ P | PS ] .
+endm

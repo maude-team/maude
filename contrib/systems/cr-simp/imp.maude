@@ -1,0 +1,142 @@
+--- TODO: this needs to be rewritten to use CR
+
+set include BOOL off .
+
+fmod IMP-SYNTAX is
+  sort Id Bool NzNat Nat .
+  subsort NzNat < Nat .
+  ops a b c d e f g i j k l m n o p q r s t u v w x y z : -> Id [ctor] .
+  op  _, : Id -> Id [ctor] .
+  ops true false : -> Bool [ctor] .
+  op  0 : -> Nat [ctor] .
+  op  1 : -> NzNat [ctor] .
+  op  _+_ : Nat Nat -> Nat [ctor assoc comm id: 0] .
+  op  _+_ : NzNat Nat -> NzNat [ctor ditto] .
+
+  sort BoolExp BoolRedex NatExp NatRedex .
+  subsort Id < NatRedex .
+  subsort Nat  NatRedex  < NatExp .
+  subsort Bool BoolRedex < BoolExp .
+  ops (_&&_) (_||_) : BoolExp BoolExp -> BoolRedex [ctor] .
+  op  ~_ : BoolExp -> BoolRedex [ctor] .
+  ops (_<_) (_<=_) (_=_) : NatExp NatExp -> BoolRedex [ctor] .
+  op  _+_ : NatRedex NatExp -> NatRedex [ditto] .
+  op  _+_ : NatExp NatExp -> NatExp [ditto] .
+  op  _-_ : NatExp NatExp -> NatRedex [ctor] .
+
+  sort BasicStmt Stmt .
+  subsort BasicStmt < Stmt .
+  op  _;_  : Stmt Stmt -> Stmt [ctor assoc prec 60] .
+  op  skip : -> BasicStmt [ctor] .
+  op  _:=_ : Id NatExp -> BasicStmt [ctor] .
+  op  if_then_fi : BoolExp Stmt -> BasicStmt [ctor] .
+  op  while_do_od : BoolExp Stmt -> BasicStmt [ctor] .
+  op  repeat_forever : Stmt -> BasicStmt [ctor] .
+endfm
+
+fmod TERM-STMT is pr IMP-SYNTAX .
+  sort TermStmt .
+  subsort TermStmt < Stmt .
+endfm
+
+fmod IMP-REDUCE is pr IMP-SYNTAX .
+  op  ~Bool_                : Bool -> Bool .
+  ops (_/\Bool_) (_\/Bool_) : Bool Bool -> Bool .
+  op  _-Nat_                : Nat Nat -> Nat .
+  ops (_<Nat_)  (_<=Nat_) : Nat Nat -> Bool .
+  op  (_=Nat_) : Nat Nat -> Bool [comm] .
+  var N M : Nat . var P : NzNat . var B : Bool .
+  eq ~Bool true  = false [variant] .
+  eq ~Bool false = true  [variant] .
+  eq true  /\Bool B = B     [variant] .
+  eq false /\Bool B = false [variant] .
+  eq true  \/Bool B = true  [variant] .
+  eq false \/Bool B = B     [variant] .
+  eq N       -Nat  (N + M) = 0 [variant] .
+  eq (N + P) -Nat  N       = P [variant] .
+  eq N       <Nat  N + P   = true  [variant] .
+  eq N + M   <Nat  N       = false [variant] .
+  eq N       <=Nat N + M   = true  [variant] .
+  eq N + P   <=Nat N       = false [variant] .
+  eq N + P    =Nat N       = false [variant] .
+  eq N        =Nat N       = true  [variant] .
+endfm
+
+fmod IMP-MEM is pr IMP-SYNTAX .
+  sort Memory .
+  op [_,_] : Id Nat -> Memory [ctor] .
+  op none  : -> Memory [ctor] .
+  op __    : Memory Memory -> Memory [ctor assoc comm id: none] .
+endfm
+
+fmod IMP-EVAL is pr IMP-MEM + IMP-REDUCE .
+  op eval : Memory NatExp  -> Nat .
+  op eval : Memory BoolExp -> Bool .
+  var NE1 NE2 : NatExp  . var B : Bool . var NR1 NR2 : NatRedex . var P : NzNat .
+  var BE1 BE2 : BoolExp . var N : Nat  . var M : Memory . var I : Id .
+  --- recursive case
+  eq eval(M,NR1 + P  )  = eval(M,NR1) + P [variant] .
+  eq eval(M,NR1 + NR2)  = eval(M,NR1) + eval(M,NR2) [variant] .
+  eq eval(M,NE1 - NE2)  = eval(M,NE1) -Nat   eval(M,NE2) [variant] .
+  eq eval(M,BE1 && BE2) = eval(M,BE1) /\Bool eval(M,BE2) [variant] .
+  eq eval(M,BE1 || BE2) = eval(M,BE1) \/Bool eval(M,BE2) [variant] .
+  eq eval(M,NE1 <  NE2) = eval(M,NE1) <Nat   eval(M,NE2) [variant] .
+  eq eval(M,NE1 <= NE2) = eval(M,NE1) <=Nat  eval(M,NE2) [variant] .
+  eq eval(M,NE1  = NE2) = eval(M,NE1)  =Nat  eval(M,NE2) [variant] .
+  eq eval(M,~ BE1)      = ~Bool eval(M,BE1) [variant] .
+  --- base case
+  eq eval([I,N] M,I)    = N [variant] .
+  eq eval(M,N)          = N [variant] .
+  eq eval(M,B)          = B [variant] .
+endfm
+
+mod IMP-NUMBERS is pr IMP-SYNTAX .
+  ops 2 3 4 5 6 7 8 9 10 : -> NzNat .
+  eq 2  = 1 + 1 .
+  eq 3  = 1 + 1 + 1 .
+  eq 4  = 1 + 1 + 1 + 1 .
+  eq 5  = 1 + 1 + 1 + 1 + 1 .
+  eq 6  = 1 + 1 + 1 + 1 + 1 + 1 .
+  eq 7  = 1 + 1 + 1 + 1 + 1 + 1 + 1 .
+  eq 8  = 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 .
+  eq 9  = 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 .
+  eq 10 = 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 .
+endm
+
+mod IMP-SEMANTICS is pr IMP-EVAL + IMP-SYNTAX + IMP-NUMBERS + TERM-STMT .
+  sort State .
+  op _|_ : Stmt Memory -> State [ctor prec 61] .
+  var NE : NatExp . var S S' : Stmt . var I : Id .
+  var M : Memory . var N : Nat . var BR : BoolRedex . var B : Bool . var BE : BoolExp .
+
+  rl  T:TermStmt        ; S' | M       => S' | M .
+  rl skip               ; S' | M       => S' | M .
+  rl I := NE            ; S' | [I,N] M => S' | [I,eval([I,N] M,NE)] M .
+  rl if BR    then S fi ; S' | M       => if eval(M,BR) then S fi ; S' | M .
+  rl if true  then S fi ; S' | M       => S ; S' | M .
+  rl if false then S fi ; S' | M       => S' | M .
+  rl while BE do S od   ; S' | M       => if BE then S ; while BE do S od fi ; S' | M .
+  rl repeat S forever   ; S' | M       => S ; repeat S forever ; S' | M .
+endm
+
+
+mod THREADED-IMP-SEMANTICS is pr IMP-EVAL + IMP-SYNTAX + IMP-NUMBERS + TERM-STMT .
+  sort State Thread ThreadSet .
+  subsort Thread < ThreadSet .
+  op __ : ThreadSet ThreadSet -> ThreadSet [ctor prec 61 assoc comm id: none] .
+  op none : -> ThreadSet .
+  op {_} : Stmt -> Thread [ctor] .
+  op _|_ : ThreadSet Memory -> State [ctor prec 62] .
+
+  var NE : NatExp . var S S' : Stmt . var I : Id . var TS : ThreadSet .
+  var M : Memory . var N : Nat . var BR : BoolRedex . var B : Bool . var BE : BoolExp .
+
+  rl {T:TermStmt         ; S'} TS | M       => {S'}                                      TS | M .
+  rl {skip               ; S'} TS | M       => {S'}                                      TS | M .
+  rl {I := NE            ; S'} TS | [I,N] M => {S'}                                      TS | [I,eval([I,N] M,NE)] M .
+  rl {if BR    then S fi ; S'} TS | M       => {if eval(M,BR) then S fi ; S'}            TS | M .
+  rl {if true  then S fi ; S'} TS | M       => {S ; S'}                                  TS | M .
+  rl {if false then S fi ; S'} TS | M       => {S'}                                      TS | M .
+  rl {while BE do S od   ; S'} TS | M       => {if BE then S ; while BE do S od fi ; S'} TS | M .
+  rl {repeat S forever   ; S'} TS | M       => {S ; repeat S forever ; S'}               TS | M .
+endm

@@ -1,0 +1,97 @@
+load imp.maude
+
+---(
+mod MUTUAL-EXCLUSION is pr THREADED-IMP-SEMANTICS .
+  ops crit rest  : -> TermStmt [ctor] .
+  op [_]   : State -> State .
+  op [_,_] : ThreadSet Memory -> State [ctor] .
+  var TS : ThreadSet . var M : Memory .
+  eq [TS | M] = [TS,M] .
+  ---rl TS | M => [TS,M] .
+endm
+
+mod PETERSON is pr MUTUAL-EXCLUSION .
+  ops p0 p1 : -> Thread .
+  op init-mem : -> Memory .
+  eq init-mem = [a,0] [b,0] [t,0] .
+
+  eq p0 = {repeat
+             a := 1 ;
+             t := 0 ;
+             while b = 1 && t = 0 do skip od ;
+             crit ;
+             a := 0 ;
+             rest
+           forever ;
+           skip} .
+  eq p1 = {repeat
+             b := 1 ;
+             t := 1 ;
+             while a = 1 && t = 1 do skip od ;
+             crit ;
+             b := 0 ;
+             rest
+           forever ;
+           skip} .
+endm
+
+mod PETERSON-PRED is pr PETERSON .
+  op  i : Stmt Stmt Nat Nat Nat -> State .
+  ops a1 a2 a3 a4 a5 a6 a7 a8 a9 b1 b2 b3 b4 b5 b6 b7 b8 b9 : Bool -> Stmt .
+  var S S' : Stmt . var A B T : Nat . var L : Bool .
+
+  eq i(S,S',A,B,T) = {repeat S forever ; skip} {repeat S' forever ; skip} | [a,A] [b,B] [t,T] .
+
+  eq a1(L) = a := 1 ; t := 0 ; while b = 1 && t = 0 do skip od ; crit ; a := 0 ; rest .
+
+  eq a2(L) = t := 0 ; while b = 1 && t = 0 do skip od ; crit ; a := 0 ; rest .
+  eq a3(L) = while b = 1 && t = 0 do skip od ; crit ; a := 0 ; rest .
+  eq a4(L) = if b = 1 && t = 0 then skip fi ; while b = 1 && t = 0 do skip od ; crit ; a := 0 ; rest .
+  eq a5(L) = if L then skip fi ; while b = 1 && t = 0 do skip od ; crit ; a := 0 ; rest .
+  eq a6(L) = skip ; while b = 1 && t = 0 do skip od ; crit ; a := 0 ; rest .
+  eq a7(L) = crit ; a := 0 ; rest .
+  eq a8(L) = a := 0 ; rest .
+
+  eq a9(L) = rest .
+
+  eq b1(L) = b := 1 ; t := 1 ; while a = 1 && t = 1 do skip od ; crit ; b := 0 ; rest .
+
+  eq b2(L) = t := 1 ; while a = 1 && t = 1 do skip od ; crit ; b := 0 ; rest .
+  eq b3(L) = while a = 1 && t = 1 do skip od ; crit ; b := 0 ; rest .
+  eq b4(L) = if a = 1 && t = 1 then skip fi ; while a = 1 && t = 1 do skip od ; crit ; b := 0 ; rest .
+  eq b5(L) = if L then skip fi ; while a = 1 && t = 1 do skip od ; crit ; b := 0 ; rest .
+  eq b6(L) = skip ; while a = 1 && t = 1 do skip od ; crit ; b := 0 ; rest .
+  eq b7(L) = crit ; b := 0 ; rest .
+  eq b8(L) = b := 0 ; rest .
+
+  eq b9(L) = rest .
+endm
+
+load ../../rltool.maude
+(select PETERSON-PRED .)
+(add-goal
+          ( i(S1:Stmt,S2:Stmt,A:Nat,B:Nat,T:Nat) ) | ((S1:Stmt) =/= (a1(L:Bool)) \/ (S1:Stmt) =/= (a9(L:Bool)) \/ (A:Nat) = (0)) /\
+                                                     ((S2:Stmt) =/= (b1(L:Bool)) \/ (S2:Stmt) =/= (b9(L:Bool)) \/ (B:Nat) = (0)) /\
+                                                     ((S1:Stmt) =/= (a2(L:Bool)) \/ (S1:Stmt) =/= (a3(L:Bool)) \/ (S1:Stmt) =/= (a4(L:Bool)) \/ (S1:Stmt) =/= (a5(L:Bool)) \/
+                                                      (S1:Stmt) =/= (a6(L:Bool)) \/ (S1:Stmt) =/= (a7(L:Bool)) \/ (S1:Stmt) =/= (a8(L:Bool)) \/ (A:Nat) = (1)) /\
+                                                     ((S2:Stmt) =/= (b2(L:Bool)) \/ (S2:Stmt) =/= (b3(L:Bool)) \/ (S2:Stmt) =/= (b4(L:Bool)) \/ (S2:Stmt) =/= (b5(L:Bool)) \/
+                                                      (S2:Stmt) =/= (b6(L:Bool)) \/ (S2:Stmt) =/= (b7(L:Bool)) \/ (S2:Stmt) =/= (b8(L:Bool)) \/ (B:Nat) = (1)) /\
+                                                     (B:Nat <= 1) = (true) /\ (A:Nat <= 1) = (true) /\ (T:Nat <= 1) = (true) /\
+                                                     ((S1:Stmt) = (a1(L:Bool)) \/ (S1:Stmt) = (a2(L:Bool)) \/ (S1:Stmt) = (a3(L:Bool)) \/ (S1:Stmt) = (a4(L:Bool)) \/ (S1:Stmt) = (a5(L:Bool)) \/
+                                                      (S1:Stmt) = (a6(L:Bool)) \/ (S1:Stmt) = (a7(L:Bool)) \/ (S1:Stmt) = (a8(L:Bool)) \/ (S1:Stmt) = (a9(L:Bool))) /\
+                                                     ((S2:Stmt) = (b1(L:Bool)) \/ (S2:Stmt) = (b2(L:Bool)) \/ (S2:Stmt) = (b3(L:Bool)) \/ (S2:Stmt) = (b4(L:Bool)) \/ (S2:Stmt) = (b5(L:Bool)) \/
+                                                      (S2:Stmt) = (b6(L:Bool)) \/ (S2:Stmt) = (b7(L:Bool)) \/ (S2:Stmt) = (b8(L:Bool)) \/ (S2:Stmt) = (b9(L:Bool)))
+      =>A
+          ([i(S1:Stmt,S2:Stmt,A:Nat,B:Nat,T:Nat)]) | ((S1:Stmt) =/= (a1(L:Bool)) \/ (S1:Stmt) =/= (a9(L:Bool)) \/ (A:Nat) = (0)) /\
+                                                     ((S2:Stmt) =/= (b1(L:Bool)) \/ (S2:Stmt) =/= (b9(L:Bool)) \/ (B:Nat) = (0)) /\
+                                                     ((S1:Stmt) =/= (a2(L:Bool)) \/ (S1:Stmt) =/= (a3(L:Bool)) \/ (S1:Stmt) =/= (a4(L:Bool)) \/ (S1:Stmt) =/= (a5(L:Bool)) \/
+                                                      (S1:Stmt) =/= (a6(L:Bool)) \/ (S1:Stmt) =/= (a7(L:Bool)) \/ (S1:Stmt) =/= (a8(L:Bool)) \/ (A:Nat) = (1)) /\
+                                                     ((S2:Stmt) =/= (b2(L:Bool)) \/ (S2:Stmt) =/= (b3(L:Bool)) \/ (S2:Stmt) =/= (b4(L:Bool)) \/ (S2:Stmt) =/= (b5(L:Bool)) \/
+                                                      (S2:Stmt) =/= (b6(L:Bool)) \/ (S2:Stmt) =/= (b7(L:Bool)) \/ (S2:Stmt) =/= (b8(L:Bool)) \/ (B:Nat) = (1)) /\
+                                                     (B:Nat <= 1) = (true) /\ (A:Nat <= 1) = (true) /\ (T:Nat <= 1) = (true) /\
+                                                     ((S1:Stmt) = (a1(L:Bool)) \/ (S1:Stmt) = (a2(L:Bool)) \/ (S1:Stmt) = (a3(L:Bool)) \/ (S1:Stmt) = (a4(L:Bool)) \/ (S1:Stmt) = (a5(L:Bool)) \/
+                                                      (S1:Stmt) = (a6(L:Bool)) \/ (S1:Stmt) = (a7(L:Bool)) \/ (S1:Stmt) = (a8(L:Bool)) \/ (S1:Stmt) = (a9(L:Bool))) /\
+                                                     ((S2:Stmt) = (b1(L:Bool)) \/ (S2:Stmt) = (b2(L:Bool)) \/ (S2:Stmt) = (b3(L:Bool)) \/ (S2:Stmt) = (b4(L:Bool)) \/ (S2:Stmt) = (b5(L:Bool)) \/
+                                                      (S2:Stmt) = (b6(L:Bool)) \/ (S2:Stmt) = (b7(L:Bool)) \/ (S2:Stmt) = (b8(L:Bool)) \/ (S2:Stmt) = (b9(L:Bool)))
+.)
+---)

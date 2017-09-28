@@ -1,0 +1,86 @@
+set include BOOL off .
+
+fmod BOOL* is
+  sort Bool* .
+  op tt : -> Bool* [ctor metadata "00"] .
+  op ff : -> Bool* [ctor metadata "01"] .
+  op not*_  : Bool* -> Bool* [metadata "100"] .
+  op _or*_  : Bool* Bool* -> Bool* [assoc comm metadata "101"] .
+  op _and*_ : Bool* Bool* -> Bool* [assoc comm metadata "102"] .
+
+  var B : Bool* .
+  eq not* tt   = ff [variant] .
+  eq not* ff   = tt [variant] .
+  eq ff or* B  = B  [variant] .
+  eq tt or* B  = tt [variant] .
+  eq tt and* B = B  [variant] .
+  eq ff and* B = ff [variant] .
+endfm
+
+fmod INT* is
+  pr BOOL* .
+  sorts Nat* NzNat* NzNeg* NzInt* Int* .
+  subsorts NzNat* < Nat* < Int* .
+  subsorts NzNat* NzNeg* < NzInt* < Int* .
+
+  op 0        :               -> Nat*   [ctor            metadata "10" ] .
+  op 1        :               -> NzNat* [ctor            metadata "11" ] .
+
+  op _:+_     : Nat*   Nat*   -> Nat*   [ctor assoc comm metadata "111"] .
+  op _:+_     : Nat*   NzNat* -> NzNat* [ctor assoc comm metadata "111"] .
+  op _:+_     : Int*   Int*   -> Int*   [     assoc comm metadata "111"] .
+
+  op -        : NzNat*        -> NzNeg* [ctor            metadata "110"] .
+  op -        : Int*          -> Int*   [                metadata "110"] .
+
+  op _:-_     : Int* Int*     -> Int*   [                metadata "112"] .
+  op _=Int*_  : Int* Int*     -> Bool*  [           comm metadata "120"] .
+  op _<Int*_  : Int* Int*     -> Bool*  [                metadata "121"] .
+  op _<=Int*_ : Int* Int*     -> Bool*  [                metadata "122"] .
+
+  vars u v w : NzNat* . vars i j k : Int* .
+
+  --- addition
+  eq i :+ 0                    = i         [variant] .   --- zeros
+  eq -(0)                      = 0         [variant] .
+  eq i :+ -(i)                 = 0         [variant] .   --- adding an inverse
+  eq i :+ -(i :+ j)            = -(j)      [variant] .
+  eq -(i) :+ -(j)              = -(i :+ j) [variant] .   --- group negation
+  eq -(-(i))                   = i         [variant] .   --- double negation
+  eq -(-(i) :+ j)              = i :+ -(j) [variant] .
+  --- subtraction
+  eq i :- j                    = i :+ -(j) [variant] .
+  --- equality                                   
+  eq i    =Int* i              = tt        [variant] .
+  eq u    =Int* u :+ v         = ff        [variant] .
+  eq 0    =Int* u              = ff        [variant] .
+  eq -(u) =Int* -(u :+ v)      = ff        [variant] .
+  eq 0    =Int* -(u)           = ff        [variant] .
+  eq u    =Int* -(v)           = ff        [variant] .
+  --- inequality
+  eq u         <Int* u :+ w    = tt        [variant] .    --- both positive
+  eq u :+ w    <Int* u         = ff        [variant] .
+  eq -(u)      <Int* -(u :+ w) = ff        [variant] .    --- both negative
+  eq -(u :+ w) <Int* -(u)      = tt        [variant] .
+  eq -(u)      <Int* w         = tt        [variant] .    --- neg to pos
+  eq -(u)      <Int* 0         = tt        [variant] .
+  eq    0      <Int* w         = tt        [variant] .
+  eq u         <Int* -(w)      = ff        [variant] .    --- pos to neg
+  eq u         <Int* 0         = ff        [variant] .
+  eq 0         <Int* -(w)      = ff        [variant] .
+  eq i         <Int* i         = ff        [variant] .    --- same
+  --- non-strict
+  eq i  <=Int* j               = (i =Int* j) or* (i <Int* j) [variant] . 
+endfm
+
+fmod INT*+MUL is 
+  pr INT* . 
+  op _:*_ : Int* Int* -> Int* [assoc comm metadata "113"] .
+  vars x : Int* .
+  var n1 n2 : NzNat* .
+  eq x :* 0                    = 0 .
+  eq x :* 1                    = x .
+  eq x :* -(n1)                = -(x :* n1) .
+  eq x :* (n1 :+ n2)           = (x :* n1) :+ (x :* n2) .
+  eq x :* (n1 :+ -(n2))        = (x :* n1) :+ -(x :* n2) .
+endfm

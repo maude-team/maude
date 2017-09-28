@@ -1,0 +1,20 @@
+set include BOOL off .
+
+fmod CHOICE-DATA is
+  sorts Nat MSet State Pred .
+  subsorts Nat < MSet .
+  op zero : -> Nat [ctor] .
+  op s    : Nat -> Nat [ctor] .
+  op __   : MSet MSet -> MSet [ctor assoc comm] .
+  op {_}  : MSet -> State [ctor] .
+  op tt   : -> Pred [ctor] .
+  op _=C_ : MSet MSet -> Pred [ctor] .  *** MSet containment
+  vars U V : MSet . var N : Nat .
+  eq U =C U = tt .
+  eq U =C U V = tt .
+endfm
+
+mod CHOICE is pr CHOICE-DATA .
+  vars U V : MSet .
+  rl [choice] : {U V} => {U} .
+endm

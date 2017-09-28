@@ -1,0 +1,83 @@
+load imp.maude
+
+---(
+mod REACH-EX is
+  pr IMP-TEST-BASE .
+  op  imp      : -> Module .
+  op  pgm      : -> Stmt .
+  ops prop inv : Nat* Nat* Nat* Nat* Nat* -> ReachForm .
+  op  term     : Env -> MatchForm .
+  var X  Y  X'  Y'  O   : Nat* . var E : Env .
+  var X1 Y1 X1' Y1' O1  : Nat* .
+  var X2 Y2 X2' Y2' O2  : Nat* .
+  --- The module used
+  eq imp = upModule('IMP-SEMANTICS,true) .
+
+  --- Example 2 --- nonground
+  ---
+  --- NOTE: this example is slightly modified from the paper version
+  ---
+  --- In this example, we consider the program:
+  ---
+  ---   while (y < o) {
+  ---      x = x - 1;
+  ---      y = y + 1;
+  ---   }
+  ---
+  --- In the sequel, refer to this program as pgm.
+  ---
+  --- We have two goals: [1] prop: the property we desire to prove: i.e. the values of x and y are swapped
+  ---                    [2] inv:  a loop invariant which allows us to prove prop
+  --- 
+  --- We first write the goals using a pseudo-code notation:
+  --- 
+  --- prop:  < pgm ~> done | x |-> X  * y |-> Y  * o |-> X > | Y <= X
+  ---        < done        | x |-> X' * y |-> Y' * o |-> X > | X' = Y /\ Y' = X
+  --- 
+  --- inv:   < pgm ~> done | x |-> X  * y |-> Y  * o |-> O > | Y <= O /\ O <= X + Y
+  ---        < done        | x |-> X' * y |-> Y' * o |-> O > | X' + Y' = X + Y /\ Y' = O .
+  ---
+  --- Essentially, prop says that if the current state of the program is pgm followed by the empty continuation,
+  --- and in the initial state y <= x, then in the final state the values of x and y will be swapped.
+  ---
+  --- Similarly, inv says that for every exeuction of the while loop, the formula y <= o <= x + y, holds and
+  --- then after the while loop finishes the current and previous values of x and y will add up to the same
+  --- number and y = o. Why did we choose these loop invariants?
+  ---
+  --- The loop condition is (y < o). The reachability formula assumes y <= o <= x + y holds. Now, when
+  --- we evaluate the while loop while (y < o), we either enter the loop or skip the loop.
+  ---
+  --- If we skip the loop, that means y >= o and y <= o, so y = o, and since the values of x and y have not changed, their
+  --- current and previous values add up to the same number.
+  ---
+  --- If we enter the loop, then y < o must hold. Thus y < o <= x + y holds. By rearranging terms, this implies 0 < x holds.
+  --- Now, we will let y = y + 1 and x = x - 1. Thus, after the loop exists, x >= 0, y >= 0, y = 0 (by the argument) above,
+  --- and the current and previous values add up to the same number, because, for natural numbers, (x - n) + (y + n) = x + y
+  --- whenever x >= n. Since x >= 1 in every iteration, and we always perform the operation x = x - 1, we fall into the case
+  --- above, as required.
+  eq pgm = while (y <: o) {x = x -: 1 ; (y = y +: 1 ;)} .
+  ---
+  eq prop(X,Y,X',Y',O) = upTerm(< pgm ~> done | x |-> X  * y |-> Y  * o |-> X >) | (upTerm(Y <=Nat X) ?= upTerm((tt).Bool*))
+                            =>A
+                         upTerm(< done        | x |-> X' * y |-> Y' * o |-> X >) | (upTerm(X') ?= upTerm(Y) /\ upTerm(Y') ?= upTerm(X)) .
+
+  eq inv (X,Y,X',Y',O) = upTerm(< pgm ~> done | x |-> X  * y |-> Y  * o |-> O >) | (upTerm(Y <=Nat O) ?= upTerm((tt).Bool*) /\ upTerm(O <=Nat X :+ Y) ?= upTerm((tt).Bool*))
+                            =>A
+                         upTerm(< done        | x |-> X' * y |-> Y' * o |-> O >) | (upTerm(X' :+ Y') ?= upTerm(X :+ Y) /\ upTerm(Y') ?= upTerm(O)) .
+endm
+
+--- Debugging statements
+--- set break on .
+--- break select step&subsume axiom .
+
+--- Format output for better readability
+set print conceal on .
+print conceal fmod_is_sorts_.____endfm mod_is_sorts_._____endm axiom _;_ __ .
+
+--- Turn on goal trace
+--- set print attribute on .
+
+--- Example 2 --- we split the proof into two goals: prove inv with inv as an axiom and prop with inv as an axiom
+rew init(imp,inv(X2,Y2,X2',Y2',O2), inv(X1,Y1,X1',Y1',O1), term(E)) .
+rew init(imp,inv(X2,Y2,X2',Y2',O2),prop(X1,Y1,X1',Y1',O1),term(E)) .
+---)
