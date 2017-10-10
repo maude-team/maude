@@ -10,6 +10,7 @@
 /aclocal.m4
 /configure
 /config.*
+/confdefs.h
 /.build
 stamp-*
 .dirstamp
@@ -17,6 +18,7 @@ Makefile
 Makefile.in
 .deps
 lib*.a
+*.o
 
 # testing files
 *.log
