@@ -116,6 +116,8 @@ eq '$size['__['E:Qid,'L:QidList],'C:Nat] = '$size['L:QidList,'_+_['C:Nat,'s_[
 eq '_;_['A:Assignment,'A:Assignment] = 'A:Assignment [none] .
 eq '_;_['N:NeQidSet,'N:NeQidSet] = 'N:NeQidSet [none] .
 eq '_;_['T:TypeList,'T:TypeList] = 'T:TypeList [none] .
+eq '_<_['N:Nat,'unbounded.Bound] = 'true.Bool [none] .
+eq '_<_['unbounded.Bound,'N:Nat] = 'false.Bool [none] .
 eq '_\_['S:QidSet,'N:NeQidSet] = '$diff['S:QidSet,'N:NeQidSet,
     'none.EmptyTypeSet] [none] .
 eq '_\_['S:QidSet,'none.EmptyTypeSet] = 'S:QidSet [none] .
@@ -387,4 +389,6 @@ eq 'tail['__['E:Nat,'L:NatList]] = 'L:NatList [none] .
 eq 'tail['__['E:Qid,'L:QidList]] = 'L:QidList [none] .
 eq 'union['S:QidSet,'S':QidSet] = '_;_['S:QidSet,'S':QidSet] [none] .
 eq '|_|['S:QidSet] = '$card['S:QidSet,'0.Zero] [none] .
+ceq 'continue['_`,_['N:Nat,'B:Bound]] = '_`,_['s_['N:Nat],'B:Bound] if '_<_[
+    'N:Nat,'B:Bound] = 'true.Bool [none] .
 Bye.

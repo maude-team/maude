@@ -1,0 +1,17 @@
+load ../../../contrib/tools/base/prelude.maude
+
+--- Module BOUND
+--- ------------
+
+select BOUND .
+
+reduce not (unbounded < 3) .
+reduce 3 < unbounded .
+reduce (unbounded < unbounded =/= true) and (unbounded < unbounded =/= false) .
+
+reduce continue(3, 5)         == 4, 5 .
+reduce continue(3, unbounded) == 4, unbounded .
+reduce      continue(3, 4)                 :: Depth .
+reduce      continue(3, unbounded)         :: Depth .
+reduce not (continue(unbounded, unbounded) :: Depth) .
+reduce not (continue(5, 3)                 :: Depth) .

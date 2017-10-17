@@ -815,9 +815,29 @@ endfm
 
 fmod BOUND is
   protecting NAT .
-  sort Bound .
+  ----------------
+  var N : Nat .
+
+  sorts Bound Depth .
+  -------------------
   subsort Nat < Bound .
+
+  var B : Bound .
+
   op unbounded : -> Bound [ctor] .
+  --------------------------------
+
+  op _,_ : Nat Bound -> Depth .
+  -----------------------------
+
+  op _<_ : Bound Bound -> Bool [ditto] .
+  --------------------------------------
+  eq unbounded < N = false .
+  eq N < unbounded = true .
+
+  op continue : Depth -> [Depth] .
+  --------------------------------
+ ceq continue(N,B) = s N , B if N < B .
 endfm
 
 fmod QID is

@@ -411,6 +411,8 @@ AC_CONFIG_FILES([Makefile
 		 tests/Meta/Makefile
 		 tests/Misc/Makefile
 		 tests/ResolvedBugs/Makefile
+		 tests/tools/Makefile
+		 tests/tools/base/Makefile
 ])
 
 AC_OUTPUT

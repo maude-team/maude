@@ -236,9 +236,9 @@ reduce in META-LEVEL : getKinds(fmod 'FOO is
   none
 endfm) .
 rewrites: 1
-result NeKindSet: '`[AttrSet`] ; '`[Bool`] ; '`[Condition`] ; '`[EquationSet`]
-    ; '`[FindResult`,NatList`,Bound`,Parent`] ; '`[HookList`] ; '`[ImportList`]
-    ; '`[MatchPair?`] ; '`[MembAxSet`] ; '`[Module`] ;
+result NeKindSet: '`[AttrSet`] ; '`[Bool`] ; '`[Condition`] ; '`[Depth`] ;
+    '`[EquationSet`] ; '`[FindResult`,NatList`,Bound`,Parent`] ; '`[HookList`]
+    ; '`[ImportList`] ; '`[MatchPair?`] ; '`[MembAxSet`] ; '`[Module`] ;
     '`[NarrowingApplyResult?`] ; '`[NarrowingSearchPathResult?`] ;
     '`[NarrowingSearchResult?`] ; '`[NarrowingTrace`] ; '`[OpDeclSet`] ;
     '`[OpMappingSet`] ; '`[ParameterDeclList`] ; '`[PrintOptionSet`] ; '`[QidSet`,QidList`,TypeListSet`,GTermList`,ParameterList`,Type?`,ModuleExpression`,Header`] ; '`[RenamingSet`] ; '`[Result4Tuple?`] ; '`[ResultPair?`] ;
