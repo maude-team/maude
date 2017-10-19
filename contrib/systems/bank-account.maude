@@ -1,0 +1,248 @@
+
+  set include BOOL off .
+
+fmod BOOL-FVP is
+  sort Truth .
+  ops tt ff : -> Truth [ctor] .
+  op _/\_ : Truth Truth -> Truth .
+  op _\/_ : Truth Truth -> Truth .
+  op ~ : Truth -> Truth .
+  vars B X Y Z : Truth .
+  eq tt /\ B = B  [variant] .
+  eq ff /\ B = ff [variant] .
+  eq ff \/ B = B  [variant] .
+  eq tt \/ B = tt [variant] .
+  eq ~(tt) = ff [variant] .
+  eq ~(ff) = tt [variant] .
+endfm
+
+fmod NAT-PRES-MONUS is protecting BOOL-FVP .
+    sort Nat .
+    ops 0 1 : -> Nat [ctor] .
+    op _+_ : Nat Nat -> Nat [ctor assoc comm id: 0] .
+
+    vars n n' m x y x' y' : Nat . vars b b' : Truth .
+
+    op _>_ : Nat Nat -> Truth .
+    op _>=_ : Nat Nat -> Truth .
+
+    eq m + n + 1 > n = tt [variant] .
+    eq n > n + m = ff [variant] .
+
+    eq m + n >= n =  tt [variant] .
+    eq n >= m + n + 1 = ff [variant] .
+
+    op _-_ : Nat Nat -> Nat .  *** monus
+
+    eq n - (n + m) = 0 [variant] .
+    eq (n + m) - n = m [variant] .
+endfm
+
+mod BANK-ACCOUNT is protecting NAT-PRES-MONUS .
+    sorts Account Msg MsgConf State StatePair .
+    subsort  Msg < MsgConf .
+    
+    op < bal:_pend:_overdraft:_> : Nat Nat Truth -> Account [ctor] .
+    op mt : -> MsgConf [ctor] . 
+    op withdraw : Nat -> Msg [ctor] .
+    op _,_ : MsgConf MsgConf -> MsgConf [ctor assoc comm id: mt] . 
+    op _#_ : Account MsgConf -> State [ctor] .
+    op [_,_] : State State -> StatePair [ctor] .  *** will be used to compute variants of rules
+
+
+    op [_,_,_] : Truth State State -> State .  *** if-then-else
+
+    vars n n' m x y x' y' : Nat . vars b b' : Truth . vars s s' : State . var msgs : MsgConf .
+    
+    eq [tt,s,s'] = s [variant] .
+    eq [ff,s,s'] = s' [variant] .
+
+     *** requesting to draw money having sufficient funds; the amount requested is
+     *** added to the amount of pending withdraw requests
+
+    rl < bal: n + m + x pend: x overdraft: ff > # msgs =>
+          < bal: n + m + x pend: x + m overdraft: ff > # withdraw(m),msgs .
+
+     *** actual withdrawing of money from account
+
+    rl < bal: n pend: x overdraft: ff > # withdraw(m),msgs =>
+         [ m > n , < bal: n pend: x overdraft: tt > # msgs ,
+	                < bal: (n - m) pend: (x - m) overdraft: ff > # msgs ]  .
+
+    *** more money can at any time be deposited in the account if it is not in overdraft
+
+    rl < bal: n pend: x overdraft: ff > # msgs => < bal: n + m pend: x overdraft: ff > # msgs .
+endm
+
+mod BANK-ACCOUNT-CTOR is protecting NAT-PRES-MONUS .
+    sorts Account Msg MsgConf State StatePair .
+    subsort  Msg < MsgConf .
+    
+    op < bal:_pend:_overdraft:_> : Nat Nat Truth -> Account [ctor] .
+    op mt : -> MsgConf [ctor] . 
+    op withdraw : Nat -> Msg [ctor] .
+    op _,_ : MsgConf MsgConf -> MsgConf [ctor assoc comm id: mt] . 
+    op _#_ : Account MsgConf -> State [ctor] .
+    op [_,_] : State State -> StatePair [ctor] .  *** will be used to compute variants of rules
+
+
+    op [_,_,_] : Truth State State -> State .  *** if-then-else
+
+    vars n n' m x y x' y' : Nat . vars b b' : Truth . vars s s' : State . var msgs : MsgConf .
+    
+    eq [tt,s,s'] = s [variant] .
+    eq [ff,s,s'] = s' [variant] .
+
+     *** requesting to draw money having sufficient funds; the amount requested is
+     *** added to the amount of pending withdraw requests
+
+    rl < bal: n + m + x pend: x overdraft: ff > # msgs =>
+          < bal: n + m + x pend: x + m overdraft: ff > # withdraw(m),msgs .
+
+     *** actual withdrawing of money from account (done with ctor variants of original rule)
+
+    rl  < bal: #1:Nat + #3:Nat + #4:Nat pend: #3:Nat overdraft: ff > # #2:MsgConf,withdraw(#3:Nat + #4:Nat)
+      =>
+     < bal: #1:Nat pend: 0 overdraft: ff > # #2:MsgConf .
+
+
+    rl < bal: #1:Nat + #3:Nat pend: #3:Nat + #4:Nat overdraft: ff > # #2:MsgConf,withdraw(#3:Nat)
+     =>
+     < bal: #1:Nat pend: #4:Nat overdraft: ff > # #2:MsgConf .
+
+    rl < bal: #1:Nat pend: #2:Nat overdraft: ff > # #3:MsgConf,withdraw(1 + #1:Nat + #4:Nat)
+     =>
+     < bal: #1:Nat pend: #2:Nat overdraft: tt > # #3:MsgConf .
+
+    *** more money can at any time be deposited in the account if it is not in overdraft
+
+    rl < bal: n pend: x overdraft: ff > # msgs => < bal: n + m pend: x overdraft: ff > # msgs .
+endm
+
+***(
+get variants in BANK-ACCOUNT : [< bal: n pend: x overdraft: ff > # withdraw(m),msgs ,
+         [ m > n , < bal: n pend: x overdraft: tt > # msgs ,
+	                < bal: (n - m) pend: (x - m) overdraft: ff > # msgs ] ] .
+			
+*** identity variant: not ctor var
+Variant #1  
+rewrites: 0 in 0ms cpu (0ms real) (0 rewrites/second)
+StatePair: [< bal: #1:Nat pend: #2:Nat overdraft: ff > # #3:MsgConf,withdraw(#4:Nat),[#4:Nat > #1:Nat,< bal:
+    #1:Nat pend: #2:Nat overdraft: tt > # #3:MsgConf,< bal: #1:Nat - #4:Nat pend: #2:Nat - #4:Nat overdraft:
+    ff > # #3:MsgConf]]
+n --> #1:Nat
+x --> #2:Nat
+msgs --> #3:MsgConf
+m --> #4:Nat
+
+*** not ctor variant (monus not evaluated to ctor)
+Variant #2
+rewrites: 6 in 1ms cpu (1ms real) (3710 rewrites/second)
+StatePair: [< bal: %3:Nat + %4:Nat pend: %1:Nat overdraft: ff > # %2:MsgConf,withdraw(%3:Nat),< bal: %4:Nat
+    pend: %1:Nat - %3:Nat overdraft: ff > # %2:MsgConf]
+n --> %3:Nat + %4:Nat
+x --> %1:Nat
+msgs --> %2:MsgConf
+m --> %3:Nat
+
+*** not ctor variant (if-then-else not evaluated to ctor)
+Variant #3
+rewrites: 6 in 1ms cpu (1ms real) (3548 rewrites/second)
+StatePair: [< bal: %3:Nat pend: %1:Nat overdraft: ff > # %2:MsgConf,withdraw(%3:Nat + %4:Nat),[(%3:Nat +
+    %4:Nat) > %3:Nat,< bal: %3:Nat pend: %1:Nat overdraft: tt > # %2:MsgConf,< bal: 0 pend: %1:Nat - %3:Nat
+    + %4:Nat overdraft: ff > # %2:MsgConf]]
+n --> %3:Nat
+x --> %1:Nat
+msgs --> %2:MsgConf
+m --> %3:Nat + %4:Nat
+
+*** not ctor variant (if-then-else not evaluated to ctor)
+Variant #4
+rewrites: 6 in 1ms cpu (1ms real) (3399 rewrites/second)
+StatePair: [< bal: %1:Nat pend: %3:Nat overdraft: ff > # %2:MsgConf,withdraw(%3:Nat + %4:Nat),[(%3:Nat +
+    %4:Nat) > %1:Nat,< bal: %1:Nat pend: %3:Nat overdraft: tt > # %2:MsgConf,< bal: %1:Nat - %3:Nat + %4:Nat
+    pend: 0 overdraft: ff > # %2:MsgConf]]
+n --> %1:Nat
+x --> %3:Nat
+msgs --> %2:MsgConf
+m --> %3:Nat + %4:Nat
+
+*** not ctor variant (if-then-else not evaluated to ctor)
+Variant #5
+rewrites: 6 in 1ms cpu (2ms real) (3267 rewrites/second)
+StatePair: [< bal: %1:Nat pend: %3:Nat + %4:Nat overdraft: ff > # %2:MsgConf,withdraw(%3:Nat),[%3:Nat >
+    %1:Nat,< bal: %1:Nat pend: %3:Nat + %4:Nat overdraft: tt > # %2:MsgConf,< bal: %1:Nat - %3:Nat pend:
+    %4:Nat overdraft: ff > # %2:MsgConf]]
+n --> %1:Nat
+x --> %3:Nat + %4:Nat
+msgs --> %2:MsgConf
+m --> %3:Nat
+
+*** ctor variant
+Variant #6
+rewrites: 22 in 5ms cpu (6ms real) (3912 rewrites/second)
+StatePair: [< bal: #1:Nat + #3:Nat + #4:Nat pend: #3:Nat overdraft: ff > # #2:MsgConf,withdraw(#3:Nat +
+    #4:Nat),< bal: #1:Nat pend: 0 overdraft: ff > # #2:MsgConf]
+n --> #1:Nat + #3:Nat + #4:Nat
+x --> #3:Nat
+msgs --> #2:MsgConf
+m --> #3:Nat + #4:Nat
+
+*** ctor variant
+Variant #7
+rewrites: 22 in 5ms cpu (6ms real) (3793 rewrites/second)
+StatePair: [< bal: #1:Nat + #3:Nat pend: #3:Nat + #4:Nat overdraft: ff > # #2:MsgConf,withdraw(#3:Nat),<
+    bal: #1:Nat pend: #4:Nat overdraft: ff > # #2:MsgConf]
+n --> #1:Nat + #3:Nat
+x --> #3:Nat + #4:Nat
+msgs --> #2:MsgConf
+m --> #3:Nat
+
+*** ctor variant
+Variant #8
+rewrites: 22 in 5ms cpu (6ms real) (3709 rewrites/second)
+StatePair: [< bal: #1:Nat pend: #2:Nat overdraft: ff > # #3:MsgConf,withdraw(1 + #1:Nat + #4:Nat),< bal:
+    #1:Nat pend: #2:Nat overdraft: tt > # #3:MsgConf]
+n --> #1:Nat
+x --> #2:Nat
+msgs --> #3:MsgConf
+m --> 1 + #1:Nat + #4:Nat
+
+*** not ctor variant (if-then-else not evaluated to ctor)
+Variant #9
+rewrites: 22 in 6ms cpu (6ms real) (3641 rewrites/second)
+StatePair: [< bal: #2:Nat + #3:Nat pend: #2:Nat + #4:Nat overdraft: ff > # #1:MsgConf,withdraw(#2:Nat +
+    #3:Nat + #4:Nat + #5:Nat),[(#2:Nat + #3:Nat + #4:Nat + #5:Nat) > #2:Nat + #3:Nat,< bal: #2:Nat + #3:Nat
+    pend: #2:Nat + #4:Nat overdraft: tt > # #1:MsgConf,< bal: 0 pend: 0 overdraft: ff > # #1:MsgConf]]
+n --> #2:Nat + #3:Nat
+x --> #2:Nat + #4:Nat
+msgs --> #1:MsgConf
+m --> #2:Nat + #3:Nat + #4:Nat + #5:Nat
+
+*** not ctor variant (if-then-else not evaluated to ctor)
+Variant #10
+rewrites: 22 in 6ms cpu (7ms real) (3534 rewrites/second)
+StatePair: [< bal: #2:Nat pend: #2:Nat + #3:Nat + #4:Nat overdraft: ff > # #1:MsgConf,withdraw(#2:Nat +
+    #3:Nat),[(#2:Nat + #3:Nat) > #2:Nat,< bal: #2:Nat pend: #2:Nat + #3:Nat + #4:Nat overdraft: tt > #
+    #1:MsgConf,< bal: 0 pend: #4:Nat overdraft: ff > # #1:MsgConf]]
+n --> #2:Nat
+x --> #2:Nat + #3:Nat + #4:Nat
+msgs --> #1:MsgConf
+m --> #2:Nat + #3:Nat
+
+No more variants.
+			
+The invariant satisfied by this protocol can be expressed as the constrained term:
+
+    < bal: n pend: x overdraft: ff > # msgs | n >= x = tt /\ x = debts(msgs)
+
+where debts is the recursive function:
+
+ op debts : MsgConf -> Nat .
+
+ eq debts(mt) = 0 .
+ eq debts(withdraw(m),msgs) = m + debts(msgs) .
+
+Note that this predicate should have an easy proof by contextual rewriting in reachability logic.
+
+)
