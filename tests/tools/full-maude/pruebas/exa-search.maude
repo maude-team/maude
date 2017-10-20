@@ -1,0 +1,99 @@
+(mod TEST-PLUS-LEQ is
+  sort Nat .
+  op 0 : -> Nat .
+  op s : Nat -> Nat .
+
+  op _+_ : Nat Nat -> Nat [comm] .
+  rl 0 + Y:Nat => Y:Nat .
+  rl s(X:Nat) + Y:Nat => s(X:Nat + Y:Nat) .
+
+  op _<=_ : Nat Nat -> Bool .
+  rl 0 <= Y:Nat => true .
+  rl s(X:Nat) <= s(Y:Nat) => X:Nat <= Y:Nat .
+  rl s(X:Nat) <= 0 => false .
+endm)
+
+(show module TEST-PLUS-LEQ .)
+
+(search [10] in TEST-PLUS-LEQ : (X:Nat + Y:Nat) <= Y:Nat ~>* true .)
+
+(search [10] in TEST-PLUS-LEQ : (X:Nat + Y:Nat) <= Y:Nat ~>* X:Bool .)
+
+(search [10] in TEST-PLUS-LEQ : (X:Nat + Y:Nat) <= Y:Nat ~>! X:Bool .)
+
+(search [,5] in TEST-PLUS-LEQ : (X:Nat + Y:Nat) <= Y:Nat ~>* true .)
+
+(search [,5] in TEST-PLUS-LEQ : (X:Nat + Y:Nat) <= Y:Nat ~>* X:Bool .)
+
+(search [,5] in TEST-PLUS-LEQ : (X:Nat + Y:Nat) <= Y:Nat ~>! X:Bool .)
+
+(mod VENDING-MACHINE is 
+  sorts Coin Coffee Cookie Item State . 
+  subsorts Coffee Cookie < Item .
+  subsorts Coin Item < State . 
+
+  op null : -> State . 
+  op __ : State State -> State [assoc comm] . 
+  op $ : -> Coin . 
+  op q : -> Coin . 
+  op a : -> Cookie . 
+  op c : -> Coffee . 
+
+  var St : State . 
+
+  --- AC-coherence must be explicit
+  rl St null => St null q .
+  rl St null => St null $ .
+  rl St $ => St c .
+  rl St $ => St a q .
+  rl St q q q q => St $ .
+
+  rl null St => if St == c then null a else null St fi .
+endm)
+
+(show module VENDING-MACHINE .)
+
+----(search [,4] in VENDING-MACHINE : null St:State ~>* null c .)
+
+
+(mod TEST-APPEND is
+  sort Nat .
+  op 0 : -> Nat .
+  op s : Nat -> Nat .
+
+  sort NatList .
+  op nil : -> NatList .
+  op _:_ : Nat NatList -> NatList .
+  op append : NatList NatList -> NatList .
+
+  vars XS YS : NatList .
+  var N : Nat .
+
+  rl append(nil,YS) => YS .
+  rl append(N : XS,YS) => N : append(XS,YS) .
+
+  sort NatOrClash .
+  subsort Nat < NatOrClash .
+  op clash : -> NatOrClash .
+
+  op last : NatList -> NatOrClash .
+  rl last(XS) => append(YS,N : nil) =:= XS >> N [nonexec] .
+
+  op _=:=_>>_ : NatList NatList Nat -> NatOrClash .
+  rl nil =:= nil >> X:Nat => X:Nat .
+  rl N : XS =:= N : YS >> X:Nat => XS =:= YS >> X:Nat .
+  rl N : XS =:= nil >> X:Nat => clash .
+  rl nil =:= N : XS >> X:Nat => clash .
+
+endm)
+
+(show module TEST-APPEND .)
+
+----(search [,10] in TEST-APPEND : append(XS,0 : s(0) : nil) ~>* N1:Nat : N2:Nat : nil .)
+
+----(search [,10] in TEST-APPEND : append(YS, N : nil) ~>! 0 : s(0) : nil .)
+
+----(search [,10] in TEST-APPEND : append(YS,N : nil) =:= 0 : s(0) : nil >> 0 ~>* 0 .)
+
+----(search [,10] in TEST-APPEND : last(0 : s(0) : nil) ~>! Z:Nat .)
+

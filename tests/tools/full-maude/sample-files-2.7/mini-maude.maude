@@ -1,0 +1,182 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  fmod MINI-MAUDE is
+    protecting META-LEVEL .
+    
+    vars T T1 T2 T3 : Term .
+    vars TL TL' : TermList .
+    var  QI : Qid .
+    var  QIL : QidList .
+    var  F : Qid .
+    var  M : Module .
+
+    op processPreModule : Term ~> FModule .
+    eq processPreModule(T) = solveBubbles(T, extractSignature(T)) .
+
+    ---- extractSignature
+    op extractSignature : Term ~> FModule .
+    op extractSorts : Term ~> SortSet .
+    op extractOpDecls : Term ~> OpDeclSet .
+
+    eq extractSignature('fmod_is_endfm['token[QI], T])
+      = (fmod downTerm(QI, 'error) is
+           nil
+           sorts extractSorts(T) .
+           none
+           extractOpDecls(T)
+           none
+           none
+         endfm) .
+  
+    eq extractSorts('sort_.['token[T]]) = downTerm(T, 'error) .
+    eq extractSorts('__['sort_.['token[T1]], T2])
+      = downTerm(T1, 'error) ; extractSorts(T2) .
+    ceq extractSorts(F[TL]) = none if F =/= '__ /\ F =/= 'sort_. . 
+    ceq extractSorts('__[F[TL], T]) 
+      = extractSorts(T) 
+      if F =/= 'sort_. .
+
+    eq extractOpDecls(
+         'op_:_->_.['token[T1], 'neTokenList[TL], 'token[T2]])
+      = (op downTerm(T1, 'error) : downTerm(TL, nil) 
+              -> downTerm(T2, 'error) [none] .) .
+    eq extractOpDecls('op_:`->_.['token[T1],'token[T2]])
+      = (op downTerm(T1, 'error) : nil -> downTerm(T2, 'error) 
+           [none] .) .
+    ceq extractOpDecls(F[TL]) 
+      = none 
+      if F =/= '__ /\ F =/= 'op_:_->_. /\ F =/= 'op_:`->_. .
+
+    eq extractOpDecls(
+         '__['op_:_->_.['token[T1],'neTokenList[TL],'token[T2]], T3])
+      = (op downTerm(T1, 'error) : downTerm(TL, nil) 
+              -> downTerm(T2, 'error) [none] .
+        extractOpDecls(T3)) .
+    eq extractOpDecls('__['op_:`->_.['token[T1],'token[T2]], T3])
+      = (op downTerm(T1, 'error) : nil -> downTerm(T2, 'error) 
+              [none] .
+         extractOpDecls(T3)) .
+    ceq extractOpDecls('__[F[TL], T2]) = extractOpDecls(T2)
+      if F =/= 'op_:_->_. /\ F =/= 'op_:`->_. .
+
+    ---- solveBubbles
+    op solveBubbles : Term FModule ~> FModule .
+    op solveBubblesAux : Term FModule ~> EquationSet .
+    op addEqs : FModule EquationSet -> FModule .
+   
+    eq solveBubbles('fmod_is_endfm['token[QI], T], M)
+      = addEqs(M, solveBubblesAux(T, M)) .
+
+    eq solveBubblesAux('eq_=_.['bubble[T1], 'bubble[T2]], M)
+      = (eq getTerm(metaParse(M, downTerm(T1, nil), anyType)) 
+           = getTerm(metaParse(M, downTerm(T2, nil), anyType)) 
+           [none] .) .
+    eq solveBubblesAux('__['eq_=_.['bubble[T1], 'bubble[T2]], T3], M)
+      = (eq getTerm(metaParse(M, downTerm(T1, nil), anyType)) 
+           = getTerm(metaParse(M, downTerm(T2, nil), anyType)) 
+           [none] .
+         solveBubblesAux(T3, M)) .
+    ceq solveBubblesAux('__[F[TL], T2], M) 
+      = solveBubblesAux(T2, M) 
+      if F =/= 'eq_=_. .
+    ceq solveBubblesAux(F[TL], M) 
+      = none 
+      if F =/= '__ /\ F =/= 'eq_=_. .
+
+    eq addEqs(fmod QI is 
+                IL:ImportList 
+                sorts SS:SortSet . 
+                SubSorts:SubsortDeclSet 
+                OpDecls:OpDeclSet 
+                MembAxs:MembAxSet 
+                Eqs:EquationSet 
+              endfm, 
+              Eqs':EquationSet)
+      = fmod QI is 
+          IL:ImportList 
+          sorts SS:SortSet . 
+          SubSorts:SubsortDeclSet 
+          OpDecls:OpDeclSet 
+          MembAxs:MembAxSet 
+          (Eqs:EquationSet Eqs':EquationSet) 
+        endfm .
+  endfm
+
+***(
+Maude> red in MINI-MAUDE :
+              extractSignature(
+                getTerm(metaParse(upModule('MINI-MAUDE-SYNTAX, false),
+                 'fmod 'NAT3 'is
+                    'op 's_ ': 'Nat3 '-> 'Nat3 '.
+                    'sort 'Nat3 '.
+                    'op '0 ': '-> 'Nat3 '.
+                    'eq 's 's 's '0 '= '0 '.
+                 'endfm,
+                 'PreModule))) .
+reduce in MINI-MAUDE : extractSignature(getTerm(metaParse(upModule(
+    'MINI-MAUDE-SYNTAX, false), 'fmod 'NAT3 'is 'op 's_ ': 'Nat3 '-> 'Nat3 '.
+    'sort 'Nat3 '. 'op '0 ': '-> 'Nat3 '. 'eq 's 's 's '0 '= '0 '. 'endfm,
+    'PreModule))) .
+rewrites: 33 in 0ms cpu (5ms real) (~ rewrites/second)
+result FModule: fmod 'NAT3 is
+  nil
+  sorts 'Nat3 .
+  none
+  op '0 : nil -> 'Nat3 [none] .
+  op 's_ : 'Nat3 -> 'Nat3 [none] .
+  none
+  none
+endfm
+
+Maude> red in MINI-MAUDE : 
+              processPreModule(
+                getTerm(metaParse(upModule('MINI-MAUDE-SYNTAX, false),
+                 'fmod 'NAT3 'is
+                    'sort 'Nat3 '.
+                    'op 's_ ': 'Nat3 '-> 'Nat3 '.
+                    'op '0 ': '-> 'Nat3 '.
+                    'eq 's 's 's '0 '= '0 '.
+                 'endfm,
+                 'PreModule))) .
+reduce in MINI-MAUDE : processPreModule(getTerm(metaParse(upModule(
+    'MINI-MAUDE-SYNTAX, false), 'fmod 'NAT3 'is 'sort 'Nat3 '. 'op 's_ ': 'Nat3
+    '-> 'Nat3 '. 'op '0 ': '-> 'Nat3 '. 'eq 's 's 's '0 '= '0 '. 'endfm,
+    'PreModule))) .
+rewrites: 49 in 0ms cpu (0ms real) (~ rewrites/second)
+result FModule: fmod 'NAT3 is
+  nil
+  sorts 'Nat3 .
+  none
+  op '0 : nil -> 'Nat3 [none] .
+  op 's_ : 'Nat3 -> 'Nat3 [none] .
+  none
+  eq 's_['s_['s_['0.Nat3]]] = '0.Nat3 [none] .
+endfm
+
+Maude> red in MINI-MAUDE : 
+              processPreModule(
+                getTerm(metaParse(upModule('MINI-MAUDE-SYNTAX, false),
+                 'fmod 'NAT3 'is
+                    'sort 'Nat3 '.
+                    'op 's_ ': 'Nat3 '-> 'Nat3 '.
+                    'op '0 ': '-> 'Nat3 '.
+                    'eq 's 's 's 'N:Nat3 '= 'N:Nat3 '.
+                 'endfm,
+                 'PreModule))) .
+reduce in MINI-MAUDE : processPreModule(getTerm(metaParse(upModule(
+    'MINI-MAUDE-SYNTAX, false), 'fmod 'NAT3 'is 'sort 'Nat3 '. 'op 's_ ': 'Nat3
+    '-> 'Nat3 '. 'op '0 ': '-> 'Nat3 '. 'eq 's 's 's 'N:Nat3 '= 'N:Nat3 '.
+    'endfm, 'PreModule))) .
+rewrites: 49 in 0ms cpu (0ms real) (~ rewrites/second)
+result FModule: fmod 'NAT3 is
+  nil
+  sorts 'Nat3 .
+  none
+  op '0 : nil -> 'Nat3 [none] .
+  op 's_ : 'Nat3 -> 'Nat3 [none] .
+  none
+  eq 's_['s_['s_['N:Nat3]]] = 'N:Nat3 [none] .
+endfm
+)  

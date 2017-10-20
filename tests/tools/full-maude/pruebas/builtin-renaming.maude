@@ -1,0 +1,13 @@
+trace include FULL-MAUDE .
+----set trace on .
+set trace select on .
+trace select applyMapsToModule .
+trace select metaPrettyPrint .
+
+(show module
+META-LEVEL *
+  ( 
+    op _`,_ : TermList TermList -> TermList to _%_ ,
+    op _`,_ : ParameterDeclList ParameterDeclList -> ParameterDeclList to _%_,
+    op _`,_ : RenamingSet RenamingSet -> RenamingSet to _%_
+    ) .)

@@ -1,0 +1,57 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  fmod ASSOC-ID-EX is
+    sort Foo .
+    ops a b 1f : -> Foo .
+    op f : Foo Foo -> Foo [assoc left id: 1f] .
+    var X Y : Foo .
+  endfm
+
+***(
+Maude> match f(X, Y) <=? f(a, b) .
+match in ASSOC-ID-EX : f(X, Y) <=? f(a, b) .
+Decision time: 10ms cpu (0ms real)
+
+Solution 1
+X --> 1f
+Y --> f(a, b)
+
+Solution 2
+X --> a
+Y --> b
+
+Solution 3
+X --> f(a, 1f)
+Y --> b
+
+Maude> xmatch f(X, Y) <=? f(a, b) .
+xmatch in ASSOC-ID-EX : f(X, Y) <=? f(a, b) .
+Decision time: 0ms cpu (0ms real)
+
+Solution 1
+Matched portion = f(a, 1f)
+X --> a
+Y --> 1f
+
+Solution 2
+Matched portion = f(a, 1f)
+X --> f(a, 1f)
+Y --> 1f
+
+Solution 3
+Matched portion = (whole)
+X --> 1f
+Y --> f(a, b)
+
+Solution 4
+Matched portion = (whole)
+X --> a
+Y --> b
+
+Solution 5
+Matched portion = (whole)
+X --> f(a, 1f)
+Y --> b
+)

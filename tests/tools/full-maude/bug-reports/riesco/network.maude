@@ -1,0 +1,342 @@
+(fmod SET{X :: TRIV} is
+  including BOOL .
+  sorts Set .
+  subsort X$Elt < Set .
+  op _=<_ : Set Set -> Bool .
+  op _\in_ : X$Elt Set -> Bool .
+  op _=_ : Set Set -> Bool
+    [comm metadata "built-in in CafeOBJ"] .
+  op _=_ : X$Elt X$Elt -> Bool
+    [comm metadata "built-in in CafeOBJ"] .
+  op __ : Set Set -> Set
+    [assoc comm id: emp ctor] .
+  op emp : -> Set
+    [ctor] .
+  eq emp =< S':Set
+    = true .
+  eq (E:X$Elt S:Set)=< S':Set
+    = E:X$Elt \in S':Set and S:Set =< S':Set .
+  eq E:X$Elt \in emp
+    = false .
+  eq E:X$Elt \in E:X$Elt S':Set
+    = true .
+  eq E:X$Elt E:X$Elt
+    = E:X$Elt .
+  ceq (S:Set = S':Set)
+    = S:Set =< S':Set and S':Set =< S:Set
+    if not(S:Set :: X$Elt and S':Set :: X$Elt)= true .
+  ceq E:X$Elt \in E':X$Elt S':Set
+    = E:X$Elt \in S':Set
+    if not E:X$Elt = E':X$Elt = true .
+  eq (V:Set = V:Set)
+    = true [metadata "built-in in CafeOBJ"] .
+  eq (V:X$Elt = V:X$Elt)
+    = true [metadata "built-in in CafeOBJ"] .
+endfm)
+
+(fmod PNAT is
+  including BOOL .
+  sorts PNat PNzNat PZero .
+  subsort PNzNat < PNat .
+  subsort PZero < PNat .
+  op _=_ : PNat PNat -> Bool
+    [comm metadata "built-in in CafeOBJ"] .
+  op _=_ : PNzNat PNzNat -> Bool
+    [comm metadata "built-in in CafeOBJ"] .
+  op _=_ : PZero PZero -> Bool
+    [comm metadata "built-in in CafeOBJ"] .
+  op s : PNat -> PNzNat
+    [ctor] .
+  op z : -> PZero
+    [ctor] .
+  eq (z = s(N:PNat))
+    = false .
+  eq (s(N:PNat)= s(M:PNat))
+    = (N:PNat = M:PNat) .
+  eq (V:PNat = V:PNat)
+    = true [metadata "built-in in CafeOBJ"] .
+  eq (V:PNzNat = V:PNzNat)
+    = true [metadata "built-in in CafeOBJ"] .
+  eq (V:PZero = V:PZero)
+    = true [metadata "built-in in CafeOBJ"] .
+endfm)
+
+(fth RANDOM-NUMBER is
+  including BOOL .
+  protecting PNAT .
+  op next : PNat -> PNat .
+  op seed : -> PNat .
+  eq (next(R:PNat)= seed)
+    = false .
+  eq (next(R:PNat)= next(R':PNat))
+    = (R:PNat = R':PNat) .
+endfth)
+
+(fmod RANDOM-NUMBER-MODCAFE is
+  including BOOL .
+  protecting PNAT .
+  op next : PNat -> PNat .
+  op seed : -> PNat .
+  eq (next(R:PNat)= seed)
+    = false .
+  eq (next(R:PNat)= next(R':PNat))
+    = (R:PNat = R':PNat) .
+endfm)
+
+(fmod INTRUDER is
+  including BOOL .
+  sorts Intruder .
+  op _=_ : Intruder Intruder -> Bool
+    [comm metadata "built-in in CafeOBJ"] .
+  op intrdr : -> Intruder
+    [ctor] .
+  eq (V:Intruder = V:Intruder)
+    = true [metadata "built-in in CafeOBJ"] .
+endfm)
+
+(fth PRINCIPAL is
+  including BOOL .
+  sorts Prin .
+  op _=_ : Prin Prin -> Bool
+    [comm metadata "built-in in CafeOBJ"] .
+  eq (V:Prin = V:Prin)
+    = true [metadata "built-in in CafeOBJ"] .
+endfth)
+
+(fmod PRINCIPAL-MODCAFE is
+  including BOOL .
+  sorts Prin .
+  op _=_ : Prin Prin -> Bool
+    [comm metadata "built-in in CafeOBJ"] .
+  eq (V:Prin = V:Prin)
+    = true [metadata "built-in in CafeOBJ"] .
+endfm)
+
+(fmod PRIN&INTRDR is
+  including BOOL .
+  protecting INTRUDER .
+  protecting PRINCIPAL-MODCAFE .
+  sorts Prin&Intrdr .
+  subsort Intruder < Prin&Intrdr .
+  subsort Prin < Prin&Intrdr .
+  op _=_ : Intruder Intruder -> Bool
+    [comm metadata "built-in in CafeOBJ"] .
+  op _=_ : Prin Prin -> Bool
+    [comm metadata "built-in in CafeOBJ"] .
+  op _=_ : Prin&Intrdr Prin&Intrdr -> Bool
+    [comm metadata "built-in in CafeOBJ"] .
+  eq (I:Intruder = P:Prin)
+    = false .
+  eq ((I:Intruder = PI:Prin&Intrdr) and (PI:Prin&Intrdr = P:Prin))
+    = false .
+  eq (V:Intruder = V:Intruder)
+    = true [metadata "built-in in CafeOBJ"] .
+  eq (V:Prin = V:Prin)
+    = true [metadata "built-in in CafeOBJ"] .
+  eq (V:Prin&Intrdr = V:Prin&Intrdr)
+    = true [metadata "built-in in CafeOBJ"] .
+endfm)
+
+(view PRINCIPAL-MODCAFE from TRIV to PRINCIPAL-MODCAFE is
+  sort Elt to Prin .
+endv)
+
+(fmod PRIN-SET is
+  including BOOL .
+  protecting SET{PRINCIPAL-MODCAFE} * (op emp to noPrin, sort Set to PrinSet) .
+endfm)
+
+(fmod NONCE is
+  including BOOL .
+  protecting RANDOM-NUMBER-MODCAFE .
+  protecting PRIN&INTRDR .
+  sorts Nonce .
+  op forWhom : Nonce -> Prin&Intrdr .
+  op gen : Nonce -> Prin&Intrdr .
+  op _=_ : Nonce Nonce -> Bool
+    [comm metadata "built-in in CafeOBJ"] .
+  op n : Prin&Intrdr Prin&Intrdr PNat -> Nonce
+    [ctor] .
+  eq (n(PI1:Prin&Intrdr,PI2:Prin&Intrdr,R:PNat)= n(PI1':Prin&Intrdr,PI2':Prin&Intrdr,R':PNat))
+    = PI1:Prin&Intrdr = PI1':Prin&Intrdr and PI2:Prin&Intrdr = PI2':Prin&Intrdr and R:PNat = R':PNat .
+  eq forWhom(n(PI1:Prin&Intrdr,PI2:Prin&Intrdr,R:PNat))
+    = PI2:Prin&Intrdr .
+  eq gen(n(PI1:Prin&Intrdr,PI2:Prin&Intrdr,R:PNat))
+    = PI1:Prin&Intrdr .
+  eq (V:Nonce = V:Nonce)
+    = true [metadata "built-in in CafeOBJ"] .
+endfm)
+
+(view NONCE from TRIV to NONCE is
+  sort Elt to Nonce .
+endv)
+
+(fmod NONCE-SET is
+  including BOOL .
+  protecting SET{NONCE} * (op emp to noNonce, sort Set to NonceSet) .
+endfm)
+
+(fmod CIPHER1 is
+  including BOOL .
+  protecting NONCE .
+  sorts Cipher1 .
+  op gen : Cipher1 -> Prin&Intrdr .
+  op non : Cipher1 -> Nonce .
+  op _=_ : Cipher1 Cipher1 -> Bool
+    [comm metadata "built-in in CafeOBJ"] .
+  op c1 : Prin&Intrdr Nonce Prin&Intrdr -> Cipher1
+    [ctor] .
+  eq (c1(QI:Prin&Intrdr,N:Nonce,PI:Prin&Intrdr)= c1(QI':Prin&Intrdr,N':Nonce,PI':Prin&Intrdr))
+    = (QI:Prin&Intrdr = QI':Prin&Intrdr) and (N:Nonce = N':Nonce) and (PI:Prin&Intrdr = PI':Prin&Intrdr) .
+  eq gen(c1(QI:Prin&Intrdr,N:Nonce,PI:Prin&Intrdr))
+    = PI:Prin&Intrdr .
+  eq non(c1(QI:Prin&Intrdr,N:Nonce,PI:Prin&Intrdr))
+    = N:Nonce .
+  eq (V:Cipher1 = V:Cipher1)
+    = true [metadata "built-in in CafeOBJ"] .
+endfm)
+
+(fmod CIPHER2 is
+  including BOOL .
+  protecting NONCE .
+  sorts Cipher2 .
+  op non : Cipher2 -> Nonce .
+  op non1 : Cipher2 -> Nonce .
+  op _=_ : Cipher2 Cipher2 -> Bool
+    [comm metadata "built-in in CafeOBJ"] .
+  op c2 : Prin&Intrdr Nonce Nonce -> Cipher2
+    [ctor] .
+  eq (c2(PI:Prin&Intrdr,N1:Nonce,N2:Nonce)= c2(PI':Prin&Intrdr,N1':Nonce,N2':Nonce))
+    = (PI:Prin&Intrdr = PI':Prin&Intrdr) and (N1:Nonce = N1':Nonce) and (N2:Nonce = N2':Nonce) .
+  eq non(c2(PI:Prin&Intrdr,N1:Nonce,N2:Nonce))
+    = N2:Nonce .
+  eq non1(c2(PI:Prin&Intrdr,N1:Nonce,N2:Nonce))
+    = N1:Nonce .
+  eq (V:Cipher2 = V:Cipher2)
+    = true [metadata "built-in in CafeOBJ"] .
+endfm)
+
+(fmod CIPHER3 is
+  including BOOL .
+  protecting NONCE .
+  sorts Cipher3 .
+  op _=_ : Cipher3 Cipher3 -> Bool
+    [comm metadata "built-in in CafeOBJ"] .
+  op c3 : Prin&Intrdr Nonce -> Cipher3
+    [ctor] .
+  eq (c3(QI:Prin&Intrdr,N:Nonce)= c3(QI':Prin&Intrdr,N':Nonce))
+    = (QI:Prin&Intrdr = QI':Prin&Intrdr) and (N:Nonce = N':Nonce) .
+  eq (V:Cipher3 = V:Cipher3)
+    = true [metadata "built-in in CafeOBJ"] .
+endfm)
+
+(fmod MESSAGE1 is
+  including BOOL .
+  protecting CIPHER1 .
+  sorts Msg1 .
+  op _=_ : Msg1 Msg1 -> Bool
+    [comm metadata "built-in in CafeOBJ"] .
+  op m1 : Prin&Intrdr Prin&Intrdr Prin&Intrdr Cipher1 -> Msg1
+    [ctor] .
+  eq (m1(C:Prin&Intrdr,S:Prin&Intrdr,D:Prin&Intrdr,CIPH1:Cipher1)= m1(C':Prin&Intrdr,S':Prin&Intrdr,D':Prin&Intrdr,CIPH1':Cipher1))
+    = (C:Prin&Intrdr = C':Prin&Intrdr) and
+      (S:Prin&Intrdr = S':Prin&Intrdr) and
+      (D:Prin&Intrdr = D':Prin&Intrdr) and
+      (CIPH1:Cipher1 = CIPH1':Cipher1) .
+  eq (V:Msg1 = V:Msg1)
+    = true [metadata "built-in in CafeOBJ"] .
+endfm)
+
+(fmod MESSAGE2 is
+  including BOOL .
+  protecting CIPHER2 .
+  sorts Msg2 .
+  op ciph2 : Msg2 -> Cipher2 .
+  op src : Msg2 -> Prin&Intrdr .
+  op _=_ : Msg2 Msg2 -> Bool
+    [comm metadata "built-in in CafeOBJ"] .
+  op m2 : Prin&Intrdr Prin&Intrdr Prin&Intrdr Cipher2 -> Msg2
+    [ctor] .
+  eq (m2(C:Prin&Intrdr,S:Prin&Intrdr,D:Prin&Intrdr,CIPH2:Cipher2)= m2(C':Prin&Intrdr,S':Prin&Intrdr,D':Prin&Intrdr,CIPH2':Cipher2))
+    = (C:Prin&Intrdr = C':Prin&Intrdr) and
+      (S:Prin&Intrdr = S':Prin&Intrdr) and
+      (D:Prin&Intrdr = D':Prin&Intrdr) and
+      (CIPH2:Cipher2 = CIPH2':Cipher2) .
+  eq ciph2(m2(C:Prin&Intrdr,S:Prin&Intrdr,D:Prin&Intrdr,CIPH2:Cipher2))
+    = CIPH2:Cipher2 .
+  eq src(m2(C:Prin&Intrdr,S:Prin&Intrdr,D:Prin&Intrdr,CIPH2:Cipher2))
+    = S:Prin&Intrdr .
+  eq (V:Msg2 = V:Msg2)
+    = true [metadata "built-in in CafeOBJ"] .
+endfm)
+
+(fmod MESSAGE3 is
+  including BOOL .
+  protecting CIPHER3 .
+  sorts Msg3 .
+  op _=_ : Msg3 Msg3 -> Bool
+    [comm metadata "built-in in CafeOBJ"] .
+  op m3 : Prin&Intrdr Prin&Intrdr Prin&Intrdr Cipher3 -> Msg3
+    [ctor] .
+  eq (m3(C:Prin&Intrdr,S:Prin&Intrdr,D:Prin&Intrdr,CIPH3:Cipher3)= m3(C':Prin&Intrdr,S':Prin&Intrdr,D':Prin&Intrdr,CIPH3':Cipher3))
+    = (C:Prin&Intrdr = C':Prin&Intrdr) and
+      (S:Prin&Intrdr = S':Prin&Intrdr) and
+      (D:Prin&Intrdr = D':Prin&Intrdr) and
+      (CIPH3:Cipher3 = CIPH3':Cipher3) .
+  eq (V:Msg3 = V:Msg3)
+    = true [metadata "built-in in CafeOBJ"] .
+endfm)
+
+(fmod MESSAGE is
+  including BOOL .
+  protecting MESSAGE1 .
+  protecting MESSAGE2 .
+  protecting MESSAGE3 .
+  sorts Msg .
+  subsort Msg1 < Msg .
+  subsort Msg2 < Msg .
+  subsort Msg3 < Msg .
+  op _=_ : Msg Msg -> Bool
+    [comm metadata "built-in in CafeOBJ"] .
+  op _=_ : Msg1 Msg1 -> Bool
+    [comm metadata "built-in in CafeOBJ"] .
+  op _=_ : Msg2 Msg2 -> Bool
+    [comm metadata "built-in in CafeOBJ"] .
+  op _=_ : Msg3 Msg3 -> Bool
+    [comm metadata "built-in in CafeOBJ"] .
+  eq (M1:Msg1 = M2:Msg2)
+    = false .
+  eq (M1:Msg1 = M3:Msg3)
+    = false .
+  eq (M2:Msg2 = M3:Msg3)
+    = false .
+  eq (V:Msg = V:Msg)
+    = true [metadata "built-in in CafeOBJ"] .
+  eq (V:Msg1 = V:Msg1)
+    = true [metadata "built-in in CafeOBJ"] .
+  eq (V:Msg2 = V:Msg2)
+    = true [metadata "built-in in CafeOBJ"] .
+  eq (V:Msg3 = V:Msg3)
+    = true [metadata "built-in in CafeOBJ"] .
+endfm)
+
+(view MESSAGE from TRIV to MESSAGE is
+  sort Elt to Msg .
+endv)
+
+(fmod NETWORK is
+  including BOOL .
+  protecting SET{MESSAGE} * (op emp to noMsg, sort Set to Network) .
+  op _\in_ : Cipher1 Network -> Bool .
+  op _\in_ : Cipher2 Network -> Bool .
+  vars N N' N'' : Nonce .
+  vars C S D S' D' : Prin&Intrdr .
+  vars CIPH1 CIPH1' : Cipher1 .
+  vars CIPH2 CIPH2' : Cipher2 .
+  var M1 : Msg1 .
+  var M2 : Msg2 .
+  var M3 : Msg3 .
+  var NW : Network .
+
+  eq CIPH1 \in noMsg = false .
+endfm)

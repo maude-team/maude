@@ -1,0 +1,22 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  fmod PRELIM-SET{X :: TRIV} is
+    protecting BOOL .
+    sorts Set NeSet .
+    subsorts X$Elt < NeSet < Set .
+    op empty : -> Set .
+    op _,_ : Set Set -> Set [assoc comm id: empty] .
+    op _,_ : NeSet NeSet -> NeSet [ditto] .
+    op _in_ : X$Elt Set -> Bool .
+    op _\_ : Set Set -> Set .   *** set difference
+    
+    var  E : X$Elt .
+    vars S S' : Set .
+    eq E, E = E .
+    eq E in E, S = true .
+    eq E in S = false [owise] .
+    eq (E, S) \ (E, S') = S \ (E, S') .
+    eq S \ S' = S [owise] .
+  endfm

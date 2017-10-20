@@ -1,0 +1,16 @@
+mod AMBIGUOUS is
+ sort Foo .
+ op a : -> Foo .
+ ops f g h : Foo -> Foo .
+vars M "here" : Foo .
+ eq f("here") = g("here") [print "here"] .
+ rl g(M) => h(M) [print "M = " M "g->h rule"] .
+endm
+
+show module .
+
+red f(a) .
+
+set print attr on .
+
+red f(a) .

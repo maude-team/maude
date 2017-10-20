@@ -1,0 +1,8 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  (fth NZNAT# is
+     protecting NAT .
+     op # : -> NzNat .
+   endfth)

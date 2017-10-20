@@ -1,0 +1,35 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  fmod VENDING-MACHINE-SIGNATURE is
+    sorts Coin Item Marking .
+    subsorts Coin Item < Marking .
+    op __ : Marking Marking -> Marking [assoc comm id: null] .
+    op null : -> Marking .
+    op $ : -> Coin [format (r! o)] .
+    op q : -> Coin [format (r! o)] .
+    op a : -> Item [format (b! o)] .
+    op c : -> Item [format (b! o)] .
+  endfm
+
+***(
+Maude> reduce in META-LEVEL : 
+           upModule('VENDING-MACHINE-SIGNATURE, false) .
+reduce in META-LEVEL : upModule('VENDING-MACHINE-SIGNATURE, false) .
+rewrites: 1 in 0ms cpu (0ms real) (~ rewrites/second)
+result FModule: fmod 'VENDING-MACHINE-SIGNATURE is
+  including 'BOOL .
+  sorts 'Coin ; 'Item ; 'Marking .
+  subsort 'Coin < 'Marking .
+  subsort 'Item < 'Marking .
+  op '$ : nil -> 'Coin [format('r! 'o)] .
+  op '__ : 'Marking 'Marking -> 'Marking [assoc comm id('null.Marking)] .
+  op 'a : nil -> 'Item [format('b! 'o)] .
+  op 'c : nil -> 'Item [format('b! 'o)] .
+  op 'null : nil -> 'Marking [none] .
+  op 'q : nil -> 'Coin [format('r! 'o)] .
+  none
+  none
+endfm
+)

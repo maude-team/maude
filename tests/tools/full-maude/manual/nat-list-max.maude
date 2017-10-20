@@ -1,0 +1,50 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  fmod NAT-LIST-MAX is
+    pr NAT .
+    sort NeNatList .
+    subsort Nat < NeNatList .
+    op __ : NeNatList NeNatList -> NeNatList [ctor assoc] .
+    op max : NeNatList -> Nat .
+    var N : Nat .
+    var NL : NeNatList .
+    eq max(N) = N .
+    eq max(N NL) = if N > max(NL) then N else max(NL) fi .
+  endfm
+
+***(
+Maude> red max(4 2 5 3) .
+reduce in NAT-LIST-MAX : max(4 2 5 3) .
+rewrites: 10 in 0ms cpu (0ms real) (~ rewrites/second)
+result NzNat: 5
+)
+
+  fmod NAIVE-NAT-LIST-MIXFIX-MAX is
+    pr NAT-LIST-MAX * (op max : NeNatList -> Nat to maximum_) .
+  endfm
+
+***(
+Maude> red maximum 2 3 4 1 .
+reduce in NAIVE-NAT-LIST-MIXFIX-MAX : maximum 2 3 4 1 .
+rewrites: 1 in 0ms cpu (0ms real) (~ rewrites/second)
+result NeNatList: 2 3 4 1
+
+Maude> red maximum (2 3 4 1) .
+reduce in NAIVE-NAT-LIST-MIXFIX-MAX : maximum (2 3 4 1) .
+rewrites: 10 in 0ms cpu (0ms real) (~ rewrites/second)
+result NzNat: 4
+)
+
+  fmod NAT-LIST-MIXFIX-MAX is
+    pr NAT-LIST-MAX 
+         * (op max : NeNatList -> Nat to maximum_ [prec 41]) .
+  endfm
+
+***(
+Maude> red maximum 2 3 4 1 .
+reduce in NAT-LIST-MIXFIX-MAX : maximum 2 3 4 1 .
+rewrites: 10 in 0ms cpu (0ms real) (~ rewrites/second)
+result NzNat: 4
+)

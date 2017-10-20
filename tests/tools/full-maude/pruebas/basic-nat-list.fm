@@ -1,0 +1,24 @@
+(fmod LIST{X :: TRIV} is
+  pr NAT .
+  sort List{X} .
+  subsort X$Elt < List{X} .
+  op nil : -> List{X} [ctor] .
+  op __ : List{X} List{X} -> List{X} [assoc id: nil ctor] .
+  
+  var E : X$Elt .
+  var L : List{X} .
+  op size : List{X} -> Nat .
+  eq size(E L) = 1 + size(L) .
+  eq size(nil) = 0 .
+ endfm)
+
+(view List`{String`} from TRIV to LIST{String} is
+  sort Elt to List{String} . 
+ endv)
+ 
+(fmod STRING-LIST-SET is
+  pr SET{List`{String`}} .
+ endfm)
+ 
+(red | ("foo", "foo" "bar", "foo" "bar" "baz") | .)
+

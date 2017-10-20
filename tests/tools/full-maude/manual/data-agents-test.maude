@@ -1,0 +1,187 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+  
+  load data-agents.maude
+  
+  mod AGENT-TEST is
+    ex DATA-AGENTS{Qid, Qid} .
+    ops sam joe me : -> Oid [ctor] .
+    op iconf : -> Configuration .
+    eq iconf 
+      = < sam : DataAgent | data : empty, pal : joe, requests : empty >
+        msg(sam, me, tellReq('a, 'bc))
+        msg(sam, me, tellReq('d, 'ef))
+        < joe : DataAgent | data : empty, pal : sam, requests : empty >
+        msg(joe, me, tellReq('g, 'hi))
+        msg(joe, me, tellReq('j, 'kl))  .
+  endm
+
+***(
+  Maude> rew iconf .
+  rewrite in AGENT-TEST : iconf .
+  rewrites: 49 in 0ms cpu (1ms real) (49049 rewrites/second)
+  result Configuration: 
+    < sam : DataAgent | data : ('a |-> 'bc, 'd |-> 'ef), pal : joe, requests : empty > 
+    < joe : DataAgent | data : ('g |-> 'hi, 'j |-> 'kl), pal : sam, requests : empty > 
+    msg(me, sam, tellReply('a, 'bc)) 
+    msg(me, sam, tellReply('d, 'ef)) 
+    msg(me, joe, tellReply('g, 'hi)) 
+    msg(me, joe, tellReply('j, 'kl))
+
+  ----
+  Maude> search iconf =>! C:Configuration .
+  search in AGENT-TEST : iconf =>! C:Configuration .
+
+  Solution 1 (state 255)
+  states: 256  rewrites: 3073 in 33ms cpu (33ms real) (90395 rewrites/second)
+  C:Configuration --> 
+    < sam : DataAgent | data : ('a |-> 'bc, 'd |-> 'ef), pal : joe, requests : empty > 
+    < joe : DataAgent | data : ('g |-> 'hi, 'j |-> 'kl), pal : sam, requests : empty > 
+    msg(me, sam, tellReply('a, 'bc)) 
+    msg(me, sam, tellReply('d, 'ef)) 
+    msg(me, joe, tellReply('g, 'hi)) 
+    msg(me, joe, tellReply('j, 'kl))
+
+  No more solutions.
+  states: 256  rewrites: 3073 in 33ms cpu (33ms real) (90395 rewrites/second)
+
+  ----
+  Maude> rew iconf msg(sam, me, lookupReq('a)) .
+  rewrite in AGENT-TEST : iconf msg(sam, me, lookupReq('a)) .
+  rewrites: 58 in 0ms cpu (0ms real) (~ rewrites/second)
+  result Configuration: 
+    < sam : DataAgent | data : ('a |-> 'bc, 'd |-> 'ef), pal : joe, requests : empty > 
+    < joe : DataAgent | data : ('g |-> 'hi, 'j |-> 'kl), pal : sam, requests : empty > 
+    msg(me, sam, tellReply('a, 'bc)) 
+    msg(me, sam, tellReply('d, 'ef)) 
+    msg(me, sam, lookupReply('a, undefined)) 
+    msg(me, joe, tellReply('g, 'hi)) 
+    msg(me, joe, tellReply('j, 'kl))
+
+  ----
+  Maude> search iconf msg(sam, me, lookupReq('a)) 
+                =>! msg(me, sam, lookupReply('a, Q:Qid)) C:Configuration .
+  search in AGENT-TEST : iconf msg(sam, me, lookupReq('a)) =>! C:Configuration
+    msg(me, sam, lookupReply('a, Q:Qid)) .
+
+  Solution 1 (state 1081)
+  states: 1087  rewrites: 15150 in 169ms cpu (169ms real) (89130 rewrites/second)
+  C:Configuration --> 
+    < sam : DataAgent | data : ('a |-> 'bc, 'd |-> 'ef), pal : joe, requests : empty > 
+    < joe : DataAgent | data : ('g |-> 'hi, 'j |-> 'kl), pal : sam, requests : empty > 
+    msg(me, sam, tellReply('a, 'bc)) 
+    msg(me, sam, tellReply('d, 'ef)) 
+    msg(me, joe, tellReply('g, 'hi)) 
+    msg(me, joe, tellReply('j, 'kl))
+  Q:Qid --> 'bc
+
+  No more solutions.
+  states: 1088  rewrites: 15169 in 170ms cpu (170ms real) (88721 rewrites/second)
+
+  ----
+  Maude> search iconf msg(sam, me, lookupReq('g)) msg(joe, me, lookupReq('a)) 
+           =>! msg(me, sam, lookupReply('g, Q:Qid)) 
+               msg(me, joe, lookupReply('a, Q':Qid))             
+               C:Configuration .
+
+  search in AGENT-TEST : iconf msg(sam, me, lookupReq('g)) msg(joe, me,
+    lookupReq('a)) =>! C:Configuration msg(me, sam, lookupReply('g, Q:Qid))
+    msg(me, joe, lookupReply('a, Q':Qid)) .
+
+  Solution 1 (state 5183)
+  states: 5184  rewrites: 81793 in 933ms cpu (969ms real) (87586 rewrites/second)
+  C:Configuration --> 
+    < sam : DataAgent | data : ('a |-> 'bc, 'd |-> 'ef, 'g |-> 'hi), pal : joe, requests : empty > 
+    < joe : DataAgent | data : ('a |-> 'bc, 'g |-> 'hi, 'j |-> 'kl), pal : sam, requests : empty > 
+    msg(me, sam, tellReply('a, 'bc)) 
+    msg(me, sam, tellReply('d, 'ef)) 
+    msg(me, joe, tellReply('g, 'hi)) 
+    msg(me, joe, tellReply('j, 'kl))
+  Q:Qid --> 'hi
+  Q':Qid --> 'bc
+
+  No more solutions.
+  states: 5184  rewrites: 81793 in 933ms cpu (969ms real) (87586 rewrites/second)
+  
+  ----
+  Maude> search iconf 
+                msg(sam, me, lookupReq('g)) 
+                msg(joe, me, lookupReq('a))
+                msg(sam, me, tellReq('g, 'ih)) 
+                msg(joe, me, tellReq('a,'cb))
+            =>! msg(me, sam, lookupReply('g, Q:Qid)) 
+                msg(me, joe, lookupReply('a, Q':Qid))             
+                C:Configuration .
+  search in AGENT-TEST : iconf ((msg(sam, me, tellReq('g, 'ih)) msg(joe, me,
+    tellReq('a, 'cb))) msg(joe, me, lookupReq('a))) msg(sam, me, lookupReq('g))
+    =>! C:Configuration msg(me, sam, lookupReply('g, Q:Qid)) msg(me, joe,
+    lookupReply('a, Q':Qid)) .
+
+  49 solutions from states: 176400  rewrites: 3618721 
+  --- different agent states with 4 possibly reply combinations
+  Q:Qid --> 'hi
+  Q':Qid --> 'bc
+
+  Q:Qid --> 'ih
+  Q':Qid --> 'bc
+
+  Q:Qid --> 'hi
+  Q':Qid --> 'cb
+
+  Q:Qid --> 'ih
+  Q':Qid --> 'cb
+
+  ----
+  Maude> search iconf 
+                msg(sam, me, tellReq('m, 'no)) 
+                msg(joe, me, tellReq('m, 'pq))
+            =>! C:Configuration 
+                < sam : DataAgent | data : ('m |-> Q:Qid, R:Dict{Qid, Qid}), Atts:AttributeSet > 
+                < joe : DataAgent | data : ('m |-> Q':Qid, R':Dict{Qid, Qid}), Atts':AttributeSet > 
+            such that Q:Qid =/= Q':Qid .
+
+  search in AGENT-TEST : iconf msg(sam, me, tellReq('m, 'no)) msg(joe, me,
+    tellReq('m, 'pq)) =>! C:Configuration < sam : DataAgent |
+    Atts:AttributeSet,data : (R:Dict{Qid,Qid}, 'm |-> Q:Qid) > < joe :
+    DataAgent | Atts':AttributeSet,data : (R':Dict{Qid,Qid}, 'm |-> Q':Qid) >
+    such that Q:Qid =/= Q':Qid = true .
+
+  Solution 1 (state 5117)
+  states: 5120  rewrites: 88066 in 932ms cpu (963ms real) (94404 rewrites/second)
+  C:Configuration --> msg(me, sam, tellReply('a, 'bc)) msg(me, sam, tellReply('d,
+    'ef)) msg(me, sam, tellReply('m, 'no)) msg(me, joe, tellReply('g, 'hi))
+    msg(me, joe, tellReply('j, 'kl)) msg(me, joe, tellReply('m, 'pq))
+  Atts:AttributeSet --> pal : joe,requests : empty
+  R:Dict{Qid,Qid} --> 'a |-> 'bc, 'd |-> 'ef
+  Q:Qid --> 'no
+  Atts':AttributeSet --> pal : sam,requests : empty
+  R':Dict{Qid,Qid} --> 'g |-> 'hi, 'j |-> 'kl
+  Q':Qid --> 'pq
+
+  No more solutions.
+  states: 5120  rewrites: 88066 in 933ms cpu (964ms real) (94303 rewrites/second)
+  
+  Maude> show path labels 5117 .
+  tell
+  tell
+  tell
+  tell
+  tell
+  tell
+  setReq
+  setReq
+  setReq
+  setReq
+  setReq
+  setReq
+  setReply
+  setReply
+  setReply
+  setReply
+  setReply
+  setReply
+  
+  set trace on .
+  rew iconf .
+)  

@@ -1,0 +1,24 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+  
+load mobile-maude-distributed.maude
+load printers.maude
+
+erew <> < l("127.0.0.1", 2) : ClientRootObject |
+            cnt : 1,
+            guests : o(l("127.0.0.1", 2), 0),
+            forward : 0 |-> (l("127.0.0.1", 2), 0),
+            neighbors : empty,
+            state : idle,
+            defNeighbor : null,
+            port : 60039,
+            server : "127.0.0.1" >
+        < o(l("127.0.0.1", 2), 0) : MobileObject |
+            mod : upModule('SELLER,false),
+            s : upTerm(< o(l("127.0.0.1", 2), 0) : Seller | description : 15 >
+                       & none),
+            gas : 200,
+            hops : 0,
+	    executable : getTerm(metaFrewrite(upModule('SELLER, false),
+		                  upTerm(< o(l("127.0.0.1", 2), 0) : Seller | description : 15 >
+                       & none), 200, 1)) > .

@@ -1,0 +1,9 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+  
+  load view-set.fm
+
+ (fmod GENERIC-SET-LIST{X :: TRIV} is
+    protecting LIST{Set{X}} .
+  endfm)

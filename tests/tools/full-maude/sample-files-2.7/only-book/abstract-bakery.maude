@@ -1,0 +1,18 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+  ---- checked Church-Rosser using the CRC tool
+
+  load bakery.maude
+  
+  mod ABSTRACT-BAKERY is
+    including BAKERY  .
+    vars P Q : Mode .
+    vars X Y : Nat .
+    eq < P, 0, Q, s s Y > = < P, 0, Q, s 0 > .
+    eq < P, s s X, Q, 0 > = < P, s 0, Q, 0 > .
+    eq < P, s s s X, Q, s s s Y > = < P, s s X, Q, s s Y > .
+    eq < P, s s s X, Q, s s 0 > = < P, s s 0, Q, s 0 > .
+    eq < P, s s s X, Q, s 0 > = < P, s s 0, Q, s 0 > .
+    eq < P, s s 0, Q, s s Y > = < P, s 0, Q, s 0 > .
+    eq < P, s 0, Q, s s Y > = < P, s 0, Q, s 0 > .
+  endm

@@ -1,0 +1,24 @@
+  fmod FOO is 
+    sort Foo .
+    ops f g h : -> Foo .
+  endfm
+  
+  view Foo from TRIV to FOO is
+    sort Elt to Foo .
+  endv 
+   
+  fmod MLIST{X :: TRIV} is
+    sorts List{X} .
+    subsort X$Elt < List{X} .
+
+    op nil : -> List{X} [ctor] .
+    op __ : List{X} List{X} -> List{X} [ctor assoc id: nil] .
+  endfm
+
+  select FULL-MAUDE .
+  loop init .
+  
+ (red in MLIST{String} : "one" "two" "three" .)
+
+ (red in MLIST{Foo} : f g h .)
+ 

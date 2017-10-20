@@ -1,0 +1,20 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  load mutex.maude
+  load model-checker.maude
+  
+  mod MUTEX-PREDS is
+    protecting MUTEX .
+    including SATISFACTION .
+    subsort Conf < State .
+    op crit : Name -> Prop .
+    op wait : Name -> Prop .
+    var N : Name .
+    var C : Conf .
+    var P : Prop .
+    eq [N, critical] C |= crit(N) = true .
+    eq [N, wait] C |= wait(N) = true .
+    eq C |= P = false [owise] .
+  endm

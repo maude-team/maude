@@ -1,0 +1,6 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  view POSET from TRIV to POSET is
+  endv

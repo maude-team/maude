@@ -1,0 +1,9 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+ (view RingToRat from RING to RAT is
+    sort Ring to Rat .
+    op e to term 1 .
+    op z to 0 .
+  endv)

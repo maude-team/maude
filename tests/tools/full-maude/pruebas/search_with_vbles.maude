@@ -1,0 +1,11 @@
+mod FOO is
+  sort Foo .
+  ops f g h : Foo -> Foo .
+  rl [r1] : f(F:Foo) => g(F:Foo) .
+  rl [r2] : h(F:Foo) => g(F:Foo) .
+  eq [e1] : f(F:Foo) =  h(F:Foo) .
+endm
+
+search f(F:Foo) =>* g(F:Foo) .
+
+    

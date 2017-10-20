@@ -1,0 +1,62 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  fmod METAXMATCH-EX is
+    pr META-LEVEL .
+    op foo : QidSet ~> QidSet .
+  endfm
+
+***(
+Maude> red metaXmatch(upModule('METAXMATCH-EX, false), 
+             upTerm(('A ; QS:QidSet)), 
+             upTerm(foo('A ; 'B ; 'C)), nil, 0, 1, 0) .
+reduce in METAXMATCH-EX : metaXmatch(upModule('METAXMATCH-EX, false), upTerm('A
+    ; QS:QidSet), upTerm(foo('A ; 'B ; 'C)), nil, 0, 1, 0) .
+rewrites: 4 in 0ms cpu (7ms real) (~ rewrites/second)
+result MatchPair: {
+	'QS:QidSet <- '_;_[''B.Sort,''C.Sort],'foo[[]]}
+
+Maude> red metaXmatch(upModule('METAXMATCH-EX, false), 
+               upTerm(('A ; QS:QidSet)), 
+               upTerm(foo('A ; 'B ; 'C)), nil, 0, 1, 1) .
+reduce in METAXMATCH-EX : metaXmatch(upModule('METAXMATCH-EX, false), upTerm('A
+    ; QS:QidSet), upTerm(foo('A ; 'B ; 'C)), nil, 0, 1, 1) .
+rewrites: 4 in 0ms cpu (0ms real) (~ rewrites/second)
+result MatchPair: {
+	'QS:QidSet <- ''C.Sort,'foo['_;_[''B.Sort,[]]]}
+
+Maude> red metaXmatch(upModule('METAXMATCH-EX, false), 
+               upTerm(('A ; QS:QidSet)), 
+               upTerm(foo('A ; 'B ; 'C)), nil, 0, 1, 2) .
+reduce in METAXMATCH-EX : metaXmatch(upModule('METAXMATCH-EX, false), upTerm('A
+    ; QS:QidSet), upTerm(foo('A ; 'B ; 'C)), nil, 0, 1, 2) .
+rewrites: 4 in 0ms cpu (0ms real) (~ rewrites/second)
+result MatchPair: {
+	'QS:QidSet <- ''B.Sort,'foo['_;_[''C.Sort,[]]]}
+
+Maude> red metaXmatch(upModule('METAXMATCH-EX, false), 
+               upTerm(('A ; QS:QidSet)), 
+               upTerm(foo('A ; 'B ; 'C)), nil, 0, 1, 3) .
+reduce in METAXMATCH-EX : metaXmatch(upModule('METAXMATCH-EX, false), upTerm('A
+    ; QS:QidSet), upTerm(foo('A ; 'B ; 'C)), nil, 0, 1, 3) .
+rewrites: 4 in 0ms cpu (0ms real) (~ rewrites/second)
+result MatchPair?: (noMatch).MatchPair?
+
+Maude> reduce in META-LEVEL : 
+           metaXmatch(upModule('METAXMATCH-EX, false), 
+             upTerm(s N:Nat), upTerm(prec(s_^2(0))), nil, 0, 1, 0) .
+reduce in META-LEVEL : metaXmatch(upModule('METAXMATCH-EX, false), upTerm(s
+    N:Nat), upTerm(prec(2)), nil, 0, 1, 0) .
+rewrites: 4 in 10ms cpu (8ms real) (400 rewrites/second)
+result MatchPair: {
+	'N:Nat <- 's_['0.Zero],'prec[[]]}
+
+Maude> red metaXmatch(upModule('METAXMATCH-EX, false), 
+               upTerm(s N:Nat), upTerm(prec(s_^2(0))), nil, 0, 1, 1) .
+reduce in META-LEVEL : metaXmatch(upModule('METAXMATCH-EX, false), upTerm(s
+    N:Nat), upTerm(prec(2)), nil, 0, 1, 1) .
+rewrites: 4 in 0ms cpu (0ms real) (~ rewrites/second)
+result MatchPair: {
+	'N:Nat <- '0.Zero,'prec['s_[[]]]}
+)

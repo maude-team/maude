@@ -1,0 +1,11 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  load sposet.maude  
+  
+  fth STOSET is
+    including SPOSET .
+    vars X Y : Elt .
+    ceq X = Y if X < Y = false /\ Y < X = false [nonexec label total] .
+  endfth

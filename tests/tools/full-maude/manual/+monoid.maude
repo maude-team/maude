@@ -1,0 +1,15 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  fth +MONOID is
+    including TRIV .
+    op 0 : -> Elt .
+    op _+_ : Elt Elt -> Elt [assoc comm id: 0] .
+  endfth
+
+select FULL-MAUDE .
+loop init .
+
+(show all +MONOID .)
+

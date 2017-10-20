@@ -1,0 +1,61 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  load bank-account.maude
+  
+  mod BANK-MANAGER is
+    inc BANK-ACCOUNT .
+    op Manager : -> Cid [ctor] .
+    op new-account : Oid Oid Nat -> Msg [ctor] .
+    vars O C : Oid .
+    var  N : Nat .
+    rl [new] :
+      < O : Manager | none >
+      new-account(O, C, N)
+      => < O : Manager | none >
+         < C : Account | bal : N > .
+  endm
+
+  mod BANK-MANAGER-TEST is
+    ex BANK-MANAGER .
+    ops A-001 A-002 A-003 A-004 : -> Oid .
+    op mgrConf : -> Configuration .
+    eq mgrConf 
+      = < A-001 : Account | bal : 300 >
+        < A-004 : Manager | none >
+        new-account(A-004, A-002, 250)
+        new-account(A-004, A-003, 1250) .
+  endm
+
+  select FULL-MAUDE .
+  loop init .
+  
+ (rew in BANK-MANAGER-TEST : mgrConf .)
+ 
+ (mod BANK-MANAGER is
+    inc BANK-ACCOUNT .
+    op Manager : -> Cid [ctor] .
+    op new-account : Oid Oid Nat -> Msg [ctor] .
+    vars O C : Oid .
+    var  N : Nat .
+    rl [new] :
+      < O : Manager | none >
+      new-account(O, C, N)
+      => < O : Manager | none >
+         < C : Account | bal : N > .
+  endm)
+
+ (mod BANK-MANAGER-TEST is
+    ex BANK-MANAGER .
+    ops A-001 A-002 A-003 A-004 : -> Oid .
+    op mgrConf : -> Configuration .
+    eq mgrConf 
+      = < A-001 : Account | bal : 300 >
+        < A-004 : Manager | none >
+        new-account(A-004, A-002, 250)
+        new-account(A-004, A-003, 1250) .
+  endm) 
+
+ (rew in BANK-MANAGER-TEST : mgrConf .)
+  

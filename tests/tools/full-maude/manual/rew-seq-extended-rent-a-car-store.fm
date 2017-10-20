@@ -1,0 +1,27 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  load extended-rent-a-car-store-test.fm
+  load rew-seq-test.fm    
+    
+(down EXTENDED-RENT-A-CAR-STORE :
+   rew rewSeq(upModule(EXTENDED-RENT-A-CAR-STORE-TEST),
+            upTerm(EXTENDED-RENT-A-CAR-STORE-TEST, ExtStoreConf),
+            StoreStrat)  .)
+
+---(
+rewrites: 83045 in 100ms cpu (223ms real) (830450 rewrites/second)
+result Configuration :
+  < 'A1 : EconomyCar | available : true > < 'A3 : MidSizeCar | available : true
+    > < 'A5 : FullSizeCar | available : true > < 'C : Calendar | date : 8 > <
+    'C1 : Staff | cash : 4500,debt : 60 > < 'C2 : OccasionalCust | cash : 5000,
+    debt : 0 > < 'S : Store | calendar : 'C,cars :('A1, 'A3, 'A5),customers :(
+    'C1, 'C2),discounts :(((OccasionalCust,EconomyCar),0),((OccasionalCust,
+    FullSizeCar),0),((OccasionalCust,MidSizeCar),0),((PreferredCust,
+    EconomyCar),10),((PreferredCust,FullSizeCar),20),((PreferredCust,
+    MidSizeCar),15),((Staff,EconomyCar),20),((Staff,FullSizeCar),40),((Staff,
+    MidSizeCar),30)),payments :('C1,500),penalty : 0,rates :((EconomyCar,100),(
+    FullSizeCar,200),(MidSizeCar,150)),rentals : empty,suspended : 'C1,
+    threshold : 1000 >
+---)

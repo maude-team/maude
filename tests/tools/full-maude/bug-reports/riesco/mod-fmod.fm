@@ -1,0 +1,12 @@
+(mod A is
+  sort A .
+  ops a b : -> A [ctor] .
+  rl a => b .
+ endm)
+
+(fmod B is
+  pr A .
+ endfm)
+
+(red a .)
+(rew a .)

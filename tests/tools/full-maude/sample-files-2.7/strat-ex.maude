@@ -1,0 +1,31 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  fmod STRAT-EX1 is
+    sort S .
+    ops a b : -> S .
+    op g : S -> S .
+    eq a = b .
+  endfm
+
+***(
+Maude> red g(a) .
+reduce in STRAT-EX1 : g(a) .
+rewrites: 1 in 0ms cpu (0ms real) (~ rewrites/second)
+result S: g(b)
+)
+
+  fmod STRAT-EX2 is
+    sort S .
+    ops a b : -> S .
+    op g : S -> S [strat(0)] .
+    eq a = b .
+  endfm
+  
+***(
+Maude> red g(a) .
+reduce in STRAT-EX2 : g(a) .
+rewrites: 0 in 0ms cpu (0ms real) (~ rewrites/second)
+result S: g(a)
+)

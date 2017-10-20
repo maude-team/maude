@@ -1,0 +1,25 @@
+----load full-maude.maude
+
+(fmod FOO{X :: TRIV} is
+ sort A .
+ ops a b : -> A [ctor] .
+ op c : -> X$Elt [ctor] .
+
+ ceq a = b
+  if not (c :: X$Elt) .
+endfm)
+
+(fmod DD is
+ sort D .
+ops d1 d2 : -> D [ctor] .
+endfm)
+
+(view VDD from TRIV to DD is
+    sort Elt to D .
+endv)
+
+(fmod SET-DD is
+ pr FOO{VDD} * (op emp to noD, sort Set to SetD) .
+endfm)
+
+(red a .)

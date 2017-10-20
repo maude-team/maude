@@ -1,0 +1,85 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  mod RIVER-CROSSING is
+    sorts Side Group State .
+
+    ops left right : -> Side [ctor] .
+    op change : Side -> Side .
+    
+    --- shepherd, wolf, goat, cabbage
+    ops s w g c : Side -> Group [ctor] .  
+    op __ : Group Group -> Group [ctor assoc comm] .
+
+    op {_} : Group -> State [ctor] .
+    op toBeEaten : Group -> Bool .
+  
+    op initial : -> State .
+  
+    vars S S' : Side .
+    var  G : Group .
+
+    eq change(left) = right .
+    eq change(right) = left .
+
+    ceq w(S) g(S) s(S') = w(S) s(S') if S =/= S' .
+        --- wolf eats goat
+    ceq c(S) g(S) w(S') s(S') = g(S) w(S') s(S') if S =/= S' .
+        --- goat eats cabbage
+
+    ceq toBeEaten(w(S) g(S) s(S') G) = true if S =/= S' .
+    ceq toBeEaten(c(S) g(S) s(S') G) = true if S =/= S' .
+    eq toBeEaten(G) = false [owise] .
+
+    eq initial = { s(left) w(left) g(left) c(left) } .
+
+    crl [shepherd-alone] : { s(S) G } => { s(change(S)) G } 
+      if not(toBeEaten(s(S) G)) .
+    crl [wolf] : { s(S) w(S) G } => { s(change(S)) w(change(S)) G } 
+      if not(toBeEaten(s(S) w(S) G)) .
+    rl [goat] : { s(S) g(S) G } => { s(change(S)) g(change(S)) G }.
+    crl [cabbage] : { s(S) c(S) G } => { s(change(S)) c(change(S)) G } 
+      if not(toBeEaten(s(S) c(S) G)) .
+  endm
+
+***(
+Maude> search initial =>* { w(right) s(right) g(right) c(right) } .
+search in RIVER-CROSSING : initial =>* {s(right) w(right) g(right) c(right)} .
+
+Solution 1 (state 27)
+states: 28  rewrites: 328 in 0ms cpu (2ms real) (~ rewrites/second)
+empty substitution
+
+No more solutions.
+states: 28  rewrites: 363 in 0ms cpu (2ms real) (~ rewrites/second)
+
+Maude> show path 27 .
+state 0, State: {s(left) w(left) g(left) c(left)}
+===[ rl {G s(S) g(S)} => {s(change(S)) G g(change(S))} [label goat] . ]===>
+state 3, State: {s(right) w(left) g(right) c(left)}
+===[ crl {G s(S)} => {G s(change(S))} if not toBeEaten(G s(S)) = true [label
+    shepherd-alone] . ]===>
+state 8, State: {s(left) w(left) g(right) c(left)}
+===[ crl {G s(S) w(S)} => {s(change(S)) G w(change(S))} if not toBeEaten(s(S) G
+    w(S)) = true [label wolf] . ]===>
+state 14, State: {s(right) w(right) g(right) c(left)}
+===[ rl {G s(S) g(S)} => {s(change(S)) G g(change(S))} [label goat] . ]===>
+state 21, State: {s(left) w(right) g(left) c(left)}
+===[ crl {G s(S) c(S)} => {s(change(S)) G c(change(S))} if not toBeEaten(s(S) G
+    c(S)) = true [label cabbage] . ]===>
+state 25, State: {s(right) w(right) g(left) c(right)}
+===[ crl {G s(S)} => {G s(change(S))} if not toBeEaten(G s(S)) = true [label
+    shepherd-alone] . ]===>
+state 26, State: {s(left) w(right) g(left) c(right)}
+===[ rl {G s(S) g(S)} => {s(change(S)) G g(change(S))} [label goat] . ]===>
+state 27, State: {s(right) w(right) g(right) c(right)}
+
+Maude> show path labels 27 .
+goat
+shepherd-alone
+wolf
+goat
+cabbage
+shepherd-alone
+goat
+)

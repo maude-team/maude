@@ -1,0 +1,14 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  fth RING is
+    sort Ring .
+    ops z e : -> Ring .
+    op _+_ : Ring Ring -> Ring [assoc comm id: z] .
+    op _*_ : Ring Ring -> Ring [assoc comm id: e] .
+    op -_ : Ring -> Ring .
+    vars A B C : Ring .
+    eq A + (- A) = z [nonexec] .
+    eq A * (B + C) = (A * B) + (A * C) [nonexec] .
+  endfth

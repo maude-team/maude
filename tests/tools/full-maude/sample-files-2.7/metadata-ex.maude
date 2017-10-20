@@ -1,0 +1,10 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  fmod METADATA-EX is
+    sorts Foo Bar .
+    subsort Foo < Bar .
+    op f : Foo -> Foo [memo metadata "f on Foos"] .
+    op f : Bar -> Bar [ditto metadata "f on Bars"] .
+  endfm

@@ -1,0 +1,61 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  mod RIVER-CROSSING-2 is
+    sorts Side Group .
+
+    ops left right : -> Side [ctor] .
+    op change : Side -> Side .
+    
+    --- shepherd, wolf, goat, cabbage
+    ops s w g c : Side -> Group [ctor] .  
+    op __ : Group Group -> Group [ctor assoc comm] .
+    op initial : -> Group .
+
+    vars S S' : Side .
+
+    eq change(left) = right .
+    eq change(right) = left .
+
+    eq initial = s(left) w(left) g(left) c(left) .
+
+    rl [shepherd-alone] : s(S) => s(change(S)) .
+    rl [wolf] : s(S) w(S) => s(change(S)) w(change(S)) .
+    rl [goat] : s(S) g(S) => s(change(S)) g(change(S)) .
+    rl [cabbage] : s(S) c(S) => s(change(S)) c(change(S)) .
+  endm
+
+  load model-checker.maude
+  
+  mod RIVER-CROSSING-2-PROP is
+    protecting RIVER-CROSSING-2 .
+    including MODEL-CHECKER .
+     
+    subsort Group < State .
+    ops disaster success : -> Prop .
+
+    vars S S' S'' : Side .
+    ceq (w(S) g(S) s(S') c(S'') |= disaster) = true if S =/= S' .
+    ceq (w(S'') g(S) s(S') c(S) |= disaster) = true if S =/= S' .
+    eq (s(right) w(right) g(right) c(right) |= success) = true .
+  endm
+
+***(
+Maude> red modelCheck(initial, 
+                <> success -> (<> disaster /\ ((~ success) U disaster))) .
+reduce in RIVER-CROSSING-2-PROP : modelCheck(initial, <> success -> <> disaster
+    /\ (~ success U disaster)) .
+ModelChecker: Property automaton has 4 states.
+ModelCheckerSymbol: Examined 13 system states.
+rewrites: 77 in 0ms cpu (1ms real) (~ rewrites/second)
+result ModelCheckResult: counterexample({s(left) w(left) g(left) c(left),'goat}
+    {s(right) w(left) g(right) c(left),'shepherd-alone} {s(left) w(left) g(
+    right) c(left),'wolf} {s(right) w(right) g(right) c(left),'goat} {s(left)
+    w(right) g(left) c(left),'cabbage} {s(right) w(right) g(left) c(right),
+    'shepherd-alone} {s(left) w(right) g(left) c(right),'goat} {s(right) w(
+    right) g(right) c(right),'goat} {s(left) w(right) g(left) c(right),
+    'shepherd-alone} {s(right) w(right) g(left) c(right),'wolf} {s(left) w(
+    left) g(left) c(right),'goat} {s(right) w(left) g(right) c(right),'cabbage}
+    {s(left) w(left) g(right) c(left),'wolf}, {s(right) w(right) g(right) c(
+    left),'goat} {s(left) w(right) g(left) c(left),'goat})
+)

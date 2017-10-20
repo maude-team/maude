@@ -1,0 +1,54 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+mod RECOLORING is
+  pr NAT .
+  sort Place Board Color .
+  subsort Place < Board .
+
+  ops w b : -> Color [ctor] .
+  op sq : Nat Nat Color -> Place [ctor] .
+  op __ : Board Board -> Board [ctor assoc comm] .
+  op initial : -> Board .
+
+  op recolor : Color -> Color .
+  op allWhite? : Board -> Bool .
+
+  vars I J : Nat .
+  vars C1 C2 C3 C4 C5 C6 C7 C8 : Color .
+  var B : Board .
+
+  eq recolor(b) = w .
+  eq recolor(w) = b .
+
+  eq allWhite?(sq(I,J,b) B) = false .
+  eq allWhite?(B) = true [owise] .
+
+  eq initial 
+    = sq(1,1,w) sq(1,2,b) sq(1,3,b) sq(1,4,b) sq(1,5,b) sq(1,6,b) sq(1,7,b) sq(1,8,w)
+      sq(2,1,b) sq(2,2,b) sq(2,3,b) sq(2,4,b) sq(2,5,b) sq(2,6,b) sq(2,7,b) sq(2,8,b)
+      sq(3,1,b) sq(3,2,b) sq(3,3,b) sq(3,4,b) sq(3,5,b) sq(3,6,b) sq(3,7,b) sq(3,8,b)
+      sq(4,1,b) sq(4,2,b) sq(4,3,b) sq(4,4,b) sq(4,5,b) sq(4,6,b) sq(4,7,b) sq(4,8,b)
+      sq(5,1,b) sq(5,2,b) sq(5,3,b) sq(5,4,b) sq(5,5,b) sq(5,6,b) sq(5,7,b) sq(5,8,b)
+      sq(6,1,b) sq(6,2,b) sq(6,3,b) sq(6,4,b) sq(6,5,b) sq(6,6,b) sq(6,7,b) sq(6,8,b)
+      sq(7,1,b) sq(7,2,b) sq(7,3,b) sq(7,4,b) sq(7,5,b) sq(7,6,b) sq(7,7,b) sq(7,8,b)
+      sq(8,1,w) sq(8,2,b) sq(8,3,b) sq(8,4,b) sq(8,5,b) sq(8,6,b) sq(8,7,b) sq(8,8,w) .
+
+  rl [recolorV] : sq(I,1,C1) sq(I,2,C2) sq(I,3,C3) sq(I,4,C4) 
+       sq(I,5,C5) sq(I,6,C6) sq(I,7,C7) sq(I,8,C8) =>
+       sq(I,1,recolor(C1)) sq(I,2,recolor(C2)) sq(I,3,recolor(C3)) sq(I,4,recolor(C4)) 
+       sq(I,5,recolor(C5)) sq(I,6,recolor(C6)) sq(I,7,recolor(C7)) sq(I,8,recolor(C8)) .
+  rl [recolorH] : sq(1,J,C1) sq(2,J,C2) sq(3,J,C3) sq(4,J,C4) 
+       sq(5,J,C5) sq(6,J,C6) sq(7,J,C7) sq(8,J,C8) =>
+       sq(1,J,recolor(C1)) sq(2,J,recolor(C2)) sq(3,J,recolor(C3)) sq(4,J,recolor(C4)) 
+       sq(5,J,recolor(C5)) sq(6,J,recolor(C6)) sq(7,J,recolor(C7)) sq(8,J,recolor(C8)) .
+endm
+
+search initial =>* B:Board such that allWhite?(B:Board) .
+---(
+search in RECOLORING : init =>* B such that allWhite?(B) = true .
+
+No solution.
+states: 32768  rewrites: 4751361 in 13700ms cpu (25492ms real) (346814
+    rewrites/second)
+---)

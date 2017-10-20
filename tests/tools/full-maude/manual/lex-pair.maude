@@ -1,0 +1,30 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  load stoset.maude 
+  
+  fmod LEX-PAIR{X :: STOSET, Y :: STOSET} is
+    sort Pair{X, Y} .
+    op <_;_> : X$Elt Y$Elt -> Pair{X, Y} .
+    op _<_ : Pair{X, Y} Pair{X, Y} -> Bool .
+    op 1st : Pair{X, Y} -> X$Elt .
+    op 2nd : Pair{X, Y} -> Y$Elt .
+    
+    vars A A' : X$Elt .
+    vars B B' : Y$Elt .
+    eq 1st(< A ; B >) = A .
+    eq 2nd(< A ; B >) = B .
+    eq < A ; B > < < A' ; B' > = (A < A') or (A == A' and B < B') .
+  endfm
+
+***(
+  fmod LEX-PAIR{X :: STOSET, Y :: STOSET} is
+    protecting PAIR{STOSET, STOSET}{X, Y} .
+    op _<_ : 
+        Pair{STOSET, STOSET}{X, Y} Pair{STOSET, STOSET}{X, Y} -> Bool .
+    vars A A' : X$Elt .
+    vars B B' : Y$Elt .
+    eq < A ; B > < < A' ; B' > = (A < A') or (A == A' and B < B') .
+  endfm
+)

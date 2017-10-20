@@ -1,0 +1,7 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  view StringAsToset from TOSET to STRING is
+    sort Elt to String .
+  endv

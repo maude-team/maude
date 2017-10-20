@@ -1,0 +1,17 @@
+(fth A is
+  sort A .
+ endfth)
+
+(fth C is
+  sort C .
+ endfth)
+
+(fmod B{X :: (A + C)} is
+  sort B .
+ endfm)
+
+(view N from NAT to A + C is
+  sort Nat to A .
+ endv) 
+ 
+(red in B{N} : 3 .)

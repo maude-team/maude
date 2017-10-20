@@ -1,0 +1,59 @@
+(omod DINING-PHILOSOPHERS is
+  protecting NAT .
+
+  msg chopstick : Nat -> Msg .    *** chopsticks are messages
+
+  class Philosopher | state : PhilState, #sticks : Nat .
+
+  subsort Nat < Oid .    *** Object names are numbers!
+
+  sort PhilState .
+  ops thinking hungry eating : -> PhilState [ctor] .
+
+  vars I J K : Nat . 
+
+  rl [hungry] : < I : Philosopher | state : thinking >  =>  
+                < I : Philosopher | state : hungry > .
+
+  crl [grabfirst] : chopstick(J)
+                    < I : Philosopher | state : hungry, #sticks : 0 >  =>
+                    < I : Philosopher | state : hungry, #sticks : 1 >
+                       if I can use stick J .
+
+  op right : Nat -> Nat . *** The ``right'' chopstick index.
+  eq right(I) = if I == 5 then 1 else I + 1 fi .
+  op _can`use`stick_ : Nat Nat -> Bool .
+  eq I can use stick J = (I == J) or (J == right(I)) .
+
+  crl [grabSecond] : chopstick(J)
+                     < I : Philosopher | #sticks : 1 >  =>
+                     < I : Philosopher | state : eating, #sticks : 2 >
+                        if I can use stick J .
+
+  rl [full] :  < I : Philosopher | state : eating >  =>
+               < I : Philosopher | state : thinking, #sticks : 0 >
+               chopstick(I)  chopstick(right(I)) .
+
+  op initState : -> Configuration .
+  eq initState =
+      chopstick(1)  
+      < 1 : Philosopher | state : thinking, #sticks : 0 > 
+      chopstick(2)  
+      < 2 : Philosopher | state : thinking, #sticks : 0 > 
+      chopstick(3)  
+      < 3 : Philosopher | state : thinking, #sticks : 0 > 
+      chopstick(4)  
+      < 4 : Philosopher | state : thinking, #sticks : 0 > 
+      chopstick(5)  
+      < 5 : Philosopher | state : thinking, #sticks : 0 > .
+endom)
+
+
+---- load trace.txt
+
+(search [1] initState =>* C:Configuration < 2 : Philosopher | state : eating >  < 4 : Philosopher | state : eating > .)
+
+---- eof
+
+(search [1] initState =>* C:Configuration < 2 : Philosopher | state : eating, #sticks : N:Nat >
+                                             < 4 : Philosopher | state : eating, #sticks : N2:Nat > .)

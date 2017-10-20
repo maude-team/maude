@@ -1,0 +1,11 @@
+----load full-maude.maude
+
+(omod TEST is
+  pr NAT .
+
+  class Foo | foo : Nat .
+  class Foo2 | .
+endom)
+
+(show module .)
+(show all .)

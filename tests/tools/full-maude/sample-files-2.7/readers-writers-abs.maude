@@ -1,0 +1,45 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+  ---- Checked Church-Rooser using the CRC
+  ---- Checked coherent using the ChC
+
+  load readers-writers-preds.maude
+  
+  mod READERS-WRITERS-ABS is
+    including READERS-WRITERS-PREDS .
+    including READERS-WRITERS .
+    eq < s(s(N:Nat)), 0 > = < s(0), 0 > .
+  endm
+  
+***(
+Maude> search in READERS-WRITERS-ABS : < s(0), 0 > =>1 X:Config .
+search in READERS-WRITERS-ABS : < s(0),0 > =>1 X:Config .
+
+Solution 1 (state 0)
+states: 1  rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+X:Config --> < s(0),0 >
+
+Solution 2 (state 1)
+states: 2  rewrites: 3 in 0ms cpu (0ms real) (~ rewrites/second)
+X:Config --> < 0,0 >
+
+No more solutions.
+states: 2  rewrites: 3 in 0ms cpu (0ms real) (~ rewrites/second)
+
+Maude> search in READERS-WRITERS-ABS : 
+           < 0,0 > =>* C:Config such that mutex(C:Config) = ff .
+search in READERS-WRITERS-ABS : < 0,0 > =>* C:Config such that mutex(C:Config)
+    = ff .
+
+No solution.
+states: 3  rewrites: 9 in 0ms cpu (0ms real) (~ rewrites/second)
+
+Maude> search in READERS-WRITERS-ABS : 
+           < 0,0 > =>* C:Config such that one-writer(C:Config) = ff .
+search in READERS-WRITERS-ABS : < 0,0 > =>* C:Config such that one-writer(
+    C:Config) = ff .
+
+No solution.
+states: 3  rewrites: 9 in 0ms cpu (0ms real) (~ rewrites/second)
+)  

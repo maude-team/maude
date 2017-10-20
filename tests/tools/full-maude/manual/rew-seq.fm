@@ -1,0 +1,22 @@
+  load view-substitution.fm
+  load view-tuple.fm
+
+ (mod REW-SEQ is
+    including META-LEVEL .
+    protecting LIST{Tuple{Qid, Substitution}} .
+
+    var M : Module .
+    var T : Term .
+    var L : Qid .
+    var S : Substitution .
+    var LLS : List{Tuple{Qid, Substitution}} .
+
+    op rewSeq : Module Term List{Tuple{Qid, Substitution}} -> [Term] .
+
+    rl [seq] : 
+      rewSeq(M, T, (L, S) LLS)
+      => rewSeq(M, getTerm(metaXapply(M, T, L, S, 0, unbounded, 0)), LLS) .
+            
+    rl [seq] : rewSeq(M, T, nil) => T .
+  endm)
+

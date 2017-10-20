@@ -1,0 +1,90 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+ (omod 8-PUZZLE is
+    sorts NumValue Value Coordinate .
+    subsort NumValue < Value .
+    ops 1 2 3 4 : -> Coordinate [ctor] .
+    ops 1 2 3 4 5 6 7 8 : -> NumValue [ctor] .
+    op blank : -> Value [ctor] .
+    op s_ : Coordinate -> Coordinate .
+    eq s 1 = 2 .
+    eq s 2 = 3 .
+    eq s 3 = 4 .
+    eq s 4 = 4 .
+    op `(_`,_`) : Coordinate Coordinate -> Oid .
+    class Tile | value : Value .
+    ops left right up down : -> Msg .
+    vars N M R : Coordinate .
+    var P : NumValue .
+
+    crl [r] : 
+      right
+      < (N, R) : Tile | value : blank > 
+      < (N, M) : Tile | value : P >
+      => < (N, R) : Tile | value : P > 
+         < (N, M) : Tile | value : blank > 
+      if R = s M .
+
+    crl [l] : 
+      left 
+      < (N, R) : Tile | value : blank >    
+      < (N, M) : Tile | value : P >
+      => < (N, R) : Tile | value : P > 
+         < (N, M) : Tile | value : blank >
+      if s R = M .
+
+    crl [u] : 
+      up 
+      < (R, M) : Tile | value : blank > 
+      < (N, M) : Tile | value : P >
+      => < (R, M) : Tile | value : P > 
+         < (N, M) : Tile | value : blank > 
+      if s R = N .
+
+    crl [d] : 
+      down 
+      < (R, M) : Tile | value : blank > 
+      < (N, M) : Tile | value : P >
+      => < (R, M) : Tile | value : P > 
+         < (N, M) : Tile | value : blank >
+      if R = s N .
+
+    ops initial final : -> Configuration . 
+    eq initial
+      = < (1, 1) : Tile | value : 7 >     
+        < (1, 2) : Tile | value : 1 > 
+        < (1, 3) : Tile | value : 2 >     
+        < (2, 1) : Tile | value : 6 >     
+        < (2, 2) : Tile | value : blank >
+        < (2, 3) : Tile | value : 8 >     
+        < (3, 1) : Tile | value : 5 > 
+        < (3, 2) : Tile | value : 4 >
+        < (3, 3) : Tile | value : 3 > .     
+
+    eq final
+      = < (1, 1) : Tile | value : 7 >     
+        < (1, 2) : Tile | value : 8 > 
+        < (1, 3) : Tile | value : 1 >     
+        < (2, 1) : Tile | value : 6 >     
+        < (2, 2) : Tile | value : blank >
+        < (2, 3) : Tile | value : 2 >     
+        < (3, 1) : Tile | value : 5 > 
+        < (3, 2) : Tile | value : 4 >
+        < (3, 3) : Tile | value : 3 > .     
+  endom)
+
+(search up left down right initial =>* C:Configuration 
+           such that C:Configuration == final .)
+---(
+rewrites: 1141 in 40ms cpu (39ms real) (28525 rewrites/second)
+search in 8-PUZZLE : up left down right initial =>* C:Configuration .
+
+Solution 1
+C:Configuration --> <(1,1): Tile | value : 7 > <(1,2): Tile | value : 8 > <(1,
+    3): Tile | value : 1 > <(2,1): Tile | value : 6 > <(2,2): Tile | value :
+    blank > <(2,3): Tile | value : 2 > <(3,1): Tile | value : 5 > <(3,2): Tile
+    | value : 4 > <(3,3): Tile | value : 3 >
+
+No more solutions.
+---)

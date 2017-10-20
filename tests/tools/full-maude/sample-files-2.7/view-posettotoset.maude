@@ -1,0 +1,13 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+***(
+  view PosetToToset from POSET to TOSET is
+    sort Elt to Elt .
+  endv
+)
+
+  view PosetToToset from POSET to TOSET is
+  endv
+  

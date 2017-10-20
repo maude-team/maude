@@ -1,0 +1,7 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+  
+ (view Tuple{X :: TRIV, Y :: TRIV} from TRIV to TUPLE[2]{X, Y} is
+    sort Elt to Tuple{X, Y} .
+  endv)

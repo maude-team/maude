@@ -1,0 +1,46 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+  
+ (omod ACCOUNT is
+    protecting QID .
+    protecting INT .
+
+    subsort Qid < Oid .
+    class Account | bal : Int .
+    msgs credit debit : Oid Int -> Msg .
+    msg from_to_transfer_ : Oid Oid Int -> Msg .
+
+    vars A B : Oid .
+    var  M : Nat .
+    vars N N' : Int .
+
+    rl [credit] :
+      credit(A, M)
+      < A : Account | bal : N >
+      => < A : Account | bal : N + M > .
+
+    crl [debit] :
+      debit(A, M)
+      < A : Account | bal : N >
+      => < A : Account | bal : N - M >
+      if N >= M .
+
+    crl [transfer] :
+      (from A to B transfer M)
+      < A : Account | bal : N >
+      < B : Account | bal : N' >
+      => < A : Account | bal : N - M >
+         < B : Account | bal : N' + M >
+      if N >= M .
+  endom)
+  
+ (rew < 'A-06238 : Account | bal : 2000 >
+              debit('A-06238, 1000) .)
+---(
+rewrites: 878 in 10ms cpu (10ms real) (87800 rewrites/second)
+rewrite in ACCOUNT :
+  < 'A-06238 : Account | bal : 2000 > debit('A-06238,1000)
+result Object :
+  < 'A-06238 : Account | bal : 1000 >
+---)

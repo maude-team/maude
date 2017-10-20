@@ -1,0 +1,7 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+ (view Set{X :: TRIV} from TRIV to SET{X} is
+    sort Elt to Set{X} .
+  endv)

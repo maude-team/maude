@@ -1,0 +1,207 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  fth VAR is
+    protecting BOOL .
+    sorts Var VarSet .
+    subsort Var < VarSet .               *** singleton sets
+    op empty-set : -> VarSet .           *** empty set
+    op _U_ : VarSet VarSet -> VarSet [assoc comm id: empty-set] . 
+                                         *** set union
+    op _in_ : Var VarSet -> Bool .       *** membership test
+    op _\_ : VarSet VarSet -> VarSet .   *** set difference
+    op new : VarSet -> Var .             *** new variable
+
+    vars E E' : Var .
+    vars S S' : VarSet .
+
+    eq E U E = E .
+    eq E in empty-set = false .
+    eq E in E' U S = (E == E') or (E in S) .
+    eq empty-set \ S = empty-set .
+    eq (E U S) \ S' = if E in S' then S \ S' else E U (S \ S') fi .
+    eq new(S) in S = false [nonexec] .                              
+  endfth
+
+  fmod LAMBDA{X :: VAR} is
+    sort Lambda{X} .
+    subsort X$Var < Lambda{X} .             *** variables
+    op \_._ : X$Var Lambda{X} -> Lambda{X} [ctor] .              
+                                            *** lambda abstraction
+    op __ : Lambda{X} Lambda{X} -> Lambda{X} [ctor] .            
+                                            *** application
+    op _[_/_] : Lambda{X} Lambda{X} X$Var -> Lambda{X} .
+                                            *** substitution
+    op fv : Lambda{X} -> X$VarSet .         *** free variables
+ 
+    vars X Y : X$Var .
+    vars M N P : Lambda{X} .
+ 
+    *** Free variables
+    eq fv(X) = X .
+    eq fv(\ X . M) = fv(M) \ X .
+    eq fv(M N) = fv(M) U fv(N) .
+    eq fv(M [N / X]) = (fv(M) \ X) U fv(N) .
+ 
+    *** Substitution equations
+    eq X [N / X] = N .
+    ceq Y [N / X] = Y if X =/= Y .
+    eq (M N)[P / X] = (M [P / X])(N [P / X]) .
+    eq (\ X . M)[N / X] = \ X . M .
+    ceq (\ Y . M)[N / X] = \ Y . (M [N / X])
+      if X =/= Y and (not(Y in fv(N)) or not(X in fv(M))) .
+    ceq (\ Y . M)[N / X] 
+      = \ (new(fv(M N))) . ((M [new(fv(M N)) / Y])[N / X])
+      if X =/= Y /\ (Y in fv(N)) /\ (X in fv(M)) .
+ 
+    *** Alpha conversion
+    ceq \ X . M = \ Y . (M [Y / X]) if not(Y in fv(M)) [nonexec] .
+  endfm
+
+  mod BETA-ETA{X :: VAR} is
+    including LAMBDA{X} .
+    var  X : X$Var . 
+    vars M N : Lambda{X} .
+    rl [beta] : (\ X . M) N => M [N / X] .
+    crl [eta] : \ X . (M X) => M if not(X in fv(M)) .
+  endm
+
+  load set-max.maude
+  ----load toset.maude
+  load view-natastoset.maude
+  
+  view VarNat from VAR to (SET-MAX * (op _,_ to _U_,
+                                      op _-_ to _\_)) {NatAsToset} is
+    sort Var to Nat .
+    sort VarSet to Set{TOSET}{NatAsToset} .
+    var S : VarSet .
+    op empty-set to empty .
+    op new(S) to term if S == empty then 1 else s max(S) fi .
+  endv
+
+  mod UNTYPED-LAMBDA-CALCULUS is
+    protecting BETA-ETA{VarNat} .
+  endm
+
+***(
+Maude> set trace on .
+Maude> set trace eqs off .
+Maude> rew [2] (\ 1 . (1 1))(\ 1 . (1 1)) .
+rewrite [2] in UNTYPED-LAMBDA-CALCULUS : (\ 1 . (1 1)) \ 1 . (1 1) .
+*********** rule
+rl (\ X:Nat . M:Lambda{VarNat}) N:Lambda{VarNat} => M:Lambda{VarNat}[N:Lambda{
+    VarNat} / X:Nat] [label beta] .
+X:Nat --> 1
+M:Lambda{VarNat} --> 1 1
+N:Lambda{VarNat} --> \ 1 . (1 1)
+(\ 1 . (1 1)) \ 1 . (1 1)
+--->
+(1 1)[\ 1 . (1 1) / 1]
+*********** rule
+rl (\ X:Nat . M:Lambda{VarNat}) N:Lambda{VarNat} => M:Lambda{VarNat}[N:Lambda{
+    VarNat} / X:Nat] [label beta] .
+X:Nat --> 1
+M:Lambda{VarNat} --> 1 1
+N:Lambda{VarNat} --> \ 1 . (1 1)
+(\ 1 . (1 1)) \ 1 . (1 1)
+--->
+(1 1)[\ 1 . (1 1) / 1]
+rewrites: 8 in 0ms cpu (0ms real) (~ rewrites/second)
+result Lambda{VarNat}: (\ 1 . (1 1)) \ 1 . (1 1)
+
+Maude> set trace off .
+
+Maude> set trace on .
+Maude> set trace eqs off .
+Maude> rew (\ 1 . ((1 (\ 2 . ((1 2) 2))) 1)) (\ 3 . (\ 4 . 3)) .
+rewrite in UNTYPED-LAMBDA-CALCULUS : (\ 1 . ((1 \ 2 . ((1 2) 2)) 1)) \ 3 . \ 4
+    . 3 .
+*********** rule
+rl (\ X:Nat . M:Lambda{VarNat}) N:Lambda{VarNat} => M:Lambda{VarNat}[N:Lambda{
+    VarNat} / X:Nat] [label beta] .
+X:Nat --> 1
+M:Lambda{VarNat} --> (1 \ 2 . ((1 2) 2)) 1
+N:Lambda{VarNat} --> \ 3 . \ 4 . 3
+(\ 1 . ((1 \ 2 . ((1 2) 2)) 1)) \ 3 . \ 4 . 3
+--->
+((1 \ 2 . ((1 2) 2)) 1)[\ 3 . \ 4 . 3 / 1]
+*********** rule
+rl (\ X:Nat . M:Lambda{VarNat}) N:Lambda{VarNat} => M:Lambda{VarNat}[N:Lambda{
+    VarNat} / X:Nat] [label beta] .
+X:Nat --> 3
+M:Lambda{VarNat} --> \ 4 . 3
+N:Lambda{VarNat} --> \ 2 . (((\ 3 . \ 4 . 3) 2) 2)
+(\ 3 . \ 4 . 3) \ 2 . (((\ 3 . \ 4 . 3) 2) 2)
+--->
+(\ 4 . 3)[\ 2 . (((\ 3 . \ 4 . 3) 2) 2) / 3]
+*********** rule
+rl (\ X:Nat . M:Lambda{VarNat}) N:Lambda{VarNat} => M:Lambda{VarNat}[N:Lambda{
+    VarNat} / X:Nat] [label beta] .
+X:Nat --> 4
+M:Lambda{VarNat} --> \ 2 . (((\ 3 . \ 4 . 3) 2) 2)
+N:Lambda{VarNat} --> \ 3 . \ 4 . 3
+(\ 4 . \ 2 . (((\ 3 . \ 4 . 3) 2) 2)) \ 3 . \ 4 . 3
+--->
+(\ 2 . (((\ 3 . \ 4 . 3) 2) 2))[\ 3 . \ 4 . 3 / 4]
+*********** trial #1
+crl \ X:Nat . (M:Lambda{VarNat} X:Nat) => M:Lambda{VarNat} if not X:Nat in fv(
+    M:Lambda{VarNat}) = true [label eta] .
+X:Nat --> 2
+M:Lambda{VarNat} --> (\ 3 . \ 4 . 3) 2
+*********** solving condition fragment
+not X:Nat in fv(M:Lambda{VarNat}) = true
+*********** failure for condition fragment
+not X:Nat in fv(M:Lambda{VarNat}) = true
+*********** failure #1
+*********** rule
+rl (\ X:Nat . M:Lambda{VarNat}) N:Lambda{VarNat} => M:Lambda{VarNat}[N:Lambda{
+    VarNat} / X:Nat] [label beta] .
+X:Nat --> 3
+M:Lambda{VarNat} --> \ 4 . 3
+N:Lambda{VarNat} --> 2
+(\ 3 . \ 4 . 3) 2
+--->
+(\ 4 . 3)[2 / 3]
+*********** trial #2
+crl \ X:Nat . (M:Lambda{VarNat} X:Nat) => M:Lambda{VarNat} if not X:Nat in fv(
+    M:Lambda{VarNat}) = true [label eta] .
+X:Nat --> 2
+M:Lambda{VarNat} --> \ 4 . 2
+*********** solving condition fragment
+not X:Nat in fv(M:Lambda{VarNat}) = true
+*********** failure for condition fragment
+not X:Nat in fv(M:Lambda{VarNat}) = true
+*********** failure #2
+*********** rule
+rl (\ X:Nat . M:Lambda{VarNat}) N:Lambda{VarNat} => M:Lambda{VarNat}[N:Lambda{
+    VarNat} / X:Nat] [label beta] .
+X:Nat --> 4
+M:Lambda{VarNat} --> 2
+N:Lambda{VarNat} --> 2
+(\ 4 . 2) 2
+--->
+2[2 / 4]
+rewrites: 164 in 0ms cpu (1ms real) (~ rewrites/second)
+result Lambda{VarNat}: \ 2 . 2
+
+Maude> set trace off .
+
+Maude> set trace on .
+Maude> set trace eqs off .
+Maude> rew (\ 1 . (\ 2 . 2))((\ 1 . (1 1))(\ 1 .(1 1))) .
+rewrite in UNTYPED-LAMBDA-CALCULUS : (\ 1 . \ 2 . 2) ((\ 1 . (1 1)) \ 1 . (1
+    1)) .
+*********** rule
+rl (\ X:Nat . M:Lambda{VarNat}) N:Lambda{VarNat} => M:Lambda{VarNat}[N:Lambda{
+    VarNat} / X:Nat] [label beta] .
+X:Nat --> 1
+M:Lambda{VarNat} --> \ 2 . 2
+N:Lambda{VarNat} --> (\ 1 . (1 1)) \ 1 . (1 1)
+(\ 1 . \ 2 . 2) ((\ 1 . (1 1)) \ 1 . (1 1))
+--->
+(\ 2 . 2)[(\ 1 . (1 1)) \ 1 . (1 1) / 1]
+rewrites: 32 in 0ms cpu (0ms real) (~ rewrites/second)
+result Lambda{VarNat}: \ 2 . 2
+
+Maude> set trace off .
+)

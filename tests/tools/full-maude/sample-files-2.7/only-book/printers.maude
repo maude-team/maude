@@ -1,0 +1,80 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+  
+set trace on .
+set trace mb off .
+set trace eq off .
+set trace condition off .
+
+----load mobile-maude-distributed.maude
+----load mobile-maude-centralized.maude
+load printers-buyer.maude
+load printers-seller.maude
+
+mod PRINTERS is
+  pr BUYER .
+  pr SELLER .
+  pr MOBILE-MAUDE .
+endm
+
+
+eof
+
+---- use printers-erew{1,2,3}.maude files
+
+erew <> < l("127.0.0.1", 0) : ServerRootObject |
+            cnt : 1,
+            guests : o(l("127.0.0.1", 0), 0),
+            forward : 0 |-> (l("127.0.0.1", 0), 0),
+            neighbors : empty,
+            state : idle,
+            defNeighbor : null,
+            port : 60039 >
+	    < o(l("127.0.0.1", 0), 0) : MobileObject |
+            mod : upModule('SELLER,false),
+            s : upTerm(< o(l("127.0.0.1", 0), 0) : Seller | description : 30 >
+                       & none),
+            gas : 200,
+            hops : 0 > .
+
+erew <> < l(address, 1) : ClientRootObject |
+            cnt : 1,
+            guests : (o(l(address, 1), 0) . o(l(address, 1), 1)),
+            forward : ((0 |-> (l(address, 1), 0)) . (1 |-> (l(address, 1), 0))),
+	    neighbors : empty,
+            state : idle,
+            defNeighbor : null >
+        < o(l(address, 1), 0) : MobileObject |
+            mod : upModule('BUYER,false),
+            s : upTerm(< o(l(address, 1), 0) : Buyer |
+                           price : null,
+                           status : done,
+		                   bestSeller : null,
+                           sellers : (o(l(address, 1), 1) . (o(l(address, 2), 0) . o(l(address, 0), 0)) >
+                       & none),
+            gas : 200,
+            hops : 0,
+            mode : active >
+	< o(l(address, 1), 1) : MobileObject |
+            mod : upModule('SELLER,false),
+            s : upTerm(< o(l(address, 1), 0) : Seller | description : 20 >
+                       & none),
+            gas : 200,
+            hops : 0,
+            mode : active > .
+
+erew <> < l(address, 2) : ClientRootObject |
+            cnt : 1,
+            guests : o(l(address, 2), 0),
+            forward : 0 |-> (l(address, 2), 0),
+            neighbors : empty,
+            state : idle,
+            defNeighbor : null >
+        < o(l(address, 2), 0) : MobileObject |
+            mod : upModule('SELLER,false),
+            s : upTerm(< o(l(address, 2), 0) : Seller | description : 15 >
+                       & none),
+            gas : 200,
+            hops : 0,
+            mode : active > .
+

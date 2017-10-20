@@ -1,0 +1,14 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team + Santiago Escobar
+
+  mod NATURALS is
+    sort Nat .
+    op 0 : -> Nat [ctor] .
+    op s : Nat -> Nat [ctor] .
+    op _+_ : Nat Nat -> Nat .
+  
+    vars X Y : Nat .
+    rl [base] : 0 + Y => Y .
+    rl [ind] : s(X) + Y => s(X + Y) .
+  endm

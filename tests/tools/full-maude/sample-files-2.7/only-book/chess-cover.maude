@@ -1,0 +1,78 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+mod CHESS-COVER is
+  pr NAT .
+  sorts Status Pos Board State .
+  subsort Pos < Board .
+
+  ops e c : -> Status [ctor] .
+
+  op sq : Nat Nat Status -> Pos [ctor] . 
+  op __ : Board Board -> Board [ctor assoc comm] .
+  op {_} : Board -> State [ctor].
+  
+  op cDiag : Nat Nat Board -> Bool .
+
+  ops init4 init6 init8 final4 final6 final8 : -> Board .
+
+  vars I J I1 J1 : Nat .
+  var B : Board .
+
+  eq init4 = sq(1,1,e) sq(1,2,e) sq(1,3,e) sq(1,4,e) 
+             sq(2,1,e) sq(2,2,e) sq(2,3,e) sq(2,4,e)
+             sq(3,1,e) sq(3,2,e) sq(3,3,e) sq(3,4,e)
+             sq(4,1,e) sq(4,2,e) sq(4,3,e) sq(4,4,e) .
+          
+  eq final4 = sq(1,1,e) sq(1,2,e) sq(1,3,c) sq(1,4,c) 
+              sq(2,1,c) sq(2,2,c) sq(2,3,c) sq(2,4,c)
+              sq(3,1,c) sq(3,2,c) sq(3,3,c) sq(3,4,c)
+              sq(4,1,c) sq(4,2,c) sq(4,3,c) sq(4,4,c) .
+
+  eq init6 = sq(1,1,e) sq(1,2,e) sq(1,3,e) sq(1,4,e) sq(1,5,e) sq(1,6,e) 
+             sq(2,1,e) sq(2,2,e) sq(2,3,e) sq(2,4,e) sq(2,5,e) sq(2,6,e) 
+             sq(3,1,e) sq(3,2,e) sq(3,3,e) sq(3,4,e) sq(3,5,e) sq(3,6,e)
+             sq(4,1,e) sq(4,2,e) sq(4,3,e) sq(4,4,e) sq(4,5,e) sq(4,6,e)
+             sq(5,1,e) sq(5,2,e) sq(5,3,e) sq(5,4,e) sq(5,5,e) sq(5,6,e)
+             sq(6,1,e) sq(6,2,e) sq(6,3,e) sq(6,4,e) sq(6,5,e) sq(6,6,e) .
+
+  eq final6 = sq(1,1,e) sq(1,2,c) sq(1,3,c) sq(1,4,c) sq(1,5,c) sq(1,6,c)
+              sq(2,1,c) sq(2,2,c) sq(2,3,c) sq(2,4,c) sq(2,5,c) sq(2,6,c)
+              sq(3,1,c) sq(3,2,c) sq(3,3,c) sq(3,4,c) sq(3,5,c) sq(3,6,c)
+              sq(4,1,c) sq(4,2,c) sq(4,3,c) sq(4,4,c) sq(4,5,c) sq(4,6,c)
+              sq(5,1,c) sq(5,2,c) sq(5,3,c) sq(5,4,c) sq(5,5,c) sq(5,6,c)
+              sq(6,1,c) sq(6,2,c) sq(6,3,c) sq(6,4,c) sq(6,5,c) sq(6,6,e) .
+
+  eq init8 = sq(1,1,e) sq(1,2,e) sq(1,3,e) sq(1,4,e) sq(1,5,e) sq(1,6,e) sq(1,7,e) sq(1,8,e)
+             sq(2,1,e) sq(2,2,e) sq(2,3,e) sq(2,4,e) sq(2,5,e) sq(2,6,e) sq(2,7,e) sq(2,8,e)
+             sq(3,1,e) sq(3,2,e) sq(3,3,e) sq(3,4,e) sq(3,5,e) sq(3,6,e) sq(3,7,e) sq(3,8,e)
+             sq(4,1,e) sq(4,2,e) sq(4,3,e) sq(4,4,e) sq(4,5,e) sq(4,6,e) sq(4,7,e) sq(4,8,e)
+             sq(5,1,e) sq(5,2,e) sq(5,3,e) sq(5,4,e) sq(5,5,e) sq(5,6,e) sq(5,7,e) sq(5,8,e)
+             sq(6,1,e) sq(6,2,e) sq(6,3,e) sq(6,4,e) sq(6,5,e) sq(6,6,e) sq(6,7,e) sq(6,8,e)
+             sq(7,1,e) sq(7,2,e) sq(7,3,e) sq(7,4,e) sq(7,5,e) sq(7,6,e) sq(7,7,e) sq(7,8,e)
+             sq(8,1,e) sq(8,2,e) sq(8,3,e) sq(8,4,e) sq(8,5,e) sq(8,6,e) sq(8,7,e) sq(8,8,e) .
+
+  eq final8 = sq(1,1,e) sq(1,2,c) sq(1,3,c) sq(1,4,c) sq(1,5,c) sq(1,6,c) sq(1,7,c) sq(1,8,c)
+              sq(2,1,c) sq(2,2,c) sq(2,3,c) sq(2,4,c) sq(2,5,c) sq(2,6,c) sq(2,7,c) sq(2,8,c)
+              sq(3,1,c) sq(3,2,c) sq(3,3,c) sq(3,4,c) sq(3,5,c) sq(3,6,c) sq(3,7,c) sq(3,8,c)
+              sq(4,1,c) sq(4,2,c) sq(4,3,c) sq(4,4,c) sq(4,5,c) sq(4,6,c) sq(4,7,c) sq(4,8,c)
+              sq(5,1,c) sq(5,2,c) sq(5,3,c) sq(5,4,c) sq(5,5,c) sq(5,6,c) sq(5,7,c) sq(5,8,c)
+              sq(6,1,c) sq(6,2,c) sq(6,3,c) sq(6,4,c) sq(6,5,c) sq(6,6,c) sq(6,7,c) sq(6,8,c)
+              sq(7,1,c) sq(7,2,c) sq(7,3,c) sq(7,4,c) sq(7,5,c) sq(7,6,c) sq(7,7,c) sq(7,8,c)
+              sq(8,1,c) sq(8,2,c) sq(8,3,c) sq(8,4,c) sq(8,5,c) sq(8,6,c) sq(8,7,c) sq(8,8,e) .
+  
+  ceq cDiag(I,J,sq(I1,J1,e) B) = false if (I1 + J1 < I + J) /\ (I1 + J1 >= 3) .
+  eq cDiag(I,J,B) = true [owise] .
+
+  crl { B sq(I,J,e) sq(s(I),J,e) } => { B sq(I,J,c) sq(s(I),J,c) } if cDiag(I,J,B) . 
+  crl { B sq(I,J,e) sq(I,s(J),e) } => { B sq(I,J,c) sq(I,s(J),c) } if cDiag(I,J,B) . 
+endm
+
+search { init8 } =>* { B:Board } such that B:Board == final8 .
+---(
+search in CHESS-COVER : {init8} =>* {B} such that B == final8 = true .
+
+No solution.
+states: 6936  rewrites: 4621144 in 11540ms cpu (20827ms real) (400445
+    rewrites/second)
+---)

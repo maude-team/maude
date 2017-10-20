@@ -1,0 +1,75 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  mod READERS-WRITERS is 
+    sort Nat .
+    op 0 : -> Nat [ctor] .
+    op s : Nat -> Nat [ctor] .
+    
+    sort Config .
+    op <_,_> : Nat Nat -> Config [ctor] .  --- readers/writers
+
+    vars R W : Nat .
+
+    rl < 0, 0 > => < 0, s(0) > .
+    rl < R, s(W) > => < R, W > .
+    rl < R, 0 > => < s(R), 0 > .
+    rl < s(R), W > => < R, W > .
+  endm
+
+***(
+Maude> search < 0, 0 > =>* < s(N:Nat), s(M:Nat) > .
+...
+
+Maude> search < 0, 0 > =>* < N:Nat, s(s(M:Nat)) > .
+...
+
+Maude> search [1, 100000] in READERS-WRITERS : 
+           < 0, 0 > =>* < s(N:Nat), s(M:Nat) > .
+search [1, 100000] in READERS-WRITERS : < 0,0 > =>* < s(N:Nat),s(M:Nat) > .
+
+No solution.
+states: 100002  rewrites: 200001 in 312460ms cpu (636669ms real) (640
+    rewrites/second)
+
+Maude> search [1, 100000] in READERS-WRITERS : 
+           < 0, 0 > =>* < N:Nat, s(s(M:Nat)) > .
+search [1, 100000] in READERS-WRITERS : < 0,0 > =>* < N:Nat,s(s(M:Nat)) > .
+
+No solution.
+states: 100002  rewrites: 200001 in 70600ms cpu (623434ms real) (2832
+    rewrites/second)
+    
+  mod READERS-WRITERS is 
+    sort Nat .
+    op 0 : -> Nat [ctor] .
+    op s : Nat -> Nat [ctor iter] .
+    
+    sort Config .
+    op <_,_> : Nat Nat -> Config [ctor] .  --- readers/writers
+
+    vars R W : Nat .
+
+    rl < 0, 0 > => < 0, s(0) > .
+    rl < R, s(W) > => < R, W > .
+    rl < R, 0 > => < s(R), 0 > .
+    rl < s(R), W > => < R, W > .
+  endm
+
+Maude> search [1, 100000] in READERS-WRITERS : 
+           < 0, 0 > =>* < s(N:Nat), s(M:Nat) > .
+search [1, 100000] in READERS-WRITERS : < 0,0 > =>* < s(N:Nat),s(M:Nat) > .
+
+No solution.
+states: 100002  rewrites: 200001 in 610ms cpu (1298ms real) (327870
+    rewrites/second)
+
+Maude> search [1, 100000] in READERS-WRITERS : 
+           < 0, 0 > =>* < N:Nat, s(s(M:Nat)) > .
+search [1, 100000] in READERS-WRITERS : < 0,0 > =>* < N:Nat,s^2(M:Nat) > .
+
+No solution.
+states: 100002  rewrites: 200001 in 400ms cpu (1191ms real) (500002
+    rewrites/second)
+)

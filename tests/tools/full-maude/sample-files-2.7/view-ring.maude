@@ -1,0 +1,6 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  view RING from RING to RING is
+  endv

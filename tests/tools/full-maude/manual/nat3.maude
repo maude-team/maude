@@ -1,0 +1,10 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  fmod NAT3 is
+    sort Nat3 .
+    op s_ : Nat3 -> Nat3 .
+    op 0 : -> Nat3 .
+    eq s s s 0 = 0 .
+  endfm

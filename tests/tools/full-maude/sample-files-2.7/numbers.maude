@@ -1,0 +1,510 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  fmod NUMBERS is
+    protecting BOOL .
+
+    sort Zero .
+    sorts Nat NzNat .
+    subsort Zero NzNat < Nat .
+    op zero : -> Zero [ctor] .
+    op s_ : Nat -> NzNat [ctor] .
+    op sd : Nat Nat -> Nat .
+    ops _+_ _*_ : Nat Nat -> Nat [assoc comm] .
+    op _+_ : NzNat Nat -> NzNat [ditto] .
+    op _*_ : NzNat NzNat -> NzNat [ditto] .
+    op p : NzNat -> Nat .
+
+    vars I N M : Nat .
+    eq N + zero = N .
+    eq N + s M = s (N + M) .
+    eq sd(N, N) = zero .
+    eq sd(N, zero) = N .
+    eq sd(zero, N) = N .
+    eq sd(s N, s M) = sd(N, M) .
+    eq N * zero = zero .
+    eq N * s M = (N * M) + N .
+    eq p(s N) = N [label partial-predecessor] .
+
+    eq (N + M) * I = (N * I) + (M * I)
+      [nonexec metadata "distributive law"] .
+
+    sort Nat3 .
+    ops 0 1 2 : -> Nat3 [ctor] .
+    op _+_ : Nat3 Nat3 -> Nat3 [comm] .
+    vars N3 : Nat3 .
+    eq N3 + 0 = N3  .
+    eq 1 + 1 = 2 .
+    eq 1 + 2 = 0 .
+    eq 2 + 2 = 1 .
+
+    sort NatSeq .
+    subsort Nat < NatSeq .
+    op nil : -> NatSeq .
+    op __ : NatSeq NatSeq -> NatSeq [assoc id: nil] .
+
+    sort NatSet .
+    subsort Nat < NatSet .
+    op empty : -> NatSet .
+    op _;_ : NatSet NatSet -> NatSet [assoc comm id: empty] .
+    eq N ; N = N [label natset-idem] .
+
+    op _in_ : Nat NatSet -> Bool .
+    var NS : NatSet .
+    eq N in N ; NS = true .
+    eq N in NS = false [owise] .
+  endfm
+  
+  ***(
+  Maude> red s zero + s zero + s zero .
+  reduce in NUMBERS : s zero + s zero + s zero .
+  rewrites: 4 in 0ms cpu (0ms real) (~ rews/sec)
+  result NzNat: s s s zero
+
+  Maude> red 1 + (1 + 1) .
+  reduce in NUMBERS : 1 + (1 + 1) .
+  rewrites: 2 in 0ms cpu (0ms real) (~ rews/sec)
+  result Nat3: 0
+
+  Maude> red zero ; s zero ; zero ; s zero .
+  reduce in NUMBERS : zero ; s zero ; zero ; s zero .
+  rewrites: 2 in 0ms cpu (0ms real) (~ rews/sec)
+  result NatSet: zero ; s zero
+
+  Maude> red zero in s zero ; zero ; s s zero .
+  reduce in NUMBERS : zero in s zero ; zero ; s s zero .
+  rewrites: 1 in 0ms cpu (0ms real) (~ rews/sec)
+  result Bool: true
+
+  Maude> red zero in s zero ; s s zero .
+  reduce in NUMBERS : zero in s zero ; s s zero .
+  rewrites: 1 in 0ms cpu (0ms real) (~ rews/sec)
+  result Bool: false
+
+  Maude> match [5] NS0:NatSeq NS1:NatSeq <=? zero zero zero .
+  match [5] in NUMBERS : NS0:NatSeq NS1:NatSeq <=? zero zero zero .
+  Decision time: 0ms cpu (0ms real)
+
+  Solution 1
+  NS0:NatSeq --> nil
+  NS1:NatSeq --> zero zero zero
+
+  Solution 2
+  NS0:NatSeq --> zero
+  NS1:NatSeq --> zero zero
+
+  Solution 3
+  NS0:NatSeq --> zero zero
+  NS1:NatSeq --> zero
+
+  Solution 4
+  NS0:NatSeq --> zero zero zero
+  NS1:NatSeq --> nil
+
+  Maude> xmatch [5] NS0:NatSeq NS1:NatSeq <=? zero zero zero .
+  xmatch [5] in NUMBERS : NS0:NatSeq NS1:NatSeq <=? zero zero zero .
+  Decision time: 0ms cpu (7ms real)
+
+  Solution 1
+  Matched portion = zero zero
+  NS0:NatSeq --> nil
+  NS1:NatSeq --> zero zero
+
+  Solution 2
+  Matched portion = zero zero
+  NS0:NatSeq --> zero
+  NS1:NatSeq --> zero
+
+  Solution 3
+  Matched portion = zero zero
+  NS0:NatSeq --> zero zero
+  NS1:NatSeq --> nil
+
+  Solution 4
+  Matched portion = (whole)
+  NS0:NatSeq --> nil
+  NS1:NatSeq --> zero zero zero
+
+  Solution 5
+  Matched portion = (whole)
+  NS0:NatSeq --> zero
+  NS1:NatSeq --> zero zero
+
+  Maude> set trace on .
+  Maude> set trace select on .
+  Maude> trace select partial-predecessor .
+
+  Maude> red s s p(s zero) + s p(s zero) .
+  reduce in NUMBERS : s s p(s zero) + s p(s zero) .
+  *********** equation
+  eq p(s N) = N [label partial-predecessor] .
+  N --> zero
+  p(s zero)
+  --->
+  zero
+  rewrites: 3 in 0ms cpu (0ms real) (~ rews/sec)
+  result NzNat: s s s zero
+
+  Maude> show sorts NUMBERS .
+  sort Bool .
+  sort Zero . subsorts Zero < Nat NatSet NatSeq .
+  sort Nat . subsorts NzNat Zero < Nat < NatSet NatSeq .
+  sort NzNat . subsorts NzNat < Nat NatSet NatSeq .
+  sort Nat3 .
+  sort NatSeq . subsorts NzNat Zero Nat < NatSeq .
+  sort NatSet . subsorts NzNat Zero Nat < NatSet .
+
+  Maude> show components NUMBERS .
+  [Bool]:
+          1       Bool
+
+  [NatSeq, NatSet]:
+          1       NatSeq
+          2       NatSet
+          3       Nat
+          4       Zero
+          5       NzNat
+
+  [Nat3] (error free):
+          1       Nat3
+
+Maude> reduce in META-LEVEL :
+           sortLeq(upModule('NUMBERS, false), 'Zero, 'Nat) .
+reduce in META-LEVEL : sortLeq(upModule('NUMBERS, false), 'Zero, 'Nat) .
+rewrites: 2 in 0ms cpu (1ms real) (~ rewrites/second)
+result Bool: true
+
+Maude> reduce in META-LEVEL :
+           sortLeq(upModule('NUMBERS, false), 'Zero, 'NzNat) .
+reduce in META-LEVEL : sortLeq(upModule('NUMBERS, false), 'Zero, 'NzNat) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result Bool: false
+
+Maude> reduce in META-LEVEL :
+           sortLeq(upModule('NUMBERS, false), '`[Zero`], '`[Nat`]) .
+reduce in META-LEVEL : sortLeq(upModule('NUMBERS, false), '`[Zero`], '`[Nat`])
+    .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result Bool: true
+
+Maude> reduce in META-LEVEL :
+          sortLeq(upModule('NUMBERS, false), '`[Zero`], '`[Bool`]) .
+reduce in META-LEVEL : sortLeq(upModule('NUMBERS, false), '`[Zero`], '`[Bool`])
+    .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result Bool: false
+
+Maude> reduce in META-LEVEL :
+           sortLeq(upModule('NUMBERS, false), '`[Zero`], 'Bool) .
+reduce in META-LEVEL : sortLeq(upModule('NUMBERS, false), '`[Zero`], 'Bool) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result Bool: false
+
+Maude> reduce in META-LEVEL :
+           sortLeq(upModule('NUMBERS, false), 'Zero, '`[NatSet`]) .
+reduce in META-LEVEL : sortLeq(upModule('NUMBERS, false), 'Zero, '`[NatSet`]) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result Bool: true
+
+Maude> reduce in META-LEVEL :
+           sameKind(upModule('NUMBERS, false), 'Zero, 'NzNat) .
+reduce in META-LEVEL : sameKind(upModule('NUMBERS, false), 'Zero, 'NzNat) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result Bool: true
+
+Maude> reduce in META-LEVEL :
+           sameKind(upModule('NUMBERS, false), 'Zero, 'Nat3) .
+reduce in META-LEVEL : sameKind(upModule('NUMBERS, false), 'Zero, 'Nat3) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result Bool: false
+
+Maude> reduce in META-LEVEL :
+          sameKind(upModule('NUMBERS, false), '`[Zero`], '`[NzNat`]) .
+reduce in META-LEVEL : sameKind(upModule('NUMBERS, false), '`[Zero`],
+    '`[NzNat`]) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result Bool: true
+
+Maude> reduce in META-LEVEL :
+           sameKind(upModule('NUMBERS, false), '`[Zero`], 'NzNat) .
+reduce in META-LEVEL : sameKind(upModule('NUMBERS, false), '`[Zero`], 'NzNat) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result Bool: true
+
+Maude> reduce in META-LEVEL :
+           completeName(upModule('NUMBERS, false), 'Zero) .
+reduce in META-LEVEL : completeName(upModule('NUMBERS, false), 'Zero) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result Sort: 'Zero
+
+Maude> reduce in META-LEVEL :
+           completeName(upModule('NUMBERS, false), '`[Zero`]) .
+reduce in META-LEVEL : completeName(upModule('NUMBERS, false), '`[Zero`]) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result Kind: '`[NatSeq`,NatSet`]
+
+Maude> reduce in META-LEVEL : 
+           getKind(upModule('NUMBERS, false), 'Zero) .
+reduce in META-LEVEL : getKind(upModule('NUMBERS, false), 'Zero) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result Kind: '`[NatSeq`,NatSet`]
+
+Maude> reduce in META-LEVEL : 
+           getKind(upModule('NUMBERS, false), '`[Zero`]) .
+reduce in META-LEVEL : getKind(upModule('NUMBERS, false), '`[Zero`]) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result Kind: '`[NatSeq`,NatSet`]
+
+Maude> reduce in META-LEVEL : getKinds(upModule('NUMBERS, false)) .
+reduce in META-LEVEL : getKinds(upModule('NUMBERS, false)) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result NeKindSet: '`[Bool`] ; '`[Nat3`] ; '`[NatSeq`,NatSet`]
+
+Maude> reduce in META-LEVEL : 
+           lesserSorts(upModule('NUMBERS, false), 'Nat) .
+reduce in META-LEVEL : lesserSorts(upModule('NUMBERS, false), 'Nat) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result NeSortSet: 'NzNat ; 'Zero
+
+Maude> reduce in META-LEVEL : 
+           lesserSorts(upModule('NUMBERS, false), 'Zero) .
+reduce in META-LEVEL : lesserSorts(upModule('NUMBERS, false), 'Zero) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result EmptyTypeSet: (none).EmptyTypeSet
+
+Maude> reduce in META-LEVEL : 
+           lesserSorts(upModule('NUMBERS, false), 'NatSeq) .
+reduce in META-LEVEL : lesserSorts(upModule('NUMBERS, false), 'NatSeq) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result NeSortSet: 'Nat ; 'NzNat ; 'Zero
+
+Maude> reduce in META-LEVEL : 
+           lesserSorts(upModule('NUMBERS, false), '`[NatSeq`]) .
+reduce in META-LEVEL : lesserSorts(upModule('NUMBERS, false), '`[NatSeq`]) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result NeSortSet: 'Nat ; 'NatSeq ; 'NatSet ; 'NzNat ; 'Zero
+
+Maude> reduce in META-LEVEL : 
+           lesserSorts(upModule('NUMBERS, false), '`[Bool`]) .
+reduce in META-LEVEL : lesserSorts(upModule('NUMBERS, false), '`[Bool`]) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result Sort: 'Bool
+
+Maude> reduce in META-LEVEL :
+     leastSort(upModule('NUMBERS, false), 'p['s_['zero.Zero]]) .
+reduce in META-LEVEL : leastSort(upModule('NUMBERS, false), 'p['s_[
+    'zero.Zero]]) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result Sort: 'Nat
+
+Maude> reduce in META-LEVEL :
+           glbSorts(upModule('NUMBERS, false), 'Zero, 'Nat) .
+reduce in META-LEVEL : glbSorts(upModule('NUMBERS, false), 'Zero, 'Nat) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result Sort: 'Zero
+
+Maude> reduce in META-LEVEL :
+           glbSorts(upModule('NUMBERS, false), 'NatSet, 'NatSeq) .
+reduce in META-LEVEL : glbSorts(upModule('NUMBERS, false), 'NatSet, 'NatSeq) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result Sort: 'Nat
+
+Maude> reduce in META-LEVEL :
+           glbSorts(upModule('NUMBERS, false), 'NzNat, 'NzNat) .
+reduce in META-LEVEL : glbSorts(upModule('NUMBERS, false), 'NzNat, 'NzNat) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result Sort: 'NzNat
+
+Maude> reduce in META-LEVEL :
+           glbSorts(upModule('NUMBERS, false), 'Zero, 'NzNat) .
+reduce in META-LEVEL : glbSorts(upModule('NUMBERS, false), 'Zero, 'NzNat) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result EmptyTypeSet: (none).EmptyTypeSet
+
+Maude> reduce in META-LEVEL :
+           glbSorts(upModule('NUMBERS, false), 'NzNat, 'Bool) .
+reduce in META-LEVEL : glbSorts(upModule('NUMBERS, false), 'NzNat, 'Bool) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result EmptyTypeSet: (none).EmptyTypeSet
+
+Maude> reduce in META-LEVEL :
+         glbSorts(upModule('NUMBERS, false), '`[Nat`], '`[Bool`]) .
+reduce in META-LEVEL : glbSorts(upModule('NUMBERS, false), '`[Nat`], '`[Bool`])
+    .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result EmptyTypeSet: (none).EmptyTypeSet
+
+Maude> reduce in META-LEVEL :
+         glbSorts(upModule('NUMBERS, false),'`[Nat`],'`[NatSeq`]) .
+reduce in META-LEVEL : glbSorts(upModule('NUMBERS, false), '`[Nat`],
+    '`[NatSeq`]) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result Kind: '`[NatSeq`,NatSet`]
+
+Maude> reduce in META-LEVEL :
+           glbSorts(upModule('NUMBERS, false), '`[Nat`], 'Bool) .
+reduce in META-LEVEL : glbSorts(upModule('NUMBERS, false), '`[Nat`], 'Bool) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result EmptyTypeSet: (none).EmptyTypeSet
+
+Maude> reduce in META-LEVEL :
+           glbSorts(upModule('NUMBERS, false), '`[NatSeq`], 'Zero) .
+reduce in META-LEVEL : glbSorts(upModule('NUMBERS, false), '`[NatSeq`], 'Zero)
+    .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result Sort: 'Zero
+
+Maude> reduce in META-LEVEL :
+          glbSorts(upModule('NUMBERS, false), 'NzNat, '`[NatSet`]) .
+reduce in META-LEVEL : glbSorts(upModule('NUMBERS, false), 'NzNat, '`[NatSet`])
+    .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result Sort: 'NzNat
+
+Maude> reduce in META-LEVEL :
+     maximalSorts(upModule('NUMBERS, false), '`[Zero`]) .
+reduce in META-LEVEL : maximalSorts(upModule('NUMBERS, false), '`[Zero`]) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result NeSortSet: 'NatSeq ; 'NatSet
+
+Maude> reduce in META-LEVEL :
+     minimalSorts(upModule('NUMBERS, false), '`[Zero`]) .
+reduce in META-LEVEL : minimalSorts(upModule('NUMBERS, false), '`[Zero`]) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result NeSortSet: 'NzNat ; 'Zero
+
+Maude> reduce in META-LEVEL :
+           maximalAritySet(upModule('NUMBERS, false), 
+             '_+_, 'NzNat 'NzNat, 'NzNat) .
+reduce in META-LEVEL : maximalAritySet(upModule('NUMBERS, false), '_+_, 'NzNat
+    'NzNat, 'NzNat) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result TypeListSet: 'Nat 'NzNat ; 'NzNat 'Nat
+
+Maude> reduce in META-LEVEL :
+           maximalAritySet(upModule('NUMBERS, false), 
+             '_+_, 'Nat 'Nat, 'NzNat) .
+reduce in META-LEVEL : maximalAritySet(upModule('NUMBERS, false), '_+_, 'Nat
+    'Nat, 'NzNat) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result TypeListSet: 'Nat 'NzNat ; 'NzNat 'Nat
+
+Maude> reduce in META-LEVEL :
+           maximalAritySet(upModule('NUMBERS, false), 
+             '_+_, 'Nat 'Nat, 'Nat) .
+reduce in META-LEVEL : maximalAritySet(upModule('NUMBERS, false), '_+_, 'Nat
+    'Nat, 'Nat) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result NeTypeList: 'Nat 'Nat
+
+Maude> reduce in META-LEVEL :
+           maximalAritySet(upModule('NUMBERS, false), 
+             '_+_, 'Nat3 'Nat3, 'Nat3) .
+reduce in META-LEVEL : maximalAritySet(upModule('NUMBERS, false), '_+_, 'Nat3
+    'Nat3, 'Nat3) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result NeTypeList: 'Nat3 'Nat3
+
+Maude> reduce in META-LEVEL :
+           maximalAritySet(upModule('NUMBERS, false), 
+             '_+_, 'Nat3 'Nat3, 'NzNat) .
+reduce in META-LEVEL : maximalAritySet(upModule('NUMBERS, false), '_+_, 'Nat3
+    'Nat3, 'NzNat) .
+rewrites: 1 in 0ms cpu (0ms real) (~ rewrites/second)
+result [QidSet,QidList,TypeListSet,GTermList,ParameterList,Type?,
+    ModuleExpression,Header]: maximalAritySet(fmod 'NUMBERS is
+  including 'BOOL .
+  protecting 'BOOL .
+  sorts 'Nat ; 'Nat3 ; 'NatSeq ; 'NatSet ; 'NzNat ; 'Zero .
+  subsort 'Nat < 'NatSeq .
+  subsort 'Nat < 'NatSet .
+  subsort 'NzNat < 'Nat .
+  subsort 'Zero < 'Nat .
+  op '0 : nil -> 'Nat3 [ctor] .
+  op '1 : nil -> 'Nat3 [ctor] .
+  op '2 : nil -> 'Nat3 [ctor] .
+  op '_*_ : 'Nat 'Nat -> 'Nat [assoc comm] .
+  op '_*_ : 'NzNat 'NzNat -> 'NzNat [assoc comm] .
+  op '_+_ : 'Nat 'Nat -> 'Nat [assoc comm] .
+  op '_+_ : 'Nat3 'Nat3 -> 'Nat3 [comm] .
+  op '_+_ : 'NzNat 'Nat -> 'NzNat [assoc comm] .
+  op '_;_ : 'NatSet 'NatSet -> 'NatSet [assoc comm id('empty.NatSet)] .
+  op '__ : 'NatSeq 'NatSeq -> 'NatSeq [assoc id('nil.NatSeq)] .
+  op '_in_ : 'Nat 'NatSet -> 'Bool [none] .
+  op 'empty : nil -> 'NatSet [none] .
+  op 'nil : nil -> 'NatSeq [none] .
+  op 'p : 'NzNat -> 'Nat [none] .
+  op 's_ : 'Nat -> 'NzNat [ctor] .
+  op 'sd : 'Nat 'Nat -> 'Nat [none] .
+  op 'zero : nil -> 'Zero [ctor] .
+  none
+  eq '_*_['I:Nat,'_+_['N:Nat,'M:Nat]] = '_+_['_*_['I:Nat,'N:Nat],'_*_['I:Nat,
+    'M:Nat]] [nonexec metadata("distributive law")] .
+  eq '_*_['N:Nat,'s_['M:Nat]] = '_+_['N:Nat,'_*_['N:Nat,'M:Nat]] [none] .
+  eq '_*_['zero.Zero,'N:Nat] = 'zero.Zero [none] .
+  eq '_+_['0.Nat3,'N3:Nat3] = 'N3:Nat3 [none] .
+  eq '_+_['1.Nat3,'1.Nat3] = '2.Nat3 [none] .
+  eq '_+_['1.Nat3,'2.Nat3] = '0.Nat3 [none] .
+  eq '_+_['2.Nat3,'2.Nat3] = '1.Nat3 [none] .
+  eq '_+_['N:Nat,'s_['M:Nat]] = 's_['_+_['N:Nat,'M:Nat]] [none] .
+  eq '_+_['zero.Zero,'N:Nat] = 'N:Nat [none] .
+  eq '_;_['N:Nat,'N:Nat] = 'N:Nat [label('natset-idem)] .
+  eq '_in_['N:Nat,'NS:NatSet] = 'false.Bool [owise] .
+  eq '_in_['N:Nat,'_;_['N:Nat,'NS:NatSet]] = 'true.Bool [none] .
+  eq 'p['s_['N:Nat]] = 'N:Nat [label('partial-predecessor)] .
+  eq 'sd['N:Nat,'N:Nat] = 'zero.Zero [none] .
+  eq 'sd['N:Nat,'zero.Zero] = 'N:Nat [none] .
+  eq 'sd['zero.Zero,'N:Nat] = 'N:Nat [none] .
+  eq 'sd['s_['N:Nat],'s_['M:Nat]] = 'sd['N:Nat,'M:Nat] [none] .
+endfm, '_+_, 'Nat3 'Nat3, 'NzNat)
+
+Maude> reduce in META-LEVEL :
+           wellFormed(upModule('NUMBERS, false)) .
+reduce in META-LEVEL : wellFormed(upModule('NUMBERS, false)) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result Bool: true
+
+Maude> reduce in META-LEVEL :
+           wellFormed(upModule('NUMBERS, false), 'p['zero.Zero]) .
+reduce in META-LEVEL : wellFormed(upModule('NUMBERS, false), 'p['zero.Zero]) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result Bool: true
+
+Maude> reduce in META-LEVEL :
+           wellFormed(upModule('NUMBERS, false), 
+             's_['zero.Zero, 'zero.Zero]) .
+Advisory: could not find an operator s_ with appropriate domain in meta-module
+    NUMBERS when trying to interprete metaterm 's_['zero.Zero,'zero.Zero].
+reduce in META-LEVEL : wellFormed(upModule('NUMBERS, false), 's_['zero.Zero,
+    'zero.Zero]) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result Bool: false
+
+Maude> reduce in META-LEVEL :
+           wellFormed(upModule('NUMBERS, false), 
+             'N:Zero <- 'zero.Zero) .
+reduce in META-LEVEL : wellFormed(upModule('NUMBERS, false), 
+	'N:Zero <- 'zero.Zero) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result Bool: true
+
+Maude> reduce in META-LEVEL :
+           wellFormed(upModule('NUMBERS, false), 
+             'N:Nat <- 'p['zero.Zero]) .
+reduce in META-LEVEL : wellFormed(upModule('NUMBERS, false), 
+	'N:Nat <- 'p['zero.Zero]) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result Bool: false
+
+Maude> reduce in META-LEVEL :
+           wellFormed(upModule('NUMBERS, false), 
+             'N:Zero <- 's_['zero.Zero,'zero.Zero]) .
+Advisory: could not find an operator s_ with appropriate domain in meta-module
+    NUMBERS when trying to interprete metaterm 's_['zero.Zero,'zero.Zero].
+reduce in META-LEVEL : wellFormed(upModule('NUMBERS, false), 
+	'N:Zero <- 's_['zero.Zero,'zero.Zero]) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result Bool: false
+)
+  

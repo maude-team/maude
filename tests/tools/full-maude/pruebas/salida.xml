@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="US-ASCII" standalone="yes"?>
+<maudeml>
+ <rewrite module="FOO">
+  <term op="f" kind="[Foo]">
+   <term op="f" kind="[Foo]">
+    <term op="a" kind="[Foo]"/>
+   </term>
+  </term>
+ </rewrite>
+ <result total-rewrites="2" real-time-ms="0" cpu-time-ms="0" rewrites-per-second="200000">
+  <term op="g" sort="Foo">
+   <term op="g" sort="Foo">
+    <term op="a" sort="Foo"/>
+   </term>
+  </term>
+ </result>
+</maudeml>

@@ -1,0 +1,33 @@
+*** load full-maude.maude
+(mod PRUEBA2 is
+    pr CONVERSION * (op min : Float Float -> Float to minf,
+               op max : Float Float -> Float to maxf,
+               op -_ : FiniteFloat -> FiniteFloat to -f_,
+               op _+_ : Float Float -> Float to _+f_,
+                op _-_ : Float Float -> Float to _-f_,
+                *** op _/_ : Float Float ~> Float to _/f_,
+                op _*_ : Float Float -> Float to _*f_,
+                *** op _rem_ : Float Float ~> Float to _remf_,
+                op floor : Float -> Float to floorf,
+                op ceiling : Float -> Float to ceilingf,
+                ***op _^_ : Float Float ~> Float to _^f_,
+                op abs : Float -> Float to absf,
+                op _<_ : Float Float -> Bool to _<f_,
+                op _<=_ : Float Float -> Bool to _<=f_,
+                op _>_ : Float Float -> Bool to _>f_,
+                op _>=_ : Float Float -> Bool to _>=f_,
+               op string : Float -> String to stringf,
+                op _+_ : String String -> String to conc,
+               op _<_ : String String -> Bool to _lt_,
+               op _<=_ : String String -> Bool to _let_,
+               op _>_ : String String -> Bool to _gt_,
+               op _>=_ : String String -> Bool to _get_,
+               op _xor_ : Nat Nat -> Nat to _xorN_,
+               op float : String ~> Float to floats,
+               op string : Rat NzNat ~> String to toString
+               ) .
+endm)
+
+(show module .)
+
+(red stringf(342.2) .)

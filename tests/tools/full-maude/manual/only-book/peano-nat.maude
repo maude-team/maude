@@ -1,0 +1,39 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  fmod PEANO-NAT is
+    protecting BOOL .
+    sorts Nat NzNat Zero .
+    subsorts Zero NzNat < Nat .
+    op 0 : -> Zero [ctor] .
+    op s_ : Nat -> NzNat [ctor] .
+    op p_ : NzNat -> Nat .
+    op _+_ : Nat Nat -> Nat [comm] .
+    op _+_ : NzNat NzNat -> NzNat [comm] .
+    op _*_ : Nat Nat -> Nat [comm] .
+    op _*_ : NzNat NzNat -> NzNat [comm] .
+    op _>_ : Nat Nat -> Bool .
+    op d : Nat Nat -> Nat [comm] .
+    op quot : Nat NzNat -> Nat .
+    op gcd : Nat Nat -> Nat [comm] .
+    op gcd : NzNat NzNat -> NzNat [comm] .
+    vars N M : Nat .
+    vars N' M' : NzNat .
+    eq p s N = N .
+    eq N + 0 = N .
+    eq (s N) + (s M) = s s (N + M) .
+    eq N * 0 = 0 .
+    eq (s N) * (s M) = s (N + (M + (N * M))) .
+    eq 0 > M = false .
+    eq N' > 0 = true .
+    eq s N > s M = N > M .
+    eq d(0, N) = N .
+    eq d(s N, s M) = d(N, M) .
+    ceq quot(N, M') = s quot(d(N, M'), M') if N > M' .
+    eq quot(M', M') = s 0 .
+    ceq quot(N, M') = 0 if M' > N .
+    eq gcd(0, N) = 0 .
+    eq gcd(N', N') = N' .
+    ceq gcd(N', M') = gcd(d(N', M'), M') if N' > M' .
+  endfm
+

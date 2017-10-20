@@ -1,0 +1,143 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  fmod ASSOC-MB-EX1 is
+    sort Foo .
+    op f : Foo Foo -> Foo [assoc comm] .
+    op e : -> [Foo] .
+    ops a b c d : -> Foo .
+
+    mb f(a, e) : Foo .
+  endfm
+
+  select FULL-MAUDE .
+  loop init .
+  
+ (select ASSOC-MB-EX1 .)
+ 
+ (red f(a, b, e) .)
+---( 
+Warning: membership axioms are not guaranteed to work correctly for associative
+    symbol f as it has declarations that are not at the kind level.
+reduce in ASSOC-MB-EX1 : f(e, a, b) .
+rewrites: 0 in 0ms cpu (0ms real) (~ rewrites/second)
+result [Foo]: f(e, a, b)
+---)
+
+ (red f(a, b, e, a) .)
+---(
+reduce in ASSOC-MB-EX1 : f(e, a, a, b) .
+rewrites: 0 in 0ms cpu (0ms real) (~ rewrites/second)
+result [Foo]: f(e, a, a, b)
+---)
+
+ (red f(e, b, e, a) .)
+---(
+reduce in ASSOC-MB-EX1 : f(e, e, a, b) .
+rewrites: 0 in 0ms cpu (0ms real) (~ rewrites/second)
+result [Foo]: f(e, e, a, b)
+---)
+
+ (red f(a, b, e, e, a) .)
+---(
+reduce in ASSOC-MB-EX1 : f(e, e, a, a, b) .
+rewrites: 0 in 0ms cpu (0ms real) (~ rewrites/second)
+result [Foo]: f(e, e, a, a, b)
+---)
+
+ (red f(a, a, b, e, e, a) .)
+---(
+reduce in ASSOC-MB-EX1 : f(e, e, a, a, a, b) .
+rewrites: 0 in 0ms cpu (0ms real) (~ rewrites/second)
+result [Foo]: f(e, e, a, a, a, b)
+---)
+
+  fmod ASSOC-MB-EX2 is
+    sort Foo .
+    op f : [Foo] [Foo] -> [Foo] [assoc comm] .
+    op e : -> [Foo] .
+    ops a b c d : -> Foo .
+
+    mb f(X:Foo, Y:Foo) : Foo .
+    mb f(a, e) : Foo .
+  endfm
+
+  select FULL-MAUDE .
+  loop init .
+  
+ (select ASSOC-MB-EX2 .)
+ 
+ (red f(a, b, e) .)
+---(
+reduce in ASSOC-MB-EX2 : f(e, a, b) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result Foo: f(e, a, b)
+---)
+
+ (red f(a, b, e, a) .)
+---(
+reduce in ASSOC-MB-EX2 : f(e, a, a, b) .
+rewrites: 3 in 0ms cpu (0ms real) (~ rewrites/second)
+result Foo: f(e, a, a, b)
+---)
+
+ (red f(e, b, e, a) .)
+---(
+reduce in ASSOC-MB-EX2 : f(e, e, a, b) .
+rewrites: 6 in 0ms cpu (0ms real) (~ rewrites/second)
+result [Foo]: f(e, e, a, b)
+---)
+
+ (red f(a, b, e, e, a) .)
+---(
+reduce in ASSOC-MB-EX2 : f(e, e, a, a, b) .
+rewrites: 11 in 0ms cpu (0ms real) (~ rewrites/second)
+result Foo: f(e, e, a, a, b)
+---)
+
+ (red f(a, a, b, e, e, a) .)
+---(
+reduce in ASSOC-MB-EX2 : f(e, e, a, a, a, b) .
+rewrites: 12 in 0ms cpu (0ms real) (~ rewrites/second)
+result Foo: f(e, e, a, a, a, b)
+---)
+
+ (fmod ASSOC-MB-EX1 is
+    sort Foo .
+    op f : Foo Foo -> Foo [assoc comm] .
+    op e : -> [Foo] .
+    ops a b c d : -> Foo .
+
+    mb f(a, e) : Foo .
+  endfm)
+ 
+ (red f(a, b, e) .)
+
+ (red f(a, b, e, a) .)
+
+ (red f(e, b, e, a) .)
+
+ (red f(a, b, e, e, a) .)
+
+ (red f(a, a, b, e, e, a) .)
+
+ (fmod ASSOC-MB-EX2 is
+    sort Foo .
+    op f : [Foo] [Foo] -> [Foo] [assoc comm] .
+    op e : -> [Foo] .
+    ops a b c d : -> Foo .
+
+    mb f(X:Foo, Y:Foo) : Foo .
+    mb f(a, e) : Foo .
+  endfm)
+
+ (red f(a, b, e) .)
+
+ (red f(a, b, e, a) .)
+
+ (red f(e, b, e, a) .)
+
+ (red f(a, b, e, e, a) .)
+ 
+ (red f(a, a, b, e, e, a) .)

@@ -1,0 +1,20 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  mod BB-TEST is
+    sort Expression .
+    ops a b bingo : -> Expression .
+    op f : Expression  Expression -> Expression .
+
+    rl a => b .
+    rl b => a .
+    rl f(b, b) => bingo .
+  endm
+
+***(
+Maude> frew in BB-TEST : f(a, a) .
+frewrite in BB-TEST : f(a, a) .
+rewrites: 3 in 0ms cpu (0ms real) (~ rewrites/second)
+result Expression: bingo
+)

@@ -1,0 +1,31 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team + Santiago Escobar
+
+ (mod LEFTID-UNIFICATION-EXAMPLE is 
+    sorts Magma Elem . 
+    subsorts Elem < Magma . 
+    op __ : Magma Magma -> Magma [gather (E e) left id: e] . 
+    ops a b c d e : -> Elem .
+  endm)
+
+(id-unify X:Magma a =? Y:Magma a a .)
+---(
+rewrites: 13828 in 17ms cpu (17ms real) (810931 rewrites/second)
+id-unify in LEFTID-UNIFICATION-EXAMPLE : X:Magma a =? Y:Magma a a .
+
+Solution 1
+X:Magma --> Y:Magma a
+
+Solution 2
+X:Magma --> a ; Y:Magma --> e
+
+No more solutions.
+---)
+
+(id-unify a X:Magma =? a a Y:Magma .)
+---(
+rewrites: 2545 in 26ms cpu (28ms real) (95136 rewrites/second)
+id-unify in LEFTID-UNIFICATION-EXAMPLE : a X:Magma =? a a Y:Magma .
+No unifier
+---)

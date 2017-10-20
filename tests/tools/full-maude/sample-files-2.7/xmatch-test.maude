@@ -1,0 +1,90 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  fmod XMATCH-TEST is
+    sort Elt .
+    ops a b c d e : -> Elt .
+    op _._ : Elt Elt -> Elt [assoc] .
+    op _+_ : Elt Elt -> Elt [assoc comm] .
+    vars X Y Z : Elt .
+    eq X . (Y + Z) = (X . Y) + (X . Z) [metadata "distributivity"] .
+  endfm
+
+***(
+  Maude> xmatch X . (Y + Z) <=? a . b . (c + d + e) .
+  xmatch in XMATCH-TEST : X . Z + Y <=? a . b . c + d + e .
+  Decision time: 0ms cpu (0ms real)
+
+  Solution 1
+  Matched portion = (whole)
+  X:Elt --> a . b
+  Y:Elt --> c
+  Z:Elt --> d + e
+
+  Solution 2
+  Matched portion = b . (c + d + e)
+  X:Elt --> b
+  Y:Elt --> c
+  Z:Elt --> d + e
+
+  Solution 3
+  Matched portion = (whole)
+  X:Elt --> a . b
+  Y:Elt --> d
+  Z:Elt --> c + e
+
+  Solution 4
+  Matched portion = b . (c + d + e)
+  X:Elt --> b
+  Y:Elt --> d
+  Z:Elt --> c + e
+
+  Solution 5
+  Matched portion = (whole)
+  X:Elt --> a . b
+  Y:Elt --> e
+  Z:Elt --> c + d
+
+  Solution 6
+  Matched portion = b . (c + d + e)
+  X:Elt --> b
+  Y:Elt --> e
+  Z:Elt --> c + d
+
+  Solution 7
+  Matched portion = (whole)
+  X:Elt --> a . b
+  Y:Elt --> c + d
+  Z:Elt --> e
+
+  Solution 8
+  Matched portion = b . (c + d + e)
+  X:Elt --> b
+  Y:Elt --> c + d
+  Z:Elt --> e
+
+  Solution 9
+  Matched portion = (whole)
+  X:Elt --> a . b
+  Y:Elt --> c + e
+  Z:Elt --> d
+
+  Solution 10
+  Matched portion = b . (c + d + e)
+  X:Elt --> b
+  Y:Elt --> c + e
+  Z:Elt --> d
+
+  Solution 11
+  Matched portion = (whole)
+  X:Elt --> a . b
+  Y:Elt --> d + e
+  Z:Elt --> c
+
+  Solution 12
+  Matched portion = b . (c + d + e)
+  X:Elt --> b
+  Y:Elt --> d + e
+  Z:Elt --> c
+)

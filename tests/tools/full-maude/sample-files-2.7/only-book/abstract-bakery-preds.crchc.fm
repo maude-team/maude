@@ -1,0 +1,30 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+  ---- checked Church-Rosser using the CRC tool  ?!
+
+  ---- load full-maude22g.maude
+  ---- load crchc2a.maude
+  
+  load bakery-preds.crchc.maude
+  load abstract-bakery.crchc.maude
+  
+  mod ABSTRACT-BAKERY-PREDS is
+    protecting ABSTRACT-BAKERY .
+    including BAKERY-PREDS .
+  endm
+  
+***(
+  select FULL-MAUDE .
+  
+  loop init .
+
+ (check Church-Rosser ABSTRACT-BAKERY-PREDS .)
+
+rewrites: 107398 in 30ms cpu (155ms real) (3579933 rewrites/second)
+
+Church-Rosser checking of ABSTRACT-BAKERY-PREDS
+Checking solution:
+  All critical pairs have been joined. The specification is
+    locally-confluent.
+  The specification is sort-decreasing.
+)

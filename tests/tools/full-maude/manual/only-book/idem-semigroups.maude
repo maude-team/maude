@@ -1,0 +1,45 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  load basic-nat.maude
+
+  fmod IDEM-SEMIGROUP is
+    protecting QID .   
+    
+    sorts List Set .
+    subsorts Qid < List Set .
+    op __ : List List -> List [ctor assoc] .    *** list concatenation
+    op _,_ : Set Set -> Set [ctor assoc comm] . *** set union
+    op {_} : List -> Set .                      *** set of a list
+  
+    var  I : Qid .
+    var  S : Set .
+    vars L P Q : List .
+
+    eq S, S = S .
+    eq {I} = I .
+    eq {I L} = I, {L} .
+    eq L L = L .
+    ceq L P Q = L Q if {L} = {Q} /\ {L P} = {L} .
+  endfm
+
+red in IDEM-SEMIGROUP : 'a 'b 'c .
+---(
+reduce in IDEM-SEMIGROUP : 'a 'b 'c .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result List: 'a 'b 'c
+---)
+
+red 'a 'b 'c 'b 'a 'b 'c .
+---(
+reduce in IDEM-SEMIGROUP : 'a 'b 'c 'b 'a 'b 'c .
+rewrites: 797 in 0ms cpu (1ms real) (~ rewrites/second)
+result List: 'a 'b 'c
+---)
+
+red 'a 'b 'c == 'a 'b 'c 'b 'a 'b 'c .
+---(
+reduce in IDEM-SEMIGROUP : 'a 'b 'c == 'a 'b 'c 'b 'a 'b 'c .
+rewrites: 798 in 0ms cpu (1ms real) (~ rewrites/second)
+result Bool: true
+---)

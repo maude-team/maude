@@ -1,0 +1,138 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  load instrumentation.maude
+  load instrumentation-infrastructure.maude
+  load bank-account.maude
+  
+  mod INSTRUMENTATION-TEST is 
+    protecting INSTRUMENTATION .
+    protecting INSTRUMENTATION-INFRASTRUCTURE .
+    protecting BANK-ACCOUNT . 
+    
+    ops A-001 A-002 A-003 : -> Oid .
+
+    var  H : Header .
+    var  IL : ImportList .
+    var  SS : SortSet .
+    var  SSDS : SubsortDeclSet .
+    vars OPDS OPDS' : OpDeclSet .
+    var  MAS : MembAxSet .
+    var  EqS : EquationSet .
+    var  RlS : RuleSet .
+
+    op addOps : Module OpDeclSet -> Module .
+    eq addOps(mod H is IL sorts SS . SSDS OPDS MAS EqS RlS endm, OPDS')
+      = mod H is IL sorts SS . SSDS OPDS OPDS' MAS EqS RlS endm .
+    eq addOps(fmod H is IL sorts SS . SSDS OPDS MAS EqS endfm, OPDS')
+      = fmod H is IL sorts SS . SSDS OPDS OPDS' MAS EqS endfm .
+  endm
+
+red in INSTRUMENTATION-TEST : 
+           downTerm(
+             getTerm(
+               metaRewrite(
+                 addOps(instrument('BANK-ACCOUNT),
+                   op 'A-001 : nil -> 'Oid [ctor] .
+                   op 'A-002 : nil -> 'Oid [ctor] . 
+                   op 'A-003 : nil -> 'Oid [ctor] .),
+                 '`{_`,_`}[upTerm(< A-001 : Account | bal : 300 >
+                                  debit(A-001, 200)
+                                  debit(A-001, 150)
+                                  < A-002 : Account | bal : 250 >
+                                  debit(A-002, 400)
+                                  < A-003 : Account | bal : 1250 >
+                                  (from A-003 to A-002 transfer 300)), 
+                           'nil.QidList],
+                 unbounded)),
+             {(none).Configuration, (nil).QidList}) .
+---(
+reduce in INSTRUMENTATION-TEST : downTerm(getTerm(metaRewrite(addOps(
+    instrument('BANK-ACCOUNT), (op 'A-002 : nil -> 'Oid [ctor] .
+op 'A-003 : nil -> 'Oid [ctor] .)
+op 'A-001 : nil -> 'Oid [ctor] .), '`{_`,_`}[upTerm((((((< A-003 : Account |
+    bal : 1250 > from A-003 to A-002 transfer 300) debit(A-002, 400)) < A-002 :
+    Account | bal : 250 >) debit(A-001, 150)) debit(A-001, 200)) < A-001 :
+    Account | bal : 300 >),'nil.QidList], unbounded)), {(none).Configuration,(
+    nil).QidList}) .
+rewrites: 51 in 0ms cpu (4ms real) (~ rewrites/second)
+result InstrConfig: {debit(A-001, 200) < A-001 : Account | bal : 150 > < A-002
+    : Account | bal : 150 > < A-003 : Account | bal : 950 >,'debit 'transfer
+    'debit}
+---)
+
+red in INSTRUMENTATION-TEST :
+           metaSearch(
+             addOps(instrument('BANK-ACCOUNT),
+               op 'A-001 : nil -> 'Oid [ctor] .
+               op 'A-002 : nil -> 'Oid [ctor] . 
+               op 'A-003 : nil -> 'Oid [ctor] .),
+             '`{_`,_`}[
+               upTerm(< A-001 : Account | bal : 300 >
+                      debit(A-001, 200)
+                      debit(A-001, 150)
+                      < A-002 : Account | bal : 250 >
+                      debit(A-002, 400)
+                      < A-003 : Account | bal : 1250 >
+                      (from A-003 to A-002 transfer 300)), 
+               'nil.QidList],
+             '`{_`,_`}[
+               upTerm(C:Configuration debit(A-001, 150)), 
+               'QL:QidList],
+             nil, '!, unbounded, 1) .
+---(
+reduce in INSTRUMENTATION-TEST : metaSearch(addOps(instrument('BANK-ACCOUNT), (
+    op 'A-002 : nil -> 'Oid [ctor] .
+op 'A-003 : nil -> 'Oid [ctor] .)
+op 'A-001 : nil -> 'Oid [ctor] .), '`{_`,_`}[upTerm((((((< A-003 : Account |
+    bal : 1250 > from A-003 to A-002 transfer 300) debit(A-002, 400)) < A-002 :
+    Account | bal : 250 >) debit(A-001, 150)) debit(A-001, 200)) < A-001 :
+    Account | bal : 300 >),'nil.QidList], '`{_`,_`}[upTerm(C:Configuration
+    debit(A-001, 150)),'QL:QidList], nil, '!, unbounded, 1) .
+rewrites: 96 in 0ms cpu (1ms real) (~ rewrites/second)
+result ResultTriple: {'`{_`,_`}['__['debit['A-001.Oid,'s_^150['0.Zero]],
+    '<_:_|_>['A-001.Oid,'Account.Cid,'bal`:_['s_^100['0.Zero]]],'<_:_|_>[
+    'A-002.Oid,'Account.Cid,'bal`:_['s_^150['0.Zero]]],'<_:_|_>['A-003.Oid,
+    'Account.Cid,'bal`:_['s_^950['0.Zero]]]],'__[''transfer.Qid,''debit.Qid,
+    ''debit.Qid]],'InstrConfig,
+	'C:Configuration <- '__['<_:_|_>['A-001.Oid,'Account.Cid,'bal`:_[
+    's_^100['0.Zero]]],'<_:_|_>['A-002.Oid,'Account.Cid,'bal`:_['s_^150[
+    '0.Zero]]],'<_:_|_>['A-003.Oid,'Account.Cid,'bal`:_['s_^950['0.Zero]]]] ; 
+	'QL:QidList <- '__[''transfer.Qid,''debit.Qid,''debit.Qid]}
+---)
+
+red in INSTRUMENTATION-TEST :
+           getLabels(
+             downTerm(
+               getTerm(
+                 metaSearch(
+                   addOps(instrument('BANK-ACCOUNT),
+                     op 'A-001 : nil -> 'Oid [ctor] .
+                     op 'A-002 : nil -> 'Oid [ctor] . 
+                     op 'A-003 : nil -> 'Oid [ctor] .),
+                   '`{_`,_`}[
+                     upTerm(< A-001 : Account | bal : 300 >
+                            debit(A-001, 200)
+                            debit(A-001, 150)
+                            < A-002 : Account | bal : 250 >
+                            debit(A-002, 400)
+                            < A-003 : Account | bal : 1250 >
+                            (from A-003 to A-002 transfer 300)), 
+                     'nil.QidList],
+                   '`{_`,_`}[
+                     upTerm(C:Configuration debit(A-001, 150)), 
+                     'QL:QidList],
+                   nil, '!, unbounded, 1)), 
+               {(none).Configuration, (nil).QidList})) .
+---(
+reduce in INSTRUMENTATION-TEST : getLabels(downTerm(getTerm(metaSearch(addOps(
+    instrument('BANK-ACCOUNT), (op 'A-002 : nil -> 'Oid [ctor] .
+op 'A-003 : nil -> 'Oid [ctor] .)
+op 'A-001 : nil -> 'Oid [ctor] .), '`{_`,_`}[upTerm((((((< A-003 : Account |
+    bal : 1250 > from A-003 to A-002 transfer 300) debit(A-002, 400)) < A-002 :
+    Account | bal : 250 >) debit(A-001, 150)) debit(A-001, 200)) < A-001 :
+    Account | bal : 300 >),'nil.QidList], '`{_`,_`}[upTerm(C:Configuration
+    debit(A-001, 150)),'QL:QidList], nil, '!, unbounded, 1)), {none,nil})) .
+rewrites: 99 in 10ms cpu (1ms real) (9900 rewrites/second)
+result NeTypeList: 'transfer 'debit 'debit
+---)

@@ -1,0 +1,58 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+  ---- checked Church-Rosser using the CRC tool
+
+  fmod SIEVE is
+    protecting NAT .
+    sort NatList .
+    subsort Nat < NatList .
+    op nil : -> NatList .
+    op _._ : NatList NatList -> NatList [assoc id: nil strat (0)] .
+    op force : NatList NatList -> NatList [strat (1 2 0)] .
+    op show_upto_ : NatList Nat -> NatList .
+    op filter_with_ : NatList Nat -> NatList .
+    op nats-from_ : Nat -> NatList .
+    op sieve_ : NatList -> NatList .
+    op primes : -> NatList .
+
+    vars P I E : Nat .
+    vars S L : NatList .
+
+    eq force(L, S) = L . S .
+    eq show nil upto I = nil .
+    eq show E . S upto I
+      = if I == 0
+        then nil
+        else force(E, show S upto sd(I, 1))
+        fi .
+    eq filter nil with P = nil .
+    eq filter I . S with P
+      = if (I rem P) == 0
+        then filter S with P
+        else I . filter S with P
+        fi .
+    eq nats-from I = I . nats-from (s I) .
+    eq sieve nil = nil .
+    eq sieve (I . S) = I . sieve (filter S with I) .
+    eq primes = sieve nats-from 2 .
+  endfm
+
+reduce show primes upto 10 .
+***(
+reduce in SIEVE : show primes upto 10 .
+rewrites: 415 in 0ms cpu (0ms real) (~ rewrites/second)
+result NatList: 2 . 3 . 5 . 7 . 11 . 13 . 17 . 19 . 23 . 29
+***)
+
+reduce in META-LEVEL :
+           metaReduce(upModule('SIEVE, false),
+             'show_upto_['primes.NatList, 's_^10['0.Zero]]) .
+***(
+reduce in META-LEVEL : metaReduce(upModule('SIEVE, false), 'show_upto_[
+    'primes.NatList,'s_^10['0.Zero]]) .
+rewrites: 417 in 0ms cpu (2ms real) (~ rewrites/second)
+result ResultPair: {'_._['s_^2['0.Zero],'s_^3['0.Zero],'s_^5['0.Zero],'s_^7[
+    '0.Zero],'s_^11['0.Zero],'s_^13['0.Zero],'s_^17['0.Zero],'s_^19['0.Zero],
+    's_^23['0.Zero],'s_^29['0.Zero]],'NatList}
+***)

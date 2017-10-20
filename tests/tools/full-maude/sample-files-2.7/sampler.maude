@@ -1,0 +1,13 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  mod SAMPLER is
+    pr RANDOM .
+    pr COUNTER .
+    pr CONVERSION .
+    op rand : -> [Float] .
+    op sampleBernoulli : Float -> [Bool] .
+    rl rand => float(random(counter) / 4294967295) .
+    rl sampleBernoulli(P:Float) => rand < P:Float .
+  endm

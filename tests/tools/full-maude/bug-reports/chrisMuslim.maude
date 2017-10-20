@@ -1,0 +1,113 @@
+load full-maude26
+
+(omod POPULATION is
+  protecting NAT .
+  protecting STRING .
+  sort Status .
+  op single : -> Status [ctor] .
+  ops engaged married separated : Oid -> Status [ctor] .
+  subsort String < Oid .
+  class Person | age : Nat, status : Status .
+  vars N N' : Nat .   vars X X' : String .
+
+  crl [birthday] :  < X : Person | age : N >  =>
+                    < X : Person | age : N + 1 >  if N < 999 .
+
+  crl [engagement] :  < X : Person | age : N, status : single >
+                      < X' : Person | age : N', status : single >
+                         =>
+                      < X : Person | status : engaged(X') >
+                      < X' : Person | status : engaged(X) >
+                         if N > 15 or N' > 15 .
+
+  op initState : -> Configuration .  *** Initial state
+  eq initState =
+         < "Peter" : Person | age : 35, status : single >
+         < "Lizzie" : Person | age : 32, status : single >
+         < "Sam the Snake" : Person | age : 37, status : single > .
+endom)
+
+(frew [10] initState .)
+
+
+
+
+(omod CHR-MUSLIM is
+  protecting POPULATION .
+
+  sort ChristianStatus .
+  ops notBapt baptized confirmed : -> ChristianStatus [ctor] .
+  
+  class Christian | chrStatus : ChristianStatus .
+  class Muslim | al-haji : Bool .
+  subclass Christian Muslim < Person .
+
+  op initState2 : -> Configuration .
+  eq initState2 =
+  < "Imitiaz" : Muslim | age : 35, status : married("Maiken"), 
+                         al-haji : false >
+  < "Maiken" : Christian | age : 34, status : married("Imtiaz"), 
+                          chrStatus : confirmed >
+  < "Panchen Lama" : Person | age : 13, status : single > .
+endom)
+
+
+(omod VERSION1 is
+  protecting CHR-MUSLIM .  
+
+  var X : String .
+
+  rl [baptism] :   < X : Christian | chrStatus : notBapt >  =>  
+                   < X : Christian | chrStatus : baptized > .
+
+  rl [confirmation] :  < X : Christian | chrStatus : baptized >  =>
+                       < X : Christian | chrStatus : confirmed > .
+
+  rl [hajj] :  < X : Muslim | >  =>  < X : Muslim | al-haji : true > .
+endom)
+
+(omod TEST-CONVERSION is protecting CHR-MUSLIM .
+  sorts ChrObject MuslimObject .
+  subsorts ChrObject MuslimObject < Object .
+
+  var X : String .  var N : Nat .  var S : Status .
+
+  mb (< X : Christian | >) : ChrObject .
+  mb (< X : Muslim | >) : MuslimObject .
+
+  crl [baptism] : < X : Person | age : N, status : S >  =>
+                  < X : Christian | age : N, status : S, 
+                                    chrStatus : baptized > 
+                  if not (< X : Person | >) :: ChrObject .
+
+  crl [convertIslam] : < X : Person | age : N, status : S >  =>
+                       < X : Muslim | age : N, status : S, 
+                                      al-haji : false > 
+                       if not (< X : Person | >) :: MuslimObject .
+endom)
+
+(rew [5]  < "Arne" : Muslim | age : 22, status : single, 
+                              al-haji : true > .)
+
+(search [2] < "Arne" : Muslim | age : 22, status : single, 
+                              al-haji : true >
+            =>* < "Arne" : Muslim | age : N, status : single, 
+                              al-haji : true > .)
+
+(search < "Arne" : Muslim | age : 22, status : single, 
+                              al-haji : true > 
+   =>1 C:Configuration .)
+
+
+---- load trace.txt
+
+(select POPULATION .)
+
+(search [2] < "Lizzie" : Person | age : 30, status : single > =>* 
+            < "Lizzie" : Person | age : N:Nat > such that N:Nat > 30 .)
+
+---- eof
+(search [2] < "Lizzie" : Person | age : 30, status : single > =>* 
+            < "Lizzie" : Person | age : N:Nat, status : S:Status > such that N:Nat > 30 .)
+
+

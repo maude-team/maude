@@ -1,0 +1,44 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  fmod COMM-IDEM-EX is
+    pr NAT .
+    sort CI .
+    subsort Nat < CI .
+    op f : CI CI -> CI [ctor comm idem] .
+
+    vars N M : Nat .
+    var  C : CI .
+
+    op g : CI -> Nat .
+    eq g(f(N, M)) = 0 .
+    eq g(C) = 1 [owise] .
+  endfm
+
+***(
+Maude> red f(2, 2) .
+reduce in COMM-IDEM-EX : 2 .
+rewrites: 0 in 0ms cpu (0ms real) (~ rewrites/second)
+result NzNat: 2
+
+Maude> red f(2, 3) == f(3, 2) .
+reduce in COMM-IDEM-EX : f(2, 3) == f(2, 3) .
+rewrites: 1 in 0ms cpu (0ms real) (~ rewrites/second)
+result Bool: true
+
+Maude> red g(2) .
+reduce in COMM-IDEM-EX : g(2) .
+rewrites: 1 in 0ms cpu (0ms real) (~ rewrites/second)
+result Zero: 0
+
+Maude> red g(f(2, f(2, 2))) .
+reduce in COMM-IDEM-EX : g(2) .
+rewrites: 1 in 0ms cpu (0ms real) (~ rewrites/second)
+result Zero: 0
+
+Maude> red g(f(2, f(3, 4))) .
+reduce in COMM-IDEM-EX : g(f(2, f(3, 4))) .
+rewrites: 1 in 0ms cpu (0ms real) (~ rewrites/second)
+result NzNat: 1
+)

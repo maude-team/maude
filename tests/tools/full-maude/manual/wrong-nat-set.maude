@@ -1,0 +1,19 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  fmod WRONG-NAT-SET is
+    pr NAT .
+    sort WNatSet .
+    subsort Nat < WNatSet .
+    op none : -> WNatSet [ctor] .
+    op __ : WNatSet WNatSet -> WNatSet
+         [ctor assoc comm idem id: none] .
+  endfm
+
+***(
+Maude> red 4 4 5 2 .
+reduce in WRONG-NAT-SET : 4 4 2 5 .
+rewrites: 0 in 0ms cpu (0ms real) (~ rewrites/second)
+result WNatSet: 2 4 4 5
+)

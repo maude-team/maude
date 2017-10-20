@@ -1,0 +1,34 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  fmod PEANO-INT is
+    protecting PEANO-NAT .
+    sorts Int NzInt .
+    subsort Nat < Int .
+    subsorts NzNat < NzInt < Int .
+    op -_ : Int -> Int [ctor] .
+    op -_ : NzInt -> NzInt [ctor] .
+    op _+_ : Int Int -> Int [comm] .
+    op _*_ : Int Int -> Int [comm] .
+    op _*_ : NzInt NzInt -> NzInt [comm] .
+    op quot : Int NzInt -> Int .
+    op gcd : Int Int -> Nat [comm] .
+    op gcd : NzInt NzInt -> NzNat [comm] .
+    vars I J : Int .
+    vars I' J' : NzInt .
+    vars N' M' : NzNat .
+    eq - - I = I .
+    eq - 0 = 0 .
+    eq I + 0 = I .
+    eq M' + (- M') = 0 .
+    ceq M' + (- N') = - d(N', M') if N' > M' .
+    ceq M' + (- N') = d(N', M') if M' > N' .
+    eq (- I) + (- J) = - (I + J) .
+    eq I * 0 = 0 .
+    eq I * (- J) = - (I * J) .
+    eq quot(0, I') = 0 .
+    eq quot(- I', J') = - quot(I', J') .
+    eq quot(I', - J') = - quot(I', J') .
+    eq gcd(- I', J') = gcd(I', J') .
+  endfm
+    

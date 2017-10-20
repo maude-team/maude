@@ -1,0 +1,846 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+*** 
+*** Mobile Maude
+*** by F. Duran, S. Eker, P. Lincoln, J. Meseguer, A. Riesco, and A. Verdejo
+*** 
+
+  ---- Some thoughts:
+  ----  - We must assume uniqueness of root object names
+  ----  - Although in the general case we need to keep forwarding info in each 
+  ----    root object (location), in the case of the star configuration we are 
+  ----    initially assuming we could consider that the server root object 
+  ----    associates a location (or even just a socket through which it may be 
+  ----    reached) to each mobile object. Since in the case a mobile object moves 
+  ----    from a process to another it must pass by the server root object, this 
+  ----    information may be kept easily updated. 
+  ----  - In the general case, we will need to be able to look for both mobile
+  ----    objects and locations, and therefore, we need to keep information about 
+  ----    both in the root objects. In the previous version, all the Mobile Maude
+  ----    processes where in the same configuration, and reaching a particular 
+  ----    process was represented by one single rule. In the general case we may 
+  ----    pass by several nodes before reaching the desired location (we cannot 
+  ----    assume all of them connected to each other), and therefore we need 
+  ----    some kind of forwarding info for locations as well. In the previous 
+  ----    version, the forwarding info about mobile objects was kept only in their 
+  ----    home process, but in a more general setting this information should 
+  ----    perhaps be replicated (I believe that the hops works in this case as well).
+  ----
+  ---- The specification below only open the sockets, and allows clients to send  
+  ---- messages, but these are left in the configuration of the server root object, 
+  ---- which is not able to handle it. Every time a new mobile object is created, 
+  ---- its identifier should be sent to the server root object. In this way, the 
+  ---- server could mantain a structure of the form PFun(MOBILE-OBJECT, SOCKET), 
+  ---- that is, PFun(Mid, Oid), associating the socket through which messages to a 
+  ---- particular object could be reached. Another alternative, probably cleaner, 
+  ---- and closer to the general case, would be to consider two different structures: 
+  ---- a Map{MOBILE-OBJECT, LOCATION} and a Map{LOCATION, SOCKET}, so that 
+  ---- we associate a socket to each location, and a location to each mobile 
+  ---- object. Although the location of a mobile object changes when it moves from 
+  ---- one location to another, the socket through which the a particular location 
+  ---- may be reached (from the server) is more stable. We can get all the 
+  ---- required information by sending to the server the identifier of each client 
+  ---- root object when it establishes a connection.
+
+---- We add format attributes to the CONFIGURATION module
+
+fmod CONFIGURATION is
+  sorts Attribute AttributeSet .
+  subsort Attribute < AttributeSet .
+  op none : -> AttributeSet .
+  op _`,_ : AttributeSet AttributeSet -> AttributeSet
+     [ctor assoc comm id: none  format (o o nt o)] .
+  sorts Oid Cid Object Msg Portal Configuration .
+  subsort Object Msg Portal < Configuration .
+  op <_:_|_> : Oid Cid AttributeSet -> Object
+     [ctor object format (n r! o b o nt ont d)] .
+  op none : -> Configuration .
+  op __ : Configuration Configuration -> Configuration
+     [ctor config assoc comm id: none] .
+  op <> : -> Portal [ctor] .
+endfm
+
+load maybe.maude
+
+fmod LOC is
+  pr STRING .
+  sort Loc .
+  op l : String Nat -> Loc .               *** Root-Object Oid 
+endfm
+
+view Loc from TRIV to LOC is
+  sort Elt to Loc .
+endv
+
+fmod MID is
+  pr LOC .
+  sort Mid .
+  op o : Loc Nat -> Mid .           *** Mobile-Object Oid
+endfm
+
+fmod OID is
+  pr CONFIGURATION .
+  pr MID .
+  subsorts Loc Mid < Oid .
+endfm
+
+view Oid from TRIV to OID is
+  sort Elt to Oid .
+endv
+
+mod MOBILE-OBJECT-INTERFACE is
+  pr META-LEVEL .
+  inc OID .
+  
+  *** Messages being pulled in or out of a mobile object must be of 
+  *** the form go(L), go-find(O, L), newo(Mod, Conf, O), or (to O : C) 
+  *** for L a Loc, O an Mid, C a term of sort Contents, Mod a term of 
+  *** sort Module, and Conf a term of sort Configuration. 
+
+  sort Contents .
+
+  op go : Loc -> Msg [ctor msg] .
+  op go-find : Mid Loc -> Msg [ctor msg] .
+  op to_:_ : Mid Contents -> Msg [ctor format(!m s s s o) gather (& &) msg] .
+  op kill : -> Msg [ctor].
+
+  op newo : Module Configuration Oid -> Msg [ctor msg] .
+
+  op tmp-id : -> Mid [ctor] .
+  
+  op start-up : Mid -> Contents [ctor] .
+
+  *** Note that if the newo message/command takes a configuration
+  *** as argument, then such a configuration must make sense in 
+  *** the module in which the newo command is used. In order to have 
+  *** this, the module in question should include the module in which
+  *** such a configuration makes sense. Perhaps
+  *** we should take a more general approach in which instead of 
+  *** taking a configuration, newo takes a term metarepresenting
+  *** a configuration, although then we have some additional problems
+  *** because it is not possible to initialize the attributes of 
+  *** the objects in such a meta configuration, neither send messages
+  *** to them, since we do not know their identifiers (just the 
+  *** temporal name, which will be changed with a start-up message).
+
+  *** The state of a mobile object is given by a pair C & Ms of configurations, 
+  *** although we assume that Ms is a set of messages being sent out 
+  *** of the mobile object.
+
+  sort MobObjState .
+  op _&_ : Configuration Configuration -> MobObjState .
+endm
+
+mod TUPLE`[2`]{X :: TRIV, Y :: TRIV} is
+
+  sorts Tuple{X,Y} .
+
+  op `(_`,_`) : X$Elt Y$Elt -> Tuple{X,Y} .
+  op p1_ : Tuple{X,Y} -> X$Elt .
+  op p2_ : Tuple{X,Y} -> Y$Elt .
+  eq p1 (V1:X$Elt, V2:Y$Elt) = V1:X$Elt .
+  eq p2 (V1:X$Elt, V2:Y$Elt) = V2:Y$Elt .
+endm
+
+view Tuple`{Loc`,Nat`} from TRIV to TUPLE`[2`]{Loc, Nat} is
+  sort Elt to Tuple{Loc,Nat} .
+endv
+
+mod MOBILE-MAUDE-SYNTAX is
+  pr OID .
+  pr STRING .
+  pr META-LEVEL .
+  pr TUPLE`[2`]{Loc, Nat} .
+  pr SET{Oid} .
+  pr MAP{Loc, Oid} . 
+  pr MAP{Nat, Tuple`{Loc`,Nat`}} .
+  pr MAYBE{Nat} * (op maybe to null) .
+  pr MAYBE{Oid} * (op maybe to null) .
+  
+  op errorModule : -> [Module] [ctor] .
+
+---------------------------------------------------------------------------------------
+----  class MobileObject | 
+----     mod : Module,            *** rewrite rules of the mobile object
+----     s : Term,                *** current state
+----     l : Loc,                 *** current location
+----     gas : Nat,               *** bound on resources
+----     hops : Nat,              *** number of hops
+----     mode : Mode .            *** Objects in motion cannot be active
+
+  sort MobileObject .
+  subsort MobileObject < Cid .
+  op MobileObject : -> MobileObject .
+  
+  sort TermSet .
+  subsort Term < TermSet .
+  op emptyTS : -> TermSet .
+  op _._ : TermSet TermSet -> TermSet [assoc comm id: emptyTS] .
+  eq T . T = T .
+  
+  op mod :_ : Module -> Attribute [ctor gather(&)] .
+  op s :_ : Term -> Attribute [ctor gather(&)] .
+  op gas :_ : Nat -> Attribute [ctor gather(&)] .
+  op hops :_ : Nat -> Attribute [ctor gather(&)] .
+  op executable :_ : TermSet -> Attribute [ctor gather(&)] .
+
+  var  V@MobileObject : MobileObject .
+  sort Mode .
+  ops idle active : -> Mode .
+
+  sort MO .
+  subsort MO < Object .
+  
+  var  O : Oid .
+  var  MOD : Module .
+  vars T T' : Term .
+  var  L : Loc .
+  vars N N' : Nat .
+  var  MOM : Mode .
+  var  B : Bool .
+  
+ ----  mb (< O : V@MobileObject | mod : MOD, s : T, gas : N, hops : N', executable : T' >) : MO .
+------------------------------------------------------------------------------------
+  
+------------------------------------------------------------------------------------
+  sort RootObjectState .
+  ops idle waiting-connection active : -> RootObjectState .
+
+----  class RootObject |          *** One per location
+----     cnt : Nat,               *** counter to generate new mobile object names
+----     guests : Set{Oid},       *** objects in the location
+----     forward : Map{Nat,Tuple{Loc,Nat}},  
+----                              *** forwarding information
+----     state : RootObjectState,           *** Either idle, waiting-connection, or active
+----     neighbors : Map{Loc, Oid}, 
+----         *** application loc -> socket, shows the socket through which messages 
+----         *** to such a location must be sent
+----     defNeighbor : Maybe{Oid} . 
+----         *** default socket, the loc isn't between the neighbors
+
+  sort RootObject .
+  subsort RootObject < Cid .
+  op RootObject : -> RootObject .
+  
+  op cnt :_ : Nat -> Attribute [ctor gather(&)] .
+  op guests :_ : Set{Oid} -> Attribute [ctor gather(&)] .
+  op forward :_ : Map{Nat, Tuple{Loc, Nat}} -> Attribute [ctor gather(&)] . 
+  op state :_ : RootObjectState -> Attribute [ctor gather(&)] .
+  op neighbors :_ : Map{Loc, Oid} -> Attribute [ctor gather(&)] .
+  op defNeighbor :_ : Maybe{Oid} -> Attribute [ctor gather(&)] .
+------------------------------------------------------------------------------------
+
+  op error : String -> Msg [ctor msg] .
+  
+  *** Inter-object message inside a process configuration.
+  op to_`{_`} : Mid String -> Msg [ctor msg format(!m s s s s o)] .
+  
+  *** Inter-object message inside a process configuration.
+  op to_`{_`} : Mid Term -> Msg [ctor msg format(!m s s s s o)] .
+
+  *** Object motion to a location
+  op go : Loc Object -> Msg [ctor msg format(!m o) frozen(2)] .
+  
+  *** Change of address notified by a mobile object to its "parent 
+  *** location" by indicating the pair of the current host location and
+  *** the current number of hops, and indicating the mobile object's 
+  *** identity by the last number in the message.
+
+  op to_@_`{_`} : Loc Tuple{Loc,Nat} Nat -> Msg [ctor msg format(!m o !m o !m o !m o)] . 
+
+  *** Inter-object message in transit between processes. 
+  *** The second argument indicates the number of hops registered for
+  *** a mobile object in its parent process so that the processing of
+  *** messages addressed to in-transit objects is postponed until the
+  *** forwarding information corresponding to such objects is 
+  *** updated.
+
+  op to_hops_in_`{_`} : Mid Maybe{Nat} Loc Term -> Msg 
+       [ctor msg format(!m o !m o !m o !m o !m o)] .
+
+  *** Mobile object creation.
+
+  op newo : Module Term Term -> Msg [ctor msg format(!m o)] .
+
+  *** Object motion to find another object.
+
+  op go-find : Mid Loc Object -> Msg [ctor msg format(!m o) frozen] .  
+
+  op go-find : Mid Loc Maybe{Nat} Object -> Msg [ctor msg format(!m o) frozen] .  
+
+  op to_dead`{_`} : Loc Nat -> Msg [ctor msg format(!m o !m s o !m o)] .
+
+  op new-socket : Loc -> Msg [ctor msg format(!m o)] .
+
+endm
+
+------------------------------------------------------------------------------------
+---- MOBILE-MAUDE-SEMANTICS
+------------------------------------------------------------------------------------
+  
+mod MOBILE-MAUDE-SEMANTICS is
+  pr MOBILE-MAUDE-SYNTAX .
+  
+  op Send : Oid Oid Msg -> Msg [ctor msg format (b o)] .
+
+  vars O O' : Oid .
+  var  OS : Set{Oid} .
+  vars L L' L'' L''' : Loc .
+  vars AtS AtS' : AttributeSet .
+  vars N N' : Nat .
+  var  Mod : Mode .
+  var  F : Map{Nat,Tuple{Loc,Nat}} .
+  vars T T' T'' T''' T'''' : Term .
+  var  ExT : TermSet .
+  var  TL : TermList .
+  var  MOD : Module .
+  vars H N'' : Maybe{Nat} .
+  var  V@MobileObject : MobileObject .
+  var  V@RootObject : RootObject .
+  var  RP : ResultPair .
+  var  B : Bool .
+
+  ------------------------------------------------------------------------------------
+  ---- Mobile-Maude Rules
+  ------------------------------------------------------------------------------------
+
+  *** Go to a location.
+
+  rl [go-loc] :
+    < L : V@RootObject | state : active, guests : (O, OS), AtS > 
+    go(L, < O : V@MobileObject | AtS' >)
+    => < L : V@RootObject | state : active, guests : (O, OS), AtS >
+       < O : V@MobileObject | AtS' > .
+
+  crl [go-loc] :
+    < L : V@RootObject | state : active, guests : (O, OS), AtS > 
+    go(L', < O : V@MobileObject | AtS' >)
+    => < L : V@RootObject | state : active, guests : OS, AtS >  
+       Send(L', L, go(L', < O : V@MobileObject | AtS' >))
+    if L =/= L' .
+
+  crl [go-loc] :
+    < L : V@RootObject | state : active, guests : OS, AtS > 
+    go(L', < O : V@MobileObject | AtS' >)
+    => < L : V@RootObject | state : active, guests : OS, AtS >  
+       Send(L', L, go(L', < O : V@MobileObject | AtS' >))
+    if L =/= L' /\ not O in OS .
+
+  rl [go-find-loc] :  
+    *** the object it is trying to reach is in the same location
+    < L : V@RootObject | state : active, guests : (O, OS), AtS > 
+    go-find(O, L', < O' : V@MobileObject | AtS' >)
+    => < L : V@RootObject | state : active, guests : (O, OS), AtS >
+       < O' : V@MobileObject | AtS' > .
+
+  crl [go-find-loc] :
+    *** although the location is the home of the object it is trying 
+    *** to reach, such an object is currently not in it, and 
+    *** therefore the message must be forwarded appropriately,
+    *** assuming that the forwarding info in the home location is 
+    *** better than the tentative one---the forwarding can take place
+    *** only if there is an updated forwarding information.
+    < L : V@RootObject | state : active, guests : (O, OS), forward : F, AtS >
+    go-find(o(L, N), L', < O : V@MobileObject | AtS' >) 
+    => < L : V@RootObject | state : active, guests : OS, forward : F, AtS > 
+       Send(p1(F[N]), L, go-find(o(L, N), p1(F[N]), p2(F[N]), < O : V@MobileObject | AtS' >))
+    if not o(L, N) in (O, OS) /\ p1(F[N]) =/= L .
+
+  crl [go-find-loc] :
+    *** in case the tentative location is the location in which the
+    *** go-find message is generated, if the found object is not
+    *** in such a location and it is not the home location for such 
+    *** an object then the go-find message is sent to its home 
+    *** location
+    < L : V@RootObject | state : active, guests : (O, OS), AtS >
+    go-find(o(L', N), L, < O : V@MobileObject | AtS' >)
+    => < L : V@RootObject | state : active, guests : OS, AtS > 
+       Send(L', L, go-find(o(L', N), L', (null).Maybe{Nat}, < O : V@MobileObject | AtS' >))
+    if not o(L', N) in (O, OS) /\ L =/= L' .
+
+  crl [go-find-loc] :
+    *** If the found object is not in the current location and 
+    *** it is not the home location nor the tentative one, then
+    *** the go-find message is sent to the tentative location
+    < L : V@RootObject | state : active, guests : (O, OS), AtS >
+    go-find(o(L', N), L'', < O : V@MobileObject | AtS' >) 
+    => < L : V@RootObject | state : active, guests : OS, AtS > 
+       Send(L'', L, go-find(o(L', N), L'', (null).Maybe{Nat}, < O : V@MobileObject | AtS' >))
+    if not o(L', N) in (O, OS) /\ L =/= L' /\ L =/= L'' .
+
+
+  *** Parent location updates a mobile object's forwarding address.
+  *** We must make sure that the situation in which an object is in 
+  *** transit is handled correctly. 
+  *** Note that since the forwarding info is updated when the object
+  *** arrives to its destination location, the forwarding info is 
+  *** not valid during the transit of the mobile objects. However, 
+  *** since we have the guests list we still have enough info to 
+  *** guide the messages appropriately.
+
+  rl [forwarding-update] :
+    to L @ (L', N') { N } 
+    < L : V@RootObject  | forward : F, AtS > 
+    => if F [ N ] == undefined 
+       then < L : V@RootObject  | forward : F, AtS >
+       else if p2(F [ N ]) < N'
+            then < L : V@RootObject  | forward : insert(N, (L', N'), F), AtS >
+            else < L : V@RootObject  | forward : F, AtS >
+            fi 
+       fi .
+
+  *** Message in transit.
+  crl [forwarding-update] :
+    to L @ (L', N') { N } 
+    < L'' : V@RootObject  | AtS > 
+    => < L'' : V@RootObject  | AtS >
+       Send(L, L'', to L @ (L', N') { N }) 
+    if L =/= L'' .
+
+  *** Arrival at a location.
+
+  *** When a go message reaches the location it is addressed to, 
+  *** the mobile object that it carries as an argument is 
+  *** put into the configuration. Depending on whether the location
+  *** is the home location of such a mobile object or not, the 
+  *** forwarding information is updated or a message is sent 
+  *** to its home location so that it updates its forwarding info.
+
+  rl [arrive-loc] :
+    go(L, < o(L', N) : V@MobileObject | hops : N', AtS' >)
+    < L : V@RootObject | guests : OS, forward : F, AtS >
+    => < o(L', N) : V@MobileObject | hops : N' + 1, AtS' >
+       if L == L'
+       then < L : V@RootObject |
+                       guests : (o(L', N), OS),
+                       forward : insert(N, (L, N' + 1), F), AtS >
+       else < L : V@RootObject | guests : (o(L', N), OS), forward : F, AtS >
+            Send(L', L, to L' @ (L, N' + 1) { N })
+       fi .
+
+  *** When a go-find message reaches the tentative location it 
+  *** was addressed to, depending on whether the object the message
+  *** is trying to find is in such a location or not the mobile 
+  *** object will be put into the configuration or 
+  *** forwarded. As in the arrive-loc rule, the forwarding 
+  *** information is updated. In addition, if the message requires
+  *** to be forwarded, it will be done to the location the mobile
+  *** object is in according to the forwarding information in its
+  *** home location or to such a home location depending on whether
+  *** it is in its home location or not.
+
+  rl [arrive-find-loc] :
+    *** the object has been reached in its home location
+    go-find(o(L, N), L', H, 
+            < o(L', N') : V@MobileObject | hops : N'', AtS' >) 
+    < L' : V@RootObject | state : active, guests : (o(L, N), OS), forward : F, AtS > 
+    => < L' : V@RootObject | state : active, guests : (o(L, N), o(L', N'), OS),
+                             forward : insert(N', (L', N'' + 1),F), AtS >
+       < o(L', N') : V@MobileObject | hops : N'' + 1, AtS' > .
+
+  crl [arrive-find-loc] :
+    *** the object has been reached in the tentative location, 
+    *** and this is not its home location
+    go-find(o(L, N), L', H, 
+            < o(L'', N') : V@MobileObject | hops : N'', AtS >) 
+    < L' : V@RootObject | state : active, guests : (o(L, N), OS), forward : F, AtS' > 
+    => < L' : V@RootObject | state : active, guests : (o(L, N), o(L'', N'), OS),
+                             forward : F, AtS' >
+       < o(L'', N') : V@MobileObject | hops : N'' + 1, AtS > 
+       Send(L'', L', to L'' @ (L', N'' + 1) { N' })
+    if L' =/= L'' .
+
+  crl [arrive-find-loc] :
+    go-find(o(L, N), L, (null).Maybe{Nat}, < o(L'', N') : V@MobileObject | AtS >) 
+    < L : V@RootObject | state : active, guests : OS, forward : F, AtS' > 
+    => < L : V@RootObject | state : active, guests : OS, forward : F, AtS' > 
+       Send(p1(F[N]), L, 
+            go-find(o(L, N), p1(F[N]), p2(F[N]), < o(L'', N') : V@MobileObject | AtS >))
+    if not(o(L, N) in OS) .
+      
+  crl [arrive-find-loc] :
+    go-find(o(L, N), L, N'', < o(L'', N') : V@MobileObject | AtS' >) 
+    < L : V@RootObject | state : active, guests : OS, forward : F, AtS > 
+    => < L : V@RootObject | state : active, guests : OS, forward : F, AtS > 
+       Send(p1(F[N]), L, 
+            go-find(o(L, N), p1(F[N]), p2(F[N]), < o(L'', N') : V@MobileObject | AtS' >))
+    if not(o(L, N) in OS) and p2(F[N]) > N'' .
+    
+  crl [arrive-find-proc] :
+    go-find(o(L, N), L', H, < o(L'', N') : V@MobileObject | AtS >) 
+    < L' : V@RootObject | state : active, guests : OS, AtS' > 
+    => < L' : V@RootObject | state : active, guests : OS, AtS' > 
+       Send(L, L', 
+            go-find(o(L, N), L, (null).Maybe{Nat}, < o(L'', N') : V@MobileObject | AtS >)) 
+    if not(o(L, N) in OS) and L =/= L' .
+
+  crl [arrive-find-proc] :
+    go-find(O, L, H, < O' : V@MobileObject | AtS >) 
+    < L' : V@RootObject | state : active, AtS' >
+    => < L' : V@RootObject | state : active, AtS' >
+       Send(L, L', go-find(O, L, H, < O' : V@MobileObject | AtS >)) 
+    if L =/= L' .  
+
+
+  *** Message redirected to the right location.
+  *** Messages which are sent to mobile objects in a different 
+  *** location must be appropriately redirected. Note that the 
+  *** condition makes sure not only that the object is not in the 
+  *** location' belly, but also that the forwarding info does not 
+  *** point to the location itself, which would mean that the mobile object
+  *** has not arrived to its destination yet. If the location in which
+  *** the message is generated is the parent location of the mobile 
+  *** object the message is addressed to, then the message is 
+  *** forwarded to the location indicated by the forwarding info with 
+  *** the corresponding number of hops; in other case the message is 
+  *** forwarded to the parent location with the number of hops set to 
+  *** null. This hops information is used in the msg-arrive-to-proc 
+  *** rule to avoid unnecessary forwarding of messages when the 
+  *** destination object is in transit.
+
+  crl [msg-send] :
+    < L : V@RootObject  | state : active, guests : OS, forward : F, AtS >
+    (to o(L, N) { T })
+    => < L : V@RootObject  | state : active, guests : OS, forward : F, AtS >
+       Send(p1(F[N]), L, to o(L, N) hops p2(F[N]) in p1(F[N]) { T }) 
+    if (p1(F[N]) =/= L) /\ (not o(L, N) in OS) .
+
+  crl [msg-send] :
+    < O : V@RootObject  | state : active, guests : OS, forward : F, AtS >
+    (to o(L, N) { T })
+    => < O : V@RootObject  | state : active, guests : OS, forward : F, AtS >
+       Send(L, O, to o(L, N) hops null in L { T }) 
+    if (O =/= L) /\ (not o(L, N) in OS) .
+
+
+  *** Arrival of an inter-object message to a location.
+
+  rl [msg-arrive-to-loc] :
+    *** If the object is in the location then the message is just put 
+    *** in the location so the object can get it.
+    to o(L, N) hops H in L' { T' } 
+    < L' : V@RootObject  | state : active, guests : (o(L, N), OS), AtS > 
+    => < L' : V@RootObject  | state : active, guests : (o(L, N), OS), AtS >
+       to o(L, N) { T' } .
+
+  crl [msg-arrive-to-loc] :
+    *** If the object is not in the location and the number of hops is 
+    *** null then the message is being sent to the mobile object's 
+    *** parent location. If the forwarding info is pointing to the 
+    *** parent location itself then the object is in transit and the 
+    *** forwarding info has not been updated with its new location, so 
+    *** the message is not handled; otherwise, the message is sent to 
+    *** the location indicated by the forwarding info with the  
+    *** corresponding number of hops.
+    to o(L, N) hops null in L { T } 
+    < L : V@RootObject | state : active, guests : OS, forward : F, AtS > 
+    => < L : V@RootObject | state : active, guests : OS, forward : F, AtS > 
+       Send(p1(F[N]), L, to o(L, N) hops p2(F[N]) in p1(F[N]) { T })
+    if (not o(L, N) in OS) /\ (p1(F[N]) =/= L) .
+
+  crl [msg-arrive-to-loc] :
+    *** If the object is not in the location and the location is not the 
+    *** parent then the message is forwarded back to the parent location
+    *** with the same hops number. Note that since L =/= L' the 
+    *** number of hops is not null, that is, it is a natural number.
+    *** Note that, since the forwarding info is updated once the object
+    *** has arrived to a location, it cannot be the case that the 
+    *** message has arrived before the object. If the object to which 
+    *** the message is addressed is not in the location registered in 
+    *** the forwarding info it is because the object has already left 
+    *** the location and the message must be returned to the parent location. 
+    to o(L, N) hops N' in L' { T } 
+    < L' : V@RootObject | state : active, guests : OS, AtS > 
+    => < L' : V@RootObject | state : active, guests : OS, AtS > 
+       Send(L, L', to o(L, N) hops N' in L { T } )
+    if (not o(L, N) in OS) /\ (L =/= L') .
+
+  crl [msg-arrive-to-loc] :
+    *** Finally, if the message is being returned from a location to 
+    *** which the message was forwarded from the parent location because
+    *** the object already left it, then the message will be forwarded 
+    *** again by the parent location only if its forwarding info has 
+    *** been updated since the message was forwarded by the first time,
+    *** that is, if the number of hops in the message is smaller than 
+    *** the number of hops in the forwarding info in the parent location. 
+    *** Note that we don't check whether the forwarding info points to 
+    *** the parent location itself anymore, since in this case the hops 
+    *** would have been appropriately incremented. 
+    to o(L, N) hops N' in L { T } 
+    < L : V@RootObject  | state : active, guests : OS, forward : F, AtS > 
+    => < L : V@RootObject  | state : active, guests : OS, forward : F, AtS > 
+       Send(p1(F[N]), L, to o(L, N) hops p2(F[N]) in p1(F[N]) { T })
+    if (not o(L, N) in OS) /\ (N' < p2(F[N])) .
+
+  crl [msg-arrive-to-loc] :  
+    to O hops H in L' { T } 
+    < L : V@RootObject | AtS > 
+    => < L : V@RootObject | AtS > 
+       Send(L', L, to O hops H in L' { T })
+    if L =/= L' .
+
+  *** We have further simplified the checking. Instead of checking 
+  *** that the result of introducing the current message to the 
+  *** configuration representing the current state of the mobile 
+  *** object is a valid configuration we just check that it is a 
+  *** valid message in the module of the object. We can assume that, 
+  *** since the previous state was a valid one, adding a valid message
+  *** will result in a new valid state.
+
+  rl [msg-in] :
+    to O { T } 
+    < O : V@MobileObject | mod : MOD, s : '_&_[T', T''], gas : N, executable : ExT, AtS > 
+    => if sortLeq(MOD, leastSort(MOD, 'to_:_[upTerm(O), T]), 'Msg)
+          or
+          sortLeq(MOD, 'Msg, leastSort(MOD, 'to_:_[upTerm(O), T]))
+       then < O : V@MobileObject | mod : MOD, s : '_&_['__['to_:_[upTerm(O), T], T'], T''], 
+                                   executable : getPossibleTerms(MOD, '_&_['__['to_:_[upTerm(O), T], T'], T'']),
+                                   gas : N, AtS >
+       else < O : V@MobileObject | mod : MOD, s : '_&_[T', T''], 
+                                   executable : ExT, gas : N, AtS > 
+       fi .
+
+  *** Pulling out of messages from mobile objects.
+
+  *** Note that we must have three rules to deal with all the 
+  *** possible cases. Although in general it is enough with two cases
+  *** to deal with associative lists (one element and more than one 
+  *** element), at the metalevel, since the engine is giving the 
+  *** list in flattened form and expect it in flattened form, we 
+  *** must make sure that when we have more than one element the top 
+  *** operator is __.
+
+  rl [message-out-to] :
+    < O : V@MobileObject | mod : MOD, s : '_&_[T, 'to_:_[T', T'']], executable : ExT, gas : N, AtS > 
+    => < O : V@MobileObject | mod : MOD, s : '_&_[T, 'none.Configuration], 
+                              executable : getPossibleTerms(MOD, '_&_[T, 'none.Configuration]),
+			      gas : N, AtS > 
+       (to downTerm(T', o(l("null", 0), 0)) { T'' }) .
+
+  rl [message-out-to] :
+    < O : V@MobileObject | 
+        mod : MOD, s : '_&_[T, '__['to_:_[T', T''], T''']], 
+        executable : ExT, gas : N, AtS > 
+    => < O : V@MobileObject | mod : MOD, s : '_&_[T, T'''], gas : N,
+                              executable : getPossibleTerms(MOD, '_&_[T, T''']),
+			      AtS > 
+       (to downTerm(T', o(l("null", 0), 0)) { T'' }) .
+
+  crl [message-out-to] :
+    < O : V@MobileObject | 
+        mod : MOD, s : '_&_[T, '__['to_:_[T', T''], T''', TL]], 
+        executable : ExT, gas : N, AtS >
+    => < O : V@MobileObject | mod : MOD, s : '_&_[T, '__[T''', TL]], gas : N,
+                              executable : getPossibleTerms(MOD, '_&_[T, '__[T''', TL]]),
+			      AtS > 
+       (to downTerm(T', o(l("null", 0), 0)) { T'' })
+       if TL =/= empty .
+
+  *** If there is a go command inside the mobile object indicating 
+  *** where it should move then there shouldn't be any other message.
+  *** Perhaps we should control this situation and act in 
+  *** consequence.
+
+  rl [message-out-go] :
+    < O : V@MobileObject | mod : MOD, s : '_&_[T, 'go[T']], executable : ExT, gas : N, AtS > 
+    => go(downTerm(T', l("null", 0)), 
+          < O : V@MobileObject | mod : MOD, s : '_&_[T, 'none.Configuration], gas : N,
+                                 executable : getPossibleTerms(MOD, '_&_[T, 'none.Configuration]),
+				 AtS >) .
+    
+  rl [message-out-go-find] :
+    < O : V@MobileObject | mod : MOD, s : '_&_[T, 'go-find[T', T'']], executable : ExT, AtS > 
+    => go-find(downTerm(T', o(l("null", 0), 0)), downTerm(T'', l("null", 0)), 
+          < O : V@MobileObject | mod : MOD, s : '_&_[T, 'none.Configuration], 
+                                 executable : getPossibleTerms(MOD, '_&_[T, 'none.Configuration]),
+				 AtS >) .
+
+  *** Pulling out a newo command (new-mobile-object message).
+
+  *** newo is defined in the MOBILE-OBJECT-INTERFACE module  
+  *** as follows:
+  ***   op newo : Module Configuration Oid -> Msg .
+  *** newo takes a module (a term of sort Module metarepresenting a 
+  *** module), a Configuration (which will be the initial 
+  *** configuration in the belly of the mobile object to create), 
+  *** and the provisional id of the main object in the configuration 
+  *** given as second argument. The first action accomplished by a 
+  *** mobile object when it detects the newo command is creating a 
+  *** new mobile object with the metarepresentation of the
+  *** configuration given as second argument to the newo message, 
+  *** and then sending a start-up message to the main object with 
+  *** its new name, so it coincides with the name of the mobile 
+  *** object it is in. Note that as for the to_:_ message we need 
+  *** three rules to cover all the cases. Before creating the mobile
+  *** object we check that the initial state given to the newo
+  *** command as second argument together with the start-up message
+  *** is a valid configuration. 
+
+  rl [message-out-newo] :
+    < O : V@MobileObject | mod : MOD, s : '_&_[T, 'newo[T', T'', T''']], gas : N,
+                           executable : ExT, AtS >
+    => < O : V@MobileObject | mod : MOD, s : '_&_[T, 'none.Configuration], gas : N,
+                              executable : getPossibleTerms(MOD, '_&_[T, 'none.Configuration]),
+			      AtS > 
+       newo(downTerm(T', errorModule), T'', T''') .
+
+  rl [message-out-newo] :
+    < O : V@MobileObject | mod : MOD, s : '_&_[T, '__['newo[T', T'', T'''], T'''']], gas : N,
+               executable : ExT, AtS >
+    => < O : V@MobileObject | mod : MOD, s : '_&_[T, T''''], gas : N,
+                              executable : getPossibleTerms(MOD, '_&_[T, T'''']),
+			      AtS > 
+       newo(downTerm(T', errorModule), T'', T''') .
+
+  crl [message-out-newo] :
+    < O : V@MobileObject | mod : MOD, s : '_&_[T, '__['newo[T', T'', T'''], T'''', TL]], gas : N,
+               executable : ExT, AtS >
+    => < O : V@MobileObject | mod : MOD, s : '_&_[T, '__[T'''', TL]], gas : N,
+                              executable : getPossibleTerms(MOD, '_&_[T, '__[T'''', TL]]), AtS > 
+       newo(downTerm(T', errorModule), T'', T''')
+    if TL =/= empty .
+
+
+  *** In order to make sure that no gas is consumed when an object 
+  *** cannot do anything we check that the result of executing 
+  *** metaFrewrite on a term is different from the original term.  
+  *** It could of course happen that although some rules are applied 
+  *** there is a loop and the final term is equal to the original one. 
+  *** We use the gas value both as the maximum number of rewrites in
+  *** each call to metaFrewrite and as the number of times 
+  *** that metaFrewrite is called. Note that the gas value is 
+  *** decremented each time metaFrewrite is called.
+  
+  var RS : ResultPair .
+  
+----  crl [do-something] :
+----    < O : V@MobileObject | mod : MOD, s : T, gas : N, 
+----                           executable : true, AtS > 
+----    => < O : V@MobileObject | mod : MOD, 
+----                  s : T', 
+----                  gas : sd(N, 1), 
+----                  
+----                  executable : (T =/= T'), AtS > 
+----    if (N > 0) /\ RS := metaFrewrite(MOD, T, N, 1) /\ T' := getTerm(RS) .
+  
+----  crl [do-something] :
+----    < O : V@MobileObject | mod : MOD, s : T, gas : N, executable : T',
+----                           AtS > 
+----    => < O : V@MobileObject | mod : MOD, 
+----                  s : T', 
+----                  gas : sd(N, 1), 
+----               
+----		  executable : getTerm(metaFrewrite(MOD, T', N, 1)),
+----                  AtS > 
+----    if (N > 0) /\ T' =/= T .
+    
+var TS : TermSet .
+var RST? : ResultTriple? .
+
+---- Decrementamos el gas de uno en uno, por lo que ponemos 1 en vez de N.
+crl [do-something] :
+    < O : V@MobileObject | mod : MOD, s : T, gas : N, executable : T' . TS,
+                           AtS > 
+    => < O : V@MobileObject | mod : MOD, 
+                  s : T', 
+                  gas : sd(N, 1), 
+		  executable : getPossibleTerms(MOD, T'), AtS > 
+    if (N > 0) /\ T' =/= T .
+    
+  op getPossibleTerms : Module Term -> TermSet .
+  op getPossibleTerms : Module Term Nat -> TermSet .
+  
+  eq getPossibleTerms(MOD, T) = getPossibleTerms(MOD, T, 0) .
+  ceq getPossibleTerms(MOD, T, N) = getTerm(RST?) . getPossibleTerms(MOD, T, N + 1)
+   if 
+   RST? := metaSearch(MOD, T, 'M:MobObjState, nil, '+, 1, N)
+   /\ 
+   RST? =/= (failure).ResultTriple? .
+  eq getPossibleTerms(MOD, T, N) = emptyTS [owise] .
+
+
+  *** Create new object.
+
+  *** newo is defined in the MOBILE-OBJECT-INTERFACE module
+  *** as follows:
+  ***   op newo : Module Configuration Oid -> Msg .
+  *** newo takes a module (a term of sort Module metarepresenting a 
+  *** module), a Configuration (which will be the initial 
+  *** configuration in the belly of the mobile object to create), 
+  *** and the provisional id of the main object in the configuration 
+  *** given as second argument. The first action accomplished by a 
+  *** mobile object when it detects the newo command is creating a 
+  *** new mobile object with the metarepresentation of the
+  *** configuration given as second argument to the newo message, 
+  *** and then sending a start-up message to the main object with 
+  *** its new name, so it coincides with the name of the mobile 
+  *** object it is in. 
+  *** When a mobile object is created, its number of hops is set to 
+  *** zero, and the forwarding info in its parent location is 
+  *** initialized as expected, with the location in which it's located
+  *** ---the parent itself---and its number of hops---zero.
+  *** Note that the gas initially given is 100. Perhaps the initial 
+  *** amount of gas should be specified in the newo command.
+
+  rl [create-object] :
+    < L : V@RootObject | cnt : N, guests : OS, forward : F, state : active, AtS > 
+    newo(MOD, T, T') 
+    => if sortLeq(MOD, 
+            leastSort(MOD, '__[T, 'to_:_[T', 'start-up[upTerm(o(L, N))]]]),
+            'Configuration)
+          or
+          sortLeq(MOD,
+            'Configuration, 
+            leastSort(MOD, '__[T, 'to_:_[T', 'start-up[upTerm(o(L, N))]]]))
+       then < L : V@RootObject | cnt : N + 1, 
+                                 guests : (o(L, N), OS),
+                                 forward : insert(N, (L, 0), F), 
+                                 state : active, AtS >
+            < o(L, N) : MobileObject | mod : MOD, 
+                             s : '_&_['__[T, 'to_:_[T', 'start-up[upTerm(o(L, N))]]],
+                                      'none.Configuration], 
+                             gas : 10000, 
+                             executable : getPossibleTerms(MOD, '_&_['__[T, 'to_:_[T', 'start-up[upTerm(o(L, N))]]],
+                                      'none.Configuration]),
+                             hops : 0 > 
+       else < L : V@RootObject | cnt : N, guests : OS, forward : F, 
+                                 state : active, AtS > 
+       fi .
+
+  *** kill (by alberto)
+  
+  *** when a mobile object inner object dead
+  
+  rl [message-out-kill] :
+    < o(L, N) : V@MobileObject | s : '_&_[T, 'kill.Msg], AtS > 
+    => to L dead { N } . 
+    
+  rl [mobile-object-dead] :
+    < L : V@RootObject | guests : (o(L, N), OS), forward : ((N |-> (L, N')), F), AtS >
+    to L dead { N }
+    => < L : V@RootObject | guests : OS, forward : F, AtS >  .
+    
+  crl [mobile-object-dead] :
+    < L' : V@RootObject | guests : OS, AtS > 
+    to L dead { N }
+    => < L' : V@RootObject | guests : OS, AtS > 
+       Send(L, L', to L dead { N })
+    if L' =/= L /\ not o(L, N) in OS .
+    
+  crl [mobile-object-dead] :
+    < L : V@RootObject | guests : (o(L', N), OS), AtS > 
+    to L' dead { N }
+    => < L : V@RootObject | guests : OS, AtS > 
+       Send(L', L, to L' dead { N }) 
+    if L =/= L' .
+      
+  crl [mobile-object-dead] : 
+    to L dead { N }
+    < L : V@RootObject | guests : OS, forward : ((N |-> (L', N')), F), AtS > 
+    => < L : V@RootObject | guests : OS, forward : F, AtS > 
+    if not o(L, N) in OS .
+
+endm
+
+

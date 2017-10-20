@@ -1,0 +1,32 @@
+(fmod PNAT is
+  sorts PNat PNzNat PZero .
+ endfm)
+
+(fth ONE is
+  sort Elt .
+ endfth)
+
+(view V from ONE to PNAT is
+   sort Elt to PNat .
+ endv)
+ 
+(show view V .)
+ 
+fmod PNAT is
+  sorts PNat PNzNat PZero .
+endfm
+
+fth ONE is
+  sort Elt .
+endfth
+
+view V from ONE to PNAT is
+   sort Elt to PNat .
+endv
+ 
+select FULL-MAUDE .
+loop init .
+
+(show view V .)
+ 
+  

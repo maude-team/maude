@@ -1,0 +1,6 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  view NatAsToset from TOSET to NAT is
+    sort Elt to Nat .
+  endv

@@ -1,0 +1,68 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  load list-cons.maude
+  
+  fmod GEN-TREE{X :: TRIV} is
+    protecting LIST-CONS{X} .
+
+    sorts Tree{X} Forest{X} .
+
+    op _[_] : X$Elt Forest{X} -> Tree{X} [ctor] .
+    op empty-forest : -> Forest{X} [ctor] .
+    op _:_ : Tree{X} Forest{X} -> Forest{X} [ctor] .
+
+    op root : Tree{X} -> X$Elt .
+    op children : Tree{X} -> Forest{X} .
+    op #children : Tree{X} -> Nat .
+    op length : Forest{X} -> Nat .
+    op leaf? : Tree{X} -> Bool .
+    
+    var E : X$Elt .
+    var T : Tree{X} .
+    var F : Forest{X} .
+
+    eq root(E [F]) = E .
+    eq children(E [F]) = F .
+    
+    eq length(empty-forest) = 0 .
+    eq length(T : F) = 1 + length(F) .
+    eq #children(E [F]) = length(F) .
+    eq leaf?(T) = #children(T) == 0 .
+
+    ops depth degree : Tree{X} -> Nat .
+    ops depth-forest degree-forest : Forest{X} -> Nat .
+    
+    eq depth(E [F]) = 1 + depth-forest(F) .
+    eq depth-forest(empty-forest) = 0 .
+    eq depth-forest(T : F) = max(depth(T), depth-forest(F)) .
+    
+    eq degree(E [F]) = max(length(F), degree-forest(F)) .
+    eq degree-forest(empty-forest) = 0 .
+    eq degree-forest(T : F) = max(degree(T), degree-forest(F)) .
+
+    ops preorder postorder : Tree{X} -> List{X} .
+    ops preorder-forest postorder-forest : Forest{X} -> List{X} .
+ 
+    eq preorder(E [F]) = E : preorder-forest(F) .
+    eq preorder-forest(empty-forest) = [] .
+    eq preorder-forest(T : F) = preorder(T) ++ preorder-forest(F) .
+    
+    eq postorder(E [F]) = postorder-forest(F) ++ (E : []) .
+    eq postorder-forest(empty-forest) = [] .
+    eq postorder-forest(T : F) = postorder(T) ++ postorder-forest(F) .
+  endfm
+
+  fmod GEN-TREE-TEST is
+    protecting GEN-TREE{Int} .
+  endfm
+
+red postorder(
+        1 [ 3 [ 4 [ empty-forest ] : empty-forest ] 
+                  : (2 [ empty-forest ] : empty-forest) ]) .
+---(
+reduce in GEN-TREE-TEST : postorder(1[3[4[empty-forest] : empty-forest] : 2[
+    empty-forest] : empty-forest]) .
+rewrites: 26 in 0ms cpu (0ms real) (~ rewrites/second)
+result NeList{Int}: 4 : 3 : 2 : 1 : []
+---)

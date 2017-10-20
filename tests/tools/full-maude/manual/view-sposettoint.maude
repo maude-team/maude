@@ -1,0 +1,16 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  view SPosetToInt from SPOSET to INT is
+    sort Elt to Int .
+    vars X Y : Elt .
+    op X < Y to term X <= Y and X =/= Y .
+  endv
+
+***(
+  view SPosetToInt from SPOSET to INT is
+    sort Elt to Int .
+    op X:Elt < Y:Elt to term X:Int <= Y:Int and X:Int =/= Y:Int .
+  endv
+)

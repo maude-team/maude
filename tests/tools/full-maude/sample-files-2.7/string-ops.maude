@@ -1,0 +1,29 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+  
+  fmod STRING-OPS is
+    pr STRING .
+    var S : String .
+    op extractHostName : String -> String .
+    op extractPath : String -> String .
+    op extractHeader : String -> String .
+    op extractBody : String -> String .
+
+    eq extractHostName(S) 
+      = if find(S, "/", 0) == notFound 
+        then S
+        else substr(S, 0, find(S, "/", 0)) 
+        fi .
+
+    eq extractPath(S) 
+      = if find(S, "/", 0) == notFound 
+        then "/"
+        else substr(S, find(S, "/", 0), length(S)) 
+        fi .
+
+    eq extractHeader(S) 
+      = substr(S, 0, find(S, "\r\n\r\n", 0) + 4) .
+    eq extractBody(S) 
+      = substr(S, find(S, "\r\n\r\n", 0) + 4, length(S)) .
+  endfm

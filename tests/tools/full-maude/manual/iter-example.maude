@@ -1,0 +1,66 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  fmod ITER-EXAMPLE is
+    sorts NzEvenNat EvenNat OddNat NzNat Nat EvenInt OddInt NzInt Int .
+    subsorts OddNat < OddInt NzNat < NzInt < Int .
+    subsorts EvenNat < EvenInt Nat < Int .
+    subsorts NzEvenNat < NzNat EvenNat < Nat .
+
+    op 0 : -> EvenNat .
+
+    op s : EvenNat -> OddNat [iter] .
+    op s : OddNat -> NzEvenNat [iter] .
+    op s : Nat -> NzNat [iter] .
+    op s : EvenInt -> OddInt [iter] .
+    op s : OddInt -> EvenInt [iter] .
+    op s : Int -> Int [iter] .
+
+    op _+_ : Int Int -> Int [comm gather (E e)] .
+    op _+_ : OddInt OddInt -> EvenInt [ditto] .
+    op _+_ : EvenInt EvenInt -> EvenInt [ditto] .
+    op _+_ : OddInt EvenInt -> OddInt [ditto] .
+    op _+_ : Nat Nat -> Nat [ditto] .
+    op _+_ : Nat NzNat -> NzNat [ditto] .
+    op _+_ : OddNat OddNat -> NzEvenNat [ditto] .
+    op _+_ : NzEvenNat EvenNat -> NzEvenNat [ditto] .
+    op _+_ : EvenNat EvenNat -> EvenNat [ditto] .
+    op _+_ : OddNat EvenNat -> OddNat [ditto] .
+  endfm
+
+  unify in ITER-EXAMPLE : 
+           s^1000000(X:OddNat) =? s^100000000001(Y:Int) .
+---(
+  Solution 1
+  X:OddNat --> s^99999000001(#1:EvenNat)
+  Y:Int --> #1:EvenNat
+---)
+
+  unify in ITER-EXAMPLE : 
+           s^1000000(X:OddNat) =? s^100000000001(Y:Int + Z:Int + W:Int) .
+---(
+  Solution 1
+  X:OddNat --> s^99999000001(#1:OddNat + (#2:OddNat + #3:EvenNat))
+  W:Int --> #1:OddNat
+  Z:Int --> #2:OddNat
+  Y:Int --> #3:EvenNat
+
+  Solution 2
+  X:OddNat --> s^99999000001(#1:OddNat + (#2:EvenNat + #3:OddNat))
+  W:Int --> #1:OddNat
+  Z:Int --> #2:EvenNat
+  Y:Int --> #3:OddNat
+
+  Solution 3
+  X:OddNat --> s^99999000001(#1:EvenNat + (#2:OddNat + #3:OddNat))
+  W:Int --> #1:EvenNat
+  Z:Int --> #2:OddNat
+  Y:Int --> #3:OddNat
+
+  Solution 4
+  X:OddNat --> s^99999000001(#1:EvenNat + (#2:EvenNat + #3:EvenNat))
+  W:Int --> #1:EvenNat
+  Z:Int --> #2:EvenNat
+  Y:Int --> #3:EvenNat
+---)

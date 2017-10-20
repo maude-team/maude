@@ -1,0 +1,22 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  fmod COLOR-TEST is
+    sorts Color ColorList .
+    subsort Color < ColorList .
+    op red : -> Color [format (r! o)] .
+    op green : -> Color [format (g! o)] .
+    op blue : -> Color [format (b! o)] .
+    op yellow : -> Color [format (yu o)] .
+    op cyan : -> Color [format (cu o)] .
+    op magenta : -> Color [format (mu o)] .
+    op __ : ColorList ColorList -> ColorList [assoc] .
+  endfm
+
+***(
+Maude> reduce red green blue yellow cyan magenta .
+reduce in COLOR-TEST : red green blue yellow cyan magenta .
+rewrites: 0 in 0ms cpu (0ms real) (~ rewrites/second)
+result ColorList: red green blue yellow cyan magenta
+)

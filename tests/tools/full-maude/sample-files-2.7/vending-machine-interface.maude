@@ -1,0 +1,143 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  load vending-machine-grammar.maude
+  load buying-strats.maude
+  
+  mod VENDING-MACHINE-INTERFACE is
+    including LOOP-MODE .
+    including VENDING-MACHINE-GRAMMAR .
+    protecting BUYING-STRATS .
+    protecting CONVERSION .
+
+    op <_;_;_> : Action Marking QidList -> State .
+    op init : -> System .
+    op idle : -> Action .
+    eq init = [nil, < idle ; null ; nil >, nil] .
+
+    var  A : Action .
+    var  I : Item .
+    var  C : Coin .
+    var  M : Marking .
+    vars QIL QIL' QIL'' : QidList .
+    var  N : Nat .
+
+    crl [in] :
+      [QIL, < idle ; M ; nil >, QIL']
+       => if T:ResultPair? :: ResultPair
+          then [nil, 
+                < downTerm(getTerm(T:ResultPair?), idle) ; M ; nil >, 
+                QIL']
+          else [nil, < idle ; M ; nil >, 'ERROR QIL]
+          fi
+       if QIL =/= nil
+          /\ T:ResultPair?  
+               := metaParse(upModule('VENDING-MACHINE-GRAMMAR, false), 
+                    QIL, 'Action) .
+
+    crl [out] :
+       [QIL, < A ; M ; QIL' >, QIL'']
+       => [QIL, < A ; M ; nil >, QIL''  QIL']
+       if QIL' =/= nil .
+
+    op showBasket : Marking -> QidList .   
+    eq showBasket(I M)
+       = metaPrettyPrint(upModule('VENDING-MACHINE-SIGNATURE, false), 
+           upTerm(I))
+         showBasket(M) .
+    eq showBasket(C M) = showBasket(M) .
+    eq showBasket(null) = nil .
+
+    op showCredit : Marking -> QidList .
+    eq showCredit(C M)
+       = metaPrettyPrint(upModule('VENDING-MACHINE-SIGNATURE, false), 
+           upTerm(C))
+         showCredit(M) .
+    eq showCredit(I M) = showCredit(M) .
+    eq showCredit(null) = nil .
+
+    rl [showBasket] :
+        < showBasket ; M ; nil >
+        => < idle ; M ; ('\u 'basket: '\o showBasket(M) '\n) > .
+
+    rl [showCredit] :
+       < showCredit ; M ; nil >
+       => < idle ; M ; ('\u 'credit: '\o showCredit(M) '\n) > .
+
+    rl [insertCoin] :
+      < q ; M ; nil >
+      => < idle ; 
+           downTerm(insertCoin('add-q, upTerm(M)), null) ;
+           nil > .
+
+    rl [insertCoin] :
+      < $ ; M ; nil >
+      => < idle ; 
+           downTerm(insertCoin('add-$, upTerm(M)), null) ;
+           nil > .
+
+    rl [buy1Cake]:
+      < buy1Cake ; M ; nil >
+      => < buy c : 1 ; M ; nil > .
+
+    rl [buy1Apple]:
+      < buy1Apple ;  M ; nil >
+      => < buy a : 1 ; M ; nil > .
+
+    rl [buyNitems]:
+      < buy c : N ;  M ; nil >
+      => < idle ; 
+           downTerm(onlyNitems(upTerm(M), 'buy-c, N), null) ; 
+           nil > .
+
+    rl [buyNitems]:
+      < buy a : N ;  M ; nil >
+      => < idle ; 
+           downTerm(onlyNitems(upTerm(M), 'buy-a, N), null) ; 
+           nil > .
+  endm
+
+***(
+Maude> loop init .
+
+Maude> cont .
+rewrites: 0 in 0ms cpu (0ms real) (~ rewrites/second)
+result System: [nil,< idle ; null ; nil >,nil]
+
+Maude> ($)
+
+Maude> (showCredit)
+credit: $
+
+Maude> ($)
+
+Maude> cont .
+rewrites: 0 in 0ms cpu (0ms real) (~ rewrites/second)
+result System: [nil,< idle ; $ $ ; nil >,nil]
+
+Maude> (q)
+
+Maude> (buy1Apple)
+
+Maude> (showBasket)
+basket: a
+
+Maude> (showCredit)
+credit: $ q q
+
+Maude> ($)
+
+Maude> (buy a : 3)
+
+Maude> (showBasket)
+basket: a a a a
+
+Maude> (showCredit)
+credit: q
+
+Maude> cont .
+rewrites: 0 in 0ms cpu (0ms real) (~ rewrites/second)
+result System: [nil,< idle ; q a a a a ; nil >,'\u 'credit: '\o '\r '\! 'q '\o
+    '\n]
+)

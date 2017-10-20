@@ -1,0 +1,10 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  ---- load toset.maude ---- do it in the main file
+
+ (fmod TREE-NODE{T :: TOSET} is
+    protecting NAT .
+    sort Node{T} .
+    op n : Nat T$Elt -> Node{T} [ctor] .
+  endfm)

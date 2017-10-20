@@ -1,0 +1,27 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  load sposet.maude
+
+  fth POSET is
+    including SPOSET .
+    op _<=_ : Elt Elt -> Bool .
+    vars X Y : Elt .
+    eq X <= X = true [nonexec] .
+    ceq X <= Y = true if X < Y [nonexec] .
+    ceq X = Y if X <= Y /\ X < Y = false [nonexec] .
+  endfth
+
+***(
+  load nsposet.maude
+
+  fth POSET is
+    including NSPOSET .
+    op _<_ : Elt Elt -> Bool .
+    vars X Y : Elt .
+    eq X < X = false [nonexec] .
+    ceq X <= Y = true if X < Y [nonexec] .
+    ceq X = Y if X <= Y /\ X < Y = false [nonexec] .
+  endfth
+)

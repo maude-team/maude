@@ -1,0 +1,31 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+  
+---- load mobile-maude.maude 
+
+mod SELLER is
+  inc MOBILE-OBJECT-INTERFACE .
+
+  sort Seller .
+  subsort Seller < Cid .
+  op Seller : -> Seller .
+  var V@Seller : Seller .
+
+  op description :_ : Nat -> Attribute [ctor] .
+    
+  op get-printer-price : Mid -> Contents [ctor] .
+  op printer-price : Nat -> Contents [ctor] .
+
+  vars S B : Mid .
+  var  N : Nat .
+  var  AtS : AttributeSet .
+  var  Conf : Configuration .
+  
+  rl [get-des] : 
+    Conf (to S : get-printer-price(B))
+    < S : V@Seller | description : N, AtS > & none
+    => Conf < S : V@Seller | description : N, AtS >
+       & (to B : printer-price(N)) .    
+endm
+
+

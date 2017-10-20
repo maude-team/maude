@@ -1,0 +1,31 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  fmod COLLAPSE-ID-EX is
+    sort Foo .
+    ops a e : -> Foo .
+    op f : Foo Foo -> Foo [left id: e] .
+    var X : Foo .
+    ---- eq f(X, a) = ...
+  endfm
+
+  fmod COLLAPSE-NAT-EX is
+    sorts Nat NzNat .
+    subsort NzNat < Nat .
+    op 0 : -> Nat .
+    op s : Nat -> NzNat .
+    op + : Nat Nat -> Nat [assoc comm id: 0] .
+    op + : Nat NzNat -> Nat [assoc comm id: 0] .
+    var X : Nat .
+    var Y : NzNat .
+    eq +(s(X), Y) = s(+(X, Y)) .
+  endfm
+
+  fmod COLLAPSE-IDEM-EX is
+    sort Foo .
+    ops a b : -> Foo .
+    op f : Foo Foo -> Foo [idem] .
+    var X : Foo .
+    eq a = b .
+  endfm

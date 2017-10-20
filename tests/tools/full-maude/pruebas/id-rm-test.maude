@@ -1,0 +1,24 @@
+(set include BOOL off .)
+(mod TEST is
+  sort Nat .
+  op 0 : -> Nat .
+  op s_ : Nat -> Nat .
+  sorts Object  Conf .
+  subsort Object < Conf .
+  op none : -> Conf [ctor] .
+  op __ : Conf Conf -> Conf [comm assoc id: none] .
+  op count : Conf -> Nat .
+  eq count(C:Conf O:Object) = s count(C:Conf) .
+  eq count(none) = 0 .
+endm)
+
+trace include FULL-MAUDE .
+set trace off . 
+set trace select on .
+trace select ---- moreGeneralEqs moreGeneralRls 
+             ---- removeIds getVariants 
+             getVariants# .
+set print conceal off .
+print conceal fmod_is_sorts_.____endfm mod_is_sorts_._____endm db __ .
+
+(rm ids TEST .)

@@ -1,0 +1,122 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+  
+  load socket.maude
+  
+mod BUFFERED-SOCKET is
+  pr NAT .
+  inc SOCKET .
+
+------------------------------------------------------------------------------------
+----  class BufferedSocket |      *** One on each extreme of the socket
+----     read : String,           *** Messages read
+----     bState : BState .        *** Either idle or active
+
+  op BufferedSocket : -> Cid [ctor] .
+
+  op read :_ : String -> Attribute [ctor gather(&)] . 
+  op bState :_ : BState -> Attribute [ctor gather(&)] . 
+
+------------------------------------------------------------------------------------
+
+  op b : Oid -> Oid .   *** buffered sockets ids are marked with a b operator,
+                        *** i.e., the buffers associated to a socket SOCKET                         *** have identifier b(SOCKET); note that there is a 
+                        *** BufferedSocket on each side of the socket, that is,
+                        *** there are two objects with the same id, but in different
+                        *** configurations.
+    
+  sort BState .
+  ops idle active : -> BState [ctor] .
+    
+  op CreateClientTcpSocket : Oid Oid String Nat -> Msg [ctor msg format (b o)] .
+  op CreateServerTcpSocket : Oid Oid Nat Nat -> Msg [ctor msg format (b o)] .
+  op CreatedSocket : Oid Oid Oid -> Msg [ctor msg format (m o)] .
+
+  op AcceptClient : Oid Oid -> Msg [ctor msg format (b o)] .
+  op AcceptedClient : Oid Oid String Oid -> Msg [ctor msg format (m o)] .
+
+  op Send : Oid Oid String -> Msg [ctor msg format (b o)] .
+  op Sent : Oid Oid -> Msg [ctor msg format (m o)] .
+
+  op Receive : Oid Oid -> Msg [ctor msg format (b o)] .
+  op Received : Oid Oid String -> Msg [ctor msg format (m o)] .
+
+  op CloseSocket : Oid Oid -> Msg [ctor msg format (b o)] .
+  op ClosedSocket : Oid Oid String -> Msg [ctor msg format (m o)] .
+
+  op SocketError : Oid Oid String -> Msg [ctor msg format (r o)] .
+
+  vars SOCKET NEW-SOCKET SOCKET-MANAGER O : Oid .
+  vars ADDRESS IP IP' DATA S S' REASON : String .
+  var  Atts : AttributeSet .
+  vars PORT BACKLOG N : Nat .
+
+  rl [createServerTcpSocket] :
+    CreateServerTcpSocket(SOCKET-MANAGER, O, PORT, BACKLOG)
+    => createServerTcpSocket(SOCKET-MANAGER, O, PORT, BACKLOG) .
+
+  rl [acceptClient] :
+    AcceptClient(b(SOCKET), O)
+    => acceptClient(SOCKET, O) .
+
+  rl [acceptedClient] :
+    acceptedClient(O, SOCKET, IP', NEW-SOCKET) 
+    => AcceptedClient(O, b(SOCKET), IP', b(NEW-SOCKET)) 
+       < b(NEW-SOCKET) : BufferedSocket | bState : idle, read : "" > .
+       
+  rl [socketError] :
+    socketError(O, SOCKET-MANAGER, REASON)
+    => SocketError(O, SOCKET-MANAGER, REASON) .
+       
+  rl [closeSocket] :
+    CloseSocket(b(SOCKET), SOCKET-MANAGER)
+    => closeSocket(SOCKET, SOCKET-MANAGER) .
+
+  rl [closedSocket] :
+    < b(SOCKET) : BufferedSocket | Atts >
+    closedSocket(SOCKET, SOCKET-MANAGER, DATA)
+    => ClosedSocket(b(SOCKET), SOCKET-MANAGER, DATA) .
+
+  rl [createClientTcpSocket] :
+    CreateClientTcpSocket(SOCKET-MANAGER, O, ADDRESS, PORT)
+    => createClientTcpSocket(SOCKET-MANAGER, O, ADDRESS, PORT) .
+
+  rl [createdSocket] :
+    createdSocket(O, SOCKET-MANAGER, SOCKET) 
+    => < b(SOCKET) : BufferedSocket | bState : idle, read : "" > 
+       CreatedSocket(O, SOCKET-MANAGER, b(SOCKET)) .
+
+  rl [send] : 
+    < b(SOCKET) : BufferedSocket | bState : active, Atts > 
+    Send(b(SOCKET), O, DATA)
+    => < b(SOCKET) : BufferedSocket | bState : active, Atts >
+       send(SOCKET, O, DATA + "#") .
+
+  rl [sent] : 
+    < b(SOCKET) : BufferedSocket | bState : active, Atts > 
+    sent(O, SOCKET)
+    => < b(SOCKET) : BufferedSocket | bState : active, Atts > 
+       Sent(O, b(SOCKET)) .
+
+  rl [buffer-start-up] : 
+    < b(SOCKET) : BufferedSocket | bState : idle, Atts > 
+    => < b(SOCKET) : BufferedSocket | bState : active, Atts > 
+       receive(SOCKET, b(SOCKET)) .
+  
+  rl [received] : 
+    < b(SOCKET) : BufferedSocket | bState : active, read : S, Atts > 
+    received(b(SOCKET), O, DATA) 
+    => < b(SOCKET) : BufferedSocket | bState : active, read : (S + DATA), Atts > 
+       receive(SOCKET, b(SOCKET)) .
+  
+  crl [Received] : 
+    < b(SOCKET) : BufferedSocket | bState : active, read : S, Atts >  
+    Receive(b(SOCKET), O)
+    => < b(SOCKET) : BufferedSocket | bState : active, read : S', Atts >
+       Received(O, b(SOCKET), DATA)
+    if N := find(S, "#", 0) 
+       /\ DATA := substr(S, 0, N) 
+       /\ S' := substr(S, N + 1, length(S)) .
+endm
+ 

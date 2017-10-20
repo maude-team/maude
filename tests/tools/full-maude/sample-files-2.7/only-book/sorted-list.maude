@@ -1,0 +1,84 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  load toset.maude
+  load view-toset.maude
+  load list-cons.maude
+  
+  fmod SORTED-LIST{X :: TOSET} is
+    protecting LIST-CONS{TOSET}{X} .
+
+    sorts SortedList{X} NeSortedList{X} .
+    subsorts NeSortedList{X} < SortedList{X} < List{TOSET}{X} .
+    subsort NeSortedList{X} < NeList{TOSET}{X} .
+
+    vars N M : X$Elt .
+    vars L L' : List{TOSET}{X} .
+    vars OL OL' : SortedList{X} .
+    var  NEOL : NeSortedList{X} .
+
+    mb [] : SortedList{X} .
+    mb (N : []) : NeSortedList{X} .
+    cmb (N : NEOL) : NeSortedList{X} if N <= head(NEOL) .
+
+    op insertion-sort : List{TOSET}{X} -> SortedList{X} .
+    op insert-list : SortedList{X} X$Elt -> SortedList{X} .
+   
+    eq insertion-sort([]) = [] .
+    eq insertion-sort(N : L) = insert-list(insertion-sort(L), N) .
+
+    eq insert-list([], M) = M : [] .
+    ceq insert-list(N : OL, M) = M : N : OL if M <= N .
+    ceq insert-list(N : OL, M) = N : insert-list(OL, M) if N < M .
+
+    op mergesort : List{TOSET}{X} -> SortedList{X} .
+    op merge : SortedList{X} SortedList{X} -> SortedList{X} [comm] .
+
+    eq mergesort([]) = [] .
+    eq mergesort(N : []) = N : [] .
+    ceq mergesort(L) 
+      = merge(mergesort(take (length(L) quo 2) from L),
+              mergesort(throw (length(L) quo 2) from L))
+      if length(L) > 1 .
+
+    eq merge(OL, []) = OL .
+    ceq merge(N : OL, M : OL') = N : merge(OL, M : OL') if N <= M .
+
+    op quicksort : List{TOSET}{X} -> SortedList{X} .
+    op leq-elems : List{TOSET}{X} X$Elt -> List{TOSET}{X} .
+    op gr-elems : List{TOSET}{X} X$Elt -> List{TOSET}{X} .
+
+    eq quicksort([]) = [] .
+    eq quicksort(N : L) 
+      = quicksort(leq-elems(L,N)) ++ (N : quicksort(gr-elems(L,N))) .
+
+    eq leq-elems([], M) = [] .
+    ceq leq-elems(N : L, M) = N : leq-elems(L, M) if N <= M .
+    ceq leq-elems(N : L, M) = leq-elems(L, M) if M < N .
+    eq gr-elems([], M) = [] .
+    ceq gr-elems(N : L, M) = gr-elems(L, M) if N <= M .
+    ceq gr-elems(N : L, M) = N : gr-elems(L, M) if M < N .
+  endfm
+
+***(
+  load view-natastoset.maude
+
+  fmod SORTED-LIST-TEST is
+    protecting SORTED-LIST{NatAsToset} .
+  endfm
+
+Maude> red insertion-sort(5 : 4 : 3 : 2 : 1 : 0 : []) .
+reduce in SORTED-LIST-TEST : insertion-sort(5 : 4 : 3 : 2 : 1 : 0 : []) .
+rewrites: 120 in 0ms cpu (0ms real) (~ rewrites/second)
+result NeSortedList{NatAsToset}: 0 : 1 : 2 : 3 : 4 : 5 : []
+
+Maude> red mergesort(5 : 3 : 1 : 0 : 2 : 4 : []) .
+reduce in SORTED-LIST-TEST : mergesort(5 : 3 : 1 : 0 : 2 : 4 : []) .
+rewrites: 159 in 0ms cpu (0ms real) (~ rewrites/second)
+result NeSortedList{NatAsToset}: 0 : 1 : 2 : 3 : 4 : 5 : []
+
+Maude> red quicksort(0 : 1 : 2 : 5 : 4 : 3 : []) .
+reduce in SORTED-LIST-TEST : quicksort(0 : 1 : 2 : 5 : 4 : 3 : []) .
+rewrites: 175 in 0ms cpu (0ms real) (~ rewrites/second)
+result NeSortedList{NatAsToset}: 0 : 1 : 2 : 3 : 4 : 5 : []
+)

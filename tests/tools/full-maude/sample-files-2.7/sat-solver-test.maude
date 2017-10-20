@@ -1,0 +1,28 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  load model-checker.maude
+
+  fmod SAT-SOLVER-TEST is
+    extending SAT-SOLVER .
+    extending LTL .
+    ops a b c d e p q r : -> Formula .
+  endfm
+
+***(
+Maude> red satSolve(a /\ (O b) /\ (O O ((~ c) /\ [](c \/ (O c))))) .
+reduce in SAT-SOLVER-TEST : satSolve(O O (~ c /\ [](c \/ O c)) /\ (a /\ O b)) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result SatSolveResult: model(a ; b, (~ c) ; c)
+
+Maude> red tautCheck((a => (O a)) <-> (a => ([] a))) .
+reduce in SAT-SOLVER-TEST : tautCheck((a => O a) <-> a => []a) .
+rewrites: 49 in 0ms cpu (0ms real) (~ rewrites/second)
+result Bool: true
+
+Maude> red tautCheck((a -> (O a)) <-> (a -> ([] a))) .
+reduce in SAT-SOLVER-TEST : tautCheck((a -> O a) <-> a -> []a) .
+rewrites: 33 in 0ms cpu (0ms real) (~ rewrites/second)
+result TautCheckResult: counterexample(a ; a ; (~ a), True)
+)

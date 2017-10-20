@@ -1,0 +1,35 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  fmod QUEUE{X :: TRIV} is
+    protecting BOOL .
+    sort NeQueue{X} Queue{X} .
+    subsort NeQueue{X} < Queue{X} .
+    op empty : -> Queue{X} [ctor] .
+    op enqueue : Queue{X} X$Elt -> NeQueue{X} [ctor] .
+    op dequeue : NeQueue{X} -> Queue{X} .
+    op first : NeQueue{X} -> X$Elt .
+    op isEmpty : Queue{X} -> Bool .
+  
+    var Q : Queue{X} .
+    var E : X$Elt .
+
+    eq dequeue(enqueue(empty, E)) = empty .
+    ceq dequeue(enqueue(Q, E)) = enqueue(dequeue(Q), E) 
+      if Q =/= empty .
+    eq first(enqueue(empty, E)) = E .
+    ceq first(enqueue(Q, E)) = first(Q) if Q =/= empty .
+    eq isEmpty(empty) = true .
+    eq isEmpty(enqueue(Q, E)) = false .
+  endfm
+
+***(
+  fmod QUEUE-TEST is
+    protecting QUEUE{Qid} .
+  endfm
+
+Maude> red first(enqueue(enqueue(empty, 'a), 'b)) .
+reduce in QUEUE-TEST : first(enqueue(enqueue(empty, 'a), 'b)) .
+rewrites: 3 in 0ms cpu (0ms real) (~ rewrites/second)
+result Qid: 'a
+)

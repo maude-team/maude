@@ -1,0 +1,99 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  fmod NAT-PRED-SUPER is
+    sorts Nat ErrorNat .
+    subsorts Nat < ErrorNat .
+    op 0 : -> Nat [ctor] .
+    op s_ : Nat -> Nat [ctor] .
+    op _+_ : Nat Nat -> Nat [comm] .
+    op p_ : Nat -> ErrorNat .
+    op error : -> ErrorNat .
+    vars N M : Nat .
+    eq N + 0 = N .
+    eq (s N) + (s M) = s s (N + M) .
+    eq p s N = N .
+    eq p 0 = error .
+  endfm
+
+***(
+Maude> red p (0 + 0) .
+result ErrorNat: error
+
+Maude> red p (s s 0 + s 0) .
+result Nat: s s 0
+)  
+
+  fmod NAT-PRED-SUPER is
+    sorts Nat ErrorNat .
+    subsorts Nat < ErrorNat .
+    op 0 : -> Nat [ctor] .
+    op s_ : Nat -> Nat [ctor] .
+    op _+_ : Nat Nat -> Nat [comm] .
+    op p_ : Nat -> ErrorNat .
+    op error : -> ErrorNat .
+    vars N M : Nat .
+    eq N + 0 = N .
+    eq (s N) + (s M) = s s (N + M) .
+    eq p s N = N .
+    eq p 0 = error .
+
+    op s_ : ErrorNat -> ErrorNat .
+    op _+_ : ErrorNat ErrorNat -> ErrorNat [ditto] .
+    op p_ : ErrorNat -> ErrorNat .
+    eq s error = error .
+    eq N + error = error .
+    eq p error = error .
+  endfm
+
+***(
+Maude> red p (0 + 0) + p (s s 0 + s 0) .
+reduce in NAT-PRED-SUPER : p (0 + 0) + p (s 0 + s s 0) .
+rewrites: 6 in 0ms cpu (0ms real) (~ rewrites/second)
+result ErrorNat: error
+
+Maude> red p s (0 + 0) + p (s s 0 + s 0) .
+reduce in NAT-PRED-SUPER : p s (0 + 0) + p (s 0 + s s 0) .
+rewrites: 6 in 0ms cpu (0ms real) (~ rewrites/second)
+result Nat: s s 0
+
+Maude> red p (0 + 0) + p (s s 0 + s 0) .
+result Nat: s s 0
+
+Maude> red p p (0 + 0) .
+result ErrorNat: error
+)
+
+  fmod NAT-PRED-SUPER is
+    sorts Nat ErrorNat .
+    subsorts Nat < ErrorNat .
+    op 0 : -> Nat [ctor] .
+    op s_ : Nat -> Nat [ctor] .
+    op _+_ : Nat Nat -> Nat [comm] .
+    op p_ : Nat -> ErrorNat .
+    op error : -> ErrorNat .
+    vars N M : Nat .
+    eq N + 0 = N .
+    eq (s N) + (s M) = s s (N + M) .
+    eq p s N = N .
+    eq p 0 = error .
+
+    op s_ : ErrorNat -> ErrorNat .
+    op _+_ : ErrorNat ErrorNat -> ErrorNat [ditto] .
+    op p_ : ErrorNat -> ErrorNat .
+    eq s error = error .
+    eq N + error = N .
+    eq p error = error .
+  endfm
+
+***(
+Maude> red p (0 + 0) + p (s s 0 + s 0) .
+reduce in NAT-PRED-SUPER : p (0 + 0) + p (s 0 + s s 0) .
+rewrites: 6 in 0ms cpu (0ms real) (~ rewrites/second)
+result Nat: s s 0
+
+Maude> red p p (0 + 0) .
+reduce in NAT-PRED-SUPER : p p (0 + 0) .
+rewrites: 3 in 0ms cpu (0ms real) (~ rewrites/second)
+result ErrorNat: error
+)

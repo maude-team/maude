@@ -1,0 +1,15 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  mod DATA-AGENTS-CONF is
+    ex CONFIGURATION .
+
+    *** my msg syntax
+    sort MsgBody .
+    op msg : Oid Oid MsgBody -> Msg [ctor message] .
+
+    *** agents may be pending on requests
+    sort Request .
+    op w4 : Oid Oid MsgBody -> Request [ctor] .
+  endm

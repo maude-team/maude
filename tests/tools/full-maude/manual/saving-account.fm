@@ -1,0 +1,61 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  load account.fm
+  
+ (omod SAVING-ACCOUNT is
+    including ACCOUNT .
+    protecting FLOAT .
+    class SavingAccount | rate : Float .
+    subclass SavingAccount < Account .
+  endom)
+
+         (rew < 'A-73728 : SavingAccount | bal : 5000, rate : 3.0 >
+              < 'A-06238 : Account | bal : 2000 >
+              < 'A-28381 : SavingAccount | bal : 9000, rate : 3.0 >
+              debit('A-06238, 1000)
+              credit('A-73728, 1300)
+              credit('A-28381, 200) .)
+---(
+rewrites: 1908 in 0ms cpu (11ms real) (~ rewrites/second)
+rewrite in SAVING-ACCOUNT :
+  < 'A-73728 : SavingAccount | bal : 5000,rate : 3.0 > < 'A-06238 : Account |
+    bal : 2000 > < 'A-28381 : SavingAccount | bal : 9000,rate : 3.0 > debit(
+    'A-06238,1000)credit('A-73728,1300)credit('A-28381,200)
+result Configuration :
+  < 'A-06238 : Account | bal : 1000 > < 'A-28381 : SavingAccount | bal : 9200,
+    rate : 3.0 > < 'A-73728 : SavingAccount | bal : 6300,rate : 3.0 >
+---)
+  
+  (search in SAVING-ACCOUNT :
+              < 'A-73728 : SavingAccount | bal : 5000, rate : 3.0 >
+              < 'A-06238 : Account | bal : 2000 >
+              < 'A-28381 : SavingAccount | bal : 9000, rate : 3.0 >
+              debit('A-06238, 1000)
+              credit('A-73728, 1300)
+              credit('A-28381, 200)
+           =>! C:Configuration 
+               < O:Oid : Account | bal : N:Nat > 
+           such that N:Nat < 8000 .)
+---(           
+rewrites: 6699 in 10ms cpu (45ms real) (669900 rewrites/second)
+search in SAVING-ACCOUNT : < 'A-73728 : SavingAccount | bal : 5000,rate : 3.0 >
+    < 'A-06238 : Account | bal : 2000 > < 'A-28381 : SavingAccount | bal :
+    9000,rate : 3.0 > debit('A-06238,1000)credit('A-73728,1300)credit('A-28381,
+    200) =>! C:Configuration < O:Oid : V#0:Account | bal : N:Nat,
+    V#1:AttributeSet > .
+
+Solution 1
+C:Configuration --> < 'A-28381 : SavingAccount | bal : 9200,rate : 3.0 > <
+    'A-73728 : SavingAccount | bal : 6300,rate : 3.0 > ; N:Nat --> 1000 ; O:Oid
+    --> 'A-06238 ; V#0:Account --> Account ; V#1:AttributeSet --> (
+    none).AttributeSet
+
+Solution 2
+C:Configuration --> < 'A-06238 : Account | bal : 1000 > < 'A-28381 :
+    SavingAccount | bal : 9200,rate : 3.0 > ; N:Nat --> 6300 ; O:Oid -->
+    'A-73728 ; V#0:Account --> SavingAccount ; V#1:AttributeSet --> rate : 3.0
+
+No more solutions.
+---)  

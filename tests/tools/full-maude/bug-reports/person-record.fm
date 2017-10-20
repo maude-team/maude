@@ -1,0 +1,32 @@
+set trace off .
+set trace select on .
+trace select ---- evalModExp 
+             evalViewExp
+             .
+set print conceal off .
+print conceal db 
+              fmod_is_sorts_.____endfm
+              mod_is_sorts_._____endm
+              fth_is_sorts_.____endfth
+              th_is_sorts_._____endth
+              .
+trace include FULL-MAUDE .
+
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+ (fmod PERSON-RECORD is
+    pr POWER[3]{String}
+         * (sort Tuple{String, String, String} to PersonRecord,
+            op p1_ to firstname, op p2_ to lastname, op p3_ to address) .
+    op fullName : PersonRecord -> String .
+    vars F L A : String .
+    eq fullName((F, L, A)) = F + " " + L .
+  endfm)
+
+  (red fullName(("John", "Smith", "Maude Ave")) .)
+---(
+  result String :
+    "John Smith"
+---)

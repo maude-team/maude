@@ -1,0 +1,32 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  fmod NAT-PRED-SUB is
+    sorts Nat NzNat .
+    subsorts NzNat < Nat .
+    op 0 : -> Nat [ctor] .
+    op s_ : Nat -> NzNat [ctor] .
+    op _+_ : Nat Nat -> Nat [comm] .
+    op p_ : NzNat -> Nat .
+    vars N M : Nat .
+    eq N + 0 = N .
+    eq (s N) + (s M) = s s (N + M) .
+    eq p s N = N .
+  endfm
+
+***(
+Maude> red p (s s 0 +  s 0) .
+reduce in NAT-PRED-SUB : p (s 0 + s s 0) .
+rewrites: 3 in 0ms cpu (0ms real) (~ rewrites/second)
+result NzNat: s s 0
+
+Maude> red p (0 + 0) .
+reduce in NAT-PRED-SUB : p (0 + 0) .
+rewrites: 1 in 0ms cpu (0ms real) (~ rewrites/second)
+result [Nat]: p 0
+
+Maude> red p s s 0 + s p 0 .
+reduce in NAT-PRED-SUB : s p 0 + p s s 0 .
+rewrites: 1 in 0ms cpu (0ms real) (~ rewrites/second)
+result [Nat]: s 0 + s p 0
+)

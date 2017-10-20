@@ -1,0 +1,60 @@
+  fmod MBOOL is
+    sort MBool .
+    ops true false : -> MBool [ctor] .
+    op _and_ : MBool MBool -> MBool [assoc comm] .
+    var B : MBool .
+    eq true and B = B .
+    eq false and B = false .
+  endfm 
+
+  fmod MSET{X :: TRIV} is
+    sort Set{X} .
+    subsort X$Elt < Set{X} .
+    op empty : -> Set{X} [ctor] .
+    op __ : Set{X} Set{X} -> Set{X} [ctor assoc comm id: empty] .
+  endfm
+  
+  fmod GEN-TREE{X :: TRIV} is
+    pr MBOOL .
+    pr MSET{X} .
+    
+    sorts Tree{X} Forest{X} .
+    subsort Tree{X} < Forest{X} .
+
+    op _[_] : X$Elt Forest{X} -> Tree{X} [ctor] .
+    op none : -> Forest{X} [ctor] .
+    op _,_ : Forest{X} Forest{X} -> Forest{X} [ctor assoc id: none] .
+
+    op elts : Tree{X} -> Set{X} .
+    op elts : Forest{X} -> Set{X} .
+    op sameShape : Tree{X} Tree{X} -> MBool [comm] .
+    op sameShape : Forest{X} Forest{X} -> MBool [comm] .
+    
+    vars E E' : X$Elt .
+    vars F F' F'' F''' : Forest{X} .
+
+    eq elts(((E [F]), F')) = E elts(F) elts(F') .
+    eq elts(none) = empty .
+    
+    eq sameShape(((E [F]), F'), ((E' [F'']), F''')) = sameShape(F, F'') and sameShape(F', F''') .
+    eq sameShape(none, ((E [F]), F')) = false  .
+    eq sameShape(none, none) = true  .
+  endfm
+
+  fmod GEN-TREE-TEST is
+    protecting GEN-TREE{Int} .
+  endfm
+
+select FULL-MAUDE .
+loop init .
+
+(red in GEN-TREE-TEST : elts(1 [(3 [(4 [none]), none]), ((2 [none]), none)]) .)
+---(
+result Set{Int}: 1 2 3 4
+---)
+
+(red in GEN-TREE-TEST : sameShape(1 [(3 [(4 [none]), none]), ((2 [none]), none)],
+                            4 [(2 [(1 [none]), none]), ((3 [none]), none)]) .)
+---(
+result MBool: (true).MBool
+---)

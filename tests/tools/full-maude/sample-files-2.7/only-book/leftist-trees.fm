@@ -1,0 +1,138 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  load bin-tree.maude
+  load toset.maude
+  load priority-pair.maude
+  
+  select FULL-MAUDE .
+  loop init .
+  
+  load view-node.fm
+  
+ (fmod LEFTIST-TREES{T :: TOSET} is
+    protecting BIN-TREE{Node{T}} .
+    sorts NeLTree{T} LTree{T} .
+    subsorts NeLTree{T} < LTree{T} < BinTree{Node{T}} .
+    subsorts NeLTree{T} < NeBinTree{Node{T}} .
+
+    op rank : BinTree{Node{T}} -> Nat .   
+    op rankL : LTree{T} -> Nat . 
+    op findMin : NeLTree{T} -> T$Elt .
+
+    vars NeTL NeTR : NeLTree{T} .               
+    vars M N N1 N2 : Nat .
+    vars T TL TR TL1 TR1 TL2 TR2 : LTree{T} .   
+    vars X X1 X2 : T$Elt .
+
+    mb empty : LTree{T} .
+    mb empty [n(1, X)] empty : NeLTree{T} .
+    cmb NeTL [n(1, X)] empty : NeLTree{T} if X < findMin(NeTL) .
+    cmb NeTL [n(N, X)] NeTR : NeLTree{T} 
+     if rank(NeTL) >= rank(NeTR) /\ X < findMin(NeTL) /\ 
+        X < findMin(NeTR) /\ N = 1 + rank(NeTR) .
+       
+    eq rank(empty) = 0 .
+    eq rank(TL [n(N, X)] TR) = 1 + rank(TR) .
+    eq rankL(empty) = 0 .
+    eq rankL(TL [n(N,X)] TR) = N . 
+    eq findMin(TL [n(N,X)] TR) = X .
+
+    op merge : LTree{T} LTree{T} -> LTree{T} .
+    op insert : T$Elt LTree{T} -> NeLTree{T} .
+    op deleteMin : NeLTree{T} -> LTree{T} .
+    op make : T$Elt LTree{T} LTree{T} -> LTree{T} .
+  
+    eq merge(empty, T) = T .
+    eq merge(T, empty) = T .
+    eq merge(TL1 [n(N1, X1)] TR1, TL2 [n(N2, X2)] TR2) =
+         if X1 < X2 then make(X1, TL1, merge(TR1, TL2 [n(N2,X2)] TR2))
+                    else make(X2, TL2, merge(TL1 [n(N1,X1)] TR1,TR2))
+         fi .
+        
+    eq make(X, TL, TR) = if rankL(TL) >= rankL(TR) 
+                         then TL [n(rankL(TR) + 1,X)] TR
+                         else TR [n(rankL(TL) + 1,X)] TL fi .
+                        
+    eq insert(X,T) = merge(empty [n(1,X)] empty, T) .
+    eq deleteMin(TL [n(N,X)] TR) = merge(TL,TR) . 
+  endfm)
+
+  load view-intastoset.fm
+  
+ (fmod LEFTIST-TREES-TEST is
+    protecting LEFTIST-TREES{IntAsToset} .
+  endfm)
+
+
+ (red in LEFTIST-TREES-TEST : 
+            insert(5, insert(4, empty)) .)
+---(
+rewrites: 3285 in 20ms cpu (25ms real) (164250 rewrites/second)
+reduce in LEFTIST-TREES-TEST :
+  insert(5,insert(4,empty))
+result NeLTree{IntAsToset} :
+  (empty[n(1,5)]empty)[n(1,4)]empty
+---)
+
+  (red in LEFTIST-TREES-TEST : 
+            findMin(
+              insert(5, deleteMin(insert(3, insert(-10, empty))))) .)
+---(
+rewrites: 2871 in 0ms cpu (7ms real) (~ rewrites/second)
+reduce in LEFTIST-TREES-TEST :
+  findMin(insert(5,deleteMin(insert(3,insert(-10,empty)))))
+result NzNat :
+  3
+---)
+
+  (reduce in LEFTIST-TREES-TEST :
+            deleteMin(insert(900, insert(-901, insert(902, insert(-903,
+                      insert(904, insert(-905, insert(906, insert(-907,
+                      insert(908, insert(-909, insert(910, insert(-910,
+                      insert(911, insert(-912, insert(913, insert(-914,
+                      empty))))))))))))))))) .)
+---(
+rewrites: 6930 in 30ms cpu (20ms real) (231000 rewrites/second)
+reduce in LEFTIST-TREES-TEST :
+  deleteMin(insert(900,insert(-901,insert(902,insert(-903,insert(904,insert(
+    -905,insert(906,insert(-907,insert(908,insert(-909,insert(910,insert(-910,
+    insert(911,insert(-912,insert(913,insert(-914,empty)))))))))))))))))
+result NeLTree{IntAsToset} :
+  (((empty[n(1,908)]empty)[n(2,-907)](empty[n(1,906)]empty))[n(3,-909)](((
+    empty[n(1,911)]empty)[n(2,-901)]((empty[n(1,904)]empty)[n(1,900)]empty))[n(
+    2,-905)]((empty[n(1,913)]empty)[n(1,910)]empty)))[n(3,-912)]((empty[n(1,
+    -903)]empty)[n(2,-910)](empty[n(1,902)]empty))
+---)
+    
+  ----load toset.maude  ---- do it in the main file
+  ----load priority-pair.maude
+  ----load leftist-trees.fm
+  load view-intstringastoset.fm
+
+ (fmod LEFTIST-TREES-TEST-PAIR is
+    protecting LEFTIST-TREES{IntStringAsToset} .
+  endfm)
+
+  (red in LEFTIST-TREES-TEST-PAIR :
+            findMin(insert(< 4, "d" >, insert(< 8, "h" >, 
+                      insert(< 1, "a" >, empty)))) .)
+---(
+rewrites: 5195 in 0ms cpu (29ms real) (~ rewrites/second)
+reduce in LEFTIST-TREES-TEST-PAIR :
+  findMin(insert(< 4,"d" >,insert(< 8,"h" >,insert(< 1,"a" >,empty))))
+result Priority-Pair{IntAsToset,String} :
+  < 1,"a" >
+---)
+
+  (red in LEFTIST-TREES-TEST-PAIR : 
+            findMin(insert(< 5, "e" >, deleteMin(insert(< 3, "c" >,
+                      insert(< -10, "zzz" >,empty))))) .)
+---(
+rewrites: 5292 in 0ms cpu (12ms real) (~ rewrites/second)
+reduce in LEFTIST-TREES-TEST-PAIR :
+  findMin(insert(< 5,"e" >,deleteMin(insert(< 3,"c" >,insert(< -10,"zzz" >,
+    empty)))))
+result Priority-Pair{IntAsToset,String} :
+  < 3,"c" >
+---)  

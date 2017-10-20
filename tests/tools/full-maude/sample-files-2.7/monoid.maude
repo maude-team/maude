@@ -1,0 +1,9 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  fth MONOID is
+    including TRIV .
+    op 1 : -> Elt .
+    op __ : Elt Elt -> Elt [assoc id: 1] .
+  endfth

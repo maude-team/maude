@@ -1,0 +1,14 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+  ---- checked Church-Rosser using the CRC tool
+  
+  fmod SIMPLE-NAT is
+    sort Nat .
+    op zero : -> Nat .
+    op s_ : Nat -> Nat .
+    op _+_ : Nat Nat -> Nat .
+    vars N M : Nat .
+    eq zero + N = N .
+    eq s N + M = s (N + M) .
+  endfm

@@ -1,0 +1,36 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  fmod NAT-MSET-MIN is
+    protecting BOOL .
+    sorts Nat NatMSet .
+    subsort Nat < NatMSet .
+    op 0 : -> Nat [ctor] .
+    op s : Nat -> Nat [ctor] .
+    op _ _ : NatMSet NatMSet -> NatMSet [assoc comm ctor] .
+    op _<_ : Nat Nat -> Bool .
+    op min : NatMSet -> Nat .
+
+    vars N M : Nat .
+    var  S : NatMSet .
+    eq 0 < s(N) = true .
+    eq s(N) < 0 = false .
+    eq s(N) < s(M) = N < M .
+    eq min(N N S) = min(N S) .
+    ceq min(N M S) = min(N S) if N < M .
+    ceq min(N M) = N if N < M .
+    eq min(N) = N .
+  endfm
+
+***(
+Maude> red min(s(s(0)) s(s(0))) .
+reduce in NAT-MSET-MIN : min(s(s(0)) s(s(0))) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result Nat: min(s(s(0)) s(s(0)))
+
+Maude> red min(s(s(0)) min(s(0) s(0))) .
+reduce in NAT-MSET-MIN : min(s(s(0)) min(s(0) s(0))) .
+rewrites: 1 in 0ms cpu (0ms real) (~ rewrites/second)
+result Nat: min(s(s(0)) min(s(0) s(0)))
+)

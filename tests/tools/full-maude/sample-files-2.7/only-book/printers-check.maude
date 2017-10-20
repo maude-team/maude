@@ -1,0 +1,188 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+  
+set show advisories off .
+load mobile-maude-centralized.maude
+load printers.maude
+load model-checker.maude 
+
+set trace off .
+
+mod PRINTERS-PREDS is
+  pr PRINTERS .
+  including SATISFACTION .
+
+  subsort Configuration < State .
+  op exSeller : Nat -> Prop .
+  op exBuyer : Nat -> Prop .
+
+  var  C : Configuration .
+  vars N N' : Nat .
+  vars S B : Oid .
+  var  AtS : AttributeSet .
+
+  op minPrice : Configuration ~> Nat [frozen] .
+  op minPrice : Configuration Nat -> Nat [frozen] .
+  
+  eq minPrice(< S : Seller | description : N, AtS > C) = minPrice(C, N) .
+  eq minPrice(< S : Seller | description : N, AtS > C, N') 
+    = minPrice(C, min(N, N')) .
+  eq minPrice(C, N) = N [owise] .
+
+  eq (< S : Seller | description : N, AtS > C) |= exSeller(N) = true .
+  eq C |= exSeller(N) = false [owise] .
+
+  eq (< B : Buyer | price : N, status : buying, AtS > C) |= exBuyer(N)
+    = true .
+  eq C |= exBuyer(N) = false [owise] .
+endm
+
+mod MOBILE-PRINTERS-PREDS is
+  pr MOBILE-MAUDE .
+  pr SATISFACTION .
+  pr MAYBE{Nat} * (op maybe to null) .
+  
+  vars C C' : Configuration .
+  var  N : Nat .
+  vars O PID : Oid .
+  vars T T' : Term .
+  var  AtS : AttributeSet .
+  
+  subsort Configuration < State .
+  op bestPrice&Seller : -> Prop .
+  op bestPrice&Seller : Nat -> Prop .
+  eq C |= bestPrice&Seller = C |= bestPrice&Seller(minPrice(C)) .
+
+  op existsSeller : Nat -> Prop .
+  op existsBuyer : Nat -> Prop .
+
+  op min : Maybe{Nat} Maybe{Nat} -> Maybe{Nat} [ditto] .
+
+  eq min(null, N) = N .
+  eq min(N, null) = N .
+  eq min(null, null) = null .
+  
+  op minPrice : Configuration -> Maybe{Nat} [frozen] .
+  eq minPrice(C < PID : Process | conf : C' >)
+    = min(minPrice(C), minPrice(C')) .
+  eq minPrice(C < O : MobileObject | s : ('_&_[T, T']), AtS >)
+    = min(minPrice(C), 
+          downTerm(
+            getTerm(metaReduce(upModule('PRINTERS-PREDS, false), 'minPrice[T])), 
+            null)) .
+  eq minPrice(C) = null [owise] .
+
+  eq ((C < PID : Process | conf : C' >) |= bestPrice&Seller(N))
+    = (C |= bestPrice&Seller(N)) or
+      ((C' |= existsSeller(N)) and (C' |= existsBuyer(N))) .
+  eq C |= bestPrice&Seller(N) = false [owise] .
+
+  eq ((< O : MobileObject | s : ('_&_[T, T']), AtS > C)
+       |= existsSeller(N))
+    = (getTerm(metaReduce(upModule('PRINTERS-PREDS, false),
+                 '_|=_[T, 'exSeller[upTerm(N)]])) == 'true.Bool)
+      or (C |= existsSeller(N)) .
+  eq C |= existsSeller(N) = false [owise] .
+
+  eq (< O : MobileObject | s : ('_&_[T, T']), AtS > C)
+       |= existsBuyer(N)
+    = (getTerm(metaReduce(upModule('PRINTERS-PREDS, false),
+                 '_|=_[T, 'exBuyer[upTerm(N)]])) == 'true.Bool)
+      or (C |= existsBuyer(N)) .
+  eq (C |= existsBuyer(N)) = false [owise] .
+endm
+
+mod PRINTERS-CHECK is 
+  pr PRINTERS . ---- NECESSARY FOR THE UPTERMS
+  inc MOBILE-PRINTERS-PREDS .
+  inc MODEL-CHECKER .
+  inc LTL-SIMPLIFIER .
+  pr MOBILE-MAUDE .
+
+  op initial : -> Configuration .
+  eq initial 
+    = < socketManager : Manager | counter : 0 >
+      < pid(0) : Process |
+        conf : (< l("127.0.0.1", 0) : ServerRootObject | 
+            cnt : 1,
+            guests : o(l("127.0.0.1", 0), 0),
+            forward : 0 |-> (l("127.0.0.1", 0), 0),
+            neighbors : empty,
+            state : idle,
+            defNeighbor : null,
+            port : 60039 >
+	    < o(l("127.0.0.1", 0), 0) : MobileObject | 
+            mod : upModule('SELLER,false),
+            s : upTerm(< o(l("127.0.0.1", 0), 0) : Seller | description : 30 >
+                       & none),
+            gas : 200,
+            hops : 0,
+	        executable : getTerm(metaFrewrite(upModule('SELLER, false),
+		                  upTerm(< o(l("127.0.0.1", 0), 0) : Seller | description : 30 >
+                       & none), 200, 1)) >)
+        >
+      < pid(1) : Process |
+        conf : (< l("127.0.0.1", 1) : ClientRootObject |
+            cnt : 1,
+            guests : (o(l("127.0.0.1", 1), 0), o(l("127.0.0.1", 1), 1)),
+            forward : ((0 |-> (l("127.0.0.1", 1), 0)), (1 |-> (l("127.0.0.1", 1), 0))),
+	    neighbors : empty,
+            state : idle,
+            defNeighbor : null,
+            port : 60039,
+            server : "127.0.0.1" >
+        < o(l("127.0.0.1", 1), 0) : MobileObject | 
+            mod : upModule('BUYER,false),
+            s : upTerm(< o(l("127.0.0.1", 1), 0) : Buyer | 
+                           price : null,
+                           status : done,
+		                   bestSeller : null,
+                           sellers : (o(l("127.0.0.1", 1), 1) . (o(l("127.0.0.1", 2), 0)) . (o(l("127.0.0.1", 0), 0))) >
+                       & none),
+            gas : 200,
+            hops : 0,
+	        executable : getTerm(metaFrewrite(upModule('BUYER,false), upTerm(< o(l("127.0.0.1", 1), 0) : Buyer | 
+                           price : null,
+                           status : done,
+		                   bestSeller : null,
+                           sellers :(o(l("127.0.0.1", 1), 1) . o(l("127.0.0.1", 2), 0) . o(l("127.0.0.1", 0), 0)) >
+                           & none), 200, 1)) >
+	< o(l("127.0.0.1", 1), 1) : MobileObject | 
+            mod : upModule('SELLER,false),
+            s : upTerm(< o(l("127.0.0.1", 1), 1) : Seller | description : 20 >
+                       & none),
+            gas : 200,
+            hops : 0,
+	        executable : getTerm(metaFrewrite(upModule('SELLER, false),
+		                  upTerm(< o(l("127.0.0.1", 1), 1) : Seller | description : 20 >
+                       & none), 200, 1)) >)
+        >
+    < pid(2) : Process |
+        conf : (< l("127.0.0.1", 2) : ClientRootObject |
+            cnt : 1,
+            guests : o(l("127.0.0.1", 2), 0),
+            forward : 0 |-> (l("127.0.0.1", 2), 0),
+            neighbors : empty,
+            state : idle,
+            defNeighbor : null,
+            port : 60039,
+            server : "127.0.0.1" >
+        < o(l("127.0.0.1", 2), 0) : MobileObject | 
+            mod : upModule('SELLER,false),
+            s : upTerm(< o(l("127.0.0.1", 2), 0) : Seller | description : 15 >
+                       & none),
+            gas : 200,
+            hops : 0,
+	        executable : getTerm(metaFrewrite(upModule('SELLER, false),
+		                  upTerm(< o(l("127.0.0.1", 2), 0) : Seller | description : 15 >
+                       & none), 200, 1)) >)
+        > .
+	
+endm
+
+***(
+  Maude> red modelCheck(initial, <> [] bestPrice&Seller) .
+reduce in PRINTERS-CHECK : modelCheck(initial, <> []bestPrice&Seller) .
+rewrites: 412790 in 3220ms cpu (7543ms real) (128195 rewrites/second)
+result Bool: true
+    )

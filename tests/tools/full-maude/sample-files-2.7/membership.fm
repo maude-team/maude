@@ -1,0 +1,38 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team + Santiago Escobar
+
+load last-append.fm 
+
+ (mod MEMBERSHIP is
+    protecting LAST-APPEND .
+    vars XS YS ZS : NatList .
+    vars N M X Y : Nat .
+    op member : Nat NatList -> [Success] .
+    rl member(N, XS) => append(YS, N : ZS) =:= XS [nonexec] .
+  endm)
+
+ (search [1] in MEMBERSHIP : 
+            member(s(0), 0 : s(0) : nil) ~>! success .)
+---(
+search [1] in MEMBERSHIP : member(s(0),0 : s(0): nil) ~>! success .
+
+Solution 1
+empty substitution
+
+No more solutions.
+---)
+
+(search [,5] in MEMBERSHIP : 
+            member(N:Nat, 0 : s(0) : nil) ~>! success .)
+---(
+search [,5] in MEMBERSHIP : member(N:Nat,0 : s(0): nil) ~>! success .
+
+Solution 1
+N:Nat --> 0
+
+Solution 2
+N:Nat --> s(0)
+
+No more solutions.
+---)

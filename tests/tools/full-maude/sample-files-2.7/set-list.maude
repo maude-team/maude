@@ -1,0 +1,14 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  load basic-set.maude
+  
+  fmod SET-LIST{X :: TRIV} is
+    protecting BASIC-SET{X} .
+    sort SetList{X} .
+    subsort Set{X} < SetList{X} .
+    op nil : -> SetList{X} [ctor] .
+    op _;_ : SetList{X} SetList{X} -> SetList{X} 
+        [ctor assoc id: nil] .
+  endfm

@@ -1,0 +1,45 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+load basic-nat.maude
+
+  fmod BASIC-NAT-LIST is
+    protecting BASIC-NAT .    
+    
+    sorts NeList List .
+    subsorts Nat < NeList < List .
+    op nil : -> List [ctor] .
+    op __ : List List -> List [ctor assoc id: nil] .
+    op __ : NeList NeList -> NeList [ctor assoc id: nil] .
+
+    op tail : NeList -> List .
+    op head : NeList -> Nat .
+   
+    var N : Nat .
+    var L : List .
+  
+    eq tail(N L) = L .
+    eq head(N L) = N .
+
+    op length : List -> Nat .
+    op reverse : List -> List .
+
+    eq length(nil) = 0 .
+    eq length(N L) = s length(L) .
+    eq reverse(nil) = nil .
+    eq reverse(N L) = reverse(L) N .
+  endfm
+    
+red length(head(0 (s 0) (s s 0))) .
+---(
+reduce in BASIC-NAT-LIST : length(head(0 s 0 s s 0)) .
+rewrites: 3 in 0ms cpu (0ms real) (~ rewrites/second)
+result Nat: s 0
+---)
+ 
+red reverse(tail(0 (s 0) (s s 0))) .
+---(
+reduce in BASIC-NAT-LIST : reverse(tail(0 s 0 s s 0)) .
+rewrites: 4 in 0ms cpu (0ms real) (~ rewrites/second)
+result NeList: s s 0 s 0
+---)

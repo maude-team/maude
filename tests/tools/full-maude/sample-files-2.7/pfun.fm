@@ -1,0 +1,39 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  load set-kind.fm
+  load maybe.fm
+    
+ (fmod PFUN{X :: TRIV, Y :: TRIV} is
+    pr SET-KIND{Tuple{X, Y}} .
+    pr SET{X} + SET{Y} .
+    pr MAYBE{Y} * (op maybe to undefined) .
+
+    sort PFun{X, Y} .
+    subsorts Tuple{X, Y} < PFun{X, Y} < KSet{Tuple{X, Y}} .
+
+    vars A D : X$Elt .
+    vars B C : Y$Elt .
+    var  F : PFun{X, Y} .
+    var  S : KSet{Tuple{X, Y}} .
+
+    op dom : KSet{Tuple{X, Y}} -> Set{X} .         *** domain
+    eq dom(empty) = empty .
+    eq dom((A, B), S) = A, dom(S) .
+    op im : KSet{Tuple{X, Y}} -> Set{Y} .          *** image
+    eq im(empty) = empty .
+    eq im((A, B), S) = B, im(S) .
+
+    op empty : -> PFun{X, Y} [ctor] .
+    cmb (A, B), (D, C), F : PFun{X, Y}
+      if (D, C), F : PFun{X, Y} /\ not(A in dom((D, C), F)) .
+
+    op _`[_`] : PFun{X, Y} X$Elt -> Maybe{Y} .
+    op _`[_->_`] : PFun{X, Y} X$Elt Y$Elt -> PFun{X, Y} .
+    ceq ((A, B), F)[ A ] = B if ((A, B), F) : PFun{X, Y} .
+    eq F [ A ] = undefined [owise] .
+    ceq ((A, B), F)[ A -> C ] = (A, C), F
+      if ((A, B), F) : PFun{X, Y} .
+    eq F [ A -> C ] = (A, C), F [owise] .
+  endfm)

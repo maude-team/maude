@@ -1,0 +1,114 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  load model-checker.maude
+  
+  select FULL-MAUDE .
+  loop init .
+
+  load rrobin.fm
+
+ (omod CHECK-RROBIN{N :: NZNAT#} is
+    pr RROBIN{N} .
+    inc MODEL-CHECKER .
+    inc SATISFACTION .
+    ex LTL-SIMPLIFIER .
+    inc LTL .
+
+    subsort Configuration < State .
+
+    op inCrit : Nat/{N} -> Prop .
+    op twoInCrit : -> Prop .
+
+    var  N : Nat .
+    vars X Y : Nat/{N} .
+    var  C : Configuration .
+    var  F : Formula .
+
+    eq < X : Proc | mode : critical > C |= inCrit(X) = true .
+    eq < Y : Proc | mode : critical > < Y : Proc | mode : critical > C
+         |= twoInCrit = true .
+
+    op guaranteedReentrance : -> Formula .
+    op allProcessesReenter : Nat -> Formula .
+    op nextIter_ : Formula -> Formula .
+    op nextIterAux : Nat Formula -> Formula .
+
+    eq guaranteedReentrance = allProcessesReenter(#) .
+
+    eq allProcessesReenter(s N)
+      = (inCrit([s N]) -> nextIter inCrit([s N])) /\
+        allProcessesReenter(N) .
+    eq allProcessesReenter(0) = inCrit([0]) -> nextIter inCrit([0]) .
+
+    eq nextIter F = nextIterAux(2 * #, F) .
+
+    eq nextIterAux(s N, F) = O nextIterAux(N, F) .
+    eq nextIterAux(0, F) = F .
+  endom)
+
+  load view-5.fm
+
+  (reduce in CHECK-RROBIN{5} :  
+            modelCheck(init, [] ~ twoInCrit) .)
+---(         
+rewrites: 24439 in 20ms cpu (81ms real) (1221950 rewrites/second)
+reduce in CHECK-RROBIN{5}:
+  modelCheck(init,[]~ twoInCrit)
+result Bool :
+  true
+---)
+
+
+  (reduce in CHECK-RROBIN{5} : 
+            modelCheck(init, [] guaranteedReentrance) .)
+---(            
+rewrites: 28198 in 60ms cpu (112ms real) (469966 rewrites/second)
+reduce in CHECK-RROBIN{5}:
+  modelCheck(init,[]guaranteedReentrance)
+result Bool :
+  true
+---)
+
+  (red in CHECK-RROBIN{5} :
+            modelCheck(init, [] (inCrit([1]) -> O O O inCrit([1]))) .)
+---(
+rewrites: 25205 in 60ms cpu (95ms real) (420083 rewrites/second)
+reduce in CHECK-RROBIN{5}:
+  modelCheck(init,[](inCrit([1])-> O O O inCrit([1])))
+result ModelCheckResult :
+  counterexample({go([0])<[0]: Proc | mode : wait > <[1]: Proc | mode : wait >
+    <[2]: Proc | mode : wait > <[3]: Proc | mode : wait > <[4]: Proc | mode :
+    wait >,'enter}{<[0]: Proc | mode : critical > <[1]: Proc | mode : wait > <[
+    2]: Proc | mode : wait > <[3]: Proc | mode : wait > <[4]: Proc | mode :
+    wait >,'exit}{go([1])<[0]: Proc | mode : wait > <[1]: Proc | mode : wait >
+    <[2]: Proc | mode : wait > <[3]: Proc | mode : wait > <[4]: Proc | mode :
+    wait >,'enter}{<[0]: Proc | mode : wait > <[1]: Proc | mode : critical > <[
+    2]: Proc | mode : wait > <[3]: Proc | mode : wait > <[4]: Proc | mode :
+    wait >,'exit}{go([2])<[0]: Proc | mode : wait > <[1]: Proc | mode : wait >
+    <[2]: Proc | mode : wait > <[3]: Proc | mode : wait > <[4]: Proc | mode :
+    wait >,'enter}{<[0]: Proc | mode : wait > <[1]: Proc | mode : wait > <[2]:
+    Proc | mode : critical > <[3]: Proc | mode : wait > <[4]: Proc | mode :
+    wait >,'exit},{go([3])<[0]: Proc | mode : wait > <[1]: Proc | mode : wait >
+    <[2]: Proc | mode : wait > <[3]: Proc | mode : wait > <[4]: Proc | mode :
+    wait >,'enter}{<[0]: Proc | mode : wait > <[1]: Proc | mode : wait > <[2]:
+    Proc | mode : wait > <[3]: Proc | mode : critical > <[4]: Proc | mode :
+    wait >,'exit}{go([4])<[0]: Proc | mode : wait > <[1]: Proc | mode : wait >
+    <[2]: Proc | mode : wait > <[3]: Proc | mode : wait > <[4]: Proc | mode :
+    wait >,'enter}{<[0]: Proc | mode : wait > <[1]: Proc | mode : wait > <[2]:
+    Proc | mode : wait > <[3]: Proc | mode : wait > <[4]: Proc | mode :
+    critical >,'exit}{go([0])<[0]: Proc | mode : wait > <[1]: Proc | mode :
+    wait > <[2]: Proc | mode : wait > <[3]: Proc | mode : wait > <[4]: Proc |
+    mode : wait >,'enter}{<[0]: Proc | mode : critical > <[1]: Proc | mode :
+    wait > <[2]: Proc | mode : wait > <[3]: Proc | mode : wait > <[4]: Proc |
+    mode : wait >,'exit}{go([1])<[0]: Proc | mode : wait > <[1]: Proc | mode :
+    wait > <[2]: Proc | mode : wait > <[3]: Proc | mode : wait > <[4]: Proc |
+    mode : wait >,'enter}{<[0]: Proc | mode : wait > <[1]: Proc | mode :
+    critical > <[2]: Proc | mode : wait > <[3]: Proc | mode : wait > <[4]: Proc
+    | mode : wait >,'exit}{go([2])<[0]: Proc | mode : wait > <[1]: Proc | mode
+    : wait > <[2]: Proc | mode : wait > <[3]: Proc | mode : wait > <[4]: Proc |
+    mode : wait >,'enter}{<[0]: Proc | mode : wait > <[1]: Proc | mode : wait >
+    <[2]: Proc | mode : critical > <[3]: Proc | mode : wait > <[4]: Proc | mode
+    : wait >,'exit})
+---)

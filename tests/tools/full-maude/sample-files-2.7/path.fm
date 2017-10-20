@@ -1,0 +1,161 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+ (fmod PATH is
+     sorts Node Edge .
+     ops source target : Edge -> Node .
+
+     sort Path .
+     subsort Edge < Path .
+     op _;_ : [Path] [Path] -> [Path] .
+
+     var  E : Edge .
+     vars P Q R S : Path .
+     cmb E ; P : Path if target(E) = source(P) .
+     ceq (P ; Q) ; R
+       = P ; (Q ; R)
+       if target(P) = source(Q) /\ target(Q) = source(R) .
+
+     ops source target : Path -> Node .
+     ceq source(P) = source(E) if E ; S := P .
+     ceq target(P) = target(S) if E ; S := P .
+
+     protecting NAT .
+
+     ops n1 n2 n3 n4 n5 : -> Node .
+     ops a b c d e f : -> Edge .
+     op length : Path -> Nat .
+
+     eq length(E) = 1 .
+     ceq length(E ; P) = 1 + length(P) if E ; P : Path .
+
+     eq source(a) = n1 .
+     eq target(a) = n2 .
+     eq source(b) = n1 .
+     eq target(b) = n3 .
+     eq source(c) = n3 .
+     eq target(c) = n4 .
+     eq source(d) = n4 .
+     eq target(d) = n2 .
+     eq source(e) = n2 .
+     eq target(e) = n5 .
+     eq source(f) = n2 .
+     eq target(f) = n1 .
+   endfm)
+
+  (red in PATH : b ; (c ; d) .)
+---(
+rewrites: 893 in 30ms cpu (21ms real) (29766 rewrites/second)
+reduce in PATH :
+  b ;(c ; d)
+result Path :
+  b ;(c ; d)
+---)
+
+  (red length(b ; (c ; d)) .)
+---(
+rewrites: 474 in 10ms cpu (2ms real) (47400 rewrites/second)
+reduce in PATH :
+  length(b ;(c ; d))
+result NzNat :
+  3
+---)
+
+  (red a ; (b ; c) .)
+---(
+rewrites: 587 in 0ms cpu (2ms real) (~ rewrites/second)
+reduce in PATH :
+  a ;(b ; c)
+result [Path] :
+  a ;(b ; c)
+---)
+
+  (red source(a ; (b ; c)) .)
+---(
+rewrites: 616 in 0ms cpu (2ms real) (~ rewrites/second)
+reduce in PATH :
+  source(a ;(b ; c))
+result [Node] :
+  source(a ;(b ; c))
+---)
+
+  (red target((a ; b) ; c) .)
+---(
+rewrites: 622 in 0ms cpu (2ms real) (~ rewrites/second)
+reduce in PATH :
+  target((a ; b); c)
+result [Node] :
+  target((a ; b); c)
+---)
+
+  (red length(a ; (b ; c)) .)
+---(
+rewrites: 579 in 0ms cpu (2ms real) (~ rewrites/second)
+reduce in PATH :
+  length(a ;(b ; c))
+result [Nat] :
+  length(a ;(b ; c))
+---)
+
+  set trace on .
+  set trace mb off .
+  set trace condition off .
+  set trace substitution off .
+  (reduce in PATH : length(b ; c) .)
+---(
+*********** trial #1
+ceq length(E:Edge ; P:Path) = length(P:Path) + 1 if E:Edge ; P:Path : Path .
+*********** solving condition fragment
+E:Edge ; P:Path : Path
+*********** success for condition fragment
+E:Edge ; P:Path : Path
+*********** success #1
+*********** equation
+ceq length(E:Edge ; P:Path) = length(P:Path) + 1 if E:Edge ; P:Path : Path .
+length(b ; c)
+--->
+length(c) + 1
+*********** equation
+eq length(E:Edge) = 1 .
+length(c)
+--->
+1
+*********** equation
+(built-in equation for symbol _+_)
+1 + 1
+--->
+2
+rewrites: 444 in 0ms cpu (7ms real) (~ rewrites/second)
+reduce in PATH :
+  length(b ; c)
+result NzNat :
+  2
+---)
+
+  set trace off .
+  load path.maude
+
+---(
+  (red in PATH : b ; (c ; d) .)
+  Warning: no loop state.
+  Advisory: attempting to reinitialize loop.
+  Warning: "full-maude.maude", line 13692: bad token init
+  Warning: "full-maude.maude", line 13692: no parse for term.
+  Advisory: unable to reinitialize loop.
+---)
+
+  select FULL-MAUDE .
+  loop init .
+
+---(
+      Full Maude 2.3 `(November 20th`, 2006`)
+---)
+
+  (red in PATH : b ; (c ; d) .)
+---(
+  reduce in PATH :
+    b ;(c ; d)
+  result Path :
+    b ;(c ; d)
+---)

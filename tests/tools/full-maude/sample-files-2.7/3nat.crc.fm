@@ -1,0 +1,39 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+  ---- checked Church-Rosser using the CRC tool
+
+  ---- load full-maude22g.maude
+  ---- load crchc2a.maude
+
+***(
+             \||||||||||||||||||/
+           --- Welcome to Maude ---
+             /||||||||||||||||||\
+        Maude 2.2 built: Dec 23 2005 17:05:02
+         Copyright 1997-2005 SRI International
+           Wed Nov  8 16:33:52 2006
+
+         Full Maude 2.2g `(November 6th`, 2006`)
+
+     Church-Rosser and Coherence Checker 2b `(November 6th`, 2006`)
+
+Maude>
+)
+
+  load 3nat.maude
+  
+  select FULL-MAUDE .
+  
+  loop init .
+
+ (check Church-Rosser 3*NAT .) 
+***(
+rewrites: 11322 in 20ms cpu (37ms real) (566100 rewrites/second)
+
+Church-Rosser checking of 3*NAT
+Checking solution:
+  All critical pairs have been joined. The specification is
+    locally-confluent.
+  The specification is sort-decreasing.
+)

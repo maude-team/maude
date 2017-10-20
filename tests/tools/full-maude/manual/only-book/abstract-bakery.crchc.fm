@@ -1,0 +1,66 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+  ---- checked Church-Rosser using the CRC tool
+
+  load bakery.crchc.maude
+  
+  mod ABSTRACT-BAKERY is
+    including BAKERY  .
+    vars P Q : Mode .
+    vars X Y : Nat .
+    eq < P, 0, Q, s s Y > = < P, 0, Q, s 0 > .
+    eq < P, s s X, Q, 0 > = < P, s 0, Q, 0 > .
+    eq < P, s s s X, Q, s s s Y > = < P, s s X, Q, s s Y > .
+    eq < P, s s s X, Q, s s 0 > = < P, s s 0, Q, s 0 > .
+    eq < P, s s s X, Q, s 0 > = < P, s s 0, Q, s 0 > .
+    eq < P, s s 0, Q, s s Y > = < P, s 0, Q, s 0 > .
+    eq < P, s 0, Q, s s Y > = < P, s 0, Q, s 0 > .
+  endm
+
+***(
+  select FULL-MAUDE .
+  
+  loop init .
+
+Maude>  (check Church-Rosser ABSTRACT-BAKERY .)
+rewrites: 27440 in 20ms cpu (83ms real) (1372000 rewrites/second)
+
+Church-Rosser checking of ABSTRACT-BAKERY
+Checking solution:
+  All critical pairs have been joined. The specification is
+    locally-confluent.
+  The specification is sort-decreasing.
+
+Maude>  (check coherence ABSTRACT-BAKERY .)
+rewrites: 69404 in 100ms cpu (169ms real) (694040 rewrites/second)
+
+Coherence checking of ABSTRACT-BAKERY
+Coherence checking solution:
+  The following critical pairs cannot be rewritten:
+  cp < sleep,0,Q@:Mode,s 0 >
+    => < wait,s s s Y*@:Nat,Q@:Mode,s s Y*@:Nat > .
+  cp < sleep,s 0,Q@:Mode,s 0 >
+    => < wait,s s s Y*@:Nat,Q@:Mode,s s Y*@:Nat > .
+  cp < P@:Mode,s 0,sleep,0 >
+    => < P@:Mode,s s X*@:Nat,wait,s s s X*@:Nat > .
+  cp < P@:Mode,s s 0,sleep,s 0 >
+    => < P@:Mode,s s X*@:Nat,wait,s s s X*@:Nat > .
+  ccp < wait,s s 0,Q@:Mode,s 0 >
+    => < crit,s s 0,Q@:Mode,s 0 >
+    if s 0 < s s s X*@:Nat = ff .
+  ccp < wait,s s 0,Q@:Mode,s 0 >
+    => < crit,s s 0,Q@:Mode,s 0 >
+    if s s 0 < s s s X*@:Nat = ff .
+  ccp < wait,s s X*@:Nat,Q@:Mode,s s Y*@:Nat >
+    => < crit,s s X*@:Nat,Q@:Mode,s s Y*@:Nat >
+    if s s s Y*@:Nat < s s s X*@:Nat = ff .
+  ccp < P@:Mode,s 0,wait,s 0 >
+    => < P@:Mode,s 0,crit,s 0 >
+    if s s Y*@:Nat < s 0 = tt .
+  ccp < P@:Mode,s 0,wait,s 0 >
+    => < P@:Mode,s 0,crit,s 0 >
+    if s s Y*@:Nat < s s 0 = tt .
+  ccp < P@:Mode,s s X*@:Nat,wait,s s Y*@:Nat >
+    => < P@:Mode,s s X*@:Nat,crit,s s Y*@:Nat >
+    if s s s Y*@:Nat < s s s X*@:Nat = tt .
+)

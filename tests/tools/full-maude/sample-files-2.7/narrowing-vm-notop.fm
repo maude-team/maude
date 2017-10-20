@@ -1,0 +1,63 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team + Santiago Escobar
+
+mod NARROWING-VM-NOTOP is 
+    sorts Coin Item Marking Money State . 
+    subsort Coin < Money .
+    op empty : -> Money .
+    op __ : Money Money -> Money [assoc comm id: empty] . 
+    subsort Money Item < Marking . 
+    op __ : Marking Marking -> Marking [assoc comm id: empty] . 
+    subsort Marking < State .
+    ops $ q : -> Coin . ops a c : -> Item . 
+    var M : Marking .
+    rl [buy-c] : $ => c . 
+    rl [buy-a] : $ => a q . 
+    eq [change]: q q q q = $ [variant] . 
+endm
+
+mod NARROWING-VM-NOTOP-COHERENT is
+    sorts Coin Item Marking Money State . 
+    subsort Coin < Money .
+    op empty : -> Money .
+    op __ : Money Money -> Money [assoc comm id: empty] .
+    subsort Money Item < Marking .
+    op __ : Marking Marking -> Marking [assoc comm id: empty] .
+    subsort Marking < State .
+    ops $ q : -> Coin . ops a c : -> Item . var M : [Marking] .
+    rl [buy-c] : M $ => M c .
+    rl [buy-a] : M $ => M a q .
+    eq [change]: q q q q M = $ M [variant] .
+endm
+
+red in FULL-MAUDE :
+            metaParamodulationSearch(
+              upModule('NARROWING-VM-NOTOP-COHERENT, false),
+              'M:Money,
+              '__['a.Item, 'c.Item],
+              none, '*, unbounded, 1, unbounded) .
+---(
+result ResultTriple: {'__['a.Item,'c.Item],'Marking,
+	'#1:`[State`] <- '__['q.Coin,'q.Coin,'q.Coin] ; 
+	'#4:`[State`] <- 'a.Item ; 
+	'#6:Money <- 'empty.Money ; 
+	'%3:Money <- '__['q.Coin,'q.Coin,'q.Coin] ; 
+	'M:Money <- '__['$.Coin,'q.Coin,'q.Coin,'q.Coin]}
+---)
+
+red in FULL-MAUDE :
+            metaParamodulationSearch(
+              axCohComplete(upModule('NARROWING-VM-NOTOP, false)),
+              'M:Money,
+              '__['a.Item, 'c.Item],
+              none, '*, unbounded, 1, unbounded) .
+---(
+result ResultTriple: {'__['a.Item,'c.Item],'Marking,
+	'#1:`[State`] <- '__['q.Coin,'q.Coin,'q.Coin] ; 
+	'#4:`[State`] <- 'a.Item ; 
+	'#6:Money <- 'empty.Money ; 
+	'%3:Money <- '__['q.Coin,'q.Coin,'q.Coin] ; 
+	'M:Money <- '__['$.Coin,'q.Coin,'q.Coin,'q.Coin]}
+---)
+

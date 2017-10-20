@@ -1,0 +1,56 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  fmod ITER-MB-EX1 is
+    sort Foo .
+    op f : Foo -> Foo [iter] .
+    op e : -> [Foo] .
+
+    mb f(e) : Foo .
+  endfm
+
+***(
+Maude> red f(e) .
+Warning: membership axioms are not guaranteed to work correctly for iterated
+    symbol f as it has declarations that are not at the kind level.
+reduce in ITER-MB-EX1 : f(e) .
+rewrites: 1 in 0ms cpu (0ms real) (~ rewrites/second)
+result Foo: f(e)
+
+Maude> red f(f(e)) .
+reduce in ITER-MB-EX1 : f^2(e) .
+rewrites: 0 in 0ms cpu (0ms real) (~ rewrites/second)
+result [Foo]: f^2(e)
+
+Maude> red f(f(f(e))) .
+reduce in ITER-MB-EX1 : f^3(e) .
+rewrites: 0 in 0ms cpu (0ms real) (~ rewrites/second)
+result [Foo]: f^3(e)
+)
+
+  fmod ITER-MB-EX2 is
+    sort Foo .
+    op f : [Foo] -> [Foo] [iter] .
+    op e : -> [Foo] .
+
+    mb f(X:Foo) : Foo .
+    mb f(e) : Foo .
+  endfm
+
+***(
+Maude> red f(e) .
+reduce in ITER-MB-EX2 : f(e) .
+rewrites: 1 in 0ms cpu (0ms real) (~ rewrites/second)
+result Foo: f(e)
+
+Maude> red f(f(e)) .
+reduce in ITER-MB-EX2 : f^2(e) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result Foo: f^2(e)
+
+Maude> red f(f(f(e))) .
+reduce in ITER-MB-EX2 : f^3(e) .
+rewrites: 3 in 0ms cpu (0ms real) (~ rewrites/second)
+result Foo: f^3(e)
+)

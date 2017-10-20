@@ -1,0 +1,106 @@
+----load model-checker.maude
+----load full-maude.maude
+
+(omod LIDER is
+  pr QID .
+
+  sort Mode .
+  ops idle activo lider : -> Mode [ctor] .
+
+  class Nodo | modo : Mode, prioridad : Nat, siguiente : Oid .
+
+  subsort Qid < Oid .
+
+  msg to_:_ : Oid Nat -> Msg .
+
+  vars N N' : Nat .
+  vars O O' : Oid .
+
+  rl [activar] :
+     < O : Nodo | modo : idle, siguiente : O', prioridad : N >
+  => < O : Nodo | modo : activo >
+     (to O' : N) .
+
+  crl [borrar] :
+      (to O : N)
+      < O : Nodo | modo : activo, prioridad : N' >
+   => < O : Nodo | >
+   if N < N' .
+
+  crl [reenviar] :
+      (to O : N)
+      < O : Nodo | modo : activo, prioridad : N', siguiente : O' >
+   => < O : Nodo | >
+      (to O' : N)
+   if N > N' .
+
+  rl [lider] :
+     (to O : N)
+     < O : Nodo | modo : activo, prioridad : N >
+  => < O : Nodo | modo : lider > .
+
+  op init : -> Configuration .
+  eq init = < 'n1 : Nodo | modo : idle, prioridad : 1, siguiente : 'n2 >
+            < 'n2 : Nodo | modo : idle, prioridad : 2, siguiente : 'n3 >
+            < 'n3 : Nodo | modo : idle, prioridad : 3, siguiente : 'n4 >
+            < 'n4 : Nodo | modo : idle, prioridad : 4, siguiente : 'n5 >
+            < 'n5 : Nodo | modo : idle, prioridad : 5, siguiente : 'n1 > .
+endom)
+
+(omod INVARIANTE is
+  pr LIDER .
+
+  var C : Configuration .
+  var O : Oid .
+
+  op numLideres : Configuration -> Nat .
+  eq numLideres(< O : Nodo | modo : lider > C) = 1 + numLideres(C) .
+  eq numLideres(C) = 0 [owise] .
+
+  op 1lider : Configuration -> Bool .
+  eq 1lider(C) = numLideres(C) <= 1 .
+endom)
+
+(rew init .)
+
+eof
+
+(search init =>* C:Configuration s.t. not 1lider .)
+
+(omod PROPS is
+  pr LIDER .
+  pr SATISFACTION .
+
+  subsort Configuration < State .
+
+  var C : Configuration .
+  var O : Oid .
+
+  op hayLider : -> Prop [ctor] .
+  ops idle activo esLider : Oid -> Prop [ctor] .
+
+  eq < O : Nodo | modo : lider > C |= hayLider = true .
+  eq < O : Nodo | modo : lider > C |= esLider(O) = true .
+  eq < O : Nodo | modo : idle > C |= idle(O) = true .
+  eq < O : Nodo | modo : idle > C |= activo(O) = true .
+endom)
+
+(omod CHECK is
+  pr PROPS .
+  pr MODEL-CHECKER .
+  pr LTL-SIMPLIFIER .
+
+***(
+  *** Disponible en LIDER
+  op init : -> Configuration .
+  eq init = < 'n1 : Nodo | modo : idle, prioridad : 1, siguiente : 'n2 >
+            < 'n2 : Nodo | modo : idle, prioridad : 2, siguiente : 'n3 >
+            < 'n3 : Nodo | modo : idle, prioridad : 3, siguiente : 'n4 >
+            < 'n4 : Nodo | modo : idle, prioridad : 4, siguiente : 'n5 >
+            < 'n5 : Nodo | modo : idle, prioridad : 5, siguiente : 'n1 > .
+)
+endom)
+
+(red modelCheck(init, <> hayLider -> <> esLider('n5)) .)
+(red modelCheck(init, <> esLider('n5)) .)
+(red modelCheck(init, idle('n1) -> <> idle('n1)) .)

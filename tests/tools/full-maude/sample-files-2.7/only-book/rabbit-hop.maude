@@ -1,0 +1,92 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  mod RABBIT-HOP is
+    protecting NAT .
+    sorts Rabbit RabbitList .
+    subsort Rabbit < RabbitList .
+
+    ops x o free : -> Rabbit [ctor] .
+    op __ : RabbitList RabbitList -> RabbitList [ctor assoc] .
+    op initial : Nat -> RabbitList .
+
+    var  N : Nat .
+    eq initial(0) = free .
+    eq initial(s(N)) = x initial(N) o .
+
+    rl [xAdvances] : x free => free x .
+    rl [xJumps] : x o free => free o x .
+    rl [oAdvances] : free o => o free .
+    rl [oJumps] : free x o => o x free .
+  endm
+
+***(
+Maude> search initial(3) =>* o o o free x x x .
+search in RABBIT-HOP : initial(3) =>* o o o free x x x .
+
+Solution 1 (state 71)
+states: 72  rewrites: 85 in 0ms cpu (1ms real) (~ rewrites/second)
+empty substitution
+
+No more solutions.
+states: 72  rewrites: 86 in 0ms cpu (1ms real) (~ rewrites/second)
+
+Maude> show path 71 .
+search in RABBIT-HOP : initial(3) =>* o o o free x x x .
+
+Solution 1 (state 71)
+states: 72  rewrites: 85 in 0ms cpu (1ms real) (~ rewrites/second)
+empty substitution
+
+No more solutions.
+states: 72  rewrites: 86 in 0ms cpu (1ms real) (~ rewrites/second)
+
+Maude> state 0, RabbitList: x x x free o o o
+===[ rl x free => free x [label xAdvances] . ]===>
+state 1, RabbitList: x x free x o o o
+===[ rl free x o => o x free [label oJumps] . ]===>
+state 4, RabbitList: x x o x free o o
+===[ rl free o => o free [label oAdvances] . ]===>
+state 9, RabbitList: x x o x o free o
+===[ rl x o free => free o x [label xJumps] . ]===>
+state 14, RabbitList: x x o free o x o
+===[ rl x o free => free o x [label xJumps] . ]===>
+state 22, RabbitList: x free o x o x o
+===[ rl x free => free x [label xAdvances] . ]===>
+state 28, RabbitList: free x o x o x o
+===[ rl free x o => o x free [label oJumps] . ]===>
+state 34, RabbitList: o x free x o x o
+===[ rl free x o => o x free [label oJumps] . ]===>
+state 41, RabbitList: o x o x free x o
+===[ rl free x o => o x free [label oJumps] . ]===>
+state 48, RabbitList: o x o x o x free
+===[ rl x free => free x [label xAdvances] . ]===>
+state 54, RabbitList: o x o x o free x
+===[ rl x o free => free o x [label xJumps] . ]===>
+state 60, RabbitList: o x o free o x x
+===[ rl x o free => free o x [label xJumps] . ]===>
+state 63, RabbitList: o free o x o x x
+===[ rl free o => o free [label oAdvances] . ]===>
+state 67, RabbitList: o o free x o x x
+===[ rl free x o => o x free [label oJumps] . ]===>
+state 69, RabbitList: o o o x free x x
+===[ rl x free => free x [label xAdvances] . ]===>
+state 71, RabbitList: o o o free x x x
+
+Maude> show path labels 71 .
+xAdvances
+oJumps
+oAdvances
+xJumps
+xJumps
+xAdvances
+oJumps
+oJumps
+oJumps
+xAdvances
+xJumps
+xJumps
+oAdvances
+oJumps
+xAdvances
+)

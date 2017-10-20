@@ -1,0 +1,18 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  mod INSTRUMENTATION-INFRASTRUCTURE is
+    pr CONFIGURATION .
+    pr QID-LIST .
+
+    sorts InstrConfig .
+
+    var C : Configuration .
+    var QL : QidList .
+
+    op {_,_} : Configuration QidList -> InstrConfig .
+    op getConfig : InstrConfig -> Configuration .
+    op getLabels : InstrConfig -> QidList .
+    eq getConfig({C, QL}) = C . 
+    eq getLabels({C, QL}) = QL . 
+  endm

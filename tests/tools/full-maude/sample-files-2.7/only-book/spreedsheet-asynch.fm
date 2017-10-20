@@ -1,0 +1,57 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+ (omod SPREADSHEET-ASYNCH is
+    protecting NAT . 
+    sort Name .
+    subsort Nat < Name .
+    op total : -> Name [ctor] .
+    op `(_`,_`) : Name Name -> Oid .
+    class Cell | val : Nat .
+    msgs add sub : Nat Nat Nat -> Msg .
+    msgs add-row add-col : Nat Nat -> Msg .
+    msgs sub-row sub-col : Nat Nat -> Msg .
+    msgs add-total sub-total : Nat -> Msg .
+    vars M N V W : Nat .
+
+    rl [add] : 
+      add(N, M, V)  
+      < (N, M) : Cell | val : W > 
+      => < (N, M) : Cell | val : W + V > 
+         add-row(N, V)  
+         add-col(M, V)  
+         add-total(V) .
+    rl [add-row] :  
+      add-row(N, V)  
+      < (N, total) : Cell | val : W > 
+      => < (N, total) : Cell | val : W + V > . 
+    rl [add-col] :  
+      add-col(M,V)  
+      < (total, M) : Cell | val : W >  
+      => < (total, M) : Cell | val : W + V > . 
+    rl [add-total] :  
+      add-total(V)  
+      < (total, total) : Cell | val : W >
+      => < (total, total) : Cell | val : W + V > .
+
+    crl [sub] :  
+      sub(N, M, V)  
+      < (N, M) : Cell | val : W > 
+      => < (N, M) : Cell | val : sd(W, V) > 
+         sub-row(N, V)  
+         sub-col(M, V)  
+         sub-total(V)  
+      if V <= W .
+    rl [sub-row] :  
+      sub-row(N, V)  
+      < (N, total) : Cell | val : W > 
+      => < (N, total) : Cell | val : sd(W, V) > .
+    rl [sub-col] :  
+      sub-col(M, V)  
+      < (total, M) : Cell | val : W > 
+      => < (total, M) : Cell | val : sd(W, V) > .
+    rl [sub-total] :  
+      sub-total(V)  
+      < (total, total) : Cell | val : W >
+      => < (total, total) : Cell | val : sd(W, V) > .
+  endom)

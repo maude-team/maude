@@ -1,0 +1,42 @@
+(select UNIT .)
+
+(load (omod 'SAVING-ACCOUNT is
+       including 'BOOL .
+       including 'CONFIGURATION .
+       including 'CONFIGURATION+ .
+       protecting 'FLOAT .
+       protecting 'QID .
+       protecting 'INT .
+       sorts none .
+       subsort 'Qid < 'Oid .
+       class 'Account | attr 'bal : 'Int .
+       class 'SavingAccount | attr 'rate : 'Float .
+       subclass 'SavingAccount < 'Account .
+       none
+       msg 'credit : 'Oid 'Int -> 'Msg . 
+       msg 'debit : 'Oid 'Int -> 'Msg . 
+       msg 'from_to_transfer_ : 'Oid 'Oid 'Int -> 'Msg .
+       none
+       none
+       rl '__['credit['A:Oid,'M:Nat],'<_:_|_>['A:Oid,'Account.Account,'bal`:_[
+    'N:Int]]] => '<_:_|_>['A:Oid,'Account.Account,'bal`:_['_+_['N:Int,'M:Nat]]]
+    [label('credit)] .
+       crl '__['debit['A:Oid,'M:Nat],'<_:_|_>['A:Oid,'Account.Account,'bal`:_[
+    'N:Int]]] => '<_:_|_>['A:Oid,'Account.Account,'bal`:_['_-_['N:Int,'M:Nat]]]
+    if '_>=_['N:Int,'M:Nat] = 'true.Bool [label('debit)] .
+       crl '__['from_to_transfer_['A:Oid,'B:Oid,'M:Nat],'__['<_:_|_>['A:Oid,
+    'Account.Account,'bal`:_['N:Int]],'<_:_|_>['B:Oid,'Account.Account,'bal`:_[
+    'N':Int]]]] => '__['<_:_|_>['A:Oid,'Account.Account,'bal`:_['_-_['N:Int,
+    'M:Nat]]],'<_:_|_>['B:Oid,'Account.Account,'bal`:_['_+_['N':Int,'M:Nat]]]]
+    if '_>=_['N:Int,'M:Nat] = 'true.Bool [label('transfer)] .
+     endom) .)
+
+(select SAVING-ACCOUNT .)
+
+(rew < 'A-73728 : SavingAccount | bal : 5000, rate : 3.0 >
+              < 'A-06238 : Account | bal : 2000 >
+              < 'A-28381 : SavingAccount | bal : 9000, rate : 3.0 >
+              debit('A-06238, 1000)
+              credit('A-73728, 1300)
+              credit('A-28381, 200) .)
+(show module SAVING-ACCOUNT .)

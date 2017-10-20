@@ -1,0 +1,540 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+in stoset.maude
+
+fmod 234TREES{T :: STOSET} is
+  pr NAT .
+  sort Ne234Tree?{T} 234Tree?{T} Ne234Tree{T} 234Tree{T} .
+  subsort Ne234Tree?{T} < 234Tree?{T} .
+  subsort Ne234Tree{T} < 234Tree{T} < 234Tree?{T} .
+  subsort Ne234Tree{T} < Ne234Tree?{T} .
+
+  op empty234 : -> 234Tree{T} [ctor] .
+  op _`[_`]_ : 234Tree?{T} T$Elt 234Tree?{T} -> Ne234Tree?{T} [ctor] .
+  op _<_>_<_>_ : 234Tree?{T} T$Elt 234Tree?{T} T$Elt 234Tree?{T} -> Ne234Tree?{T} [ctor] .
+  op _`{_`}_`{_`}_`{_`}_ : 234Tree?{T} T$Elt 234Tree?{T} T$Elt 
+                           234Tree?{T} T$Elt 234Tree?{T} -> 
+                           Ne234Tree?{T} [ctor] .
+                           
+  vars N N1 N2 N3 N4 N5 N6 N7 NN1 NN2 M : T$Elt .
+  vars TL TLM TC TRM TR : 234Tree{T} . 
+  vars T T' T1 T2 T3 T4 T5 T6 T7 T8 : 234Tree{T} .
+
+  cmb TL [ N ] TR : Ne234Tree{T} 
+    if greaterKey(N, TL) 
+       /\ smallerKey(N, TR) 
+       /\ depth(TL) = depth(TR) .
+  cmb TL < N1 > TC < N2 > TR : Ne234Tree{T} 
+    if N1 < N2 
+       /\ greaterKey(N1, TL) /\ smallerKey(N1, TC) 
+       /\ greaterKey(N2, TC) /\ smallerKey(N2, TR) 
+       /\ depth(TL) = depth(TC) /\ depth(TC) = depth(TR) .
+  cmb TL { N1 } TLM { N2 } TRM { N3 } TR : Ne234Tree{T} 
+    if N1 < N2 /\ N2 < N3 
+       /\ greaterKey(N1, TL) /\ smallerKey(N1, TLM) 
+       /\ greaterKey(N2, TLM) /\ smallerKey(N2, TRM)
+       /\ greaterKey(N3, TRM) /\ smallerKey(N3, TR) 
+       /\ depth(TL) = depth(TLM) /\ depth(TL) = depth(TRM) 
+       /\ depth(TL) = depth(TR) .
+
+  --- Auxiliary functions used in the specification of 2-3-4 trees.
+
+  op depth : 234Tree?{T} -> Nat .  
+  op greaterKey : T$Elt 234Tree{T} -> Bool . --- True if the first argument is 
+                                             --- greater than all keys in the tree.
+  op smallerKey : T$Elt 234Tree{T} -> Bool . --- True if the first argument is
+                                             --- smaller than all keys in the tree.
+  op maxKey : Ne234Tree{T} -> T$Elt .  --- Greater element in a tree.
+  op minKey : Ne234Tree{T} -> T$Elt .  --- Smallest element in a tree. 
+
+  --- Note the use of the subsort in the four previous operations!
+
+  vars 234?TL 234?TLM 234?TC 234?TRM 234?TR : 234Tree?{T} .
+
+  eq depth(empty234) = 0 .
+  eq depth(234?TL [ N ] 234?TR) = 1 + max(depth(234?TL), depth(234?TR)) .
+  eq depth(234?TL < N1 > 234?TC < N2 > 234?TR) 
+    = 1 + max(max(depth(234?TL), depth(234?TC)), depth(234?TR)) .
+  eq depth(234?TL { N1 } 234?TLM { N2 } 234?TRM { N3 } 234?TR) 
+    = 1 + max(max(depth(234?TL), depth(234?TLM)), 
+              max(depth(234?TRM), depth(234?TR))) .
+
+ op maxT : T$Elt T$Elt -> T$Elt .
+ op minT : T$Elt T$Elt -> T$Elt .
+
+ eq maxT(N1, N2) = if (N2 < N1) then N1 else N2 fi .
+ eq minT(N1, N2) = if (N1 < N2) then N1 else N2 fi .
+
+ eq greaterKey(M, empty234) = true .
+ eq greaterKey(M, TL [ N ] TR)  
+   = if TR == empty234 then N < M else greaterKey(M, TR) fi .
+ eq greaterKey(M, TL < N1 > TC < N2 > TR)  
+   = if TR == empty234 then N2 < M else greaterKey(M, TR) fi .
+ eq greaterKey(M, TL { N1 } TLM { N2 } TRM { N3 } TR)  
+   = if TR == empty234 then N3 < M else greaterKey(M, TR) fi .
+
+ eq smallerKey(M, empty234) = true .
+ eq smallerKey(M, TL [ N ] TR)  
+   = if TL == empty234 then M < N else smallerKey(M, TR) fi .
+ eq smallerKey(M, TL < N1 > TC < N2 > TR) 
+   = if TL == empty234 then M < N2 else smallerKey(M, TR) fi . 
+ eq smallerKey(M, TL { N1 } TLM { N2 } TRM { N3 } TR) 
+   = if TL == empty234 then M < N1 else smallerKey(M, TL) fi .
+
+ eq maxKey(TL [ N ] TR)  
+   = if TR == empty234 then N else maxKey(TR) fi .
+ eq maxKey(TL < N1 > TC < N2 > TR) 
+   = if TR == empty234 then N2 else maxKey(TR) fi .
+ eq maxKey(TL { N1 } TLM { N2 } TRM { N3 } TR) 
+   = if TR == empty234 then N3 else maxKey(TR) fi .
+
+ eq minKey(TL [ N ] TR)  
+   = if TL == empty234 then N else minKey(TL) fi .
+ eq minKey(TL < N1 > TC < N2 > TR) 
+   = if TL == empty234 then N1 else minKey(TL) fi .
+ eq minKey(TL { N1 } TLM { N2 } TRM { N3 } TR) 
+   = if TL == empty234 then N1 else minKey(TL) fi .
+
+ ------------------------------------------------------------------------------
+ --- 
+ --- Insertion in a 2-3-4 tree
+ --- "insert"
+ --- Adds a new element to the tree (whenever it is not already in it).
+
+ op insert : T$Elt 234Tree{T} -> 234Tree{T} .
+ op insert' : T$Elt 234Tree{T} ~> 234Tree{T} . 
+
+ eq insert(M, TL { N1 } TLM { N2 } TRM { N3 } TR) 
+   = insert(M, (TL [ N1 ] TLM) [ N2 ] (TRM [ N3 ] TR)) .
+ eq insert(M, T) = insert'(M, T) [owise] .
+
+
+ eq insert'(M, empty234) = empty234 [ M ] empty234 .
+ eq insert'(M, empty234 [ N ] empty234) 
+   = if M == N 
+     then empty234 [ N ] empty234 
+     else empty234 < minT(N,M) > empty234 < maxT(N,M) > empty234
+     fi .
+ eq insert'(M, empty234 < N1 > empty234 < N2 > empty234) 
+   = if M == N1 or M == N2 
+     then empty234 < N1 > empty234 < N2 > empty234
+     else empty234 
+          { minT(N1, M) } 
+          empty234 
+          { minT(maxT(N1, M), N2) } 
+          empty234 
+          { maxT(N2, M) } 
+          empty234 
+     fi .
+
+ ceq insert'(M, T1 [ N ] T2) = T1 [ N ] T2 
+   if M = N /\ (T1 =/= empty234 or T2 =/= empty234) .
+ ceq insert'(M, T1 [ N ] T2) 
+   = insert'(M, (TL [ N1 ] TLM) < N2 > (TRM [N3] TR) < N > T2)
+   if M < N /\ (T1 =/= empty234 or T2 =/= empty234) 
+      /\ TL { N1 } TLM { N2 } TRM { N3 } TR := T1 .
+ ceq insert'(M, T1 [ N ] T2) = insert'(M, T1) [ N ] T2
+   if M < N /\ (T1 =/= empty234 or T2 =/= empty234) [owise] .
+ ceq insert'(M, T1 [ N ] T2) 
+   = insert'(M, T1 < N > (TL [ N1 ] TLM) < N2 > (TRM [N3] TR))
+   if N < M /\ (T1 =/= empty234 or T2 =/= empty234) 
+      /\ TL { N1 } TLM { N2 } TRM { N3 } TR := T2 .
+ ceq insert'(M, T1 [ N ] T2) = T1 [ N ] insert'(M, T2)
+   if N < M /\ (T1 =/= empty234 or T2 =/= empty234) [owise] .
+
+ ceq insert'(M, T1 < NN1 > T2 < NN2 > T3) 
+   = T1 < NN1 > T2 < NN2 > T3
+   if (M == NN1 or M == NN2) 
+      /\ (T1 =/= empty234 or T2 =/= empty234 or T3 =/= empty234) .
+ ceq insert'(M, T1 < NN1 > T2 < NN2 > T3) 
+   = insert'-aux(M, 
+       (TL [N1] TLM) { N2 } (TRM [N3] TR) { NN1 } T2 { NN2 } T3)
+   if (T1 =/= empty234 or T2 =/= empty234 or T3 =/= empty234) 
+      /\ M < NN1 /\ TL { N1 } TLM { N2 } TRM { N3 } TR := T1 .
+ ceq insert'(M, T1 < NN1 > T2 < NN2 > T3) 
+   = insert'(M, T1) < NN1 > T2 < NN2 > T3
+   if (T1 =/= empty234 or T2 =/= empty234 or T3 =/= empty234) 
+      /\ M < NN1 
+   [owise] .
+ ceq insert'(M, T1 < NN1 > T2 < NN2 > T3) 
+   = insert'-aux(M, 
+       T1 { NN1 } (TL [N1] TLM) { N2 } (TRM [N3] TR) { NN2 } T2) 
+   if (T1 =/= empty234 or T2 =/= empty234 or T3 =/= empty234) 
+      /\ NN1 < M /\ M < NN2 
+      /\ TL { N1 } TLM { N2 } TRM { N3 } TR := T2 .
+ ceq insert'(M, T1 < NN1 > T2 < NN2 > T3) 
+   = T1 < NN1 > insert'(M,T2) < NN2 > T3
+   if (T1 =/= empty234 or T2 =/= empty234 or T3 =/= empty234) 
+      /\ NN1 < M /\ M < NN2 
+   [owise] .
+ ceq insert'(M, T1 < NN1 > T2 < NN2 > T3) 
+   = insert'-aux(M, 
+       T1 { NN1 } T2 { NN2 } (TL [N1] TLM) { N2 } (TRM [N3] TR))
+   if (T1 =/= empty234 or T2 =/= empty234 or T3 =/= empty234) 
+      /\ NN2 < M /\ TL { N1 } TLM { N2 } TRM { N3 } TR := T3 .
+ ceq insert'(M, T1 < NN1 > T2 < NN2 > T3) 
+   = T1 < NN1 > T2 < NN2 > insert'(M,T3)
+   if (T1 =/= empty234 or T2 =/= empty234 or T3 =/= empty234) 
+      /\ NN2 < M 
+   [owise] .
+
+ --- "Very partial" function!
+
+ op insert'-aux : T$Elt Ne234Tree{T} ~> 234Tree{T} .
+
+ ceq insert'-aux(M, TL { N1 } TLM { N2 } TRM { N3 } TR) 
+   = insert'(M, TL) { N1 } TLM { N2 } TRM { N3 } TR
+   if M < N1 .
+ ceq insert'-aux(M, TL { N1 } TLM { N2 } TRM { N3 } TR) 
+   = TL { N1 } insert'(M, TLM) { N2 } TRM { N3 } TR
+   if N1 < M /\ M < N2 .
+ ceq insert'-aux(M, TL { N1 } TLM { N2 } TRM { N3 } TR) 
+   = TL { N1 } TLM { N2 } insert'(M, TRM) { N3 } TR
+   if N2 < M /\ M < N3 .
+ ceq insert'-aux(M, TL { N1 } TLM { N2 } TRM { N3 } TR) 
+   = TL { N1 } TLM { N2 } TRM { N3 } insert'(M, TR)
+   if N3 < M .
+ eq insert'-aux(M, TL { N1 } TLM { N2 } TRM { N3 } TR) 
+   = TL { N1 } TLM { N2 } TRM { N3 } TR [owise] .
+
+ --- "delete"
+ --- Deletes a new element from the tree. It assumes that the element
+ --- is in the tree.
+
+ op delete : T$Elt 234Tree{T} -> 234Tree{T} .
+
+ --- These cases are only possible in the first call.
+
+ eq delete(M, empty234) = empty234 .
+ eq delete(M, empty234 [M] empty234) = empty234 .
+ eq delete(M, (T1 [N1] T2) [N] (T3 [N2] T4)) 
+   = delete(M, T1 { N1 } T2 { N } T3 { N2 } T4) .
+ ceq delete(M, (T1 [N1] T2) [N] (T3 < N2 > T4 < N3 > T5)) 
+   = delete(M, T1 < N1 > T2 < N > T3) [N2] (T4 [N3] T5)
+   if M < N .
+ ceq delete(M, (T1 < N1 > T2 < N2 > T3) [N] (T4 [N3] T5)) 
+   = (T1 [N1] T2) [N2] delete(M, T3 < N > T4 < N3 > T5)
+   if N < M .
+ ceq delete(M, (T1 [N1] T2) [N] (T3 { N2 } T4 { N3 } T5 { N4 } T6)) 
+   = delete(M, T1 < N1 > T2 < N > T3) [N2] (T4 < N3 > T5 < N4 > T6)
+   if M < N .
+ ceq delete(M, (T1 { N1 } T2 { N2 } T3 { N3 } T4) [N] (T5 [N4] T6)) 
+   = (T1 < N1 > T2 < N2 > T3) [N3] delete(M, T4 < N > T5 < N4 > T6)
+   if N < M .
+ ceq delete(M, T1 [N] T2) = delete(M, T1) [N] T2
+   if M < N
+   [owise] .
+ ceq delete(M, T1 [N] T2) = T1 [N] delete(M, T2)
+   if N < M 
+   [owise] .
+
+ eq delete(M, empty234 < M > empty234 < N > empty234) 
+   = empty234 [N] empty234 .
+ eq delete(M, empty234 < N > empty234 < M > empty234) 
+   = empty234 [N] empty234 .
+ ceq delete(M, (T1 [N1] T2) < N2 > (T3 [N3] T4) < N4 > T5) 
+   = delete(M, T1 { N1 } T2 { N2 } T3 { N3 } T4) [N4] T5
+   if M < N2 .
+ ceq delete(M, (T1 [N1] T2) < N2 > (T3 < N3 > T4 < N4 > T5) < N5 > T6) 
+   = delete(M, T1 < N1 > T2 < N2 > T3) < N3 > (T4 [N4] T5) < N5 > T6
+   if M < N2 .
+ ceq delete(M, (T1 [N1] T2) < N2 > (T3 { N3 } T4 { N4 } T5 { N5 } T6) < N6 > T7) 
+   = delete(M, T1 < N1 > T2 < N2 > T3) < N3 > (T4 < N4 > T5 < N5 > T6) < N6 > T7
+   if M < N2 .
+ ceq delete(M, T1 < N1 > (T2 [N2] T3) < N3 > (T4 [N4] T5)) 
+   = T1 [N1] delete(M, T2 { N2 } T3 { N3 } T4 { N4 } T5)
+   if N1 < M /\ M < N3 .
+ ceq delete(M, T1 < N1 > (T2 [N2] T3) < N3 > (T4 < N4 > T5 < N5 > T6)) 
+   = T1 < N1 > delete(M, T2 < N2 > T3 < N3 > T4) < N4 > (T5 [N5] T6)
+   if N1 < M /\ M < N3 .
+ ceq delete(M, T1 < N1 > (T2 [N2] T3) < N3 > (T4 { N4 } T5 { N5 } T6 { N6 } T7)) 
+   = T1 < N1 > delete(M, T2 < N2 > T3 < N3 > T4) < N4 > (T5 < N5 > T6 < N6 > T7)
+   if N1 < M /\ M < N3 .
+ ceq delete(M, T1 < N1 > (T2 [N2] T3) < N3 > (T4 [N4] T5)) 
+   = T1 [N1] delete(M, T2 { N2 } T3 { N3 } T4 { N4 } T5)
+   if N3 < M .
+ ceq delete(M, T1 < N1 > (T2 < N2 > T3 < N3 > T4) < N4 > (T5 [N5] T6)) 
+   = T1 < N1 > (T2 [N2] T3) < N3 > delete(M, T4 < N4 > T5 < N5 > T6)
+   if N3 < M .
+ ceq delete(M, T1 < N1 > (T2 { N2 } T3 { N3 } T4 { N4 } T5) < N5 > (T6 [N6] T7)) 
+   = T1 < N1 > (T2 < N2 > T3 < N3 > T4) < N4 > delete(M, T5 < N5 > T6 < N6 > T7)
+   if N3 < M .
+ ceq delete(M, T1 < N1 > T2 < N2 > T3) = delete(M, T1) < N1 > T2 < N2 > T3
+   if M < N1 
+   [owise] .
+ ceq delete(M, T1 < N1 > T2 < N2 > T3) = T1 < N1 > delete(M, T2) < N2 > T3
+   if N1 < M /\ M < N2 
+   [owise] .
+ ceq delete(M, T1 < N1 > T2 < N2 > T3) = T1 < N1 > T2 < N2 > delete(M, T3)
+   if N2 < M 
+   [owise] .
+
+ eq delete(M, empty234 { M } empty234 { N1 } empty234 { N2 } empty234) 
+   = empty234 < N1 > empty234 < N2 > empty234 .
+ eq delete(M, empty234 { N1 } empty234 { M } empty234 { N2 } empty234) 
+   = empty234 < N1 > empty234 < N2 > empty234 .
+ eq delete(M, empty234 { N1 } empty234 { N2 } empty234 { M } empty234) 
+   = empty234 < N1 > empty234 < N2 > empty234 .
+ ceq delete(M, (T1 [N1] T2) { N2 } (T3 [N3] T4) { N4 } T5 { N5 } T6) 
+   = delete(M, T1 { N1 } T2 { N2 } T3 { N3 } T4) < N4 > T5 < N5 > T6
+   if M < N2 .
+ ceq delete(M, (T1 [N1] T2) { N2 } (T3 < N3 > T4 < N4 > T5) { N5 } T6 { N6 } T7) 
+   = delete(M, T1 < N1 > T2 < N2 > T3) { N3 } (T4 [N4] T5) { N5 } T6 { N6 } T7
+   if M < N2 .
+ ceq delete(M, (T1 [N1] T2) { N2 } (T3 { N3 } T4 { N4 } T5 { N5 } T6) { N6 } T7 { N7 } T8) 
+   = delete(M, T1 < N1 > T2 < N2 > T3) { N3 } (T4 < N4 > T5 < N5 > T6) { N6 } T7 { N7} T8
+   if M < N2 .
+ ceq delete(M, T1 { N1 } (T2 [N2] T3) { N3 } (T4 [ N4 ] T5) { N5 } T6) 
+   = T1 < N1 > delete(M, T2 { N2 } T3 { N3 } T4 { N4 } T5) < N5 > T6
+   if N1 < M /\ M < N3 .
+ ceq delete(M, T1 { N1 } (T2 [N2] T3) { N3 } (T4 < N4 > T5 < N5 > T6) { N6 } T7) 
+   = T1 { N1 } delete(M, T2 < N2 > T3 < N3 > T4) { N4 } (T5 [N5] T6) { N6 } T7
+   if N1 < M /\ M < N3 .
+ ceq delete(M, T1 { N1 } (T2 [N2] T3) { N3 } (T4 { N4 } T5 { N5 } T6 { N6 } T7) { N7 } T8) 
+   = T1 { N1 } delete(M, T2 < N2 > T3 < N3 > T4) { N4 } (T5 < N5 > T6 < N6 > T7) { N7 } T8
+   if N1 < M /\ M < N3 .
+ ceq delete(M, T1 { N1 } T2 { N2 } (T3 [N3] T4) { N4 } (T5 [N5] T6)) 
+   = T1 < N1 > T2 < N2 > delete(M, T3 { N3 } T4 { N4 } T5 { N5 } T6)
+   if N2 < M /\ M < N4 .
+ ceq delete(M, T1 { N1 } T2 { N2 } (T3 [N3] T4) { N4 } (T5 < N5 > T6 < N6 > T7)) 
+   = T1 { N1 } T2 { N2 } delete(M, T3 < N3 > T4 < N4 > T5) { N5 } (T6 [N6] T7)
+   if N2 < M /\ M < N4 .
+ ceq delete(M, T1 { N1 } T2 { N2 } (T3 [N3] T4) { N4 } (T5 { N5 } T6 { N6 } T7 { N7 } T8)) 
+   = T1 { N1 } T2 { N2 } delete(M, T3 < N3 > T4 < N4 > T5) { N5 } (T6 < N6 > T7 < N7 > T8)
+   if N2 < M /\ M < N4 .
+ ceq delete(M, T1 { N1 } T2 { N2 } (T3 [N3] T4) { N4 } (T5 [N5] T6)) 
+   = T1 < N1 > T2 < N2 > delete(M, T3 { N3 } T4 { N4 } T5 { N5 } T6)
+   if N4 < M .
+ ceq delete(M, T1 { N1 } T2 { N2 } (T3 < N3 > T4 < N4 > T5) { N5 } (T6 [N6] T7)) 
+   = T1 { N1 } T2 { N2 } (T3 [N3] T4) { N4 } delete(M, T5 < N5 > T6 < N6 > T7)
+   if N5 < M .
+ ceq delete(M, T1 { N1 } T2 { N2 } (T3 { N3 } T4 { N4 } T5 { N5 } T6) { N6 } (T7 [N7] T8)) 
+   = T1 { N1 } T2 { N2 } (T3 < N3 > T4 < N4 > T5) { N5 } delete(M, T6 < N6 > T7 < N7 > T8)
+   if N5 < M .
+ ceq delete(M, T1 { N1 } T2 { N2 } T3 { N3 } T4)  
+   = delete(M, T1) { N1 } T2 { N2 } T3 { N3 } T4
+   if M < N1 [owise] .
+ ceq delete(M, T1 { N1 } T2 { N2 } T3 { N3 } T4) 
+   = T1 { N1 } delete(M, T2) { N2 } T3 { N3 } T4
+   if N1 < M /\ M < N2 [owise] .
+ ceq delete(M, T1 { N1 } T2 { N2 } T3 { N3 } T4) 
+   = T1 { N1 } T2 { N2 } delete(M, T3) { N3 } T4
+   if N2 < M /\ M < N3 [owise] .
+ ceq delete(M, T1 { N1 } T2 { N2 } T3 { N3 } T4) 
+   = T1 { N1 } T2 { N2 } T3 { N3 } delete(M, T4)
+   if N3 < M [owise] .
+
+ eq delete(M, (T1 [ N1 ] T2) [ M ] (T3 [ N3 ] T4)) 
+   = delete(M, T1 { N1 } T2 { M } T3 { N3 } T4) .
+
+ eq delete(M, (T1 < N1 > T2 < N2 > T3) [ M ] (T4 [ N4 ] T5)) 
+   = (T1 [ N1 ] T2) [ N2 ] delete(M, T3 < M > T4 < N4 > T5) .
+
+ eq delete(M, (T1 { N1 } T2 { N2 } T3 { N3 } T4) [ M ] (T5 [ N5 ] T6)) 
+   = (T1 < N1 > T2 < N2 > T3) [ N3 ] delete(M, T4 < M > T5 < N5 > T6) .
+
+ eq delete(M, (T1 [ N1 ] T2) < M > (T3 [ N3 ] T4) < N4 > T5) 
+   = delete(M, T1 { N1 } T2 { M } T3 { N3 } T4) [ N4 ] T5 .
+
+ eq delete(M, T1 < N1 > (T3 [ N3 ] T4) < M > (T5 [ N5 ] T6)) 
+   = T1 [ N1 ] delete(M, T3 { N3 } T4 { M } T5 { N5 } T6) .
+
+ eq delete(M, (T1 < N1 > T2 < N2 > T3) < M > (T4 [ N4 ] T5) < N5 > T6) 
+   = (T1 [ N1 ] T2) < N2 > delete(M, T3 < M > T4 < N4 > T5) < N5 > T6 .
+
+ eq delete(M, T1 < N1 > (T2 < N2 > T3 < N3 > T4) < M > (T5 [ N5 ] T6)) 
+   = T1 < N1 > (T2 [ N2 ] T3) < N3 > delete(M, T4 < M > T5 < N5 > T6) .
+
+ eq delete(M, (T1 { N1 } T2 { N2 } T3 { N3 } T4) < M > (T5 [ N5 ] T6) < N6 > T7) 
+   = (T1 < N1 > T2 < N2 > T3) < N3 > delete(M, T4 < M > T5 < N5 > T6) < N6 > T7 .
+
+ eq delete(M, T1 < N1 > (T2 { N2 } T3 { N3 } T4 { N4 } T5) < M > (T6 [ N6 ] T7)) 
+   = T1 < N1 > (T2 < N2 > T3 < N3 > T4) < N4 > delete(M, T5 < M > T6 < N6 > T7) .
+
+ eq delete(M, (T1 [ N1 ] T2) { M } (T3 [ N3 ] T4) { N5 } T5 { N6 } T6) 
+   = delete(M, T1 { N1 } T2 { M } T3 { N3 } T4) < N5 > T5 < N6 > T6 .
+
+ eq delete(M, T1 { N1 } (T2 [ N2 ] T3) { M } (T4 [ N4 ] T5) { N5 } T6) 
+   = T1 < N1 > delete(M, T2 { N2 } T3 { M } T4 { N4 } T5) < N5 > T6 .
+
+ eq delete(M, T1 { N1 } T2 { N2 } (T3 [ N3 ] T4) { M } (T5 [ N5 ] T6)) 
+   = T1 < N1 > T2 < N2 > delete(M, T3 { N3 } T4 { M } T5 { N5 } T6) .
+
+ eq delete(M, (T1 < N1 > T2 < N2 > T3) { M } (T4 [ N4 ] T5) { N5 } T6 { N6 } T7) 
+   = (T1 [ N1 ] T2) { N2 } delete(M, T3 < M > T4 < N4 > T5) { N5 } T6 { N6 } T7 .
+
+ eq delete(M, T1 { N1 } (T2 < N2 > T3 < N3 > T4) { M } (T5 [ N5 ] T6) { N6 } T7) 
+   = T1 { N1 } (T2 [ N2 ] T3) { N3 } delete(M, T4 < M > T5 < N5 > T6) { N6 } T7 .
+
+ eq delete(M, T1 { N1 } T2 { N2 } (T3 < N3 > T4 < N4 > T5) { M } (T6 [ N6 ] T7)) 
+   = T1 { N1 } T2 { N2 } (T3 [ N3 ] T4) { N4 } delete(M, T5 < M > T6 < N6 > T7) .
+
+ eq delete(M, (T1 { N1 } T2 { N2 } T3 { N3 } T4) { M } (T5 [ N5 ] T6) { N6 } T7 { N7 } T8) 
+   = (T1 < N1 > T2 < N2 > T3) { N3 } delete(M, T4 < M > T5 < N5 > T6) { N6 } T7 { N7 } T8 .
+
+ eq delete(M, T1 { N1 } (T2 { N2 } T3 { N3 } T4 { N4 } T5) { M } (T6 [ N6 ] T7) { N7 } T8) 
+   = T1 { N1 } (T2 < N2 > T3 < N3 > T4) { N4 } delete(M, T5 < M > T6 < N6 > T7) { N7 } T8 .
+
+ eq delete(M, T1 { N1 } T2 { N2 } (T3 { N3 } T4 { N4 } T5 { N5 } T6) { M } (T7 [ N7 ] T8)) 
+   = T1 { N1 } T2 { N2 } (T3 < N3 > T4 < N4 > T5) { N5 } delete(M, T6 < M > T7 < N7 > T8) .
+
+
+ sort EltTree{T} .
+ op <_;_> : T$Elt 234Tree{T} -> EltTree{T} [ctor].
+ op deletemin : Ne234Tree{T} ~> EltTree{T} .
+ 
+ ceq delete(M, T1 [ M ] T2) = T1 [ N ] T'
+  if < N ; T' > := deletemin(T2) [owise] .
+  
+ ceq delete(M, T1 < M > T2 < N2 > T3) = T1 < N > T' < N2 > T3
+  if < N ; T' > := deletemin(T2) [owise] .
+  
+ ceq delete(M, T1 < N1 > T2 < M > T3) = T1 < N1 > T2 < N > T'
+  if < N ; T' > := deletemin(T3) [owise] .
+  
+ ceq delete(M, T1 { M } T2 { N2 } T3 { N3 } T4) = T1 { N } T' { N2 } T3 { N3 } T4
+  if < N ; T' > := deletemin(T2) [owise] .
+  
+ ceq delete(M, T1 { N1 } T2 { M } T3 { N3 } T4) = T1 { N1 } T2 { N } T' { N3 } T4
+  if < N ; T' > := deletemin(T3) [owise] .
+  
+ ceq delete(M, T1 { N1 } T2 { N2 } T3 { M } T4) = T1 { N1 } T2 { N2 } T3 { N } T'
+  if < N ; T' > := deletemin(T4) [owise] .
+  
+ --- delete min and return it
+  
+ eq deletemin(empty234 < M > empty234 < N > empty234) 
+   = < M ; empty234 [N] empty234 > .
+
+ ceq deletemin((T1 [N1] T2) < N2 > (T3 [N3] T4) < N4 > T5) 
+   = < M ; T' < N3 > T4 < N4 > T5 >
+   if < M ; T' > := deletemin(T1 < N1 > T2 < N2 > T3) .
+ ceq deletemin((T1 [N1] T2) < N2 > (T3 < N3 > T4 < N4 > T5) < N5 > T6) 
+   = < M ; T' < N3 > (T4 [N4] T5) < N5 > T6 >
+   if < M ; T' > := deletemin(T1 < N1 > T2 < N2 > T3) .
+ ceq deletemin((T1 [N1] T2) < N2 > (T3 { N3 } T4 { N4 } T5 { N5 } T6) < N6 > T7) 
+   = < M ; T' < N3 > (T4 < N4 > T5 < N5 > T6) < N6 > T7 >
+   if < M ; T' > := deletemin(T1 < N1 > T2 < N2 > T3) .
+ ceq deletemin(T1 < N1 > T2 < N2 > T3) = < M ; T' < N1 > T2 < N2 > T3 >
+   if < M ; T' > := deletemin(T1) 
+   [owise] .
+   
+ eq deletemin(empty234 { M } empty234 { N1 } empty234 { N2 } empty234) 
+   = < M ; empty234 < N1 > empty234 < N2 > empty234 > .
+    
+ ceq deletemin((T1 [N1] T2) { N2 } (T3 [N3] T4) { N4 } T5 { N5 } T6) 
+   = < M ; T' < N4 > T5 < N5 > T6 >
+   if < M ; T' > := deletemin(T1 { N1 } T2 { N2 } T3 { N3 } T4) .
+ ceq deletemin((T1 [N1] T2) { N2 } (T3 < N3 > T4 < N4 > T5) { N5 } T6 { N6 } T7) 
+   = < M ; T' { N3 } (T4 [N4] T5) { N5 } T6 { N6 } T7 >
+   if < M ; T' > := deletemin(T1 < N1 > T2 < N2 > T3) .
+ ceq deletemin((T1 [N1] T2) { N2 } (T3 { N3 } T4 { N4 } T5 { N5 } T6) { N6 } T7 { N7 } T8) 
+   = < M ; T' { N3 } (T4 < N4 > T5 < N5 > T6) { N6 } T7 { N7} T8 >
+   if < M ; T' > := deletemin(T1 < N1 > T2 < N2 > T3) .
+ ceq deletemin(T1 { N1 } T2 { N2 } T3 { N3 } T4) 
+   = < M ; T' { N1 } T2 { N2 } T3 { N3 } T4 >
+   if < M ; T' > := deletemin(T1) 
+   [owise] .
+   
+ --- find
+ --- Looks for an element in the tree .
+ 
+ op find : T$Elt 234Tree{T} -> Bool .  
+
+ eq find(M, empty234) = false .
+ ceq find(M, T1 [N1] T2) = find(M, T1) if M < N1 .
+ eq find(M, T1 [M] T2) = true .
+ ceq find(M, T1 [N1] T2) = find(M, T2) if N1 < M .
+ ceq find(M, T1 < N1 > T2 < N2 > T3) = find(M, T1) if M < N1 .
+ eq find(M, T1 < M > T2 < N2 > T3) = true .
+ ceq find(M, T1 < N1 > T2 < N2 > T3) = find(M, T2) if N1 < M and M < N2 .
+ eq find(M, T1 < N1 > T2 < M > T3) = true .
+ ceq find(M, T1 < N1 > T2 < N2 > T3) = find(M, T3) if N2 < M .
+ ceq find(M, T1 { N1 } T2 { N2 } T3 { N3 } T4) = find(M, T1) if M < N1 .
+ eq find(M, T1 { M } T2 { N2 } T3 { N3 } T4) = true .
+ ceq find(M, T1 { N1 } T2 { N2 } T3 { N3 } T4) = find(M, T2) if N1 < M and M < N2 .
+ eq find(M, T1 { N1 } T2 { M } T3 { N3 } T4) = true .
+ ceq find(M, T1 { N1 } T2 { N2 } T3 { N3 } T4) = find(M, T3) if N2 < M and M < N3 .
+ eq find(M, T1 { N1 } T2 { N2 } T3 { M } T4) = true .
+ ceq find(M, T1 { N1 } T2 { N2 } T3 { N3 } T4) = find(M, T4) if N3 < M .
+
+endfm
+
+load view-intasstoset.maude
+
+fmod 234TREES-TEST is
+ protecting 234TREES{IntAsStoset} .
+ 
+ op tree : -> 234Tree{IntAsStoset} .
+ 
+ eq tree 
+   = insert(100,
+       insert(90,
+         insert(15,
+           insert(80,
+             insert(70,
+               insert(40,
+                 insert(50,
+                   insert(20,
+                     insert(60,
+                       insert(30, insert(10, empty234))))))))))) .
+endfm
+
+red tree .
+---(
+reduce in 234TREES-TEST : tree .
+rewrites: 1173 in 0ms cpu (0ms real) (~ rewrites/second)
+result Ne234Tree{IntAsStoset}: ((empty234{10}empty234{15}empty234{20}empty234)[
+    30](empty234[40]empty234))[50]((empty234[60]empty234)[70](empty234{
+    80}empty234{90}empty234{100}empty234))
+---)
+
+red find(30, tree) .
+---(
+reduce in 234TREES-TEST : find(30, tree) .
+rewrites: 1177 in 0ms cpu (0ms real) (~ rewrites/second)
+result Bool: true
+---)
+
+red delete(30, tree) .
+---(
+reduce in 234TREES-TEST : delete(30, tree) .
+rewrites: 1309 in 0ms cpu (0ms real) (~ rewrites/second)
+result Ne234Tree{IntAsStoset}: (empty234 < 10 > empty234 < 15 > empty234){
+    20}empty234[40]empty234{50}empty234[60]empty234{70}(empty234{80}empty234{
+    90}empty234{100}empty234)
+---)
+
+fmod 234TREE-TEST-2 is
+ protecting 234TREES{IntAsStoset} .
+
+ var N : Int .
+ var T : 234Tree{IntAsStoset} .
+
+ op buildTree : Int -> 234Tree{IntAsStoset} .
+ eq buildTree(N) 
+   = if N == 0 
+     then empty234 
+     else insert(N,buildTree(N - 1)) 
+     fi .
+
+ op deleteTree : Int 234Tree{IntAsStoset} -> 234Tree{IntAsStoset} .
+ eq deleteTree(N, T) 
+   = if N == 0 
+   then T 
+   else delete(N,deleteTree(N - 1, T)) 
+   fi .
+endfm
+
+red insert(100,insert(90,insert(15,insert(80,insert(70,insert(40,insert(50,insert(20,insert(10,insert(30,insert(60,empty234))))))))))) .
+---(
+reduce in 234TREE-TEST-2 : insert(100, insert(90, insert(15, insert(80, insert(
+    70, insert(40, insert(50, insert(20, insert(10, insert(30, insert(60,
+    empty234))))))))))) .
+rewrites: 1172 in 0ms cpu (0ms real) (~ rewrites/second)
+result Ne234Tree{IntAsStoset}: ((empty234{10}empty234{15}empty234{20}empty234)[
+    30](empty234[40]empty234))[50]((empty234[60]empty234)[70](empty234{
+    80}empty234{90}empty234{100}empty234))
+---)
+

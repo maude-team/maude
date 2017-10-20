@@ -1,0 +1,13 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  fmod PRIORITY-PAIR{X :: TOSET, Y :: TRIV} is
+    sort Priority-Pair{X, Y} .
+    op <_,_> : X$Elt Y$Elt -> Priority-Pair{X, Y} .
+    ops _<_ _<=_ : Priority-Pair{X, Y} Priority-Pair{X, Y} -> Bool .
+
+    vars A A' : X$Elt .
+    vars B B' : Y$Elt .
+    eq < A, B > < < A', B' > = A < A' .  
+    eq < A, B > <= < A', B' > = A <= A' .  
+  endfm

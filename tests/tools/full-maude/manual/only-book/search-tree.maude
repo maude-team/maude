@@ -1,0 +1,145 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  fth CONTENTS is
+    sort Contents .
+    op combine : Contents Contents -> Contents [assoc] .
+  endfth
+
+  fmod RECORD is 
+    sort Record .
+    op null : -> Record [ctor] .
+    op _,_ : [Record] [Record] -> [Record] [ctor assoc comm id: null] .
+  endfm
+
+  view Record from TRIV to RECORD is
+    sort Elt to Record .
+  endv
+
+  view Contents from TRIV to CONTENTS is
+    sort Elt to Contents .
+  endv
+  
+  load stoset.maude
+  load bin-tree.maude
+  load maybe.maude
+  
+  fmod SEARCH-TREE{X :: STOSET, Y :: CONTENTS} is
+    extending BIN-TREE{Record} .  
+    protecting MAYBE{Contents}{Y} * (op maybe to not-found) .
+    
+    sorts SearchRecord{X, Y} SearchTree{X, Y} NeSearchTree{X, Y} .
+    subsort SearchRecord{X, Y} < Record .
+    subsorts NeSearchTree{X, Y} < SearchTree{X, Y} < BinTree{Record} .
+    subsort NeSearchTree{X, Y} < NeBinTree{Record} .
+
+    --- Search records, used as nodes in search trees.
+    var Rec : [Record] .
+    var K : X$Elt .
+    var C : Y$Contents .
+
+    op key:_ : X$Elt -> Record [ctor] .
+    op key : Record ~> X$Elt .
+    op numKeys : Record -> Nat .
+    eq numKeys(key: K, Rec) = 1 + numKeys(Rec) .
+    eq numKeys(Rec) = 0 [owise] .
+    ceq key(Rec, key: K) = K if numKeys(Rec, key: K) = 1 .
+
+    op contents:_ : Y$Contents -> Record [ctor] .
+    op numContents : Record -> Nat .
+    op contents : Record ~> Y$Contents .
+    eq numContents(contents: C, Rec) = 1 + numContents(Rec) .
+    eq numContents(Rec) = 0 [owise] .
+    ceq contents(Rec, contents: C) = C 
+      if numContents(Rec, contents: C) = 1 .
+
+    cmb Rec : SearchRecord{X, Y} 
+      if numContents(Rec) = 1 /\ numKeys(Rec) = 1 .
+
+    --- Definition of binary search trees.    
+    ops min max : NeSearchTree{X, Y} -> SearchRecord{X, Y} .
+
+    var  SRec : SearchRecord{X, Y} .
+    vars L R : SearchTree{X, Y} .
+    vars L' R' : NeSearchTree{X, Y} .
+    var  C' : Y$Contents .
+    
+    mb empty : SearchTree{X, Y} .
+    mb empty [SRec] empty : NeSearchTree{X, Y} .
+    cmb L' [SRec] empty : NeSearchTree{X, Y} 
+      if key(max(L')) < key(SRec) .
+    cmb empty [SRec] R' : NeSearchTree{X, Y} 
+      if key(SRec) < key(min(R')) .
+    cmb L' [SRec] R' : NeSearchTree{X, Y} 
+      if key(max(L')) < key(SRec) /\ key(SRec) < key(min(R')) .
+
+    eq min(empty [SRec] R) = SRec .
+    eq min(L' [SRec] R) = min(L') .
+    eq max(L [SRec] empty) = SRec .
+    eq max(L [SRec] R') = max(R') .
+
+    --- Operations for binary search trees.    
+    op insert : SearchTree{X, Y} X$Elt Y$Contents 
+         -> SearchTree{X, Y} .
+    op lookup : SearchTree{X, Y} X$Elt -> Maybe{Contents}{Y} .
+    op delete : SearchTree{X, Y} X$Elt -> SearchTree{X, Y} .
+    op find : SearchTree{X, Y} X$Elt -> Bool .
+ 
+    eq insert(empty, K, C) = empty [key: K, contents: C] empty .
+    ceq insert(L [Rec, key: K, contents: C] R, K, C') 
+      = L [Rec, key: K, contents: combine(C, C')] R 
+      if numKeys(Rec) = 0 /\ numContents(Rec) = 0 .
+    ceq insert(L [SRec] R, K, C) = insert(L, K, C) [SRec] R 
+      if K < key(SRec) .
+    ceq insert(L [SRec] R, K, C) = L [SRec] insert(R, K, C) 
+      if key(SRec) < K .
+
+    eq lookup(empty, K) = not-found .
+    ceq lookup(L [SRec] R, K) = C 
+      if key(SRec) = K /\ C := contents(SRec) .
+    ceq lookup(L [SRec] R, K) = lookup(L, K) if K < key(SRec) .
+    ceq lookup(L [SRec] R, K) = lookup(R, K) if key(SRec) < K .
+
+    eq delete(empty, K) = empty .
+    ceq delete(L [SRec] R, K) = delete(L, K) [SRec] R 
+      if K < key(SRec) .
+    ceq delete(L [SRec] R, K) = L [SRec] delete(R, K) 
+      if key(SRec) < K .
+    ceq delete(empty [SRec] R, K) = R if key(SRec) = K .
+    ceq delete(L [SRec] empty, K) = L if key(SRec) = K .
+    ceq delete(L' [SRec] R', K) = L' [min(R')] delete(R', key(min(R'))) 
+      if key(SRec) = K .
+
+    eq find(empty, K) = false .
+    ceq find(L [SRec] R, K) = true if key(SRec) = K .
+    ceq find(L [SRec] R, K) = find(L, K) if K < key(SRec) .
+    ceq find(L [SRec] R, K) = find(R, K) if key(SRec) < K .
+  endfm
+
+***(
+  view StringAsContents from CONTENTS to STRING is
+    sort Contents to String .
+    op combine to _+_ .
+  endv
+
+  load view-intasstoset.maude
+
+  fmod SEARCH-TREE-TEST is
+    protecting SEARCH-TREE{IntAsStoset, StringAsContents} .
+  endfm
+
+Maude> red insert(insert(empty, 1, "a"), 2, "b") .
+reduce in SEARCH-TREE-TEST : insert(insert(empty, 1, "a"), 2, "b") .
+rewrites: 53 in 0ms cpu (0ms real) (~ rewrites/second)
+result NeSearchTree{IntAsStoset,StringAsContents}: empty[key: 1,contents: "a"](empty[
+    key: 2,contents: "b"]empty)
+
+Maude> red lookup(insert(insert(insert(empty, 1, "a"), 
+                                  2, "b"), 
+                           1, "c"), 
+                    1) .
+reduce in SEARCH-TREE-TEST : lookup(insert(insert(insert(empty, 1, "a"), 2,
+    "b"), 1, "c"), 1) .
+rewrites: 88 in 0ms cpu (428ms real) (~ rewrites/second)
+result String: "ac"
+)

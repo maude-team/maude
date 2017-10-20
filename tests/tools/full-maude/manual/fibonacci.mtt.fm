@@ -1,0 +1,26 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+  ---- checked terminating using the MTT
+
+ (set include BOOL off .)
+
+ (fmod NEW-NAT is
+    sort Nat .
+    op 0 : -> Nat .
+    op s : Nat -> Nat .
+    op + : Nat Nat -> Nat .
+    vars N M : Nat .
+    eq +(0, N) = N .
+    eq +(s(N), M) = s(+(N, M)) .
+  endfm)
+
+ (fmod FIBONACCI is
+    protecting NEW-NAT .
+    op fibo : Nat -> Nat .
+
+    var N : Nat .
+    eq fibo(0) = 0 .
+    eq fibo(s(0)) = s(0) .
+    eq fibo(s(s(N))) = +(fibo(N), fibo(s(N))) .
+  endfm)

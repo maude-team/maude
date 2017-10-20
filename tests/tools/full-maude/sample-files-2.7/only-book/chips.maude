@@ -1,0 +1,40 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  mod CHIPS is
+    protecting NAT .
+    sorts Place Board Chip .
+    subsort Place < Board .
+
+    ops r b g y e : -> Chip [ctor] .   --- colors and empty
+    op place : Nat Chip -> Place [ctor] .
+    op __ : Board Board -> Board [ctor assoc comm] .
+    ops initial final : -> Board .
+
+    eq initial 
+      = place(0, r) place(1, b) place(2, g) place(3, y) 
+        place(4, e) place(5, e) place(6, e) place(7, e) 
+        place(8, e) place(9, e) place(10,e) place(11,e) .
+
+    eq final 
+      = place(0, y) place(1, g) place(2, b) place(3, r) 
+        place(4, e) place(5, e) place(6, e) place(7, e) 
+        place(8, e) place(9, e) place(10,e) place(11,e) .
+
+    vars I J : Nat .
+    var  C : Chip .
+
+    crl [move] : 
+      place(I, C) place(J, e) => place(I, e) place(J, C) 
+      if (((I + 5) rem 12 == J) or ((J + 5) rem 12 == I))
+         /\ C =/= e .
+  endm
+
+search initial =>* B:Board such that B:Board == final .
+---(
+search in CHIPS : initial =>* B:Board such that B:Board == final = true .
+
+No solution.
+states: 1980  rewrites: 1789561 in 1200ms cpu (2004ms real) (1491300
+    rewrites/second)
+---)

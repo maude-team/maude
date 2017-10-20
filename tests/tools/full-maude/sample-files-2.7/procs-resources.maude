@@ -1,0 +1,992 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  mod PROCS-RESOURCES is 
+    sorts State Resources Process .
+    subsort Process Resources < State .
+    ops res null : -> Resources [ctor] .
+    op p : Resources -> Process [ctor] .
+    op __ : Resources Resources -> Resources 
+         [ctor assoc comm id: null] .
+    op __ : State State -> State [ctor ditto] .
+        
+    rl [acq1] : p(null) res => p(res) .
+    rl [acq2] : p(res) res => p(res res) .
+    rl [rel] : p(res res) => p(null) res res .
+    rl [dupl] : p(null) res => p(null) res p(null) res .
+  endm
+
+***(
+Maude> search in PROCS-RESOURCES : res p(null) =>! X:State .
+search in PROCS-RESOURCES : res p(null) =>! X:State .
+
+Solution 1 (state 1)
+states: 3  rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+X:State --> p(res)
+
+Solution 2 (state 5)
+states: 9  rewrites: 9 in 0ms cpu (0ms real) (~ rewrites/second)
+X:State --> p(res) p(res)
+
+Solution 3 (state 13)
+states: 19  rewrites: 26 in 0ms cpu (0ms real) (~ rewrites/second)
+X:State --> p(res) p(res) p(res)
+
+Solution 4 (state 25)
+states: 34  rewrites: 56 in 0ms cpu (0ms real) (~ rewrites/second)
+X:State --> p(res) p(res) p(res) p(res)
+
+Solution 5 (state 43)
+states: 55  rewrites: 104 in 0ms cpu (1ms real) (~ rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res)
+
+Solution 6 (state 67)
+states: 83  rewrites: 173 in 0ms cpu (1ms real) (~ rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 7 (state 99)
+states: 119  rewrites: 268 in 0ms cpu (2ms real) (~ rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 8 (state 139)
+states: 164  rewrites: 392 in 0ms cpu (3ms real) (~ rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 9 (state 189)
+states: 219  rewrites: 550 in 0ms cpu (4ms real) (~ rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 10 (state 249)
+states: 285  rewrites: 745 in 10ms cpu (5ms real) (74500 rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res)
+
+Solution 11 (state 321)
+states: 363  rewrites: 982 in 10ms cpu (7ms real) (98200 rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res)
+
+Solution 12 (state 405)
+states: 454  rewrites: 1264 in 10ms cpu (8ms real) (126400 rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res)
+
+Solution 13 (state 503)
+states: 559  rewrites: 1596 in 10ms cpu (10ms real) (159600 rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res)
+
+Solution 14 (state 615)
+states: 679  rewrites: 1981 in 10ms cpu (13ms real) (198100 rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res)
+
+Solution 15 (state 743)
+states: 815  rewrites: 2424 in 10ms cpu (15ms real) (242400 rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 16 (state 887)
+states: 968  rewrites: 2928 in 10ms cpu (18ms real) (292800 rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 17 (state 1049)
+states: 1139  rewrites: 3498 in 10ms cpu (21ms real) (349800 rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 18 (state 1229)
+states: 1329  rewrites: 4137 in 20ms cpu (25ms real) (206850 rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 19 (state 1429)
+states: 1539  rewrites: 4850 in 20ms cpu (30ms real) (242500 rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 20 (state 1649)
+states: 1770  rewrites: 5640 in 30ms cpu (34ms real) (188000 rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 21 (state 1891)
+states: 2023  rewrites: 6512 in 30ms cpu (38ms real) (217066 rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res)
+
+Solution 22 (state 2155)
+states: 2299  rewrites: 7469 in 30ms cpu (43ms real) (248966 rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res)
+
+Solution 23 (state 2443)
+states: 2599  rewrites: 8516 in 40ms cpu (48ms real) (212900 rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res)
+
+Solution 24 (state 2755)
+states: 2924  rewrites: 9656 in 40ms cpu (53ms real) (241400 rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res)
+
+Solution 25 (state 3093)
+states: 3275  rewrites: 10894 in 40ms cpu (59ms real) (272350 rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res)
+
+Solution 26 (state 3457)
+states: 3653  rewrites: 12233 in 40ms cpu (65ms real) (305825 rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 27 (state 3849)
+states: 4059  rewrites: 13678 in 40ms cpu (71ms real) (341950 rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 28 (state 4269)
+states: 4494  rewrites: 15232 in 50ms cpu (79ms real) (304640 rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 29 (state 4719)
+states: 4959  rewrites: 16900 in 50ms cpu (86ms real) (338000 rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 30 (state 5199)
+states: 5455  rewrites: 18685 in 60ms cpu (95ms real) (311416 rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 31 (state 5711)
+states: 5983  rewrites: 20592 in 60ms cpu (104ms real) (343200 rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res)
+
+Solution 32 (state 6255)
+states: 6544  rewrites: 22624 in 70ms cpu (113ms real) (323200 rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res)
+
+Solution 33 (state 6833)
+states: 7139  rewrites: 24786 in 70ms cpu (123ms real) (354085 rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res)
+
+Solution 34 (state 7445)
+states: 7769  rewrites: 27081 in 80ms cpu (134ms real) (338512 rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res)
+
+Solution 35 (state 8093)
+states: 8435  rewrites: 29514 in 80ms cpu (146ms real) (368925 rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res)
+
+Solution 36 (state 8777)
+states: 9138  rewrites: 32088 in 80ms cpu (158ms real) (401100 rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 37 (state 9499)
+states: 9879  rewrites: 34808 in 90ms cpu (170ms real) (386755 rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 38 (state 10259)
+states: 10659  rewrites: 37677 in 100ms cpu (184ms real) (376770
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 39 (state 11059)
+states: 11479  rewrites: 40700 in 100ms cpu (198ms real) (407000
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 40 (state 11899)
+states: 12340  rewrites: 43880 in 110ms cpu (213ms real) (398909
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 41 (state 12781)
+states: 13243  rewrites: 47222 in 130ms cpu (229ms real) (363246
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 42 (state 13705)
+states: 14189  rewrites: 50729 in 140ms cpu (246ms real) (362350
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res)
+
+Solution 43 (state 14673)
+states: 15179  rewrites: 54406 in 140ms cpu (264ms real) (388614
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res)
+
+Solution 44 (state 15685)
+states: 16214  rewrites: 58256 in 150ms cpu (283ms real) (388373
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res)
+
+Solution 45 (state 16743)
+states: 17295  rewrites: 62284 in 160ms cpu (304ms real) (389275
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res)
+
+Solution 46 (state 17847)
+states: 18423  rewrites: 66493 in 170ms cpu (324ms real) (391135
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res)
+
+Solution 47 (state 18999)
+states: 19599  rewrites: 70888 in 180ms cpu (345ms real) (393822
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 48 (state 20199)
+states: 20824  rewrites: 75472 in 200ms cpu (368ms real) (377360
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 49 (state 21449)
+states: 22099  rewrites: 80250 in 200ms cpu (391ms real) (401250
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 50 (state 22749)
+states: 23425  rewrites: 85225 in 230ms cpu (416ms real) (370543
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 51 (state 24101)
+states: 24803  rewrites: 90402 in 240ms cpu (441ms real) (376675
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 52 (state 25505)
+states: 26234  rewrites: 95784 in 250ms cpu (468ms real) (383136
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res)
+
+Solution 53 (state 26963)
+states: 27719  rewrites: 101376 in 260ms cpu (495ms real) (389907
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res)
+
+Solution 54 (state 28475)
+states: 29259  rewrites: 107181 in 260ms cpu (526ms real) (412234
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res)
+
+Solution 55 (state 30043)
+states: 30855  rewrites: 113204 in 270ms cpu (556ms real) (419274
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res)
+
+Solution 56 (state 31667)
+states: 32508  rewrites: 119448 in 290ms cpu (587ms real) (411889
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res)
+
+Solution 57 (state 33349)
+states: 34219  rewrites: 125918 in 310ms cpu (622ms real) (406187
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 58 (state 35089)
+states: 35989  rewrites: 132617 in 320ms cpu (655ms real) (414428
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 59 (state 36889)
+states: 37819  rewrites: 139550 in 320ms cpu (690ms real) (436093
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 60 (state 38749)
+states: 39710  rewrites: 146720 in 330ms cpu (726ms real) (444606
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 61 (state 40671)
+states: 41663  rewrites: 154132 in 350ms cpu (763ms real) (440377
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 62 (state 42655)
+states: 43679  rewrites: 161789 in 380ms cpu (802ms real) (425760
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 63 (state 44703)
+states: 45759  rewrites: 169696 in 410ms cpu (842ms real) (413892
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res)
+
+Solution 64 (state 46815)
+states: 47904  rewrites: 177856 in 440ms cpu (884ms real) (404218
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res)
+
+Solution 65 (state 48993)
+states: 50115  rewrites: 186274 in 440ms cpu (927ms real) (423350
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res)
+
+Solution 66 (state 51237)
+states: 52393  rewrites: 194953 in 450ms cpu (971ms real) (433228
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res)
+
+Solution 67 (state 53549)
+states: 54739  rewrites: 203898 in 460ms cpu (1017ms real) (443256
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res)
+
+Solution 68 (state 55929)
+states: 57154  rewrites: 213112 in 470ms cpu (1065ms real) (453429
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 69 (state 58379)
+states: 59639  rewrites: 222600 in 470ms cpu (1114ms real) (473617
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 70 (state 60899)
+states: 62195  rewrites: 232365 in 490ms cpu (1166ms real) (474214
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 71 (state 63491)
+states: 64823  rewrites: 242412 in 540ms cpu (1219ms real) (448911
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 72 (state 66155)
+states: 67524  rewrites: 252744 in 550ms cpu (1278ms real) (459534
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 73 (state 68893)
+states: 70299  rewrites: 263366 in 560ms cpu (1334ms real) (470296
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res)
+
+Solution 74 (state 71705)
+states: 73149  rewrites: 274281 in 570ms cpu (1392ms real) (481194
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res)
+
+Solution 75 (state 74593)
+states: 76075  rewrites: 285494 in 630ms cpu (1452ms real) (453165
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res)
+
+Solution 76 (state 77557)
+states: 79078  rewrites: 297008 in 660ms cpu (1514ms real) (450012
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res)
+
+Solution 77 (state 80599)
+states: 82159  rewrites: 308828 in 690ms cpu (1578ms real) (447576
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res)
+
+Solution 78 (state 83719)
+states: 85319  rewrites: 320957 in 700ms cpu (1645ms real) (458510
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 79 (state 86919)
+states: 88559  rewrites: 333400 in 700ms cpu (1713ms real) (476285
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 80 (state 90199)
+states: 91880  rewrites: 346160 in 710ms cpu (1783ms real) (487549
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 81 (state 93561)
+states: 95283  rewrites: 359242 in 720ms cpu (1855ms real) (498947
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 82 (state 97005)
+states: 98769  rewrites: 372649 in 760ms cpu (1930ms real) (490327
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 83 (state 100533)
+states: 102339  rewrites: 386386 in 760ms cpu (2006ms real) (508402
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 84 (state 104145)
+states: 105994  rewrites: 400456 in 840ms cpu (2085ms real) (476733
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res)
+
+Solution 85 (state 107843)
+states: 109735  rewrites: 414864 in 920ms cpu (2168ms real) (450939
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res)
+
+Solution 86 (state 111627)
+states: 113563  rewrites: 429613 in 990ms cpu (2252ms real) (433952
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res)
+
+Solution 87 (state 115499)
+states: 117479  rewrites: 444708 in 1000ms cpu (2339ms real) (444708
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res)
+
+Solution 88 (state 119459)
+states: 121484  rewrites: 460152 in 1040ms cpu (2428ms real) (442453
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res)
+
+Solution 89 (state 123509)
+states: 125579  rewrites: 475950 in 1120ms cpu (2520ms real) (424955
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 90 (state 127649)
+states: 129765  rewrites: 492105 in 1190ms cpu (2619ms real) (413533
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 91 (state 131881)
+states: 134043  rewrites: 508622 in 1240ms cpu (2726ms real) (410179
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 92 (state 136205)
+states: 138414  rewrites: 525504 in 1330ms cpu (2825ms real) (395115
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 93 (state 140623)
+states: 142879  rewrites: 542756 in 1380ms cpu (2928ms real) (393301
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 94 (state 145135)
+states: 147439  rewrites: 560381 in 1400ms cpu (3034ms real) (400272
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res)
+
+Solution 95 (state 149743)
+states: 152095  rewrites: 578384 in 1510ms cpu (3143ms real) (383035
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res)
+
+Solution 96 (state 154447)
+states: 156848  rewrites: 596768 in 1520ms cpu (3255ms real) (392610
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res)
+
+Solution 97 (state 159249)
+states: 161699  rewrites: 615538 in 1520ms cpu (3370ms real) (404959
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res)
+
+Solution 98 (state 164149)
+states: 166649  rewrites: 634697 in 1530ms cpu (3488ms real) (414834
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res)
+
+Solution 99 (state 169149)
+states: 171699  rewrites: 654250 in 1530ms cpu (3609ms real) (427614
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 100 (state 174249)
+states: 176850  rewrites: 674200 in 1640ms cpu (3732ms real) (411097
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 101 (state 179451)
+states: 182103  rewrites: 694552 in 1650ms cpu (3859ms real) (420940
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 102 (state 184755)
+states: 187459  rewrites: 715309 in 1660ms cpu (3988ms real) (430909
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+
+Solution 103 (state 190163)
+states: 192919  rewrites: 736476 in 1790ms cpu (4121ms real) (411439
+    rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+    p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(
+    res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res) p(res)
+...
+
+
+Maude> search [5] in PROCS-RESOURCES : res p(null) =>! X:State .
+search in PROCS-RESOURCES : res p(null) =>! X:State .
+
+Solution 1 (state 1)
+states: 3  rewrites: 2 in 0ms cpu (22ms real) (~ rewrites/second)
+X:State --> p(res)
+
+Solution 2 (state 5)
+states: 9  rewrites: 9 in 0ms cpu (22ms real) (~ rewrites/second)
+X:State --> p(res) p(res)
+
+Solution 3 (state 13)
+states: 19  rewrites: 26 in 0ms cpu (22ms real) (~ rewrites/second)
+X:State --> p(res) p(res) p(res)
+
+Solution 4 (state 25)
+states: 34  rewrites: 56 in 0ms cpu (23ms real) (~ rewrites/second)
+X:State --> p(res) p(res) p(res) p(res)
+
+Solution 5 (state 43)
+states: 55  rewrites: 104 in 0ms cpu (23ms real) (~ rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res)
+)

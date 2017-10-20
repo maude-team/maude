@@ -1,0 +1,52 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  load toset.maude
+  load view-intastoset.maude
+  load view-toset.maude
+  
+  fmod RENAMING-PAR-MOD-A{X :: TRIV} is
+    sort Foo{X} .
+    op f : Foo{X} -> Foo{X} .
+  endfm
+
+  fmod RENAMING-PAR-MOD-B{X :: TRIV} is
+    extending RENAMING-PAR-MOD-A{X} .
+    sort Bar{X} .
+    op g : Bar{X} -> Foo{X} .
+  endfm
+
+  fmod RENAMING-PAR-MOD-C is
+    pr (RENAMING-PAR-MOD-B * (sort Foo{X} to Foo'{X},
+               sort Bar{X} to Bar'{X},
+               op f : Foo{X} -> Foo{X} to f',
+               op g : Bar{X} -> Foo{X} to g')) {TOSET} {IntAsToset} .
+  endfm
+
+***(
+Maude> show modules .
+...
+fmod RENAMING-PAR-MOD-A{[X]}
+fmod RENAMING-PAR-MOD-B * (sort Foo{X} to Foo'{X}, sort Bar{X} to Bar'{X}, op f
+    : [Foo{X}] -> [Foo{X}] to f', op g : [Bar{X}] -> [Foo{X}] to g')
+fmod RENAMING-PAR-MOD-A{[X]} * (sort Foo{X} to Foo'{X}, op f : [Foo{X}] -> [
+    Foo{X}] to f')
+fmod (RENAMING-PAR-MOD-B * (sort Foo{X} to Foo'{X}, sort Bar{X} to Bar'{X}, op
+    f : [Foo{X}] -> [Foo{X}] to f', op g : [Bar{X}] -> [Foo{X}] to g')){TOSET}
+fth X :: TOSET
+fth X :: POSET
+fth X :: SPOSET
+fth X :: TAOSET
+fmod RENAMING-PAR-MOD-A{TOSET}
+fmod RENAMING-PAR-MOD-A{TOSET}{[X]}
+fmod RENAMING-PAR-MOD-A{TOSET}{[X]} * (sort Foo{TOSET}{X} to Foo'{TOSET}{X}, op
+    f : [Foo{TOSET}{X}] -> [Foo{TOSET}{X}] to f')
+fmod (RENAMING-PAR-MOD-B * (sort Foo{X} to Foo'{X}, sort Bar{X} to Bar'{X}, op
+    f : [Foo{X}] -> [Foo{X}] to f', op g : [Bar{X}] -> [Foo{X}] to g')){TOSET}{
+    IntAsToset}
+fmod RENAMING-PAR-MOD-A{TOSET}{IntAsToset}
+fmod RENAMING-PAR-MOD-A{TOSET}{IntAsToset} * (sort Foo{TOSET}{IntAsToset} to
+    Foo'{TOSET}{IntAsToset}, op f : [Foo{TOSET}{IntAsToset}] -> [Foo{TOSET}{
+    IntAsToset}] to f')
+)

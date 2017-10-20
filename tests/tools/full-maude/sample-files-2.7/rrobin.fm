@@ -1,0 +1,38 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  load nat-modulo.fm
+  
+ (omod RROBIN{N :: NZNAT#} is
+    protecting NAT/{N} .
+
+    sort Mode .
+    ops wait critical : -> Mode [ctor] .
+
+    subsort Nat/{N} < Oid .
+
+    class Proc | mode : Mode .
+    msg go : Nat/{N} -> Msg .
+
+    var N : Nat .
+
+    rl [enter] :
+      go([N])
+      < [N] : Proc | mode : wait >
+      => < [N] : Proc | mode : critical > .
+
+    rl [exit] :
+      < [N] : Proc | mode : critical >
+      => < [N] : Proc | mode : wait >
+         go([s(N)]) .
+
+    op init : -> Configuration .
+    op make-init : Nat/{N} -> Configuration .
+
+    ceq init = go([0]) make-init([N]) if s(N) := # .
+    ceq make-init([s(N)])
+      = < [s(N)] : Proc | mode : wait > make-init([N])
+      if N < # .
+    eq make-init([0]) = < [0] : Proc | mode : wait > .
+  endom)

@@ -1,0 +1,37 @@
+(fmod FOO{X :: TRIV} is
+   sort Foo{X} .
+   op f : X$Elt -> Foo{X} .
+   op g : -> Foo{X} .
+   eq f(X:X$Elt) = g .
+ endfm)
+ 
+(red in FOO{Int} : f(3) .)
+
+---- the renaming don't reach the core maude modules
+(red in FOO{Int} * (op 3 to term three) : f(three) .)
+(red in FOO{Int} * (op _+_ to _plus_) : f(2 + 3) .)
+(red in FOO{Int} * (op _+_ to _plus_) : f(2 plus 3) .)
+
+(fmod BAR is
+  pr QID + FOO{Qid} .
+ endfm)
+ 
+(red f('q) .)
+
+(show module .)
+
+(show module FOO{Qid} + Qid .)
+
+(show module FOO{Qid} + QID .)
+
+(show all .)
+
+(fmod BAZ is
+  pr QID + FOO{Qid} + BAR .
+ endfm)
+ 
+(red f('q) .)
+
+(show module .)
+
+(show module QID + FOO{Qid} + BAR .)

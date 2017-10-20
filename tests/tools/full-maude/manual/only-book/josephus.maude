@@ -1,0 +1,59 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  mod JOSEPHUS is
+    protecting NAT .
+    sorts Morituri Circle .
+    subsort NzNat < Morituri .
+  
+    op __ : Morituri Morituri -> Morituri [ctor assoc] . 
+    op {_} : Morituri -> Circle [ctor] . 
+    op initial : NzNat -> Morituri .
+
+    var  M : Morituri .
+    vars I1 I2 I3 N : NzNat .
+
+    eq initial(1) = 1 .
+    eq initial(s(N)) = initial(N) s(N) .
+
+    rl [kill>3] : { I1 I2 I3 M } => { M I1 I2 } .
+    rl [kill3]  : { I1 I2 I3 } => { I1 I2 } . 
+       --- Rule kill3 is necessary because M cannot be empty
+    rl [kill2]  : { I1 I2 } => { I2 } .         
+  endm
+
+  rewrite { initial(41) } .
+---(
+rewrite in JOSEPHUS : {initial(41)} .
+rewrites: 81 in 0ms cpu (0ms real) (~ rewrites/second)
+result Circle: {31}
+---)
+
+  mod JOSEPHUS-GENERALIZED is
+    protecting NAT .
+    sorts Morituri Circle .
+    subsort NzNat < Morituri .
+  
+    op dagger : NzNat NzNat -> Morituri [ctor] .
+    op __ : Morituri Morituri -> Morituri [ctor assoc] . 
+    op {_} : Morituri -> Circle [ctor] . 
+    op initial : NzNat NzNat -> Morituri .  
+
+    var  M : Morituri .
+    vars I I1 I2 N : NzNat .
+
+    eq initial(1, I)  = dagger(I, I) 1 .
+    eq initial(s(N), I) = initial(N, I) s(N) .
+
+    rl [kill] : { dagger(1, I) I1 M } => { dagger(I, I) M } .
+    rl [next] : { dagger(s(N), I) I1 M } => { dagger(N, I) M I1 } .
+    rl [last] : { dagger(N, I) I1 } => { I1 } .  
+       --- The last one throws the dagger away!
+  endm                                    
+
+rewrite { initial(41, 3) } .
+---(
+rewrite in JOSEPHUS-GENERALIZED : {initial(41, 3)} .
+rewrites: 162 in 0ms cpu (0ms real) (~ rewrites/second)
+result Circle: {31}
+---)

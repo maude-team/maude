@@ -1,0 +1,67 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  load o-ticker.maude
+  
+  mod O-TICKER-FACTORY is
+    inc O-TICKER .
+    op TickerFactory : Aid Nat -> Actor [ctor object] .
+    ops newReq newReply : Aid  -> MsgBody [ctor] .
+    op o : Aid Nat -> Aid [ctor] .
+
+    vars A C : Aid .
+    vars I J : Nat .
+    rl [newReq] :
+      TickerFactory(A, I) (A <| newReq(C))
+      => TickerFactory(A, s I) (C <| newReply(o(A, I)))
+         Ticker(o(A, I), 0) (o(A, I) <| tick) .
+  endm
+
+  mod O-TICKER-CUSTOMER is
+    inc O-TICKER-FACTORY .
+    ops Cust Cust1 Cust2 :  Aid Aid Nat ->  Actor [ctor object] .
+
+    vars C TF T : Aid .
+    vars N M : Nat .
+
+    rl [req] :
+      Cust(C, TF, N)
+      => Cust1(C, TF, N) (TF <| newReq(C)) .
+
+    rl [newReply] :
+      Cust1(C, TF, N) (C <| newReply(T))
+      => Cust2(C, TF, N)  T <| timeReq(C) .
+
+    rl [timeReply] :
+      Cust2(C, TF, N) (C <| timeReply(M))
+      => Cust(C, TF, s N) .
+  endm
+
+  mod O-TICKER-FACTORY-TEST is
+    ex O-TICKER-CUSTOMER .
+    ops tf c1 c2 : -> Aid [ctor] .
+    ops ic1 ic2 : -> AConf .
+    eq ic1 = TickerFactory(tf, 0) Cust(c1, tf, 0)  .
+    eq ic2 = ic1 Cust(c2, tf, 0) .
+  endm
+
+***(
+Maude> frew [20] ic2 .
+frewrite in O-TICKER-FACTORY-TEST : ic2 .
+rewrites: 76 in 0ms cpu (0ms real) (~ rewrites/second)
+result (sort not calculated): (o(tf, 0) <| tick) (o(tf, 1) <| tick) (o(tf, 2)
+    <| tick) (o(tf, 3) <| tick) (o(tf, 4) <| tick) (o(tf, 5) <| tick) Ticker(o(
+    tf, 0), 11) Ticker(o(tf, 1), 11) Ticker(o(tf, 2), 7) Ticker(o(tf, 3), 7)
+    Ticker(o(tf, 4), 3) Ticker(o(tf, 5), 3) TickerFactory(tf, 6) ((tf <|
+    newReq(c1)) Cust1(c1, tf, 3)) (tf <| newReq(c2)) Cust1(c2, tf, 3)
+
+Maude> frew [4] ic2 Cust(c1, tf, 0) .
+Warning: saw duplicate object: Cust1(c1, tf, 0)
+frewrite in O-TICKER-FACTORY-TEST : ic2 Cust(c1, tf, 0) .
+rewrites: 8 in 0ms cpu (0ms real) (~ rewrites/second)
+result AConf: (c1 <| newReply(o(tf, 0))) (c1 <| newReply(o(tf, 1))) (c2 <|
+    newReply(o(tf, 2))) (o(tf, 0) <| tick) (o(tf, 1) <| tick) (o(tf, 2) <|
+    tick) Ticker(o(tf, 0), 0) Ticker(o(tf, 1), 0) Ticker(o(tf, 2), 0)
+    TickerFactory(tf, 3) Cust1(c1, tf, 0) Cust1(c1, tf, 0) Cust1(c2, tf, 0)
+)

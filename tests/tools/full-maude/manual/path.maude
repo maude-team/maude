@@ -1,0 +1,57 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  fmod PATH is
+     sorts Node Edge .
+     ops source target : Edge -> Node .
+
+     sort Path .
+     subsort Edge < Path .
+     op _;_ : [Path] [Path] -> [Path] .
+
+     var  E : Edge .
+     vars P Q R S : Path .
+     cmb E ; P : Path if target(E) = source(P) .
+     ceq (P ; Q) ; R
+       = P ; (Q ; R)
+       if target(P) = source(Q) /\ target(Q) = source(R) .
+
+     ops source target : Path -> Node .
+     ceq source(P) = source(E) if E ; S := P .
+     ceq target(P) = target(S) if E ; S := P .
+
+     protecting NAT .
+
+     ops n1 n2 n3 n4 n5 : -> Node .
+     ops a b c d e f : -> Edge .
+     op length : Path -> Nat .
+
+     eq length(E) = 1 .
+     ceq length(E ; P) = 1 + length(P) if E ; P : Path .
+
+     eq source(a) = n1 .
+     eq target(a) = n2 .
+     eq source(b) = n1 .
+     eq target(b) = n3 .
+     eq source(c) = n3 .
+     eq target(c) = n4 .
+     eq source(d) = n4 .
+     eq target(d) = n2 .
+     eq source(e) = n2 .
+     eq target(e) = n5 .
+     eq source(f) = n2 .
+     eq target(f) = n1 .
+   endfm
+
+***(
+Maude> red in PATH : b ; (c ; d) .
+reduce in PATH : b ; (c ; d) .
+rewrites: 7 in 0ms cpu (0ms real) (~ rewrites/second)
+result Path: b ; (c ; d)
+
+Maude> red length(b ; (c ; d)) .
+reduce in PATH : length(b ; (c ; d)) .
+rewrites: 12 in 0ms cpu (0ms real) (~ rewrites/second)
+result NzNat: 3
+)

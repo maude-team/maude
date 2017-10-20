@@ -1,0 +1,128 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  load cell.fm
+
+ (omod OO-STACK2{X :: CELL} is
+    protecting INT .
+    protecting QID .
+    subsort Qid < Oid .
+    class Node{X} | next : Oid, node : Oid .
+    class Stack{X} | first : Oid .
+    msg _push_ : Oid Oid -> Msg .
+    msg _pop : Oid -> Msg .
+    msg _top_ : Oid Oid -> Msg .
+    msg _elt_ : Oid X$Elt -> Msg .
+
+    op null : -> Oid .
+    op o : Oid Int -> Oid .
+
+    vars O O' O'' O''' : Oid .
+    var  E : X$Elt .
+    var  N : Int .
+
+    rl [top] : *** top on a non-empty stack
+       < O : Stack{X} | first : O' >
+       < O' : Node{X} | node : O'' >
+       < O'' : X$Cell | contents : E >
+       (O top O''')
+       => < O : Stack{X} | >
+          < O' : Node{X} | >
+          < O'' : X$Cell | >
+          (O''' elt E) .
+
+    rl [push1] : *** push on a non-empty stack
+       < O : Stack{X} | first : o(O, N) >
+       (O push O')
+       => < O : Stack{X} | first : o(O, N + 1) >
+          < o(O, N + 1) : Node{X} |
+                 next : o(O, N), node : O' > .
+
+    rl [push2] : *** push on an empty stack
+       < O : Stack{X} | first : null >
+       (O push O')
+       => < O : Stack{X} | first : o(O, 0) >
+          < o(O, 0) : Node{X} | next : null, node : O' > .
+
+    rl [pop] : *** pop on a non-empty stack
+       < O : Stack{X} | first : O' >
+       < O' : Node{X} | next : O'' >
+       (O pop)
+       => < O : Stack{X} | first : O'' > .
+  endom)
+  
+  (show module OO-STACK2 * (class Stack{X} to Stack{X},
+                                class Node{X} to Node{X},
+                                attr Stack{X} . first to head,
+                                msg _elt_ to element,
+                                sort Int to Integer) .)
+---(
+rewrites: 10948 in 30ms cpu (39ms real) (364933 rewrites/second)
+
+omod OO-STACK2 * (sort Int to Integer, msg _elt_ to element, class Node`{X`} to
+    Node`{X`}, class Stack`{X`} to Stack`{X`}, attr Stack`{X`} . first to head)
+    {X :: CELL} is
+  protecting QID .
+  protecting INT * (sort Int to Integer) .
+  including CONFIGURATION+ .
+  including CONFIGURATION .
+  protecting BOOL .
+  subsort Qid < Oid .
+  class Node{X}| next : Oid, node : Oid .
+  class Stack{X}| head : Oid .
+  op null : -> Oid .
+  op o : Oid Integer -> Oid .
+  msg _pop : Oid -> Msg .
+  msg _push_ : Oid Oid -> Msg .
+  msg _top_ : Oid Oid -> Msg .
+  msg element : Oid X$Elt -> Msg .
+  rl < O:Oid : Stack{X}| head : O':Oid > < O':Oid : Node{X}| next : O'':Oid >
+    O:Oid pop
+    => < O:Oid : Stack{X}| head : O'':Oid > [label pop] .
+  rl < O:Oid : Stack{X}| head : O':Oid > < O':Oid : Node{X}| node : O'':Oid > <
+    O'':Oid : X$Cell | contents : E:X$Elt > O:Oid top O''':Oid
+    => < O:Oid : Stack{X}| none > < O':Oid : Node{X}| none > < O'':Oid : X$Cell
+    | none > element(O''':Oid,E:X$Elt) [label top] .
+  rl < O:Oid : Stack{X}| head : null > O:Oid push O':Oid
+    => < O:Oid : Stack{X}| head : o(O:Oid,0)> < o(O:Oid,0): Node{X}| next :
+    null,node : O':Oid > [label push2] .
+  rl < O:Oid : Stack{X}| head : o(O:Oid,N:Integer)> O:Oid push O':Oid
+    => < O:Oid : Stack{X}| head : o(O:Oid,N:Integer + 1)> < o(O:Oid,N:Integer +
+    1): Node{X}| next : o(O:Oid,N:Integer),node : O':Oid > [label push1] .
+endom
+---)
+
+  load view-account.fm
+  
+  (rew in OO-STACK2{Account} 
+                   * (class Account to Account,
+                      class Stack{Account} to Stack{Account},
+                      class Node{Account} to Node{Account},
+                      attr Stack{Account} . first to head,
+                      attr Account . bal to balance,
+                      msg _elt_ to element,
+                      sort Int to Integer) :
+  < 'stack : Stack{Account} | head : null >
+  < 'A-73728 : Account | balance : 5000 >
+  < 'A-06238 : Account | balance : 2000 >
+  < 'A-28381 : Account | balance : 15000 >
+  ('stack push 'A-73728)
+  ('stack push 'A-06238)
+  ('stack push 'A-28381)
+  ('stack top 'A-06238)
+  ('stack pop) .)
+---(
+rewrites: 37024 in 80ms cpu (102ms real) (462800 rewrites/second)
+rewrite in OO-STACK2`{Account`}*`(sort`Int`to`Integer`,msg_elt_to`element`,class`Account`to`Account`,class`Node`{Account`}to`Node`{Account`}`,class`Stack`{Account`}to`Stack`{Account`}`,attr`Account`.`bal`to`balance`,attr`Stack`{Account`}.`first`to`head`) :
+  < 'stack : Stack{Account}| head : null > < 'A-73728 : Account | balance :
+    5000 > < 'A-06238 : Account | balance : 2000 > < 'A-28381 : Account |
+    balance : 15000 >('stack push 'A-73728)('stack push 'A-06238)('stack push
+    'A-28381)('stack top 'A-06238)'stack pop
+result Configuration :
+  element('A-06238,15000)< 'A-06238 : Account | balance : 2000 > < 'A-28381 :
+    Account | balance : 15000 > < 'A-73728 : Account | balance : 5000 > <
+    'stack : Stack{Account}| head : o('stack,1)> < o('stack,0): Node{Account}|
+    next : null,node : 'A-06238 > < o('stack,1): Node{Account}| next : o(
+    'stack,0),node : 'A-73728 >
+---)

@@ -1,0 +1,496 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+load mobile-maude.maude
+
+------------------------------------------------------------------------------------
+---- (REDEFINITION OF) SOCKET
+------------------------------------------------------------------------------------
+  
+mod SOCKET is
+  inc STRING .
+  inc CONFIGURATION .
+  
+  op socket : Nat -> Oid [ctor] .
+
+  op createClientTcpSocket : Oid Oid String Nat -> Msg [ctor msg format (b o)] .
+  op createServerTcpSocket : Oid Oid Nat Nat -> Msg [ctor msg format (b o)] .
+  op createdSocket : Oid Oid Oid -> Msg [ctor msg format (m o)] .
+
+  op acceptClient : Oid Oid -> Msg [ctor msg format (b o)] .
+  op acceptedClient : Oid Oid String Oid -> Msg [ctor msg format (m o)] .
+
+  op send : Oid Oid Msg -> Msg [ctor msg format (b o)] .
+  op sent : Oid Oid -> Msg [ctor msg format (m o)] .
+
+  op receive : Oid Oid -> Msg [ctor msg format (b o)] .
+  op received : Oid Oid Msg -> Msg [ctor msg format (m o)] .
+
+  op closeSocket : Oid Oid -> Msg [ctor msg format (b o)] .
+  op closedSocket : Oid Oid String -> Msg [ctor msg format (m o)] .
+
+  op socketError : Oid Oid String -> Msg [ctor msg format (r o)] .
+
+  op socketManager : -> Oid .
+
+-------------------------------------------------------------------------------
+---- class Manager | counter : Nat .
+
+  sort Manager .
+  subsort Manager < Cid .
+  op Manager : -> Manager [ctor] .
+  op counter`:_ : Nat -> Attribute [ctor] .
+
+  var V@Manager : Manager .
+-------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------
+---- class Socket | source : Oid, target : Oid, socketState : SocketState .
+
+  sort Socket .
+  subsort Socket < Cid . 
+  op Socket : -> Socket [ctor] .
+  op source`:_ : Oid -> Attribute [ctor] .
+  op target`:_ : Oid -> Attribute [ctor] .
+  op socketState`:_ : SocketState -> Attribute [ctor] .
+
+  sort SocketState .
+  ops active closed : -> SocketState .
+
+  var V@Socket : Socket .
+-------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------
+---- class Process | conf : Configuration .
+
+  sort Process .
+  subsort Process < Cid . 
+  op Process : -> Process [ctor] .
+  op conf`:_ : Configuration -> Attribute [ctor] .
+
+  op pid : Nat -> Oid [ctor] . ---- process objects identifiers
+
+  vars V@Process V'@Process : Process .
+-------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------
+---- class ServerSocket | address : String, port : Nat, backlog : Nat .
+
+  sort ServerSocket .
+  subsort ServerSocket < Cid . 
+  op ServerSocket : -> ServerSocket [ctor] .
+  op address`:_ : String -> Attribute [ctor] .
+  op port`:_ : Nat -> Attribute [ctor] .
+  op backlog`:_ : Nat -> Attribute [ctor] .
+
+  op server : Nat -> Oid [ctor] . ---- server socket objects identifiers
+
+  var  V@ServerSocket : ServerSocket .
+-------------------------------------------------------------------------------
+
+  vars SOCKET PID PID' O O' : Oid .
+  vars DATA ADDRESS S S' : String .
+  vars Atts Atts' Atts'' Atts''' : AttributeSet .
+  vars N M PORT BACKLOG : Nat .
+  vars CONF CONF' : Configuration .
+  var  MSG : Msg .
+  
+  eq [ServerTcpSocketCreation] : < PID : V@Process | 
+        conf : (createServerTcpSocket(socketManager, O, PORT, BACKLOG) CONF), Atts >
+    < socketManager : V@Manager | counter : N, Atts' >
+    = < PID : V@Process | 
+           conf : (createdSocket(O, socketManager, server(N)) CONF), Atts >
+       < socketManager : V@Manager | counter : (N + 1), Atts' >
+       < server(N) : ServerSocket | 
+           address : "127.0.0.1", port : PORT, backlog : BACKLOG > .
+    ---- it could also result in a socketError(ME, socketManager, REASON)
+    ---- we assume the same address for all processes
+
+  eq [SocketCreation] : < PID : V@Process | conf : (acceptClient(server(N), O) CONF), Atts >
+    < PID' : V'@Process | 
+        conf : (createClientTcpSocket(socketManager, O', ADDRESS, PORT) CONF'), Atts' >
+    < socketManager : V@Manager | counter : M, Atts'' >
+    < server(N) : V@ServerSocket | address : ADDRESS, port : PORT, Atts''' > 
+    = < PID : V@Process | 
+           conf : (acceptedClient(O, server(N), ADDRESS, socket(M)) CONF), Atts >
+       < PID' : V'@Process | 
+           conf : (createdSocket(O', socketManager, socket(M)) CONF'), Atts' >
+       < socketManager : V@Manager | counter : (M + 1), Atts'' > 
+       < server(N) : V@ServerSocket | address : ADDRESS, port : PORT, Atts''' >
+       < socket(M) : Socket | source : PID, target : PID', socketState : active > .
+    ---- we assume it always work, no socketError(ME, socketManager, REASON) message
+
+  eq [send] : < PID : V@Process | conf : (send(SOCKET, O, MSG) CONF), Atts >
+    < PID' : V'@Process | conf : (receive(SOCKET, O') CONF'), Atts' >
+    < SOCKET : Socket | source : PID, target : PID', socketState : active, Atts'' > 
+    = < PID : V@Process | conf : (sent(O, SOCKET) CONF), Atts >
+       < PID' : V'@Process | conf : (received(O', SOCKET, MSG) CONF'), Atts' >
+       < SOCKET : Socket | 
+           source : PID, target : PID', socketState : active, Atts'' > .
+
+  eq [send] : < PID : V@Process | conf : (send(SOCKET, O, MSG) CONF), Atts >
+    < PID' : V'@Process | conf : (receive(SOCKET, O') CONF'), Atts' >
+    < SOCKET : Socket | source : PID', target : PID, socketState : active, Atts'' > 
+    = < PID : V@Process | conf : (sent(O, SOCKET) CONF), Atts >
+       < PID' : V'@Process | conf : (received(O', SOCKET, MSG) CONF'), Atts' >
+       < SOCKET : Socket | 
+           source : PID', target : PID, socketState : active, Atts'' > .
+
+  rl [send] :
+    < PID : V@Process | conf : (send(SOCKET, O, MSG) CONF), Atts >
+    < PID' : V'@Process | conf : (receive(SOCKET, O') CONF'), Atts' >
+    < SOCKET : Socket | source : PID, target : PID', socketState : closed, Atts'' > 
+    => < PID : V@Process | conf : (closedSocket(O, socketManager, "") CONF), Atts >
+       < PID' : V'@Process | 
+           conf : (closedSocket(O', socketManager, "") CONF'), Atts' >
+       < SOCKET : Socket | 
+           source : PID, target : PID', socketState : closed, Atts'' > .
+
+  rl [send] :
+    < PID : V@Process | conf : (send(SOCKET, O, MSG) CONF), Atts >
+    < PID' : V'@Process | conf : (receive(SOCKET, O') CONF'), Atts' >
+    < SOCKET : Socket | source : PID', target : PID, socketState : closed, Atts'' > 
+    => < PID : V@Process | conf : (closedSocket(O, socketManager, "") CONF), Atts >
+       < PID' : V'@Process | 
+           conf : (closedSocket(O', socketManager, "") CONF'), Atts' >
+       < SOCKET : Socket | 
+           source : PID', target : PID, socketState : closed, Atts'' > .
+
+  ---- Core Maude takes send and receive messages even if the other side 
+  ---- is not ready, that is, communication is asynchronous. Here we are 
+  ---- modeling synchronous communication. We could introduce buffers for 
+  ---- not-yet-sent and not-yet-received messages.
+
+  rl [send] :
+    < PID : V@Process | conf : (closeSocket(SOCKET, O) CONF), Atts >
+    < PID' : V'@Process | conf : CONF', Atts' >
+    < SOCKET : Socket | source : PID, target : PID', socketState : active, Atts'' > 
+    => < PID : V@Process | conf : (closedSocket(O, socketManager, "") CONF), Atts >
+       < PID' : V'@Process | conf : CONF', Atts' >
+       < SOCKET : Socket | source : PID, target : PID', socketState : closed, Atts'' > .
+    ---- PID' should also get the closedSocket message, but who should it be 
+    ---- addressed to?
+
+endm
+
+
+------------------------------------------------------------------------------------
+----load socket
+----load my-socket
+------------------------------------------------------------------------------------
+
+mod BUFFERED-SOCKET is
+  pr NAT .
+  inc SOCKET .
+  pr MOBILE-MAUDE-SEMANTICS .
+
+------------------------------------------------------------------------------------
+----  class BufferedSocket |      *** One on each extreme of the socket
+----     bState : BState .        *** Either idle or active
+----     waiting : Bool .         *** Waiting for Sent
+
+  sort BufferedSocket .
+  subsort BufferedSocket < Cid .
+  op BufferedSocket : -> BufferedSocket .
+ 
+  op bState :_ : BState -> Attribute [ctor gather(&)] .
+  op waiting :_ : Bool -> Attribute [ctor gather(&)] .
+
+  var  V@BufferedSocket : BufferedSocket .
+  var FR : FindResult .
+  var MSG : Msg .
+------------------------------------------------------------------------------------
+
+  op b : Oid -> Oid .   *** buffered sockets ids are marked with a b operator,
+                        *** i.e., the buffers associated to a socket SOCKET 
+                        *** have identifier b(SOCKET); note that there is a 
+                        *** BufferedSocket on each side of the socket, that is,
+                        *** there are two objects with the same id, but in different
+                        *** configurations.
+    
+  sort BState .
+  ops idle active : -> BState [ctor] .
+    
+  op CreateClientTcpSocket : Oid Oid String Nat -> Msg [ctor msg format (b o)] .
+  op CreateServerTcpSocket : Oid Oid Nat Nat -> Msg [ctor msg format (b o)] .
+  op CreatedSocket : Oid Oid Oid -> Msg [ctor msg format (m o)] .
+
+  op AcceptClient : Oid Oid -> Msg [ctor msg format (b o)] .
+  op AcceptedClient : Oid Oid String Oid -> Msg [ctor msg format (m o)] .
+
+  op Send : Oid Oid Msg -> Msg [ctor msg format (b o)] .
+  op Sent : Oid Oid -> Msg [ctor msg format (m o)] .
+
+  op Receive : Oid Oid -> Msg [ctor msg format (b o)] .
+  op Received : Oid Oid Msg -> Msg [ctor msg format (m o)] .
+
+  op CloseSocket : Oid Oid -> Msg [ctor msg format (b o)] .
+  op ClosedSocket : Oid Oid String -> Msg [ctor msg format (m o)] .
+
+  op SocketError : Oid Oid String -> Msg [ctor msg format (r o)] .
+
+  vars SOCKET NEW-SOCKET SOCKET-MANAGER O O' : Oid .
+  vars ADDRESS IP IP' DATA S S' REASON : String .
+  var  AttS : AttributeSet .
+  vars PORT BACKLOG N : Nat .
+
+  eq [createServerTcpSocket] : CreateServerTcpSocket(SOCKET-MANAGER, O, PORT, BACKLOG)
+    = createServerTcpSocket(SOCKET-MANAGER, O, PORT, BACKLOG) .
+
+  eq [acceptClient] : AcceptClient(b(SOCKET), O)
+    = acceptClient(SOCKET, O) .
+
+  eq [acceptedclient] : acceptedClient(O, SOCKET, IP', NEW-SOCKET) 
+    = AcceptedClient(O, b(SOCKET), IP', b(NEW-SOCKET)) 
+       < b(NEW-SOCKET) : BufferedSocket | bState : idle, waiting : false > .
+       
+  rl [socketError] :
+    socketError(O, SOCKET-MANAGER, REASON)
+    => SocketError(O, SOCKET-MANAGER, REASON) .
+       
+  rl [closeSocket] :
+    CloseSocket(b(SOCKET), SOCKET-MANAGER)
+    => closeSocket(SOCKET, SOCKET-MANAGER) .
+
+  rl [closedSocket] :
+    < b(SOCKET) : V@BufferedSocket | AttS >
+    closedSocket(SOCKET, SOCKET-MANAGER, DATA)
+    => ClosedSocket(b(SOCKET), SOCKET-MANAGER, DATA) .
+
+  eq [createClientTcpSocket] : CreateClientTcpSocket(SOCKET-MANAGER, O, ADDRESS, PORT)
+    = createClientTcpSocket(SOCKET-MANAGER, O, ADDRESS, PORT) .
+
+  eq [createdSocket] : createdSocket(O, SOCKET-MANAGER, SOCKET) 
+    = < b(SOCKET) : BufferedSocket | bState : idle, waiting : false  > 
+       CreatedSocket(O, SOCKET-MANAGER, b(SOCKET)) .
+
+  eq [send] : < b(SOCKET) : V@BufferedSocket | bState : active, waiting : false > 
+    Send(b(SOCKET), O, MSG)
+    = < b(SOCKET) : V@BufferedSocket | bState : active, waiting : true >
+       send(SOCKET, O, MSG) .
+
+  eq [sent] : < b(SOCKET) : V@BufferedSocket | bState : active, waiting : true > 
+    sent(O, SOCKET)
+    = < b(SOCKET) : V@BufferedSocket | bState : active, waiting : false >
+       Sent(O, b(SOCKET)) .
+
+  eq [buffer-start-up] : < b(SOCKET) : V@BufferedSocket | bState : idle, AttS > 
+    = < b(SOCKET) : V@BufferedSocket | bState : active, AttS > 
+       receive(SOCKET, b(SOCKET)) .
+   
+  eq [received] : < b(SOCKET) : V@BufferedSocket | bState : active, AttS > 
+    Receive(b(SOCKET), O)
+    received(b(SOCKET), O', MSG)
+    = < b(SOCKET) : V@BufferedSocket | bState : active, AttS >
+       Received(O, b(SOCKET), MSG)
+       receive(SOCKET, b(SOCKET)) .
+  
+endm
+
+
+mod CENTRALIZED-MOBILE-MAUDE is
+  pr MOBILE-MAUDE-SEMANTICS .
+  pr BUFFERED-SOCKET .
+
+  var V@RootObject : RootObject .
+------------------------------------------------------------------------------------
+----  class ClientRootObject |
+----     server : Oid .        *** Server root object's socket oid
+
+  sort ClientRootObject .
+  subsort ClientRootObject < RootObject .
+  op ClientRootObject : -> ClientRootObject .
+  
+  op server :_ : String -> Attribute [ctor gather(&)] .
+-----  op port :_ : Nat -> Attribute [ctor gather(&)] .
+
+  var V@ClientRootObject : ClientRootObject .
+------------------------------------------------------------------------------------
+----  class ServerRootObject |
+----     clients : Map{Oid,Oid}, 
+----                              *** Client root objects' socket ids
+----     socket : Oid .           *** Get connections through only one socket
+----
+----  subclasses ClientRootObject ServerRootObject < RootObject .
+
+  sort ServerRootObject .
+  subsort ServerRootObject < RootObject .
+  op ServerRootObject : -> ServerRootObject .
+
+  var V@ServerRootObject : ServerRootObject .
+------------------------------------------------------------------------------------
+
+
+  vars O O' O'' SOCKET NEW-SOCKET SOCKET-MANAGER : Oid .
+  var  L : Loc .
+  vars DATA IP IP' S S' S'' : String .
+  vars AtS AtS' : AttributeSet .
+  vars N : Nat .
+  var  MSG : Msg .
+  vars LSPF LSPF' : Map{Loc,Oid} .
+
+------------------------------------------------------------------------------------
+---- Auxiliary functions
+------------------------------------------------------------------------------------
+
+  var  Q : Qid .
+  vars QIL QIL' : QidList .
+
+  op MMMS : -> Module .
+  eq MMMS = upModule('MOBILE-MAUDE-SYNTAX, false) .
+
+  op qidListString : QidList -> String .
+  op qidListString : QidList String -> String .
+  op stringQidList : String -> QidList .
+  op stringQidList : String QidList -> QidList .
+  
+  eq qidListString(QIL) = qidListString(QIL, "") .
+  eq qidListString(nil, S) = S .
+  eq qidListString(Q QIL, S) = qidListString(QIL, S + string(Q) + " ") .
+  
+  eq stringQidList(S) = stringQidList(S, nil) .
+  eq stringQidList("", QIL) = QIL .
+  eq stringQidList(S, QIL) = QIL qid(S) [owise] . ***if S =/= "" /\ find(S, " ", 0) = notFound .
+  ceq stringQidList(S, QIL) 
+    = stringQidList(S'', QIL qid(S') ) 
+    if N := find(S, " ", 0)
+       /\ S' := substr(S, 0, N)
+       /\ S'' := substr(S, N + 1, length(S)) .
+ 
+  op msg2string : Msg -> String .
+  eq msg2string(MSG) = qidListString(metaPrettyPrint(MMMS, upTerm(MSG), none)) .
+  
+  op string2msg : String -> Msg .
+  eq string2msg(S) 
+    = downTerm(getTerm(metaParse(MMMS, stringQidList(S), 'Msg)), error(S)) .
+
+  ------------------------------------------------------------------------------------
+  ---- ROOT OBJECT
+  ------------------------------------------------------------------------------------
+
+  crl [received] : 
+    ---- the first connection is made the default one
+    < O : V@RootObject | state : active, neighbors : empty, defNeighbor : null, AtS >
+    Received(O, SOCKET, MSG)
+    => < O : V@RootObject | state : active, 
+                            neighbors : insert(L, SOCKET, empty), 
+                            defNeighbor : if V@RootObject == ServerRootObject 
+                                           then null 
+                                           else SOCKET 
+                                           fi, 
+                            AtS >
+       Receive(SOCKET, O) 
+    if new-socket(L) := MSG .
+
+  crl [received] : 
+    < O : V@RootObject | state : active, neighbors : LSPF, AtS >
+    Received(O, SOCKET, MSG)
+    => < O : V@RootObject | state : active, 
+                            neighbors : insert(L, SOCKET, LSPF), 
+                            AtS >
+       Receive(SOCKET, O) 
+    if LSPF =/= empty /\ new-socket(L) := MSG .
+
+  crl [received] : 
+    < O : V@RootObject | state : active, AtS >
+    Received(O, SOCKET, MSG)
+    => < O : V@RootObject | state : active, AtS >
+       MSG
+       Receive(SOCKET, O) 
+    if not new-socket(MSG) .
+
+  op new-socket : Msg -> Bool .
+  eq new-socket(new-socket(L)) = true .
+  eq new-socket(MSG) = false [owise] .
+
+  ---- the root object is in charge of sending the message through the right socket
+  crl [changeSend] : 
+    < O : V@RootObject | state : active, neighbors : LSPF, defNeighbor : O', AtS >
+    Send(L, O'', MSG)
+    => < O : V@RootObject | state : active, neighbors : LSPF, defNeighbor : O', AtS >
+       Send(O', O'', MSG)
+    if LSPF[L] == undefined /\ O' =/= null .
+
+  crl [changeSend] : 
+    < O : V@RootObject | state : active, neighbors : LSPF, AtS >
+    Send(L, O', MSG)
+    => < O : V@RootObject | state : active, neighbors : LSPF, AtS >
+       Send(LSPF[L], O', MSG)
+    if LSPF[L] =/= undefined .
+
+  ----rl [messageSent] : 
+  ---- we should perhaps handle the acks
+  ----    < O : V@RootObject | AtS > 
+  ----    Sent(O, O')
+  ----    => < O : V@RootObject | AtS > .
+  eq Sent(O, O') = none .
+
+  ------------------------------------------------------------------------------------
+  ---- SERVER
+  ------------------------------------------------------------------------------------
+
+  ---- TCP socket server start up
+  rl [connect] : 
+    < O : V@ServerRootObject | state : idle, port : N, AtS > 
+    => < O : V@ServerRootObject | state : waiting-connection, port : N, AtS > 
+       CreateServerTcpSocket(socketManager, O, N, 5) .
+
+  rl [connected] : 
+    < O : V@ServerRootObject | state : waiting-connection, AtS > 
+    CreatedSocket(O, SOCKET-MANAGER, SOCKET) 
+    => < O : V@ServerRootObject | state : active, AtS > 
+       AcceptClient(SOCKET, O) .
+    ---- It could also result in a socketError(ME, socketManager, REASON) message
+
+  ---- client accepted
+  rl [acceptedClient] : 
+    < O : V@ServerRootObject | state : active, AtS > 
+    AcceptedClient(O, SOCKET, IP', NEW-SOCKET) 
+    ---- It could also result in a socketError(ME, socketManager, REASON) message
+    => < O : V@ServerRootObject | state : active, AtS >
+       AcceptClient(SOCKET, O) 
+       Receive(NEW-SOCKET, O) 
+       Send(NEW-SOCKET, O, new-socket(O)) .
+
+  crl [closedSocket] :
+    ---- what happens if the default socket is closed?
+    ---- we cannot take any other one as default, we can get very easily into loops
+    ---- we possibly need to distinguish between new-socket and new-default-socket
+    ----   messages; then, loosing a default socket may result in a null value
+    ----   for defNeighbor
+    < O : V@ServerRootObject | neighbors : LSPF, defNeighbor : O', AtS > 
+    ClosedSocket(SOCKET, SOCKET, DATA)
+    => < O : V@ServerRootObject | neighbors : LSPF', defNeighbor : O', AtS > 
+    if SOCKET =/= O' /\ (LSPF', (L |-> SOCKET)) := LSPF .
+
+  ------------------------------------------------------------------------------------
+  ---- CLIENT
+  ------------------------------------------------------------------------------------
+
+  ---- A client root object requests a socket connection
+  rl [connect] : 
+    < O : V@ClientRootObject | state : idle, server : S, port : N, AtS > 
+    => < O : V@ClientRootObject | state : waiting-connection, server : S, port : N, AtS > 
+       CreateClientTcpSocket(socketManager, O, S, N) .
+
+  ---- Response to a client root object's socket connection request
+  rl [connected] : 
+    < O : V@ClientRootObject | state : waiting-connection, AtS > 
+    CreatedSocket(O, SOCKET-MANAGER, SOCKET) 
+    => < O : V@ClientRootObject | state : active, AtS > 
+       Receive(SOCKET, O) 
+       Send(SOCKET, O, new-socket(O)) .
+  
+---- It can also get a socketError(O, SOCKET-MANAGER, REASON) message:
+----  rl [tryAgain] : < O : V@ClientRootObject | state : waiting-connection, AtS >
+----                  socketError(O, SOCKET-MANAGER, REASON)
+----    => < O : V@ClientRootObject | state : waiting-connection, AtS >
+----       createClientTcpSocket(socketManager, O, server-address, port) .
+
+endm
+
+
+mod MOBILE-MAUDE is
+  inc CENTRALIZED-MOBILE-MAUDE .
+endm
+

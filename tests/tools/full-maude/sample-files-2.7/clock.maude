@@ -1,0 +1,53 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  load sampler.maude
+
+  mod CLOCK is
+    pr SAMPLER .
+    sort Clock .
+    op clock : Nat Float -> Clock [ctor] .
+    op broken : Nat Float -> Clock [ctor] .
+    var T : Nat .
+    var C : Float .
+    rl clock(T,C) 
+      => if sampleBernoulli(C / 1000.0)
+         then clock(s(T), C - (C / 1000.0))
+         else broken(T, C) 
+         fi .
+  endm
+
+***(
+Maude> rewrite in CLOCK : clock(0, 1.0e+3) .
+rewrite in CLOCK : clock(0, 1.0e+3) .
+rewrites: 444 in 0ms cpu (0ms real) (~ rewrites/second)
+result Clock: broken(40, 9.607702107358117e+2)
+
+Maude> rewrite in CLOCK : clock(0, 1.0e+3) .
+rewrite in CLOCK : clock(0, 1.0e+3) .
+rewrites: 444 in 0ms cpu (0ms real) (~ rewrites/second)
+result Clock: broken(40, 9.607702107358117e+2)
+
+Maude> set clear rules off .
+
+Maude> rewrite in CLOCK : clock(0, 1.0e+3) .
+rewrite in CLOCK : clock(0, 1.0e+3) .
+rewrites: 503 in 0ms cpu (1ms real) (~ rewrites/second)
+result Clock: broken(46, 9.5501998182355942e+2)
+
+Maude> rewrite in CLOCK : clock(0, 1.0e+3) .
+rewrite in CLOCK : clock(0, 1.0e+3) .
+rewrites: 194 in 0ms cpu (0ms real) (~ rewrites/second)
+result Clock: broken(16, 9.8411944181564002e+2)
+
+Maude> rewrite in CLOCK : clock(0, 1.0e+3) .
+rewrite in CLOCK : clock(0, 1.0e+3) .
+rewrites: 90 in 0ms cpu (0ms real) (~ rewrites/second)
+result Clock: broken(6, 9.9401498001499397e+2)
+
+Maude> rewrite in CLOCK : clock(0, 1.0e+3) .
+rewrite in CLOCK : clock(0, 1.0e+3) .
+rewrites: 315 in 0ms cpu (0ms real) (~ rewrites/second)
+result Clock: broken(28, 9.7237474437709557e+2)
+)

@@ -1,0 +1,10 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  load abstract-bakery.maude
+  load bakery-preds.maude
+  
+  mod ABSTRACT-BAKERY-PREDS is
+    protecting ABSTRACT-BAKERY .
+    including BAKERY-PREDS .
+  endm

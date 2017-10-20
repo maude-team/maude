@@ -1,0 +1,86 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+ (omod OO-BLOCKS-WORLD is
+    protecting QID .
+    sorts BlockId Up Down .
+    subsorts Qid < BlockId < Oid .
+    subsorts BlockId < Up Down .
+    op clear : -> Up [ctor] .
+    op table : -> Down [ctor] .
+    class Block | under : Up, on : Down .
+    msg move : Oid Oid Oid -> Msg .
+    msgs unstack stack : Oid Oid -> Msg .
+    vars X Y Z : BlockId .
+
+    rl [move] : 
+      move(X, Z, Y) 
+      < X : Block | under : clear, on : Z > 
+      < Z : Block | under : X > 
+      < Y : Block | under : clear >
+      => < X : Block | on : Y > 
+         < Z : Block | under : clear > 
+         < Y : Block | under : X > .
+    rl [unstack] : 
+      unstack(X,Z) 
+      < X : Block | under : clear, on : Z > 
+      < Z : Block | under : X > 
+      => < X : Block | on : table > 
+         < Z : Block | under : clear > . 
+    rl [stack] : 
+      stack(X, Z) 
+      < X : Block | under : clear, on : table > 
+      < Z : Block | under : clear >
+      => < X : Block | on : Z > 
+         < Z : Block | under : X > .
+
+    ops initial final : -> Configuration . 
+    eq initial
+      = < 'a : Block | under : 'c, on : table > 
+        < 'c : Block | under : clear, on : 'a >
+        < 'b : Block | under : clear, on : table > .
+       
+    eq final
+      = < 'a : Block | under : clear, on : 'b > 
+        < 'b : Block | under : 'a, on : 'c > 
+        < 'c : Block | under : 'b, on : table > .
+  endom)
+
+(search unstack('c,'a) stack('b,'c) stack('a,'b) initial 
+            =>* C:Configuration such that C:Configuration == final .)
+---(
+rewrites: 1639 in 20ms cpu (21ms real) (81950 rewrites/second)
+search in OO-BLOCKS-WORLD : unstack('c,'a)stack('b,'c)stack('a,'b)initial =>*
+    C:Configuration .
+
+Solution 1
+C:Configuration --> < 'a : Block | on : 'b,under : clear > < 'b : Block | on :
+    'c,under : 'a > < 'c : Block | on : table,under : 'b >
+
+No more solutions.
+---)
+
+ (omod OO-BLOCKS-WORLD-COLOR is 
+    including OO-BLOCKS-WORLD .
+    sort Color .
+    ops red blue yellow : -> Color [ctor] .
+    class ColoredBlock | color : Color .
+    subclass ColoredBlock < Block .
+  endom)
+
+(rewrite
+          unstack('c, 'a)
+          < 'a : Block | color : red, under : 'c, on : table >
+          < 'c : Block | color : blue, under : clear, on : 'a >
+          < 'b : Block | color : yellow, under : clear, on : table > .)
+---(
+rewrites: 1839 in 10ms cpu (11ms real) (183900 rewrites/second)
+rewrite in OO-BLOCKS-WORLD-COLOR :
+  unstack('c,'a)< 'a : Block | color : red,under : 'c,on : table > < 'c : Block
+    | color : blue,under : clear,on : 'a > < 'b : Block | color : yellow,under
+    : clear,on : table >
+result Configuration :
+  < 'a : Block | color : red,on : table,under : clear > < 'b : Block | color :
+    yellow,on : table,under : clear > < 'c : Block | color : blue,on : table,
+    under : clear >
+---)

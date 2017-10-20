@@ -1,0 +1,18 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  load rent-a-car-store.fm
+  
+ (fmod RENT-A-CAR-STORE-TEST is
+    pr RENT-A-CAR-STORE .
+
+    op StoreConf : -> Configuration [memo] .
+    eq StoreConf
+      = < 'C1 : Customer | cash : 5000, debt : 0, suspended : false >
+        < 'C2 : Customer | cash : 5000, debt : 0, suspended : false >
+        < 'A1 : EconomyCar | available : true, rate : 100 >
+        < 'A3 : MidSizeCar | available : true, rate : 150 >
+        < 'A5 : FullSizeCar | available : true, rate : 200 >
+        < 'C : Calendar | date : 0 > .
+  endfm)

@@ -1,0 +1,40 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  mod ACTOR-O-CONF is
+    sorts Actor Msg AConf .
+    subsorts Actor Msg < AConf .
+    op none : -> AConf [ctor] .
+    op __ : AConf AConf -> AConf [ctor config assoc comm id: none] .
+    *** actor messages
+    sorts Aid MsgBody .
+    op _<|_ : Aid MsgBody -> Msg [ctor message] .
+  endm
+
+  mod O-TICKER is
+    including ACTOR-O-CONF .
+    protecting NAT .
+    op Ticker : Aid Nat -> Actor [ctor object] .
+    op tick : -> MsgBody [ctor] .
+    op timeReq : Aid -> MsgBody [ctor] .
+    op timeReply : Nat -> MsgBody [ctor] .
+
+    vars T C : Aid .
+    var  N : Nat .
+    rl Ticker(T, N) (T <| tick)
+      => Ticker(T, s N) (T <| tick) .
+    rl Ticker(T, N) (T <| timeReq(C))
+      => Ticker(T, N) (C <| timeReply(N)) .
+  endm
+  
+  mod O-TICKER-TEST is
+    extending O-TICKER .
+    ops myticker me : -> Aid [ctor] .
+    op tConf : -> AConf .
+    eq tConf
+      = Ticker(myticker, 0)
+        (myticker <| tick)
+        (myticker <| timeReq(me)) .
+  endm
+  

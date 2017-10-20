@@ -1,0 +1,52 @@
+fmod MY-NAT is
+sort Nat .
+op 0 : -> Nat .
+op s_ : Nat -> Nat .
+op _+_ : Nat Nat -> Nat [assoc comm] .
+eq N:Nat + 0 = N:Nat .
+endfm
+
+red in FULL-MAUDE : getVariants(upModule('MY-NAT, true), '_+_['E:Nat, 'E':Nat], 1, irreducible ACUnify) .
+---(
+reduce in FULL-MAUDE : getVariants(upModule('MY-NAT, true), '_+_['E:Nat, 'E':Nat], 1, irreducible ACUnify) .
+rewrites: 7755 in 14ms cpu (16ms real) (524021 rewrites/second)
+result VariantFourSet: 
+  {'E':Nat, 'E:Nat <- '0.Nat, (none).Substitution, 7} 
+| {'E:Nat, 'E':Nat <- '0.Nat, (none).Substitution, 7} 
+| {'_+_['E:Nat,'E':Nat], (none).Substitution, (none).Substitution, 5}
+---)
+
+red in FULL-MAUDE : getVariants(upModule('MY-NAT, true), '_+_['E:Nat, 'E':Nat, 'E'':Nat], 1, irreducible ACUnify) .
+---(
+reduce in FULL-MAUDE : getVariants(upModule('MY-NAT, true), '_+_['E:Nat, 'E':Nat,'E'':Nat], 1, irreducible ACUnify) .
+rewrites: 26538 in 50ms cpu (55ms real) (523452 rewrites/second)
+result VariantFourSet: 
+  {'E'':Nat, 
+   'E':Nat <- '0.Nat ; 'E:Nat <- '0.Nat, 
+   (none).Substitution, 
+   11} 
+| {'E':Nat, 
+   'E'':Nat <- '0.Nat ; 'E:Nat <- '0.Nat,
+   (none).Substitution,
+   11} 
+| {'E:Nat, 
+   'E'':Nat <- '0.Nat ; 'E':Nat <- '0.Nat,
+   (none).Substitution,
+   11} 
+| {'_+_['E':Nat,'E'':Nat], 
+   'E:Nat <- '0.Nat, 
+   (none).Substitution,
+   9} 
+| {'_+_['E:Nat,'E'':Nat], 
+   'E':Nat <- '0.Nat,
+   (none).Substitution,
+   9} 
+| {'_+_['E:Nat,'E':Nat], 
+   'E'':Nat <- '0.Nat,
+   (none).Substitution,
+   9} 
+| {'_+_['E:Nat,'E':Nat,'E'':Nat],
+   (none).Substitution,
+   (none).Substitution,
+   6}
+---)

@@ -1,0 +1,21 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  load rent-a-car-store-test.fm
+  load rew-seq-test.fm    
+
+(down RENT-A-CAR-STORE :
+   rew rewSeq(upModule(RENT-A-CAR-STORE-TEST),
+            upTerm(RENT-A-CAR-STORE-TEST, StoreConf),
+            StoreStrat)  .)
+---(
+rewrites: 3312 in 30ms cpu (35ms real) (110400 rewrites/second)
+result Configuration :
+  < 'A1 : EconomyCar | available : true,rate : 100 > < 'A3 : MidSizeCar |
+    available : true,rate : 150 > < 'A5 : FullSizeCar | available : true,rate :
+    200 > < 'C : Calendar | date : 8 > < 'C1 : Customer | cash : 4400,debt :
+    140,suspended : true > < 'C2 : Customer | cash : 5000,debt : 0,suspended :
+    false >
+---)
+

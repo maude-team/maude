@@ -1,0 +1,224 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+in search-tree.maude
+
+fmod RB-TREES{X :: STOSET, Y :: CONTENTS} is
+   including SEARCH-TREE{X, Y} .
+
+   --- We add a new field to the node's record.
+
+   sort Color .
+   ops r b : -> Color [ctor].
+   op color:_ : Color -> Record [ctor] .
+   op color : Record ~> Color .
+ 
+   vars Rec Rec' Rec'' : Record .
+  
+   eq color(Rec,color: Co) = Co .
+
+  
+  ------------------------------------------------------------------------------
+  ---
+  --- Red-black trees specification.
+
+  sorts NeRBTree{X, Y} RBTree{X, Y} . 
+  subsort NeRBTree{X, Y} < RBTree{X, Y} < SearchTree{X, Y} .
+  subsort NeRBTree{X, Y} < NeSearchTree{X, Y} .
+
+  vars RBTL RBTR RBTLL RBTRR RBTL1 RBTR1 RBTL2 RBTR2 : RBTree{X, Y} .
+  var Co : Color .
+  vars K K' : X$Elt .
+  vars C C' : Y$Contents .
+  vars L R L1 R1 L2 R2 : BinTree{Record} .
+  vars RBT T TLL TRR : RBTree{X, Y} .
+  vars ST TL TR RBTL? RBTR? : SearchTree{X, Y} .
+
+
+  --- Value of nodes is not taken into account!
+
+  mb empty : RBTree{X, Y} .
+  cmb (RBTL? [Rec] RBTR?)  : NeRBTree{X, Y}
+   if color(Rec) = b 
+   /\ blackBalance(RBTL?) /\ blackBalance(RBTR?)
+   /\ blackDepth(RBTR?) = blackDepth(RBTR?)
+   /\ not twoRed(RBTL?) /\ not twoRed(RBTR?) .
+  
+  op blackDepth : BinTree{Record} ~> Nat .
+  eq blackDepth(empty) = 0 .
+  eq blackDepth(L [color: b, Rec] R) = 1 + max(blackDepth(L),blackDepth(R)) .
+  eq blackDepth(L [color: r, Rec] R) = max(blackDepth(L),blackDepth(R)) .
+
+  op blackBalance : BinTree{Record} -> Bool .
+  eq blackBalance(empty) = true .
+  eq blackBalance(L [Rec] R) = blackBalance(L) and blackBalance(R) and
+                               (blackDepth(L) == blackDepth(R)) .
+
+  op twoRed : BinTree{Record} ~> Bool .
+  eq twoRed(empty) = false .
+  eq twoRed(L [color: b, Rec] R) = twoRed(L) or twoRed(R) .
+  eq twoRed(empty [color: r, Rec] empty) = false .
+  eq twoRed((L1 [color: b, Rec] R1) [color: r, Rec] empty) = 
+     twoRed(L1 [color: b, Rec] R1) .
+  eq twoRed(empty [color: r, Rec] (L1 [color: b, Rec] R1)) = 
+     twoRed(L1 [color: b, Rec] R1) .
+  eq twoRed((L1 [color: b, Rec] R1) [color: r, Rec] (L2 [color: b, Rec] R2)) =
+     twoRed( L1 [color: b, Rec] R1) or twoRed(L2 [color: b, Rec] R2) .
+  eq twoRed(L [color: r, Rec] R) = true [owise] .
+
+  ------------------------------------------------------------------------------
+  --- 
+  --- Insertion in a red-black tree
+ 
+  op insertRB : X$Elt Y$Contents RBTree{X, Y} -> RBTree{X, Y} .
+  op insertRB-aux : X$Elt Y$Contents SearchTree{X, Y} ~> SearchTree{X, Y} .
+
+  ceq insertRB(K,C,RBT) = RBTL? [color: b, Rec] RBTR?  
+      if RBTL? [color: Co, Rec] RBTR? := insertRB-aux(K,C,RBT) .
+  
+  eq insertRB-aux(K,C,empty) = empty [color: r, key: K, contents: C] empty . 
+  ceq insertRB-aux(K,C,RBTL? [color: Co,Rec] RBTR?) =
+      balanceRB(Co, insertRB-aux(K,C, RBTL?), Rec, RBTR?)
+      if K < key(Rec) .
+  ceq insertRB-aux(K,C,RBTL? [color: Co, Rec] RBTR?) =
+      balanceRB(Co, RBTL?, Rec, insertRB-aux(K,C, RBTR?))
+      if key(Rec) < K .
+  eq insertRB-aux(K,C,RBTL? [key: K, contents: C', Rec] RBTR?) =
+     RBTL? [key: K, contents: combine(C,C'), Rec] RBTR? .
+
+  --- Notice the sort!
+
+  vars RBT1 RBT2 RBT3 RBT4 : SearchTree{X, Y} .
+
+  op balanceRB : Color SearchTree{X, Y} Record SearchTree{X, Y} -> RBTree{X, Y} .
+  eq balanceRB(b, (RBT1 [color: r,Rec] RBT2) [color: r,Rec'] RBT3, Rec'', RBT4) =
+       (RBT1 [color: b,Rec] RBT2) [color: r,Rec'] (RBT3 [color: b,Rec''] RBT4) .
+  eq balanceRB(b, RBT1 [color: r,Rec] (RBT2 [color: r,Rec'] RBT3), Rec'', RBT4) =
+       (RBT1 [color: b,Rec] RBT2) [color: r,Rec'] (RBT3 [color: b,Rec''] RBT4) .
+  eq balanceRB(b, RBT1, Rec, (RBT2 [color: r,Rec'] RBT3) [color: r, Rec''] RBT4) =
+       (RBT1 [color: b,Rec] RBT2) [color: r,Rec'] (RBT3 [color: b,Rec''] RBT4) .
+  eq balanceRB(b, RBT1, Rec, RBT2 [color: r,Rec'] (RBT3 [color: r, Rec''] RBT4)) =
+       (RBT1 [color: b,Rec] RBT2) [color: r,Rec'] (RBT3 [color: b,Rec''] RBT4) .
+  eq balanceRB(Co, RBT1, Rec, RBT2) = RBT1 [color: Co,Rec] RBT2 [owise] .
+
+
+
+
+  op delete : X$Elt RBTree{X, Y} -> RBTree{X, Y} .
+  ceq delete(K,T) = TL [color: b, Rec'] TR if TL [color: Co, Rec'] TR := del(K, T) .
+  eq delete(K,T) = empty [owise] .
+
+  op del : X$Elt SearchTree{X, Y} ~> SearchTree{X, Y} .
+  eq del(K, empty) = empty .
+  eq del(K, TL [color: Co, Rec'] TR) = 
+       if K < key(Rec') then
+         delformLeft(K, TL, Rec', TR)
+       else if key(Rec') < K then
+         delformRight(K, TL, Rec', TR)
+       else
+         app(TL, TR)
+       fi fi .
+  
+
+  op delformLeft : X$Elt RBTree{X, Y} Record RBTree{X, Y} -> RBTree{X, Y} .
+  eq delformLeft(K, TL [color: b, Rec'] TR, Rec'', TRR) = 
+       balleft(del(K,TL [color: b, Rec'] TR), Rec'', TRR) .
+  eq delformLeft(K, TL, Rec', TR) = del(K,TL) [color: r, Rec'] TR [owise] .  
+
+  op delformRight : X$Elt RBTree{X, Y} Record RBTree{X, Y} -> RBTree{X, Y} .
+  eq delformRight(K, TLL, Rec', TL [color: b, Rec''] TR) = 
+       balright(TLL,Rec',del(K,TL [color: b,Rec''] TR)) .
+  eq delformRight(K, TL, Rec', TR) = TL [color: r,Rec'] del(K,TR) [owise] .  
+
+  op balleft : RBTree{X, Y} Record RBTree{X, Y} ~> RBTree{X, Y} .
+  eq balleft(TL [color: r, Rec] TR, Rec', TRR) = (TL [color: b,Rec] TR) [color: r, Rec'] TRR .
+  eq balleft(TLL, Rec, TL [color: b, Rec'] TR) = balance(TLL, Rec, TL [color: r,Rec'] TR) .
+  eq balleft(TLL, Rec, (TL [color: b, Rec'] TR) [color: r,Rec''] TRR) = 
+       (TLL [color: b, Rec] TL) [color: r, Rec'] balance(TR, Rec'', subl(TRR)) .
+
+  op balright : RBTree{X, Y} Record RBTree{X, Y} ~> RBTree{X, Y} .
+  eq balright(TLL, Rec, TL [color: r, Rec'] TR) = TLL [color: r,Rec] (TL [color: b,Rec'] TR) . 
+  eq balright(TL [color: b,Rec] TR, Rec', TRR) = balance(TL [color: r,Rec] TR, Rec', TRR) .
+  eq balright(TLL [color: r,Rec] (TL [color: b,Rec'] TR), Rec'', TRR) =
+       balance(subl(TLL), Rec, TL) [color: r, Rec'] (TR [color: b,Rec''] TRR) .
+
+  op balance : SearchTree{X, Y} Record SearchTree{X, Y} -> SearchTree{X, Y} .
+  eq balance(T1 [color: r, I1] T2, I2, T3 [color: r, I3] T4) = 
+            (T1 [color: b, I1] T2) [color: r, I2] (T3 [color: b, I3] T4) .
+  eq balance((T1 [color: r, I1] T2) [color: r, I2] T3, I3, T4) = 
+            (T1 [color: b, I1] T2) [color: r, I2] (T3 [color: b, I3] T4) .
+  eq balance(T1 [color: r, I1] (T2 [color: r, I2] T3), I3, T4) = 
+            (T1 [color: b, I1] T2) [color: r, I2] (T3 [color: b, I3] T4) .
+  eq balance(T1, I1, (T2 [color: r, I2] T3) [color: r, I3] T4) = 
+            (T1 [color: b, I1] T2) [color: r, I2] (T3 [color: b, I3] T4) .
+  eq balance(T1, I1, T2 [color: r, I2] (T3 [color: r, I3] T4)) = 
+            (T1 [color: b, I1] T2) [color: r, I2] (T3 [color: b, I3] T4) .
+  eq balance(T1, I1, T2) = T1 [color: b, I1] T2 [owise] .
+
+  op subl : NeRBTree{X, Y} ~> RBTree{X, Y} .
+  ---TODO
+  eq subl(TL [color: b,Rec] TR) = TL [color: r,Rec] TR .
+
+  vars T1 T2 T3 T4 : SearchTree{X, Y} .  
+  vars I I1 I2 I3 : Record .
+
+  op app : SearchTree{X, Y} SearchTree{X, Y} ~> SearchTree{X, Y} .
+  eq app(empty, T2) = T2 .
+  eq app(T1, empty) = T1 .
+  ceq app(T1 [color: r,I1] T2, T3 [color: r,I2] T4) = (T1 [color: r, I1] TL) [color: r,I] (TR [color: r,I2] T4) 
+      if TL [color: r, I] TR := app(T2, T3) .
+  eq app(T1 [color: r,I1] T2, T3 [color: r,I2] T4) = T1 [color: r,I1] (app(T2,T3) [color: r,I2] T4) [owise] .
+  ceq app(T1 [color: b,I1] T2, T3 [color: b,I2] T4) = (T1 [color: b, I1] TL) [color: r,I] (TR [color: b,I2] T4) 
+      if TL [color: r, I] TR := app(T2, T3) .
+  eq app(T1 [color: b,I1] T2, T3 [color: b,I2] T4) = 
+       balleft(T1, I1, app(T2,T3) [color: b,I2] T4) [owise] .
+  eq app(T1, TL [color: r,I] TR) = app(T1,TL) [color: r, I] TR [owise] .
+  eq app(TL [color: r,I] TR, T2) = TL [color: r, I] app(TR, T2) [owise] .
+endfm
+
+***(
+view StringAsContents from CONTENTS to STRING is
+  sort Contents to String .
+  op combine to _+_ .
+endv
+
+load view-intasstoset.maude
+
+fmod RB-TREES-TEST is
+  protecting RB-TREES{IntAsStoset, StringAsContents} .
+  op tree : -> RBTree{IntAsStoset, StringAsContents} .
+  eq tree = insertRB(3, "mi", insertRB(1, "do", insertRB(5, "sol", 
+              insertRB(2, "re", insertRB(4, "fa", empty))))) .
+endfm
+
+Maude> red tree .
+reduce in RB-TREES-TEST : tree .
+rewrites: 1845 in 10ms cpu (2ms real) (184500 rewrites/second)
+result NeRBTree{IntAsStoset,StringAsContents}: (empty[key: 1,contents: "do",
+    color: b]empty)[key: 2,contents: "re",color: b]((empty[key: 3,contents:
+    "mi",color: r]empty)[key: 4,contents: "fa",color: b](empty[key: 5,contents:
+    "sol",color: r]empty))
+
+Maude> red delete(3, tree) .
+reduce in RB-TREES-TEST : delete(3, tree) .
+rewrites: 2334 in 0ms cpu (2ms real) (~ rewrites/second)
+result NeRBTree{IntAsStoset,StringAsContents}: (empty[key: 1,contents: "do",
+    color: b]empty)[key: 2,contents: "re",color: b](empty[key: 4,contents:
+    "fa",color: b](empty[key: 5,contents: "sol",color: r]empty))
+
+Maude> red delete(2, insertRB(2, "re", insertRB(4, "fa", empty))) .
+reduce in RB-TREES-TEST : delete(2, insertRB(2, "re", insertRB(4, "fa",
+    empty))) .
+rewrites: 467 in 0ms cpu (0ms real) (~ rewrites/second)
+result NeRBTree{IntAsStoset,StringAsContents}: empty[key: 4,contents: "fa",
+    color: b]empty
+
+Maude> red insertRB(1, "do",
+    insertRB(2, "re", delete(2, insertRB(2, "re", insertRB(4, "fa", empty))))) .
+reduce in RB-TREES-TEST : insertRB(1, "do", insertRB(2, "re", delete(2,
+    insertRB(2, "re", insertRB(4, "fa", empty))))) .
+rewrites: 1128 in 0ms cpu (1ms real) (~ rewrites/second)
+result NeRBTree{IntAsStoset,StringAsContents}: (empty[key: 1,contents: "do",
+    color: b]empty)[key: 2,contents: "re",color: b](empty[key: 4,contents:
+    "fa",color: b]empty)
+)

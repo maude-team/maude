@@ -1,0 +1,94 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  load ring.maude
+  
+  fmod MONOMIAL{X :: TRIV} is
+    protecting NAT .
+    sorts Pow{X} Mon{X} .
+    subsorts Pow{X} < Mon{X} .
+    *** multiplication
+    op __ : Mon{X} Mon{X} -> Mon{X} [assoc comm] .
+    op _^_ : X$Elt NzNat -> Pow{X} .
+    var  X : X$Elt .
+    vars N M : NzNat .
+    eq (X ^ N) (X ^ M) = X ^ (N + M) .
+  endfm
+
+  fmod POLYNOMIAL{R :: RING, X :: TRIV} is
+    protecting MONOMIAL{X} .
+    sorts Poly{R, X} .
+    subsorts R$Ring < Poly{R, X} .
+    *** multiplication
+    op __ : Poly{R, X} Poly{R, X} -> Poly{R, X} [assoc comm] .
+    *** addition
+    op _++_ : Poly{R, X} Poly{R, X} -> Poly{R, X} [assoc comm] .
+    op --_ : Poly{R, X} -> Poly{R, X} .
+    op __ : R$Ring Mon{X} -> Poly{R, X} .
+    
+    vars A B : R$Ring .
+    vars U V : Mon{X} .
+    vars P Q R : Poly{R, X} .
+    eq P ++ z = P .
+    eq P ++ (-- P) = z .
+    eq P e = P .
+    eq -- (P ++ Q) = (-- P) ++ (-- Q) .
+    eq -- (A U) = (- A) U .
+    eq P (Q ++ R) = (P Q) ++ (P R) .
+    eq z U = z .
+    eq z P = z .
+    eq A (B U) = (A B) U .
+    eq (A U) ++ (B U) = (A ++ B) U .
+    eq (A U) (B V) = (A B) (U V) .
+    eq A B = A * B .
+    eq A ++ B = A + B .
+  endfm
+
+  load view-ringtorat.maude
+  
+  fmod RAT-POLY{X :: TRIV} is
+    protecting POLYNOMIAL{RingToRat, X} .
+  endfm
+
+  fmod QID-RAT-POLY is
+    pr RAT-POLY{Qid} .
+  endfm
+
+red in QID-RAT-POLY :
+           (((2 / 3) (('X ^ 2) ('Y ^ 3))) 
+            ++ ((7 / 5) (('Y ^ 2) ('Z ^ 5))))
+           (((1 / 7) ('U ^ 2)) 
+            ++ (1 / 2)) .
+***(
+reduce in QID-RAT-POLY : (1/2 ++ (1/7 'U ^ 2)) (2/3 ('X ^ 2) 'Y ^ 3) ++ (7/5 (
+    'Y ^ 2) 'Z ^ 5) .
+rewrites: 25 in 0ms cpu (32ms real) (~ rewrites/second)
+result Poly{RingToRat,Qid}: (1/3 ('X ^ 2) 'Y ^ 3) ++ (1/5 ('U ^ 2) ('Y ^ 2) 'Z
+    ^ 5) ++ (2/21 ('U ^ 2) ('X ^ 2) 'Y ^ 3) ++ (7/10 ('Y ^ 2) 'Z ^ 5)
+***)
+
+red in QID-RAT-POLY :
+           ((2 / 3) ('X ^ 2)) ++ ((1 / 7) ('X ^ 2)) .
+***(
+reduce in QID-RAT-POLY : (1/7 'X ^ 2) ++ (2/3 'X ^ 2) .
+rewrites: 7 in 0ms cpu (0ms real) (7000000 rewrites/second)
+result Poly{RingToRat,Qid}: 17/21 'X ^ 2
+***)
+
+***(
+  load poset.maude
+  load view-poset.maude
+  load view-ring.maude
+
+  fmod ILLEGAL-INST{X :: RING, Y :: POSET} is
+    protecting POLYNOMIAL{X, POSET}{Y} .
+  endfm
+
+Warning: Instantiation POLYNOMIAL{X, POSET} uses both a theory-view and a
+    parameter from enclosing module ILLEGAL-INST.
+
+  fmod LEGAL-INST{X :: RING, Y :: POSET} is
+    protecting POLYNOMIAL{RING, POSET}{X, Y} .
+  endfm
+***)    

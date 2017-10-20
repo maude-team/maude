@@ -1,0 +1,11 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  load poset.maude
+  
+  fth TOSET is
+    including POSET .
+    vars X Y : Elt .
+    ceq X <= Y = true if Y <= X = false [nonexec label total] .
+  endfth

@@ -1,0 +1,28 @@
+(mod FOO is
+  sort Foo .
+  ops a b c d e : -> Foo .
+  rl [r1] : a => b .
+  rl [r2] : a => c .
+  rl [e1] : c => d .
+  rl [e2] : c => e .
+endm)
+
+(search a =>* G:Foo .)
+(search a =>+ G:Foo .)
+(search a =>! G:Foo .)
+(search a =>1 G:Foo .)
+
+(search [1] a =>* G:Foo .)
+(search [1] a =>+ G:Foo .)
+(search [1] a =>! G:Foo .)
+(search [1] a =>1 G:Foo .)
+
+(search [,1] a =>* G:Foo .)
+(search [,1] a =>+ G:Foo .)
+(search [,1] a =>! G:Foo .)
+(search [,1] a =>1 G:Foo .)
+
+(search [1,1] a =>* G:Foo .)
+(search [1,1] a =>+ G:Foo .)
+(search [1,1] a =>! G:Foo .)
+(search [1,1] a =>1 G:Foo .)

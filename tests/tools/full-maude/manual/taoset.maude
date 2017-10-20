@@ -1,0 +1,12 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  fth TAOSET is
+    protecting BOOL .
+    sort Elt .
+    op _<_ : Elt Elt -> Bool .
+    vars X Y Z : Elt .
+    ceq X < Z = true if X < Y /\ Y < Z [nonexec label transitive] .
+    ceq X = Y if X < Y /\ Y < X [nonexec label antisymmetric] .
+  endfth

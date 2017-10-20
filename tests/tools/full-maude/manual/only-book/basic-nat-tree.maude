@@ -1,0 +1,51 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+load basic-nat.maude
+
+  fmod BASIC-NAT-TREE is
+    protecting BASIC-NAT .  
+    
+    sorts Tree .
+    subsort Nat < Tree .    
+    op __ : Tree Tree -> Tree [ctor] .
+
+    op depth : Tree -> Nat .
+    op width : Tree -> Nat .
+    
+    var  N : Nat .
+    vars T T' : Tree .
+
+    eq depth(N) = s 0 .
+    eq depth(T T') =  s(max(depth(T), depth(T'))) .
+    eq width(N) = s 0 .
+    eq width(T T') = width(T) + width(T') .
+  endfm
+
+red depth(((s 0) 0) (0 s 0)) .
+---(
+reduce in BASIC-NAT-TREE : depth((s 0 0) (0 s 0)) .
+rewrites: 14 in 0ms cpu (0ms real) (~ rewrites/second)
+result Nat: s s s 0
+---)
+  
+red width(((s 0) 0) (0 s 0)) .
+---(
+reduce in BASIC-NAT-TREE : width((s 0 0) (0 s 0)) .
+rewrites: 14 in 0ms cpu (0ms real) (~ rewrites/second)
+result Nat: s s s s 0
+---)
+  
+red depth((s 0) (0 s 0)) .
+---(
+reduce in BASIC-NAT-TREE : depth(s 0 (0 s 0)) .
+rewrites: 9 in 0ms cpu (0ms real) (~ rewrites/second)
+result Nat: s s s 0
+---)
+  
+red width((s 0) (0 s 0)) .
+---(
+reduce in BASIC-NAT-TREE : width(s 0 (0 s 0)) .
+rewrites: 9 in 0ms cpu (0ms real) (~ rewrites/second)
+result Nat: s s s 0
+---)

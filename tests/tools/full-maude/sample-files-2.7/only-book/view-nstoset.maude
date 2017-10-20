@@ -1,0 +1,5 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  view NSTOSET from TRIV to NSTOSET is
+  endv

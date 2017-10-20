@@ -1,0 +1,63 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+  ---- checked Church-Rosser using the CRC tool
+  ---- checked terminating using the MTT
+
+  fmod FIBONACCI is
+    protecting NAT .
+    op fibo : Nat -> Nat .
+
+    var N : Nat .
+    eq fibo(0) = 0 .
+    eq fibo(1) = 1 .
+    eq fibo(s s N) = fibo(N) + fibo(s N) .
+  endfm
+
+***(
+  Maude> red fibo(50) .
+  reduce in FIBONACCI : fibo(50) .
+  rewrites: 61095033220 in 132081000ms cpu (145961720ms real)
+    (462557 rews/sec)
+  result NzNat: 12586269025
+)
+
+  fmod FIBONACCI is
+    protecting NAT .
+    op fibo : Nat -> Nat [memo] .
+
+    var N : Nat .
+    eq fibo(0) = 0 .
+    eq fibo(1) = 1 .
+    eq fibo(s s N) = fibo(N) + fibo(s N) .
+  endfm
+
+***(
+  Maude> red fibo(50) .
+  reduce in FIBONACCI : fibo(50) .
+  rewrites: 148 in 0ms cpu (0ms real) (~ rews/sec)
+  result NzNat: 12586269025
+
+  Maude> red fibo(100) .
+  reduce in FIBONACCI : fibo(100) .
+  rewrites: 151 in 0ms cpu (1ms real) (~ rews/sec)
+  result NzNat: 354224848179261915075
+
+  Maude> red fibo(1000) .
+  reduce in FIBONACCI : fibo(1000) .
+  rewrites: 2701 in 0ms cpu (11ms real) (~ rews/sec)
+  result NzNat: 434665576869374564356885276750406258025646605173717804
+    024817290895365554179490518904038798400792551692959225930803226347
+    752096896232398733224711616429964409065331879382989696499285160037
+    04476137795166849228875
+
+  Maude> show module FIBONACCI .
+  fmod FIBONACCI is
+    protecting NAT .
+    op fibo : Nat -> Nat [memo] .
+    var N : Nat .
+    eq fibo(0) = 0 .
+    eq fibo(1) = 1 .
+    eq fibo(s s N) = fibo(N) + fibo(s N) .
+  endfm
+)

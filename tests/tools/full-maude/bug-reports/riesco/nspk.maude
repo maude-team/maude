@@ -1,0 +1,21 @@
+(fmod PNAT is
+  including BOOL .
+
+  sorts PNat PNzNat PZero .
+  subsort PNzNat < PNat .
+  subsort PZero < PNat .
+
+  op _=_ : PNat PNat -> Bool [comm metadata "built-in in CafeOBJ"] .
+  op _=_ : PNzNat PNzNat -> Bool [comm metadata "built-in in CafeOBJ"] .
+  op _=_ : PZero PZero -> Bool [comm metadata "built-in in CafeOBJ"] .
+
+  op s : PNat -> PNzNat [ctor] .
+  op z : -> PZero [ctor] .
+
+  eq (V:PNat = V:PNat) = true [metadata "built-in in CafeOBJ"] .
+  eq (V:PNzNat = V:PNzNat) = true [metadata "built-in in CafeOBJ"] .
+  eq (V:PZero = V:PZero) = true [metadata "built-in in CafeOBJ"] .
+
+  eq (z = s(N:PNat)) = false .
+  eq (s(N:PNat) = s(M:PNat)) = (N:PNat = M:PNat) .
+endfm)

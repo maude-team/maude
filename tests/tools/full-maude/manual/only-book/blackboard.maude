@@ -1,0 +1,31 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  mod BLACKBOARD is
+    protecting NAT .
+    sort Blackboard .
+    subsort Nat < Blackboard .
+    
+    op __ : Blackboard Blackboard -> Blackboard [ctor assoc comm] .
+    op initial : -> Blackboard .
+
+    vars M N : Nat .
+ 
+    eq initial = 1 2 3 4 5 6 7 8 9 .
+
+    rl [replace] : M N => M * N + M + N .
+  endm
+
+search initial =>* N:Nat .
+---(
+search in BLACKBOARD : initial =>* N .
+
+Solution 1 (state 14989)
+states: 14990  rewrites: 1051141 in 930ms cpu (2142ms real) (1130259
+    rewrites/second)
+N --> 3628799
+
+No more solutions.
+states: 14990  rewrites: 1052081 in 930ms cpu (2145ms real) (1131269
+    rewrites/second)
+---)

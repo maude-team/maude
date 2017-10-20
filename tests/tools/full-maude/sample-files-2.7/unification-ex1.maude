@@ -1,0 +1,53 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  fmod UNIFICATION-EX1 is
+    protecting NAT .
+    op f : Nat Nat -> Nat .
+    op f : NzNat Nat -> NzNat .
+    op f : Nat NzNat -> NzNat .
+  endfm
+
+  unify f(X:Nat, Y:Nat) ^ B:NzNat =? A:NzNat ^ f(Y:Nat, Z:Nat) .
+
+---(
+  Solution 1
+  X:Nat --> #1:Nat
+  Y:Nat --> #2:NzNat
+  B:NzNat --> f(#2:NzNat, #3:Nat)
+  A:NzNat --> f(#1:Nat, #2:NzNat)
+  Z:Nat --> #3:Nat
+
+  Solution 2
+  X:Nat --> #1:NzNat
+  Y:Nat --> #2:Nat
+  B:NzNat --> f(#2:Nat, #3:NzNat)
+  A:NzNat --> f(#1:NzNat, #2:Nat)
+  Z:Nat --> #3:NzNat
+---)
+
+  unify f(X:Nat, Y:NzNat) =? f(Z:NzNat, U:Nat) 
+           /\ V:NzNat =? f(X:Nat, U:Nat) .
+
+---(
+  Solution 1
+  X:Nat --> #1:NzNat
+  Y:NzNat --> #2:NzNat
+  Z:NzNat --> #1:NzNat
+  U:Nat --> #2:NzNat
+  V:NzNat --> f(#1:NzNat, #2:NzNat)
+---)
+  
+  reduce in META-LEVEL : 
+           metaUnify(upModule('UNIFICATION-EX1, false), 
+             'f['X:Nat, 'Y:NzNat] =? 'f['Z:NzNat, 'U:Nat] /\ 
+               'V:NzNat =? 'f['X:Nat, 'U:Nat], 0, 0) .
+---(
+  result UnificationPair: {
+          'U:Nat <- '#1:NzNat ; 
+          'V:NzNat <- 'f['#2:NzNat,'#1:NzNat] ; 
+          'X:Nat <- '#2:NzNat ; 
+          'Y:NzNat <- '#1:NzNat ; 
+          'Z:NzNat <- '#2:NzNat, 2}
+---)  

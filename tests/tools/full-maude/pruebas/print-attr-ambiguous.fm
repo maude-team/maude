@@ -1,0 +1,50 @@
+(mod AMBIGUOUS is
+ sort Foo .
+ op a : -> Foo .
+ ops f g h : Foo -> Foo .
+vars M "here" : Foo .
+ eq f("here") = g("here") [print "here"] .
+ rl g(M) => h(M) [print "M = " M "g->h rule"] .
+endm)
+
+(show module .)
+
+(red f(a) .)
+
+set print attr on .
+
+(red f(a) .)
+
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+ (fmod PRINT-ATTR-AMBIGUOUS is
+    sort Foo .
+    op a : -> Foo .
+    ops f g h : Foo -> Foo .
+    vars metadata "here" : Foo .
+    eq f("here") = g("here") [print "here"] .
+    eq g(metadata) = h(metadata) 
+       [print "metadata = " metadata "g->h equation"] .
+  endfm)
+
+---(
+Warning: "print-attr-ambiguous.maude", line 10 (fmod PRINT-ATTR-AMBIGUOUS):
+    multiple distinct parses for statement
+eq f ("here") = g ("here") [print "here"] .
+Warning: "print-attr-ambiguous.maude", line 11 (fmod PRINT-ATTR-AMBIGUOUS):
+    multiple distinct parses for statement
+eq g (metadata) = h (metadata) [print "metadata = " metadata "g->h equation"] .
+---)
+
+  set print attribute on .
+ (red f(g(a)) .)
+---(
+  reduce in PRINT-ATTR-AMBIGUOUS : f(g(a)) .
+  metadata = 
+  h(a)
+  metadata = 
+  rewrites: 3 in 0ms cpu (0ms real) (25210 rewrites/second)
+  result Foo: h(h(a))
+---)

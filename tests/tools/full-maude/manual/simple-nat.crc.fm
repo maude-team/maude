@@ -1,0 +1,37 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+  ---- checked Church-Rosser using the CRC tool
+
+  (fmod SIMPLE-NAT is
+    sort Nat .
+    op zero : -> Nat .
+    op s_ : Nat -> Nat .
+    op _+_ : Nat Nat -> Nat .
+    vars N M : Nat .
+    eq zero + N = N .
+    eq s N + M = s (N + M) .
+  endfm)
+  
+  (check Church-Rosser SIMPLE-NAT .)
+  
+  ***(
+  		     \||||||||||||||||||/
+		   --- Welcome to Maude ---
+		     /||||||||||||||||||\
+	    Maude 2.2 built: Dec 23 2005 17:05:02
+	     Copyright 1997-2005 SRI International
+		   Wed Nov  8 16:33:52 2006
+
+	     Full Maude 2.2g `(November 6th`, 2006`)
+
+
+    Church-Rosser and Coherence Checker 2b `(November 6th`, 2006`)
+  
+  Maude> (check Church-Rooser .)
+  Church-Rosser checking of SIMPLE-NAT
+  Checking solution:
+    All critical pairs have been joined. The specification is
+      locally-confluent.
+    The specification is sort-decreasing.
+  )

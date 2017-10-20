@@ -1,0 +1,53 @@
+----From Traian Serbanuta
+----
+----Dear Professor,
+----
+----I am currently working on a project using/extending Full Maude and I
+----think I might have found a parsing bug in Full Maude 2.4, which I
+----isolated to the following:
+----
+----if I load full-maude and input
+
+
+----set trace on .
+set trace select on .
+trace include FULL-MAUDE .
+trace select procModule4 .
+trace select parseDecl .
+
+(fmod X is sort A B . subsort A < B . op 0 : -> A . op s : B -> B . mb
+s(0) : A . endfm)
+
+(show module .)
+
+----it breaks, in the sense nothing works from there on, and I have to
+----re-initialize the loop to continue.  if I use a conditional
+----membership, though, it works:
+
+(fmod X is sort A B . subsort A < B . op 0 : -> A . op s : B -> B .
+cmb s(0) : A . endfm)
+
+(show module .)
+
+----by looking at the trace, it seemed to me that when meta-parsing the
+----second module, A is interpreted as a sortToken in the cmb, while for
+----the first module it remains a bubble in the mb axiom, which messes
+----things when trying to resolve the type.
+----
+----both of them seem to work in Maude 2.3
+----
+----Please let me know whether I am missing something, or, if there is a
+----quick workaround for this.
+----
+----Thank you,
+----- traian serbanuta
+----sample script exhibiting the problem:
+(fmod X is sort A B . subsort A < B . op 0 : -> A . op s : B -> B . mb
+s(0) : A . endfm)
+***> next two don't work
+(show module .)
+(show modules .)
+----loop init .
+(fmod X is sort A B . subsort A < B . op 0 : -> A . op s : B -> B .
+cmb s(0) : A if 0 = 0 . endfm)
+(show module .)

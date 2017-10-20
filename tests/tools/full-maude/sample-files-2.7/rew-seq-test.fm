@@ -1,0 +1,35 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  load rew-seq.fm
+  
+ (fmod REW-SEQ-TEST is
+    pr REW-SEQ .
+    
+   op StoreStrat : -> List{Tuple{Qid, Substitution}} [memo] .
+   eq StoreStrat
+     = ('car-rental,
+          'U:Oid <- ''C1.Qid ;           *** size car A3 for 2 days
+          'I:Oid <- ''A3.Qid ;
+          'NumDays:Int <- 's_^2['0.Zero] ;
+          'A:Oid <- ''a0.Qid)
+       ('new-day, none)                  *** two days pass
+       ('new-day, none)
+       ('on-date-car-return, none)       *** car A3 is returned
+       ('new-day, none)
+       ('car-rental,                     *** client C1 rents the full
+          'U:Oid <- ''C1.Qid ;           *** size car A5 for 1 day
+          'I:Oid <- ''A5.Qid ;
+          'NumDays:Int <- 's_^1['0.Zero] ;
+          'A:Oid <- ''a1.Qid)
+       ('new-day, none)                  *** two days pass
+       ('new-day, none)
+       ('late-car-return, none)          *** car A5 is returned
+       ('new-day, none)
+       ('suspend-late-payers, none)      *** client C1 is suspended
+       ('new-day, none)
+       ('new-day, none)
+       ('pay-debt,                       *** client C1 pays 100$
+          'Amnt:Int <- 's_^100['0.Zero]) .
+  endfm)

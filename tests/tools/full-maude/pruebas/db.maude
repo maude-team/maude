@@ -1,0 +1,116 @@
+fmod BAG{X :: TRIV} is
+  sort Bag{X} .
+  subsort X$Elt < Bag{X} .
+  op empty : -> Bag{X} [ctor] .
+  op __ : Bag{X} Bag{X} -> Bag{X} [ctor assoc comm id: empty] .
+endfm
+
+mod FULL-MAUDE is
+  pr META-FULL-MAUDE-SIGN .
+  pr DATABASE-HANDLING .
+  inc LOOP-MODE .
+  pr BANNER .
+
+  op INITIAL-DATABASE : -> Database .
+  op INITIAL-DATABASE2 : -> Database .
+
+  eq INITIAL-DATABASE
+    = insTermModule('BAG, upModule('BAG, false), 
+        insertTermView('MyBool,
+          ('view_from_to_is_endv['token[''Bool.Qid],'token[''TRIV.Qid],'token[
+           ''BOOL.Qid],'sort_to_.['sortToken[''Elt.Qid],'sortToken[''Bool.Qid]]]),
+          emptyDatabase)) .
+
+  eq INITIAL-DATABASE2
+    = insTermModule('MyTRIV, upModule('TRIV, false),
+        insTermModule('MyBOOL, upModule('BOOL, false),
+          insTermModule('BAG, upModule('BAG, false), 
+            insertView((view 'MyBool from 'MyTRIV to 'MyBOOL is sort 'Elt to 'MyBool endv),
+              emptyDatabase)))) .
+
+*** The state of the persistent system, which is supported by the built-in
+*** module \texttt{LOOP-MODE}, described in Section~\ref{loop}, is represented 
+*** as a single object.
+
+  subsort Object < State .
+
+  op o : -> Oid .
+  op init : -> System .
+
+  var  Atts : AttributeSet .
+  var  X@Database : DatabaseClass .
+  var  O : Oid .
+  var  DB : Database .
+  var  ME : Header .
+  var  QI : Qid .
+  vars QIL QIL' QIL'' : QidList .
+  var  TL : TermList .
+  var  N : Nat .
+  vars RP RP' : ResultPair .
+
+  rl [init] :
+     init
+     => [nil,
+         < o : Database | 
+            db : INITIAL-DATABASE2,
+            input : nilTermList, output : nil, 
+            default : 'CONVERSION >,
+         ('\n '\s '\s '\s '\s '\s '\s '\s string2qidList(banner) '\n)] .
+
+*** When some text has been introduced in the loop, the first argument of the
+*** operator \verb~[_,_,_,]~ is different from \texttt{nil}, and we can use
+*** this fact to activate the following rule, that enters an input such as a
+*** module or a command from the user into the database.  The constant
+*** \texttt{GRAMMAR} names the module containing the signature defining the
+*** top level syntax of Full Maude (see Section~\ref{sec:signature} and
+*** Appendix~\ref{signature-full-maude}). This signature is used by the
+*** \texttt{metaParse} function to parse the input. PD the input is
+*** syntactically valid\footnote{Of course, the input may be syntactically
+*** valid, but not semantically valid, since further processing---for example,
+*** of bubbles---may reveal a semantic inconsistency.}, the parsed input is 
+*** placed in the \texttt{input} attribute of the database object; otherwise, 
+*** an error message is placed in the output channel of the loop.
+
+  rl [in] :
+    [QI QIL, 
+     < O : X@Database | 
+         db : DB, input : nilTermList, output : nil, default : ME, Atts >, 
+     QIL']
+    => if metaParse(GRAMMAR, QI QIL, '@Input@) :: ResultPair
+       then [nil, 
+             < O : X@Database | db : DB, 
+                 input : getTerm(metaParse(GRAMMAR, QI QIL, '@Input@)),
+                 output : nil, default : ME, Atts >, 
+              QIL'] 
+       else [nil, 
+             < O : X@Database | db : DB, input : nilTermList, 
+                 output : ('\r 'Warning: 
+                           printSyntaxError(metaParse(GRAMMAR, QI QIL, '@Input@), 
+                             QI QIL) 
+                           '\n
+                           '\r 'Error: '\o 'No 'parse 'for 'input. '\n), 
+                 default : ME, Atts >, 
+             QIL'] 
+       fi .
+
+*** When the \texttt{output} attribute of the persistent object contains a
+*** nonempty list of quoted identifiers, the \texttt{out} rule moves it to the
+*** third argument of the loop. Then the Core Maude system displays it in the 
+*** terminal.
+
+  rl [out] :
+    [QIL, 
+     < O : X@Database | 
+         db : DB, input : TL, output : (QI QIL'), default : ME, Atts >, 
+     QIL'']
+    => [QIL, 
+        < O : X@Database | 
+            db : DB, input : TL, output : nil, default : ME, Atts >, 
+        (QI QIL' QIL'')] .
+endm
+
+*******************************************************************************
+
+loop init .
+
+(show module BAG{MyBool} .)

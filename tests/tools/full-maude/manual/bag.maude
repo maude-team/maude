@@ -1,0 +1,33 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  fmod BAG{X :: TRIV * (sort Elt to Element)} is
+    protecting NAT .
+    sorts Bag{X} NeBag{X} .
+    subsorts X$Element < NeBag{X} < Bag{X} .
+    op mt : -> Bag{X} .
+    op __ : Bag{X} Bag{X} -> Bag{X} [assoc comm id: mt] .
+    op __ : Bag{X} NeBag{X} -> NeBag{X} [ditto] .
+    op occurrences : X$Element Bag{X} -> Nat .
+    
+    vars E E' : X$Element .
+    var  S : Bag{X} .
+    eq occurrences(E, E S) = 1 + occurrences(E, S) .
+    eq occurrences(E, S) = 0 [owise] .
+  endfm
+
+  select FULL-MAUDE .
+  loop init .
+  
+ (select BAG .)
+ 
+ (red 3 .)
+ 
+ (view Nat' from TRIV * (sort Elt to Element) to NAT is
+   sort Element to Nat .
+  endv)
+   
+ (select BAG{Nat'} .)
+ 
+ (red 3 2 .)

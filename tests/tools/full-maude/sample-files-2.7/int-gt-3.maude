@@ -1,0 +1,51 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  fmod INT-GT-3 is
+    protecting INT .
+    sorts One Two Three IntGt3 .
+    subsorts One Two Three IntGt3 < NzNat .
+    op s_ : Zero -> One [ctor ditto] .
+    op s_ : One -> Two [ctor ditto] .
+    op s_ : Two -> Three [ctor ditto] .
+    op s_ : Three -> IntGt3 [ctor ditto] .
+    op s_ : IntGt3 -> IntGt3 [ctor ditto] .
+  endfm
+
+***(
+Maude> red -1 .
+reduce in INT-GT-3 : -1 .
+rewrites: 0 in 0ms cpu (0ms real) (~ rewrites/second)
+result NzInt: -1
+
+Maude> red 0 .
+reduce in INT-GT-3 : 0 .
+rewrites: 0 in 0ms cpu (0ms real) (~ rewrites/second)
+result Zero: 0
+
+Maude> red 1 .
+reduce in INT-GT-3 : 1 .
+rewrites: 0 in 0ms cpu (0ms real) (~ rewrites/second)
+result One: 1
+
+Maude> red 2 .
+reduce in INT-GT-3 : 2 .
+rewrites: 0 in 0ms cpu (0ms real) (~ rewrites/second)
+result Two: 2
+
+Maude> red 3 .
+reduce in INT-GT-3 : 3 .
+rewrites: 0 in 0ms cpu (0ms real) (~ rewrites/second)
+result Three: 3
+
+Maude> red 4 .
+reduce in INT-GT-3 : 4 .
+rewrites: 0 in 0ms cpu (0ms real) (~ rewrites/second)
+result IntGt3: 4
+
+Maude> red 12345678901234567890 .
+reduce in INT-GT-3 : 12345678901234567890 .
+rewrites: 0 in 0ms cpu (0ms real) (~ rewrites/second)
+result IntGt3: 12345678901234567890
+)

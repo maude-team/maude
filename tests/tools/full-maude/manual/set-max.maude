@@ -1,0 +1,46 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  load basic-set.maude
+  load toset.maude
+  load view-toset.maude
+
+  fmod SET-MAX{T :: TOSET} is
+    protecting BASIC-SET{TOSET}{T} .
+    protecting EXT-BOOL .
+    op max : NeSet{TOSET}{T} -> T$Elt .
+    var E : T$Elt .
+    var S : Set{TOSET}{T} .
+    eq max(E, S)
+      = if S == empty or-else max(S) < E
+        then E
+        else max(S)
+        fi .
+  endfm
+
+  load view-intastoset.maude
+
+  fmod INT-SET-MAX is
+    protecting SET-MAX{IntAsToset} .
+  endfm
+
+***(
+Maude> red max((4, 3, 5, 2, 1)) .
+reduce in INT-SET-MAX : max(4,3,5,1,2) .
+rewrites: 139 in 0ms cpu (0ms real) (~ rewrites/second)
+result NzNat: 5
+)
+
+  load view-stringastoset.maude
+  
+  fmod STRING-SET-MAX is
+    protecting SET-MAX{StringAsToset} .
+  endfm
+
+***(
+Maude> red max("four", "three", "five", "two", "one") .
+reduce in STRING-SET-MAX : max("four","three","five","one","two") .
+rewrites: 139 in 0ms cpu (417ms real) (~ rewrites/second)
+result String: "two"
+)

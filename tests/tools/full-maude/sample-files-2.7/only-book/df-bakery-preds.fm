@@ -1,0 +1,30 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  ---- load model-checker.maude ---- include them in the main file
+  ---- load bakery.maude
+  ---- select FULL-MAUDE .
+  ---- loop init .
+  
+  load df-bakery.fm
+  
+ (mod DF-BAKERY-PREDS is
+    protecting DF-BAKERY .  
+    including SATISFACTION .
+    subsort EConfig < State .
+    ops 1wait 2wait 1crit 2crit : -> Prop [ctor] . 
+    vars P Q : Mode .
+    vars X Y : Nat .
+    eq {< wait, X, Q, Y >} |= 1wait = true .
+    eq {< sleep, X, Q, Y >} |= 1wait = false .
+    eq {< crit, X, Q, Y >} |= 1wait = false .
+    eq {< P, X, wait, Y >} |= 2wait = true .
+    eq {< P, X, sleep, Y >} |= 2wait = false .
+    eq {< P, X, crit, Y >} |= 2wait = false .
+    eq {< crit, X, Q, Y >} |= 1crit = true .
+    eq {< sleep, X, Q, Y >} |= 1crit = false .
+    eq {< wait, X, Q, Y >} |= 1crit = false .
+    eq {< P, X, crit, Y >} |= 2crit = true .
+    eq {< P, X, sleep, Y >} |= 2crit = false .
+    eq {< P, X, wait, Y >} |= 2crit = false .
+  endm)

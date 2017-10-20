@@ -1,0 +1,256 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  ---- modified on 10/28/08
+  ---- - the _=?_ operator defined in unification.maude is now called _=?c_
+  ---- - a bug in Full Maude 2.3 required a change in he procCommand function,
+  ----   which now returns a term of sort Tuple{Database, QidList}; since 
+  ----   the unify command does not change the given database, it just gives 
+  ----   it back as pair of the tuple to return together with the previous result
+  
+-------------------------------------------------------------------------------
+
+---- unifyc takes a set of commutative equations
+
+-------------------------------------------------------------------------------
+
+  set show loop stats off .
+  set show loop timing off .
+  set show advisories off .
+
+  load unification.maude
+
+  fmod UNIFICATION-BANNER is 
+    pr STRING .
+    op unification-banner : -> String .
+    eq unification-banner = "Unification command available October 29th 2008" .
+  endfm
+
+  set protect BOOL off .
+  
+  fmod UNIFICATION-SIGN is
+    extending FULL-MAUDE-SIGN .
+    op unifyc_. : @Bubble@ -> @Command@ .
+  endfm
+
+  fmod EQ-CONDITION-SYNTAX is 
+    sort @CommEqSet@ .
+    op _/\_ : @CommEqSet@ @CommEqSet@ -> @CommEqSet@ 
+        [ctor assoc prec 73] .
+    op _=_  : Universal Universal -> @CommEqSet@ 
+        [ctor poly(1 2) prec 71] .
+  endfm
+
+  set protect BOOL on .
+
+  fmod UNIFICATION-META-SIGN is
+    pr META-LEVEL .
+    pr META-FULL-MAUDE-SIGN .
+    pr UNIT .
+
+    op UNIF-GRAMMAR : -> FModule .
+
+    eq UNIF-GRAMMAR 
+      = addImports((including 'UNIFICATION-SIGN .), GRAMMAR) .
+  endfm
+
+  fmod UNIFICATION-COMMAND-PROCESSING is
+    pr COMMAND-PROCESSING .
+    pr UNIFICATION .
+
+    vars T T' : Term .
+    var  ME : ModuleExpression .
+    var  DB : Database .
+    var  M : Module .
+    var  Sb : Substitution .
+    var  SbS : SubstitutionSet .
+    var  N : Nat .
+
+    op procUnify : Module Term -> QidList .
+    op procUnify : Module SubstitutionSet Nat -> QidList .
+
+    eq procCommand('unifyc_.[T], ME, DB) 
+      = if compiledModule(ME, DB)
+        then << DB ; procUnify(getFlatModule(ME, DB), T) >> 
+        else << DB ; procUnify(
+                    getFlatModule(modExp(evalModExp(ME, DB)), 
+                      database(evalModExp(ME, DB))),
+                    T) >> 
+        fi .
+  
+    ---- Given the term resulting from the parsing of the argument given 
+    ---- to the unifyc_. command, getCommEqSet returns the corresponding 
+    ---- set of commutative equations.
+    op getCommEqSet : Term ~> CommEqSet .
+    eq getCommEqSet('_/\_[T, T']) = getCommEqSet(T) getCommEqSet(T') .
+    eq getCommEqSet('_=_[T, T']) = T =?c T' .
+
+    ---- solveBubblesCommEqSet takes the bubble given as argument of a unifyc_.
+    ---- command and tries to parse it as a conjunection of equations. 
+    ---- If the input is ok, it gives as result the corresponding set of 
+    ---- commutative equations.
+    ---- addDecls is a function that returns the module resulting from adding all 
+    ---- the declarations in the module passed as second argument to the module 
+    ---- passed as first argument.
+    op solveBubblesCommEqSet : Term Module ~> CommEqSet .
+    eq solveBubblesCommEqSet('bubble[T], M)
+      = getCommEqSet(
+          getTerm(
+            metaParse(
+              addDecls(M, upModule('EQ-CONDITION-SYNTAX, true)), 
+              downQidList(T), 
+              '@CommEqSet@))) .
+
+    eq procUnify(M, T)
+      = if metaUnify(M, solveBubblesCommEqSet(T, M)) :: SubstitutionSet
+        then procUnify(M, metaUnify(M, solveBubblesCommEqSet(T, M)), 1) 
+        else ('\r 'Error: '\o 'Incorrect 'unifyc 'command. '\n)
+        fi .
+
+    eq procUnify(M, emptySubstitutionSet, N) = ('\n '\n 'No 'more 'solutions.) .
+    eq procUnify(M, substitutionSet(Sb, SbS), N)
+      = ('\n 'Solution qid(string(N, 10)) '\s
+         '\n eMetaPrettyPrint(M, Sb)
+         procUnify(M, SbS, s N)) .
+  endfm
+
+  mod UNIFICATION-DATABASE-HANDLING is
+    inc DATABASE-HANDLING .
+    pr UNIFICATION-COMMAND-PROCESSING .
+ 
+    sort Unifier .
+    subsort Unifier < DatabaseClass .
+    op Unifier : -> Unifier .
+
+    var  Atts : AttributeSet .
+    var  X@Unifier : Unifier .
+    var  O : Oid .
+    var  ME : ModuleExpression .
+    var  DB : Database .
+    vars T T' : Term .
+    var  QIL : QidList .
+
+    rl [Unifier] :
+       < O : X@Unifier | db : DB, input : ('unifyc_.[T]), 
+          output : QIL, default : ME, Atts >
+       => < O : X@Unifier | db : DB, input : nilTermList, 
+             output : getQidList(procCommand('unifyc_.[T], ME, DB)), 
+             default : ME, Atts > .
+  endm
+
+  *** Redefinition of the FULL-MAUDE module. The init rule now creates an 
+  *** instance of class Unifier. The init rule now takes Unifier objects, and for them 
+  *** it uses UNIF-GRAMMAR instead of GRAMMAR to parse inputs. 
+
+  mod FULL-MAUDE is
+    pr UNIFICATION-META-SIGN .
+    inc UNIFICATION-DATABASE-HANDLING .
+    inc LOOP-MODE .
+    pr BANNER .
+    pr UNIFICATION-BANNER .
+
+    subsort Object < State .
+
+    op o : -> Oid .
+    op init : -> System .
+
+    var  Atts : AttributeSet .
+    var  X@Unifier : DatabaseClass .
+    var  O : Oid .
+    var  DB : Database .
+    var  ME : Header .
+    var  QI : Qid .
+    vars QIL QIL' QIL'' : QidList .
+    var  TL : TermList .
+    var  N : Nat .
+    vars RP RP' : ResultPair .
+
+    rl [init] :
+       init
+       => [nil,
+           < o : Unifier | 
+              db : initialDatabase,
+              input : nilTermList, output : nil, 
+              default : 'CONVERSION >,
+           ('\t string2qidList(unification-banner) '\n)] .
+  
+    rl [in] :
+      [QI QIL, 
+       < O : X@Unifier | 
+           db : DB, input : nilTermList, output : nil, default : ME, Atts >, 
+       QIL']
+      => if metaParse(UNIF-GRAMMAR, QI QIL, '@Input@) :: ResultPair
+         then [nil, 
+               < O : X@Unifier | db : DB, 
+                   input : getTerm(metaParse(UNIF-GRAMMAR, QI QIL, '@Input@)),
+                   output : nil, default : ME, Atts >, 
+                QIL'] 
+         else [nil, 
+               < O : X@Unifier | db : DB, input : nilTermList, 
+                   output : ('\r 'Warning: 
+                             printSyntaxError(
+                               metaParse(UNIF-GRAMMAR, QI QIL, '@Input@), 
+                               QI QIL) 
+                             '\n
+                             '\r 'Error: '\o 'No 'parse 'for 'input. '\n), 
+                   default : ME, Atts >, 
+               QIL'] 
+         fi .
+
+    rl [out] :
+      [QIL, 
+       < O : X@Unifier | 
+           db : DB, input : TL, output : (QI QIL'), default : ME, Atts >, 
+       QIL'']
+      => [QIL, 
+          < O : X@Unifier | 
+              db : DB, input : TL, output : nil, default : ME, Atts >, 
+          (QI QIL' QIL'')] .
+  endm
+
+  loop init .
+
+  trace exclude FULL-MAUDE .
+
+  set show loop stats on .
+  set show loop timing on .
+  set show advisories on .
+
+---(
+  load peano-nat.fm
+---rewrites: 4916 in 20ms cpu (35ms real) (245800 rewrites/second)
+---Introduced module PEANO-NAT
+
+  (unifyc X:NzNat + (0 * Y:NzNat) = W:Nat + s Z:Nat .)
+---rewrites: 764 in 0ms cpu (6ms real) (~ rewrites/second)
+---
+---Solution 1 
+---W:Nat --> 0 * Y@:NzNat ; X:NzNat --> s Z@:Nat ; Y:NzNat --> Y@:NzNat ; Z:Nat
+---    --> Z@:Nat
+---
+---No more solutions.
+
+  (unifyc X:NzNat + s (Y:Nat * W:Nat) = s V:Nat + Z:Nat .)
+---rewrites: 1245 in 0ms cpu (4ms real) (~ rewrites/second)
+---
+---Solution 1 
+---V:Nat --> V@:Nat ; W:Nat --> W@:Nat ; X:NzNat --> s V@:Nat ; Y:Nat --> Y@:Nat ;
+---    Z:Nat --> s(Y@:Nat * W@:Nat)
+---Solution 2 
+---V:Nat --> Y@:Nat * W@:Nat ; W:Nat --> W@:Nat ; X:NzNat --> Z@:NzNat ; Y:Nat -->
+---    Y@:Nat ; Z:Nat --> Z@:NzNat
+---
+---No more solutions.
+
+  (unifyc s X:Nat + (X:Nat * Y:Nat) = Z:NzNat + s s 0 
+             /\ Y:Nat = s s W:NzNat 
+             /\ s V:Nat = s s s s s 0 
+             /\ Z:NzNat = V:Nat * s 0 .)
+---rewrites: 4204 in 0ms cpu (8ms real) (~ rewrites/second)
+---
+---Solution 1 
+---V:Nat --> s s s s 0 ; W:NzNat --> s s 0 ; X:Nat --> s 0 ; Y:Nat --> s s s s 0 ;
+---    Z:NzNat --> s 0 * s s s s 0
+---
+---No more solutions.
+)

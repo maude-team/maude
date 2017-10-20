@@ -1,0 +1,14 @@
+mod FOO is
+  pr SET{Nat} .
+  inc RANDOM .
+  var N : Nat .
+  var NS : Set{Nat} .
+  rl N, NS => NS, random(counter) .
+endm
+
+rew [10] 3 .
+
+eof
+
+load model-checker.maude
+

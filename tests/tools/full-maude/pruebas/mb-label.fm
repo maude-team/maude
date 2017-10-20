@@ -1,0 +1,34 @@
+(fmod SET-KIND-1{X :: TRIV} is
+ pr EXT-BOOL .
+ pr NAT .
+
+ sorts NeKSet{X} KSet{X} .
+ subsort X$Elt < NeKSet{X} < KSet{X} .
+ op empty : -> KSet{X} [ctor] .
+ op _`,_ : KSet{X} KSet{X} ~> KSet{X} [ctor assoc comm id: empty] .
+---  mb NS:NeKSet`{X`}, NS':NeKSet`{X`} : NeKSet{X}  .
+ mb NS:NeKSet`{X`}, NS':NeKSet`{X`} : NeKSet{X} [label AAA] .
+
+ vars E E' : X$Elt .
+ vars S S' : KSet{X} .
+
+ *** idempotence
+ eq E, E = E .
+
+ *** inclusion
+ op _in_ : X$Elt KSet{X} -> Bool .
+ eq E in E, S = true .
+ eq E in S = false [owise] .
+
+ *** cardinality
+ op card : KSet{X} -> Nat .
+ eq card(E, S) = if E in S then card(S) else 1 + card(S) fi .
+ eq card(empty) = 0 .
+
+ *** intersection
+ op _intersection_ : KSet{X} KSet{X} -> KSet{X} [assoc comm] .
+ eq E, S intersection E, S' = E, (S intersection S') .
+ eq S intersection S' = empty [owise].
+endfm)
+
+(show module .)

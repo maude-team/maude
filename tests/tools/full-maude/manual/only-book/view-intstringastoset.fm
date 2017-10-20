@@ -1,0 +1,11 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+  
+  ---- load toset.maude  ---- do it in the main file
+  ---- load priority-pair.maude
+  load view-intastoset.fm
+
+ (view IntStringAsToset from TOSET to 
+      PRIORITY-PAIR{IntAsToset, String} is
+    sort Elt to Priority-Pair{IntAsToset, String} .
+  endv)

@@ -1,0 +1,16 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+  ---- checked Church-Rosser using the CRC tool
+
+  fmod 3*NAT is
+    sort Zero Nat .
+    subsort Zero < Nat .
+    op zero : -> Zero .
+    op s_ : Nat -> Nat .
+
+    sort 3*Nat .
+    subsorts Zero < 3*Nat < Nat .
+    var M3 : 3*Nat .
+    mb (s s s M3) : 3*Nat  .
+  endfm

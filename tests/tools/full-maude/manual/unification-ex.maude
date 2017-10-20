@@ -1,0 +1,769 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  unify in NAT : X:Nat ^ #1:Nat =? #2:Nat .
+---(
+  Warning: unsafe variable name #1:Nat in unification problem.
+---)
+
+  unify [100] in NAT : 
+           X:Nat + X:Nat + Y:Nat =? A:Nat + B:Nat + C:Nat .
+---( 
+Solution 1
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat + #6:Nat + #8:Nat
+Y:Nat --> #4:Nat + #7:Nat + #9:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
+B:Nat --> #2:Nat + #5:Nat + #5:Nat + #6:Nat + #7:Nat
+C:Nat --> #3:Nat + #6:Nat + #8:Nat + #8:Nat + #9:Nat
+
+Solution 2
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat + #6:Nat + #8:Nat
+Y:Nat --> #4:Nat + #7:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
+B:Nat --> #2:Nat + #5:Nat + #5:Nat + #6:Nat + #7:Nat
+C:Nat --> #3:Nat + #6:Nat + #8:Nat + #8:Nat
+
+Solution 3
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat + #6:Nat
+Y:Nat --> #4:Nat + #7:Nat + #8:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
+B:Nat --> #2:Nat + #5:Nat + #5:Nat + #6:Nat + #7:Nat
+C:Nat --> #3:Nat + #6:Nat + #8:Nat
+
+Solution 4
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat + #6:Nat
+Y:Nat --> #4:Nat + #7:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
+B:Nat --> #2:Nat + #5:Nat + #5:Nat + #6:Nat + #7:Nat
+C:Nat --> #3:Nat + #6:Nat
+
+Solution 5
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat + #6:Nat + #7:Nat
+Y:Nat --> #4:Nat + #8:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
+B:Nat --> #2:Nat + #5:Nat + #5:Nat + #6:Nat
+C:Nat --> #3:Nat + #6:Nat + #7:Nat + #7:Nat + #8:Nat
+
+Solution 6
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat + #6:Nat + #7:Nat
+Y:Nat --> #4:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
+B:Nat --> #2:Nat + #5:Nat + #5:Nat + #6:Nat
+C:Nat --> #3:Nat + #6:Nat + #7:Nat + #7:Nat
+
+Solution 7
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat + #6:Nat
+Y:Nat --> #4:Nat + #7:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
+B:Nat --> #2:Nat + #5:Nat + #5:Nat + #6:Nat
+C:Nat --> #3:Nat + #6:Nat + #7:Nat
+
+Solution 8
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat + #6:Nat
+Y:Nat --> #4:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
+B:Nat --> #2:Nat + #5:Nat + #5:Nat + #6:Nat
+C:Nat --> #3:Nat + #6:Nat
+
+Solution 9
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat + #7:Nat
+Y:Nat --> #4:Nat + #6:Nat + #8:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
+B:Nat --> #2:Nat + #5:Nat + #5:Nat + #6:Nat
+C:Nat --> #3:Nat + #7:Nat + #7:Nat + #8:Nat
+
+Solution 10
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat + #7:Nat
+Y:Nat --> #4:Nat + #6:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
+B:Nat --> #2:Nat + #5:Nat + #5:Nat + #6:Nat
+C:Nat --> #3:Nat + #7:Nat + #7:Nat
+
+Solution 11
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat
+Y:Nat --> #4:Nat + #6:Nat + #7:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
+B:Nat --> #2:Nat + #5:Nat + #5:Nat + #6:Nat
+C:Nat --> #3:Nat + #7:Nat
+
+Solution 12
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat
+Y:Nat --> #4:Nat + #6:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
+B:Nat --> #2:Nat + #5:Nat + #5:Nat + #6:Nat
+C:Nat --> #3:Nat
+
+Solution 13
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat + #6:Nat
+Y:Nat --> #4:Nat + #7:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
+B:Nat --> #2:Nat + #5:Nat + #5:Nat
+C:Nat --> #3:Nat + #6:Nat + #6:Nat + #7:Nat
+
+Solution 14
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat + #6:Nat
+Y:Nat --> #4:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
+B:Nat --> #2:Nat + #5:Nat + #5:Nat
+C:Nat --> #3:Nat + #6:Nat + #6:Nat
+
+Solution 15
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat
+Y:Nat --> #4:Nat + #6:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
+B:Nat --> #2:Nat + #5:Nat + #5:Nat
+C:Nat --> #3:Nat + #6:Nat
+
+Solution 16
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat
+Y:Nat --> #4:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
+B:Nat --> #2:Nat + #5:Nat + #5:Nat
+C:Nat --> #3:Nat
+
+Solution 17
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat + #7:Nat
+Y:Nat --> #4:Nat + #6:Nat + #8:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
+B:Nat --> #2:Nat + #5:Nat + #6:Nat
+C:Nat --> #3:Nat + #5:Nat + #7:Nat + #7:Nat + #8:Nat
+
+Solution 18
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat + #7:Nat
+Y:Nat --> #4:Nat + #6:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
+B:Nat --> #2:Nat + #5:Nat + #6:Nat
+C:Nat --> #3:Nat + #5:Nat + #7:Nat + #7:Nat
+
+Solution 19
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat
+Y:Nat --> #4:Nat + #6:Nat + #7:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
+B:Nat --> #2:Nat + #5:Nat + #6:Nat
+C:Nat --> #3:Nat + #5:Nat + #7:Nat
+
+Solution 20
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat
+Y:Nat --> #4:Nat + #6:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
+B:Nat --> #2:Nat + #5:Nat + #6:Nat
+C:Nat --> #3:Nat + #5:Nat
+
+Solution 21
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat + #6:Nat
+Y:Nat --> #4:Nat + #7:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
+B:Nat --> #2:Nat + #5:Nat
+C:Nat --> #3:Nat + #5:Nat + #6:Nat + #6:Nat + #7:Nat
+
+Solution 22
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat + #6:Nat
+Y:Nat --> #4:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
+B:Nat --> #2:Nat + #5:Nat
+C:Nat --> #3:Nat + #5:Nat + #6:Nat + #6:Nat
+
+Solution 23
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat
+Y:Nat --> #4:Nat + #6:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
+B:Nat --> #2:Nat + #5:Nat
+C:Nat --> #3:Nat + #5:Nat + #6:Nat
+
+Solution 24
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat
+Y:Nat --> #4:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
+B:Nat --> #2:Nat + #5:Nat
+C:Nat --> #3:Nat + #5:Nat
+
+Solution 25
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #6:Nat
+Y:Nat --> #4:Nat + #5:Nat + #7:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
+B:Nat --> #2:Nat + #5:Nat
+C:Nat --> #3:Nat + #6:Nat + #6:Nat + #7:Nat
+
+Solution 26
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #6:Nat
+Y:Nat --> #4:Nat + #5:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
+B:Nat --> #2:Nat + #5:Nat
+C:Nat --> #3:Nat + #6:Nat + #6:Nat
+
+Solution 27
+X:Nat --> #1:Nat + #2:Nat + #3:Nat
+Y:Nat --> #4:Nat + #5:Nat + #6:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
+B:Nat --> #2:Nat + #5:Nat
+C:Nat --> #3:Nat + #6:Nat
+
+Solution 28
+X:Nat --> #1:Nat + #2:Nat + #3:Nat
+Y:Nat --> #4:Nat + #5:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
+B:Nat --> #2:Nat + #5:Nat
+C:Nat --> #3:Nat
+
+Solution 29
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat
+Y:Nat --> #4:Nat + #6:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
+B:Nat --> #2:Nat
+C:Nat --> #3:Nat + #5:Nat + #5:Nat + #6:Nat
+
+Solution 30
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat
+Y:Nat --> #4:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
+B:Nat --> #2:Nat
+C:Nat --> #3:Nat + #5:Nat + #5:Nat
+
+Solution 31
+X:Nat --> #1:Nat + #2:Nat + #3:Nat
+Y:Nat --> #4:Nat + #5:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
+B:Nat --> #2:Nat
+C:Nat --> #3:Nat + #5:Nat
+
+Solution 32
+X:Nat --> #1:Nat + #2:Nat + #3:Nat
+Y:Nat --> #4:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat + #4:Nat
+B:Nat --> #2:Nat
+C:Nat --> #3:Nat
+
+Solution 33
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat + #5:Nat + #7:Nat
+Y:Nat --> #6:Nat + #8:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat + #4:Nat + #5:Nat + #6:Nat
+C:Nat --> #3:Nat + #5:Nat + #7:Nat + #7:Nat + #8:Nat
+
+Solution 34
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat + #5:Nat + #7:Nat
+Y:Nat --> #6:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat + #4:Nat + #5:Nat + #6:Nat
+C:Nat --> #3:Nat + #5:Nat + #7:Nat + #7:Nat
+
+Solution 35
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat + #5:Nat
+Y:Nat --> #6:Nat + #7:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat + #4:Nat + #5:Nat + #6:Nat
+C:Nat --> #3:Nat + #5:Nat + #7:Nat
+
+Solution 36
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat + #5:Nat
+Y:Nat --> #6:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat + #4:Nat + #5:Nat + #6:Nat
+C:Nat --> #3:Nat + #5:Nat
+
+Solution 37
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat + #5:Nat + #6:Nat
+Y:Nat --> #7:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat + #4:Nat + #5:Nat
+C:Nat --> #3:Nat + #5:Nat + #6:Nat + #6:Nat + #7:Nat
+
+Solution 38
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat + #5:Nat
+Y:Nat --> #6:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat + #4:Nat + #5:Nat
+C:Nat --> #3:Nat + #5:Nat + #6:Nat
+
+Solution 39
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat + #6:Nat
+Y:Nat --> #5:Nat + #7:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat + #4:Nat + #5:Nat
+C:Nat --> #3:Nat + #6:Nat + #6:Nat + #7:Nat
+
+Solution 40
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat + #6:Nat
+Y:Nat --> #5:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat + #4:Nat + #5:Nat
+C:Nat --> #3:Nat + #6:Nat + #6:Nat
+
+Solution 41
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat
+Y:Nat --> #5:Nat + #6:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat + #4:Nat + #5:Nat
+C:Nat --> #3:Nat + #6:Nat
+
+Solution 42
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat
+Y:Nat --> #5:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat + #4:Nat + #5:Nat
+C:Nat --> #3:Nat
+
+Solution 43
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat + #5:Nat
+Y:Nat --> #6:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat + #4:Nat
+C:Nat --> #3:Nat + #5:Nat + #5:Nat + #6:Nat
+
+Solution 44
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat
+Y:Nat --> #5:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat + #4:Nat
+C:Nat --> #3:Nat + #5:Nat
+
+Solution 45
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat + #6:Nat
+Y:Nat --> #5:Nat + #7:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat + #5:Nat
+C:Nat --> #3:Nat + #4:Nat + #6:Nat + #6:Nat + #7:Nat
+
+Solution 46
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat + #6:Nat
+Y:Nat --> #5:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat + #5:Nat
+C:Nat --> #3:Nat + #4:Nat + #6:Nat + #6:Nat
+
+Solution 47
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat
+Y:Nat --> #5:Nat + #6:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat + #5:Nat
+C:Nat --> #3:Nat + #4:Nat + #6:Nat
+
+Solution 48
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat
+Y:Nat --> #5:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat + #5:Nat
+C:Nat --> #3:Nat + #4:Nat
+
+Solution 49
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat + #5:Nat
+Y:Nat --> #6:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat
+C:Nat --> #3:Nat + #4:Nat + #5:Nat + #5:Nat + #6:Nat
+
+Solution 50
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat
+Y:Nat --> #5:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat
+C:Nat --> #3:Nat + #4:Nat + #5:Nat
+
+Solution 51
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat
+Y:Nat --> #4:Nat + #6:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat
+C:Nat --> #3:Nat + #5:Nat + #5:Nat + #6:Nat
+
+Solution 52
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat
+Y:Nat --> #4:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat
+C:Nat --> #3:Nat + #5:Nat + #5:Nat
+
+Solution 53
+X:Nat --> #1:Nat + #2:Nat + #3:Nat
+Y:Nat --> #4:Nat + #5:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat
+C:Nat --> #3:Nat + #5:Nat
+
+Solution 54
+X:Nat --> #1:Nat + #2:Nat + #3:Nat
+Y:Nat --> #4:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat
+C:Nat --> #3:Nat
+
+Solution 55
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat
+Y:Nat --> #5:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat
+C:Nat --> #3:Nat + #4:Nat + #4:Nat + #5:Nat
+
+Solution 56
+X:Nat --> #1:Nat + #2:Nat + #3:Nat
+Y:Nat --> #4:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat
+C:Nat --> #3:Nat + #4:Nat
+
+Solution 57
+X:Nat --> #1:Nat + #2:Nat + #4:Nat + #5:Nat + #7:Nat
+Y:Nat --> #3:Nat + #6:Nat + #8:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat + #4:Nat + #5:Nat + #6:Nat
+C:Nat --> #5:Nat + #7:Nat + #7:Nat + #8:Nat
+
+Solution 58
+X:Nat --> #1:Nat + #2:Nat + #4:Nat + #5:Nat + #7:Nat
+Y:Nat --> #3:Nat + #6:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat + #4:Nat + #5:Nat + #6:Nat
+C:Nat --> #5:Nat + #7:Nat + #7:Nat
+
+Solution 59
+X:Nat --> #1:Nat + #2:Nat + #4:Nat + #5:Nat
+Y:Nat --> #3:Nat + #6:Nat + #7:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat + #4:Nat + #5:Nat + #6:Nat
+C:Nat --> #5:Nat + #7:Nat
+
+Solution 60
+X:Nat --> #1:Nat + #2:Nat + #4:Nat + #5:Nat
+Y:Nat --> #3:Nat + #6:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat + #4:Nat + #5:Nat + #6:Nat
+C:Nat --> #5:Nat
+
+Solution 61
+X:Nat --> #1:Nat + #2:Nat + #4:Nat + #5:Nat + #6:Nat
+Y:Nat --> #3:Nat + #7:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat + #4:Nat + #5:Nat
+C:Nat --> #5:Nat + #6:Nat + #6:Nat + #7:Nat
+
+Solution 62
+X:Nat --> #1:Nat + #2:Nat + #4:Nat + #5:Nat + #6:Nat
+Y:Nat --> #3:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat + #4:Nat + #5:Nat
+C:Nat --> #5:Nat + #6:Nat + #6:Nat
+
+Solution 63
+X:Nat --> #1:Nat + #2:Nat + #4:Nat + #5:Nat
+Y:Nat --> #3:Nat + #6:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat + #4:Nat + #5:Nat
+C:Nat --> #5:Nat + #6:Nat
+
+Solution 64
+X:Nat --> #1:Nat + #2:Nat + #4:Nat + #5:Nat
+Y:Nat --> #3:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat + #4:Nat + #5:Nat
+C:Nat --> #5:Nat
+
+Solution 65
+X:Nat --> #1:Nat + #2:Nat + #4:Nat + #6:Nat
+Y:Nat --> #3:Nat + #5:Nat + #7:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat + #4:Nat + #5:Nat
+C:Nat --> #6:Nat + #6:Nat + #7:Nat
+
+Solution 66
+X:Nat --> #1:Nat + #2:Nat + #4:Nat + #6:Nat
+Y:Nat --> #3:Nat + #5:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat + #4:Nat + #5:Nat
+C:Nat --> #6:Nat + #6:Nat
+
+Solution 67
+X:Nat --> #1:Nat + #2:Nat + #4:Nat
+Y:Nat --> #3:Nat + #5:Nat + #6:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat + #4:Nat + #5:Nat
+C:Nat --> #6:Nat
+
+Solution 68
+X:Nat --> #1:Nat + #2:Nat + #4:Nat + #5:Nat
+Y:Nat --> #3:Nat + #6:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat + #4:Nat
+C:Nat --> #5:Nat + #5:Nat + #6:Nat
+
+Solution 69
+X:Nat --> #1:Nat + #2:Nat + #4:Nat + #5:Nat
+Y:Nat --> #3:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat + #4:Nat
+C:Nat --> #5:Nat + #5:Nat
+
+Solution 70
+X:Nat --> #1:Nat + #2:Nat + #4:Nat
+Y:Nat --> #3:Nat + #5:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat + #4:Nat
+C:Nat --> #5:Nat
+
+Solution 71
+X:Nat --> #1:Nat + #2:Nat + #4:Nat + #6:Nat
+Y:Nat --> #3:Nat + #5:Nat + #7:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat + #5:Nat
+C:Nat --> #4:Nat + #6:Nat + #6:Nat + #7:Nat
+
+Solution 72
+X:Nat --> #1:Nat + #2:Nat + #4:Nat + #6:Nat
+Y:Nat --> #3:Nat + #5:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat + #5:Nat
+C:Nat --> #4:Nat + #6:Nat + #6:Nat
+
+Solution 73
+X:Nat --> #1:Nat + #2:Nat + #4:Nat
+Y:Nat --> #3:Nat + #5:Nat + #6:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat + #5:Nat
+C:Nat --> #4:Nat + #6:Nat
+
+Solution 74
+X:Nat --> #1:Nat + #2:Nat + #4:Nat
+Y:Nat --> #3:Nat + #5:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat + #5:Nat
+C:Nat --> #4:Nat
+
+Solution 75
+X:Nat --> #1:Nat + #2:Nat + #4:Nat + #5:Nat
+Y:Nat --> #3:Nat + #6:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat
+C:Nat --> #4:Nat + #5:Nat + #5:Nat + #6:Nat
+
+Solution 76
+X:Nat --> #1:Nat + #2:Nat + #4:Nat + #5:Nat
+Y:Nat --> #3:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat
+C:Nat --> #4:Nat + #5:Nat + #5:Nat
+
+Solution 77
+X:Nat --> #1:Nat + #2:Nat + #4:Nat
+Y:Nat --> #3:Nat + #5:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat
+C:Nat --> #4:Nat + #5:Nat
+
+Solution 78
+X:Nat --> #1:Nat + #2:Nat + #4:Nat
+Y:Nat --> #3:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat
+C:Nat --> #4:Nat
+
+Solution 79
+X:Nat --> #1:Nat + #2:Nat + #5:Nat
+Y:Nat --> #3:Nat + #4:Nat + #6:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat
+C:Nat --> #5:Nat + #5:Nat + #6:Nat
+
+Solution 80
+X:Nat --> #1:Nat + #2:Nat + #5:Nat
+Y:Nat --> #3:Nat + #4:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat
+C:Nat --> #5:Nat + #5:Nat
+
+Solution 81
+X:Nat --> #1:Nat + #2:Nat
+Y:Nat --> #3:Nat + #4:Nat + #5:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat + #4:Nat
+C:Nat --> #5:Nat
+
+Solution 82
+X:Nat --> #1:Nat + #2:Nat + #4:Nat
+Y:Nat --> #3:Nat + #5:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat
+C:Nat --> #4:Nat + #4:Nat + #5:Nat
+
+Solution 83
+X:Nat --> #1:Nat + #2:Nat + #4:Nat
+Y:Nat --> #3:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat
+C:Nat --> #4:Nat + #4:Nat
+
+Solution 84
+X:Nat --> #1:Nat + #2:Nat
+Y:Nat --> #3:Nat + #4:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat + #3:Nat
+B:Nat --> #2:Nat
+C:Nat --> #4:Nat
+
+Solution 85
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat + #6:Nat
+Y:Nat --> #5:Nat + #7:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat
+B:Nat --> #2:Nat + #3:Nat + #3:Nat + #4:Nat + #5:Nat
+C:Nat --> #4:Nat + #6:Nat + #6:Nat + #7:Nat
+
+Solution 86
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat + #6:Nat
+Y:Nat --> #5:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat
+B:Nat --> #2:Nat + #3:Nat + #3:Nat + #4:Nat + #5:Nat
+C:Nat --> #4:Nat + #6:Nat + #6:Nat
+
+Solution 87
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat
+Y:Nat --> #5:Nat + #6:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat
+B:Nat --> #2:Nat + #3:Nat + #3:Nat + #4:Nat + #5:Nat
+C:Nat --> #4:Nat + #6:Nat
+
+Solution 88
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat
+Y:Nat --> #5:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat
+B:Nat --> #2:Nat + #3:Nat + #3:Nat + #4:Nat + #5:Nat
+C:Nat --> #4:Nat
+
+Solution 89
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat + #5:Nat
+Y:Nat --> #6:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat
+B:Nat --> #2:Nat + #3:Nat + #3:Nat + #4:Nat
+C:Nat --> #4:Nat + #5:Nat + #5:Nat + #6:Nat
+
+Solution 90
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat
+Y:Nat --> #5:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat
+B:Nat --> #2:Nat + #3:Nat + #3:Nat + #4:Nat
+C:Nat --> #4:Nat + #5:Nat
+
+Solution 91
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat
+Y:Nat --> #4:Nat + #6:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat
+B:Nat --> #2:Nat + #3:Nat + #3:Nat + #4:Nat
+C:Nat --> #5:Nat + #5:Nat + #6:Nat
+
+Solution 92
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat
+Y:Nat --> #4:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat
+B:Nat --> #2:Nat + #3:Nat + #3:Nat + #4:Nat
+C:Nat --> #5:Nat + #5:Nat
+
+Solution 93
+X:Nat --> #1:Nat + #2:Nat + #3:Nat
+Y:Nat --> #4:Nat + #5:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat
+B:Nat --> #2:Nat + #3:Nat + #3:Nat + #4:Nat
+C:Nat --> #5:Nat
+
+Solution 94
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat
+Y:Nat --> #5:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat
+B:Nat --> #2:Nat + #3:Nat + #3:Nat
+C:Nat --> #4:Nat + #4:Nat + #5:Nat
+
+Solution 95
+X:Nat --> #1:Nat + #2:Nat + #3:Nat
+Y:Nat --> #4:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat
+B:Nat --> #2:Nat + #3:Nat + #3:Nat
+C:Nat --> #4:Nat
+
+Solution 96
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat
+Y:Nat --> #4:Nat + #6:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat
+B:Nat --> #2:Nat + #3:Nat + #4:Nat
+C:Nat --> #3:Nat + #5:Nat + #5:Nat + #6:Nat
+
+Solution 97
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #5:Nat
+Y:Nat --> #4:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat
+B:Nat --> #2:Nat + #3:Nat + #4:Nat
+C:Nat --> #3:Nat + #5:Nat + #5:Nat
+
+Solution 98
+X:Nat --> #1:Nat + #2:Nat + #3:Nat
+Y:Nat --> #4:Nat + #5:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat
+B:Nat --> #2:Nat + #3:Nat + #4:Nat
+C:Nat --> #3:Nat + #5:Nat
+
+Solution 99
+X:Nat --> #1:Nat + #2:Nat + #3:Nat
+Y:Nat --> #4:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat
+B:Nat --> #2:Nat + #3:Nat + #4:Nat
+C:Nat --> #3:Nat
+
+Solution 100
+X:Nat --> #1:Nat + #2:Nat + #3:Nat + #4:Nat
+Y:Nat --> #5:Nat
+A:Nat --> #1:Nat + #1:Nat + #2:Nat
+B:Nat --> #2:Nat + #3:Nat
+C:Nat --> #3:Nat + #4:Nat + #4:Nat + #5:Nat
+---)
+
+  unify in CONVERSION : 
+           X:String < "foo" + Y:Char =? 
+             Z:String + string(pi) < "foo" + Z:String .
+---(
+  Solution 1
+  X:String --> #1:Char + string(pi)
+  Y:Char --> #1:Char
+  Z:String --> #1:Char
+---)
+
+  reduce in META-LEVEL : 
+           metaUnify(['NAT], '_+_['X:Nat,'Y:Nat] =? '_+_['A:Nat,'B:Nat], 
+             100000000000000000000, 0) .
+---(
+  result UnificationPair: {
+          'A:Nat <- '_+_['#100000000000000000001:Nat,
+                         '#100000000000000000002:Nat] ; 
+          'B:Nat <- '_+_['#100000000000000000003:Nat,
+                         '#100000000000000000004:Nat] ; 
+          'X:Nat <- '_+_['#100000000000000000001:Nat,
+                         '#100000000000000000003:Nat] ; 
+          'Y:Nat <- '_+_['#100000000000000000002:Nat,
+                         '#100000000000000000004:Nat],
+            100000000000000000004}
+---)
+
+  reduce in META-LEVEL : 
+           metaDisjointUnify(['NAT], 
+             '_+_['X:Nat,'Y:Nat] =? '_+_['X:Nat,'B:Nat], 0, 0) .
+---(
+  result UnificationTriple: {
+          'X:Nat <- '_+_['#1:Nat,'#2:Nat] ; 
+          'Y:Nat <- '_+_['#3:Nat,'#4:Nat],
+          'B:Nat <- '_+_['#1:Nat,'#3:Nat] ; 
+          'X:Nat <- '_+_['#2:Nat,'#4:Nat], 4}
+---)
+
+  reduce in META-LEVEL : 
+           metaUnify(['NAT], 
+             '_+_['X:Nat,'Y:Nat] =? '_+_['#1:Nat,'Y:Nat], 0, 0) .
+---(
+  Warning: unsafe variable name #1:Nat in unification problem.
+
+  result [UnificationPair?]: 
+    metaUnify(
+      th 'NAT is
+        including 'NAT .
+        sorts none .
+        none
+        none
+        none
+        none
+        none
+      endth, 
+      '_+_['X:Nat,'Y:Nat] =? '_+_['#1:Nat,'Y:Nat], 0, 0)
+---)

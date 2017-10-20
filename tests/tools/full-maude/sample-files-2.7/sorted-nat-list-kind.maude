@@ -1,0 +1,30 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  fmod NAT-LIST-KIND is
+    protecting NAT .
+    sort NatList .
+    subsort Nat < NatList .
+
+    op __ : NatList NatList ~> NatList [assoc] .
+    mb I:NatList J:NatList : NatList .
+  endfm
+
+  fmod SORTED-NAT-LIST-KIND is
+    protecting NAT-LIST-KIND .
+    sort SortedNatList .
+    subsort Nat < SortedNatList < NatList .
+
+    vars I J : Nat .
+    var  SNL : SortedNatList .
+    cmb I J : SortedNatList if I <= J .
+    cmb I J SNL : SortedNatList if I <= J /\ J SNL : SortedNatList .
+  endfm
+
+***(
+Maude> red 0 1 2 3 4 5 6 7 8 9 .
+reduce in SORTED-NAT-LIST-KIND : 0 1 2 3 4 5 6 7 8 9 .
+rewrites: 1354 in 0ms cpu (3ms real) (~ rewrites/second)
+result SortedNatList: 0 1 2 3 4 5 6 7 8 9
+)

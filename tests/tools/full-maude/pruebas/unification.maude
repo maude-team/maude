@@ -1,0 +1,17 @@
+fmod AC is
+  sort Foo .
+  ops a b c d e z : -> Foo .
+  op f : Foo Foo -> Foo [assoc comm] .
+  op g : Foo Foo -> Foo .
+  vars W X Y Z A B C D E F : Foo .
+endfm
+
+unify f(X, Y) =? f(A, B, C) . *** 25 solutions
+unify [10] f(X, Y) =? f(A, B, C) .
+
+fmod FOO is
+ sort Foo .
+ ops g h : Foo -> Foo .
+endfm
+
+unify g(X:Foo) =? Y:Foo /\ h(X:Foo) =? h(Z:Foo) .

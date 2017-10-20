@@ -1,0 +1,7 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  view IntStringAsToset from TOSET to 
+      PRIORITY-PAIR{IntAsToset, String} is
+    sort Elt to Priority-Pair{IntAsToset, String} .
+  endv

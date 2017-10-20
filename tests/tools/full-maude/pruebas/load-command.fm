@@ -1,0 +1,101 @@
+fmod FOO is
+  sort Foo .
+  ops f g : -> Foo .
+  eq f = g .
+endfm
+
+red in META-LEVEL : upModule('FOO, false) .
+
+select FULL-MAUDE .
+loop init .
+
+(select META-LEVEL .)
+
+(load fmod 'FOO is
+        including 'BOOL .
+        sorts 'Foo .
+        none
+        op 'f : nil -> 'Foo [none] .
+        op 'g : nil -> 'Foo [none] .
+        none
+        eq 'f.Foo = 'g.Foo [none] .
+      endfm .)
+      
+(show module FOO .)
+
+(red in FOO : f .)
+
+(fmod CHANGE-NAME is
+  pr META-LEVEL . 
+  op setName : Module ModuleExpression -> Module .
+  vars ME ME' : ModuleExpression .
+  var IL : ImportList .
+  var SS : SortSet .
+  var SSDS : SubsortDeclSet .
+  var OPDS : OpDeclSet .
+  var MAS : MembAxSet .
+  var EqS : EquationSet .
+  eq setName(fmod ME is IL sorts SS . SSDS OPDS MAS EqS endfm, ME') 
+    = fmod ME' is IL sorts SS . SSDS OPDS MAS EqS endfm .
+ endfm)
+ 
+(load setName(upModule('NAT, true), 'MY-NAT) .)
+
+(show module MY-NAT .)
+
+(red in MY-NAT : 2 + 3 .)
+
+(omod ACCOUNT is
+    protecting QID .
+    protecting INT .
+
+    subsort Qid < Oid .
+    class Account | bal : Int .
+    msgs credit debit : Oid Int -> Msg .
+    msg from_to_transfer_ : Oid Oid Int -> Msg .
+
+    vars A B : Oid .
+    var  M : Nat .
+    vars N N' : Int .
+
+    rl [credit] :
+      credit(A, M)
+      < A : Account | bal : N >
+      => < A : Account | bal : N + M > .
+
+    crl [debit] :
+      debit(A, M)
+      < A : Account | bal : N >
+      => < A : Account | bal : N - M >
+      if N >= M .
+
+    crl [transfer] :
+      (from A to B transfer M)
+      < A : Account | bal : N >
+      < B : Account | bal : N' >
+      => < A : Account | bal : N - M >
+         < B : Account | bal : N' + M >
+      if N >= M .
+  endom)
+ 
+(fmod CHANGE-NAME is
+  pr META-LEVEL . 
+  op setName : Module ModuleExpression -> Module .
+  vars ME ME' : ModuleExpression .
+  var IL : ImportList .
+  var SS : SortSet .
+  var SSDS : SubsortDeclSet .
+  var OPDS : OpDeclSet .
+  var MAS : MembAxSet .
+  var EqS : EquationSet .
+  var RlS : RuleSet .
+  eq setName(fmod ME is IL sorts SS . SSDS OPDS MAS EqS endfm, ME') 
+    = fmod ME' is IL sorts SS . SSDS OPDS MAS EqS endfm .
+  eq setName(mod ME is IL sorts SS . SSDS OPDS MAS EqS RlS endm, ME') 
+    = mod ME' is IL sorts SS . SSDS OPDS MAS EqS RlS endm .
+ endfm)
+ 
+(load setName(upModule(ACCOUNT), 'MY-ACCOUNT) .)
+
+(show module MY-ACCOUNT .)
+ 

@@ -1,0 +1,34 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  load model-checker.maude
+  load bakery.maude
+  load deadlock-free-mod-expr.maude . ---- assumes Full Maude is already running
+  
+  select FULL-MAUDE .
+  loop init .
+  
+  load df-abstract-bakery-preds.fm
+  
+ (mod DF-ABSTRACT-BAKERY-CHECK is
+    including MODEL-CHECKER .
+    including DF-ABSTRACT-BAKERY-PREDS .
+  endm)
+
+(red modelCheck({initial}, []~(1crit /\ 2crit)) .)
+---(
+rewrites: 1368 in 14ms cpu (14ms real) (95524 rewrites/second)
+reduce in DF-ABSTRACT-BAKERY-CHECK :
+  modelCheck({initial},[]~(1crit /\ 2crit))
+result Bool :
+  true
+---)
+
+(red modelCheck({initial}, (1wait |-> 1crit) /\ (2wait |-> 2crit)) .)
+---(
+rewrites: 1440 in 4ms cpu (4ms real) (332179 rewrites/second)
+reduce in DF-ABSTRACT-BAKERY-CHECK :
+  modelCheck({initial},(1wait |-> 1crit)/\(2wait |-> 2crit))
+result Bool :
+  true
+---)

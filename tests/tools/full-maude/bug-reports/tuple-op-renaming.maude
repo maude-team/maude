@@ -1,0 +1,90 @@
+fmod MNAT is
+  sorts MNzNat MNat .
+  subsort MNzNat < MNat .
+  op 0 : -> MNat .
+  op s_ : MNat -> MNzNat .
+  op _+_ : MNat MNat -> MNat .
+  vars N M : MNat .
+  eq 0 + N = N .
+  eq s N + M = s (N + M) .
+endfm
+
+view MNat from TRIV to MNAT is
+  sort Elt to MNat .
+endv
+
+fmod MLIST{X :: TRIV} is
+  sorts NeList{X} List{X} .
+  subsort X$Elt < NeList{X} < List{X} .
+
+  op nil : -> List{X} [ctor] .
+  op __ : List{X} List{X} -> List{X} [ctor assoc id: nil prec 25] .
+  op __ : NeList{X} List{X} -> NeList{X} [ctor ditto] .
+  op __ : List{X} NeList{X} -> NeList{X} [ctor ditto] .
+endfm
+
+fmod MSET{X :: TRIV} is
+  protecting MNAT .
+  sorts NeSet{X} Set{X} .
+  subsort X$Elt < NeSet{X} < Set{X} .
+
+  op empty : -> Set{X} [ctor] .
+  op _,_ : Set{X} Set{X} -> Set{X} [ctor assoc comm id: empty prec 121 format (d r os d)] .
+  op _,_ : NeSet{X} Set{X} -> NeSet{X} [ctor ditto] .
+
+  var E : X$Elt .
+  var N : NeSet{X} .
+  vars A S S' : Set{X} .
+  var C : MNat .
+
+  eq N, N = N .
+  
+  op _in_ : X$Elt Set{X} -> Bool .
+  eq E in (E, S) = true .
+  eq E in S = false [owise] .
+
+  op |_| : Set{X} -> MNat .
+  op |_| : NeSet{X} -> MNzNat .
+  eq | S | = $card(S, 0) .
+
+  op $card : Set{X} MNat -> MNat .
+  eq $card(empty, C) = C .
+  eq $card((N, N, S), C) = $card((N, S), C) .
+  eq $card((E, S), C) = $card(S, s C) [owise] .
+
+  op _\_ : Set{X} Set{X} -> Set{X}  [gather (E e)].
+  eq S \ empty = S .
+  eq S \ N = $diff(S, N, empty) .
+
+  op $diff : Set{X} Set{X} Set{X} -> Set{X} .
+  eq $diff(empty, S', A) = A .
+  eq $diff((E, S), S', A) = $diff(S, S', if E in S' then A else E, A fi) .
+endfm
+
+view List`{MNat`} from TRIV to MLIST{MNat} is
+  sort Elt to List{MNat} .
+endv
+
+fmod 2-TUPLE{T1 :: TRIV, T2 :: TRIV} is
+  sort Tuple{T1, T2} .
+  op ((_,_)) : T1$Elt T2$Elt -> Tuple{T1, T2} [ctor] .
+  op p1_ : Tuple{T1, T2} -> T1$Elt .
+  op p2_ : Tuple{T1, T2} -> T2$Elt .
+  var E1 : T1$Elt .
+  var E2 : T2$Elt .
+  eq p1(E1, E2) = E1 .
+  eq p2(E1, E2) = E2 .
+endfm
+
+fmod FOO is
+  pr 2-TUPLE{MNat, List`{MNat`}} 
+       * (op p1_ : Tuple{MNat, List`{MNat`}} -> MNat to getMNat, 
+          op p2_ : Tuple{MNat, List`{MNat`}} -> List{MNat} to getMNats) .
+endfm
+
+select FULL-MAUDE .
+loop init .
+
+(show module FOO .)
+(show all FOO .)
+

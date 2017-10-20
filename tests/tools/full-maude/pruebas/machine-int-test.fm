@@ -1,0 +1,18 @@
+load machine-int.maude
+
+fmod machineint-CoreMaude is
+  protecting MACHINE-INT{32-BIT} * (op _+_ to _plus_) .
+  vars A B : MachineInt .
+
+  op plus : MachineInt MachineInt -> MachineInt .
+
+  eq plus(A, B) = A plus B .
+endfm
+
+select FULL-MAUDE .
+loop init .
+
+(red in machineint-CoreMaude : -2147483648 - 1 .)
+(red in machineint-CoreMaude : 34 + 43 .)
+(red in machineint-CoreMaude : 34 plus 43 .)
+

@@ -1,0 +1,27 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  fmod PRINT-ATTRIBUTE-EX is
+    sorts Foo FooList .
+    ops a b : -> Foo [ctor] .
+    subsort Foo < FooList .
+    op nil : -> FooList [ctor] .
+    op __ : FooList FooList -> FooList [ctor assoc id: nil] .
+
+    op reverse : FooList -> FooList .  
+    eq reverse(nil) = nil .
+    eq reverse(foo:Foo fl:FooList) = reverse(fl:FooList) foo:Foo 
+         [print "first = " foo:Foo ", rest = " fl:FooList] .
+  endfm  
+
+  set print attribute on .
+  
+  red in PRINT-ATTRIBUTE-EX : reverse(a b a b) .
+---(
+  first = a, rest = b a b
+  first = b, rest = a b
+  first = a, rest = b
+  first = b, rest = nil
+  result FooList: b a b a
+---)

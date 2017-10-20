@@ -1,0 +1,167 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  mod LIBRARY-PETRI-NET is
+    sorts Place Marking .
+    subsort Place < Marking .
+    op 1 : -> Marking [ctor] .
+    op __ : Marking Marking -> Marking [ctor assoc comm id: 1] .
+    ops a b n r j : -> Place [ctor] .
+
+    var M : Marking .
+
+    rl [buy] : r r r r => j j j j j j j j .
+    rl [file] : j => a .
+    rl [borr] : a => b .
+    rl [ret] : b => a .
+    rl [lose] : b => n .
+    rl [disc] : a => n .
+    rl [req1] : n n => r r .
+    rl [req2] : M => M r .
+  endm
+
+rew [30] 1 .
+---(
+rewrite [30] in LIBRARY-PETRI-NET : 1 .
+rewrites: 30 in 0ms cpu (0ms real) (~ rewrites/second)
+result Marking: j j j j j j j j j j j j j j j j j j j j j j j j j j j j j j j j
+    j j j j j j j j j j j j j j j j
+---)
+
+set trace on .
+rew [10] 1 .
+---(
+rewrite [10] in LIBRARY-PETRI-NET : 1 .
+*********** rule
+rl M => r M [label req2] .
+M --> 1
+1
+--->
+r 1
+*********** rule
+rl M => r M [label req2] .
+M --> r
+r
+--->
+r r
+*********** rule
+rl M => r M [label req2] .
+M --> r r
+r r
+--->
+r r r
+*********** rule
+rl M => r M [label req2] .
+M --> r r r
+r r r
+--->
+r r r r
+*********** rule
+rl r r r r => j j j j j j j j [label buy] .
+empty substitution
+r r r r
+--->
+j j j j j j j j
+*********** rule
+rl M => r M [label req2] .
+M --> j j j j j j j j
+j j j j j j j j
+--->
+r j j j j j j j j
+*********** rule
+rl M => r M [label req2] .
+M --> r j j j j j j j j
+r j j j j j j j j
+--->
+r r j j j j j j j j
+*********** rule
+rl M => r M [label req2] .
+M --> r r j j j j j j j j
+r r j j j j j j j j
+--->
+r r r j j j j j j j j
+*********** rule
+rl M => r M [label req2] .
+M --> r r r j j j j j j j j
+r r r j j j j j j j j
+--->
+r r r r j j j j j j j j
+*********** rule
+rl r r r r => j j j j j j j j [label buy] .
+empty substitution
+r r r r j j j j j j j j
+--->
+(j j j j j j j j) j j j j j j j j
+rewrites: 10 in 0ms cpu (0ms real) (~ rewrites/second)
+result Marking: j j j j j j j j j j j j j j j j
+---)
+
+set trace on .
+frewrite [10] 1 .
+---(
+frewrite in LIBRARY-PETRI-NET : 1 .
+*********** rule
+rl M => r M [label req2] .
+M --> 1
+1
+--->
+r 1
+*********** rule
+rl M => r M [label req2] .
+M --> r
+r
+--->
+r r
+*********** rule
+rl M => r M [label req2] .
+M --> r
+r
+--->
+r r
+*********** rule
+rl M => r M [label req2] .
+M --> r
+r
+--->
+r r
+*********** rule
+rl r r r r => j j j j j j j j [label buy] .
+empty substitution
+r r r r
+--->
+j j j j j j j j
+*********** rule
+rl j => a [label file] .
+empty substitution
+j
+--->
+a
+*********** rule
+rl M => r M [label req2] .
+M --> j
+j
+--->
+r j
+*********** rule
+rl j => a [label file] .
+empty substitution
+j
+--->
+a
+*********** rule
+rl M => r M [label req2] .
+M --> j
+j
+--->
+r j
+*********** rule
+rl j => a [label file] .
+empty substitution
+j
+--->
+a
+rewrites: 10 in 0ms cpu (0ms real) (~ rewrites/second)
+result (sort not calculated): a (r j) a (r j) a j j j
+---)
+
+set trace off .

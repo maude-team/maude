@@ -1,0 +1,15 @@
+select FULL-MAUDE .
+
+red acuCohComplete(fmod 'N is
+  including 'BOOL .
+  sorts 'Nat .
+  none
+  op '0 : nil -> 'Nat [ctor] .
+  op '_+_ : '`[Nat`] '`[Nat`] -> '`[Nat`] [assoc comm] .
+  op 's : '`[Nat`] -> '`[Nat`] [ctor] .
+  mb '0.Nat : 'Nat [none] .
+  cmb '_+_['#1:`[Nat`],'#2:`[Nat`]] : 'Nat if '#1:`[Nat`] : 'Nat /\ '#2:`[Nat`]
+    : 'Nat [none] .
+  cmb 's['#1:`[Nat`]] : 'Nat if '#1:`[Nat`] : 'Nat [none] .
+  eq '_+_['0.Nat,'N:Nat] = 'N:Nat [label('a1)] .
+endfm) .

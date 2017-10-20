@@ -1,0 +1,34 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+  ---- Checked Church-Rooser using the CRC (crchc2a.maude)
+  ---- Checked coherent using the ChC (crchc2a.maude)
+
+  load readers-writers-abs.maude
+  
+  select FULL-MAUDE .
+  
+  loop init .
+  
+ (check Church-Rosser READERS-WRITERS-ABS .)
+***(
+rewrites: 21745 in 30ms cpu (50ms real) (724833 rewrites/second)
+
+Church-Rosser checking of READERS-WRITERS-ABS
+Checking solution:
+  All critical pairs have been joined. The specification is
+    locally-confluent.
+  The specification is sort-decreasing.
+)
+
+
+ (check coherence READERS-WRITERS-ABS .)
+***(
+rewrites: 7682 in 10ms cpu (14ms real) (768200 rewrites/second)
+
+Coherence checking of READERS-WRITERS-ABS
+Coherence checking solution:
+  The following critical pairs cannot be rewritten:
+  cp < s(0),0 >
+    => < s(N*@:Nat),0 > .
+)

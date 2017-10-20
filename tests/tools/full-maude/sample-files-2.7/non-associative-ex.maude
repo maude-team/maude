@@ -1,0 +1,20 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+   fmod NON-ASSOCIATIVE-EX is
+     sorts s1 s2 .
+     subsort s1 < s2 .
+     op f : s1 s2 -> s2 [assoc] .
+     op a : -> s1 .
+     eq f(a,a) = a .
+   endfm
+
+***(
+Maude> red f(a, a) .
+Warning: sort declarations for associative operator f are non-associative on 2
+    out of 27 sort triples. First such triple is (s1, s1, s2).
+reduce in NON-ASSOCIATIVE-EX : f(a, a) .
+rewrites: 1 in 0ms cpu (0ms real) (~ rewrites/second)
+result s1: a
+)

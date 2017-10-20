@@ -1,0 +1,23 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  fmod HET-LIST is
+    protecting CONVERSION .
+
+    sort List .
+    op nil : -> List .
+    op __ : Universal List -> List [ctor poly (1)] .
+  endfm
+
+***(
+Maude> red 4 "foo" 4.5 1/2 nil .
+reduce in HET-LIST : 4 "foo" 4.5 1/2 nil .
+rewrites: 0 in 0ms cpu (4ms real) (~ rewrites/second)
+result List: 4 "foo" 4.5 1/2 nil
+
+Maude> red (4 "foo" nil) 4.5 1/2 nil .
+reduce in HET-LIST : (4 "foo" nil) 4.5 1/2 nil .
+rewrites: 0 in 0ms cpu (0ms real) (~ rewrites/second)
+result List: (4 "foo" nil) 4.5 1/2 nil
+)

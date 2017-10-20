@@ -1,0 +1,120 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+  
+  load vending-machine.maude 
+  
+  fmod BUYING-STRATS is
+    protecting META-LEVEL .
+
+    var T : Term .
+    var Q : Qid .
+    var  N : Nat .
+    vars BuyItem? BuyCake? Change? : [Result4Tuple].
+  
+    op insertCoin : Qid Term -> Term .
+
+    ceq insertCoin(Q, T)
+      = if BuyItem? :: Result4Tuple
+        then getTerm(BuyItem?)
+        else T 
+        fi
+      if (Q == 'add-q or Q == 'add-$)
+         /\ BuyItem? := metaXapply(upModule('VENDING-MACHINE, false), 
+                          T, Q, none, 0, unbounded, 0) .
+        
+    eq insertCoin(Q, T) = T [owise] . 
+
+    op onlyCakes : Term -> Term .
+ 
+    ceq onlyCakes(T)
+      = if BuyCake? :: Result4Tuple
+        then onlyCakes(getTerm(BuyCake?))
+        else (if Change? :: Result4Tuple
+              then onlyCakes(getTerm(Change?))
+              else T
+              fi)
+        fi
+      if BuyCake? := metaXapply(upModule('VENDING-MACHINE, false), 
+                       T, 'buy-c, none, 0, unbounded, 0)
+         /\ Change? := metaXapply(upModule('VENDING-MACHINE, false), 
+                         T, 'change, none, 0, unbounded, 0) .
+    
+    op onlyNitems : Term Qid Nat -> Term .
+
+    ceq onlyNitems(T, Q, N)
+      = if N == 0
+        then T
+        else (if BuyItem? :: Result4Tuple
+              then onlyNitems(getTerm(BuyItem?), Q, sd(N, 1))
+              else (if Change? :: Result4Tuple
+                    then onlyNitems(getTerm(Change?), Q, N)
+                    else T
+                    fi)
+              fi)
+        fi
+      if (Q == 'buy-c or Q == 'buy-a)
+         /\ BuyItem? := metaXapply(upModule('VENDING-MACHINE, false),
+                          T, Q, none, 0, unbounded, 0)
+         /\ Change? := metaXapply(upModule('VENDING-MACHINE, false),
+                         T, 'change, none, 0, unbounded, 0) .
+                         
+    eq onlyNitems(T, Q, N) = T [owise] .                       
+    
+    op cakesAndApples : Term -> Term .
+    op buyItem? : Term Qid -> Bool .
+
+    ceq buyItem?(T, Q)
+      = if BuyItem? :: Result4Tuple
+        then true
+        else (if Change? :: Result4Tuple
+              then buyItem?(getTerm(Change?), Q)
+              else false
+              fi)
+        fi
+      if (Q == 'buy-c or Q == 'buy-a)
+         /\ BuyItem? := metaXapply(upModule('VENDING-MACHINE, false),
+                                   T, Q, none, 0, unbounded, 0)
+         /\ Change? := metaXapply(upModule('VENDING-MACHINE, false),
+                                  T, 'change, none, 0, unbounded, 0) .
+                               
+    eq buyItem?(T, Q) = false [owise] .
+  
+    eq cakesAndApples(T)
+      = if buyItem?(T, 'buy-c)
+        then (if buyItem?(onlyNitems(T, 'buy-c, 1), 'buy-a)
+              then cakesAndApples(onlyNitems(onlyNitems(T, 'buy-c, 1), 
+                                    'buy-a, 1))
+              else T
+              fi)
+        else T
+        fi .
+  endfm
+    
+***(
+Maude> reduce in BUYING-STRATS : 
+           onlyCakes('__['$.Coin,'$.Coin,'$.Coin,'q.Coin]) .
+reduce in BUYING-STRATS : onlyCakes('__['$.Coin,'$.Coin,'$.Coin,'q.Coin]) .
+rewrites: 32 in 0ms cpu (1ms real) (~ rewrites/second)
+result GroundTerm: '__['q.Coin,'c.Item,'c.Item,'c.Item]
+
+Maude> reduce in BUYING-STRATS :
+           onlyNitems('__['$.Coin, '$.Coin, '$.Coin, 'q.Coin], 
+             'buy-a, 3) .
+reduce in BUYING-STRATS : onlyNitems('__['$.Coin,'$.Coin,'$.Coin,'q.Coin],
+    'buy-a, 3) .
+rewrites: 64 in 0ms cpu (0ms real) (~ rewrites/second)
+result GroundTerm: '__['q.Coin,'q.Coin,'q.Coin,'q.Coin,'a.Item,'a.Item,'a.Item]
+
+Maude> reduce in BUYING-STRATS :
+           cakesAndApples('__['$.Coin, '$.Coin, '$.Coin, 'q.Coin]) .
+reduce in BUYING-STRATS : cakesAndApples('__['$.Coin,'$.Coin,'$.Coin,'q.Coin])
+    .
+rewrites: 148 in 0ms cpu (1ms real) (~ rewrites/second)
+result GroundTerm: '__['$.Coin,'q.Coin,'q.Coin,'a.Item,'c.Item]
+
+Maude> reduce in BUYING-STRATS : insertCoin('add-q, 'null.Marking) .
+reduce in BUYING-STRATS : insertCoin('add-q, 'null.Marking) .
+rewrites: 13 in 0ms cpu (0ms real) (~ rewrites/second)
+result Constant: 'q.Coin
+)

@@ -1,0 +1,55 @@
+---- Dear Mr. Duran,
+---- 
+---- Tobias and I are currently working with Prof. Meseguer at UIUC. While using 
+---- the load command in Full Maude (2.5b January 14th 2011) we encountered the 
+---- following problem:
+---- 
+---- The first example is the one from the release notes. It loads the meta-module as expected.
+
+--- This one is the example from the release notes!
+
+set print conceal off .
+print conceal db mod_is_sorts_._____endm fmod_is_sorts_.____endfm .
+set trace off .
+set trace select on .
+trace select procLoad .
+
+(select META-LEVEL .)
+
+(load fmod 'FOO is
+including 'BOOL .
+sorts 'Foo .
+none
+op 'f : nil -> 'Foo [none] .
+op 'g : nil -> 'Foo [none] .
+none
+eq 'f.Foo = 'g.Foo [none] .
+endfm .)
+
+---- But if we add one of the attributes "metadata" or owise, the meta-module is 
+---- not loaded, and Full Maude seams to stop responding. 
+
+--- This one does not work!
+(load fmod 'FOO-FAIL is
+including 'BOOL .
+sorts 'Foo .
+none
+op 'f : nil -> 'Foo [metadata("test")] .
+op 'g : nil -> 'Foo [none] .
+none
+eq 'f.Foo = 'g.Foo [owise] .
+endfm .)
+
+---- We managed to locate the source of the problem: The operator "downAttr" does 
+---- not have an equation for owise, and the equation for metadata does not seem 
+---- to work in this case. We added the following two equations to fix the problem 
+---- in our Full Maude implementation:
+---- 
+----   eq downAttr('owise.Attr) = owise .
+----   eq downAttr('metadata[T]) = metadata(substr(string(T), 1, find(string(T), "\".String", 0) + (- 1))) .
+---- 
+---- Sincerely Yours,
+---- Tobias Muhlbauer and Jonas Eckhardt
+
+(show module FOO .)
+(show module FOO-FAIL .)

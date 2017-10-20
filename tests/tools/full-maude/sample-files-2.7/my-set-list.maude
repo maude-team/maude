@@ -1,0 +1,16 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  load set-list.maude
+
+  fmod MY-SET-LIST{Y :: TRIV} is
+    pr (SET-LIST 
+          * (sort Set{X} to MySet{X},
+             op __ : SetList{X} SetList{X} -> SetList{X} to _._))
+          {Y} .
+  endfm
+
+  fmod MY-QID-SET-LIST is
+    protecting MY-SET-LIST{Qid} .
+  endfm

@@ -1,0 +1,21 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  fmod UNIFICATION-EX3 is
+    protecting NAT .
+    op f : Nat Nat -> Nat [assoc] .
+  endfm
+
+  unify f(f(X:Nat, Y:Nat), Z:Nat) =? f(A:Nat, B:Nat) .
+---(
+  Warning: Term f(X:Nat, Y:Nat, Z:Nat) is non-ground and unification 
+    for its top symbol is not currently supported.
+---)
+
+  unify X:Nat + f(f(41, 42),43) =? Y:Nat + f(41,f(42,43)) .
+---(
+  Solution 1
+  X:Nat --> #1:Nat
+  Y:Nat --> #1:Nat
+---)

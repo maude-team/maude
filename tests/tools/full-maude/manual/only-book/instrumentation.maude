@@ -1,0 +1,76 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  fmod INSTRUMENTATION is
+    pr META-LEVEL .
+
+    op instrument : Qid -> Module .
+    op instrument : Module -> Module .
+    op instrument : Module RuleSet -> RuleSet .
+
+    var  M : Module .
+    var  L : Qid .
+    var  AtS : AttrSet .
+    vars T T' : Term .
+    var  Cd : Condition .
+    var  H : Header .
+    vars IL IL' : ImportList .
+    var  SS : SortSet .
+    var  SSDS : SubsortDeclSet .
+    var  OPDS : OpDeclSet .
+    var  MAS : MembAxSet .
+    var  EqS : EquationSet .
+    vars RlS RlS' : RuleSet .
+
+    op getLabel : AttrSet -> Qid .
+    eq getLabel(label(L) AtS) = L .
+
+    op setRls : Module RuleSet -> Module .
+    eq setRls(
+         mod H is IL sorts SS . SSDS OPDS MAS EqS RlS endm, RlS')
+      = mod H is IL sorts SS . SSDS OPDS MAS EqS RlS' endm .
+    eq setRls(fmod H is IL sorts SS . SSDS OPDS MAS EqS endfm, RlS)
+      = if RlS == none
+        then fmod H is IL sorts SS . SSDS OPDS MAS EqS endfm
+        else mod H is IL sorts SS . SSDS OPDS MAS EqS RlS endm 
+        fi .
+
+    op addImports : Module ImportList -> Module .
+    eq addImports(
+         mod H is IL sorts SS . SSDS OPDS MAS EqS RlS endm, IL')
+      = mod H is IL IL' sorts SS . SSDS OPDS MAS EqS RlS endm .
+    eq addImports(fmod H is IL sorts SS . SSDS OPDS MAS EqS endfm, 
+         IL')
+      = fmod H is IL IL' sorts SS . SSDS OPDS MAS EqS endfm .
+
+    eq instrument(H) = instrument(upModule(H, false)) .
+
+    eq instrument(M)
+      = setRls(
+          addImports(M, (including 'INSTRUMENTATION-INFRASTRUCTURE .)),
+          instrument(M, getRls(M))) .
+
+    eq instrument(M, rl T => T' [AtS] . RlS) 
+      = if sameKind(M, leastSort(M, T), 'Configuration)
+        then (rl '`{_`,_`}['__[T, 'C@:Configuration], 'QL@:QidList] 
+                => '`{_`,_`}['__[T', 'C@:Configuration], 
+                     '__['QL@:QidList, 
+                         qid("'" + string(getLabel(AtS)) + ".Qid")]] 
+                [AtS] .)
+        else (rl T => T' [AtS] .)
+        fi
+        instrument(M, RlS) .
+    eq instrument(M, crl T => T' if Cd [AtS] . RlS) 
+      = if sameKind(M, leastSort(M, T), 'Configuration)
+        then (crl '`{_`,_`}['__[T, 'C@:Configuration], 
+                            'QL@:QidList] 
+                => '`{_`,_`}['__[T', 'C@:Configuration], 
+                     '__['QL@:QidList, 
+                         qid("'" + string(getLabel(AtS)) + ".Qid")]] 
+                if Cd 
+                [AtS] .)
+        else (crl T => T' if Cd [AtS] .)
+        fi
+        instrument(M, RlS) .
+    eq instrument(M, none) = none .
+  endfm

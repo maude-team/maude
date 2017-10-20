@@ -1,0 +1,33 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  fmod STACK{X :: TRIV} is
+    protecting BOOL .
+    sorts NeStack{X} Stack{X} .
+    subsort NeStack{X} < Stack{X} .
+    op empty : -> Stack{X} [ctor] .
+    op push : X$Elt Stack{X} -> NeStack{X} [ctor] .
+    op pop : NeStack{X} -> Stack{X} .
+    op top : NeStack{X} -> X$Elt .
+    op isEmpty : Stack{X} -> Bool .
+  
+    var S : Stack{X} .
+    var E : X$Elt .
+  
+    eq pop(push(E, S)) = S .
+    eq top(push(E, S)) = E .
+    eq isEmpty(empty) = true .
+    eq isEmpty(push(E, S)) = false .
+  endfm
+
+***(
+  fmod STACK-TEST is 
+    protecting STACK{Int} .
+  endfm
+
+Maude> red top(push(4, push(5, empty))) .
+reduce in STACK-TEST : top(push(4, push(5, empty))) .
+rewrites: 1 in 0ms cpu (0ms real) (~ rewrites/second)
+result NzNat: 4
+)

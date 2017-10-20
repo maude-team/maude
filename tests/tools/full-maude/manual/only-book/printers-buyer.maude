@@ -1,0 +1,68 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+  
+---- load mobile-maude.maude
+
+view Mid from TRIV to MID is
+  sort Elt to Mid .
+endv
+
+mod BUYER is
+  inc MOBILE-OBJECT-INTERFACE .
+  pr LIST{Mid} * (op __ to _._, op nil to no-id) .
+  pr MAYBE{Nat} * (op maybe to null) .
+  pr MAYBE{Oid} * (op maybe to null) .
+  
+  sort Status .
+  ops onArrival asking done buying : -> Status [ctor] .
+
+  sort Buyer .
+  subsort Buyer < Cid .
+  op Buyer : -> Buyer .
+  var V@Buyer : Buyer .
+
+  op sellers :_ : List{Mid} -> Attribute [ctor gather(&)] .
+  op status :_ : Status -> Attribute [ctor] .
+  op price :_ : Maybe{Nat} -> Attribute [ctor] .
+  op bestSeller :_ : Maybe{Oid} -> Attribute [ctor] .
+  
+  op get-printer-price : Mid -> Contents [ctor] .
+  op printer-price : Nat -> Contents [ctor] .
+  
+  var  S S' B : Oid . 
+  var  OS : List{Mid} .
+  var  AtS : AttributeSet .
+  vars N N' : Nat .
+  var  L : Loc .
+  
+  rl [move] : 
+     < B : V@Buyer | sellers : o(L,N) . OS, status : done, AtS > & none
+  => < B : V@Buyer | sellers : o(L,N) . OS, status : onArrival, AtS > 
+     & go-find(o(L,N), L) .
+           
+  rl [onArrival] : 
+     < B : V@Buyer | sellers : S . OS, status : onArrival, AtS > & none
+  => < B : V@Buyer | sellers : S . OS, status : asking, AtS >
+     & (to S : get-printer-price(B)) .
+           
+  rl [new-des] :
+     (to B : printer-price(N)) 
+	 < B : V@Buyer | sellers : S . OS, price : null, status : asking, bestSeller : null, AtS >
+  => < B : V@Buyer | sellers : OS, price : N, status : done, bestSeller : S, AtS > .
+
+  rl [new-des] :
+     (to B : printer-price(N)) 
+	 < B : V@Buyer | sellers : S . OS, price : N', status : asking, bestSeller : S', AtS >
+  => if (N < N') then
+	      < B : V@Buyer | sellers : OS, price : N, status : done, bestSeller : S, AtS >
+	 else < B : V@Buyer | sellers : OS, price : N', status : done, bestSeller : S', AtS >
+	 fi .
+	
+  rl [buy-it] :
+  	 < B : V@Buyer | sellers : no-id, status : done, bestSeller : o(L,N), AtS > & none
+  => < B : V@Buyer | sellers : no-id, status : buying, bestSeller : o(L,N), AtS >
+	 & go-find(o(L,N), L) .
+
+endm
+
+

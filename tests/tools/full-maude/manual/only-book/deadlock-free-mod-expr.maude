@@ -1,0 +1,271 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  set show loop stats off .
+  set show loop timing off .
+  set show advisories off .
+
+  load deadlock-freedom.maude
+  
+  fmod DEADLOCK-FREE-BANNER is 
+    pr STRING .
+    op deadlock-free-banner : -> String .
+    eq deadlock-free-banner 
+      = "DEADLOCK-FREE mod. expr. available Oct. 28th 2008" .
+  endfm
+
+  fmod DEADLOCK-FREE-SIGN is
+    ex FULL-MAUDE-SIGN .
+    op DEADLOCK-FREE`[_`,_`] : @ModExp@ @Sort@ -> @ModExp@ .
+  endfm
+
+  fmod DEADLOCK-FREE-META-SIGN is
+    pr META-LEVEL .
+    pr META-FULL-MAUDE-SIGN .
+    pr UNIT .
+  
+    op DEADLOCK-FREE-GRAMMAR : -> FModule .
+  
+    eq DEADLOCK-FREE-GRAMMAR 
+      = addImports((including 'DEADLOCK-FREE-SIGN .), GRAMMAR) .
+  endfm
+  
+  fmod DEADLOCK-FREE-EXPR is
+    inc MOD-EXPR .
+    pr INST-EXPR-EVALUATION .
+    pr EVALUATION .
+    pr DEADLOCK-FREEDOM .
+    pr MOD-EXP-PARSING .
+
+    vars N N' : NzNat .
+    var  PDL : ParameterDeclList .
+    vars DB DB' : Database .
+    vars T T' T'' : Term .
+    var  IL : ImportList .
+    var  VEPS : Set{Tuple{ViewExp,ViewExp}} .
+    var  X : Qid .
+    var  S : Sort .
+    vars ME ME' : ModuleExpression .
+    var  DT : Default{Term} .
+    vars U U' M DM : Module .
+    vars MNS MNS' MNS'' MNS3 MNS4 : Set{ModuleName} .
+    vars VES VES' : Set{ViewExp} .
+    var  MIS : Set{ModuleInfo} .
+    var  VIS : Set{ViewInfo} .
+    var  QIL : QidList .
+    var  VDS : OpDeclSet .
+
+  *** As for TUPLE, the equation for the \texttt{evalModExp} is reduced to the 
+  *** creation of a new module. A module expression POW[n]{Nat} produces a 
+  *** module
+  ***
+  *** fmod POW[n]{X :: TRIV} is
+  ***   inc TUPLE[n]{X, X, ..., X} .
+  *** endfm
+  *** 
+  *** which is then instantiated by the Nat view.
+
+  *** Some auxiliary functions are defined in order
+  *** to generate the different declarations in the module.
+
+    op DEADLOCK-FREE`[_,_`] : ModuleExpression Sort -> ModuleExpression .
+
+    ceq evalModExp(DEADLOCK-FREE[ME, S], PDL, DB)
+      = if unitInDb(DEADLOCK-FREE[ME', S], DB') 
+        then < DB' ; DEADLOCK-FREE[ME', S] >
+        else < evalModule(
+                 setName(
+                   deadlock-free(getFlatModule(ME', DB'), S),
+                   DEADLOCK-FREE[ME', S]), 
+                 none, DB') ;
+               DEADLOCK-FREE[ME', S] >
+        fi 
+      if ME' := modExp(evalModExp(ME, PDL, DB))
+         /\ DB' := database(evalModExp(ME, PDL, DB)) .
+
+  *** The equations for the \texttt{header2QidList}, 
+  *** \texttt{parseModExp}, \texttt{prepHeader}, and 
+  *** \texttt{setUpModExpDeps} functions on the $n$-tuple module
+  *** expression are as follows:
+
+    eq parseModExp('DEADLOCK-FREE`[_`,_`][T, T']) 
+      = DEADLOCK-FREE[parseModExp(T), parseType(T')] .
+
+    eq solveUps('upModule['DEADLOCK-FREE`[_`,_`][T, T']], DB) 
+      = solveUpsModExp('upModule['DEADLOCK-FREE`[_`,_`][T, T']], DB) .
+    eq solveUps('upTerm['DEADLOCK-FREE`[_`,_`][T, T'], 'bubble[T'']], DB) 
+      = solveUpsModExp('upTerm['DEADLOCK-FREE`[_`,_`][T, T'], 'bubble[T'']], DB) .
+
+    eq labelInModExp(X, DEADLOCK-FREE[ME, S]) = false .
+
+    eq header2Qid(DEADLOCK-FREE[ME, S]) 
+      = qid("DEADLOCK-FREE[" + string(header2Qid(ME)) + ", " + string(S) + "]") .
+    eq header2QidList(DEADLOCK-FREE[ME, S]) 
+      = ('DEADLOCK-FREE '`[ header2QidList(ME) '`, S '`]) .
+
+    eq prepModExp(DEADLOCK-FREE[ME, S], VEPS) 
+      = DEADLOCK-FREE[prepModExp(ME, VEPS), S] .
+
+    eq setUpModExpDeps(DEADLOCK-FREE[ME, S], 
+         db(< ME ; DT ; U ; U' ; M ; VDS ; MNS ; VES > MIS, 
+            MNS', VIS, VES', MNS'', MNS3, MNS4, QIL))
+      = db(< ME ; DT ; U ; U' ; M ; VDS ; MNS . DEADLOCK-FREE[ME, S] ; VES > MIS, 
+           MNS', VIS, VES', MNS'', MNS3, MNS4, QIL) .
+    eq setUpModExpDeps(DEADLOCK-FREE[ME, S], 
+         db(< ME ; DM ; U ; U' ; M ; VDS ; MNS ; VES > MIS, 
+            MNS', VIS, VES', MNS'', MNS3, MNS4, QIL))
+      = db(< ME ; DM ; U ; U' ; M ; VDS ; MNS . DEADLOCK-FREE[ME, S] ; VES > MIS, 
+           MNS', VIS, VES', MNS'', MNS3, MNS4, QIL) .
+    eq setUpModExpDeps(DEADLOCK-FREE[ME, S], DB)
+      = warning(DB, 
+          '\r 'Error: '\o 'Module header2QidList(ME) 'not 'in 'database. '\n)
+      [owise] .
+  endfm
+
+*** Redefinition of the FULL-MAUDE module. The init rule now creates an 
+*** instance of class Unifier. The init rule now takes Unifier objects, and for them 
+*** it uses UNIFICATION-GRAMMAR instead of GRAMMAR to parse inputs. 
+
+mod FULL-MAUDE is
+  pr DATABASE-HANDLING .
+  inc LOOP-MODE .
+  pr BANNER .
+  pr DEADLOCK-FREE-META-SIGN .
+  pr DEADLOCK-FREE-BANNER .
+  pr DEADLOCK-FREE-EXPR .
+
+  subsort Object < State .
+
+  sort DeadlockFree .
+  subsort DeadlockFree < DatabaseClass .
+  op DeadlockFree : -> DeadlockFree .
+
+  op o : -> Oid .
+  op init : -> System .
+
+  var  Atts : AttributeSet .
+  var  X@DeadlockFree : DatabaseClass .
+  var  O : Oid .
+  var  DB : Database .
+  var  ME : Header .
+  var  QI : Qid .
+  vars QIL QIL' QIL'' : QidList .
+  var  TL : TermList .
+  var  N : Nat .
+  vars RP RP' : ResultPair .
+
+  rl [init] :
+     init
+     => [nil,
+         < o : DeadlockFree | 
+            db : initialDatabase,
+            input : nilTermList, output : nil, 
+            default : 'CONVERSION >,
+         ('\t string2qidList(deadlock-free-banner) '\n)] .
+
+  rl [in] :
+    [QI QIL, 
+     < O : X@DeadlockFree | 
+         db : DB, input : nilTermList, output : nil, default : ME, Atts >, 
+     QIL']
+    => if metaParse(DEADLOCK-FREE-GRAMMAR, QI QIL, '@Input@) :: ResultPair
+       then [nil, 
+             < O : X@DeadlockFree | db : DB, 
+                 input : getTerm(metaParse(DEADLOCK-FREE-GRAMMAR, QI QIL, '@Input@)),
+                 output : nil, default : ME, Atts >, 
+              QIL'] 
+       else [nil, 
+             < O : X@DeadlockFree | db : DB, input : nilTermList, 
+                 output : ('\r 'Warning: 
+                           printSyntaxError(
+                             metaParse(DEADLOCK-FREE-GRAMMAR, QI QIL, '@Input@), 
+                             QI QIL) 
+                           '\n
+                           '\r 'Error: '\o 'No 'parse 'for 'input. '\n), 
+                 default : ME, Atts >, 
+             QIL'] 
+       fi .
+
+  rl [out] :
+    [QIL, 
+     < O : X@DeadlockFree | 
+         db : DB, input : TL, output : (QI QIL'), default : ME, Atts >, 
+     QIL'']
+    => [QIL, 
+        < O : X@DeadlockFree | 
+            db : DB, input : TL, output : nil, default : ME, Atts >, 
+        (QI QIL' QIL'')] .
+endm
+
+loop init .
+
+trace exclude FULL-MAUDE .
+
+set show loop stats on .
+set show loop timing on .
+set show advisories on .
+
+---(
+---(
+  $ maude.linux full-maude.maude deadlock-free-mod-expr.maude
+             \||||||||||||||||||/
+           --- Welcome to Maude ---
+             /||||||||||||||||||\
+        Maude 2.4 built: Sep 24 2008 13:12:22
+        Copyright 1997-2008 SRI International
+           Thu Oct 30 18:21:36 2008
+
+        Full Maude 2.4. September 24th 2008
+
+
+    DEADLOCK-FREE mod. expr. available Oct. 28th 2008
+---)
+  load model-checker.maude
+  load bakery.maude
+  
+  select FULL-MAUDE .
+  loop init .
+  
+---(
+  rewrites: 184 in 0ms cpu (2ms real) (~ rewrites/second)
+	DEADLOCK-FREE mod. expr. available Oct. 28th 2008
+---)
+
+  (mod DF-BAKERY is
+     protecting DEADLOCK-FREE[BAKERY, BState] .
+   endm)
+
+---(
+  rewrites: 3788 in 20ms cpu (32ms real) (189400 rewrites/second)
+  Introduced module DF-BAKERY
+---)
+
+  (show rls DF-BAKERY .)
+    
+---(
+rewrites: 259 in 30ms cpu (33ms real) (8633 rewrites/second)
+
+  crl {V:BState}
+    => {V:BState}
+    if enabled(V:BState)=/= true = true .
+  rl < P:Mode,0,wait,Y:Nat >
+    => < P:Mode,0,crit,Y:Nat > [label p2_wait] .
+  rl < P:Mode,X:Nat,crit,Y:Nat >
+    => < P:Mode,X:Nat,sleep,0 > [label p2_crit] .
+  rl < P:Mode,X:Nat,sleep,Y:Nat >
+    => < P:Mode,X:Nat,wait,s X:Nat > [label p2_sleep] .
+  rl < crit,X:Nat,Q:Mode,Y:Nat >
+    => < sleep,0,Q:Mode,Y:Nat > [label p1_crit] .
+  rl < sleep,X:Nat,Q:Mode,Y:Nat >
+    => < wait,s Y:Nat,Q:Mode,Y:Nat > [label p1_sleep] .
+  rl < wait,X:Nat,Q:Mode,0 >
+    => < crit,X:Nat,Q:Mode,0 > [label p1_wait] .
+  crl < P:Mode,X:Nat,wait,Y:Nat >
+    => < P:Mode,X:Nat,crit,Y:Nat >
+    if Y:Nat < X:Nat = true [label p2_wait] .
+  crl < wait,X:Nat,Q:Mode,Y:Nat >
+    => < crit,X:Nat,Q:Mode,Y:Nat >
+    if not Y:Nat < X:Nat = true [label p1_wait] .
+---)
+---)
+  

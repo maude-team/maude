@@ -1,0 +1,35 @@
+(view Tuple3{X :: TRIV, Y :: TRIV, Z :: TRIV} from TRIV to TUPLE[3]{X, Y, Z} is
+   sort Elt to Tuple{X, Y, Z} .
+ endv)
+
+(view List{X :: TRIV} from TRIV to LIST{X} is
+   sort Elt to List{X} .
+ endv)
+
+(fmod FOO{X :: TRIV, Y :: TRIV, Z :: TRIV} is
+   pr NAT .
+   pr LIST{Tuple3{X, Y, Z}} .
+   op foo : List{Tuple3{X, Y, Z}} -> Nat .
+   var E : Tuple{X, Y, Z} .
+   var L : List{Tuple3{X, Y, Z}} .
+   eq foo(nil) = 0 .
+   eq foo(E L) = 1 + foo(L) .
+ endfm)
+
+(fmod BAR is 
+   pr FOO{String, Nat, Nat} .
+ endfm)
+
+trace include FULL-MAUDE .
+----set trace on .
+set trace select on .
+trace select show-module .
+trace select parseModExp .
+trace select evalModExp .
+trace select unitInst .
+----set print conceal on .
+print conceal fmod_is_sorts_.____endfm mod_is_sorts_._____endm .
+
+(show module FOO{String, Nat, Nat} .)
+
+(red foo(("uno", 1, 1) ("dos", 2, 2) ("tres", 3, 3) ("cuatro", 4, 4)) .)

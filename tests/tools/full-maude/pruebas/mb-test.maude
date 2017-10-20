@@ -1,0 +1,22 @@
+fmod FOO{X :: TRIV} is 
+  sort Foo{X} .
+  op check : [Foo{X}] -> Bool .
+  op f : -> Foo{X} .
+  eq check(F:[Foo{X}]) = F:[Foo{X}] :: Foo{X} .
+endfm
+
+fmod BAR is
+  pr FOO{Nat} .
+endfm 
+
+select FULL-MAUDE .
+loop init .
+
+(red in BAR : check(f) .)
+---(
+rewrites: 845 in 102ms cpu (108ms real) (8228 rewrites/second)
+reduce in FM-BAR :
+  check(f)
+result Bool :
+  true
+---)

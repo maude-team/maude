@@ -1,0 +1,11 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  load taoset.maude
+  
+  fth SPOSET is
+    including TAOSET .
+    var X : Elt .
+    eq X < X = false [nonexec label irreflexive] .
+  endfth

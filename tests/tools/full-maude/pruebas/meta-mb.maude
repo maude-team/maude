@@ -1,0 +1,13 @@
+fmod FOO is 
+  sorts Foo Bar .
+  subsort Bar < Foo .
+  op f : Bool -> Foo .
+  var B : Bool .
+  cmb f(B) : Bar if B .
+endfm
+
+fmod BAR is inc FOO + META-LEVEL . endfm
+
+red metaReduce(upModule('FOO, false), upTerm(f(true))) .
+
+reduce leastSort(upModule('FOO, false), upTerm(f(true))) .

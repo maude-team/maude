@@ -1,0 +1,46 @@
+fmod OCL-LIST{X :: TRIV} is
+pr LIST{X}.
+endfm
+
+view Configuration from TRIV to CONFIGURATION is
+ sort Elt to Configuration .
+endv
+
+mod STACK is
+---- pr (LIST * (op __ to _::_)) {Configuration} . --- this one works fine
+ pr (OCL-LIST * (op __ to _::_)) {Configuration} . --- this one gives some warnings and advisories
+endm
+
+---(
+> maude26 parameterization-renaming.maude
+
+             \||||||||||||||||||/
+           --- Welcome to Maude ---
+             /||||||||||||||||||\
+        Maude 2.6 built: Dec 10 2010 11:12:39
+        Copyright 1997-2010 SRI International
+           Fri Jun 17 12:46:17 2011
+
+Maude> 
+Maude> Advisory: redefining module OCL-LIST.
+Advisory: redefining view Configuration.
+Advisory: redefining module STACK.
+Warning: "prelude.maude", line 997 (fmod LIST): declaration for __ has
+    different attributes from declaration on "prelude.maude", line 2456 (mod
+    CONFIGURATION).
+Advisory: <automatic>: operator __ has been imported from both "prelude.maude",
+    line 2456 (mod CONFIGURATION) and "prelude.maude", line 997 (fmod LIST)
+    with no common ancestor.
+Warning: "prelude.maude", line 997 (fmod LIST): declaration for __ has
+    different attributes from declaration on "prelude.maude", line 2456 (mod
+    CONFIGURATION).
+Warning: "prelude.maude", line 997 (fmod LIST): declaration for __ has
+    different attributes from declaration on "prelude.maude", line 2456 (mod
+    CONFIGURATION).
+Advisory: <automatic>: unable to make module instantiation LIST{Configuration}
+    due to earlier errors.
+Advisory: <automatic>: unable to make module instantiation (OCL-LIST * (op __
+    to _::_)){Configuration} due to earlier errors.
+
+Maude> 
+---)

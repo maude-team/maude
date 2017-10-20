@@ -1,0 +1,53 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  fmod FORMAT-DEMO is
+    sorts Variable Expression BoolExp Statement .
+    subsort Variable < Expression .
+    ops a b c d : -> Variable .
+    op 1 : -> Expression .
+    op _+_ : Expression Expression -> Expression [assoc comm] .
+    op _;_ : Statement Statement -> Statement [assoc prec 50] .
+    op _<=_ : Expression Expression -> BoolExp .
+
+    op while_do_od : BoolExp Statement -> Statement
+      [format (nir! o r! o++ --nir! o)] .
+
+    op let_:=_ : Variable Expression -> Statement
+      [format (nir! o d d d)] .
+  endfm
+
+***(
+  Maude> set print format off .
+  Maude> parse
+           while a <= d do
+             let a := a + b ;
+             while b <= d do
+               let b := b + c ;
+               let c := c + 1
+             od
+           od
+           .
+  Statement: while a <= d do let a := a + b ; while b <= d do let b :=
+      b + c ; let c := c + 1 od od
+
+  Maude> set print format on .
+  Maude> parse
+           while a <= d do
+             let a := a + b ;
+             while b <= d do
+               let b := b + c ;
+               let c := c + 1
+             od
+           od
+           .
+  Statement:
+  while a <= d do
+    let a := a + b ;
+    while b <= d do
+      let b := b + c ;
+      let c := c + 1
+    od
+  od
+)

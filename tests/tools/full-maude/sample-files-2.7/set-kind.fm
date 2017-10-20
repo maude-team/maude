@@ -1,0 +1,16 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+  
+  (fmod SET-KIND{X :: TRIV} is
+    sorts NeKSet{X} KSet{X} .
+    subsort X$Elt < NeKSet{X} < KSet{X} .
+    op empty : -> KSet{X} [ctor] .
+    op _`,_ : KSet{X} KSet{X} ~> KSet{X} [ctor assoc comm id: empty] .
+    mb NS:NeKSet`{X`}, NS':NeKSet`{X`} : NeKSet{X} .
+
+    var E : X$Elt .
+
+    *** idempotency
+    eq E, E = E .
+   endfm)

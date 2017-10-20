@@ -1,0 +1,20 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+  ---- Checked Church-Rooser using the CRC
+  ---- Checked coherent using the ChC
+
+  load readers-writers.maude
+  
+  mod READERS-WRITERS-PREDS is
+    protecting READERS-WRITERS .
+    sort NewBool .
+    ops tt ff : -> NewBool [ctor] .
+    ops mutex one-writer : Config -> NewBool [frozen] .
+    eq mutex(< s(N:Nat), s(M:Nat) >) = ff .
+    eq mutex(< 0, N:Nat >) = tt .
+    eq mutex(< N:Nat, 0 >) = tt .
+    eq one-writer(< N:Nat, s(s(M:Nat)) >) = ff .
+    eq one-writer(< N:Nat, 0 >) = tt .
+    eq one-writer(< N:Nat, s(0) >) = tt .
+  endm

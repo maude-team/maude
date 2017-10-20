@@ -1,0 +1,59 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  load toset.maude
+  
+  fmod PRIORITY-QUEUE{X :: TOSET} is
+    sort NePQueue{X} PQueue{X} .
+    subsort NePQueue{X} < PQueue{X} .
+    op empty : -> PQueue{X} [ctor] .
+    op insert : PQueue{X} X$Elt -> NePQueue{X} [ctor] .
+    op deleteMin : NePQueue{X} -> PQueue{X} .
+    op findMin : NePQueue{X} -> X$Elt .
+    op isEmpty : PQueue{X} -> Bool .
+    
+    var  PQ : PQueue{X} .
+    vars E F : X$Elt .
+
+    eq insert(insert(PQ, E), F) = insert(insert(PQ, F), E) [nonexec] .
+    eq deleteMin(insert(empty, E)) = empty .
+    ceq deleteMin(insert(insert(PQ, E), F)) 
+      = insert(deleteMin(insert(PQ, E)), F) 
+      if findMin(insert(PQ, E)) <= F .
+    ceq deleteMin(insert(insert(PQ, E), F)) = insert(PQ, E) 
+      if F < findMin(insert(PQ, E)) .
+    eq findMin(insert(empty, E)) = E .
+    ceq findMin(insert(insert(PQ, E), F)) = findMin(insert(PQ, E)) 
+      if findMin(insert(PQ, E)) <= F .
+    ceq findMin(insert(insert(PQ, E), F)) = F 
+      if F < findMin(insert(PQ, E)) .
+    eq isEmpty(empty) = true .
+    eq isEmpty(insert(PQ, E)) = false .
+  endfm
+
+***(
+  load view-intastoset.maude
+  
+  fmod PRIORITY-QUEUE-TEST is
+    protecting PRIORITY-QUEUE{IntAsToset} .
+  endfm
+
+Maude> red findMin(insert(insert(empty, 4), 5)) .
+reduce in PRIORITY-QUEUE-TEST : findMin(insert(insert(empty, 4), 5)) .
+rewrites: 3 in 10ms cpu (0ms real) (300 rewrites/second)
+result NzNat: 4
+
+  load priority-pair.maude
+  load view-intstringastoset.maude  
+
+  fmod PRIORITY-QUEUE-TEST-PAIR is
+    protecting PRIORITY-QUEUE{IntStringAsToset} .
+  endfm
+
+Maude> red findMin(insert(insert(insert(empty, < 4, "d" >), 
+                              < 8, "h" >), < 1, "a" >)) .
+reduce in PRIORITY-QUEUE-TEST-PAIR : findMin(insert(insert(insert(empty, < 4,
+    "d" >), < 8,"h" >), < 1,"a" >)) .
+rewrites: 13 in 0ms cpu (0ms real) (~ rewrites/second)
+result Priority-Pair{IntAsToset,String}: < 1,"a" >
+)

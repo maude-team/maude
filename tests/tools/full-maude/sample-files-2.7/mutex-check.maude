@@ -1,0 +1,54 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  load mutex-preds.maude
+  
+  mod MUTEX-CHECK is
+    protecting MUTEX-PREDS .
+    including MODEL-CHECKER .
+    including LTL-SIMPLIFIER .
+    ops initial1 initial2 : -> Conf .
+    eq initial1 = $ [a, wait] [b, wait] .
+    eq initial2 = * [a, wait] [b, wait] .
+  endm
+
+***(
+Maude> red modelCheck(initial1, [] ~(crit(a) /\ crit(b))) .
+reduce in MUTEX-CHECK : modelCheck(initial1, []~ (crit(a) /\ crit(b))) .
+rewrites: 22 in 10ms cpu (434ms real) (2200 rewrites/second)
+result Bool: true
+
+Maude> red modelCheck(initial2, [] ~(crit(a) /\ crit(b))) .
+reduce in MUTEX-CHECK : modelCheck(initial2, []~ (crit(a) /\ crit(b))) .
+rewrites: 22 in 0ms cpu (0ms real) (~ rewrites/second)
+result Bool: true
+
+Maude> red modelCheck(initial1, ([]<> wait(a)) -> ([]<> crit(a))) .
+reduce in MUTEX-CHECK : modelCheck(initial1, []<> wait(a) -> []<> crit(a)) .
+rewrites: 79 in 0ms cpu (1ms real) (~ rewrites/second)
+result Bool: true
+
+Maude> red modelCheck(initial1, ([]<> wait(b)) -> ([]<> crit(b))) .
+reduce in MUTEX-CHECK : modelCheck(initial1, []<> wait(b) -> []<> crit(b)) .
+rewrites: 79 in 0ms cpu (1ms real) (~ rewrites/second)
+result Bool: true
+
+Maude> red modelCheck(initial2, ([]<> wait(a)) -> ([]<> crit(a))) .
+reduce in MUTEX-CHECK : modelCheck(initial2, []<> wait(a) -> []<> crit(a)) .
+rewrites: 79 in 0ms cpu (1ms real) (~ rewrites/second)
+result Bool: true
+
+Maude> red modelCheck(initial2, ([]<> wait(b)) -> ([]<> crit(b))) .
+reduce in MUTEX-CHECK : modelCheck(initial2, []<> wait(b) -> []<> crit(b)) .
+rewrites: 79 in 0ms cpu (1ms real) (~ rewrites/second)
+result Bool: true
+
+Maude> red modelCheck(initial1, [] wait(b)) .
+reduce in MUTEX-CHECK : modelCheck(initial1, []wait(b)) .
+rewrites: 15 in 0ms cpu (0ms real) (~ rewrites/second)
+result ModelCheckResult: counterexample({$ [a,wait] [b,wait],'a-enter} {[a,
+    critical] [b,wait],'a-exit} {* [a,wait] [b,wait],'b-enter}, {[a,wait] [b,
+    critical],'b-exit} {$ [a,wait] [b,wait],'a-enter} {[a,critical] [b,wait],
+    'a-exit} {* [a,wait] [b,wait],'b-enter})
+)

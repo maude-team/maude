@@ -1,0 +1,11 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  load taoset.maude
+  
+  fth NSPOSET is
+    including TAOSET * (op _<_ to _<=_) .
+    var X : Elt .
+    eq X <= X = true [nonexec label reflexive] .
+  endfth

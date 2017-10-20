@@ -1,0 +1,82 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  fmod OWISE-TEST1 is
+    protecting NAT .
+
+    sorts R S .
+    op f : S Nat -> Nat .
+    ops g h : R -> S .
+    ops a b : Nat -> R .
+
+    var  r : R .
+    vars m n : Nat .
+    eq f(g(a(m)), n) = n .
+    eq f(h(a(m)), n) = n + 1 .
+    eq f(g(r), n) = 0 [owise] .
+    eq f(h(r), n) = 1 [owise] .
+  endfm
+
+***(
+Maude> red f(g(a(0)), 3) .
+reduce in OWISE-TEST1 : f(g(a(0)), 3) .
+rewrites: 1 in 0ms cpu (0ms real) (~ rewrites/second)
+result NzNat: 3
+
+Maude> red f(g(b(0)), 3) .
+reduce in OWISE-TEST1 : f(g(b(0)), 3) .
+rewrites: 1 in 0ms cpu (0ms real) (~ rewrites/second)
+result Zero: 0
+
+Maude> red f(h(b(0)), 3) .
+reduce in OWISE-TEST1 : f(h(b(0)), 3) .
+rewrites: 1 in 0ms cpu (0ms real) (~ rewrites/second)
+result NzNat: 1
+
+Maude> red f(h(a(0)), 3) .
+reduce in OWISE-TEST1 : f(h(a(0)), 3) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result NzNat: 4
+)
+
+  fmod OWISE-TEST2 is
+    sort Foo .
+    ops a b c d : -> Foo .
+    op f : Foo -> Foo [strat (0 1 0)] .
+    op g : Foo -> Foo [strat (0)] .
+
+    var X : Foo .
+    eq b = c .
+    eq f(a) = d .
+    eq f(X) = g(X) [owise] .
+  endfm
+
+***(
+Maude> red f(b) .
+reduce in OWISE-TEST2 : f(b) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result Foo: g(c)
+)
+
+  fmod OWISE-TEST2-TRANSFORMED is
+    sort Foo .
+    ops a b c d : -> Foo .
+    op f : Foo -> Foo [strat (0 1 0)] .
+    op enabled-f : Foo -> Bool [strat (0 1 0)] .
+    op g : Foo -> Foo [strat (0)] .
+
+    vars X Y : Foo .
+    eq b = c .
+    eq f(a) = d .
+    eq enabled-f(a) = true .
+    ceq f(Y) = g(X)
+      if enabled-f(Y) =/= true /\ enabled-f(X) := enabled-f(Y) .
+  endfm
+
+***(
+Maude> red f(b) .
+reduce in OWISE-TEST2-TRANSFORMED : f(b) .
+rewrites: 3 in 0ms cpu (0ms real) (~ rewrites/second)
+result Foo: g(c)
+)

@@ -1,0 +1,78 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  mod TICKER-FACTORY is
+    inc TICKER .
+    op TickerFactory : Aid Nat -> Actor [ctor] .
+    ops newReq newReply : Aid  -> MsgBody [ctor] .
+    op o : Aid Nat -> Aid [ctor] .
+
+    vars A C : Aid .
+    vars I J : Nat .
+    rl [newReq] :
+      TickerFactory(A, I) (A <| newReq(C))
+      => TickerFactory(A, s I) (C <| newReply(o(A, I)))
+         Ticker(o(A, I), 0) (o(A, I) <| tick) .
+  endm
+
+  mod TICKER-CUSTOMER is
+    inc TICKER-FACTORY .
+    ops Cust Cust1 Cust2 :  Aid Aid Nat ->  Actor [ctor] .
+
+    vars C TF T : Aid .
+    vars N M : Nat .
+
+    rl [req] :
+      Cust(C, TF, N)
+      => Cust1(C, TF, N) (TF <| newReq(C)) .
+
+    rl [newReply] :
+      Cust1(C, TF, N) (C <| newReply(T))
+      => Cust2(C, TF, N) (T <| timeReq(C)) .
+
+    rl [timeReply] :
+      Cust2(C, TF, N) (C <| timeReply(M))
+      => Cust(C, TF, s N) .
+  endm
+
+  mod TICKER-FACTORY-TEST is
+    ex TICKER-CUSTOMER .
+    ops tf c1 c2 : -> Aid [ctor] .
+    ops ic1 ic2 : -> AConf .
+    eq ic1 = TickerFactory(tf, 0) Cust(c1, tf, 0)  .
+    eq ic2 = ic1 Cust(c2, tf, 0) .
+  endm
+
+***(
+Maude> rew [40] ic2 .
+rewrite [40] in TICKER-FACTORY-TEST : ic2 .
+rewrites: 42 in 0ms cpu (0ms real) (~ rewrites/second)
+result AConf: (o(tf, 0) <| tick) Ticker(o(tf, 0), 35) TickerFactory(tf, 1)
+    Cust(c1, tf, 1) Cust(c2, tf, 0)
+
+Maude> frew [40] ic2 .
+frewrite in TICKER-FACTORY-TEST : ic2 .
+rewrites: 42 in 0ms cpu (0ms real) (~ rewrites/second)
+result (sort not calculated): (o(tf, 0) <| tick) (o(tf, 1) <| tick) (o(tf, 2)
+    <| tick) (o(tf, 3) <| tick) (o(tf, 4) <| tick) (o(tf, 5) <| tick) (o(tf, 6)
+    <| tick) (o(tf, 6) <| timeReq(c1)) Ticker(o(tf, 0), 6) Ticker(o(tf, 1), 0)
+    Ticker(o(tf, 2), 0) Ticker(o(tf, 3), 0) Ticker(o(tf, 4), 0) Ticker(o(tf,
+    5), 0) Ticker(o(tf, 6), 0) TickerFactory(tf, 7) ((tf <| newReq(c2)) Cust1(
+    c2, tf, 3)) Cust2(c1, tf, 3)
+
+Maude> frew [20] ic2 .
+frewrite in TICKER-FACTORY-TEST : ic2 .
+rewrites: 22 in 0ms cpu (0ms real) (~ rewrites/second)
+result AConf: (c1 <| timeReply(0)) (o(tf, 0) <| tick) (o(tf, 1) <| tick) (o(
+    tf, 2) <| tick) (o(tf, 3) <| tick) (o(tf, 3) <| timeReq(c2)) Ticker(o(tf,
+    0), 3) Ticker(o(tf, 1), 0) Ticker(o(tf, 2), 0) Ticker(o(tf, 3), 0)
+    TickerFactory(tf, 4) Cust2(c1, tf, 1) Cust2(c2, tf, 1)
+  
+Maude> frew [4] ic2 Cust(c1, tf, 0) .
+frewrite in TICKER-FACTORY-TEST : ic2 Cust(c1, tf, 0) .
+rewrites: 6 in 0ms cpu (0ms real) (~ rewrites/second)
+result AConf: (tf <| newReq(c1)) (tf <| newReq(c2)) (c1 <| newReply(o(tf, 0)))
+    (o(tf, 0) <| tick) Ticker(o(tf, 0), 0) TickerFactory(tf, 1) Cust1(c1, tf,
+    0) Cust1(c1, tf, 0) Cust1(c2, tf, 0)
+)

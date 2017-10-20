@@ -1,0 +1,113 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  mod BLOCKS-WORLD is
+    protecting QID .
+    sorts BlockId Prop State .
+    subsort Qid < BlockId .
+    subsort Prop < State .
+
+    op table : BlockId -> Prop [ctor] .      *** block is on the table
+    op on : BlockId BlockId -> Prop [ctor] . *** block A is on block B
+    op clear : BlockId -> Prop [ctor] .      *** block is clear
+    op hold : BlockId -> Prop [ctor] .       *** robot arm holds block
+    op empty : -> Prop [ctor] .              *** robot arm is empty
+    op 1 : -> State [ctor] .
+    op _&_ : State State -> State [ctor assoc comm id: 1] .
+ 
+    vars X Y : BlockId .
+
+    rl [pickup] : empty & clear(X) & table(X) => hold(X) .
+    rl [putdown] : hold(X) => empty & clear(X) & table(X) . 
+    rl [unstack] : empty & clear(X) & on(X, Y) => hold(X) & clear(Y) .
+    rl [stack] : hold(X) & clear(Y) => empty & clear(X) & on(X, Y) .
+  endm
+
+rew [5] empty & clear('c) & clear('b) & table('a) & 
+                 table('b) & on('c, 'a) .
+---(
+rewrite [5] in BLOCKS-WORLD : empty & clear('c) & clear('b) & table('a) &
+    table('b) & on('c, 'a) .
+*********** rule
+rl empty & table(X) & clear(X) => hold(X) [label pickup] .
+X --> 'b
+empty & table('a) & table('b) & clear('b) & clear('c) & on('c, 'a)
+--->
+(table('a) & clear('c) & on('c, 'a)) & hold('b)
+*********** rule
+rl clear(Y) & hold(X) => empty & clear(X) & on(X, Y) [label stack] .
+Y --> 'c
+X --> 'b
+table('a) & clear('c) & hold('b) & on('c, 'a)
+--->
+(table('a) & on('c, 'a)) & empty & clear('b) & on('b, 'c)
+*********** rule
+rl empty & clear(X) & on(X, Y) => clear(Y) & hold(X) [label unstack] .
+X --> 'b
+Y --> 'c
+empty & table('a) & clear('b) & on('b, 'c) & on('c, 'a)
+--->
+(table('a) & on('c, 'a)) & clear('c) & hold('b)
+*********** rule
+rl clear(Y) & hold(X) => empty & clear(X) & on(X, Y) [label stack] .
+Y --> 'c
+X --> 'b
+table('a) & clear('c) & hold('b) & on('c, 'a)
+--->
+(table('a) & on('c, 'a)) & empty & clear('b) & on('b, 'c)
+*********** rule
+rl empty & clear(X) & on(X, Y) => clear(Y) & hold(X) [label unstack] .
+X --> 'b
+Y --> 'c
+empty & table('a) & clear('b) & on('b, 'c) & on('c, 'a)
+--->
+(table('a) & on('c, 'a)) & clear('c) & hold('b)
+rewrites: 5 in 0ms cpu (0ms real) (~ rewrites/second)
+result State: table('a) & clear('c) & hold('b) & on('c, 'a)
+---)
+
+search empty & clear('c) & clear('b) & table('a) & 
+                table('b) & on('c,'a) 
+            =>* empty & clear('a) & table('c) & on('a,'b) & on('b,'c) .
+---(
+search in BLOCKS-WORLD : empty & clear('c) & clear('b) & table('a) & table('b)
+    & on('c, 'a) =>* empty & table('c) & clear('a) & on('a, 'b) & on('b, 'c) .
+
+Solution 1 (state 21)
+states: 22  rewrites: 37 in 0ms cpu (0ms real) (~ rewrites/second)
+empty substitution
+
+No more solutions.
+states: 22  rewrites: 42 in 0ms cpu (0ms real) (~ rewrites/second)
+---)
+
+show path 21 .
+---(
+state 0, State: empty & table('a) & table('b) & clear('b) & clear('c) & on('c,
+    'a)
+===[ rl empty & clear(X) & on(X, Y) => clear(Y) & hold(X) [label unstack] .
+    ]===>
+state 2, State: table('a) & table('b) & clear('a) & clear('b) & hold('c)
+===[ rl hold(X) => empty & table(X) & clear(X) [label putdown] . ]===>
+state 5, State: empty & table('a) & table('b) & table('c) & clear('a) & clear(
+    'b) & clear('c)
+===[ rl empty & table(X) & clear(X) => hold(X) [label pickup] . ]===>
+state 8, State: table('a) & table('c) & clear('a) & clear('c) & hold('b)
+===[ rl clear(Y) & hold(X) => empty & clear(X) & on(X, Y) [label stack] . ]===>
+state 13, State: empty & table('a) & table('c) & clear('a) & clear('b) & on('b,
+    'c)
+===[ rl empty & table(X) & clear(X) => hold(X) [label pickup] . ]===>
+state 17, State: table('c) & clear('b) & hold('a) & on('b, 'c)
+===[ rl clear(Y) & hold(X) => empty & clear(X) & on(X, Y) [label stack] . ]===>
+state 21, State: empty & table('c) & clear('a) & on('a, 'b) & on('b, 'c)
+---)
+
+show path labels 21 .
+---(
+unstack
+putdown
+pickup
+stack
+pickup
+stack
+---)

@@ -1,0 +1,38 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  fmod UP-DOWN-TEST is
+    protecting META-LEVEL .
+    sort Foo .
+    ops a b c d : -> Foo .
+    op f : Foo Foo -> Foo .
+    op error : -> [Foo] .
+    eq c = d .
+  endfm
+
+***(
+Maude> reduce in UP-DOWN-TEST : upTerm(f(a, f(b, c))) .
+reduce in UP-DOWN-TEST : upTerm(f(a, f(b, c))) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result GroundTerm: 'f['a.Foo,'f['b.Foo,'d.Foo]]
+
+Maude> reduce in UP-DOWN-TEST : 
+           downTerm('f['a.Foo,'f['b.Foo,'c.Foo]], error) .
+reduce in UP-DOWN-TEST : downTerm('f['a.Foo,'f['b.Foo,'c.Foo]], error) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result Foo: f(a, f(b, d))
+
+Maude> reduce in UP-DOWN-TEST : 
+           downTerm(upTerm(f(a, f(b, c))), error) .
+reduce in UP-DOWN-TEST : downTerm(upTerm(f(a, f(b, c))), error) .
+rewrites: 3 in 0ms cpu (0ms real) (~ rewrites/second)
+result Foo: f(a, f(b, d))
+
+Maude> reduce in UP-DOWN-TEST : 
+           downTerm('f['a.Foo,'f['b.Foo,'e.Foo]], error) .
+Advisory: could not find a constant e of sort Foo in meta-module UP-DOWN-TEST.
+reduce in UP-DOWN-TEST : downTerm('f['a.Foo,'f['b.Foo,'e.Foo]], error) .
+rewrites: 1 in 0ms cpu (0ms real) (~ rewrites/second)
+result [Foo]: error
+)

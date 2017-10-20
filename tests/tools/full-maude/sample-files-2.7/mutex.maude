@@ -1,0 +1,18 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  mod MUTEX is
+    sorts Name Mode Proc Token Conf .
+    subsorts Token Proc < Conf .
+    op none : -> Conf [ctor] .
+    op __ : Conf Conf -> Conf [ctor assoc comm id: none] .
+    ops a b : -> Name [ctor] .
+    ops wait critical : -> Mode [ctor] .
+    op [_,_] : Name Mode -> Proc [ctor] .
+    ops * $ : -> Token [ctor] .
+    rl [a-enter] : $ [a, wait] => [a, critical] .
+    rl [b-enter] : * [b, wait] => [b, critical] .
+    rl [a-exit] : [a, critical] => [a, wait] * .
+    rl [b-exit] : [b, critical] => [b, wait] $ .
+  endm

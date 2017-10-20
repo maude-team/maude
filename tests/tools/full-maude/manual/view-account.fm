@@ -1,0 +1,12 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  load cell.fm
+  load account.fm
+  
+ (view Account from CELL to ACCOUNT is
+    sort Elt to Int .
+    class Cell to Account .
+    attr Cell . contents to bal .
+  endv)

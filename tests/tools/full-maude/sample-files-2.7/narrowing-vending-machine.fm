@@ -1,0 +1,120 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team + Santiago Escobar
+
+mod NARROWING-VENDING-MACHINE is
+   sorts Coin Item Marking Money State .
+   subsort Coin < Money .
+   op empty : -> Money .
+   op __ : Money Money -> Money [assoc comm id: empty] .
+   subsort Money Item < Marking .
+   op __ : Marking Marking -> Marking [assoc comm id: empty] .
+   op <_> : Marking -> State .
+   ops $ q : -> Coin .
+   ops a c : -> Item .
+   var M : Marking .
+   rl [buy-c] : < M $ > => < M c > .
+   rl [buy-a] : < M $ > => < M a q > .
+   eq [change] : q q q q = $ [variant] .
+endm
+
+select FULL-MAUDE .
+loop init .
+
+(search [1] in NARROWING-VENDING-MACHINE : 
+            < M:Money > ~>* < a c > .)
+---(
+search [1] in NARROWING-VENDING-MACHINE : < M:Money > ~>* < a c > .
+
+Solution 1
+M:Money --> $ q q q
+
+No more solutions.
+---)
+
+(search [,5] in NARROWING-VENDING-MACHINE : 
+            < M:Money > ~>* < a c > .)
+---(
+search [,5] in NARROWING-VENDING-MACHINE : < M:Money > ~>* < a c > .
+
+Solution 1
+M:Money --> $ q q q
+
+No more solutions.
+---)
+
+(search [,5] in NARROWING-VENDING-MACHINE : 
+            < C1:Coin C2:Coin C3:Coin C4:Coin > ~>! < M:Money a c > .)
+---(
+search [,5] in NARROWING-VENDING-MACHINE : < C1:Coin C2:Coin C3:Coin C4:Coin >
+    ~>! < M:Money a c > .
+
+Solution 1
+C1:Coin --> $ ;
+C2:Coin --> q ;
+C3:Coin --> q ;
+C4:Coin --> q ;
+M:Money --> empty
+
+Solution 2
+C1:Coin --> q ;
+C2:Coin --> $ ;
+C3:Coin --> q ;
+C4:Coin --> q ;
+M:Money --> empty
+
+Solution 3
+C1:Coin --> q ;
+C2:Coin --> q ;
+C3:Coin --> $ ;
+C4:Coin --> q ;
+M:Money --> empty
+
+Solution 4
+C1:Coin --> q ;
+C2:Coin --> q ;
+C3:Coin --> q ;
+C4:Coin --> $ ;
+M:Money --> empty
+
+No more solutions.
+---)
+
+reduce in FULL-MAUDE :
+            metaNarrowSearch(axCohComplete(upModule('NARROWING-VENDING-MACHINE, false)),
+              '<_>['M:Money],
+              '<_>['__['a.Item, 'c.Item]],
+              none, '*, unbounded, 1, unbounded) .
+---(
+result ResultTriple: {'<_>['__['a.Item,'c.Item,'empty.Money]],'State,
+    '#1:Marking <- '__['q.Coin,'q.Coin,'q.Coin,'empty.Money] ; 
+    '#4:Marking <- '__['a.Item,'empty.Money] ; 
+    '#6:Money <- 'empty.Money ; 
+    '%3:Money <- '__['q.Coin,'q.Coin,'q.Coin,'empty.Money] ; 
+    'M:Money <- '__['$.Coin,'__['q.Coin,'q.Coin,'q.Coin,'empty.Money]]}
+---)
+
+reduce in FULL-MAUDE :
+            metaNarrowSearchPath(
+              axCohComplete(upModule('NARROWING-VENDING-MACHINE, false)),
+              '<_>['M:Money],
+              '<_>['__['a.Item, 'c.Item]],
+              none, '*, unbounded, 1, unbounded) .
+---(
+  result TraceNarrow: 
+    { '<_>['__['%3:Money,'__['q.Coin,'a.Item]]],
+      '#1:Marking <- '%3:Money ; 
+      'M:Money <- '__['$.Coin,'%3:Money],
+      'State,
+      rl '<_>['__['$.Coin,'#1:Marking]] 
+        => '<_>['__['#1:Marking,'__['q.Coin,'a.Item]]] 
+        [label('buy-a)] . }
+    { '<_>['__['c.Item,'__['a.Item,'#6:Money]]],
+      '#4:Marking <- '__['a.Item,'#6:Money] ; 
+      '%3:Money <- '__['q.Coin,'q.Coin,'q.Coin,'#6:Money],
+      'State,
+      rl '<_>['__['$.Coin,'#4:Marking]] 
+        => '<_>['__['c.Item,'#4:Marking]] 
+        [label('buy-c)] .}
+---)
+              

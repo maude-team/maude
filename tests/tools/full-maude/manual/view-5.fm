@@ -1,0 +1,9 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  ----load nznat#.fm
+  
+ (view 5 from NZNAT# to NAT is
+    op # to term 5 .
+  endv)

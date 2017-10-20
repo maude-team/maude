@@ -1,0 +1,23 @@
+From "All About Maude": 
+"Since there are no polymorphic equations, polymorphic operators are limited to 
+constructors and built-ins." 
+
+fmod UNIVERSAL is
+  pr NAT .
+  sort Universal .
+  op foo : Universal -> Bool [poly(1)] .
+  eq foo(T:Universal) = true .
+  eq foo(T:Nat) = false [owise].
+endfm
+
+red foo(3) .
+
+fmod UNIVERSAL2 is
+  inc META-LEVEL .
+  inc UNIVERSAL .
+endfm
+
+red upModule('UNIVERSAL, false) .
+
+red metaReduce(upModule('UNIVERSAL, false), 'foo['s_^3['0.Zero]]) .
+ 

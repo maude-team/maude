@@ -1,0 +1,43 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  fmod RENAMING-EX-A is
+    sort Foo .
+    op a : -> Foo .
+    op f : Foo -> Foo .
+  endfm
+  
+  fmod RENAMING-EX-B is
+    including RENAMING-EX-A .
+    sort Bar .
+    subsort Foo < Bar .
+    op f : Bar -> Bar .
+  endfm
+  
+  fmod RENAMING-EX-C is
+    inc RENAMING-EX-B * (op f : Bar -> Bar to g) .
+  endfm
+
+***(
+Maude> show module .
+fmod RENAMING-EX-C is
+  inc RENAMING-EX-B * (op f : [Bar] -> [Bar] to g) .
+endfm
+)
+
+  fmod RENAMING-EX-D is
+    sorts Foo Bar .
+  endfm
+
+  fmod RENAMING-EX-E is
+    inc RENAMING-EX-D .
+    op f : Foo -> Foo .
+  endfm
+
+  fmod RENAMING-EX-F is
+    inc RENAMING-EX-D .
+    subsort Foo < Bar .
+    op f : Bar -> Bar .
+  endfm
+ 

@@ -1,0 +1,37 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  load extended-rent-a-car-store.fm
+  
+ (fmod EXTENDED-RENT-A-CAR-STORE-TEST is
+    pr EXTENDED-RENT-A-CAR-STORE .
+
+    op ExtStoreConf : -> Configuration [memo] .
+    eq ExtStoreConf
+      = < 'S : Store |
+           discounts : 
+             (((Staff, EconomyCar), 20),
+              ((Staff, MidSizeCar), 30),
+              ((Staff, FullSizeCar), 40),
+              ((OccasionalCust, EconomyCar), 0),
+              ((OccasionalCust, MidSizeCar), 0),
+              ((OccasionalCust, FullSizeCar), 0),
+              ((PreferredCust, EconomyCar), 10),
+              ((PreferredCust, MidSizeCar), 15),
+              ((PreferredCust, FullSizeCar), 20)),
+           payments : empty, penalty : 0,
+           threshold : 1000, suspended : empty,
+           rates : ((EconomyCar, 100),
+                    (MidSizeCar, 150),
+                    (FullSizeCar, 200)),
+           customers : ('C1, 'C2), 
+           cars : ('A1, 'A3, 'A5),
+           rentals : empty, calendar : 'C >
+        < 'C1 : Staff | cash : 5000, debt : 0 >
+        < 'C2 : OccasionalCust | cash : 5000, debt : 0 >
+        < 'A1 : EconomyCar | available : true >
+        < 'A3 : MidSizeCar | available : true >
+        < 'A5 : FullSizeCar | available : true >
+        < 'C : Calendar | date : 0 > .
+  endfm)

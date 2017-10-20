@@ -1,0 +1,612 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+  
+  ---- modified on october 28th, 2008
+  ---- there were two mistakes in the version in the book:
+  ----  - for each operator f : k1 ... kn -> k, an equation 
+  ----       enabled(f(x1,...xi,...xn)) = true if enabled(xi)
+  ----    must be generated, for 1 <= i <= n; 
+  ----    bug fixed: when n = 0, no equation should be generated.
+  ----  - Equations on polymorphic operations are tricky. In the case of enabled, 
+  ----    we are interested only on the positive cases; however, given polymorphic 
+  ----    operators like if_then_else_fi or _==_, we must generated equations for 
+  ----    each possible kind. All combinations are generated for Universal arguments.
+
+  view TypeList from TRIV to META-LEVEL is
+    sort Elt to TypeList .
+  endv
+
+  fmod DEADLOCK-FREEDOM is
+    pr META-LEVEL .
+    pr CONVERSION .
+    pr (SET * (op empty to empty*, 
+               op _`,_ to _*_, 
+               op insert to insert*, 
+               op delete to delete*, 
+               op _in_ to _in*_, 
+               op |_| to |_|*, 
+               op $card to $card*, 
+               op union to union*, 
+               op intersection to intersection*, 
+               op $intersect to $intersect*, 
+               op _\_ to _\*_, 
+               op $diff to $diff*, 
+               op _subset_ to _subset*_, 
+               op _psubset_ to _psubset*_)){TypeList} .
+
+    op deadlock-free : Module Sort -> Module .
+
+    var  F : Qid .
+    var  H : Header .
+    var  M : Module .
+    var  N : Nat .
+    vars T T' : Term .
+    var  TL : TermList .
+    vars IL IL' : ImportList .
+    var  S : Sort .
+    vars SS SS' : SortSet .
+    vars SSDS SSDS' : SubsortDeclSet .
+    var  OPD : OpDecl .
+    vars OPDS OPDS' : OpDeclSet .
+    var  MAS : MembAxSet .
+    vars EqS EqS' : EquationSet .
+    vars RlS RlS' : RuleSet .
+    vars Tp Tp' : Type .
+    vars TpL TpL' : TypeList .
+    var  TpLS : Set{TypeList} .
+    var  TpS : TypeSet .
+    var  AtS : AttrSet .
+    var  Cd : Condition .
+    vars NL NL' : NatList .
+
+    op addSorts : Module SortSet ~> Module .
+    eq addSorts(mod H is IL sorts SS . SSDS OPDS MAS EqS RlS endm, SS')
+      = mod H is IL sorts SS ; SS' . SSDS OPDS MAS EqS RlS endm .
+    eq addSorts(fmod H is IL sorts SS . SSDS OPDS MAS EqS endfm, SS')
+      = fmod H is IL sorts SS ; SS' . SSDS OPDS MAS EqS endfm .
+
+    op addImports : Module ImportList ~> Module .
+    eq addImports(mod H is IL sorts SS . SSDS OPDS MAS EqS RlS endm, IL')
+      = mod H is IL IL' sorts SS . SSDS OPDS MAS EqS RlS endm .
+    eq addImports(fmod H is IL sorts SS . SSDS OPDS MAS EqS endfm, IL')
+      = fmod H is IL IL' sorts SS . SSDS OPDS MAS EqS endfm .
+
+    op addOps : Module OpDeclSet ~> Module .
+    eq addOps(mod H is IL sorts SS . SSDS OPDS MAS EqS RlS endm, OPDS')
+      = mod H is IL sorts SS . SSDS OPDS OPDS' MAS EqS RlS endm .
+    eq addOps(fmod H is IL sorts SS . SSDS OPDS MAS EqS endfm, OPDS')
+      = fmod H is IL sorts SS . SSDS OPDS OPDS' MAS EqS endfm .
+
+    op addEqs : Module EquationSet ~> Module .
+    eq addEqs(mod H is IL sorts SS . SSDS OPDS MAS EqS RlS endm, EqS')
+      = mod H is IL sorts SS . SSDS OPDS MAS (EqS EqS') RlS endm .
+    eq addEqs(fmod H is IL sorts SS . SSDS OPDS MAS EqS endfm, EqS')
+      = fmod H is IL sorts SS . SSDS OPDS MAS (EqS EqS') endfm .
+
+    op addRls : Module RuleSet ~> Module .
+    ---- It makes a functional module to become a system module
+    eq addRls(mod H is IL sorts SS . SSDS OPDS MAS EqS RlS endm, RlS')
+      = mod H is IL sorts SS . SSDS OPDS MAS EqS EqS RlS RlS' endm .
+    eq addRls(fmod H is IL sorts SS . SSDS OPDS MAS EqS endfm, RlS)
+      = mod H is IL sorts SS . SSDS OPDS MAS EqS RlS endm .
+
+    op frozen : OpDecl Nat -> Bool .  
+    eq frozen(op F : TpL -> Tp [frozen(NL N NL') AtS] ., N)
+      ---- we could assume that all non-ctor operators are frozen
+      = true .
+    eq frozen(OPD, N) = false [owise] .
+
+    op id : OpDecl ~> Term .  
+    eq id(op F : TpL -> Tp [id(T) AtS] .) = T .
+
+----    op enabled-ops : TypeSet -> OpDeclSet .
+----    eq enabled-ops(Tp ; TpS)
+----      = (op 'enabled : Tp -> '`[Bool`] [none] . enabled-ops(TpS)) .
+----    eq enabled-ops((none).KindSet) = none .
+
+    op enabled-eqs : RuleSet -> EquationSet .
+    op enabled-eqs : OpDeclSet TypeSet -> EquationSet .
+    op enabled-eqs1 : OpDecl Set{TypeList} -> EquationSet .
+    op enabled-eqs2 : OpDecl TypeList TermList Nat -> EquationSet .
+    op unfoldUniversal : OpDecl TypeSet -> Set{TypeList} .
+    op unfoldUniversal1 : TypeList TypeSet -> Set{TypeList} .
+    op unfoldUniversal2 : TypeList Type -> Set{TypeList} .
+    op enabled-args : TypeList Nat -> TermList .
+    op make-cond : TermList Term -> EqCondition .
+
+    eq enabled-eqs(rl T => T' [AtS] . RlS)
+      = (eq 'enabled[T] = 'true.Bool [none] . enabled-eqs(RlS)) .
+    eq enabled-eqs(crl T => T' if Cd [AtS] . RlS)
+      = (ceq 'enabled[T] = 'true.Bool if Cd [none] .
+         enabled-eqs(RlS)) .
+    eq enabled-eqs((none).RuleSet) = none .
+
+    eq enabled-eqs(OPD OPDS, TpS)
+      = enabled-eqs1(OPD, unfoldUniversal(OPD, TpS))
+        enabled-eqs(OPDS, TpS) .
+    eq enabled-eqs((none).OpDeclSet, TpS) = none .
+
+    eq unfoldUniversal(op F : TpL -> Tp [poly(NL) AtS] ., TpS)
+      = unfoldUniversal1(TpL, TpS) .
+    eq unfoldUniversal(op F : TpL -> Tp [AtS] ., TpS) = TpL [owise] .
+
+    eq unfoldUniversal1(TpL, Tp ; TpS)
+      = unfoldUniversal2(TpL, Tp) * unfoldUniversal1(TpL, TpS) .
+    eq unfoldUniversal1(TpL, none) = empty* .
+    
+    eq unfoldUniversal2('Universal TpL, Tp) = Tp unfoldUniversal2(TpL, Tp) .
+    eq unfoldUniversal2(Tp TpL, Tp') = Tp unfoldUniversal2(TpL, Tp') [owise] .
+    eq unfoldUniversal2(nil, Tp) = nil . 
+    
+    eq enabled-eqs1(op F : TpL -> Tp [AtS] ., TpL' * TpLS)
+      = enabled-eqs2(op F : TpL -> Tp [AtS] ., TpL', enabled-args(TpL', 0), 0) 
+        enabled-eqs1(op F : TpL -> Tp [AtS] ., TpLS) .
+    eq enabled-eqs1(op F : TpL -> Tp [AtS] ., empty*) = none .
+                
+    eq enabled-eqs2(op F : TpL -> Tp [AtS] ., Tp' TpL', TL, N)
+      --- id-left and id-right should also be considered
+      = (if frozen(op F : TpL -> Tp [AtS] ., N) 
+         then none
+         else if id(op F : TpL -> Tp [AtS] .) :: Term
+              then ceq 'enabled[F[TL]] = 'true.Bool 
+                     if make-cond(TL, id(op F : TpL -> Tp [AtS] .))
+                     /\ 'enabled[qid("V" + string(N, 10) 
+                          + ":" + string(Tp'))] = 'true.Bool 
+                    [none] .
+              else ceq 'enabled[F[TL]] = 'true.Bool 
+                     if 'enabled[qid("V" + string(N, 10) 
+                          + ":" + string(Tp'))] = 'true.Bool 
+                     [none] .
+              fi
+         fi
+         enabled-eqs2(op F : TpL -> Tp [AtS] ., TpL', TL, s N)) .
+    eq enabled-eqs2(OPD, nil, TL, N) = none .
+
+    eq enabled-args(Tp TpL, N) 
+      = (qid("V" + string(N, 10) + ":" + string(Tp)), 
+         enabled-args(TpL, s N)) . 
+    eq enabled-args(nil, N) = empty .
+    
+    eq make-cond((T, TL), T') 
+      = ('_=/=_[T, T'] = 'true.Bool) /\ make-cond(TL, T') .
+    eq make-cond(empty, T) = nil .
+
+    eq deadlock-free(M, S) 
+      = addRls(
+          addSorts(
+            addOps(
+              addEqs(M, 
+                (enabled-eqs(getRls(M))
+                 enabled-eqs(getOps(M), getKinds(M)))),
+              (----enabled-ops(getKinds(M))
+               op 'enabled : 'Universal -> 'Bool [poly(1)] .
+               op '`{_`} : S -> 'EConfig [none] .)),
+            'EConfig ; 'Universal),
+          (crl '`{_`}[qid("V:" + string(S))] 
+             => '`{_`}[qid("V:" + string(S))]
+             if '_=/=_['enabled[qid("V:" + string(S))], 'true.Bool] 
+                  = 'true.Bool 
+             [none] .)) .
+  endfm
+
+  load abstract-bakery.maude
+  reduce in DEADLOCK-FREEDOM :
+    deadlock-free(upModule('ABSTRACT-BAKERY, true), 'BState) .
+---(
+reduce in DEADLOCK-FREEDOM : deadlock-free(upModule('ABSTRACT-BAKERY, true),
+    'BState) .
+rewrites: 2324 in 6ms cpu (7ms real) (358199 rewrites/second)
+result SModule: mod 'ABSTRACT-BAKERY is
+  nil
+  sorts 'BState ; 'Bool ; 'EConfig ; 'Mode ; 'Nat ; 'NzNat ; 'Universal ; 'Zero
+    .
+  subsort 'NzNat < 'Nat .
+  subsort 'Zero < 'Nat .
+  op '0 : nil -> 'Zero [ctor] .
+  op '<_`,_`,_`,_> : 'Mode 'Nat 'Mode 'Nat -> 'BState [ctor] .
+  op '_&_ : 'Nat 'Nat -> 'Nat [assoc comm prec(53) special(
+    id-hook('ACU_NumberOpSymbol, '&) 
+    op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
+  op '_*_ : 'Nat 'Nat -> 'Nat [assoc comm prec(31) special(
+    id-hook('ACU_NumberOpSymbol, '*) 
+    op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
+  op '_*_ : 'NzNat 'NzNat -> 'NzNat [assoc comm prec(31) special(
+    id-hook('ACU_NumberOpSymbol, '*) 
+    op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
+  op '_+_ : 'Nat 'Nat -> 'Nat [assoc comm prec(33) special(
+    id-hook('ACU_NumberOpSymbol, '+) 
+    op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
+  op '_+_ : 'NzNat 'Nat -> 'NzNat [assoc comm prec(33) special(
+    id-hook('ACU_NumberOpSymbol, '+) 
+    op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
+  op '_<<_ : 'Nat 'Nat -> 'Nat [prec(35) gather('E 'e) special(
+    id-hook('NumberOpSymbol, '<<) 
+    op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
+  op '_<=_ : 'Nat 'Nat -> 'Bool [prec(37) special(
+    id-hook('NumberOpSymbol, '<=) 
+    op-hook('succSymbol, 's_, 'Nat, 'NzNat) 
+    term-hook('trueTerm, 'true.Bool) 
+    term-hook('falseTerm, 'false.Bool))] .
+  op '_<_ : 'Nat 'Nat -> 'Bool [prec(37) special(
+    id-hook('NumberOpSymbol, '<) 
+    op-hook('succSymbol, 's_, 'Nat, 'NzNat) 
+    term-hook('trueTerm, 'true.Bool) 
+    term-hook('falseTerm, 'false.Bool))] .
+  op '_=/=_ : 'Universal 'Universal -> 'Bool [prec(51) poly(1 2) special(
+    id-hook('EqualitySymbol, nil) 
+    term-hook('equalTerm, 'false.Bool) 
+    term-hook('notEqualTerm, 'true.Bool))] .
+  op '_==_ : 'Universal 'Universal -> 'Bool [prec(51) poly(1 2) special(
+    id-hook('EqualitySymbol, nil) 
+    term-hook('equalTerm, 'true.Bool) 
+    term-hook('notEqualTerm, 'false.Bool))] .
+  op '_>=_ : 'Nat 'Nat -> 'Bool [prec(37) special(
+    id-hook('NumberOpSymbol, '>=) 
+    op-hook('succSymbol, 's_, 'Nat, 'NzNat) 
+    term-hook('trueTerm, 'true.Bool) 
+    term-hook('falseTerm, 'false.Bool))] .
+  op '_>>_ : 'Nat 'Nat -> 'Nat [prec(35) gather('E 'e) special(
+    id-hook('NumberOpSymbol, '>>) 
+    op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
+  op '_>_ : 'Nat 'Nat -> 'Bool [prec(37) special(
+    id-hook('NumberOpSymbol, '>) 
+    op-hook('succSymbol, 's_, 'Nat, 'NzNat) 
+    term-hook('trueTerm, 'true.Bool) 
+    term-hook('falseTerm, 'false.Bool))] .
+  op '_^_ : 'Nat 'Nat -> 'Nat [prec(29) gather('E 'e) special(
+    id-hook('NumberOpSymbol, '^) 
+    op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
+  op '_^_ : 'NzNat 'Nat -> 'NzNat [prec(29) gather('E 'e) special(
+    id-hook('NumberOpSymbol, '^) 
+    op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
+  op '_and_ : 'Bool 'Bool -> 'Bool [assoc comm prec(55)] .
+  op '_divides_ : 'NzNat 'Nat -> 'Bool [prec(51) special(
+    id-hook('NumberOpSymbol, 'divides) 
+    op-hook('succSymbol, 's_, 'Nat, 'NzNat) 
+    term-hook('trueTerm, 'true.Bool) 
+    term-hook('falseTerm, 'false.Bool))] .
+  op '_implies_ : 'Bool 'Bool -> 'Bool [prec(61) gather('e 'E)] .
+  op '_or_ : 'Bool 'Bool -> 'Bool [assoc comm prec(59)] .
+  op '_quo_ : 'Nat 'NzNat -> 'Nat [prec(31) gather('E 'e) special(
+    id-hook('NumberOpSymbol, 'quo) 
+    op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
+  op '_rem_ : 'Nat 'NzNat -> 'Nat [prec(31) gather('E 'e) special(
+    id-hook('NumberOpSymbol, 'rem) 
+    op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
+  op '_xor_ : 'Bool 'Bool -> 'Bool [assoc comm prec(57)] .
+  op '_xor_ : 'Nat 'Nat -> 'Nat [assoc comm prec(55) special(
+    id-hook('ACU_NumberOpSymbol, 'xor) 
+    op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
+  op '_|_ : 'Nat 'Nat -> 'Nat [assoc comm prec(57) special(
+    id-hook('ACU_NumberOpSymbol, '|) 
+    op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
+  op '_|_ : 'NzNat 'Nat -> 'NzNat [assoc comm prec(57) special(
+    id-hook('ACU_NumberOpSymbol, '|) 
+    op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
+  op '`{_`} : 'BState -> 'EConfig [none] .
+  op 'crit : nil -> 'Mode [ctor] .
+  op 'enabled : 'Universal -> 'Bool [poly(1)] .
+  op 'false : nil -> 'Bool [ctor special(
+    id-hook('SystemFalse, nil))] .
+  op 'gcd : 'Nat 'Nat -> 'Nat [assoc comm special(
+    id-hook('ACU_NumberOpSymbol, 'gcd) 
+    op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
+  op 'gcd : 'NzNat 'Nat -> 'NzNat [assoc comm special(
+    id-hook('ACU_NumberOpSymbol, 'gcd) 
+    op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
+  op 'if_then_else_fi : 'Bool 'Universal 'Universal -> 'Universal [poly(2 3 0)
+    special(
+    id-hook('BranchSymbol, nil) 
+    term-hook('1, 'true.Bool) 
+    term-hook('2, 'false.Bool))] .
+  op 'initial : nil -> 'BState [none] .
+  op 'lcm : 'Nat 'Nat -> 'Nat [assoc comm special(
+    id-hook('ACU_NumberOpSymbol, 'lcm) 
+    op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
+  op 'lcm : 'NzNat 'NzNat -> 'NzNat [assoc comm special(
+    id-hook('ACU_NumberOpSymbol, 'lcm) 
+    op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
+  op 'max : 'Nat 'Nat -> 'Nat [assoc comm special(
+    id-hook('ACU_NumberOpSymbol, 'max) 
+    op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
+  op 'max : 'NzNat 'Nat -> 'NzNat [assoc comm special(
+    id-hook('ACU_NumberOpSymbol, 'max) 
+    op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
+  op 'min : 'Nat 'Nat -> 'Nat [assoc comm special(
+    id-hook('ACU_NumberOpSymbol, 'min) 
+    op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
+  op 'min : 'NzNat 'NzNat -> 'NzNat [assoc comm special(
+    id-hook('ACU_NumberOpSymbol, 'min) 
+    op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
+  op 'modExp : '`[Nat`] '`[Nat`] '`[Nat`] -> '`[Nat`] [special(
+    id-hook('NumberOpSymbol, 'modExp) 
+    op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
+  op 'not_ : 'Bool -> 'Bool [prec(53)] .
+  op 's_ : 'Nat -> 'NzNat [iter ctor special(
+    id-hook('SuccSymbol, nil) 
+    term-hook('zeroTerm, '0.Zero))] .
+  op 'sd : 'Nat 'Nat -> 'Nat [comm special(
+    id-hook('CUI_NumberOpSymbol, 'sd) 
+    op-hook('succSymbol, 's_, 'Nat, 'NzNat))] .
+  op 'sleep : nil -> 'Mode [ctor] .
+  op 'true : nil -> 'Bool [ctor special(
+    id-hook('SystemTrue, nil))] .
+  op 'wait : nil -> 'Mode [ctor] .
+  none
+  eq 'initial.BState = '<_`,_`,_`,_>['sleep.Mode,'0.Zero,'sleep.Mode,'0.Zero] [
+    none] .
+  eq '<_`,_`,_`,_>['P:Mode,'0.Zero,'Q:Mode,'s_^2['Y:Nat]] = '<_`,_`,_`,_>[
+    'P:Mode,'0.Zero,'Q:Mode,'s_['0.Zero]] [none] .
+  eq '<_`,_`,_`,_>['P:Mode,'s_['0.Zero],'Q:Mode,'s_^2['Y:Nat]] = '<_`,_`,_`,_>[
+    'P:Mode,'s_['0.Zero],'Q:Mode,'s_['0.Zero]] [none] .
+  eq '<_`,_`,_`,_>['P:Mode,'s_^2['0.Zero],'Q:Mode,'s_^2['Y:Nat]] =
+    '<_`,_`,_`,_>['P:Mode,'s_['0.Zero],'Q:Mode,'s_['0.Zero]] [none] .
+  eq '<_`,_`,_`,_>['P:Mode,'s_^2['X:Nat],'Q:Mode,'0.Zero] = '<_`,_`,_`,_>[
+    'P:Mode,'s_['0.Zero],'Q:Mode,'0.Zero] [none] .
+  eq '<_`,_`,_`,_>['P:Mode,'s_^3['X:Nat],'Q:Mode,'s_['0.Zero]] = '<_`,_`,_`,_>[
+    'P:Mode,'s_^2['0.Zero],'Q:Mode,'s_['0.Zero]] [none] .
+  eq '<_`,_`,_`,_>['P:Mode,'s_^3['X:Nat],'Q:Mode,'s_^2['0.Zero]] =
+    '<_`,_`,_`,_>['P:Mode,'s_^2['0.Zero],'Q:Mode,'s_['0.Zero]] [none] .
+  eq '<_`,_`,_`,_>['P:Mode,'s_^3['X:Nat],'Q:Mode,'s_^3['Y:Nat]] =
+    '<_`,_`,_`,_>['P:Mode,'s_^2['X:Nat],'Q:Mode,'s_^2['Y:Nat]] [none] .
+  eq '_and_['A:Bool,'A:Bool] = 'A:Bool [none] .
+  eq '_and_['A:Bool,'_xor_['B:Bool,'C:Bool]] = '_xor_['_and_['A:Bool,'B:Bool],
+    '_and_['A:Bool,'C:Bool]] [none] .
+  eq '_and_['false.Bool,'A:Bool] = 'false.Bool [none] .
+  eq '_and_['true.Bool,'A:Bool] = 'A:Bool [none] .
+  eq '_implies_['A:Bool,'B:Bool] = 'not_['_xor_['A:Bool,'_and_['A:Bool,
+    'B:Bool]]] [none] .
+  eq '_or_['A:Bool,'B:Bool] = '_xor_['_and_['A:Bool,'B:Bool],'_xor_['A:Bool,
+    'B:Bool]] [none] .
+  eq '_xor_['A:Bool,'A:Bool] = 'false.Bool [none] .
+  eq '_xor_['false.Bool,'A:Bool] = 'A:Bool [none] .
+  eq 'enabled['<_`,_`,_`,_>['P:Mode,'0.Zero,'wait.Mode,'Y:Nat]] = 'true.Bool [
+    none] .
+  eq 'enabled['<_`,_`,_`,_>['P:Mode,'X:Nat,'crit.Mode,'Y:Nat]] = 'true.Bool [
+    none] .
+  eq 'enabled['<_`,_`,_`,_>['P:Mode,'X:Nat,'sleep.Mode,'Y:Nat]] = 'true.Bool [
+    none] .
+  eq 'enabled['<_`,_`,_`,_>['crit.Mode,'X:Nat,'Q:Mode,'Y:Nat]] = 'true.Bool [
+    none] .
+  eq 'enabled['<_`,_`,_`,_>['sleep.Mode,'X:Nat,'Q:Mode,'Y:Nat]] = 'true.Bool [
+    none] .
+  eq 'enabled['<_`,_`,_`,_>['wait.Mode,'X:Nat,'Q:Mode,'0.Zero]] = 'true.Bool [
+    none] .
+  eq 'not_['A:Bool] = '_xor_['true.Bool,'A:Bool] [none] .
+  ceq 'enabled['<_`,_`,_`,_>['P:Mode,'X:Nat,'wait.Mode,'Y:Nat]] = 'true.Bool if
+    '_<_['Y:Nat,'X:Nat] = 'true.Bool [none] .
+  ceq 'enabled['<_`,_`,_`,_>['V0:Mode,'V1:Nat,'V2:Mode,'V3:Nat]] = 'true.Bool
+    if 'enabled['V0:Mode] = 'true.Bool [none] .
+  ceq 'enabled['<_`,_`,_`,_>['V0:Mode,'V1:Nat,'V2:Mode,'V3:Nat]] = 'true.Bool
+    if 'enabled['V1:Nat] = 'true.Bool [none] .
+  ceq 'enabled['<_`,_`,_`,_>['V0:Mode,'V1:Nat,'V2:Mode,'V3:Nat]] = 'true.Bool
+    if 'enabled['V2:Mode] = 'true.Bool [none] .
+  ceq 'enabled['<_`,_`,_`,_>['V0:Mode,'V1:Nat,'V2:Mode,'V3:Nat]] = 'true.Bool
+    if 'enabled['V3:Nat] = 'true.Bool [none] .
+  ceq 'enabled['<_`,_`,_`,_>['wait.Mode,'X:Nat,'Q:Mode,'Y:Nat]] = 'true.Bool if
+    'not_['_<_['Y:Nat,'X:Nat]] = 'true.Bool [none] .
+  ceq 'enabled['_&_['V0:Nat,'V1:Nat]] = 'true.Bool if 'enabled['V0:Nat] =
+    'true.Bool [none] .
+  ceq 'enabled['_&_['V0:Nat,'V1:Nat]] = 'true.Bool if 'enabled['V1:Nat] =
+    'true.Bool [none] .
+  ceq 'enabled['_*_['V0:Nat,'V1:Nat]] = 'true.Bool if 'enabled['V0:Nat] =
+    'true.Bool [none] .
+  ceq 'enabled['_*_['V0:Nat,'V1:Nat]] = 'true.Bool if 'enabled['V1:Nat] =
+    'true.Bool [none] .
+  ceq 'enabled['_*_['V0:NzNat,'V1:NzNat]] = 'true.Bool if 'enabled['V0:NzNat] =
+    'true.Bool [none] .
+  ceq 'enabled['_*_['V0:NzNat,'V1:NzNat]] = 'true.Bool if 'enabled['V1:NzNat] =
+    'true.Bool [none] .
+  ceq 'enabled['_+_['V0:Nat,'V1:Nat]] = 'true.Bool if 'enabled['V0:Nat] =
+    'true.Bool [none] .
+  ceq 'enabled['_+_['V0:Nat,'V1:Nat]] = 'true.Bool if 'enabled['V1:Nat] =
+    'true.Bool [none] .
+  ceq 'enabled['_+_['V0:NzNat,'V1:Nat]] = 'true.Bool if 'enabled['V0:NzNat] =
+    'true.Bool [none] .
+  ceq 'enabled['_+_['V0:NzNat,'V1:Nat]] = 'true.Bool if 'enabled['V1:Nat] =
+    'true.Bool [none] .
+  ceq 'enabled['_<<_['V0:Nat,'V1:Nat]] = 'true.Bool if 'enabled['V0:Nat] =
+    'true.Bool [none] .
+  ceq 'enabled['_<<_['V0:Nat,'V1:Nat]] = 'true.Bool if 'enabled['V1:Nat] =
+    'true.Bool [none] .
+  ceq 'enabled['_<=_['V0:Nat,'V1:Nat]] = 'true.Bool if 'enabled['V0:Nat] =
+    'true.Bool [none] .
+  ceq 'enabled['_<=_['V0:Nat,'V1:Nat]] = 'true.Bool if 'enabled['V1:Nat] =
+    'true.Bool [none] .
+  ceq 'enabled['_<_['V0:Nat,'V1:Nat]] = 'true.Bool if 'enabled['V0:Nat] =
+    'true.Bool [none] .
+  ceq 'enabled['_<_['V0:Nat,'V1:Nat]] = 'true.Bool if 'enabled['V1:Nat] =
+    'true.Bool [none] .
+  ceq 'enabled['_=/=_['V0:`[BState`],'V1:`[BState`]]] = 'true.Bool if 'enabled[
+    'V0:`[BState`]] = 'true.Bool [none] .
+  ceq 'enabled['_=/=_['V0:`[BState`],'V1:`[BState`]]] = 'true.Bool if 'enabled[
+    'V1:`[BState`]] = 'true.Bool [none] .
+  ceq 'enabled['_=/=_['V0:`[Bool`],'V1:`[Bool`]]] = 'true.Bool if 'enabled[
+    'V0:`[Bool`]] = 'true.Bool [none] .
+  ceq 'enabled['_=/=_['V0:`[Bool`],'V1:`[Bool`]]] = 'true.Bool if 'enabled[
+    'V1:`[Bool`]] = 'true.Bool [none] .
+  ceq 'enabled['_=/=_['V0:`[Mode`],'V1:`[Mode`]]] = 'true.Bool if 'enabled[
+    'V0:`[Mode`]] = 'true.Bool [none] .
+  ceq 'enabled['_=/=_['V0:`[Mode`],'V1:`[Mode`]]] = 'true.Bool if 'enabled[
+    'V1:`[Mode`]] = 'true.Bool [none] .
+  ceq 'enabled['_=/=_['V0:`[Nat`],'V1:`[Nat`]]] = 'true.Bool if 'enabled[
+    'V0:`[Nat`]] = 'true.Bool [none] .
+  ceq 'enabled['_=/=_['V0:`[Nat`],'V1:`[Nat`]]] = 'true.Bool if 'enabled[
+    'V1:`[Nat`]] = 'true.Bool [none] .
+  ceq 'enabled['_==_['V0:`[BState`],'V1:`[BState`]]] = 'true.Bool if 'enabled[
+    'V0:`[BState`]] = 'true.Bool [none] .
+  ceq 'enabled['_==_['V0:`[BState`],'V1:`[BState`]]] = 'true.Bool if 'enabled[
+    'V1:`[BState`]] = 'true.Bool [none] .
+  ceq 'enabled['_==_['V0:`[Bool`],'V1:`[Bool`]]] = 'true.Bool if 'enabled[
+    'V0:`[Bool`]] = 'true.Bool [none] .
+  ceq 'enabled['_==_['V0:`[Bool`],'V1:`[Bool`]]] = 'true.Bool if 'enabled[
+    'V1:`[Bool`]] = 'true.Bool [none] .
+  ceq 'enabled['_==_['V0:`[Mode`],'V1:`[Mode`]]] = 'true.Bool if 'enabled[
+    'V0:`[Mode`]] = 'true.Bool [none] .
+  ceq 'enabled['_==_['V0:`[Mode`],'V1:`[Mode`]]] = 'true.Bool if 'enabled[
+    'V1:`[Mode`]] = 'true.Bool [none] .
+  ceq 'enabled['_==_['V0:`[Nat`],'V1:`[Nat`]]] = 'true.Bool if 'enabled[
+    'V0:`[Nat`]] = 'true.Bool [none] .
+  ceq 'enabled['_==_['V0:`[Nat`],'V1:`[Nat`]]] = 'true.Bool if 'enabled[
+    'V1:`[Nat`]] = 'true.Bool [none] .
+  ceq 'enabled['_>=_['V0:Nat,'V1:Nat]] = 'true.Bool if 'enabled['V0:Nat] =
+    'true.Bool [none] .
+  ceq 'enabled['_>=_['V0:Nat,'V1:Nat]] = 'true.Bool if 'enabled['V1:Nat] =
+    'true.Bool [none] .
+  ceq 'enabled['_>>_['V0:Nat,'V1:Nat]] = 'true.Bool if 'enabled['V0:Nat] =
+    'true.Bool [none] .
+  ceq 'enabled['_>>_['V0:Nat,'V1:Nat]] = 'true.Bool if 'enabled['V1:Nat] =
+    'true.Bool [none] .
+  ceq 'enabled['_>_['V0:Nat,'V1:Nat]] = 'true.Bool if 'enabled['V0:Nat] =
+    'true.Bool [none] .
+  ceq 'enabled['_>_['V0:Nat,'V1:Nat]] = 'true.Bool if 'enabled['V1:Nat] =
+    'true.Bool [none] .
+  ceq 'enabled['_^_['V0:Nat,'V1:Nat]] = 'true.Bool if 'enabled['V0:Nat] =
+    'true.Bool [none] .
+  ceq 'enabled['_^_['V0:Nat,'V1:Nat]] = 'true.Bool if 'enabled['V1:Nat] =
+    'true.Bool [none] .
+  ceq 'enabled['_^_['V0:NzNat,'V1:Nat]] = 'true.Bool if 'enabled['V0:NzNat] =
+    'true.Bool [none] .
+  ceq 'enabled['_^_['V0:NzNat,'V1:Nat]] = 'true.Bool if 'enabled['V1:Nat] =
+    'true.Bool [none] .
+  ceq 'enabled['_and_['V0:Bool,'V1:Bool]] = 'true.Bool if 'enabled['V0:Bool] =
+    'true.Bool [none] .
+  ceq 'enabled['_and_['V0:Bool,'V1:Bool]] = 'true.Bool if 'enabled['V1:Bool] =
+    'true.Bool [none] .
+  ceq 'enabled['_divides_['V0:NzNat,'V1:Nat]] = 'true.Bool if 'enabled[
+    'V0:NzNat] = 'true.Bool [none] .
+  ceq 'enabled['_divides_['V0:NzNat,'V1:Nat]] = 'true.Bool if 'enabled['V1:Nat]
+    = 'true.Bool [none] .
+  ceq 'enabled['_implies_['V0:Bool,'V1:Bool]] = 'true.Bool if 'enabled[
+    'V0:Bool] = 'true.Bool [none] .
+  ceq 'enabled['_implies_['V0:Bool,'V1:Bool]] = 'true.Bool if 'enabled[
+    'V1:Bool] = 'true.Bool [none] .
+  ceq 'enabled['_or_['V0:Bool,'V1:Bool]] = 'true.Bool if 'enabled['V0:Bool] =
+    'true.Bool [none] .
+  ceq 'enabled['_or_['V0:Bool,'V1:Bool]] = 'true.Bool if 'enabled['V1:Bool] =
+    'true.Bool [none] .
+  ceq 'enabled['_quo_['V0:Nat,'V1:NzNat]] = 'true.Bool if 'enabled['V0:Nat] =
+    'true.Bool [none] .
+  ceq 'enabled['_quo_['V0:Nat,'V1:NzNat]] = 'true.Bool if 'enabled['V1:NzNat] =
+    'true.Bool [none] .
+  ceq 'enabled['_rem_['V0:Nat,'V1:NzNat]] = 'true.Bool if 'enabled['V0:Nat] =
+    'true.Bool [none] .
+  ceq 'enabled['_rem_['V0:Nat,'V1:NzNat]] = 'true.Bool if 'enabled['V1:NzNat] =
+    'true.Bool [none] .
+  ceq 'enabled['_xor_['V0:Bool,'V1:Bool]] = 'true.Bool if 'enabled['V0:Bool] =
+    'true.Bool [none] .
+  ceq 'enabled['_xor_['V0:Bool,'V1:Bool]] = 'true.Bool if 'enabled['V1:Bool] =
+    'true.Bool [none] .
+  ceq 'enabled['_xor_['V0:Nat,'V1:Nat]] = 'true.Bool if 'enabled['V0:Nat] =
+    'true.Bool [none] .
+  ceq 'enabled['_xor_['V0:Nat,'V1:Nat]] = 'true.Bool if 'enabled['V1:Nat] =
+    'true.Bool [none] .
+  ceq 'enabled['_|_['V0:Nat,'V1:Nat]] = 'true.Bool if 'enabled['V0:Nat] =
+    'true.Bool [none] .
+  ceq 'enabled['_|_['V0:Nat,'V1:Nat]] = 'true.Bool if 'enabled['V1:Nat] =
+    'true.Bool [none] .
+  ceq 'enabled['_|_['V0:NzNat,'V1:Nat]] = 'true.Bool if 'enabled['V0:NzNat] =
+    'true.Bool [none] .
+  ceq 'enabled['_|_['V0:NzNat,'V1:Nat]] = 'true.Bool if 'enabled['V1:Nat] =
+    'true.Bool [none] .
+  ceq 'enabled['gcd['V0:Nat,'V1:Nat]] = 'true.Bool if 'enabled['V0:Nat] =
+    'true.Bool [none] .
+  ceq 'enabled['gcd['V0:Nat,'V1:Nat]] = 'true.Bool if 'enabled['V1:Nat] =
+    'true.Bool [none] .
+  ceq 'enabled['gcd['V0:NzNat,'V1:Nat]] = 'true.Bool if 'enabled['V0:NzNat] =
+    'true.Bool [none] .
+  ceq 'enabled['gcd['V0:NzNat,'V1:Nat]] = 'true.Bool if 'enabled['V1:Nat] =
+    'true.Bool [none] .
+  ceq 'enabled['if_then_else_fi['V0:Bool,'V1:`[BState`],'V2:`[BState`]]] =
+    'true.Bool if 'enabled['V0:Bool] = 'true.Bool [none] .
+  ceq 'enabled['if_then_else_fi['V0:Bool,'V1:`[BState`],'V2:`[BState`]]] =
+    'true.Bool if 'enabled['V1:`[BState`]] = 'true.Bool [none] .
+  ceq 'enabled['if_then_else_fi['V0:Bool,'V1:`[BState`],'V2:`[BState`]]] =
+    'true.Bool if 'enabled['V2:`[BState`]] = 'true.Bool [none] .
+  ceq 'enabled['if_then_else_fi['V0:Bool,'V1:`[Bool`],'V2:`[Bool`]]] =
+    'true.Bool if 'enabled['V0:Bool] = 'true.Bool [none] .
+  ceq 'enabled['if_then_else_fi['V0:Bool,'V1:`[Bool`],'V2:`[Bool`]]] =
+    'true.Bool if 'enabled['V1:`[Bool`]] = 'true.Bool [none] .
+  ceq 'enabled['if_then_else_fi['V0:Bool,'V1:`[Bool`],'V2:`[Bool`]]] =
+    'true.Bool if 'enabled['V2:`[Bool`]] = 'true.Bool [none] .
+  ceq 'enabled['if_then_else_fi['V0:Bool,'V1:`[Mode`],'V2:`[Mode`]]] =
+    'true.Bool if 'enabled['V0:Bool] = 'true.Bool [none] .
+  ceq 'enabled['if_then_else_fi['V0:Bool,'V1:`[Mode`],'V2:`[Mode`]]] =
+    'true.Bool if 'enabled['V1:`[Mode`]] = 'true.Bool [none] .
+  ceq 'enabled['if_then_else_fi['V0:Bool,'V1:`[Mode`],'V2:`[Mode`]]] =
+    'true.Bool if 'enabled['V2:`[Mode`]] = 'true.Bool [none] .
+  ceq 'enabled['if_then_else_fi['V0:Bool,'V1:`[Nat`],'V2:`[Nat`]]] = 'true.Bool
+    if 'enabled['V0:Bool] = 'true.Bool [none] .
+  ceq 'enabled['if_then_else_fi['V0:Bool,'V1:`[Nat`],'V2:`[Nat`]]] = 'true.Bool
+    if 'enabled['V1:`[Nat`]] = 'true.Bool [none] .
+  ceq 'enabled['if_then_else_fi['V0:Bool,'V1:`[Nat`],'V2:`[Nat`]]] = 'true.Bool
+    if 'enabled['V2:`[Nat`]] = 'true.Bool [none] .
+  ceq 'enabled['lcm['V0:Nat,'V1:Nat]] = 'true.Bool if 'enabled['V0:Nat] =
+    'true.Bool [none] .
+  ceq 'enabled['lcm['V0:Nat,'V1:Nat]] = 'true.Bool if 'enabled['V1:Nat] =
+    'true.Bool [none] .
+  ceq 'enabled['lcm['V0:NzNat,'V1:NzNat]] = 'true.Bool if 'enabled['V0:NzNat] =
+    'true.Bool [none] .
+  ceq 'enabled['lcm['V0:NzNat,'V1:NzNat]] = 'true.Bool if 'enabled['V1:NzNat] =
+    'true.Bool [none] .
+  ceq 'enabled['max['V0:Nat,'V1:Nat]] = 'true.Bool if 'enabled['V0:Nat] =
+    'true.Bool [none] .
+  ceq 'enabled['max['V0:Nat,'V1:Nat]] = 'true.Bool if 'enabled['V1:Nat] =
+    'true.Bool [none] .
+  ceq 'enabled['max['V0:NzNat,'V1:Nat]] = 'true.Bool if 'enabled['V0:NzNat] =
+    'true.Bool [none] .
+  ceq 'enabled['max['V0:NzNat,'V1:Nat]] = 'true.Bool if 'enabled['V1:Nat] =
+    'true.Bool [none] .
+  ceq 'enabled['min['V0:Nat,'V1:Nat]] = 'true.Bool if 'enabled['V0:Nat] =
+    'true.Bool [none] .
+  ceq 'enabled['min['V0:Nat,'V1:Nat]] = 'true.Bool if 'enabled['V1:Nat] =
+    'true.Bool [none] .
+  ceq 'enabled['min['V0:NzNat,'V1:NzNat]] = 'true.Bool if 'enabled['V0:NzNat] =
+    'true.Bool [none] .
+  ceq 'enabled['min['V0:NzNat,'V1:NzNat]] = 'true.Bool if 'enabled['V1:NzNat] =
+    'true.Bool [none] .
+  ceq 'enabled['modExp['V0:`[Nat`],'V1:`[Nat`],'V2:`[Nat`]]] = 'true.Bool if
+    'enabled['V0:`[Nat`]] = 'true.Bool [none] .
+  ceq 'enabled['modExp['V0:`[Nat`],'V1:`[Nat`],'V2:`[Nat`]]] = 'true.Bool if
+    'enabled['V1:`[Nat`]] = 'true.Bool [none] .
+  ceq 'enabled['modExp['V0:`[Nat`],'V1:`[Nat`],'V2:`[Nat`]]] = 'true.Bool if
+    'enabled['V2:`[Nat`]] = 'true.Bool [none] .
+  ceq 'enabled['not_['V0:Bool]] = 'true.Bool if 'enabled['V0:Bool] = 'true.Bool
+    [none] .
+  ceq 'enabled['s_['V0:Nat]] = 'true.Bool if 'enabled['V0:Nat] = 'true.Bool [
+    none] .
+  ceq 'enabled['sd['V0:Nat,'V1:Nat]] = 'true.Bool if 'enabled['V0:Nat] =
+    'true.Bool [none] .
+  ceq 'enabled['sd['V0:Nat,'V1:Nat]] = 'true.Bool if 'enabled['V1:Nat] =
+    'true.Bool [none] .
+  rl '<_`,_`,_`,_>['P:Mode,'0.Zero,'wait.Mode,'Y:Nat] => '<_`,_`,_`,_>['P:Mode,
+    '0.Zero,'crit.Mode,'Y:Nat] [label('p2_wait)] .
+  rl '<_`,_`,_`,_>['P:Mode,'X:Nat,'crit.Mode,'Y:Nat] => '<_`,_`,_`,_>['P:Mode,
+    'X:Nat,'sleep.Mode,'0.Zero] [label('p2_crit)] .
+  rl '<_`,_`,_`,_>['P:Mode,'X:Nat,'sleep.Mode,'Y:Nat] => '<_`,_`,_`,_>['P:Mode,
+    'X:Nat,'wait.Mode,'s_['X:Nat]] [label('p2_sleep)] .
+  rl '<_`,_`,_`,_>['crit.Mode,'X:Nat,'Q:Mode,'Y:Nat] => '<_`,_`,_`,_>[
+    'sleep.Mode,'0.Zero,'Q:Mode,'Y:Nat] [label('p1_crit)] .
+  rl '<_`,_`,_`,_>['sleep.Mode,'X:Nat,'Q:Mode,'Y:Nat] => '<_`,_`,_`,_>[
+    'wait.Mode,'s_['Y:Nat],'Q:Mode,'Y:Nat] [label('p1_sleep)] .
+  rl '<_`,_`,_`,_>['wait.Mode,'X:Nat,'Q:Mode,'0.Zero] => '<_`,_`,_`,_>[
+    'crit.Mode,'X:Nat,'Q:Mode,'0.Zero] [label('p1_wait)] .
+  crl '<_`,_`,_`,_>['P:Mode,'X:Nat,'wait.Mode,'Y:Nat] => '<_`,_`,_`,_>['P:Mode,
+    'X:Nat,'crit.Mode,'Y:Nat] if '_<_['Y:Nat,'X:Nat] = 'true.Bool [label(
+    'p2_wait)] .
+  crl '<_`,_`,_`,_>['wait.Mode,'X:Nat,'Q:Mode,'Y:Nat] => '<_`,_`,_`,_>[
+    'crit.Mode,'X:Nat,'Q:Mode,'Y:Nat] if 'not_['_<_['Y:Nat,'X:Nat]] =
+    'true.Bool [label('p1_wait)] .
+  crl '`{_`}['V:BState] => '`{_`}['V:BState] if '_=/=_['enabled['V:BState],
+    'true.Bool] = 'true.Bool [none] .
+endm
+---)
+
+----  reduce in DEADLOCK-FREEDOM :
+----    metaReduce(deadlock-free(upModule('ABSTRACT-BAKERY, true), 'BState), 'true.Bool) .
+---(
+reduce in DEADLOCK-FREEDOM : metaReduce(deadlock-free(upModule(
+    'ABSTRACT-BAKERY, true), 'BState), 'true.Bool) .
+rewrites: 2325 in 13ms cpu (65ms real) (167278 rewrites/second)
+result ResultPair: {'true.Bool,'Bool}
+---)

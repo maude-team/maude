@@ -1,0 +1,19 @@
+set trace on .
+set trace select on .
+trace select ---- procSearch 
+             ---- procSearch2 
+             ---- solveBubblesRl
+             ---- solveBubblesSearchL 
+             ---- solveBubblesSearchR 
+             prepSearchPattern
+             .
+set print conceal on .
+print conceal db 
+              fmod_is_sorts_.____endfm
+              mod_is_sorts_._____endm
+              .
+
+              
+prepSearchPattern('<_:_|_>['s_^2['0.Zero],'Philosopher.Philosopher,'state`:_['eating.PhilState]], 0)
+
+prepSearchPattern('<_:_|_>['"Lizzie".String,'Person.Person,'age`:_['N:Nat]])

@@ -1,0 +1,10 @@
+red in META-LEVEL :
+  metaReduce(fmod 'FOO is 
+               protecting 'NAT * (op '0.Nat to 'zero.Nat [none]) .
+               sorts 'Foo .
+               none
+               op 'f : 'Nat -> 'Nat [none] .
+               none
+               eq 'f['N:Nat] = 'N:Nat [none] .
+             endfm,
+             'f['zero.Nat]) .

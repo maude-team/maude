@@ -1,0 +1,11 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  load nsposet.maude
+
+  fth NSTOSET is
+    including NSPOSET .
+    vars X Y : Elt .
+    ceq X <= Y = true if Y <= X = false [nonexec label total] .
+  endfth

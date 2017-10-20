@@ -1,0 +1,15 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  fmod QVAL is 
+    protecting QID-LIST .   
+    extending VAL .
+    sort QVal .   
+    subsort QVal < Val .
+
+    op ql : QidList -> QVal .
+    eq compat(x:QVal,y:QVal) = true .
+    var qidl : QidList .
+    op qvalQidList : QVal -> QidList .
+    eq qvalQidList(ql(qidl)) = qidl .
+  endfm

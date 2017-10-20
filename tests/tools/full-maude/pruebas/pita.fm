@@ -1,0 +1,26 @@
+fmod OCL-COLLECTIONS{T :: TRIV} is
+	sorts Collection{T} Collection+{T} .
+	subsort Collection{T} < Collection+{T}  . 
+
+  	op empty-col : -> Collection{T} [ctor] .
+
+	var undefN1 : [Collection+{T}] .
+
+	op isCol : [Collection+{T}] -> Bool .
+	eq isCol( undefN1 ) = undefN1 :: Collection{T} .
+
+endfm
+
+fmod OCL-DATATYPE-COLLECTIONS is
+	including OCL-COLLECTIONS{Int} * (op empty-col to empty-col#Int) .
+	
+	--- si quitamos el renombrado funciona
+	--- including OCL-COLLECTIONS{Int}  .
+
+endfm
+
+select FULL-MAUDE .
+
+loop init .
+
+(show module OCL-DATATYPE-COLLECTIONS . )

@@ -1,0 +1,77 @@
+set show stats off .
+set show loop stats off .
+set show timing off .
+set show loop timing off .
+
+load ../../AAM/sample-files-2.4/rew-seq-extended-rent-a-car-store.fm
+load ../../AAM/sample-files-2.4/rew-seq-rent-a-car-store.fm
+load ../../AAM/sample-files-2.4/check-rrobin.fm
+load ../../AAM/sample-files-2.4/saving-account.fm
+load ../../AAM/sample-files-2.4/generic-set-list.fm
+load ../../AAM/sample-files-2.4/nat-plus.fm
+load ../../AAM/sample-files-2.4/oo-stack.fm
+load ../../AAM/sample-files-2.4/oo-stack2.fm
+load ../../AAM/sample-files-2.4/path.fm
+load ../../AAM/sample-files-2.4/person-record.fm
+load ../../AAM/sample-files-2.4/pfun.fm
+load ../../AAM/sample-files-2.4/polynomial.fm
+load ../../AAM/sample-files-2.4/power-ex.fm
+load ../../AAM/sample-files-2.4/set-max.fm
+load ../../AAM/sample-files-2.4/only-book/8-puzzle.fm
+load ../../AAM/sample-files-2.4/only-book/df-abstract-bakery-check.fm
+  set show loop stats off .
+  set show loop timing off .
+load ../../AAM/sample-files-2.4/only-book/leftist-trees.fm
+load ../../AAM/sample-files-2.4/only-book/oo-blocks-world.fm
+load ../../AAM/sample-files-2.4/only-book/spreadsheet.fm
+load ../../AAM/sample-files-2.4/only-book/spreedsheet-asynch.fm
+
+load ../../AAM/sample-files-2.4/narrowing-vending-machine.fm
+load ../../AAM/sample-files-2.4/last-append.fm
+load ../../AAM/sample-files-2.4/leftid-unification-example.fm
+load ../../AAM/sample-files-2.4/rightid-unification-example.fm
+load ../../AAM/sample-files-2.4/id-unification-example.fm
+
+load pruebas/basic-nat-list.fm
+load pruebas/triple-list.fm
+load pruebas/load-command.fm
+load pruebas/load-command-2.fm
+load pruebas/machine-int-test.fm
+load pruebas/machine-search.fm
+load pruebas/mb-label.fm
+load pruebas/print-attr-ambiguous.fm
+load pruebas/print-attribute-ex.fm
+load pruebas/print-attr-nonambiguous.fm
+load pruebas/renombramiento-ops-parciales.fm
+load pruebas/search-commands.fm
+load pruebas/unification.fm
+load pruebas/builtin-renaming.maude
+----load pruebas/db.maude
+load pruebas/mb-test.maude
+load pruebas/ocl.maude
+load pruebas/pita.fm
+load pruebas/summation-core-maude-modules.fm
+----load pruebas/getVariants-my-nat.fm
+load pruebas/getVariants-my-nat-set.fm
+load pruebas/a.fm
+
+load ../../PeopleShared/Olveczky/phils.fm                   --- bug in search command (March 9th, 2009) 
+load ../../PeopleShared/Olveczky/separation.fm              --- bug in search command (March 9th, 2009)
+load pruebas/serbanuta.fm                       --- bug in mb/cmbs (March 9th, 2009)
+
+load pruebas/exa-search.maude
+
+load ../../FormalTools/CRC-samples/philosophers/dining-phils.fm
+
+load pruebas/gen-tree.fm
+load pruebas/list-test.fm
+
+load narrowing.fm
+
+load bug-reports/riesco/class-no-attributes.fm
+load bug-reports/riesco/lider.fm
+load bug-reports/riesco/network.fm
+load bug-reports/riesco/nspk.fm
+load bug-reports/riesco/prueba.fm
+load bug-reports/riesco/show-view.fm
+

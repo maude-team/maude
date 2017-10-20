@@ -1,0 +1,16 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  fmod BASIC-NAT is
+    sort Nat .
+    op 0 : -> Nat [ctor] .
+    op s_ : Nat -> Nat [ctor] .
+    op _+_ : Nat Nat -> Nat .
+    op max : Nat Nat -> Nat .
+    vars N M : Nat .
+    eq 0 + N = N .
+    eq s M + N = s (M + N) .
+    eq max(0, M) = M .
+    eq max(N, 0) = N .
+    eq max(s N, s M) = s max(N, M) .
+  endfm

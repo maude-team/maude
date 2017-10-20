@@ -1,0 +1,21 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+  
+  mod SIMPLE-CLOCK is 
+    protecting INT .
+    sort Clock .
+    op clock : Int -> Clock [ctor] .
+    var T : Int .
+    rl clock(T) => clock((T + 1) rem 24) .
+  endm
+
+***(
+Maude> search in SIMPLE-CLOCK : clock(0) =>* clock(T)
+           such that T < 0 or T >= 24 .
+search in SIMPLE-CLOCK : clock(0) =>* clock(T) such that T < 0 or T >= 24 =
+    true .
+
+No solution.
+states: 24  rewrites: 216 in 0ms cpu (0ms real) (~ rewrites/second)
+)

@@ -1,0 +1,49 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+ (omod OO-STACK{X :: TRIV} is
+    protecting INT .
+    protecting QID .
+    subsort Qid < Oid .
+    class Node{X} | next : Oid, contents : X$Elt .
+    class Stack{X} | first : Oid .
+    msg _push_ : Oid X$Elt -> Msg .
+    msg _pop : Oid -> Msg .
+    msg _top_ : Oid Oid -> Msg .
+    msg _elt_ : Oid X$Elt -> Msg .
+
+    op null : -> Oid .
+    op o : Oid Int -> Oid .
+
+    vars O O' O'' : Oid .
+    var  E : X$Elt .
+    var  N : Int .
+
+    rl [top] : *** top on a non-empty stack
+       < O : Stack{X} | first : O' >
+       < O' : Node{X} | contents : E >
+       (O top O'')
+       => < O : Stack{X} | >
+          < O' : Node{X} | >
+          (O'' elt E) .
+
+    rl [push1] : *** push on a non-empty stack
+       < O : Stack{X} | first : o(O, N) >
+       (O push E)
+       => < O : Stack{X} | first : o(O, N + 1) >
+          < o(O, N + 1) : Node{X} |
+                contents : E, next : o(O, N) > .
+
+    rl [push2] : *** push on an empty stack
+       < O : Stack{X} | first : null >
+       (O push E)
+       => < O : Stack{X} | first : o(O, 0) >
+          < o(O, 0) : Node{X} | contents : E, next : null > .
+
+    rl [pop] : *** pop on a non-empty stack
+       < O : Stack{X} | first : O' >
+       < O' : Node{X} | next : O'' >
+       (O pop)
+       => < O : Stack{X} | first : O'' > .
+  endom)

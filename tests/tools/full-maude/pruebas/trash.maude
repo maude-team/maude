@@ -1,0 +1,46 @@
+red in META-LEVEL : metaPrettyPrint(mod 'NONAMBIGUOUS is
+  nil
+  sorts 'Bool ; 'Foo .
+  none
+  op '_=/=_ : 'Universal 'Universal -> 'Bool [prec(51) poly(1 2) special(
+    id-hook('EqualitySymbol, nil) 
+    term-hook('equalTerm, 'false.Bool) 
+    term-hook('notEqualTerm, 'true.Bool))] .
+  op '_==_ : 'Universal 'Universal -> 'Bool [prec(51) poly(1 2) special(
+    id-hook('EqualitySymbol, nil) 
+    term-hook('equalTerm, 'true.Bool) 
+    term-hook('notEqualTerm, 'false.Bool))] .
+  op '_and_ : 'Bool 'Bool -> 'Bool [assoc comm prec(55)] .
+  op '_implies_ : 'Bool 'Bool -> 'Bool [prec(61) gather('e 'E)] .
+  op '_or_ : 'Bool 'Bool -> 'Bool [assoc comm prec(59)] .
+  op '_xor_ : 'Bool 'Bool -> 'Bool [assoc comm prec(57)] .
+  op 'a : nil -> 'Foo [none] .
+  op 'f : 'Foo -> 'Foo [none] .
+  op 'false : nil -> 'Bool [ctor special(
+    id-hook('SystemFalse, nil))] .
+  op 'g : 'Foo -> 'Foo [none] .
+  op 'h : 'Foo -> 'Foo [none] .
+  op 'if_then_else_fi : 'Bool 'Universal 'Universal -> 'Universal [poly(2 3 0)
+    special(
+    id-hook('BranchSymbol, nil) 
+    term-hook('1, 'true.Bool) 
+    term-hook('2, 'false.Bool))] .
+  op 'not_ : 'Bool -> 'Bool [prec(53)] .
+  op 'true : nil -> 'Bool [ctor special(
+    id-hook('SystemTrue, nil))] .
+  none
+  eq '_and_['A:Bool,'A:Bool] = 'A:Bool [none] .
+  eq '_and_['A:Bool,'_xor_['B:Bool,'C:Bool]] = '_xor_['_and_['A:Bool,'B:Bool],
+    '_and_['A:Bool,'C:Bool]] [none] .
+  eq '_and_['false.Bool,'A:Bool] = 'false.Bool [none] .
+  eq '_and_['true.Bool,'A:Bool] = 'A:Bool [none] .
+  eq '_implies_['A:Bool,'B:Bool] = 'not_['_xor_['A:Bool,'_and_['A:Bool,
+    'B:Bool]]] [none] .
+  eq '_or_['A:Bool,'B:Bool] = '_xor_['_and_['A:Bool,'B:Bool],'_xor_['A:Bool,
+    'B:Bool]] [none] .
+  eq '_xor_['A:Bool,'A:Bool] = 'false.Bool [none] .
+  eq '_xor_['false.Bool,'A:Bool] = 'A:Bool [none] .
+  eq 'f['H:Foo] = 'g['H:Foo] [print('"here")] .
+  eq 'not_['A:Bool] = '_xor_['true.Bool,'A:Bool] [none] .
+  rl 'g['M:Foo] => 'h['M:Foo] [print('"metadata = " 'M:Foo '"g->h rule")] .
+endm, 'h['M:Foo], mixfix flat format number rat) .

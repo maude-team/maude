@@ -1,0 +1,41 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  load model-checker.maude
+  load bakery.crchc.maude
+  
+  mod BAKERY-PREDS is 
+    protecting BAKERY . 
+    including SATISFACTION .
+    subsort BState < State .
+    ops 1wait 2wait 1crit 2crit : -> Prop [ctor] .
+    vars P Q : Mode .
+    vars X Y : Nat .
+    eq < wait, X, Q, Y > |= 1wait = tt .
+    eq < sleep, X, Q, Y > |= 1wait = ff .
+    eq < crit, X, Q, Y > |= 1wait = ff .
+    eq < P, X, wait, Y > |= 2wait = tt .
+    eq < P, X, sleep, Y > |= 2wait = ff .
+    eq < P, X, crit, Y > |= 2wait = ff .
+    eq < crit, X, Q, Y > |= 1crit = tt .
+    eq < sleep, X, Q, Y > |= 1crit = ff .
+    eq < wait, X, Q, Y > |= 1crit = ff .
+    eq < P, X, crit, Y > |= 2crit = tt .
+    eq < P, X, sleep, Y > |= 2crit = ff .
+    eq < P, X, wait, Y > |= 2crit = ff .
+  endm
+
+***(
+  select FULL-MAUDE .
+  
+  loop init .
+
+ (check Church-Rosser BAKERY-PREDS .)
+rewrites: 58216 in 30ms cpu (86ms real) (1940533 rewrites/second)
+
+Church-Rosser checking of BAKERY-PREDS
+Checking solution:
+  All critical pairs have been joined. The specification is
+    locally-confluent.
+  The specification is sort-decreasing.
+)

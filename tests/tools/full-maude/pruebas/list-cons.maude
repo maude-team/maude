@@ -1,0 +1,54 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  fmod LIST-CONS{X :: TRIV} is
+    protecting NAT .
+
+    sorts NeList{X} List{X} .
+    subsort NeList{X} < List{X} .
+
+    op [] : -> List{X} [ctor] .
+    op _:_ : X$Elt List{X} -> NeList{X} [ctor] .
+    op tail : NeList{X} -> List{X} .
+    op head : NeList{X} -> X$Elt .
+    
+    var E : X$Elt .
+    var N : Nat .
+    vars L L' : List{X} .
+
+    eq tail(E : L) = L .
+    eq head(E : L) = E .
+
+    op _++_ : List{X} List{X} -> List{X} .
+    op length : List{X} -> Nat .
+    op reverse : List{X} -> List{X} .
+    
+    eq [] ++ L = L .
+    eq (E : L) ++ L' = E : (L ++ L') .
+    eq length([]) = 0 .
+    eq length(E : L) = 1 + length(L) .
+    eq reverse([]) = [] .
+    eq reverse(E : L) = reverse(L) ++ (E : []) .
+    
+    op take_from_ : Nat List{X} -> List{X} .
+    op throw_from_ : Nat List{X} -> List{X} .
+    
+    eq take 0 from L = [] .
+    eq take N from [] = [] .
+    eq take s(N) from (E : L) = E : take N from L .
+    
+    eq throw 0 from L = L .
+    eq throw N from [] = [] .
+    eq throw s(N) from (E : L) = throw N from L .
+  endfm
+    
+  fmod LIST-CONS-TEST is
+    protecting LIST-CONS{String} .
+  endfm
+    
+red reverse("one" : "two" : "three" : []) .
+---(
+reduce in LIST-CONS-TEST : reverse("one" : "two" : "three" : []) .
+rewrites: 10 in 0ms cpu (0ms real) (~ rewrites/second)
+result NeList{String}: "three" : "two" : "one" : []
+---)    

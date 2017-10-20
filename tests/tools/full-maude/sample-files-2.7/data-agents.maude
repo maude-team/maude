@@ -1,0 +1,96 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+  
+  ---- the system may get into an inconsistent state if different agents receive 
+  ---- simultaneously update requests on the same key
+
+  load data-agents-interface.maude
+  
+  view Request from TRIV to DATA-AGENTS-CONF is
+    sort Elt to Request .
+  endv
+
+  mod DATA-AGENTS{K :: TRIV, V :: TRIV} is
+    inc DATA-AGENTS-INTERFACE{K, V} .
+    inc DATA-AGENTS-CONF .    ---- explain in the text
+    inc CONFIGURATION .
+    pr MAP{K, V} * (sort Map{K, V} to Dict{K, V},
+                    op _[_] to lookup,
+                    op insert to update) .
+    pr SET{Request} .
+
+    vars A O C : Oid .
+    var  D : Dict{K, V} .
+    var  Key : K$Elt .
+    vars Val Val' : [V$Elt] .
+    var  Atts : AttributeSet .
+    var  RS : Set{Request} .
+
+    *** class structure
+    op DataAgent : -> Cid [ctor] .
+    op data :_ : Dict{K, V} -> Attribute [ctor] .
+    op pal :_ : Oid -> Attribute [ctor] .
+    op requests :_ : Set{Request} -> Attribute [ctor] .
+
+    *** lookup request
+    rl [lookup] :
+      < A : DataAgent | data : D, pal : O, requests : RS >
+      msg(A, C, lookupReq(Key))
+      => if lookup(D, Key) == undefined
+         then < A : DataAgent | data : D, pal : O, 
+                  requests : (RS, w4(O, C, lookupReq(Key))) >
+              msg(O, A, getReq(Key))
+         else < A : DataAgent | data : D, pal : O, requests : RS >
+              msg(C, A, lookupReply(Key, lookup(D, Key)))
+         fi .
+
+    *** lookup request missing data from pal
+    rl [getReq] :
+      < A : DataAgent | data : D, pal : O, Atts >
+      msg(A, O, getReq(Key))
+      => < A : DataAgent | data : D, pal : O, Atts >
+         msg(O, A, getReply(Key, lookup(D, Key)))  .
+
+    *** receive lookup requested missing data from pal
+    rl [getReply] :
+      < A : DataAgent | data : D, pal : O, 
+          requests : (RS, w4(O, C, lookupReq(Key))) >
+      msg(A, O, getReply(Key, Val))
+      => < A : DataAgent | pal : O, requests : RS, 
+             data : if Val == undefined then D else update(Key, Val, D) fi >
+         msg(C, A, lookupReply(Key, Val)) .
+
+    *** tell request
+    rl [tell] :
+      < A : DataAgent | data : D, requests : RS, pal : O >
+      msg(A, C, tellReq(Key, Val))
+      => if lookup(D, Key) == undefined
+         then < A : DataAgent | 
+                data : D, requests : (RS, w4(O, C, tellReq(Key, Val))), pal : O >
+              msg(O, A, setReq(Key, Val))  
+         else < A : DataAgent | data : update(Key, Val, D), requests : RS, pal : O >
+              msg(C, A, tellReply(Key, Val)) 
+         fi .
+ 
+    *** request update for missing data from pal
+    rl [setReq] :
+      < A : DataAgent | data : D, pal : O, Atts >
+      msg(A, O, setReq(Key, Val))
+      => if lookup(D, Key) == undefined
+         then < A : DataAgent | data : D, pal : O, Atts >
+              msg(O, A, setReply(Key, undefined))
+         else < A : DataAgent | data : update(Key, Val, D), pal : O, Atts >
+              msg(O, A, setReply(Key, Val))
+         fi .
+
+    *** receive requested update for missing data from pal
+    rl [setReply] :
+      < A : DataAgent | data : D, pal : O,
+          requests : (RS, w4(O, C, tellReq(Key, Val))) >
+      msg(A, O, setReply(Key, Val'))
+      => < A : DataAgent | pal : O, requests : RS, 
+             data : if Val' == undefined then update(Key, Val, D) else D fi >
+         msg(C, A, tellReply(Key, Val))  .
+  endm
+

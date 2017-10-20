@@ -1,0 +1,55 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  load list-cons.maude
+  
+  fmod BIN-TREE{X :: TRIV} is
+    protecting LIST-CONS{X} .
+
+    sorts NeBinTree{X} BinTree{X} .
+    subsort NeBinTree{X} < BinTree{X} .
+
+    op empty : -> BinTree{X} [ctor] .
+    op _[_]_ : BinTree{X} X$Elt BinTree{X} -> NeBinTree{X} [ctor] .
+    ops left right : NeBinTree{X} -> BinTree{X} .
+    op root : NeBinTree{X} -> X$Elt .
+   
+    var  E : X$Elt .
+    vars L R : BinTree{X} .
+    vars NEL NER : NeBinTree{X} .
+
+    eq left(L [E] R) = L .
+    eq right(L [E] R) = R .
+    eq root(L [E] R) = E .
+
+    op depth : BinTree{X} -> Nat .
+
+    eq depth(empty) = 0 .
+    eq depth(L [E] R) = 1 + max(depth(L), depth(R)) .
+
+    ops leaves preorder inorder postorder : BinTree{X} -> List{X} .
+
+    eq leaves(empty) = [] .
+    eq leaves(empty [E] empty) = E : [] .
+    eq leaves(NEL [E] R) = leaves(NEL) ++ leaves(R) .
+    eq leaves(L [E] NER) = leaves(L) ++ leaves(NER) .
+
+    eq preorder(empty) = [] .
+    eq preorder(L [E] R) = E : (preorder(L) ++ preorder(R)) .
+    eq inorder(empty) = [] .
+    eq inorder(L [E] R) = inorder(L) ++ (E : inorder(R)) .
+    eq postorder(empty) = [] .
+    eq postorder(L [E] R) 
+      = postorder(L) ++ (postorder(R) ++ (E : [])) .
+  endfm
+
+  fmod BIN-TREE-TEST is
+    protecting BIN-TREE{Int} .
+  endfm
+
+  red postorder((empty [1] empty) [2] (empty [3] empty)) .
+---(
+reduce in BIN-TREE-TEST : postorder((empty[1]empty)[2](empty[3]empty)) .
+rewrites: 15 in 0ms cpu (0ms real) (~ rewrites/second)
+result NeList{Int}: 1 : 3 : 2 : []
+---)

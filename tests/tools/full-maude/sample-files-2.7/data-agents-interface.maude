@@ -1,0 +1,19 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  load data-agents-conf.maude
+  
+  mod DATA-AGENTS-INTERFACE{K :: TRIV, V :: TRIV} is
+    ex DATA-AGENTS-CONF .
+
+    *** messages
+    op getReq : K$Elt -> MsgBody [ctor] .
+    op getReply : K$Elt [V$Elt] -> MsgBody [ctor] .
+    op setReq : K$Elt V$Elt -> MsgBody [ctor] .
+    op setReply : K$Elt [V$Elt] -> MsgBody [ctor] .
+    op tellReq : K$Elt V$Elt -> MsgBody [ctor] .
+    op tellReply : K$Elt V$Elt -> MsgBody [ctor] .
+    op lookupReq : K$Elt -> MsgBody [ctor] .
+    op lookupReply : K$Elt [V$Elt] -> MsgBody [ctor] .
+  endm

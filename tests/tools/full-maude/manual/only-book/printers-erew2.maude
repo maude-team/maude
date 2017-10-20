@@ -1,0 +1,40 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+  
+load mobile-maude-distributed.maude
+load printers.maude
+
+erew  <> < l("127.0.0.1", 1) : ClientRootObject |
+            cnt : 1,
+            guests : (o(l("127.0.0.1", 1), 0), o(l("127.0.0.1", 1), 1)),
+            forward : ((0 |-> (l("127.0.0.1", 1), 0)), (1 |-> (l("127.0.0.1", 1), 0))),
+	        neighbors : empty,
+            state : idle,
+            defNeighbor : null,
+            port : 60039,
+            server : "127.0.0.1" >
+        < o(l("127.0.0.1", 1), 0) : MobileObject |
+            mod : upModule('BUYER,false),
+            s : upTerm(< o(l("127.0.0.1", 1), 0) : Buyer |
+                           price : null,
+                           status : done,
+		                   bestSeller : null,
+                           sellers : (o(l("127.0.0.1", 1), 1) . o(l("127.0.0.1", 2), 0) . o(l("127.0.0.1", 0), 0)) >
+                       & none),
+            gas : 200,
+            hops : 0,
+	        executable : getTerm(metaFrewrite(upModule('BUYER,false), upTerm(< o(l("127.0.0.1", 1), 0) : Buyer |
+                           price : null,
+                           status : done,
+		           bestSeller : null,
+                           sellers :(o(l("127.0.0.1", 1), 1) . o(l("127.0.0.1", 2), 0) . o(l("127.0.0.1", 0), 0)) >
+                       & none), 200, 1)) >
+	< o(l("127.0.0.1", 1), 1) : MobileObject |
+            mod : upModule('SELLER,false),
+            s : upTerm(< o(l("127.0.0.1", 1), 1) : Seller | description : 20 >
+                       & none),
+            gas : 200,
+            hops : 0,
+	        executable : getTerm(metaFrewrite(upModule('SELLER, false),
+		                  upTerm(< o(l("127.0.0.1", 1), 1) : Seller | description : 20 >
+                       & none), 200, 1)) > .

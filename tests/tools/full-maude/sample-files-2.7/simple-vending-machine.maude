@@ -1,0 +1,98 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  load vending-machine-signature.maude
+  
+  mod SIMPLE-VENDING-MACHINE is
+    including VENDING-MACHINE-SIGNATURE .
+    rl [buy-c] : $ => c .
+    rl [buy-a] : $ => a q .
+    rl [change]: q q q q => $ .
+  endm
+
+***(
+Maude> rew in SIMPLE-VENDING-MACHINE : $ $ .
+rewrite in SIMPLE-VENDING-MACHINE : $ $ .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result Marking: q a c
+
+Maude> rew [3] $ $ q q q .
+rewrite [3] in SIMPLE-VENDING-MACHINE : $ $ q q q .
+rewrites: 3 in 0ms cpu (0ms real) (~ rewrites/second)
+result Marking: $ a c
+
+Maude> cont 1 .
+rewrites: 1 in 0ms cpu (0ms real) (~ rewrites/second)
+result Marking: a c c
+
+Maude> search in SIMPLE-VENDING-MACHINE : 
+           $ q q q =>! a c M:Marking .
+search in SIMPLE-VENDING-MACHINE : $ q q q =>! a c M:Marking .
+
+Solution 1 (state 4)
+states: 6  rewrites: 5 in 0ms cpu (0ms real) (~ rewrites/second)
+M:Marking --> null
+
+No more solutions.
+states: 6  rewrites: 5 in 0ms cpu (0ms real) (~ rewrites/second)
+
+Maude> show path 4 .
+state 0, Marking: $ q q q
+===[ rl $ => q a [label buy-a] . ]===>
+state 2, Marking: q q q q a
+===[ rl q q q q => $ [label change] . ]===>
+state 3, Marking: $ a
+===[ rl $ => c [label buy-c] . ]===>
+state 4, Marking: a c
+
+Maude> show path labels 4 .
+buy-a
+change
+buy-c
+
+Maude> show search graph .
+state 0, Marking: $ q q q
+arc 0 ===> state 1 (rl $ => c [label buy-c] .)
+arc 1 ===> state 2 (rl $ => q a [label buy-a] .)
+
+state 1, Marking: q q q c
+
+state 2, Marking: q q q q a
+arc 0 ===> state 3 (rl q q q q => $ [label change] .)
+
+state 3, Marking: $ a
+arc 0 ===> state 4 (rl $ => c [label buy-c] .)
+arc 1 ===> state 5 (rl $ => q a [label buy-a] .)
+
+state 4, Marking: a c
+
+state 5, Marking: q a a
+
+Maude> search $ q q q =>! a M:Marking such that M:Marking =/= null .
+search in SIMPLE-VENDING-MACHINE : $ q q q =>! a M:Marking such that M:Marking
+    =/= null = true .
+
+Solution 1 (state 4)
+states: 6  rewrites: 6 in 0ms cpu (0ms real) (~ rewrites/second)
+M:Marking --> c
+
+Solution 2 (state 5)
+states: 6  rewrites: 7 in 0ms cpu (0ms real) (~ rewrites/second)
+M:Marking --> q a
+
+No more solutions.
+states: 6  rewrites: 7 in 0ms cpu (0ms real) (~ rewrites/second)
+
+Maude> search $ q q q q =>+ M:Marking 
+         such that M:Marking => a a q q /\ M:Marking => c c .
+search in SIMPLE-VENDING-MACHINE : $ q q q q =>+ M:Marking 
+  such that M:Marking => q q a a /\ M:Marking => c c .
+
+Solution 1 (state 1)
+states: 2  rewrites: 10 in 0ms cpu (0ms real) (96153 rewrites/second)
+M:Marking --> $ $
+
+No more solutions.
+states: 9  rewrites: 38 in 0ms cpu (0ms real) (95477 rewrites/second)
+)

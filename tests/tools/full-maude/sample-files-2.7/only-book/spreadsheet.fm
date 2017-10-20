@@ -1,0 +1,36 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+ (omod SPREADSHEET is 
+    protecting NAT . 
+    sort Name .
+    subsort Nat < Name .
+    op total : -> Name [ctor] .
+    op `(_`,_`) : Name Name -> Oid .
+    class Cell | val : Nat .
+    msgs add sub : Nat Nat Nat -> Msg .
+    vars M N V W X Y Z : Nat .
+
+    rl [add] : 
+      add(N, M, V) 
+      < (N, M) : Cell | val : W >  
+      < (total, total) : Cell | val : X >
+      < (N, total) : Cell | val : Y > 
+      < (total, M) : Cell | val : Z > 
+      => < (N, M) : Cell | val : W + V > 
+         < (total, total) : Cell | val : X + V >
+         < (N, total) : Cell | val : Y + V > 
+         < (total, M) : Cell | val : Z + V > . 
+  
+    crl [sub] : 
+      sub(N, M, V) 
+      < (N, M) : Cell | val : W > 
+      < (total, total) : Cell | val : X >
+      < (N, total) : Cell | val : Y >         
+      < (total, M) : Cell | val : Z > 
+      => < (N, M) : Cell | val : sd(W, V) > 
+         < (total, total) : Cell | val : sd(X, V) >
+         < (N, total) : Cell | val : sd(Y, V) > 
+         < (total, M) : Cell | val : sd(Z, V) >  
+      if V <= W .
+  endom)

@@ -1,0 +1,13 @@
+fmod TERM-SET is
+  inc META-LEVEL .
+
+  var T : Term .
+  
+  sort TermSet .
+  subsort Term < TermSet .
+  op emptyTS : -> TermSet .
+  op _#_ : TermSet TermSet -> TermSet [assoc comm id: emptyTS] .
+  eq T # T = T .
+endfm
+
+red '0.Nat # emptyTS # ('s['#0:Nat]) # emptyTS .

@@ -1,0 +1,26 @@
+
+set trace off .
+trace include FULL-MAUDE .
+
+red in UNIT : moreGeneralEqs(mod 'VENDING-MACHINE-XOR is
+ nil
+ sorts 'Bool ; 'Coffee ; 'Coin ; 'Conf ; 'Cookie ; 'Item ; 'State .
+ subsort 'Coffee < 'Item .
+ subsort 'Coin < 'State .
+ subsort 'Cookie < 'Item .
+ subsort 'Item < 'State .
+ op 'q : nil -> 'Coin [none] .
+ op 'null : nil -> 'State [none] .
+ op 'not_ : 'Bool -> 'Bool [prec(53)] .
+ op 'c : nil -> 'Coffee [none] .
+ op 'a : nil -> 'Cookie [none] .
+ op '`{_`} : 'State -> 'Conf [none] .
+ op '__ : 'State 'State -> 'State [gather('e 'E)] .
+ op '0 : nil -> 'State [none] .
+ op '$ : nil -> 'Coin [none] .
+ none
+ eq '__['x:State,'y:State] = '__['y:State,'x:State] [nonexec label('XOR-Commutativity)] .
+ eq '__['x:State,'__['y:State,'z:State]] = '__['__['x:State,'y:State],'z:State] [nonexec label('XOR-Associativity)] .
+ none
+endm)
+.

@@ -1,0 +1,42 @@
+th FOO is
+  sort Foo .
+  op f : Foo -> Foo .
+  op g : Foo Foo -> Foo [assoc comm] .
+endth
+
+unify f(V:Foo) =? f(f(B:Foo)) .
+unify f(V:Foo) =? f(g(A:Foo, B:Foo, C:Foo)) .
+
+fmod FOO{X :: TRIV} is
+  sort Foo{X} .
+  op f : Foo{X} -> Foo{X} .
+  op g : Foo{X} Foo{X} -> Foo{X} [assoc comm] .
+endfm
+
+unify f(V:Foo{X}) =? f(f(B:Foo{X})) .
+unify f(V:Foo{X}) =? f(g(A:Foo{X}, B:Foo{X}, C:Foo{X})) .
+
+fmod BAR is
+  pr FOO{Nat} .
+  sort Bar .
+  subsort Foo{Nat} < Bar .
+  op f : Foo{Nat} -> Foo{Nat} .
+  op g : Foo{Nat} Foo{Nat} -> Foo{Nat} [assoc comm] .
+endfm
+
+unify f(V:Bar) =? f(f(B:Foo{Nat})) .
+unify f(V:Foo{Nat}) =? f(g(A:Bar, B:Foo{Nat}, C:Foo{Nat})) .
+
+fmod LN is pr LIST{Nat} . endfm
+fmod SN is pr SET{Nat} . endfm
+
+unify in LN : 4 + 4 L:List{Nat} =? L:List{Nat} .
+unify in SN : 4 + 4, (S:Set{Nat}) =? (S:Set{Nat}) .
+unify in SN : s s s N:Nat =? s s M:Nat .
+unify in SN : s s s N:Nat =? s s N:Nat .
+ 
+red in META-LEVEL :
+  metaUnify(upModule('BOOL, false),
+            upTerm(true and A:Bool),
+            upTerm(A:Bool and (true or B:Bool))) .
+             

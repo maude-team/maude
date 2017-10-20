@@ -1,0 +1,16 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  load nznat#.fm
+  
+ (fmod NAT/{N :: NZNAT#} is
+    sort Nat/{N} .
+    op `[_`] : Nat -> Nat/{N} [ctor] .
+    op _+_ : Nat/{N} Nat/{N} -> Nat/{N} .
+    op _*_ : Nat/{N} Nat/{N} -> Nat/{N} .
+    vars N M : Nat .
+    ceq [N] = [N rem #] if N >= # .
+    eq [N] + [M] = [N + M] .
+    eq [N] * [M] = [N * M] .
+  endfm)

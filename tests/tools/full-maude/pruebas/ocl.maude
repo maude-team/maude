@@ -1,0 +1,21 @@
+fmod OCL-COLLECTIONS{T :: TRIV} is
+    sorts Collection+{T} .
+
+        --- si la variable es tipada con el sort en lugar de con el kind no da problemas
+        ---     var N : Collection+{T} .
+        var N : [Collection+{T}] .
+
+    op oclIsUndefined : [Collection+{T}] -> Bool .
+    eq oclIsUndefined( N ) = true .
+endfm
+
+
+fmod OCL-DATATYPE-COLLECTIONS is
+        including OCL-COLLECTIONS{Int}   .
+endfm
+
+select FULL-MAUDE .
+
+loop init .
+
+(show module OCL-DATATYPE-COLLECTIONS .)

@@ -1,0 +1,53 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  mod ACTOR-CONF is
+    sorts Actor Msg AConf .
+    subsorts Actor Msg < AConf .
+    op none : -> AConf [ctor] .
+    op __ : AConf AConf -> AConf [ctor assoc comm id: none] .
+    *** actor messages
+    sorts Aid MsgBody .
+    op _<|_ : Aid MsgBody -> Msg [ctor] .
+  endm
+
+  mod TICKER is
+    including ACTOR-CONF .
+    protecting NAT .
+    op Ticker : Aid Nat -> Actor [ctor] .
+    op tick : -> MsgBody [ctor] .
+    op timeReq : Aid -> MsgBody [ctor] .
+    op timeReply : Nat -> MsgBody [ctor] .
+
+    vars T C : Aid .
+    var  N : Nat .
+    rl Ticker(T, N) (T <| tick)
+      => Ticker(T, s N) (T <| tick) .
+    rl Ticker(T, N) (T <| timeReq(C))
+      => Ticker(T, N) (C <| timeReply(N)) .
+  endm
+  
+  mod TICKER-TEST is
+    extending TICKER .
+    ops myticker me : -> Aid [ctor] .
+    op tConf : -> AConf .
+    eq tConf
+      = Ticker(myticker, 0)
+        (myticker <| tick)
+        (myticker <| timeReq(me)) .
+  endm
+  
+***(
+Maude> rew [10] tConf .
+rewrite [10] in TICKER-TEST : tConf .
+rewrites: 11 in 0ms cpu (0ms real) (~ rewrites/second)
+result AConf: (myticker <| tick) (me <| timeReply(1)) Ticker(myticker, 9)
+
+Maude> search [1] tConf =>+ tc:AConf me <| timeReply(100) .
+search in TICKER-TEST : tConf =>+ tc:AConf me <| timeReply(100) .
+
+Solution 1 (state 5152)
+states: 5153  rewrites: 5153 in 40ms cpu (80ms real) (128825 rewrites/second)
+tc:AConf --> (myticker <| tick) Ticker(myticker, 100)
+)

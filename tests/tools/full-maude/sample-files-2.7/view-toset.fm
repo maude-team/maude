@@ -1,0 +1,7 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+ (view TOSET from TRIV to TOSET is
+    sort Elt to Elt .
+  endv)

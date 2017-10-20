@@ -1,0 +1,88 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  load nstoset.maude
+  load view-nstoset.maude
+  load list-kind.maude
+  
+  fmod SORTED-LIST-KIND{X :: NSTOSET} is
+    protecting LIST-KIND{NSTOSET}{X} .
+    sorts NeSortedList{X} SortedList{X} .
+    subsort X$Elt < NeSortedList{X}
+                  < NeKList{NSTOSET}{X} SortedList{X}
+                  < KList{NSTOSET}{X} .
+
+    vars N M : X$Elt .
+    var  SL : SortedList{X} .
+    var  L : KList{NSTOSET}{X} .
+
+    op nil : -> SortedList{X} .
+    cmb N M L : NeSortedList{X} if N <= M /\ M L : SortedList{X} .
+
+    op min : NeSortedList{X} -> X$Elt .
+    ceq min(N L) = N if N L : SortedList{X} .
+
+    op max : NeSortedList{X} -> X$Elt .
+    ceq max(L N) = N if L N : SortedList{X} .
+  endfm
+
+  load view-nat<=.maude
+  
+  fmod NAT-SORTED-LIST-KIND is
+    protecting SORTED-LIST-KIND{Nat<=} .
+  endfm
+
+***(
+Maude> red in NAT-SORTED-LIST-KIND : length(2 3 4 5 6 7) .
+reduce in NAT-SORTED-LIST-KIND : length(2 3 4 5 6 7) .
+rewrites: 127 in 0ms cpu (0ms real) (~ rewrites/second)
+result NzNat: 6
+
+Maude> red min(2 3 4 5 6 7) .
+reduce in NAT-SORTED-LIST-KIND : min(2 3 4 5 6 7) .
+rewrites: 99 in 0ms cpu (0ms real) (~ rewrites/second)
+result NzNat: 2
+
+Maude> red max(2 3 4 5 6 7) .
+reduce in NAT-SORTED-LIST-KIND : max(2 3 4 5 6 7) .
+rewrites: 99 in 0ms cpu (0ms real) (~ rewrites/second)
+result NzNat: 7
+
+Maude> red min(2 4 5 6 3 7) .
+reduce in NAT-SORTED-LIST-KIND : min(2 4 5 6 3 7) .
+rewrites: 645 in 0ms cpu (2ms real) (~ rewrites/second)
+result [KList{NSTOSET}{Nat<=}]: min(2 4 5 6 3 7)
+
+Maude> red max(2 4 5 6 3 7) .
+reduce in NAT-SORTED-LIST-KIND : max(2 4 5 6 3 7) .
+rewrites: 748 in 0ms cpu (3ms real) (~ rewrites/second)
+result [KList{NSTOSET}{Nat<=}]: max(2 4 5 6 3 7)
+)
+  
+  load view-string<=.maude
+
+  fmod STRING-SORTED-LIST-KIND is
+    pr (SORTED-LIST-KIND
+          * (op length : KList{NSTOSET}{X} -> Nat to klength))
+          {String<=} .
+  endfm
+  
+***(
+Maude> red in STRING-SORTED-LIST-KIND : "one" "two" "three" .
+  result NeKList{NSTOSET}{String<=}: "one" "two" "three"
+\end{verbatim}
+
+\begin{verbatim}
+  Maude> red "one" "three" "two" .
+  result NeSortedList{String<=}: "one" "three" "two"
+\end{verbatim}
+
+\begin{verbatim}
+  Maude> red min("one" "two" "three") .
+  result [KList{NSTOSET}{String<=}]: min("one" "two" "three")
+\end{verbatim}
+
+\begin{verbatim}
+  Maude> red max("one" "three" "two") .
+  result String: "two"
+)

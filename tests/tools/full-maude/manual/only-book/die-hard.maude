@@ -1,0 +1,56 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  mod DIE-HARD is
+    protecting NAT .
+    sorts Basin BasinSet .
+    subsort Basin < BasinSet .
+
+    op basin : Nat Nat -> Basin [ctor] .   --- Capacity / Content
+    op __ : BasinSet BasinSet -> BasinSet [ctor assoc comm] .
+    op initial : -> BasinSet .
+
+    vars M1 N1 M2 N2 : Nat .
+
+    eq initial = basin(3, 0) basin(5, 0) basin(8, 0) .
+ 
+    rl [empty] : basin(M1, N1) => basin(M1, 0) .
+    rl [fill] : basin(M1, N1) => basin(M1, M1) .
+    crl [transfer1] : basin(M1, N1) basin(M2, N2) 
+      => basin(M1, 0) basin(M2, N1 + N2) 
+      if N1 + N2 <= M2 .
+    crl [transfer2] : basin(M1, N1) basin(M2, N2) 
+      => basin(M1, sd(N1 + N2, M2)) basin(M2, M2) 
+      if N1 + N2 > M2 .
+  endm
+
+search [1] initial =>* basin(N:Nat, 4) B:BasinSet .
+---(
+search in DIE-HARD : initial =>* B:BasinSet basin(N:Nat, 4) .
+
+Solution 1 (state 75)
+states: 76  rewrites: 2134 in 0ms cpu (8ms real) (~ rewrites/second)
+B:BasinSet --> basin(3, 3) basin(8, 3)
+N:Nat --> 5
+---)
+
+show path 75 .
+---(
+state 0, BasinSet: basin(3, 0) basin(5, 0) basin(8, 0)
+===[ rl basin(M1, N1) => basin(M1, M1) [label fill] . ]===>
+state 2, BasinSet: basin(3, 0) basin(5, 5) basin(8, 0)
+===[ crl basin(M1, N1) basin(M2, N2) => basin(M1, sd(M2, N1 + N2)) basin(M2,
+    M2) if N1 + N2 > M2 = true [label transfer2] . ]===>
+state 9, BasinSet: basin(3, 3) basin(5, 2) basin(8, 0)
+===[ crl basin(M1, N1) basin(M2, N2) => basin(M1, 0) basin(M2, N1 + N2) if N1 +
+    N2 <= M2 = true [label transfer1] . ]===>
+state 20, BasinSet: basin(3, 0) basin(5, 2) basin(8, 3)
+===[ crl basin(M1, N1) basin(M2, N2) => basin(M1, 0) basin(M2, N1 + N2) if N1 +
+    N2 <= M2 = true [label transfer1] . ]===>
+state 37, BasinSet: basin(3, 2) basin(5, 0) basin(8, 3)
+===[ rl basin(M1, N1) => basin(M1, M1) [label fill] . ]===>
+state 55, BasinSet: basin(3, 2) basin(5, 5) basin(8, 3)
+===[ crl basin(M1, N1) basin(M2, N2) => basin(M1, sd(M2, N1 + N2)) basin(M2,
+    M2) if N1 + N2 > M2 = true [label transfer2] . ]===>
+state 75, BasinSet: basin(3, 3) basin(5, 4) basin(8, 3)
+---)

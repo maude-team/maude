@@ -1,0 +1,15 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  fmod LIST-KIND{X :: TRIV} is
+    protecting NAT .
+    sorts NeKList{X} KList{X} .
+    subsort X$Elt < NeKList{X} < KList{X} .
+    op nil : -> KList{X} .
+    op __ : KList{X} KList{X} ~> KList{X} [assoc id: nil] .
+    mb NL:NeKList{X} NL':NeKList{X} : NeKList{X} .
+
+    op length : KList{X} -> Nat .
+    eq length(N:X$Elt L:KList{X}) = 1 + length(L:KList{X}) .
+    eq length(nil) = 0 .
+  endfm

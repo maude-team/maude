@@ -1,0 +1,73 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+load basic-nat.maude
+
+  fmod BASIC-NAT-MSET is
+    protecting BASIC-NAT .  
+    protecting BOOL .
+    
+    sort Mset .
+    subsorts Nat < Mset .
+    op empty-mset : -> Mset [ctor] .
+    op __ : Mset Mset -> Mset [ctor assoc comm id: empty-mset] .
+
+    op size : Mset -> Nat .
+    op mult : Nat Mset -> Nat .
+    op _in_ : Nat Mset -> Bool .
+
+    vars N N' : Nat .
+    var  S : Mset .
+  
+    eq size(empty-mset) = 0 .
+    eq size(N S) = s size(S) .
+    eq mult(N, empty-mset) = 0 .
+    eq mult(N, N S) = s mult(N, S) .
+    ceq mult(N, N' S) = mult(N, S) if N =/= N' .
+    eq N in S = (mult(N, S) =/= 0) . 
+  endfm
+    
+  fmod BASIC-NAT-MSET is
+    protecting BASIC-NAT .  
+    protecting BOOL .
+    
+    sort Mset .
+    subsorts Nat < Mset .
+    op empty-mset : -> Mset [ctor] .
+    op __ : Mset Mset -> Mset [ctor assoc comm id: empty-mset] .
+
+    op size : Mset -> Nat .
+    op mult : Nat Mset -> Nat .
+    op _in_ : Nat Mset -> Bool .
+
+    vars N N' : Nat .
+    var  S : Mset .
+  
+    eq size(empty-mset) = 0 .
+    eq size(N S) = s size(S) .
+    eq mult(N, N S) = s mult(N, S) .
+    eq mult(N, S) =  0 [owise] .
+    eq N in N S = true .
+    eq N in S = false [owise] .
+  endfm
+    
+red size(0 (s 0) (s s 0) (s s 0) (s 0) 0) .
+---(
+reduce in BASIC-NAT-MSET : size(0 s 0 s s 0 s s 0 0 s 0) .
+rewrites: 7 in 0ms cpu (0ms real) (~ rewrites/second)
+result Nat: s s s s s s 0
+---)
+ 
+red mult(s 0, 0 (s 0) (s s 0) (s s 0) (s 0) 0) .  
+---(
+reduce in BASIC-NAT-MSET : mult(s 0, 0 s 0 s s 0 s s 0 0 s 0) .
+rewrites: 3 in 0ms cpu (0ms real) (~ rewrites/second)
+result Nat: s s 0
+---)
+  
+red s s s 0 in 0 (s 0) (s s 0) (s s 0) (s 0) 0 .  
+---(
+reduce in BASIC-NAT-MSET : s s s 0 in 0 s 0 s s 0 s s 0 0 s 0 .
+rewrites: 1 in 0ms cpu (0ms real) (~ rewrites/second)
+result Bool: false
+---)

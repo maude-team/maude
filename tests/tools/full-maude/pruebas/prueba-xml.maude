@@ -1,0 +1,10 @@
+mod FOO is
+  sort Foo .
+  ops f g : Foo -> Foo .
+  op a : -> Foo .
+  rl f(F:Foo) => g(F:Foo) .
+endm
+
+rew f(f(a)) .
+
+quit

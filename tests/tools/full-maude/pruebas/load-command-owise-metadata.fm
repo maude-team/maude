@@ -1,0 +1,21 @@
+(load fmod 'FOO is
+        including 'BOOL .
+        sorts 'Foo .
+        none
+        op 'f : nil -> 'Foo [none] .
+        op 'g : nil -> 'Foo [none] .
+        none
+        eq 'f.Foo = 'g.Foo [none] .
+      endfm .)
+
+(select META-MODULE .)
+
+(load fmod 'FOO-FAIL is
+        including 'BOOL .
+        sorts 'Foo .
+        none
+        op 'f : nil -> 'Foo [none] . 
+        op 'g : nil -> 'Foo [none] .
+        none
+        eq 'f.Foo = 'g.Foo [owise metadata("test")] .
+      endfm .)

@@ -1,0 +1,15 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  ---- load model-checker.maude ---- include it in the main file
+  ---- load bakery.maude
+  ---- select FULL-MAUDE .
+  ---- loop init .
+  
+  load df-abstract-bakery.fm
+  load df-bakery-preds.fm
+
+ (mod DF-ABSTRACT-BAKERY-PREDS is
+    protecting DF-ABSTRACT-BAKERY .
+    including DF-BAKERY-PREDS .
+  endm)

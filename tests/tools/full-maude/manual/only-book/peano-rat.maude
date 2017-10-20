@@ -1,0 +1,30 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  fmod PEANO-RAT is
+    protecting PEANO-INT .
+    sorts Rat NzRat .
+    subsort Int < Rat .
+    subsorts NzInt < NzRat < Rat .
+    op _/_ : Rat NzRat -> Rat [ctor] .
+    op _/_ : NzRat NzRat -> NzRat [ctor] .
+    op -_  : Rat -> Rat .
+    op -_  : NzRat -> NzRat .
+    op _+_ : Rat Rat -> Rat [comm] .
+    op _*_ : Rat Rat -> Rat [comm] .
+    op _*_ : NzRat NzRat -> NzRat [comm] .
+    vars I' J' : NzInt .
+    vars R S : Rat .
+    vars R' S' : NzRat .
+    eq R / (R' / S') = (R * S') / R' .
+    eq (R / R') / S' = R / (R' * S') .
+    ceq J' / I' = quot(J', gcd(J', I')) / quot(I', gcd(J', I'))
+      if gcd(J', I') > s 0 .
+    eq R / s 0 = R .
+    eq 0 / R' = 0 .
+    eq R / (- R') = (- R) / R' .
+    eq - (R / R') = (- R) / R' .
+    eq R + (S / R') = ((R * R') + S) / R' .
+    eq R * (S / R') = (R * S) / R' .
+  endfm
+    

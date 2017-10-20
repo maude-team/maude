@@ -1,0 +1,17 @@
+(mod NONAMBIGUOUS is
+ sort Foo .
+ op a : -> Foo .
+ ops f g h : Foo -> Foo .
+vars M H : Foo .
+ eq f(H) = g(H) [print "here"] .
+ rl g(M) => h(M)
+   [print "metadata = " M " g -> h rule"] .
+endm)
+
+(show module .)
+
+(rew f(a) .)
+
+set print attr on .
+
+(rew f(a) .)

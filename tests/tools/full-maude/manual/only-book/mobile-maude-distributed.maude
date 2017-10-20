@@ -1,0 +1,350 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+  
+load mobile-maude.maude
+load socket.maude
+
+------------------------------------------------------------------------------------
+---- BUFFERED-SOCKET
+------------------------------------------------------------------------------------
+
+mod BUFFERED-SOCKET is
+  pr NAT .
+  inc SOCKET .
+
+------------------------------------------------------------------------------------
+----  class BufferedSocket |      *** One on each extreme of the socket
+----     read : String,           *** Messages read
+----     bState : BState .        *** Either idle or active
+----     waiting : Bool .         *** Waiting for Sent
+----     complete : FindResult    *** Index of #
+
+  sort BufferedSocket .
+  subsort BufferedSocket < Cid .
+  op BufferedSocket : -> BufferedSocket .
+
+  op read :_ : String -> Attribute [ctor gather(&)] .
+  op bState :_ : BState -> Attribute [ctor gather(&)] .
+  op waiting :_ : Bool -> Attribute [ctor gather(&)] .
+  op complete :_ : FindResult -> Attribute [ctor gather(&)] .
+
+  var  V@BufferedSocket : BufferedSocket .
+  var FR : FindResult .
+------------------------------------------------------------------------------------
+
+  op b : Oid -> Oid .   *** buffered sockets ids are marked with a b operator,
+                        *** i.e., the buffers associated to a socket SOCKET
+                        *** have identifier b(SOCKET); note that there is a
+                        *** BufferedSocket on each side of the socket, that is,
+                        *** there are two objects with the same id, but in different
+                        *** configurations.
+
+  sort BState .
+  ops idle active : -> BState [ctor] .
+
+  op CreateClientTcpSocket : Oid Oid String Nat -> Msg [ctor msg format (b o)] .
+  op CreateServerTcpSocket : Oid Oid Nat Nat -> Msg [ctor msg format (b o)] .
+  op CreatedSocket : Oid Oid Oid -> Msg [ctor msg format (m o)] .
+
+  op AcceptClient : Oid Oid -> Msg [ctor msg format (b o)] .
+  op AcceptedClient : Oid Oid String Oid -> Msg [ctor msg format (m o)] .
+
+  op Send : Oid Oid String -> Msg [ctor msg format (b o)] .
+  op Sent : Oid Oid -> Msg [ctor msg format (m o)] .
+
+  op Receive : Oid Oid -> Msg [ctor msg format (b o)] .
+  op Received : Oid Oid String -> Msg [ctor msg format (m o)] .
+
+  op CloseSocket : Oid Oid -> Msg [ctor msg format (b o)] .
+  op ClosedSocket : Oid Oid String -> Msg [ctor msg format (m o)] .
+
+  op SocketError : Oid Oid String -> Msg [ctor msg format (r o)] .
+
+  vars SOCKET NEW-SOCKET SOCKET-MANAGER O : Oid .
+  vars ADDRESS IP IP' DATA S S' REASON : String .
+  var  Atts : AttributeSet .
+  vars PORT BACKLOG N : Nat .
+
+  rl [createServerTcpSocket] :
+    CreateServerTcpSocket(SOCKET-MANAGER, O, PORT, BACKLOG)
+    => createServerTcpSocket(SOCKET-MANAGER, O, PORT, BACKLOG) .
+
+  rl [acceptClient] :
+    AcceptClient(b(SOCKET), O)
+    => acceptClient(SOCKET, O) .
+
+  rl [acceptedclient] :
+    acceptedClient(O, SOCKET, IP', NEW-SOCKET)
+    => AcceptedClient(O, b(SOCKET), IP', b(NEW-SOCKET))
+       < b(NEW-SOCKET) : BufferedSocket | bState : idle, read : "", waiting : false,
+                                          complete : notFound > .
+
+  rl [socketError] :
+    socketError(O, SOCKET-MANAGER, REASON)
+    => SocketError(O, SOCKET-MANAGER, REASON) .
+
+  rl [closeSocket] :
+    CloseSocket(b(SOCKET), SOCKET-MANAGER)
+    => closeSocket(SOCKET, SOCKET-MANAGER) .
+
+  rl [closedSocket] :
+    < b(SOCKET) : V@BufferedSocket | Atts >
+    closedSocket(SOCKET, SOCKET-MANAGER, DATA)
+    => ClosedSocket(b(SOCKET), SOCKET-MANAGER, DATA) .
+
+  rl [createClientTcpSocket] :
+    CreateClientTcpSocket(SOCKET-MANAGER, O, ADDRESS, PORT)
+    => createClientTcpSocket(SOCKET-MANAGER, O, ADDRESS, PORT) .
+
+  rl [createdSocket] :
+    createdSocket(O, SOCKET-MANAGER, SOCKET)
+    => < b(SOCKET) : BufferedSocket | bState : idle, read : "", waiting : false,
+                                      complete : notFound  >
+       CreatedSocket(O, SOCKET-MANAGER, b(SOCKET)) .
+
+  rl [send] :
+    < b(SOCKET) : V@BufferedSocket | bState : active, waiting : false, Atts >
+    Send(b(SOCKET), O, DATA)
+    => < b(SOCKET) : V@BufferedSocket | bState : active, waiting : true, Atts >
+       send(SOCKET, O, DATA + "#") .
+
+  rl [sent] :
+    < b(SOCKET) : V@BufferedSocket | bState : active, waiting : true, Atts >
+    sent(O, SOCKET)
+    => < b(SOCKET) : V@BufferedSocket | bState : active, waiting : false, Atts >
+       Sent(O, b(SOCKET)) .
+
+  rl [buffer-start-up] :
+    < b(SOCKET) : V@BufferedSocket | bState : idle, Atts >
+    => < b(SOCKET) : V@BufferedSocket | bState : active, Atts >
+       receive(SOCKET, b(SOCKET)) .
+
+  rl [received] :
+    < b(SOCKET) : V@BufferedSocket | bState : active, read : S, complete : FR, Atts >
+    received(b(SOCKET), O, DATA)
+    => < b(SOCKET) : V@BufferedSocket | bState : active, read : (S + DATA),
+            complete : getComplete(FR, S + DATA), Atts >
+       receive(SOCKET, b(SOCKET)) .   *** !!!!!
+
+  crl [Received] :
+    < b(SOCKET) : V@BufferedSocket | bState : active, read : S, complete : N, Atts >
+    Receive(b(SOCKET), O)
+    => < b(SOCKET) : V@BufferedSocket | bState : active, read : S',
+            complete : find(S', "#", 0), Atts >
+       Received(O, b(SOCKET), DATA)
+    if DATA := substr(S, 0, N)
+       /\ S' := substr(S, N + 1, length(S)) .
+
+  op getComplete : FindResult String -> FindResult .
+  eq getComplete(N, S) = N .
+  eq getComplete(notFound, S) = find(S, "#", 0) .
+
+endm
+
+
+mod DISTRIBUTED-MOBILE-MAUDE is
+  pr MOBILE-MAUDE-SEMANTICS .
+  pr BUFFERED-SOCKET .
+
+  var V@RootObject : RootObject .
+------------------------------------------------------------------------------------
+----  class ClientRootObject |
+----     server : Oid .        *** Server root object's socket oid
+
+  sort ClientRootObject .
+  subsort ClientRootObject < RootObject .
+  op ClientRootObject : -> ClientRootObject .
+
+  op server :_ : String -> Attribute [ctor gather(&)] .
+  op port :_ : Nat -> Attribute [ctor gather(&)] .
+
+  var V@ClientRootObject : ClientRootObject .
+------------------------------------------------------------------------------------
+----  class ServerRootObject |
+----     clients : Map{Oid,Oid},
+----                              *** Client root objects' socket ids
+----     socket : Oid .           *** Get connections through only one socket
+----
+----  subclasses ClientRootObject ServerRootObject < RootObject .
+
+  sort ServerRootObject .
+  subsort ServerRootObject < RootObject .
+  op ServerRootObject : -> ServerRootObject .
+
+  var V@ServerRootObject : ServerRootObject .
+------------------------------------------------------------------------------------
+
+
+  vars O O' O'' SOCKET NEW-SOCKET SOCKET-MANAGER : Oid .
+  var  L : Loc .
+  vars DATA IP IP' S S' S'' : String .
+  vars AtS AtS' : AttributeSet .
+  vars N : Nat .
+  var  MSG : Msg .
+  vars LSPF LSPF' : Map{Loc,Oid} .
+
+------------------------------------------------------------------------------------
+---- Auxiliary functions
+------------------------------------------------------------------------------------
+
+  var  Q : Qid .
+  vars QIL QIL' : QidList .
+
+  op MMMS : -> Module .
+  eq MMMS = upModule('MOBILE-MAUDE-SYNTAX, false) .
+
+  op qidListString : QidList -> String .
+  op qidListString : QidList String -> String .
+  op stringQidList : String -> QidList .
+  op stringQidList : String QidList -> QidList .
+
+  eq qidListString(QIL) = qidListString(QIL, "") .
+  eq qidListString(nil, S) = S .
+  eq qidListString(Q QIL, S) = qidListString(QIL, S + string(Q) + " ") .
+
+  eq stringQidList(S) = stringQidList(S, nil) .
+  eq stringQidList("", QIL) = QIL .
+  eq stringQidList(S, QIL) = QIL qid(S) [owise] . ***if S =/= "" /\ find(S, " ", 0) = notFound .
+  ceq stringQidList(S, QIL)
+    = stringQidList(S'', QIL qid(S') )
+    if N := find(S, " ", 0)
+       /\ S' := substr(S, 0, N)
+       /\ S'' := substr(S, N + 1, length(S)) .
+
+  op msg2string : Msg -> String .
+  eq msg2string(MSG) = qidListString(metaPrettyPrint(MMMS, upTerm(MSG), none)) .
+
+  op string2msg : String -> Msg .
+  eq string2msg(S)
+    = downTerm(getTerm(metaParse(MMMS, stringQidList(S), 'Msg)), error(S)) .
+
+  ------------------------------------------------------------------------------------
+  ---- ROOT OBJECT
+  ------------------------------------------------------------------------------------
+
+  crl [received] :
+    ---- the first connection is made the default one
+    < O : V@RootObject | state : active, neighbors : empty, defNeighbor : null, AtS >
+    Received(O, SOCKET, DATA)
+    => < O : V@RootObject | state : active,
+                            neighbors : insert(L, SOCKET, empty),
+                            defNeighbor : if V@RootObject == ServerRootObject
+                                           then null
+                                           else SOCKET
+                                           fi,
+                            AtS >
+       Receive(SOCKET, O)
+    if new-socket(L) := string2msg(DATA) .
+
+  crl [received] :
+    < O : V@RootObject | state : active, neighbors : LSPF, AtS >
+    Received(O, SOCKET, DATA)
+    => < O : V@RootObject | state : active,
+                            neighbors : insert(L, SOCKET, LSPF),
+                            AtS >
+       Receive(SOCKET, O)
+    if LSPF =/= empty /\ new-socket(L) := string2msg(DATA) .
+
+  crl [received] :
+    < O : V@RootObject | state : active, AtS >
+    Received(O, SOCKET, DATA)
+    => < O : V@RootObject | state : active, AtS >
+       string2msg(DATA)
+       Receive(SOCKET, O)
+    if not new-socket(DATA) .
+
+  op new-socket : String -> Bool .
+  ceq new-socket(DATA) = true if new-socket(L) := string2msg(DATA) .
+  eq new-socket(DATA) = false [owise] .
+
+  ---- the root object is in charge of sending the message through the right socket
+  crl [changeSend] :
+    < O : V@RootObject | state : active, neighbors : LSPF, defNeighbor : O', AtS >
+    Send(L, O'', MSG)
+    => < O : V@RootObject | state : active, neighbors : LSPF, defNeighbor : O', AtS >
+       Send(O', O'', msg2string(MSG))
+    if LSPF[L] == undefined /\ O' =/= null .
+
+  crl [changeSend] :
+    < O : V@RootObject | state : active, neighbors : LSPF, AtS >
+    Send(L, O', MSG)
+    => < O : V@RootObject | state : active, neighbors : LSPF, AtS >
+       Send(LSPF[L], O', msg2string(MSG))
+    if LSPF[L] =/= undefined .
+
+  ----rl [messageSent] :
+  ---- we should perhaps handle the acks
+  ----    < O : V@RootObject | AtS >
+  ----    Sent(O, O')
+  ----    => < O : V@RootObject | AtS > .
+  eq Sent(O, O') = none .
+
+  ------------------------------------------------------------------------------------
+  ---- SERVER
+  ------------------------------------------------------------------------------------
+
+  ---- TCP socket server start up
+  rl [connect] :
+    < O : V@ServerRootObject | state : idle, port : N, AtS >
+    => < O : V@ServerRootObject | state : waiting-connection, port : N, AtS >
+       CreateServerTcpSocket(socketManager, O, N, 5) .
+
+  rl [connected] :
+    < O : V@ServerRootObject | state : waiting-connection, AtS >
+    CreatedSocket(O, SOCKET-MANAGER, SOCKET)
+    => < O : V@ServerRootObject | state : active, AtS >
+       AcceptClient(SOCKET, O) .
+    ---- It could also result in a socketError(ME, socketManager, REASON) message
+
+  ---- client accepted
+  rl [acceptedClient] :
+    < O : V@ServerRootObject | state : active, AtS >
+    AcceptedClient(O, SOCKET, IP', NEW-SOCKET)
+    ---- It could also result in a socketError(ME, socketManager, REASON) message
+    => < O : V@ServerRootObject | state : active, AtS >
+       AcceptClient(SOCKET, O)
+       Receive(NEW-SOCKET, O)
+       Send(NEW-SOCKET, O, msg2string(new-socket(O))) .
+
+  crl [closedSocket] :
+    ---- what happens if the default socket is closed?
+    ---- we cannot take any other one as default, we can get very easily into loops
+    ---- we possibly need to distinguish between new-socket and new-default-socket
+    ----   messages; then, loosing a default socket may result in a null value
+    ----   for defNeighbor
+    < O : V@ServerRootObject | neighbors : LSPF, defNeighbor : O', AtS >
+    ClosedSocket(SOCKET, SOCKET, DATA)
+    => < O : V@ServerRootObject | neighbors : LSPF', defNeighbor : O', AtS >
+    if SOCKET =/= O' /\ (LSPF', (L |-> SOCKET)) := LSPF .
+
+  ------------------------------------------------------------------------------------
+  ---- CLIENT
+  ------------------------------------------------------------------------------------
+
+  ---- A client root object requests a socket connection
+  rl [connect] :
+    < O : V@ClientRootObject | state : idle, server : S, port : N, AtS >
+    => < O : V@ClientRootObject | state : waiting-connection, server : S, port : N, AtS >
+       CreateClientTcpSocket(socketManager, O, S, N) .
+
+  ---- Response to a client root object's socket connection request
+  rl [connected] :
+    < O : V@ClientRootObject | state : waiting-connection, AtS >
+    CreatedSocket(O, SOCKET-MANAGER, SOCKET)
+    => < O : V@ClientRootObject | state : active, AtS >
+       Receive(SOCKET, O)
+       Send(SOCKET, O, msg2string(new-socket(O))) .
+
+---- It can also get a socketError(O, SOCKET-MANAGER, REASON) message:
+----  rl [tryAgain] : < O : V@ClientRootObject | state : waiting-connection, AtS >
+----                  socketError(O, SOCKET-MANAGER, REASON)
+----    => < O : V@ClientRootObject | state : waiting-connection, AtS >
+----       createClientTcpSocket(socketManager, O, server-address, port) .
+
+endm
+
+
+mod MOBILE-MAUDE is
+  inc DISTRIBUTED-MOBILE-MAUDE .
+endm
+

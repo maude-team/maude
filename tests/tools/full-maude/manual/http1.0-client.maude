@@ -1,0 +1,81 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+  
+  load string-ops.maude
+  load socket.maude
+  
+  mod HTTP/1.0-CLIENT is
+    pr STRING-OPS .
+    inc SOCKET .
+    sort State .
+    ops idle connecting sending receiving closing : -> State [ctor] .
+    op state:_ : State -> Attribute [ctor] .
+    op requester:_ : Oid -> Attribute [ctor] .
+    op url:_ : String -> Attribute [ctor] .
+    op stored:_ : String -> Attribute [ctor] .
+
+    op HttpClient : -> Cid .
+    op httpClient : -> Oid .
+    op dummy : -> Oid .
+
+    op getPage : Oid Oid String -> Msg [msg ctor] .
+    op gotPage : Oid Oid String String -> Msg [msg ctor] .
+
+    vars H R R' TS : Oid .
+    vars U S ST : String .
+
+    rl [getPage] :
+      getPage(H, R, U)
+      < H : HttpClient | 
+          state: idle, requester: R', url: S, stored: "" >
+      => < H : HttpClient | 
+             state: connecting, requester: R, url: U, stored: "" >
+         createClientTcpSocket(socketManager, H, 
+           extractHostName(U), 80) .
+
+    rl [createdSocket] :
+      createdSocket(H, socketManager, TS)
+      < H : HttpClient | 
+          state: connecting, requester: R, url: U, stored: "" >
+      => < H : HttpClient | 
+             state: sending, requester: R, url: U, stored: "" >
+         send(TS, H, "GET " + extractPath(U) + " HTTP/1.0\r\nHost: " +
+         extractHostName(U) + "\r\n\r\n") .
+
+    rl [sent] :
+      sent(H, TS)
+      < H : HttpClient | 
+          state: sending, requester: R, url: U, stored: "" >
+      => < H : HttpClient | 
+             state: receiving, requester: R, url: U, stored: "" >
+         receive(TS, H) .
+
+    rl [received] :
+      received(H, TS, S) 
+      < H : HttpClient | 
+          state: receiving, requester: R, url: U, stored: ST >
+      => receive(TS, H)
+         < H : HttpClient | state: receiving, 
+             requester: R, url: U, stored: (ST + S) > .
+       
+    rl [closedSocket] : 
+      closedSocket(H, TS, S)
+      < H : HttpClient | 
+          state: receiving, requester: R, url: U, stored: ST >
+      => gotPage(R, H, extractHeader(ST), extractBody(ST)) .
+
+    op start : String -> Configuration .
+    eq start(S) 
+      = <> 
+        getPage(httpClient, dummy, S)
+        < httpClient : HttpClient | state: idle, requester: dummy, 
+            url: "", stored: "" > .
+  endm
+
+***(
+  Maude> erew start("www.google.com") .
+
+  Maude> erew [1, 2] start("www.google.com") . 
+  Maude> cont 1 .
+)  

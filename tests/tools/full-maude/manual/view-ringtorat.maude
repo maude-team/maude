@@ -1,0 +1,43 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+---- load ring.maude
+
+  view RingToRat from RING to RAT is
+    sort Ring to Rat .
+    op e to term 1 .
+    op z to 0 .
+  endv
+
+  ---(
+  Maude> reduce in META-LEVEL : upView('RingToRat) .
+   
+  reduce in META-LEVEL : upView('RingToRat) .
+  rewrites: 1 in 0ms cpu (0ms real) (1000000 rewrites/second)
+  result View: 
+  view 'RingToRat from 'RING to 'RAT is
+    sort 'Ring to 'Rat .
+    op 'z to '0 .
+    op 'e.Ring to term 's_['0.Zero] .
+  endv
+  
+  Maude> reduce in META-VIEW : 
+            getFrom(view 'RingToRat from 'RING to 'RAT is
+                      sort 'Ring to 'Rat .
+                      op 'z to '0 .
+                      op 'e.Ring to term 's_['0.Zero] .
+                    endv) .
+  result Sort: 'RING
+
+  Maude> reduce in META-VIEW : 
+            getOpMappings(view 'RingToRat from 'RING to 'RAT is
+                            sort 'Ring to 'Rat .
+                            op 'z to '0 .
+                            op 'e.Ring to term 's_['0.Zero] .
+                          endv) . 
+  result OpMappingSet: 
+    op 'z to '0 .
+    op 'e.Ring to term 's_['0.Zero] .
+  ---)
+  

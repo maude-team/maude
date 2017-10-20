@@ -1,0 +1,35 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  fmod ASSOC-ID-EX is
+    sort Foo .
+    ops a b 1f : -> Foo .
+    op f : Foo Foo -> Foo [assoc left id: 1f] .
+    var X Y : Foo .
+  endfm
+
+  select FULL-MAUDE .
+  loop init .
+
+ (select ASSOC-ID-EX .)
+ 
+ (match f(X:Foo,Y:Foo) <=? f(a,b) .)
+
+ (xmatch f(X:Foo,Y:Foo) <=? f(a, b) .)
+
+ (fmod ASSOC-ID-EX is
+    sort Foo .
+    ops a b 1f : -> Foo .
+    op f : Foo Foo -> Foo [assoc left id: 1f] .
+    var X Y : Foo .
+  endfm)
+
+  select FULL-MAUDE .
+  loop init .
+
+ (select ASSOC-ID-EX .)
+ 
+ (match f(X:Foo,Y:Foo) <=? f(a,b) .)
+
+ (xmatch f(X:Foo,Y:Foo) <=? f(a, b) .)

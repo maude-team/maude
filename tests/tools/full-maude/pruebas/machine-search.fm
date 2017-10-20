@@ -1,0 +1,159 @@
+---- This script shows that the search command does not fully function
+---- in full-maude and the show graph command does not parse.
+---- 
+---- We compare the commands in Maude running the module machine.maude
+---- to the converted module full-maude running in full-maude and note
+---- the differences.
+---- 
+---- machine.maude
+---- 
+---- mod MACHINE is
+----   sort State .
+---- 
+----   ops s t v : -> State .
+---- 
+----   op f : State -> State .
+----   op g : State State -> State .
+---- 
+----   eq f(t) = v .
+---- 
+----   eq g(t,v) = t .
+---- 
+----   rl [one] : s => t .
+----   rl [two] : s => v .
+---- endm
+---- 
+---- 
+---- [pinsky@rock reports]$ maude
+----              \||||||||||||||||||/
+----            --- Welcome to Maude ---
+----              /||||||||||||||||||\
+----          Maude 2.0 built: May 31 2003 22:37:50
+----          Copyright 1997-2003 SRI International
+----            Tue Aug  5 10:18:54 2003
+---- Maude> in machine
+---- ==========================================
+---- mod MACHINE
+---- Maude> red g(t,v) .
+---- reduce in MACHINE : g(t, v) .
+---- rewrites: 1 in 0ms cpu (0ms real) (~ rewrites/second)
+---- result State: t
+---- Maude> search s =>* w:State .
+---- search in MACHINE : s =>* w:State .
+---- 
+---- Solution 1 (state 0)
+---- states: 1  rewrites: 0 in 0ms cpu (0ms real) (~ rewrites/second)
+---- w:State --> s
+---- 
+---- Solution 2 (state 1)
+---- states: 2  rewrites: 1 in 0ms cpu (0ms real) (~ rewrites/second)
+---- w:State --> t
+---- 
+---- Solution 3 (state 2)
+---- states: 3  rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+---- w:State --> v
+---- 
+---- No more solutions.
+---- states: 3  rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+---- Maude> show search graph .
+---- state 0, State: s
+---- arc 0 ===> state 1 (rl s => t [label one] .)
+---- arc 1 ===> state 2 (rl s => v [label two] .)
+---- 
+---- state 1, State: t
+---- 
+---- state 2, State: v
+---- Maude> show path 1 .
+---- state 0, State: s
+---- ===[ rl s => t [label one] . ]===>
+---- state 1, State: t
+---- Maude> search s =>1 w:State .
+---- search in MACHINE : s =>1 w:State .
+---- 
+---- Solution 1 (state 1)
+---- states: 2  rewrites: 1 in 0ms cpu (0ms real) (~ rewrites/second)
+---- w:State --> t
+---- 
+---- Solution 2 (state 2)
+---- states: 3  rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+---- w:State --> v
+---- 
+---- No more solutions.
+---- states: 3  rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+---- Maude> q
+---- Bye.
+---- 
+---- 
+---- 
+---- Now for the same module converter to run in full-maude
+---- 
+---- full-machine.maude
+---- 
+(mod FULL-MACHINE is
+  sort State .
+
+  ops s t v : -> State .
+
+  op f : State -> State .
+  op g : State State -> State .
+
+  eq f(t) = v .
+
+  eq g(t,v) = t .
+
+  rl [one] : s => t .
+  rl [two] : s => v .
+endm)
+
+
+---- Note: the search s =>* w:State produces a graph 
+----       but cannot be shown
+---- 
+----       and the search s =>1 w:State does not parse.
+---- 
+---- [pinsky@rock reports]$ full-maude
+----              \||||||||||||||||||/
+----            --- Welcome to Maude ---
+----              /||||||||||||||||||\
+----          Maude 2.0 built: May 31 2003 22:37:50
+----          Copyright 1997-2003 SRI International
+----            Tue Aug  5 10:19:46 2003
+---- 
+----            Full Maude 2.0.1 (July 1st, 2003)
+---- 
+---- Maude> in full-machine
+---- rewrites: 893 in 50ms cpu (50ms real) (17860 rewrites/second)
+---- Introduced module FULL-MACHINE
+---- 
+ (red g(t,v) .)
+---- rewrites: 142 in 0ms cpu (0ms real) (~ rewrites/second)
+---- reduce in FULL-MACHINE :
+----   g(t,v)
+---- result State :
+----   t
+---- 
+ (search s =>* w:State .)
+---- rewrites: 195 in 0ms cpu (0ms real) (~ rewrites/second)
+---- search in FULL-MACHINE : s =>* w:State .
+---- 
+---- Solution 1
+---- w:State <- s
+---- 
+---- Solution 2
+---- w:State <- t
+---- 
+---- Solution 3
+---- w:State <- v
+---- 
+---- No more solutions.
+ (show search graph .)
+---- rewrites: 14 in 0ms cpu (0ms real) (~ rewrites/second)
+---- Error: No parse for input.
+---- 
+ (search s =>1 w:State .)
+---- rewrites: 14 in 0ms cpu (0ms real) (~ rewrites/second)
+---- Error: No parse for input.
+---- 
+---- Maude> q
+---- Bye.
+---- [pinsky@rock reports]$ 

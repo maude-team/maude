@@ -1,0 +1,7 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  (view Substitution from TRIV to META-LEVEL is
+     sort Elt to Substitution .
+   endv)

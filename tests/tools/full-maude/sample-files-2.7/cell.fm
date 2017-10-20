@@ -1,0 +1,8 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+ (oth CELL is
+    sort Elt .
+    class Cell | contents : Elt .
+  endoth)

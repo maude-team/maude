@@ -1,0 +1,7 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+  
+ (view Cid from TRIV to CONFIGURATION is
+    sort Elt to Cid .
+  endv)

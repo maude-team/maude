@@ -1,0 +1,6 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  view String<= from NSTOSET to STRING is
+    sort Elt to String .
+  endv

@@ -1,0 +1,499 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  ---- modified on 10/28/08
+  ---- - the _=?_ operator is now in conflict with one in the prelude; it has 
+  ----   been renamed as _=?c_
+
+-------------------------------------------------------------------------------
+
+---- metaUnify takes a module and a set of commutative equations
+
+-------------------------------------------------------------------------------
+---- auxiliary-functions.maude 
+-------------------------------------------------------------------------------
+
+**** We first introduce some basic functions for the manipulation of terms, and 
+**** then we present the unification and matching functions.
+
+fmod AUXILIARY-FUNCTIONS is
+  pr META-LEVEL .
+  pr EXT-BOOL .
+  pr INT .
+
+  vars T T' : Term .
+  var  TL : TermList .
+  vars Tp Tp' Tp'' Tp''' : Type .
+  vars TpL TpL' : TypeList .
+  var  M : Module .
+  var  At : Attr .
+  var  AtS : AttrSet .
+  vars L F G : Qid .
+  var  ODS : OpDeclSet .
+  vars V V' : Variable .
+  var  C : Constant .
+  var  Subst : Substitution .
+
+  *** some built-in sort operations on lists
+  op sortLeq : Module TypeList TypeList ~> Bool [ditto] . 
+  eq sortLeq(M, (Tp Tp' TpL), (Tp'' Tp''' TpL')) 
+    = sortLeq(M, Tp, Tp'') and-then sortLeq(M, Tp' TpL, Tp''' TpL') .
+  eq sortLeq(M, nil, nil) = true .  
+  eq sortLeq(M, TpL, TpL') = false [owise] .
+  
+  op leastSort : Module TermList ~> TypeList [ditto] .
+  eq leastSort(M, (T, T', TL)) = leastSort(M, T) leastSort(M, (T', TL)) .
+  eq leastSort(M, empty) = nil .
+  
+  op sameKind : Module TypeList TypeList ~> Bool [ditto] . 
+  eq sameKind(M, (Tp Tp' TpL), (Tp'' Tp''' TpL')) 
+    = sameKind(M, Tp, Tp'') and-then sameKind(M, Tp' TpL, Tp''' TpL') .
+  eq sameKind(M, nil, nil) = true .  
+  eq sameKind(M, TpL, TpL') = false [owise] .
+
+  **** occurs checks whether a variable name occurs in a term or not.
+  op occurs : Variable Term -> Bool .
+  op occurs : Variable TermList -> Bool .
+  eq occurs(V, V') = V == V' .
+  eq occurs(V, C) = false .
+  eq occurs(V, F[TL]) = occurs(V, TL) .
+  eq occurs(V, (T, TL)) = occurs(V, T) or-else  occurs(V, TL) .
+
+  **** length of term lists
+  op length : TermList -> Nat .  
+  eq length((T, TL)) = 1 + length(TL) .
+  eq length(empty) = 0 .
+
+  op _in_ : Attr AttrSet -> Bool .
+  eq At in At AtS = true .
+  eq At in AtS = false [owise] .
+
+  op getLabel : AttrSet -> Qid .
+  eq getLabel(label(L) AtS) = L .
+  eq getLabel(AtS) = 'no-label [owise] .
+
+  **** hasAttr checks whether the given operator has the given attribute
+  **** in its declaration in the given module
+
+  op hasAttr : Module Qid TypeList Attr -> Bool .
+  op hasAttr : Module OpDeclSet Qid TypeList Attr -> Bool .
+
+  eq hasAttr(M, G, TpL, At) = hasAttr(M, getOps(M), G, TpL, At) .
+  eq hasAttr(M, op F : TpL -> Tp [AtS] . ODS, G, TpL', At) 
+    = if (F == G) and-then sameKind(M, TpL, TpL')
+      then At in AtS
+      else hasAttr(M, ODS, G, TpL', At)
+      fi .
+  eq hasAttr(M, none, G, TpL, At) = false .
+
+**** The function \texttt{substitute} takes a term $t$ and a substitution 
+**** $\sigma$ and returns the term $t\sigma$. 
+
+  op substitute : Term Substitution -> Term .
+  op substitute : TermList Substitution -> TermList .
+
+  eq substitute(T, none) = T .
+  eq substitute(V, ((V' <- T) ; Subst)) 
+    **** WE MAY HAVE TO CHECK SOMETHING LIKE
+    ****      getName(V) == getName(V') and sameKind(V, V')
+    = if V == V' then T else substitute(V, Subst) fi .
+  eq substitute(C, ((V' <- T); Subst)) = C .
+  eq substitute(F[TL], Subst) = F[substitute(TL, Subst)] .
+  eq substitute((T, TL), Subst)
+    = (substitute(T, Subst), substitute(TL, Subst)) .
+
+endfm
+
+-------------------------------------------------------------------------------
+---- unification.maude
+-------------------------------------------------------------------------------
+
+*** We get the variables from the terms, but we don't use them for getting
+*** their sorts. Variables are already of the form X:S, and we get their
+*** sorts from them.
+*** Variables are collected to be able to complete the substitutions at the
+*** end of the process. 
+*** We use V to refer to variables and X to refer to variable names. 
+
+fmod UNIFICATION is
+  pr META-LEVEL .
+  pr EXT-BOOL .
+  pr AUXILIARY-FUNCTIONS .
+
+  vars QI F G X Y : Qid .
+  vars S S' : Sort .
+  vars Tp Tp' : Type .
+  vars TpL TpL' : TypeList .
+  var  TpS : TypeSet .
+  vars TpLS TpLS' : TypeListSet .
+  var  M : Module .
+  vars T T' T'' T''' T1 T1' : Term .
+  vars TL TL' : TermList .
+  var  CEqS : CommEqSet .
+  var  D : Disjunction .
+  var  UT : UnifTuple .
+  var  VDS : VarDeclSet .
+  vars Subst Subst' : Substitution .
+  var  SubstS : SubstitutionSet .
+  var  MAS : MembAxSet .
+  vars N I : Nat .
+  var  AtS : AttrSet .
+  var  IL : ImportList .
+  var  SS : SortSet .
+  var  SSDS : SubsortDeclSet .
+  var  ODS : OpDeclSet .
+  var  EqS : EquationSet .
+  var  RlS : RuleSet .
+  vars V W : Variable .
+  vars C C' : Constant .
+  var  EqC : EqCondition .
+  var  Cd : Condition .
+
+  **** a few declarations for manipulating variables.
+
+  sorts VarDecl VarDeclSet .
+  subsort VarDecl < VarDeclSet .
+
+  op var_:_. : Variable Type -> VarDecl .
+  op none : -> VarDeclSet .
+
+  op __ : VarDeclSet VarDeclSet -> VarDeclSet [assoc comm id: none] .
+  eq VD:VarDecl VD:VarDecl = VD:VarDecl .
+  **** varDecls returns the set of variables in a term
+
+  op varDecls : Term -> VarDeclSet .
+  op varDecls : TermList -> VarDeclSet .
+  op varDecls : CommEqSet -> VarDeclSet .
+  
+  eq varDecls(V) = (var V : getType(V) .) .
+  eq varDecls(C) = none .
+  eq varDecls(F[TL]) = varDecls(TL) .
+  eq varDecls(empty) = none .
+
+  eq varDecls((T, TL)) = varDecls(T) varDecls(TL) .
+
+  eq varDecls((T =?c T') CEqS) 
+    = varDecls(T) varDecls(T') varDecls(CEqS) .
+  eq varDecls((none).CommEqSet) = none .
+
+  *** The solution of a unification problem will be given as a set of
+  *** substitutions.
+
+  sort SubstitutionSet .
+  subsort Substitution < SubstitutionSet .
+  op emptySubstitutionSet : -> SubstitutionSet .
+  op substitutionSet : SubstitutionSet SubstitutionSet -> SubstitutionSet 
+          [assoc comm id: emptySubstitutionSet] .
+
+  *** unification tuples and disjunction of unification tuples
+
+  sorts UnifPair UnifTuple Disjunction .
+  subsort UnifTuple < Disjunction .
+
+  op failure : -> Disjunction .
+  op _\/_ : Disjunction Disjunction -> Disjunction [assoc comm id: failure] .
+  op unifPair : Module Disjunction -> UnifPair .
+
+  op <_;_;_> : VarDeclSet CommEqSet Substitution -> UnifTuple .
+  op [_;_;_;_] : VarDeclSet MembAxSet Substitution Substitution -> UnifTuple .
+
+  **** (commutative) equations
+
+  sorts CommEq CommEqSet .
+  subsort CommEq < CommEqSet .
+  op _=?c_ : Term Term -> CommEq [comm] .
+  op none : -> CommEqSet .
+  op __ : CommEqSet CommEqSet -> CommEqSet [assoc comm id: none] .
+
+  **** tuple disjunction for the solving (x : s) rule
+
+  op unifTuplesVar : Module Variable Type Type UnifTuple -> Disjunction .
+  op unifTuplesVarAux : TypeSet Qid UnifTuple -> Disjunction .
+  eq unifTuplesVar(M, V, Tp, Tp', UT)
+    = unifTuplesVarAux(glbSorts(M, Tp, Tp'), V, UT) .
+
+  eq unifTuplesVarAux((Tp ; TpS), V, [VDS ; MAS ; Subst ; Subst'])
+    = ([var V : Tp . VDS ; MAS ; Subst ; Subst']
+       \/
+       unifTuplesVarAux(TpS, V, [VDS ; MAS ; Subst ; Subst'])) .
+  eq unifTuplesVarAux(none, V, UT) = failure .
+
+  **** tuple disjunction for the solving (f(t1,...,tn) : s) rule
+
+  op unifTuplesNonVar : Module MembAx UnifTuple -> Disjunction .
+  op unifTuplesNonVarAux : TypeListSet TermList UnifTuple -> Disjunction .
+  op unifTuplesNonVarAux2 : TypeList TermList UnifTuple -> UnifTuple .
+
+  op getMaximalArities : Module Qid Nat Sort -> TypeListSet .
+  op arityOfFunctions : Module OpDeclSet Qid Int Sort -> TypeListSet .
+  op maximalTypeListSet : Module TypeListSet -> TypeListSet .
+  op maximalTypeListSetAux : Module TypeListSet TypeListSet -> TypeListSet .
+  op maximalTypeList : Module TypeList TypeListSet -> Bool .
+
+  eq unifTuplesNonVar(M, (mb F[TL] : S [AtS].), UT)
+    = unifTuplesNonVarAux(getMaximalArities(M, F, length(TL), S), TL, UT) .
+
+  eq unifTuplesNonVarAux(TpL ; TpLS, TL, UT)
+    = (unifTuplesNonVarAux2(TpL, TL, UT)
+       \/
+       unifTuplesNonVarAux(TpLS, TL, UT)) .
+  eq unifTuplesNonVarAux(none, TL, UT) = failure .
+
+  eq unifTuplesNonVarAux2((Tp TpL), (T, TL), [VDS ; MAS ; Subst ; Subst'])
+    = unifTuplesNonVarAux2(TpL, TL,
+        [VDS ; mb T : Tp [none] . MAS ; Subst ; Subst']) .
+  eq unifTuplesNonVarAux2(nil, empty, UT) = UT .
+
+  eq getMaximalArities(M, F, N, Tp)
+    = maximalTypeListSet(M, arityOfFunctions(M, getOps(M), F, N, Tp)) .
+  
+  eq arityOfFunctions(M, ((op G : TpL -> Tp [AtS] .) ODS), F, N, Tp')
+    = if F == G
+      then if size(TpL) == N
+           then if sortLeq(M, Tp, Tp')
+                then if comm in AtS
+                     then (TpL ; reverse(TpL) ;
+                           arityOfFunctions(M, ODS, F, N, Tp'))
+                     else (TpL ; arityOfFunctions(M, ODS, F, N, Tp'))
+                     fi
+                else arityOfFunctions(M, ODS, F, N, Tp') 
+                fi
+           else arityOfFunctions(M, ODS, F, N, Tp') 
+           fi
+      else arityOfFunctions(M, ODS, F, N, Tp') 
+      fi .
+  eq arityOfFunctions(M, none, F, N, Tp) = none .
+
+  eq maximalTypeListSet(M, TpLS) = maximalTypeListSetAux(M, TpLS, TpLS) .
+
+  eq maximalTypeListSetAux(M, (TpL ; TpLS), TpLS')
+    = if maximalTypeList(M, TpL, TpLS')
+      then (TpL ; maximalTypeListSetAux(M, TpLS, TpLS'))
+      else maximalTypeListSetAux(M, TpLS, TpLS')
+      fi .
+  eq maximalTypeListSetAux(M, none, TpLS) = none .
+
+  eq maximalTypeList(M, TpL, (TpL' ; TpLS))
+    = if TpL == TpL'
+      then maximalTypeList(M, TpL, TpLS)
+      else not(sortLeq(M, TpL, TpL')) and-then maximalTypeList(M, TpL, TpLS)
+      fi .
+  eq maximalTypeList(M, TpL, none) = true .
+
+
+  op commUnifTupleSet : VarDeclSet Qid TermList TermList CommEqSet Substitution 
+       -> Disjunction .
+  op substMembAxSet : Module VarDeclSet -> Substitution .
+
+  op size : Term -> Nat .
+  op size : TermList -> Nat .
+  op greaterCommEq : CommEq CommEq -> Bool .
+
+  op metaUnify : Module CommEqSet -> SubstitutionSet .
+
+  op commEqBreak : TermList TermList -> CommEqSet .  
+  op substituteCommEqs : CommEqSet Substitution -> CommEqSet .
+  op substituteEqs : EquationSet Substitution -> EquationSet .
+  op substituteSubstitution : Substitution Substitution  -> Substitution .
+  op getUnifSolution : UnifPair -> SubstitutionSet .
+
+  eq metaUnify(M, CEqS) 
+    = getUnifSolution(unifPair(M, < varDecls(CEqS) ; CEqS ; none >)) .
+
+*** deletion of trivial equation
+
+  eq unifPair(M, (< VDS ; (T =?c T) CEqS ; Subst > \/ D))
+    = unifPair(M, (< VDS ; CEqS ; Subst > \/ D)) .
+
+*** decomposition
+*** all subsort overloaded symbols have the same attributes
+
+  eq unifPair(M, (< VDS ; (F[TL] =?c G[TL']) CEqS ; Subst > \/ D))
+    = if (F =/= G) 
+         or-else (length(TL) =/= length(TL'))
+         ----or-else not sameKind(M, leastSort(M, TL), leastSort(M, TL'))
+      then unifPair(M, D)
+      else if (length(TL) == 2) and-then hasAttr(M, F, leastSort(M, TL), comm)
+           then unifPair(M, 
+                  (commUnifTupleSet(VDS, F, TL, TL', CEqS, Subst) \/ D))
+           else unifPair(M, 
+                  (< VDS ; commEqBreak(TL, TL') CEqS ; Subst > \/ D))
+           fi
+      fi .
+
+  eq commUnifTupleSet(VDS, F, (T, T'), (T'', T'''), CEqS, Subst)
+    = (< VDS ; (T =?c T'') (T' =?c T''') CEqS ; Subst >
+       \/
+       < VDS ; (T =?c T''') (T' =?c T'') CEqS ; Subst >) .
+         
+*** clash of symbols
+
+  ceq unifPair(M, (< VDS ; (C =?c C') CEqS ; Subst > \/ D))
+    = unifPair(M, D)
+    if getName(C) =/= getName(C') 
+       or not sameKind(M, getType(C), getType(C')) .
+  eq unifPair(M, (< VDS ; (C =?c F[TL]) CEqS ; Subst > \/ D))
+    = unifPair(M, D) .
+
+*** merging
+
+  ceq unifPair(M, (< VDS ; (V =?c T) (V =?c T') CEqS ; Subst > \/ D))
+    = unifPair(M, (< VDS ; (V =?c T) (T =?c T') CEqS ; Subst > \/ D))
+----    if size(T') > size(T) .
+    if greaterCommEq((V =?c T'), (T =?c T')) .
+
+*** check / eliminate
+
+  ceq unifPair(M, (< VDS ; (V =?c T) CEqS ; Subst > \/ D))
+    = if occurs(V, T)
+      then unifPair(M, D)
+      else if glbSorts(M, leastSort(M, T), getType(V)) == none
+           then unifPair(M, D)
+           else unifPair(M, 
+                  (< VDS ; 
+                     substituteCommEqs(CEqS, V <- T) ;
+                     (substituteSubstitution(Subst, V <- T) ; 
+                      V <- T) > \/ D))
+           fi
+      fi
+    if V =/= T .
+
+*** order-sorted checking
+
+*** transition 
+
+  eq unifPair(M, (< VDS ; none ; Subst > \/ D))
+    = unifPair(M, ([VDS ; none ; Subst ; Subst] \/ D)) .
+  
+*** solving (V <- T)
+
+  eq unifPair(M, 
+       ([var V : S . VDS ; MAS ; (V <- T ; Subst) ; Subst'] \/ D))
+    = unifPair(M, 
+        ([VDS ; mb T : S [none] . MAS ; Subst ; Subst'] \/ D)) .
+
+*** solving (X : S) 
+
+  eq unifPair(M, [var V : S . VDS ; mb V : S' [none] . MAS ; none ; Subst] \/ D)
+    = unifPair(M, unifTuplesVar(M, V, S, S', [VDS ; MAS ; none ; Subst]) \/ D) .
+
+*** solving (f(t1, ..., tn) : S)
+
+  eq unifPair(M, [VDS ; mb C : S [none] . MAS ; none ; Subst] \/ D)
+    = if sortLeq(M, getType(C), S)
+      then unifPair(M, [VDS ; MAS ; none ; Subst] \/ D)
+      else unifPair(M, D)
+      fi .
+  eq unifPair(M, [VDS ; mb F[TL] : S [AtS] . MAS ; none ; Subst] \/ D)
+    = unifPair(M, 
+        unifTuplesNonVar(M, (mb F[TL] : S [AtS] .), [VDS ; MAS ; none ; Subst]) 
+        \/ D) .
+
+*** unification auxiliary functions
+
+  eq getUnifSolution(unifPair(M, [VDS ; none ; none ; Subst] \/ D))
+    = substitutionSet(
+        (substituteSubstitution(Subst, substMembAxSet(M, VDS)) ; 
+         substMembAxSet(M, VDS)), 
+        getUnifSolution(unifPair(M, D))) .
+  eq getUnifSolution(unifPair(M, failure)) = emptySubstitutionSet .
+
+  eq substMembAxSet(M, (var V : S . VDS))
+    = ((V <- qid(string(getName(V)) + "@:" + string(S))) ; 
+       substMembAxSet(M, VDS)) .
+  eq substMembAxSet(M, none) = none .
+
+  eq commEqBreak(T, T') = (T =?c T') .
+  eq commEqBreak((T, TL), (T', TL')) = ((T =?c T') commEqBreak(TL, TL')) .
+  
+  **** size of a term (number of operator symbols in a term)
+
+  eq size(V) = 0 .
+  eq size(C) = 1 .
+  eq size(F[TL]) = (1 + size(TL)) .
+  eq size((T, TL)) = (size(T) + size(TL)) .
+
+  **** well-founded order on equations
+
+  eq greaterCommEq((T =?c T'), (T1 =?c T1'))
+    = (max(size(T), size(T')) > max(size(T1), size(T1')))
+      or-else
+      ((max(size(T), size(T')) == max(size(T1), size(T1')))
+       and-then
+       (sd(max(size(T), size(T')), min(size(T), size(T')))
+           > sd(max(size(T1), size(T1')), min(size(T1), size(T1'))))) .
+
+  **** substitute for commutative equations and for substitutions
+
+  eq substituteCommEqs(none, Subst) = none .
+  eq substituteCommEqs(((T =?c T') CEqS), Subst)  
+    = ((substitute(T, Subst) =?c substitute(T', Subst))
+       substituteCommEqs(CEqS, Subst)) .
+
+  eq substituteSubstitution(none, Subst) = none .
+  eq substituteSubstitution(((V <- T); Subst'), Subst)  
+    = ((V <- substitute(T, Subst));
+       substituteSubstitution(Subst', Subst)) .
+
+endfm
+
+---(
+load peano-nat.maude
+
+red in UNIFICATION :
+           metaUnify(upModule('PEANO-NAT, false), 
+             '_+_['X:NzNat,'_*_['0.Zero,'Y:NzNat]] 
+               =?c '_+_['W:Nat,'s_['Z:Nat]]) .
+---(
+reduce in UNIFICATION : metaUnify(upModule('PEANO-NAT, false), '_+_['W:Nat,'s_[
+    'Z:Nat]] =?c ('_+_['X:NzNat,'_*_['0.Zero,'Y:NzNat]])) .
+rewrites: 410 in 0ms cpu (426ms real) (~ rewrites/second)
+result Substitution: 
+	'W:Nat <- '_*_['0.Zero,'Y@:NzNat] ; 
+	'X:NzNat <- 's_['Z@:Nat] ; 
+	'Y:NzNat <- 'Y@:NzNat ; 
+	'Z:Nat <- 'Z@:Nat
+---)
+
+red in UNIFICATION :
+           metaUnify(upModule('PEANO-NAT, false),
+             '_+_['X:NzNat,'s_['_*_['Y:Nat,'W:Nat]]] 
+               =?c '_+_['s_['V:Nat],'Z:Nat]) .
+---(
+reduce in UNIFICATION : metaUnify(upModule('PEANO-NAT, false), '_+_['X:NzNat,
+    's_['_*_['Y:Nat,'W:Nat]]] =?c ('_+_['s_['V:Nat],'Z:Nat])) .
+rewrites: 779 in 0ms cpu (2ms real) (~ rewrites/second)
+result SubstitutionSet: substitutionSet(
+	'V:Nat <- 'V@:Nat ; 
+	'W:Nat <- 'W@:Nat ; 
+	'X:NzNat <- 's_['V@:Nat] ; 
+	'Y:Nat <- 'Y@:Nat ; 
+	'Z:Nat <- 's_['_*_['Y@:Nat,'W@:Nat]], 
+	'V:Nat <- '_*_['Y@:Nat,'W@:Nat] ; 
+	'W:Nat <- 'W@:Nat ; 
+	'X:NzNat <- 'Z@:NzNat ; 
+	'Y:Nat <- 'Y@:Nat ; 
+	'Z:Nat <- 'Z@:NzNat)
+---)
+
+red in UNIFICATION :
+           metaUnify(upModule('PEANO-NAT, false),
+             ('_+_['s_['X:Nat],'_*_['X:Nat,'Y:Nat]] 
+                =?c '_+_['Z:NzNat,'s_['s_['0.Zero]]])
+             ('Y:Nat =?c 's_['s_['W:NzNat]]) 
+             ('s_['V:Nat] =?c 's_['s_['s_['s_['s_['0.Zero]]]]]) 
+             ('Z:NzNat =?c '_*_['V:Nat,'s_['0.Zero]])) .
+---(
+reduce in UNIFICATION : metaUnify(upModule('PEANO-NAT, false), ('_+_['Z:NzNat,
+    's_['s_['0.Zero]]] =?c ('_+_['s_['X:Nat],'_*_['X:Nat,'Y:Nat]])) ('Y:Nat =?c (
+    's_['s_['W:NzNat]])) ('Z:NzNat =?c ('_*_['V:Nat,'s_['0.Zero]])) 's_['V:Nat]
+    =?c ('s_['s_['s_['s_['s_['0.Zero]]]]])) .
+rewrites: 2545 in 0ms cpu (3ms real) (~ rewrites/second)
+result Substitution: 
+	'V:Nat <- 's_['s_['s_['s_['0.Zero]]]] ; 
+	'W:NzNat <- 's_['s_['0.Zero]] ; 
+	'X:Nat <- 's_['0.Zero] ; 
+	'Y:Nat <- 's_['s_['s_['s_['0.Zero]]]] ; 
+	'Z:NzNat <- '_*_['s_['0.Zero],'s_['s_['s_['s_['0.Zero]]]]]
+---)
+---)

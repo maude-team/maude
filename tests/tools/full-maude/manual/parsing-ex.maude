@@ -1,0 +1,121 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  fmod PARSING-EX1 is
+    sort Nat .
+    ops 1 2 3 : -> Nat .
+    ops _+_ _*_ : Nat Nat -> Nat .
+  endfm
+
+***(
+  Maude> parse 1 + 2 * 3 .
+  Warning: <standard input>, line 13: ambiguous term, two parses are:
+  1 + (2 * 3) 
+  -versus- 
+  (1 + 2) * 3
+
+  Arbitrarily taking the first as correct. 
+  Nat: 1 + (2 * 3)
+  
+  Maude> parse in PARSING-EX1 : 1 + (2 * 3) .
+  Nat: 1 + (2 * 3)
+
+  Maude> parse in PARSING-EX1 : (1 + 2) * 3 .
+  Nat: (1 + 2) * 3
+)
+
+  fmod PARSING-EX2 is
+    sort Nat .
+    ops 1 2 3 : -> Nat .
+    op _+_ : Nat Nat -> Nat [prec 33] .
+    op _*_ : Nat Nat -> Nat [prec 31] .
+  endfm
+
+***(
+  Maude> parse in PARSING-EX2 : 1 + 2 * 3 .
+  Nat: 1 + 2 * 3
+
+  Maude> parse in PARSING-EX2 : (1 + 2) * 3 .
+  Nat: (1 + 2) * 3
+
+  Maude> parse in PARSING-EX2 : 1 + 2 + 3 .
+  Warning: <standard input>, line 1: ambiguous term, two parses are:
+  1 + (2 + 3) 
+  -versus- 
+  (1 + 2) + 3
+
+  Arbitrarily taking the first as correct. 
+  Nat: 1 + (2 + 3)
+
+  Maude> parse in PARSING-EX2 : (1 + 2) + 3 .
+  Nat: (1 + 2) + 3
+
+  Maude> parse in PARSING-EX2 : 1 + (2 + 3) .
+  Nat: 1 + (2 + 3)
+)
+
+  fmod PARSING-EX3 is
+    sort Nat .
+    ops 1 2 3 : -> Nat .
+    op _+_ : Nat Nat -> Nat [prec 33 gather (E e)] .
+    op _*_ : Nat Nat -> Nat [prec 31 gather (E e)] .
+  endfm
+
+***(
+  Maude> parse in PARSING-EX3 : 1 + 2 * 3 .
+  Nat: 1 + 2 * 3
+
+  Maude> parse in PARSING-EX3 : 1 + 2 + 3 .
+  Nat: 1 + 2 + 3
+)
+
+  fmod PARSING-EX4 is
+    sort Nat .
+    ops 1 2 3 : -> Nat .
+    op _+_ : Nat Nat -> Nat [prec 33 assoc] .
+    op _*_ : Nat Nat -> Nat [prec 31 assoc] .
+  endfm
+
+***(
+  Maude> parse in PARSING-EX4 : 1 + 2 * 3 .
+  Nat: 1 + 2 * 3
+
+  Maude> parse in PARSING-EX4 : 1 + 2 + 3 .
+  Nat: 1 + 2 + 3
+
+  Maude> parse in PARSING-EX1 : (2 + 3).Nat .
+  Nat: 2 + 3
+
+  Maude> parse in PARSING-EX1 : (2).Nat + 3 .
+  Nat: 2 + 3
+
+  Maude> parse in PARSING-EX1 : (2).Nat + (3).Nat .
+  Nat: 2 + 3
+
+  Maude> parse in PARSING-EX1 : ((1) + ((2) + (3))) .
+  Nat: 1 + (2 + 3)
+
+  Maude> parse in PARSING-EX1 : _+_(1, _+_(2, 3)) .
+  Nat: 1 + (2 + 3)
+
+  Maude> parse in PARSING-EX4 : _+_(1, 2, 3) .
+  Nat: 1 + 2 + 3
+
+  Maude> parse in PARSING-EX4 : if 1 == 2 then 1 + 2 else _+_(1, 2) fi .
+  Nat: if 1 == 2 then 1 + 2 else 1 + 2 fi
+
+  Maude> parse in PARSING-EX4 :
+           if _==_(1, 2)
+           then if_then_else_fi(1 + 2 :: Nat, 1 * 1, 2 * 1)
+           else _+_(1, 2)
+           fi .
+  Nat: if 1 == 2 
+       then if (1 + 2) :: Nat 
+            then 1 * 1 
+            else 2 * 1 
+            fi 
+       else 1 + 2 
+       fi
+)
+

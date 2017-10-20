@@ -1,0 +1,29 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  fmod OVER-ASSOC-EX1 is
+    sorts Foo Bar .
+    op f : Foo -> Foo .
+    op f : Foo -> Bar .
+  endfm
+
+***(
+  Warning: "overloading-assoc-warning.maude", line 8 (fmod OVER-ASSOC-EX1):
+    declaration for f has the same domain kinds as the declaration on
+    "overloading-assoc-warning.maude", line 7 (fmod OVER-ASSOC-EX1) but a
+    different range kind.
+)
+
+  fmod OVER-ASSOC-EX2 is
+    sort Foo .
+    op f : Foo Foo -> Foo [assoc] .
+    op f : Foo Foo Foo -> Foo .
+  endfm
+
+***(
+  Warning: "overloading-assoc-warning.maude", line 22 (fmod OVER-ASSOC-EX2):
+    declaration for f clashes with declaration on
+    "overloading-assoc-warning.maude", line 21 (fmod OVER-ASSOC-EX2) because of
+    associativity.
+)

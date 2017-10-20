@@ -1,0 +1,53 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team + Santiago Escobar
+
+ (mod LAST-APPEND is
+    sort Nat .
+    op 0 : -> Nat .
+    op s : Nat -> Nat .
+
+    sort NatList .
+    op nil : -> NatList .
+    op _:_ : Nat NatList -> NatList .
+
+    vars XS YS : NatList .
+    vars N M X Y : Nat .
+
+    op append : NatList NatList -> NatList .
+    rl append(nil, YS) => YS .
+    rl append(N : XS, YS) => N : append(XS, YS) .
+
+    op error : -> [Nat] .
+
+    op last : NatList -> [Nat] .
+    rl last(XS) 
+      => if append(YS, N : nil) =:= XS 
+         then N 
+         else error 
+         fi 
+      [nonexec] .
+
+    op _=:=_ : Nat Nat -> Bool [comm] .
+    rl N =:= N => true .
+    rl 0 =:= 0 => true .
+    rl s(N) =:= s(M) => N =:= M .
+    rl 0 =:= s(N) => false .
+
+    op _=:=_ : NatList NatList -> Bool [comm] .
+    rl XS =:= XS => true .
+    rl nil =:= nil => true .
+    rl X : XS =:= Y : YS  => X =:= Y and XS =:= YS .
+    rl nil =:= X : XS => false .
+  endm)
+
+  (search [1] last(0 : s(0) : nil) ~>! Z:Nat .)
+---(
+rewrites: 526142 in 642ms cpu (659ms real) (818932 rewrites/second)
+search [1] in LAST-APPEND : last(0 : s(0): nil) ~>! Z:Nat .
+
+Solution 1
+Z:Nat --> s(0)
+
+No more solutions.
+---)  

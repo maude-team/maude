@@ -1,0 +1,42 @@
+(mod FOO is
+sort Foo .
+
+ops a b final : -> Foo .
+
+eq final = b .
+
+rl a => b .
+endm)
+
+(search a =>* C:Foo such that C:Foo == b .)
+---(
+rewrites: 654 in 7ms cpu (8ms real) (83248 rewrites/second)
+search in FOO : a =>* C:Foo .
+
+Solution 1
+C:Foo --> b
+
+No more solutions.
+---)
+
+(search a =>* C:Foo such that C:Foo = b .)
+---(
+rewrites: 648 in 3ms cpu (3ms real) (176952 rewrites/second)
+search in FOO : a =>* C:Foo .
+
+Solution 1
+C:Foo --> b
+
+No more solutions.
+---)
+
+(search a =>* b .)
+---(
+rewrites: 209 in 2ms cpu (2ms real) (90437 rewrites/second)
+search in FOO : a =>* b .
+
+Solution 1
+empty substitution
+
+No more solutions.
+---)

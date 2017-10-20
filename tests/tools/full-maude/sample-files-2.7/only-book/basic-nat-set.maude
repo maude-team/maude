@@ -1,0 +1,78 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+load basic-nat.maude
+
+  fmod BASIC-NAT-SET is
+    protecting BASIC-NAT .  
+    protecting BOOL .
+    
+    sort Set .
+    subsorts Nat < Set .
+    op empty-set : -> Set [ctor] .
+    op __ : Set Set -> Set [ctor assoc comm id: empty-set] .
+
+    vars N N' : Nat .
+    vars S S' : Set .
+  
+    eq N N = N .
+
+    op _in_ : Nat Set -> Bool .
+    op delete : Nat Set -> Set .
+    op card : Set -> Nat .
+ 
+    eq N in empty-set = false .
+    eq N in (N' S) = (N == N') or (N in S) .
+    eq delete(N, empty-set) = empty-set .
+    eq delete(N, N S) = delete(N, S) .
+    ceq delete(N, N' S) = N' delete(N, S) if N =/= N' .
+    eq card(empty-set) = 0 .
+    eq card(N S) = s card(delete(N, S)) .
+  endfm
+
+  fmod BASIC-NAT-SET is
+    protecting BASIC-NAT .  
+    protecting BOOL .
+    
+    sort Set .
+    subsorts Nat < Set .
+    op empty-set : -> Set [ctor] .
+    op __ : Set Set -> Set [ctor assoc comm id: empty-set] .
+
+    vars N N' : Nat .
+    vars S S' : Set .
+  
+    eq N N = N .
+
+    op _in_ : Nat Set -> Bool .
+    op delete : Nat Set -> Set .
+    op card : Set -> Nat .
+ 
+    eq N in N S = true .
+    eq N in S = false [owise] .
+    eq delete(N, N S) = delete(N, S) .
+    eq delete(N, S) = S [owise] .
+    eq card(empty-set) = 0 .
+    eq card(N S) = s card(delete(N, S)) .
+  endfm
+
+red card(0 (s 0) (s s 0) (s s 0) (s 0) 0) .
+---(
+reduce in BASIC-NAT-SET : card(0 s 0 s s 0 s s 0 0 s 0) .
+rewrites: 10 in 0ms cpu (0ms real) (~ rewrites/second)
+result Nat: s s s 0
+---)
+ 
+red delete(s 0, 0 (s 0) (s s 0) (s s 0) (s 0) 0) .  
+---(
+reduce in BASIC-NAT-SET : delete(s 0, 0 s 0 s s 0 s s 0 0 s 0) .
+rewrites: 5 in 0ms cpu (0ms real) (~ rewrites/second)
+result Set: 0 s s 0
+---)
+  
+red s s s 0 in 0 (s 0) (s s 0) (s s 0) (s 0) 0 .  
+---(
+reduce in BASIC-NAT-SET : s s s 0 in 0 s 0 s s 0 s s 0 0 s 0 .
+rewrites: 4 in 0ms cpu (0ms real) (~ rewrites/second)
+result Bool: false
+---)

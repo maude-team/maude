@@ -1,0 +1,9 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  ---- load toset.maude
+  load tree-node.fm
+
+ (view Node{T :: TOSET} from TRIV to TREE-NODE{T} is
+    sort Elt to Node{T} .
+  endv)

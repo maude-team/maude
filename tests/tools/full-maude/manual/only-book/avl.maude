@@ -1,0 +1,141 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  load search-tree.maude
+  
+  fmod AVL{X :: STOSET, Y :: CONTENTS} is
+    extending SEARCH-TREE{X, Y} .
+    --- Add depth to search records.
+    var N : Nat .   
+    var Rec : Record .  
+
+    sort AVLRecord{X, Y} .
+    subsort AVLRecord{X, Y} < SearchRecord{X, Y} .
+    op depth:_ : Nat -> Record [ctor] .
+    op numDepths : Record -> Nat .
+    op depth : Record ~> Nat .
+    eq numDepths(depth: N, Rec) = 1 + numDepths(Rec) .
+    eq numDepths(Rec) = 0 [owise] .
+    ceq depth(Rec,depth: N) = N if numDepths(Rec) = 0 .
+   
+    var SRec : SearchRecord{X, Y} .
+    cmb SRec : AVLRecord{X, Y} if numDepths(SRec) = 1 .
+
+    sorts NeAVL{X, Y} AVL{X, Y} .
+    subsorts NeAVL{X, Y} < AVL{X, Y} < SearchTree{X, Y} .
+    subsorts NeAVL{X, Y} < NeSearchTree{X, Y} .
+    vars AVLRec AVLRec' AVLRec'' : AVLRecord{X, Y} .  
+    vars L R L' R' RL RR LR LL T1 T2 : AVL{X, Y} .   
+    var  ST : NeSearchTree{X, Y} .
+
+    mb empty : AVL{X, Y} .
+    cmb ST : NeAVL{X, Y} 
+      if L [AVLRec] R := ST /\ sd(depth(L), depth(R)) <= 1 
+         /\ 1 + max(depth(L), depth(R)) = depth(AVLRec) .
+
+    op insertAVL : AVL{X, Y} X$Elt Y$Contents -> NeAVL{X, Y} .
+    op deleteAVL : X$Elt AVL{X, Y} -> AVL{X, Y} .
+    op depthAVL : AVL{X, Y} -> Nat .
+    op buildAVL : AVL{X, Y} Record AVL{X, Y} ~> AVL{X, Y} .
+    op join : AVL{X, Y} Record AVL{X, Y} ~> AVL{X, Y} .
+    op lRotate : AVL{X, Y} AVLRecord{X, Y} AVL{X, Y} ~> AVL{X, Y} .
+    op rRotate : AVL{X, Y} AVLRecord{X, Y} AVL{X, Y} ~> AVL{X, Y} .
+   
+    vars K K' : X$Elt .   
+    vars C C' : Y$Contents .
+
+    eq insertAVL(empty, K, C) 
+      = buildAVL(empty, (depth: 0, key: K, contents: C), empty) .
+    ceq insertAVL(L [Rec, key: K, contents: C'] R, K, C) 
+      = L [Rec, key: K, contents: combine(C, C')] R 
+      if numKeys(Rec) = 0 /\ numContents(Rec) = 0 
+         /\ numDepths(Rec) = 1 .
+    ceq insertAVL(L [AVLRec] R, K, C) 
+      = join(insertAVL(L, K, C), AVLRec, R) 
+      if K < key(AVLRec) .
+    ceq insertAVL(L [AVLRec] R, K, C) 
+      = join(L, AVLRec, insertAVL(R, K, C)) 
+      if key(AVLRec) < K .
+
+    eq depthAVL(empty) = 0 .
+    eq depthAVL(L [AVLRec] R) = depth(AVLRec) .
+
+    ceq buildAVL(T1, (Rec, depth: N), T2) 
+      = T1 [Rec, depth: (max(depthAVL(T1), depthAVL(T2)) + 1)] T2 
+      if numDepths(Rec) = 0 /\ numKeys(Rec) = 1 
+         /\ numContents(Rec) = 1 .
+
+    ceq join(T1, AVLRec, T2) = buildAVL(T1, AVLRec, T2) 
+      if sd(depthAVL(T1),depthAVL(T2)) <= 1 .
+    ceq join(T1, AVLRec, T2) = lRotate(T1, AVLRec, T2) 
+      if depthAVL(T1) = depthAVL(T2) + 2 .
+    ceq join(T1, AVLRec, T2) = rRotate(T1, AVLRec, T2) 
+      if depthAVL(T1) + 2 = depthAVL(T2) .
+
+    ceq lRotate(L [AVLRec] R, AVLRec', T2) 
+      = buildAVL(L, AVLRec, buildAVL(R, AVLRec', T2)) 
+      if depthAVL(L) >= depthAVL(R) .
+    ceq lRotate(L [AVLRec] R, AVLRec', T2) 
+      = buildAVL(buildAVL(L, AVLRec, RL), AVLRec'', 
+                 buildAVL(RR, AVLRec', T2)) 
+      if depthAVL(L) < depthAVL(R) /\ RL [AVLRec''] RR := R .
+
+    ceq rRotate(T1, AVLRec, L [AVLRec'] R) 
+      = buildAVL(buildAVL(T1, AVLRec, L), AVLRec', R) 
+      if depthAVL(L) <= depthAVL(R) .
+    ceq rRotate(T1, AVLRec, L [AVLRec'] R) 
+      = buildAVL(buildAVL(T1, AVLRec, LL), AVLRec'', 
+                 buildAVL(LR, AVLRec', R)) 
+      if depthAVL(L) > depthAVL(R) /\ LL [AVLRec''] LR := L .
+
+    --- deleteAVL and auxiliary ops.
+    sort Pair{X, Y} .        --- used for deleteAVLMax
+    op pair : AVL{X, Y} AVLRecord{X, Y} -> Pair{X, Y} [ctor].
+    op deleteAVLMax : NeAVL{X, Y} -> Pair{X, Y} .
+
+    eq deleteAVL(K, empty) = empty .
+    ceq deleteAVL(K, empty [AVLRec] R) = R 
+      if K = key(AVLRec) .
+    ceq deleteAVL(K, L [AVLRec] R) = join(L', AVLRec', R) 
+      if K = key(AVLRec) 
+         /\ pair(L', AVLRec') := deleteAVLMax(L) [owise] .   
+    ceq deleteAVL(K, L [AVLRec] R) = join(L, AVLRec, deleteAVL(K, R))
+      if key(AVLRec) < K .
+    ceq deleteAVL(K, L [AVLRec] R) = join(deleteAVL(K, L), AVLRec, R)
+      if K < key(AVLRec) .
+ 
+    eq deleteAVLMax(L [AVLRec] empty) = pair(L, AVLRec) .
+    ceq deleteAVLMax(L [AVLRec] R) = pair(join(L, AVLRec, R'), AVLRec') 
+      if pair(R', AVLRec') := deleteAVLMax(R) [owise] .   
+  endfm
+
+view StringAsContents from CONTENTS to STRING is
+  sort Contents to String .
+  op combine to _+_ .
+endv
+
+load view-intasstoset.maude
+
+  fmod AVL-TEST is
+    protecting AVL{IntAsStoset, StringAsContents} .
+  endfm
+
+       red insertAVL(
+             insertAVL(
+               insertAVL(
+                 insertAVL(
+                   insertAVL(insertAVL(empty, 1, "a"), 
+                     2, "b"), 
+                   3, "c"), 
+                 4, "d"), 
+               5, "e"), 
+             6, "f") .
+---(
+reduce in AVL-TEST : insertAVL(insertAVL(insertAVL(insertAVL(insertAVL(
+    insertAVL(empty, 1, "a"), 2, "b"), 3, "c"), 4, "d"), 5, "e"), 6, "f") .
+rewrites: 4439 in 10ms cpu (7ms real) (443900 rewrites/second)
+result NeAVL{IntAsStoset,StringAsContents}: ((empty[key: 1,contents: "a",depth:
+    1]empty)[key: 2,contents: "b",depth: 2](empty[key: 3,contents: "c",depth:
+    1]empty))[key: 4,contents: "d",depth: 3](empty[key: 5,contents: "e",depth:
+    2](empty[key: 6,contents: "f",depth: 1]empty))
+---)

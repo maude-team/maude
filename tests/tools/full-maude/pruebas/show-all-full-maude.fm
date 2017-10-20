@@ -1,0 +1,5 @@
+(show module FULL-MAUDE .)
+
+set profile on .
+(show all FULL-MAUDE .)
+show profile .

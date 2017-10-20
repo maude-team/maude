@@ -1,0 +1,61 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  fmod ASSOCIATIVE-EX1 is
+    sorts s1 s2 .
+    subsort s1 < s2 .
+    op f : s2 s2 -> s2 [assoc] .
+    op a : -> s1 .
+    eq f(a,a) = a .
+  endfm
+
+  select FULL-MAUDE .
+  loop init .
+
+ (select ASSOCIATIVE-EX1 .)
+ 
+ (red f(a, a) .)
+
+  fmod ASSOCIATIVE-EX2 is
+    sorts s1 s2 .
+    subsort s1 < s2 .
+    op f : s2 s2 -> s2 [assoc] .
+    op f : s1 s2 -> s2 [assoc] .
+    op a : -> s1 .
+    eq f(a,a) = a .
+  endfm
+
+  select FULL-MAUDE .
+  loop init .
+
+ (select ASSOCIATIVE-EX2 .)
+ 
+ (red f(a, a) .)
+
+ (fmod ASSOCIATIVE-EX1 is
+    sorts s1 s2 .
+    subsort s1 < s2 .
+    op f : s2 s2 -> s2 [assoc] .
+    op a : -> s1 .
+    eq f(a,a) = a .
+  endfm)
+
+ (select ASSOCIATIVE-EX1 .)
+ 
+ (red f(a, a) .)
+
+ (fmod ASSOCIATIVE-EX2 is
+    sorts s1 s2 .
+    subsort s1 < s2 .
+    op f : s2 s2 -> s2 [assoc] .
+    op f : s1 s2 -> s2 [assoc] .
+    op a : -> s1 .
+    eq f(a,a) = a .
+  endfm)
+
+ (select ASSOCIATIVE-EX2 .)
+ 
+ (red f(a, a) .)
+
+ 

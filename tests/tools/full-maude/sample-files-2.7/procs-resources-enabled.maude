@@ -1,0 +1,42 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  load procs-resources.maude
+  
+  mod PROCS-RESOURCES-ENABLED is
+    protecting PROCS-RESOURCES .
+    protecting BOOL .
+    op enabled : State -> Bool .
+    eq enabled(p(null) res X:State) = true .
+    eq enabled(p(res) res X:State) = true .
+    eq enabled(p(res res) X:State) = true .
+    eq enabled(X:State) = false [owise] .
+  endm
+
+***(
+Maude> search [5] in PROCS-RESOURCES-ENABLED : res p(null) 
+           =>* X:State such that enabled(X:State) =/= true .
+search in PROCS-RESOURCES-ENABLED : res p(null) =>* X:State such that enabled(
+    X:State) =/= true = true .
+
+Solution 1 (state 1)
+states: 2  rewrites: 5 in 0ms cpu (0ms real) (~ rewrites/second)
+X:State --> p(res)
+
+Solution 2 (state 5)
+states: 6  rewrites: 17 in 0ms cpu (0ms real) (~ rewrites/second)
+X:State --> p(res) p(res)
+
+Solution 3 (state 13)
+states: 14  rewrites: 44 in 0ms cpu (0ms real) (~ rewrites/second)
+X:State --> p(res) p(res) p(res)
+
+Solution 4 (state 25)
+states: 26  rewrites: 91 in 0ms cpu (0ms real) (~ rewrites/second)
+X:State --> p(res) p(res) p(res) p(res)
+
+Solution 5 (state 43)
+states: 44  rewrites: 165 in 0ms cpu (1ms real) (~ rewrites/second)
+X:State --> p(res) p(res) p(res) p(res) p(res)
+)

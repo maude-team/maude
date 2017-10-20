@@ -1,0 +1,7 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+ (view IntAsToset from TOSET to INT is
+    sort Elt to Int .
+  endv)

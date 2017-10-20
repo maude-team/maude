@@ -1,0 +1,18 @@
+fmod LIST{X :: TRIV} is 
+  sort List{X} .
+  subsort X$Elt < List{X} .
+  op nil : -> List{X} [ctor] .
+  op __ : List{X} List{X} -> List{X} [ctor assoc id: nil] .
+  op reverse : List{X} -> List{X} .
+  eq reverse(nil) = nil .
+  eq reverse(E:X$Elt L:List{X}) = reverse(L:List{X}) E:X$Elt .
+endfm
+
+fmod NAT-LIST is
+  pr LIST{Nat} .
+endfm
+
+red reverse(1 2 3 4 5) .
+
+  
+  

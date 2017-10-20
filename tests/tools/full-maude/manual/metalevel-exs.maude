@@ -1,0 +1,50 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  Maude> red in META-LEVEL :
+           metaReduce(
+             fmod 'PARMODEX{'X :: 'TRIV} is
+               including 'MAP{'String, 'X} .
+               sorts 'Foo .
+               none
+               none
+               none
+               none
+             endfm,
+             'insert['"foo".String, 'A:X$Elt, 
+                     'empty.Map`{String`,X`}]) .
+reduce in META-LEVEL : metaReduce(fmod 'PARMODEX{'X :: 'TRIV} is
+  including 'MAP{'String,'X} .
+  sorts 'Foo .
+  none
+  none
+  none
+  none
+endfm, 'insert['"foo".String,'A:X$Elt,'empty.Map`{String`,X`}]) .
+rewrites: 2 in 10ms cpu (1ms real) (200 rewrites/second)
+result ResultPair: {'_|->_['"foo".String,'A:X$Elt],'Entry`{String`,X`}}
+
+Maude> red in META-LEVEL : 
+           metaNormalize(upModule('NAT, false), 's_['s_['0.Zero]]) .
+reduce in META-LEVEL : metaNormalize(upModule('NAT, false), 's_['s_['0.Zero]])
+    .
+rewrites: 2 in 0ms cpu (1ms real) (~ rewrites/second)
+result ResultPair: {'s_^2['0.Zero],'NzNat}
+
+Maude> red in META-LEVEL : 
+           metaNormalize(upModule('NAT, false), 
+             '_+_['s_['s_['0.Zero]],'0.Zero]) .
+reduce in META-LEVEL : metaNormalize(upModule('NAT, false), '_+_['s_['s_[
+    '0.Zero]],'0.Zero]) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result ResultPair: {'_+_['0.Zero,'s_^2['0.Zero]],'NzNat}
+
+Maude> red in META-LEVEL : 
+           metaNormalize(upModule('NAT, false),
+             '_+_['0.Zero,'_+_['s_['s_['0.Zero]],'0.Zero]]) .
+reduce in META-LEVEL : metaNormalize(upModule('NAT, false), '_+_['0.Zero,'_+_[
+    's_['s_['0.Zero]],'0.Zero]]) .
+rewrites: 2 in 0ms cpu (0ms real) (~ rewrites/second)
+result ResultPair: {'_+_['0.Zero,'0.Zero,'s_^2['0.Zero]],'NzNat}
+)

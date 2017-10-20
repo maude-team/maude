@@ -1,0 +1,9 @@
+(fmod A is
+    inc NAT .
+    sorts A B .
+    subsort B < A .
+    op <_> : Nat -> [B] . 
+endfm)
+
+(show module A .)
+

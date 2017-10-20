@@ -1,0 +1,15 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  fmod PAIR{X :: TRIV, Y :: TRIV} is
+    sort Pair{X, Y} .
+    op <_;_> : X$Elt Y$Elt -> Pair{X, Y} .
+    op 1st : Pair{X, Y} -> X$Elt .
+    op 2nd : Pair{X, Y} -> Y$Elt .
+    
+    var A : X$Elt .
+    var B : Y$Elt .
+    eq 1st(< A ; B >) = A .
+    eq 2nd(< A ; B >) = B .
+  endfm

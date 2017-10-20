@@ -1,0 +1,21 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  load basic-nat.maude
+
+  fmod NAIVE-IDEM-SEMIGROUP is
+    protecting QID .   
+    sort List .
+    subsort Qid < List .
+    op __ : List List -> List [ctor assoc] . *** list concatenation
+    var L : List .
+    eq L L = L .
+  endfm
+
+red in NAIVE-IDEM-SEMIGROUP : 
+          'a 'b 'c == 'a 'b 'c 'b 'a 'b 'c .
+---(
+reduce in NAIVE-IDEM-SEMIGROUP : 'a 'b 'c == 'a 'b 'c 'b 'a 'b 'c .
+rewrites: 1 in 0ms cpu (0ms real) (~ rewrites/second)
+result Bool: false
+---)

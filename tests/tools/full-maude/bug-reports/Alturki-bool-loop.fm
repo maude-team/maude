@@ -1,0 +1,21 @@
+---- Dear Paco,
+---- 
+---- It seems the stack overflow problem I was having had to do with the name of 
+---- the module being "BOOL-OPS". If I change the name of the module to something 
+---- else, it works fine. Essentially, after loading the MFE, loading a file 
+---- containing the module
+
+(set include BOOL off .)
+
+(fmod BOOL-OPS is
+ protecting TRUTH-VALUE .
+endfm)
+
+---- would cause maude to stack-overflow. I just wanted you know about that. I 
+---- am still experimenting with the tool, and will let you know if I have further 
+---- issues. Thank you.
+---- 
+---- --
+---- Musab
+
+(show module BOOL-OPS .)

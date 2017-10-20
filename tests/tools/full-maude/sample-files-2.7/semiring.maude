@@ -1,0 +1,14 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  load monoid.maude
+  load +monoid.maude
+  
+  fth SEMIRING is
+    including MONOID .
+    including +MONOID .
+    vars X Y Z : Elt .
+    eq X (Y + Z) = (X Y) + (X Z) [nonexec] .
+    eq (X + Y) Z = (X Z) + (Y Z) [nonexec] .
+  endfth

@@ -1,0 +1,14 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  th CHOICE is
+    sorts Bag Elt .
+    subsort Elt < Bag .
+    op empty : -> Bag .
+    op __ : Bag Bag -> Bag [assoc comm id: empty] .
+    op choice : Bag -> Elt .
+    var E : Elt .
+    var B : Bag .
+    rl [choice] : choice(E B) => E .
+  endth

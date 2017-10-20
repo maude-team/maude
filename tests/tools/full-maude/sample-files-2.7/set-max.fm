@@ -1,0 +1,20 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+load set-max.maude
+
+select FULL-MAUDE .
+loop init .
+
+load view-toset.fm
+load view-intastoset.fm
+
+(red in SET-MAX{IntAsToset} : max((5, 4, 8, 4, 6, 5)) .)
+---(
+rewrites: 27961 in 20ms cpu (62ms real) (1398050 rewrites/second)
+reduce in SET-MAX{IntAsToset}:
+  max(5,4,8,4,6,5)
+result NzNat :
+  8
+---)

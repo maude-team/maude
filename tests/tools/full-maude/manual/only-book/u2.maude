@@ -1,0 +1,90 @@
+  ---- from the book All About Maude
+  ---- by the Maude team
+
+  mod U2 is
+    protecting NAT .
+    sorts Performer Object Group Place .
+    subsorts Performer Object < Group .
+
+    ops left right : -> Place [ctor] .
+    op changePos : Place -> Place .
+    op flashlight : Place -> Object [ctor] .
+    op watch : Nat -> Object [ctor] .
+    op performer : Nat Place -> Performer [ctor] .  
+    op __ : Group Group -> Group [ctor assoc comm] .
+    op initial : -> Group .
+
+    var  P : Place .
+    vars M N N1 N2 : Nat .
+
+    eq initial 
+      = watch(0) flashlight(left) performer(1, left) 
+        performer(2, left) performer(5, left) performer(10, left) .
+
+    eq changePos(left) = right .
+    eq changePos(right) = left .  
+
+    rl [one-crosses] : 
+      watch(M) flashlight(P) performer(N, P) 
+      => watch(M + N) flashlight(changePos(P)) 
+         performer(N, changePos(P)) .
+    crl [two-cross] : 
+      watch(M) flashlight(P) performer(N1, P) performer(N2, P) 
+      => watch(M + N1) flashlight(changePos(P)) 
+         performer(N1, changePos(P)) 
+         performer(N2, changePos(P)) 
+      if N1 > N2 .
+  endm
+
+***(
+Maude> search [1] initial 
+           =>* flashlight(right) watch(N:Nat)
+               performer(1, right) performer(2, right) 
+               performer(5, right) performer(10, right) 
+           such that N:Nat <= 17 .
+search in U2 : initial =>* flashlight(right) watch(N) performer(1, right)
+    performer(2, right) performer(5, right) performer(10, right) such that N <=
+    17 = true .
+
+Solution 1 (state 402)
+states: 403  rewrites: 3035 in 10ms cpu (15ms real) (303500 rewrites/second)
+N --> 17
+
+Maude> show path 402 .
+state 0, Group: flashlight(left) watch(0) performer(1, left) performer(2, left)
+    performer(5, left) performer(10, left)
+===[ crl flashlight(P) watch(M) performer(N1, P) performer(N2, P) => watch(M +
+    N1) flashlight(changePos(P)) performer(N1, changePos(P)) performer(N2,
+    changePos(P)) if N1 > N2 = true [label two-cross] . ]===>
+state 5, Group: flashlight(right) watch(2) performer(1, right) performer(2,
+    right) performer(5, left) performer(10, left)
+===[ rl flashlight(P) watch(M) performer(N, P) => watch(N + M) flashlight(
+    changePos(P)) performer(N, changePos(P)) [label one-crosses] . ]===>
+state 15, Group: flashlight(left) watch(3) performer(1, left) performer(2,
+    right) performer(5, left) performer(10, left)
+===[ crl flashlight(P) watch(M) performer(N1, P) performer(N2, P) => watch(M +
+    N1) flashlight(changePos(P)) performer(N1, changePos(P)) performer(N2,
+    changePos(P)) if N1 > N2 = true [label two-cross] . ]===>
+state 71, Group: flashlight(right) watch(13) performer(1, left) performer(2,
+    right) performer(5, right) performer(10, right)
+===[ rl flashlight(P) watch(M) performer(N, P) => watch(N + M) flashlight(
+    changePos(P)) performer(N, changePos(P)) [label one-crosses] . ]===>
+state 158, Group: flashlight(left) watch(15) performer(1, left) performer(2,
+    left) performer(5, right) performer(10, right)
+===[ crl flashlight(P) watch(M) performer(N1, P) performer(N2, P) => watch(M +
+    N1) flashlight(changePos(P)) performer(N1, changePos(P)) performer(N2,
+    changePos(P)) if N1 > N2 = true [label two-cross] . ]===>
+state 402, Group: flashlight(right) watch(17) performer(1, right) performer(2,
+    right) performer(5, right) performer(10, right)
+
+Maude> search [1] initial 
+           =>* flashlight(right) watch(N:Nat)
+               performer(1, right) performer(2, right) 
+               performer(5, right) performer(10, right) .
+search in U2 : initial =>* flashlight(right) watch(N) performer(1, right)
+    performer(2, right) performer(5, right) performer(10, right) .
+
+Solution 1 (state 396)
+states: 397  rewrites: 2916 in 130ms cpu (300ms real) (22430 rewrites/second)
+N --> 19
+)

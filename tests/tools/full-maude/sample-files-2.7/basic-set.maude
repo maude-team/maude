@@ -1,0 +1,22 @@
+  ---- from the book All About Maude
+  ---- from the Maude Manual
+  ---- by the Maude team
+
+  fmod BASIC-SET{X :: TRIV} is
+    protecting BOOL .
+    sorts Set{X} NeSet{X} .
+    subsorts X$Elt < NeSet{X} < Set{X} .
+    op empty : -> Set{X} .
+    op _,_ : Set{X} Set{X} -> Set{X} [assoc comm id: empty] .
+    op _,_ : NeSet{X} NeSet{X} -> NeSet{X} [ditto] .
+    op _in_ : X$Elt Set{X} -> Bool .
+    op _\_ : Set{X} Set{X} -> Set{X} .   *** set difference
+    
+    var  E : X$Elt .
+    vars S S' : Set{X} .
+    eq E, E = E .
+    eq E in E, S = true .
+    eq E in S = false [owise] .
+    eq (E, S) \ (E, S') = S \ (E, S') .
+    eq S \ S' = S [owise] .
+  endfm
