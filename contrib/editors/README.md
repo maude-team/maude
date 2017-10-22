@@ -37,3 +37,46 @@ able to use `\maudeLexer` and `\maudeLogLexer` as languages recognized by all
 `minted` commands. (Note that this will require a fairly recent version of
 `minted`, as well as a TeX install that supports
 [LaTeX3](https://www.latex-project.org/latex3/).)
+
+Maude Mode (Emacs)
+==================
+
+This is version 0.2 of an XEmacs major mode for the Maude language.
+It provides syntax-highlighting, calling Maude in a buffer, commenting/uncommenting regions, and auto-indentation.
+If there are new versions, you will find them at <http://www.csl.sri.com/~kai/MaudeMode> .
+
+New in version 0.2 is syntax highlighting in the buffer that is running Maude and a different handling of calls to Maude:
+
+-   `C-c C-m` calls Maude,
+-   `C-c C-f` calls Full-Maude, and
+-   `C-c C-c` copies the current buffer to Maude.
+
+This mode does *not* work with FSF Emacs since FSF doesn't support nongreedy quantifiers in regular expressions.
+Use XEmacs.
+For other reasons why to prefer XEmacs over FSF Emacs see point 3.3 and 5.3 at <http://www.xemacs.org/Architecting-XEmacs/xemacs-tour.html>.
+
+To install: Once you have untared maude-mode.tar.gz in your home directory you will find all the files in `~/MaudeMode/`.
+Now just add the following lines to your `~/.emacs`:
+
+```emacs
+;; ------------------- Maude mode
+(setq load-path (cons "~/MaudeMode" load-path))
+(setq auto-mode-alist (cons '("\\.maude" . maude-mode) auto-mode-alist))
+(defvar maude-cmd "~/Maude/maude-linux/bin/maude.linux"
+"Defines the command line to call the Maude engine")
+
+(require 'maude-mode)
+
+;; -------------------
+```
+
+Adapt the maude-cmd to your environment.
+
+Just load a Maude file in XEmacs. Syntax highlighting should be automatic, if not, turn it on under `Options -> Syntax Highlighting -> In this Buffer` .
+To change colors, see `Options -> Customize -> Faces -> Font Lock Faces`.
+You can comment/uncomment regions using `C-c c / C-c u`.
+
+Enjoy.
+
+Kai
+kai.bruennler@gmx.net
