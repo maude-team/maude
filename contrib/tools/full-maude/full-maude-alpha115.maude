@@ -590,12 +590,17 @@ fmod FM-MOD-EXPRS is
   op _`,_ : @MapList@ @MapList@ -> @MapList@ [assoc prec 42] .
 endfm
 
+--- Override with your own syntax added.
+fmod MOD-EXPRS is
+  pr FM-MOD-EXPRS .
+endfm
+
 -------------------------------------------------------------------------------
 *******************************************************************************
 -------------------------------------------------------------------------------
 
 fmod SIGNATURES is
-  inc FM-MOD-EXPRS .
+  inc MOD-EXPRS .
 
   sorts @SortDecl@ @SubsortRel@ @SubsortDecl@ @OpDecl@ .
 
@@ -771,7 +776,7 @@ endfm
 -------------------------------------------------------------------------------
 
 fmod COMMANDS is
-  including FM-MOD-EXPRS .
+  including MOD-EXPRS .
 
   sorts @Command@ .
 
@@ -15620,10 +15625,6 @@ endfm
 *** communication between the loop---the input/output of the system---and the
 *** database.  Depending on the kind of input that the database receives, its
 *** state will be changed, or some output will be generated.
-
-fmod MOD-EXPRS is
-  pr FM-MOD-EXPRS .
-endfm
 
 mod FULL-MAUDE is
   pr META-FULL-MAUDE-SIGN .
