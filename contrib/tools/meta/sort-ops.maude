@@ -1,0 +1,345 @@
+--- name: sort-ops.maude
+--- reqs: prelude, full-maude, types.maude
+--- desc: This module implements a few empty and finite sort
+---       constructions; in particular, in contains functionality to:
+---       [1] Compute which sorts are empty (and empty modulo B)
+---       [2] Compute which sorts are finite (but not empty modulo B)
+---       [3] If a sort is finite modulo B, generate all of the terms in it
+
+load ../base/prelude-aux.maude
+
+fmod EMPTY-SORT-REWTH is
+  pr META-LEVEL .
+  pr QID-JOIN .
+
+  op sort-empty? : FModule Sort -> [Bool] [memo] .
+  op sorts-nonempty? : FModule TypeList -> [Bool] [memo] .
+  op empty-sorts : FModule -> [SortSet] .
+
+  op empty-sorts : FModule SortSet -> [SortSet] .
+  op es-sort-op : Sort -> Qid .
+  op sort-set : TypeList -> Term .
+  op esrewth : FModule -> [SModule] [memo] .
+  op es-sort-ops : SortSet -> OpDeclSet .
+  op es-subsort-rls : SubsortDeclSet -> RuleSet .
+  op es-op-rls : OpDeclSet -> RuleSet .
+
+  var FM : FModule .
+  var S S' : Sort .
+  var SS : SortSet .
+  var SSDS : SubsortDeclSet .
+  var Q : Qid .
+  var NTL : NeTypeList .
+  var TL : TypeList .
+  var AS : AttrSet .
+  var ODS : OpDeclSet .
+  var T : Type .
+
+  eq sort-empty?(FM,S) =
+    not metaSearch(
+          esrewth(FM),
+          join((S '.Sort)),
+          '*.Sort,
+          nil,
+          '!,
+          unbounded,
+          0) :: ResultTriple .
+
+  eq sorts-nonempty?(FM,S TL) =
+    not sort-empty?(FM,S) and-then sorts-nonempty?(FM,TL) .
+  eq sorts-nonempty?(FM,nil) = true .
+
+  eq empty-sorts(FM) = empty-sorts(FM,getSorts(FM)) .
+  eq empty-sorts(FM,S ; SS) =
+    if sort-empty?(FM,S) then S else none fi ; empty-sorts(FM,SS) .
+  eq empty-sorts(FM,none) = none .
+
+  eq esrewth(FM) =
+    mod join((getName(FM) '-ESTH)) is
+     (protecting 'BOOL .)
+     sorts 'Sort ; 'SortSet .
+     (subsort 'Sort < 'SortSet .)
+     (op 'set : 'SortSet 'SortSet -> 'SortSet [assoc comm id('mt.Sort)] .
+      op 'mt : nil -> 'SortSet [none] .
+      op '* : nil -> 'Sort [none] .)
+      es-sort-ops(getSorts(FM))
+      none
+     (eq 'set['X:Sort,'X:Sort] = 'X:Sort [none] .)
+      es-subsort-rls(getSubsorts(FM))
+      es-op-rls(getOps(FM))
+    endm .
+
+  eq es-sort-op(S) = join((S '.Sort)) .
+  eq sort-set(T NTL) = 'set[es-sort-op(T),sort-set(NTL)] .
+  eq sort-set(T) = es-sort-op(T) .
+
+  eq es-sort-ops(S ; SS) =
+    op S : nil -> 'Sort [none] .
+    es-sort-ops(SS) .
+  eq es-sort-ops(none) = none .
+
+  eq es-subsort-rls(subsort S' < S . SSDS) =
+    rl es-sort-op(S) => es-sort-op(S') [none] .
+    es-subsort-rls(SSDS) .
+  eq es-subsort-rls(none) = none .
+
+  eq es-op-rls(op Q : NTL -> S [AS] . ODS) =
+    rl es-sort-op(S) => sort-set(NTL) [none] .
+    es-op-rls(ODS) .
+  eq es-op-rls(op Q : nil -> S [AS] . ODS) =
+    rl es-sort-op(S) => '*.Sort [none] .
+    es-op-rls(ODS) .
+  eq es-op-rls(none) = none .
+endfm
+
+fmod FIN-SORT-REWTH is
+  pr EMPTY-SORT-REWTH .
+  pr META-LEVEL .
+  pr TYPE-EXTRA .
+
+  op get-finite-sorts : FModule SortSet -> SortSet .
+  op sort-finite? : FModule Sort ~> Bool [memo] .
+  op sort-finite1? : FModule SModule Sort ~> Term .
+  op mc-check-res : Term ~> Bool .
+  op fs-form : SortSet -> Term .
+  op cycle-sorts : FModule SModule SortSet -> SortSet [memo] .
+  op cycle-sorts1 : FModule SModule SortSet -> SortSet .
+  op sch-check-res : Term ResultTriple? -> Bool .
+  op fsrewth : FModule -> SModule [memo] .
+  op fs-sort-op : Sort -> Term .
+  op fs-tltoss : TypeList -> SortSet .
+  op fs-sort-ops : SortSet -> OpDeclSet .
+  op fs-op-rls : FModule OpDeclSet -> RuleSet .
+  op fs-op-rls1 : SortSet SortSet -> RuleSet .
+  op fs-op-rls2 : Sort SortSet -> RuleSet .
+
+  var FM : FModule .
+  var SM : SModule .
+  var S S' : Sort .
+  var SS SS' : SortSet .
+  var SSDS : SubsortDeclSet .
+  var N : Nat .
+  var B : Bound .
+  var RT? : ResultTriple? .
+  var Q : Qid .
+  var C C' : Constant .
+  var NTL : NeTypeList .
+  var TL : TypeList .
+  var AS : AttrSet .
+  var ODS : OpDeclSet .
+  var RS : RuleSet .
+  var NTML : NeTermList .
+
+  eq get-finite-sorts(FM,S ; SS) =
+    if sort-finite?(FM,S) then S else none fi ;
+    get-finite-sorts(FM,SS) .
+  eq get-finite-sorts(FM,none) = none .
+
+  eq mc-check-res('true.Bool)            = true .
+  eq mc-check-res('counterexample[NTML]) = false .
+
+  eq sort-finite?(FM,S) = mc-check-res(sort-finite1?(FM,fsrewth(FM),S)) .
+  eq sort-finite1?(FM,SM,S) =
+    getTerm(metaReduce(SM,
+      'modelCheck[fs-sort-op(S),'`[`]_[fs-form(cycle-sorts(FM,SM,getSorts(FM)))]])
+    ) .
+  eq fs-form(S ; SS) =
+    '_/\_[
+      '<>_['`[`]_['~_['@[fs-sort-op(S)]]]],
+      fs-form(SS)
+    ] .
+  eq fs-form(none) = 'True.Formula .
+
+  eq fsrewth(FM) =
+    (mod join((getName(FM) '-FSTH)) is
+     protecting 'MODEL-CHECKER .
+     sorts none .
+     none
+     fs-sort-ops(getSorts(FM))
+     op '@ : 'State -> 'Prop [none] .
+     none
+     eq '_|=_['S:State,'@['S':State]] = '_==_['S:State,'S':State] [none] .
+     fs-op-rls(FM,getOps(FM))
+    endm) .
+
+  eq fs-sort-op(S) = join(S '.State) .
+
+  eq fs-sort-ops(S ; SS) =
+    op S : nil -> 'State [none] .
+    fs-sort-ops(SS) .
+  eq fs-sort-ops(none) = none .
+
+  eq fs-tltoss(S TL) = S ; fs-tltoss(TL) .
+  eq fs-tltoss(nil) = none .
+
+  eq fs-op-rls(FM,op Q : NTL -> S [AS] . ODS) =
+    if sorts-nonempty?(FM,NTL) then
+      fs-op-rls1(greaterSorts(FM,S),fs-tltoss(NTL))
+    else
+      none
+    fi
+    fs-op-rls(FM,ODS) .
+  eq fs-op-rls(FM,op Q : nil -> S [AS] . ODS) = fs-op-rls(FM,ODS) .
+  eq fs-op-rls(FM,none) = none .
+
+  eq fs-op-rls1(S ; SS,SS') = fs-op-rls2(S,SS') fs-op-rls1(SS,SS') .
+  eq fs-op-rls1(none,SS') = none .
+
+  eq fs-op-rls2(S,S' ; SS') =
+    rl fs-sort-op(S) => fs-sort-op(S') [none] .
+    fs-op-rls2(S,SS') .
+  eq fs-op-rls2(S,none) = none .
+
+  eq cycle-sorts(FM,SM,SS) = cycle-sorts1(FM,SM,SS) .
+  eq cycle-sorts1(FM,SM,S ; SS) =
+    if (not sort-empty?(FM,S)) and-then
+        sch-check-res(fs-sort-op(S),metaSearch(SM,fs-sort-op(S),fs-sort-op(S),nil,'+,unbounded,0)) then
+      S
+    else
+      none
+    fi ; cycle-sorts1(FM,SM,SS) .
+  eq cycle-sorts1(FM,SM,none) = none .
+
+  eq sch-check-res(C,(failure).ResultTriple?) = false .
+  eq sch-check-res(C,{C,'State,(none).Substitution}) = true .
+endfm
+
+fmod FIN-SORT-REWTH-ALT is
+  pr FIN-SORT-REWTH .
+
+  op alt-sort-finite? : FModule Sort ~> Bool [memo] .
+  op alt-sort-finite1? : FModule Sort ~> Term .
+  op nonfinal-sorts : SModule -> SortSet [memo] .
+  op nonfinal-sorts : RuleSet -> SortSet .
+  op alt-fs-form : SortSet -> Term .
+
+  var S : Sort .
+  var SS : SortSet .
+  var C C' : Constant .
+  var RS : RuleSet .
+  var SM : SModule .
+  var FM : FModule .
+
+  eq alt-sort-finite?(FM,S) = mc-check-res(alt-sort-finite1?(fsrewth(FM),S)) .
+  eq alt-sort-finite1?(SM,S) =
+    getTerm(metaReduce(SM,
+      'modelCheck[fs-sort-op(S),'`[`]_[fs-form(nonfinal-sorts(SM))]]
+    )) .
+
+  eq alt-fs-form(S ; SS) =
+    '_/\_[
+      '_->_['@[fs-sort-op(S)],'O_['`[`]_['~_['@[fs-sort-op(S)]]]]],
+      fs-form(SS)
+    ] .
+  eq alt-fs-form(none) = 'True.Formula .
+
+  eq nonfinal-sorts(SM) = nonfinal-sorts(getRls(SM)) .
+  eq nonfinal-sorts(rl C => C' [none] . RS) = getName(C) ; nonfinal-sorts(RS) .
+  eq nonfinal-sorts(none) = none .
+endfm
+
+fmod SORT-GEN-REWTH is
+  pr TYPE-EXTRA .
+  pr QID-JOIN .
+  pr META-LEVEL .
+  pr TERMSET .
+
+  op sort-gen   : FModule Sort -> TermSet [memo] .
+  op sort-gen   : FModule Sort Bound -> TermSet .
+  op sort-gen   : SModule Sort Nat Bound TermSet ResultTriple? -> TermSet .
+  op sort-gen1  : SModule Sort Nat -> ResultTriple? .
+  op sgrewth    : FModule -> SModule [memo] .
+  op sg-sort-op : SModule Sort -> Term .
+  op sg-sort-ops : FModule SortSet -> OpDeclSet .
+  op sg-subsort-rls : FModule SubsortDeclSet -> RuleSet .
+  op sg-op-rls : FModule OpDeclSet -> RuleSet .
+  op sg-op-rls1 : FModule TypeList -> TermList .
+
+  var FM : FModule .
+  var SM : SModule .
+  var S S' : Sort .
+  var SS : SortSet .
+  var SSDS : SubsortDeclSet .
+  var N : Nat .
+  var B : Bound .
+  var TS : TermSet .
+  var RT? : ResultTriple? .
+  var Q : Qid .
+  var NTL : NeTypeList .
+  var TL : TypeList .
+  var AS : AttrSet .
+  var ODS : OpDeclSet .
+
+  eq sort-gen(FM,S) = sort-gen(FM,S,unbounded) .
+  eq sort-gen(FM,S,B) =
+    sort-gen(sgrewth(FM),S,0,B,emptyTermSet,sort-gen1(sgrewth(FM),S,0)) .
+  eq sort-gen(SM,S,N,B,TS,RT?) =
+    if RT? =/= failure and (B == unbounded or-else N <= B) then
+      sort-gen(SM,S,s(N),B,TS | getTerm(RT?),sort-gen1(SM,S,s(N)))
+    else
+      TS
+    fi .
+  eq sort-gen1(SM,S,N) =
+      metaSearch(
+        SM,
+        sg-sort-op(SM,S),
+        join('X: S),
+        nil,
+        '!, unbounded,
+        N
+      ) .
+
+  eq sgrewth(FM) =
+    mod join((getName(FM) '-SGTH)) is
+     nil
+     sorts getSorts(FM) .
+     getSubsorts(FM)
+    (getOps(FM)
+     sg-sort-ops(FM,getSorts(FM)))
+     none
+     none
+     sg-subsort-rls(FM,getSubsorts(FM))
+     sg-op-rls(FM,getOps(FM))
+    endm .
+
+  eq sg-sort-op(SM,S) = join(S '. completeName(SM,getKind(SM,S))) .
+
+  eq sg-sort-ops(FM,S ; SS) =
+    op S : nil -> completeName(FM,getKind(FM,S)) [none] .
+    sg-sort-ops(FM,SS) .
+  eq sg-sort-ops(FM,none) = none .
+
+  eq sg-subsort-rls(FM,subsort S' < S . SSDS) =
+    rl sg-sort-op(FM,S) => sg-sort-op(FM,S') [none] .
+    sg-subsort-rls(FM,SSDS) .
+  eq sg-subsort-rls(FM,none) = none .
+
+  eq sg-op-rls(FM,op Q : NTL -> S [AS] . ODS) =
+    rl sg-sort-op(FM,S) => Q[sg-op-rls1(FM,NTL)] [none] .
+    sg-op-rls(FM,ODS) .
+  eq sg-op-rls(FM,op Q : nil -> S [AS] . ODS) =
+    rl sg-sort-op(FM,S) => join(Q '. S) [none] .
+    sg-op-rls(FM,ODS) .
+  eq sg-op-rls(FM,none) = none .
+
+  eq sg-op-rls1(FM,S TL) = sg-sort-op(FM,S), sg-op-rls1(FM,TL) .
+  eq sg-op-rls1(FM,nil) = empty .
+endfm
+
+fmod SORT-GEN-EXTRA is
+  pr SORT-GEN-REWTH .
+
+  sort SrtTrmSetMap SrtTrmSetEntry .
+  subsort SrtTrmSetEntry < SrtTrmSetMap .
+  op mtSTM : -> SrtTrmSetMap [ctor] .
+  op _,_ : SrtTrmSetMap SrtTrmSetMap -> SrtTrmSetMap [assoc comm ctor id: mtSTM] .
+  op ((_,_)) : Sort TermSet -> SrtTrmSetEntry [ctor] .
+
+  var FM : FModule .
+  var SS : SortSet .
+  var S : Sort .
+
+  op sorts-gen : FModule SortSet -> SrtTrmSetMap .
+  eq sorts-gen(FM,S ; SS) = (S,sort-gen(FM,S)) , sorts-gen(FM,SS) .
+  eq sorts-gen(FM,none) = mtSTM .
+endfm
