@@ -1,0 +1,1020 @@
+--- file: prelude-aux.maude
+--- reqs: prelude
+--- desc: This file extends the basic datatypes in the prelude
+---       with many additional operations
+
+load full-maude.maude
+
+fmod BOOL-ERR is
+  pr BOOL .
+  pr QID-LIST .
+  sort NoBool MaybeBool ErrBool BoolErr Bool? .
+  subsort Bool NoBool  < MaybeBool < Bool? .
+  subsort Bool ErrBool < BoolErr   < Bool? .
+  op nobool      :         -> NoBool  [ctor]    .
+  op errb        : QidList -> BoolErr [ctor]    .
+  op not_        : Bool?   -> Bool?   [prec 53] .
+  op true?       : Bool?   -> Bool              .
+  op true-undef? : Bool?   -> Bool              .
+  eq not nobool           = nobool .
+  eq not errb(Q:QidList)  = errb(Q:QidList) .
+  ---
+  eq true?(true)          = true .
+  eq true?(B:Bool?)       = false [owise] .
+  eq true-undef?(true)    = true .
+  eq true-undef?(nobool)  = true .
+  eq true-undef?(B:Bool?) = false [owise] .
+endfm
+
+fmod STREAM{X :: TRIV} is
+  pr META-LEVEL .
+  --- SORTS
+  sort Stream{X} .
+  --- CTOR
+  op _&_ : X$Elt [Stream{X}] -> Stream{X} [strat (1 0) ctor] .
+  op _|_ : Stream{X} Stream{X} -> Stream{X} [strat (1 0) ctor] .
+  op end : -> Stream{X} [ctor] .
+  --- DEF
+  op take  : Bound Stream{X} -> Stream{X} .
+  op $take : Bound Stream{X} Stream{X} -> Stream{X} .
+  op pick! : Nat Stream{X} ~> X$Elt .
+  op rest  : Nat Stream{X} -> Stream{X} .
+  op last  : Stream{X} -> Stream{X} .
+  op last! : Stream{X} ~> X$Elt .
+  --- VAR
+  var X Y  : X$Elt .
+  var S S' : [Stream{X}] .
+  var N : Nat .
+  var B : Bound .
+  --- IMPL
+  eq end     | S               = S .
+  eq (X & S) | S'              = X & (S | S') .
+  eq take(B,S)                 = $take(B,S,end) .
+  eq $take(unbounded,X & S,S') = $take(unbounded,S,X & S') .
+  eq $take(unbounded,end,S)    = S .
+  eq $take(s(N),X & S,S')      = $take(N,S,X & S') .
+  eq $take(0,X & S,S')         = S' .
+  eq $take(N,end,S')           = S' .
+  eq pick!(s(N),X & S)         = pick!(N,S) .
+  eq pick!(0,X & S)            = X .
+  eq rest(s(N),X & S)          = rest(N,S) .
+  eq rest(0,X & S)             = X & S .
+  eq rest(N,end)               = end .
+  eq last!(X & S)              = last!(S) .
+  eq last!(X & end)            = X .
+  eq last(X & Y & S)           = last(Y & S) .
+  eq last(X & end)             = X & end .
+  eq last(end)                 = end .
+  --- EXTRA
+  op size : Stream{X} -> Nat .
+  op $size : Nat Stream{X} -> Nat .
+  eq size(S) = $size(0,S) .
+  eq $size(N,X & S) = $size(s(N),S) .
+  eq $size(N,end) = N .
+endfm
+
+fmod TREE-INDEX{X :: TRIV} is
+  pr LIST{X} * (sort List{X} to TreeIndex{X}, sort NeList{X} to NeTreeIndex{X}, op nil to noind,
+                op __ to _:_, op append to tiappend, op tail to titail, op front to tifront, op reverse to tireverse, op $reverse to $tireverse) .
+endfm
+
+fmod N-TREE{X :: TRIV,Y :: TRIV} is
+  pr EXT-BOOL . --- and-then definition
+  pr TREE-INDEX{X} .
+
+  sort Tree{X,Y} Tree?{X,Y}              .
+  sort Branch{X,Y} BranchSet{X,Y}        .
+  subsort Branch{X,Y} < BranchSet{X,Y}   .
+  subsort Tree{X,Y}   < Tree?{X,Y}       .
+
+  op (_:_:_)    : X$Elt Y$Elt Tree{X,Y}             -> Branch{X,Y}    [ctor] .
+  op _|_        : BranchSet{X,Y} BranchSet{X,Y}     -> BranchSet{X,Y} [ctor assoc comm id: nobranch prec 51] .
+  op nobranch   :                                   -> BranchSet{X,Y} [ctor] .
+  op [_]        : BranchSet{X,Y}                    -> Tree{X,Y}      [ctor] .
+  op notree     :                                   -> Tree?{X,Y}     [ctor] .
+
+  --- an empty tree/check for leaves
+  op isleaf?    : Branch{X,Y}                       -> Bool .
+  op emptree    :                                   -> Tree{X,Y} .
+  --- check that no index is duplicated in the tree
+  op wellFormed : Tree{X,Y}                         -> Bool .
+  op wellFormed : BranchSet{X,Y}                    -> Bool .
+  --- extract a subtree/prune at treeindex/prune at depth
+  op find       : Tree{X,Y} TreeIndex{X}            -> Tree?{X,Y} .     --- extract subtree at named index
+  op prune      : Tree{X,Y} TreeIndex{X}            -> Tree{X,Y}  .     --- cutoff  subtree at named index
+  op cut        : Tree{X,Y} Nat                     -> Tree{X,Y}  .     --- extract subtree upto depth
+  op cut        : BranchSet{X,Y} BranchSet{X,Y} Nat -> Tree{X,Y}  .
+  op graft      : Tree{X,Y} TreeIndex{X} Tree{X,Y}  -> Tree{X,Y}  .     --- insert tree into other tree at treeindex
+  op frontier   : Tree{X,Y}                         -> BranchSet{X,Y} . --- extract edge of tree
+  op frontier   : BranchSet{X,Y}                    -> BranchSet{X,Y} .
+  op depth      : Tree{X,Y}                         -> Nat .            --- find depth of tree
+  op depth      : BranchSet{X,Y} Nat                -> Nat .
+  ---
+  var X : X$Elt . var XS : TreeIndex{X} . var Y Y' : Y$Elt . var T T' : Tree{X,Y} . var BS BS' : BranchSet{X,Y} . var N : Nat .
+  ---
+  eq wellFormed([X : Y : T | X : Y' : T' | BS]) = false .
+  eq wellFormed([BS])                           = wellFormed(BS) [owise] .
+  eq wellFormed(X : Y : T | BS)                 = wellFormed(T) and-then wellFormed(BS) .
+  eq wellFormed(nobranch)                       = true .
+  ---
+  eq emptree                           = [nobranch] .
+  eq isleaf?(X : Y : T)                = T == emptree .
+  ---
+  eq find([X : Y : T | BS],X : XS)     = find(T,XS) .
+  eq find(T,noind)                     = T .
+  eq find(T,XS)                        = notree [owise] .
+  ---
+  eq prune([X : Y : T | BS],X : XS)    = [X : Y : prune(T,XS) | BS] .
+  eq prune(T,noind)                    = emptree .
+  eq prune(T,XS)                       = T [owise] .
+  ---
+  eq cut([BS],s(N))                    = cut(BS,nobranch,N) .
+  eq cut(T,0)                          = emptree .
+  eq cut(X : Y : T | BS,BS',N)         = cut(BS,BS' | X : Y : cut(T,N),N) .
+  eq cut(nobranch,BS',N)               = [BS'] .
+  ---
+  eq graft([X : Y : T | BS],X : XS,T') = [X : Y : graft(T,XS,T') | BS] .
+  eq graft(T,noind,T')                 = T' .
+  eq graft(T,XS,T')                    = T [owise] .
+  ---
+  eq frontier([BS])                    = frontier(BS) .
+  eq frontier(X : Y : T | BS)          = if T == emptree then X : Y : T  else frontier(T) fi | frontier(BS) .
+  eq frontier(nobranch)                = nobranch .
+  ---
+  eq depth([nobranch])                 = 0 .
+  eq depth([BS])                       = s(depth(BS,0)) [owise] .
+  eq depth(X : Y : T | BS,N)           = depth(BS,max(depth(T),N)) .
+  eq depth(nobranch,N)                 = N .
+endfm
+
+fmod MAP-EXTRA{X :: TRIV, Y :: TRIV} is
+  pr MAP{X,Y} .
+  pr NAT .
+  --- basic operations only defined over maps
+  op _[_,_]     : Map{X,Y} X$Elt Y$Elt -> Y$Elt .
+  op remove     : X$Elt Map{X,Y} -> Map{X,Y} .
+  op haskey     : X$Elt Map{X,Y} -> Bool .
+  op size       : Map{X,Y} -> Nat .
+  op $size      : Map{X,Y} Nat -> Nat .
+  op wellFormed : Map{X,Y} -> Bool .
+
+  var M : Map{X,Y} .
+  var E : Entry{X,Y} .
+  var K : X$Elt .
+  var V V' : Y$Elt .
+  var N : Nat .
+
+  --- Default Value Lookup
+  --- Returns V if K is not in the map
+  eq M [K,V] =
+          if not $hasMapping(M,K)
+          then V else M [ K ] fi .
+  --- Remove an entry from the map
+  eq remove(K, (M, K |-> V)) = M .
+  eq remove(K, M) = M [owise] .
+  --- Check if a key exists in the map
+  eq haskey(K, M) = $hasMapping(M,K) .
+  --- Get the size of the map
+  eq size(M) = $size(M,0) .
+  eq $size((M , E), N) = $size(M,s(N)) .
+  eq $size(empty,N) = N .
+  --- Checks if each key is only mapped once
+  eq wellFormed((M, K |-> V, K |-> V')) = false .
+  eq wellFormed(M) = true [owise] .
+endfm
+
+fth UNIT-LIST is
+  sort Elt List .
+  subsort Elt < List .
+  op _;_ : List List -> List [id: empty] .
+  op empty : -> List .
+endfth
+
+view UnitList from TRIV to UNIT-LIST is
+  sort Elt to List .
+endv
+
+fmod LAZY-TUPLE{X :: UNIT-LIST} is
+  pr STREAM{UnitList}{X} .
+  pr LIST{UnitList}{X} .
+
+  op tuples : List{UnitList}{X}                     -> Stream{UnitList}{X} .
+  op ns     : List{UnitList}{X} Stream{UnitList}{X} -> Stream{UnitList}{X} .
+  op ones   : X$List                                -> Stream{UnitList}{X} .
+  op adds   : X$List X$List Stream{UnitList}{X}     -> Stream{UnitList}{X} .
+
+  var L C C' : X$List .
+  var OL     : List{UnitList}{X} .
+  var E      : X$Elt .
+  var S      : Stream{UnitList}{X} .
+
+  --- INP: List{UnitList{X}}
+  --- PRE: None
+  --- OUT: Stream{UnitList{X}} where each UnitList in the stream
+  ---      represents one possible tuple generated by selecting an
+  ---      element from each input UnitList{X} in order
+  eq tuples(nil)          = end .
+  eq tuples(OL L)         = ns(OL,ones(L)) .
+  eq ns(OL L,S)           = ns(OL,adds(L,L,S)) .
+  eq ns(nil,S)            = S .
+  eq ones(E ; L)          = E & ones(L) .
+  eq ones(empty)          = end .
+  eq adds(C',E ; C,L & S) = E ; L & adds(C',C,L & S) .
+  eq adds(C',empty,L & S) = adds(C',C',S) .
+  eq adds(C,C,end)        = end .
+endfm
+
+fmod QID-JOIN is
+  pr QID-SET * (op empty to none, op _,_ to _;_ [prec 43]) .
+  pr QID-LIST .
+  pr CONVERSION .
+  op joinl  : QidList QidList -> QidList .
+  op join   : QidList         -> Qid .
+  op join   : QidList String  -> Qid .
+  op $join  : QidList String  -> String .
+  op tolist : QidSet          -> QidList .
+  var Q : Qid . var QL QL' : NeQidList . var QS : QidSet . var S : String .
+  eq joinl(Q QL,QL') = Q QL' joinl(QL,QL') .
+  eq joinl(Q,QL')    = Q .
+  eq joinl(nil,QL')  = nil .
+  eq join(QL)        = qid($join(QL,"")) .
+  eq join(QL,S)      = qid($join(QL,S)) .
+  eq $join(Q,S)      = string(Q) .
+  eq $join(Q QL,S)   = string(Q) + S + $join(QL,S) .
+  eq $join(nil,S)    = "" .
+  eq tolist(Q ; QS)  = Q tolist(QS) .
+  eq tolist(none)    = nil .
+endfm
+
+fmod QIDTUPLESET is
+  pr QID .
+  sort EmptyQidTupleSet QidPairItem QidPairSet QidTripleItem QidTripleSet .
+  subsort QidPairItem      < QidPairSet   .
+  subsort QidTripleItem    < QidTripleSet .
+  subsort EmptyQidTupleSet < QidPairSet QidTripleSet .
+  op qp   : Qid Qid                           -> QidPairItem      [ctor] .
+  op qt   : Qid Qid Qid                       -> QidTripleItem    [ctor] .
+  op _|_  : QidPairSet   QidPairSet           -> QidPairSet       [ctor assoc comm id: none] .
+  op _|_  : QidTripleSet QidTripleSet         -> QidTripleSet     [ctor assoc comm id: none] .
+  op _|_  : EmptyQidTupleSet EmptyQidTupleSet -> EmptyQidTupleSet [ctor assoc comm id: none] .
+  op none :                                   -> EmptyQidTupleSet [ctor] .
+endfm
+
+fmod STRING-EXTRA is
+  pr STRING .
+  pr NAT .
+
+  op insert    : String Nat Nat String -> String .
+
+  op replace   : String String String ~> String .
+  op replace   : String String String Nat ~> String .
+  op $replace1 : String String Nat String Nat FindResult Nat Nat -> String .
+  op $replace? : String String Nat String Nat Nat Nat Nat -> String .
+
+  var S O R : String .
+  var N L1 L2 P1 P2 I C : Nat .
+
+  --- INP: String1 Nat1 Nat2 String2
+  --- PRE: None
+  --- OUT: Replaces substr(String1,Nat1,sd(Nat2,Nat1)) with String2
+  eq insert(S,P1,P2,R) = substr(S,0,P1) + R + substr(S,P2,length(S)) .
+
+  --- INP: String0 String1 String2 [Nat]
+  --- PRE: None
+  --- OUT: Replaces first [Nat] occurences of String1 with String2 in String0
+  eq replace(S,O,R) = replace(S,O,R,length(S)) .
+  ceq replace(S,O,R,N) =
+    if N == 0 then
+      S
+    else
+      $replace1(S,O,length(O),R,length(R),find(S,O,0),0,s(N))
+    fi
+  if O =/= "" .
+  eq $replace1(S,O,L1,R,L2,notFound,C,N) = S .
+  eq $replace1(S,O,L1,R,L2,I,C,N) = $replace?(insert(S,I,I + L1,R),O,L1,R,L2,I,s(C),N) .
+  eq $replace?(S,O,L1,R,L2,I,C,N) =
+    if C < N then
+      $replace1(S,O,L1,R,L2,find(S,O,I + L2),C,N)
+    else
+      S
+    fi .
+endfm
+
+fmod STRING-PAIR is
+  pr STRING .
+
+  sort StringPair .
+  op ((_,_)) : String String -> StringPair [ctor] .
+
+  var S S'   : String .
+  var B L    : Nat .
+
+  op split   : String String ~> StringPair .
+  op rsplit  : String String ~> StringPair .
+  op split   : String Nat Nat -> StringPair .
+
+  eq  split(S,S')  = split(S, find(S,S',0),length(S')) .
+  eq rsplit(S,S')  = split(S,rfind(S,S',length(S)),length(S')) .
+  eq  split(S,B,L) = (substr(S,0,B),substr(S,B + L,length(S))) .
+endfm
+
+fmod MOD-EXTRA is
+  pr UNIT .
+  op protecting? : Module Module -> Bool .
+  op protecting? : ModuleExpression ImportList -> Bool .
+  var ME ME' : ModuleExpression . var IL : ImportList . var M M' : Module .
+  eq protecting?(M,M') = protecting?(getName(M'),getImports(M)) .
+  eq protecting?(ME,protecting ME' . IL) = ME == ME' or-else protecting?(ME,IL) .
+  eq protecting?(ME,including  ME' . IL) = protecting?(ME,IL) .
+  eq protecting?(ME,extending  ME' . IL) = protecting?(ME,IL) .
+  eq protecting?(ME,nil) = false .
+endfm
+
+fmod TYPE-EXTRA is
+  pr META-LEVEL .
+
+  --- BASIC TYPE OPERATIONS
+  op direct-subsorts   : Module Type -> SortSet .
+  op direct-subsorts   : SubsortDeclSet Type -> SortSet .
+
+  --- BASIC TYPE SET OPERATIONS
+  op getMaximalSorts   : Module -> SortSet .
+  op getMaximalSorts   : Module KindSet -> SortSet .
+
+  --- BASIC TYPE TUPLE OPERATIONS
+  op $typeLeq          : Module TypeList TypeList -> Bool .
+  op $typeLeqS         : Module TypeList TypeListSet -> Bool .
+  op typeLeqS          : Module TypeListSet TypeListSet -> Bool .
+  op $typeRel          : Module TypeList TypeList -> Bool .
+  op $typeRelS         : Module TypeList TypeListSet -> Bool .
+  op typeRelS          : Module TypeListSet TypeListSet -> Bool .
+  op greaterSorts      : Module Sort -> SortSet .
+  op $greaterSorts     : Module Sort SortSet -> SortSet .
+
+  --- BASIC TYPE TUPLE SET OPERATIONS
+  op _in_              : TypeList TypeListSet -> Bool .
+  op _-_               : TypeListSet TypeListSet -> TypeListSet .
+  op $tydiff           : TypeListSet TypeListSet TypeListSet -> TypeListSet .
+  op intersect         : TypeListSet TypeListSet -> TypeListSet .
+
+  --- TYPE TUPLE AUXILLIARY OPERATIONS
+  op merge             : TypeListSet TypeListSet -> TypeListSet .
+  op $merge1           : TypeListSet TypeListSet TypeListSet -> TypeListSet .
+  op $merge2           : TypeList TypeListSet TypeListSet -> TypeListSet .
+
+  --- CONVERSIONS
+  op typeListToSet     : TypeList -> TypeSet .
+
+  --- DECL TYPE OPERATIONS
+  op possibleTypings   : Module Qid -> TypeSet .
+
+  var SDS : SubsortDeclSet .
+  var TYLS TYLS' TYLS'' : TypeListSet .
+  var TYS : TypeSet .
+  var TY TY' : Type .
+  var S S' : Sort .
+  var K K' : Kind .
+  var KS : KindSet .
+  var TYL TYL' TYL'' : TypeList .
+  var SS SS' : SortSet .
+  var M : Module .
+  var Q Q' : Qid .
+  var ODS : OpDeclSet .
+  var AS : AttrSet .
+
+  --- INP: Module Type
+  --- PRE: Type is well-defined in Module
+  --- OUT: Set of direct subsorts of Type
+  eq direct-subsorts(M,S) = direct-subsorts(getSubsorts(M),S) .
+  eq direct-subsorts(M,K) = maximalSorts(M,K) .
+  eq direct-subsorts(SDS subsort S' < S .,S) = S' ; direct-subsorts(SDS,S) .
+  eq direct-subsorts(SDS,TY) = none [owise] .
+
+  --- INP: Module [KindSet]
+  --- PRE: Kinds are well-defined in Module
+  --- OUT: Set of maximal sorts of each kind
+  eq getMaximalSorts(M)        = getMaximalSorts(M,getKinds(M)) .
+  eq getMaximalSorts(M,K ; KS) = maximalSorts(M,K) ; getMaximalSorts(M,KS) .
+  eq getMaximalSorts(M,none)   = none .
+
+  --- INP: Module TypeListSet1 TypeListSet2
+  --- PRE: Types in TypeLists are defined in Module
+  --- OUT: true if every type in TypeListSet1 is a subtype of TypeListSet2
+  eq $typeLeq(M,K TYL,S TYL')  = false .
+  eq $typeLeq(M,S TYL,K TYL')  = sortLeq(M,S,K)  and-then $typeLeq(M,TYL,TYL') .
+  eq $typeLeq(M,K TYL,K' TYL') = sortLeq(M,K,K') and-then $typeLeq(M,TYL,TYL') .
+  eq $typeLeq(M,S TYL,S' TYL') = sortLeq(M,S,S') and-then $typeLeq(M,TYL,TYL') .
+  eq $typeLeq(M,nil,nil)       = true .
+  eq $typeLeq(M,TYL,TYL')      = false [owise] .
+  eq $typeLeqS(M,TYL,TYL' ; TYLS) =
+    $typeLeq(M,TYL,TYL') and-then $typeLeqS(M,TYL,TYLS) .
+  eq $typeLeqS(M,TYL,none) = true .
+  eq typeLeqS(M,TYL ; TYLS,TYLS') =
+    $typeLeqS(M,TYL,TYLS') and-then typeLeqS(M,TYLS,TYLS') .
+  eq typeLeqS(M,none,TYLS') = true .
+
+  --- INP:  Module TypeListSet1 TypeListSet2
+  --- PRE:  Types in TypeLists are defined in Module
+  --- OUT:  true if corresponding types in each typelist have the same kind
+  --- NOTE: the mnemonic typeRel stands for type related
+  eq $typeRel(M,TY TYL,TY' TYL') = sameKind(M,TY,TY') and $typeRel(M,TYL,TYL') .
+  eq $typeRel(M,nil,nil)         = true .
+  eq $typeRel(M,TYL,TYL')        = false [owise] .
+  eq $typeRelS(M,TYL,TYL' ; TYLS) =
+    $typeRel(M,TYL,TYL') and-then $typeRelS(M,TYL,TYLS) .
+  eq $typeRelS(M,TYL,none) = true .
+  eq typeRelS(M,TYL ; TYLS,TYLS') =
+    $typeRelS(M,TYL,TYLS') and-then typeRelS(M,TYLS,TYLS') .
+  eq typeRelS(M,none,TYLS') = true .
+
+  --- INP: Module Sort
+  --- PRE: Type is defined in Module
+  --- OUT: SortSet of all types greater than Sort
+  eq greaterSorts(M,S) = $greaterSorts(M,S,lesserSorts(M,getKind(M,S))) .
+  eq $greaterSorts(M,S,S' ; SS) =
+    if sortLeq(M,S,S') then
+      S' ; $greaterSorts(M,S,SS)
+    else
+      $greaterSorts(M,S,SS)
+    fi .
+  eq $greaterSorts(M,S,none) = none .
+
+  --- INP: TypeList TypeListSet
+  --- PRE: None
+  --- OUT: true iff TypeList is in TypeListSet
+  eq TYL in (TYL ; TYLS) = true .
+  eq TYL in TYLS = false [owise] .
+
+  --- INP: TypeListSet1 TypeListSet2
+  --- PRE: None
+  --- OUT: TypeListSet containing all TypeLists in TypeListSet1 and not in
+  ---      TypeListSet2
+  eq TYLS - TYLS' = $tydiff(TYLS,TYLS',none) .
+  eq $tydiff(TYL ; TYLS,TYLS',TYLS'') =
+    if TYL in TYLS' then
+      $tydiff(TYLS,TYLS',TYLS'')
+    else
+      $tydiff(TYLS,TYLS',TYL ; TYLS'')
+    fi .
+  eq $tydiff(none,TYLS',TYLS'') = TYLS'' .
+
+  --- INP: TypeListSet1 TypeListSet2
+  --- PRE: None
+  --- OUT: TypeListSet containing all items in both sets
+  eq intersect(TYL ; TYLS,TYLS') =
+    if TYL in TYLS' then
+      TYL ; intersect(TYLS,TYLS')
+    else
+      intersect(TYLS,TYLS')
+    fi .
+  eq intersect(none,TYLS') = none .
+
+  --- INP: TypeListSet TypeListSet
+  --- PRE: None
+  --- OUT: A TypeListSet formed by merging each pair of TypeLists
+  ---      in the two TypeListSets
+  eq merge(TYLS,TYLS') = $merge1(TYLS,TYLS',none) .
+  eq $merge1(TYL ; TYLS, TYLS', TYLS'') =
+    $merge1(TYLS, TYLS', $merge2(TYL,TYLS',none) ; TYLS'') .
+  eq $merge1(none,TYLS',TYLS'') = TYLS'' .
+  eq $merge2(TYL, TYL' ; TYLS, TYLS') =
+    $merge2(TYL, TYLS, TYL TYL' ; TYLS') .
+  eq $merge2(TYL, none, TYLS') = TYLS' .
+
+  --- INP: TypeList
+  --- PRE: None
+  --- OUT: Turns a TypeList into the corresponding TypeSet
+  eq typeListToSet(TY TYL) = TY ; typeListToSet(TYL) .
+  eq typeListToSet(nil)    = none .
+
+  --- INP: Module Qid
+  --- PRE: None
+  --- OUT: Possible result types of operators with name Qid
+  op possibleTypings : OpDeclSet Qid -> TypeSet .
+  eq possibleTypings(M,Q) = possibleTypings(getOps(M),Q) .
+  eq possibleTypings(op Q' : TYL -> TY [AS]. ODS,Q) =
+    if Q == Q' then
+      TY ; possibleTypings(ODS,Q)
+    else
+      possibleTypings(ODS,Q)
+    fi .
+  eq possibleTypings(none,Q) = none .
+endfm
+
+fmod TYPESETLIST is
+  pr META-LEVEL .
+
+  sort TypeSetList .
+  subsort TypeSet < TypeSetList .
+  op nilTSL : -> TypeSetList [ctor] .
+  op _l_ : TypeSetList TypeSetList -> TypeSetList
+     [ctor assoc id: nilTSL] .
+endfm
+
+fmod ATTR-EXTRA is
+  pr META-MODULE .
+
+  ops special-attr id-attr left-id-attr right-id-attr
+      strat-attr frozen-attr poly-attr prec-attr gather-attr
+      format-attr print-attr label-attr metadata-attr : -> Attr .
+  op _%_ : AttrSet AttrSet -> AttrSet .
+  op _-_ : AttrSet AttrSet -> AttrSet .
+  op in  : AttrSet AttrSet -> Bool .
+
+  var A A' : Attr .
+  var Q Q' : Qid .
+  var QL QL' : QidList .
+  var TYL : TypeList .
+  var TY : Type .
+  var AS AS' : AttrSet .
+  var S S' : String .
+  var N N' : Nat .
+  var NL NL' : NatList .
+  var HL HL' : NeHookList .
+  var T T' : Term .
+
+  --- INP: None
+  --- PRE: None
+  --- OUT: Attrs for use in _%_
+  eq special-attr  = special(term-hook('T,'T.S)) .
+  eq id-attr       = id('T.S) .
+  eq left-id-attr  = left-id('T.S) .
+  eq right-id-attr = right-id('T.S) .
+  eq strat-attr    = strat(0) .
+  eq frozen-attr   = frozen(0) .
+  eq poly-attr     = poly(0) .
+  eq prec-attr     = prec(0) .
+  eq gather-attr   = gather(nil) .
+  eq format-attr   = format(nil) .
+  eq print-attr    = print(nil) .
+  eq label-attr    = label('Q) .
+  eq metadata-attr = metadata("") .
+
+  --- INP: AttrSet1 AttrSet2
+  --- PRE: None
+  --- OUT: All Attrs in AttrSet1 that are not in AttrSet2;
+  ---      here we ignore subterms; we only match top operator
+  eq (special(HL) AS) % (special(HL') AS') = AS % AS' .
+  eq (id(T)       AS) % (id(T')       AS') = AS % AS' .
+  eq (left-id(T)  AS) % (left-id(T)   AS') = AS % AS' .
+  eq (right-id(T) AS) % (right-id(T)  AS') = AS % AS' .
+  eq (strat(NL)   AS) % (strat(NL')   AS') = AS % AS' .
+  eq (frozen(NL)  AS) % (frozen(NL')  AS') = AS % AS' .
+  eq (poly(NL)    AS) % (poly(NL')    AS') = AS % AS' .
+  eq (prec(N)     AS) % (prec(N')     AS') = AS % AS' .
+  eq (gather(QL)  AS) % (gather(QL')  AS') = AS % AS' .
+  eq (format(QL)  AS) % (format(QL')  AS') = AS % AS' .
+  eq (print(QL)   AS) % (print(QL')   AS') = AS % AS' .
+  eq (label(Q)    AS) % (label(Q')    AS') = AS % AS' .
+  eq (metadata(S) AS) % (metadata(S') AS') = AS % AS' .
+  eq              AS  %               AS'  = AS - AS' [owise] .
+
+  --- INP: AttrSet1 AttrSet2
+  --- PRE: None
+  --- OUT: All Attrs in AttrSet1 that are not in AttrSet2
+  eq (A AS) - (A AS') = AS - AS' .
+  eq    AS  -    AS'  = AS [owise] .
+
+
+  --- INP: AttrSet1 AttrSet2
+  --- PRE: None
+  --- OUT: true iff all kinds of Attrs in AttrSet1 are in AttrSet2
+  eq in(AS,AS') = (AS % AS') == none .
+endfm
+
+fmod OPDECL-EXTRA is
+  pr META-LEVEL .
+  pr ATTR-EXTRA .
+  op qid        : OpDecl -> Qid .
+  op argTypes   : OpDecl -> TypeList .
+  op resultType : OpDecl -> Type .
+  op attrSet    : OpDecl -> AttrSet .
+  op metadata   : OpDecl ~> String .
+  var Q : Qid    . var T  : Type    . var TL : TypeList .
+  var S : String . var AS : AttrSet .
+  eq qid(op Q : TL -> T [AS].)        = Q  .
+  eq argTypes(op Q : TL -> T [AS].)   = TL .
+  eq resultType(op Q : TL -> T [AS].) = T  .
+  eq attrSet(op Q : TL -> T [AS].)    = AS .
+  eq metadata(op Q : TL -> T [metadata(S) AS].) = S .
+endfm
+
+fmod OPDECLSET-EXTRA is
+  pr OPDECL-EXTRA .
+  pr META-MODULE .
+
+  op _inODS_     : OpDecl OpDeclSet -> Bool .
+  op _-_         : OpDeclSet OpDeclSet -> OpDeclSet .
+  op subset?     : OpDeclSet OpDeclSet -> Bool .
+  op $opdiff     : OpDeclSet OpDeclSet OpDeclSet -> OpDeclSet .
+  op argTypeSet  : OpDeclSet -> TypeListSet .
+  op $argTypeSet : OpDeclSet TypeListSet -> TypeListSet .
+  op resTypeSet  : OpDeclSet -> TypeSet .
+  op $resTypeSet : OpDeclSet TypeSet -> TypeListSet .
+  op constants   : OpDeclSet -> OpDeclSet .
+  op $constants  : OpDeclSet OpDeclSet -> OpDeclSet .
+  op ctors       : OpDeclSet -> OpDeclSet .
+  op stripAttrs  : OpDeclSet -> OpDeclSet .
+  ---
+  op qid         : OpDeclSet -> QidSet .
+  op argTypes    : OpDeclSet -> TypeListSet .
+  op resultType  : OpDeclSet -> TypeSet .
+  --- op attrSet : OpDeclSet -> AttrSetSet . --- right now no attrsetset sort to use...
+
+  var TS : TypeSet .
+  var TLS : TypeListSet .
+  var ODS ODS' ODS'' : OpDeclSet .
+  var OD OD' : OpDecl .
+  var Q : Qid .
+  var AS : AttrSet .
+  var TYL : TypeList .
+  var TY : Type .
+  var QS : QidSet .
+
+  --- INP: OpDecl OpDeclSet
+  --- PRE: None
+  --- OUT: true iff OpDecl is in OpDeclSet
+  eq OD inODS OD ODS = true .
+  eq OD inODS ODS = false [owise] .
+
+  --- INP: OpDeclSet1 OpDeclSet2
+  --- PRE: None
+  --- OUT: Removes all OpDecls in set 2
+  ---      from set 1
+  eq ODS - ODS' = $opdiff(ODS,ODS',none) .
+  eq $opdiff(OD ODS,ODS',ODS'') =
+    $opdiff(ODS,ODS',if OD inODS ODS' then none else OD fi ODS'') .
+  eq $opdiff(none,ODS',ODS'') = ODS'' .
+
+  --- INP: OpDeclSet1 OpDeclSet2
+  --- PRE: None
+  --- OUT: true iff OpDeclSet1 is a subset of OpDeclSet2
+  eq subset?(OD ODS,ODS') = OD inODS ODS' and-then subset?(ODS,ODS') .
+  eq subset?(none,ODS') = true .
+
+  --- INP: OpDeclSet
+  --- PRE: None
+  --- OUT: A set of TypeLists represents the arguments from each OpDecl
+  eq argTypeSet(ODS) = $argTypeSet(ODS,none) .
+  eq $argTypeSet(OD ODS,TLS) = $argTypeSet(ODS,argTypes(OD) ; TLS) .
+  eq $argTypeSet(none,TLS) = TLS .
+
+  --- INP: OpDeclSet
+  --- PRE: None
+  --- OUT: A TypeSet representing the results from each OpDecl
+  eq resTypeSet(ODS) = $resTypeSet(ODS,none) .
+  eq $resTypeSet(OD ODS,TS) = $resTypeSet(ODS,resultType(OD) ; TS) .
+  eq $resTypeSet(none,TS) = TS .
+
+  --- INP: OpDeclSet
+  --- PRE: None
+  --- OUT: Extracts all constants
+  eq constants(ODS) = $constants(ODS,none) .
+  eq $constants(OD ODS,ODS') =
+    $constants(ODS,if argTypes(OD) == nil then OD else none fi ODS') .
+  eq $constants(none,ODS') = ODS' .
+
+  --- INP: OpDeclSet
+  --- PRE: None
+  --- OUT: Extracts all ctors
+  op $ctors      : OpDeclSet OpDeclSet -> OpDeclSet .
+  eq ctors(ODS) = $ctors(ODS,none) .
+  eq $ctors(op Q : TYL -> TY [ctor AS]. ODS,ODS') =
+     $ctors(ODS,op Q : TYL -> TY [ctor AS]. ODS') .
+  eq $ctors(ODS,ODS') = ODS' [owise] .
+
+  --- INP: OpDeclSet
+  --- PRE: None
+  --- OUT: Replaces each op's AttrSet with none
+  eq stripAttrs(op Q : TYL -> TY [AS]. ODS) =
+   op Q : TYL -> TY [none]. stripAttrs(ODS) .
+  eq stripAttrs(none) = none .
+
+  --- INP: OpDeclSet
+  --- PRE: None
+  --- OUT: Qid/TypeList/TypeSets (Set functor liftings of OpDecl type)
+  eq qid(OD OD' ODS)        = qid(OD) ; qid(OD' ODS) .
+  eq qid(none)              = none .
+  eq argTypes(OD OD' ODS)   = argTypes(OD) ; argTypes(OD' ODS) .
+  eq argTypes(none)         = none .
+  eq resultType(OD OD' ODS) = resultType(OD) ; resultType(OD' ODS) .
+  eq resultType(none)       = none .
+endfm
+
+fmod OPDECL-ORDER is
+  pr META-LEVEL .
+  pr TYPE-EXTRA .
+  pr OPDECL-EXTRA .
+
+  op opLeq : Module OpDecl OpDecl -> Bool .
+  op getMaximal : Module OpDeclSet -> OpDeclSet .
+  op $getMaximal : Module OpDeclSet OpDeclSet OpDeclSet -> OpDeclSet .
+  op $getMaximal1 : Module OpDecl OpDeclSet -> Bool .
+  op opsBelow : Module OpDecl -> OpDeclSet .
+  op opsBelow : Module OpDecl OpDeclSet -> OpDeclSet .
+  op $opsBelow : Module OpDecl OpDeclSet OpDeclSet -> OpDeclSet .
+  op relatedOps : Module Qid TypeList OpDeclSet -> OpDeclSet .
+  op relatedOps : Module OpDecl OpDeclSet -> OpDeclSet .
+
+  var M : Module .
+  var OD OD' : OpDecl .
+  var ODS ODS' ODS'' : OpDeclSet .
+  var Q : Qid .
+  var TYL : TypeList .
+
+  --- INP: Module OpDecl1 OpDecl2
+  --- PRE: OpDecls are well-defined with respect to Module
+  --- OUT: true iff names agree and argTypes of OpDecl1 are less than that
+  ---      of OpDecl2
+  eq opLeq(M,OD,OD') =
+    qid(OD) == qid(OD') and-then typeLeqS(M,argTypes(OD),argTypes(OD')) .
+
+  --- INP: Module OpDeclSet
+  --- PRE: OpDeclSet is well-defined with respect to Module
+  --- OUT: The maximal OpDecls in the OpDeclSet
+  eq getMaximal(M,ODS) = $getMaximal(M,ODS,none,none) .
+  eq $getMaximal(M,OD ODS,ODS',ODS'') =
+    if $getMaximal1(M,OD,ODS ODS') then
+      $getMaximal(M,ODS,OD ODS',OD ODS'')
+    else
+      $getMaximal(M,ODS,ODS',ODS'')
+    fi .
+  eq $getMaximal(M,none,ODS',ODS'') = ODS'' .
+  eq $getMaximal1(M,OD,OD' ODS) =
+    not opLeq(M,OD,OD') and-then $getMaximal1(M,OD,ODS) .
+  eq $getMaximal1(M,OD,none) = true .
+
+  --- INP: Module OpDecl [OpDeclSet]
+  --- PRE: OpDecls are well-defined with respect to Module
+  --- OUT: All OpDecls in OpDeclSet that are less than OpDecl
+  eq opsBelow(M,OD) = opsBelow(M,OD,getOps(M)) .
+  eq opsBelow(M,OD,ODS) = $opsBelow(M,OD,ODS,none) .
+  eq $opsBelow(M,OD,OD' ODS',ODS) =
+    if opLeq(M,OD',OD) and OD' =/= OD then
+      $opsBelow(M,OD,ODS',OD' ODS)
+    else
+      $opsBelow(M,OD,ODS',ODS)
+    fi .
+  eq $opsBelow(M,OD,none,ODS) = ODS .
+
+  --- INP: Module OpDecl/(Qid TypeList) OpDeclSet
+  --- PRE: OpDecls are well-defined with respect to Module
+  --- OUT: Set of OpDecls in OpDeclSet that are related to OpDecl; that is
+  ---      their arguments are in the same kind
+  eq relatedOps(M,Q,TYL,ODS) =
+    relatedOps(M,op Q : TYL -> 'Sort [none].,ODS) .
+  eq relatedOps(M,OD,OD' ODS) =
+    if qid(OD) == qid(OD') and typeRelS(M,argTypes(OD),argTypes(OD')) then
+      OD' relatedOps(M,OD,ODS)
+    else
+      relatedOps(M,OD,ODS)
+    fi .
+  eq relatedOps(M,OD,none) = none .
+endfm
+
+fmod OPDECL-TYPING is
+  pr META-LEVEL .
+  pr TERM-HANDLING .
+  pr TYPE-EXTRA .
+  pr OPDECL-EXTRA .
+
+  op subterms : Term -> TermList .
+  op termListSorts : Module TermList -> TypeList .
+  op findOps : Module OpDeclSet Qid TypeList Type -> OpDeclSet .
+  op findOps : Module OpDeclSet Term -> OpDeclSet .
+  op overloaded? : OpDeclSet -> Bool .
+
+  var M : Module .
+  var OD : OpDecl .
+  var ODS : OpDeclSet .
+  var Q : Qid .
+  var TY TY' : Type .
+  var AS AS' : AttrSet .
+  var TYL TYL' : TypeList .
+  var T : Term .
+  var NTL : NeTermList .
+  var C : Constant .
+  var V : Variable .
+  var TL : TermList .
+
+  --- INP: Term
+  --- PRE: None
+  --- OUT: The list of subterms from this term
+  eq subterms(Q[NTL])      = NTL .
+  eq subterms(C)           = empty .
+  eq subterms(V)           = empty .
+
+  --- INP: Module TermList
+  --- PRE: Term well-defined in Module
+  --- OUT: A TypeList with n elements corresponding to n terms' types in termlist
+  eq termListSorts(M,(T, TL))  = leastSort(M,T) termListSorts(M,TL) .
+  eq termListSorts(M,empty) = nil .
+
+  --- INP: Module OpDeclSet Qid TypeList Type
+  --- PRE: TypeList and Type are defined in Module
+  --- OUT: Given a term with structure Q(X1...XN) whose
+  ---      least sort is Type where the sorts of X1...XN
+  ---      correspond to the Types in TypeList, find all
+  ---      possible operators in the OpDeclSet that
+  ---      could be instantiated to get this term
+  eq findOps(M,OD ODS,Q,TYL,TY) =
+    if typeLeqS(M,TYL,argTypes(OD)) and qid(OD) == Q and
+        typeLeqS(M,resultType(OD),TY) then
+      OD
+    else
+      none
+    fi findOps(M,ODS,Q,TYL,TY) .
+  eq findOps(M,none,Q,TYL,TY) = none .
+
+  --- INP: SModule Term
+  --- PRE: Term and OpDeclSet are well-defined in Module
+  --- OUT: Set of OpDecls that could top this term
+  eq findOps(M,ODS,T) =
+    findOps(M,ODS,root(T),termListSorts(M,subterms(T)),leastSort(M,T)) .
+
+  --- INP: OpDeclSet
+  --- PRE: None
+  --- OUT: True iff no operators share the same name in OpDeclSet
+  eq overloaded?(op Q : TYL -> TY [AS]. op Q : TYL' -> TY' [AS']. ODS) = true .
+  eq overloaded?(ODS)                                                  = false [owise] .
+endfm
+
+fmod TERM-EXTRA is
+  pr TERM-HANDLING .
+  pr SUBSTITUTIONSET .
+  op getName        : QidSet                 -> [QidSet] .
+  op varsToTermList : QidSet                 -> [TermList] .
+  op filterNotIn    : SubstitutionSet QidSet -> SubstitutionSet .
+  op filterNotIn*   : Substitution QidSet    -> Substitution .
+  op domain         : Substitution           -> QidSet .
+
+  var TQ : TermQid . var Q : Qid . var QS : QidSet . var V : Variable .
+  var S : Substitution . var SS : SubstitutionSet . var T : Term .
+
+  ---
+  eq getName(TQ ; Q ; QS)   = getName(TQ) ; getName(Q ; QS) .
+  eq getName(none)          = none .
+  eq varsToTermList(V ; QS) = V,varsToTermList(QS) .
+  eq varsToTermList(none)   = empty .
+
+  --- INP: SubsitutionSet QS:QidSet
+  --- PRE: None
+  --- OUT: SubstitutionSet where each substitution binding V <- T is
+  ---      filtered out V occurs in QS
+  eq filterNotIn(S | SS,QS)      = filterNotIn*(S,QS) | filterNotIn(SS,QS) .
+  eq filterNotIn(empty,QS)       = empty .
+  eq filterNotIn*(V <- T ; S,QS) = if V in QS then none else V <- T fi ; filterNotIn*(S,QS) .
+  eq filterNotIn*(none,QS)       = none .
+
+  --- INP: Substitution
+  --- PRE: None
+  --- OUT: QidSet composed of variables mapped to other values
+  eq domain(V <- T ; S) = V ; domain(S) .
+  eq domain(none)       = none .
+endfm
+
+--- this module has functionality to generate unique prefixes with
+--- respect to the sorts/operators in a module; this is useful when
+--- an algorithm needs to generate fresh sorts/operators; if the
+--- generated sort/operator will be needed often, it can be memoized
+fmod UNIQUE-PREFIX is
+  pr META-LEVEL .
+  pr OPDECLSET-EXTRA .
+  pr SET{String} .
+
+  op sortPrefix     : Module             -> String [memo] .
+  op sortPrefix     : SortSet            -> String .
+  op opPrefix       : Module             -> String [memo] .
+  op opPrefix       : OpDeclSet          -> String .
+  op uniquePrefix   : QidSet             -> String .
+  op uniquePrefix   : String Set{String} -> String .
+  op qidSetToStrSet : QidSet             -> Set{String} .
+
+  var P S : String . var SS : Set{String} . var D : Qid . var Q : QidSet .
+
+  eq sortPrefix(M:Module)   = uniquePrefix(getSorts(M:Module)) .
+  eq sortPrefix(S:SortSet)  = uniquePrefix(S:SortSet) .
+  eq opPrefix(M:Module)     = uniquePrefix(qid(getOps(M:Module))) .
+  eq opPrefix(O:OpDeclSet)  = uniquePrefix(qid(O:OpDeclSet)) .
+  eq uniquePrefix(Q)        = uniquePrefix("@",qidSetToStrSet(Q)) .
+  eq uniquePrefix(P,(S,SS)) = if P == substr(S,0,length(P)) then uniquePrefix(P + "@",(S,SS))
+                                                         else uniquePrefix(P,SS) fi .
+  eq uniquePrefix(P,empty)  = P .
+  eq qidSetToStrSet(D ; Q)  = string(D) , qidSetToStrSet(Q) .
+  eq qidSetToStrSet(none)   = empty .
+endfm
+
+--- this module provides functionality to add a set of variables into a module
+--- as FRESH constants (by using the functionality of opPrefix above); the function
+--- returns a new module as well as an assignment mapping each variable into its
+--- fresh constant --- this assignment can later be used to decode the new term
+--- back into its original form
+fmod VARIABLES-TO-CONSTANTS is
+  pr TERM-EXTRA .
+  pr OPDECLSET-EXTRA .
+  pr UNIT .
+  pr QID-JOIN .
+  pr UNIQUE-PREFIX .
+
+  sort ModuleSubstPair .
+  op ((_,_)) : Module Substitution -> ModuleSubstPair [ctor] .
+  op mod : ModuleSubstPair -> Module .
+  op sub : ModuleSubstPair -> Substitution .
+
+  sort ConstGenStrategy .
+  ops simple prefix full : -> ConstGenStrategy [ctor] .
+
+  op  varsToConsts  : Module ConstGenStrategy QidSet                            -> [Module] .
+  op  varsToConsts# : Module ConstGenStrategy QidSet                            -> [ModuleSubstPair] .
+  op  varsToConsts# : Module ConstGenStrategy QidSet Qid OpDeclSet Substitution -> [ModuleSubstPair] .
+
+  op  constsToVars  : Substitution Term                                         -> Term .
+  op  constsToVars  : Substitution Qid TermList TermList                        -> TermList .
+  op  constsToVars  : Substitution SubstitutionSet                              -> SubstitutionSet .
+
+  op  repeatedNames : QidSet                                                   -> QidSet .
+  op $repeatedNames : QidSet QidSet QidSet                                     -> QidSet .
+
+  var M : Module . var V : Variable . var C : Constant . var Q : QidSet .
+  var QS QS' QS'' : QidSet . var TL TL' : TermList . var T : Term . var SS : SubstitutionSet .
+  var S S' : Substitution . var P : Qid . var O : OpDeclSet . var CS : ConstGenStrategy .
+  var TQ : TermQid .
+
+  --- INP: Module QidSet (Variables)
+  --- PRE: QidSet should be a set of variables
+  --- OUT: A new module where variables have been added as constants
+  eq mod((M,S)) = M .
+  eq sub((M,S)) = S .
+  eq varsToConsts(M,CS,QS)                = mod(varsToConsts#(M,CS,QS)) .
+  eq varsToConsts#(M,CS,QS)               = varsToConsts#(M,CS,QS,qid(opPrefix(M)),none,none) .
+  eq varsToConsts#(M,simple,V ; QS,P,O,S) = varsToConsts#(M,simple,QS,P,O op getName(V)                       : nil -> getType(V) [none].,S ; V <- join(getName(V) '. getType(V))) .
+  eq varsToConsts#(M,prefix,V ; QS,P,O,S) = varsToConsts#(M,prefix,QS,P,O op join(P getName(V))               : nil -> getType(V) [none].,S ; V <- join(P getName(V) '. getType(V))) .
+  eq varsToConsts#(M,full,  V ; QS,P,O,S) = varsToConsts#(M,full,  QS,P,O op join(P getName(V) '| getType(V)) : nil -> getType(V) [none].,S ; V <- join(P getName(V) '| getType(V) '. getType(V))) .
+  eq varsToConsts#(M,CS,none,P,O,S)       = (addOps(O,M),S) .
+
+  --- INP: Substitution (Variables to fresh Constants) Term/SubstitutionSet
+  --- PRE: None
+  --- OUT: Identical to Term/SubstitutionSet except in Term/Codomain of SubstitutionSet
+  ---      each occurrence of a constant in the codomain of Substitution is
+  ---      replaced by the variable which is assigned to it
+  eq constsToVars(S,Q[TL])         = constsToVars(S,Q,TL,empty) .
+  eq constsToVars(S,V)             = V .
+  eq constsToVars(S ; V <- C,C)    = V .
+  eq constsToVars(S,C)             = C [owise] .
+  eq constsToVars(S,Q,(T,TL),TL')  = constsToVars(S,Q,TL,(TL',constsToVars(S,T))) .
+  eq constsToVars(S,Q,empty,TL')   = Q[TL'] .
+  ---
+  eq constsToVars(S,S | S' | SS)             = constsToVars(S,S) | constsToVars(S,S' | SS) .
+  eq constsToVars(S,(empty).SubstitutionSet) = (empty).SubstitutionSet .
+  eq constsToVars(S,V <- T ; S')             = V <- constsToVars(S,T) ; constsToVars(S,S') .
+  eq constsToVars(S,(none).Substitution)     = (none).Substitution .
+
+
+  --- INP: QidSet
+  --- PRE: Each Qid in QidSet is a TermQid
+  --- OUT: Set of names (obtained by getName) which are not unique
+  eq  repeatedNames(QS)               = $repeatedNames(QS,none,none) .
+  eq $repeatedNames(TQ ; QS,QS',QS'') = if getName(TQ) in QS' then $repeatedNames(QS,QS',QS'' ; getName(TQ))
+                                                              else $repeatedNames(QS,QS' ; getName(TQ),QS'') fi .
+  eq $repeatedNames(none,QS',QS'')    = QS'' .
+endfm
+
+fmod APPLY-SUBS is
+  pr TERMSET .
+  pr SUBSTITUTIONSET .
+
+  var S : Substitution .
+  var T : Term .
+  var SS : SubstitutionSet .
+
+  op apply : SubstitutionSet Term -> TermSet .
+  eq apply(S | SS,T) = (T << S) | apply(SS,T) .
+  eq apply(none,T) = emptyTermSet .
+endfm
+
+fmod VARIABLESET is
+  pr META-LEVEL .
+  sort NeVariableSet VariableSet .
+  subsort Variable < NeVariableSet < VariableSet < QidSet .
+  subsort EmptyTypeSet < VariableSet .
+  subsort NeVariableSet < NeQidSet .
+  op _;_ : VariableSet VariableSet   -> VariableSet   [ctor ditto].
+  op _;_ : NeVariableSet VariableSet -> NeVariableSet [ctor ditto].
+
+  var V : Variable .
+  var VS : VariableSet .
+  var SS : SortSet .
+
+  op sorts : VariableSet -> TypeSet .
+  eq sorts(V ; VS) = getType(V) ; sorts(VS) .
+  eq sorts(none) = none .
+
+  op filterBySort : VariableSet SortSet -> VariableSet .
+  eq filterBySort(V ; VS,SS) =
+    if getType(V) in SS then V else none fi ; filterBySort(VS,SS) .
+  eq filterBySort(none,SS) = none .
+endfm
+
+fmod MODULE-DATABASE-IMP{X :: TRIV} is
+  pr MAP-EXTRA{X,Module} * (sort Map{X,Module} to ModuleDatabase{X}, sort MapEntry{X,Module} to ModuleEntry{X}) .
+endfm
