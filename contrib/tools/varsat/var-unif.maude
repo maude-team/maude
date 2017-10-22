@@ -1,0 +1,102 @@
+load ../base/prelude-aux.maude
+
+fmod UNIFIERS is
+  pr SUBSTITUTIONSET .
+
+  op unifiers  : Module UnificationProblem -> SubstitutionSet .
+  op $unifiers : Module UnificationProblem Nat UnificationPair? SubstitutionSet -> SubstitutionSet .
+  op matches   : Module Term Term -> SubstitutionSet .
+  op $matches  : Module Term Term Nat Substitution? -> SubstitutionSet .
+
+  var M : Module .
+  var UP : UnificationProblem .
+  var I J : Nat .
+  var S S' : Substitution .
+  var SS : SubstitutionSet .
+  var T T' : Term .
+
+  eq unifiers(M,UP) = $unifiers(M,UP,0,metaUnify(M,UP,0,0),empty) .
+  eq $unifiers(M,UP,I,{S,J},SS) = $unifiers(M,UP,s(I),metaUnify(M,UP,s(J),s(I)),SS | S) .
+  eq $unifiers(M,UP,I,noUnifier,SS) = SS .
+
+  eq matches(M,T,T') = $matches(M,T,T',0,metaMatch(M,T,T',nil,0)) .
+  eq $matches(M,T,T',I,S) = S | $matches(M,T,T',s(I),metaMatch(M,T,T',nil,s(I))) .
+  eq $matches(M,T,T',I,noMatch) = empty .
+endfm
+
+fmod EQ-VARIANT is
+  --- renaming needed to avoid a billion conflicts later...
+  pr VARIANT * (op addOps to MHaddOps, op addEqs to MHaddEqs, op addSorts to MHaddSorts) .
+  pr SUBSTITUTIONSET .
+  pr VARIABLESET .
+
+  --- sort to collect variant unifier results
+  sort SubstSetNatPair .
+  op  ssnp : SubstitutionSet Nat -> SubstSetNatPair [ctor] .
+
+  --- copmute variants
+  op  variants     : Module Term -> VariantTripleSet .
+  op $variants     : Module Term Nat Variant? VariantTripleSet -> VariantTripleSet .
+  --- compute variant unifiers
+  op  var-unifiers : Module UnificationProblem -> SubstitutionSet .
+  op #var-unifiers : Module UnificationProblem -> SubstSetNatPair .
+  op $var-unifiers : Module UnificationProblem Nat Nat UnificationPair SubstitutionSet -> SubstSetNatPair .
+  --- helper functions for variant/variant unifier generation
+  op  applySubs : Variant SubstitutionSet -> VariantTripleSet .
+  op  getSubs   : VariantTripleSet -> SubstitutionSet .
+  op  getTerms  : VariantTripleSet -> TermSet .
+  op  getss     : SubstSetNatPair -> SubstitutionSet .
+
+  var M : Module . var T T' : Term . var I J J' : Nat . var P : Parent . var B : Bool .
+  var S S' : Substitution . var SS : SubstitutionSet . var VS : VariantTripleSet . var UP : UnificationProblem .
+
+  eq  variants(M,T)                       = $variants(M,T,0,metaGetVariant(M,T,empty,0,0),empty) .
+  eq $variants(M,T,I,noVariant,VS)        = VS .
+  eq $variants(M,T,I,{T',S,J,P,B},VS)     = $variants(M,T,s(I),metaGetVariant(M,T,empty,s(J),s(I)),{T',S,J,P,B} | VS) .
+  eq  var-unifiers(M,UP)                  = getss(#var-unifiers(M,UP)) .
+  eq #var-unifiers(M,UP)                  = $var-unifiers(M,UP,0,0,metaVariantUnify(M,UP,empty,0,0),empty) .
+  eq $var-unifiers(M,UP,I,J,noUnifier,SS) = ssnp(SS,J) .
+  eq $var-unifiers(M,UP,I,J,{S,J'},SS)    = $var-unifiers(M,UP,s(I),s(J'),metaVariantUnify(M,UP,empty,s(J'),s(I)),SS | S) .
+
+  eq applySubs({T,S,I,P,B},S' | SS) = {T << S',S << S',I,P,B} | applySubs({T,S,I,P,B},SS) .
+  eq applySubs({T,S,I,P,B},empty)   = empty .
+
+  eq getSubs({T,S,I,P,B} | VS)  = S | getSubs(VS) .
+  eq getSubs(empty)             = empty .
+  eq getTerms({T,S,I,P,B} | VS) = T | getTerms(VS) .
+  eq getTerms(empty)            = emptyTermSet .
+  eq getss(ssnp(SS,I))          = SS .
+endfm
+
+fmod SHOW-VARIANTS is
+  pr META-LEVEL .
+  pr VARIANT * (op addOps to MHaddOps, op addEqs to MHaddEqs, op addSorts to MHaddSorts) .
+
+  ---(
+  sort VariantSet .
+  subsort Variant < VariantSet .
+  op _|_ : VariantSet VariantSet -> VariantSet [ctor assoc comm id: mt] .
+  op mt  : -> VariantSet [ctor] .
+  ---)
+
+  op showVariants : Module Term Bound -> VariantTripleSet .
+  op showVariants : Module Term Bound Nat Variant? -> VariantTripleSet .
+  op showVariant  : Variant -> Variant .
+
+  var N : Nat .
+  var M : Module .
+  var T : Term .
+  var TOT : Bound .
+  var V : Variant .
+  var P : Parent .
+  var B : Bool .
+  var S : Substitution .
+
+  eq showVariants(M,T,TOT)                       = showVariants(M,T,TOT,0,metaGetVariant(M,T,empty,0,0)) .
+  eq showVariants(M,T,s(TOT),N,V)                = showVariant(V) | showVariants(M,T,TOT,s(N),metaGetVariant(M,T,empty,0,s(N))) .
+  eq showVariants(M,T,unbounded,N,V)             = showVariant(V) | showVariants(M,T,unbounded,s(N),metaGetVariant(M,T,empty,0,s(N))) .
+  eq showVariants(M,T,0,N,V)                     = showVariant(V) .
+  eq showVariants(M,T,TOT,N,noVariant)           = empty .
+  eq showVariants(M,T,TOT,N,noVariantIncomplete) = empty .
+  eq showVariant({T,S,N,P,B})                    = {T,S,N,P,B} [print "VARIANT: {" T "," S "}"] .
+endfm

@@ -1,0 +1,210 @@
+load ../meta/foform.maude
+
+set include BOOL off .
+
+--- Bool*s
+--- MaybeNat
+--- NatPair
+--- Int
+--- Numbers (abbrev)
+--- Ids
+
+fmod BOOL* is
+  sort Bool* .
+  op tt : -> Bool* [ctor] .
+  op ff : -> Bool* [ctor] .
+  op _and*_ : Bool* Bool* -> Bool* .
+  op _or*_ : Bool* Bool* -> Bool* .
+  op not*_ : Bool* -> Bool* .
+  vars B X Y Z : Bool* .
+  eq B and* tt = B  [variant] .
+  eq B and* ff = ff [variant] .
+  eq B or* ff  = B  [variant] .
+  eq B or* tt  = tt [variant] .
+  eq not* tt   = ff [variant] .
+  eq not* ff   = tt [variant] .
+endfm
+
+fmod NAT*-CTOR is
+  pr BOOL* .
+  sorts Nat* NzNat* .
+  subsorts NzNat* < Nat* .
+  --- ctors
+  op 0       : -> Nat*                 [ctor] .
+  op 1       : -> NzNat*               [ctor] .
+  op _:+_    : NzNat* Nat*   -> NzNat* [ctor assoc comm id: 0] .
+  op _:+_    : Nat*   Nat*   -> Nat*   [ctor assoc comm id: 0] .
+endfm
+
+fmod NAT* is
+  pr NAT*-CTOR .
+  ---
+  op s       : Nat* -> Nat* .
+  op sd      : Nat* Nat* -> Nat* .
+  op _<Nat_  : Nat* Nat* -> Bool* .
+  op _<=Nat_ : Nat* Nat* -> Bool* .
+  op min     : Nat* Nat* -> Nat* [comm] .
+  op max     : Nat* Nat* -> Nat* [comm] .
+  ---
+  op _=/=_   : Nat* Nat* -> Bool* .
+  op _==_    : Nat* Nat* -> Bool* .
+  ---
+  var n m : Nat* . var p : NzNat* .
+  ---
+  eq s(n)         = n :+ 1 [variant] .
+  eq sd(n,n :+ m) = 0 [variant].
+  eq sd(n :+ m,n) = m [variant] .
+  eq n      <Nat  p :+ n = tt [variant] .
+  eq n :+ m <Nat  n      = ff [variant] .
+  eq p :+ n <=Nat n      = ff [variant] .
+  eq n      <=Nat n :+ m = tt [variant] .
+  eq min(n,n :+ m) = n      [variant] .
+  eq max(n,n :+ m) = n :+ m [variant] .
+endfm
+
+fmod MULT-NAT* is
+  pr NAT* .
+  op _:*_ : Nat* Nat* -> Nat* [assoc comm] .
+  var X : Nat* . var X' Y' : NzNat* .
+  eq X :*  0        =  0 .
+  eq X :*  1        =  1 .
+  eq X :* (X' :+ Y') = (X :* X') :+ (X :* Y') .
+endfm
+
+fmod MAYBENAT* is
+  pr NAT* .
+  sort MaybeNat* .
+  subsort Nat* < MaybeNat* .
+  op null : -> MaybeNat* [ctor] .
+  ---
+  op _=/=_ : MaybeNat* MaybeNat* -> Bool* .
+  op _==_  : MaybeNat* MaybeNat* -> Bool* .
+endfm
+
+fmod ASSOC-LISTNAT* is
+  pr NAT* .
+  sort ListNat* NeListNat* .
+  subsort Nat* < NeListNat* < ListNat* .
+  op __  : NeListNat* NeListNat* -> NeListNat* [ctor assoc] .
+  op nil : -> ListNat* [ctor] .
+endfm
+
+fmod ASSOC-LISTBOOL* is
+  pr BOOL* .
+  sort ListBool* NeListBool* .
+  subsort Bool* < NeListBool* < ListBool* .
+  op __  : NeListBool* NeListBool* -> NeListBool* [ctor assoc] .
+  op nil : -> ListBool* .
+endfm
+
+fmod NUMBERS is
+  pr NAT* .
+  ops 2 3 4 5 6 7 8 9 10 : -> NzNat* .
+  eq 2  = 1 :+ 1 .
+  eq 3  = 1 :+ 1 :+ 1 .
+  eq 4  = 1 :+ 1 :+ 1 :+ 1 .
+  eq 5  = 1 :+ 1 :+ 1 :+ 1 :+ 1 .
+  eq 6  = 1 :+ 1 :+ 1 :+ 1 :+ 1 :+ 1 .
+  eq 7  = 1 :+ 1 :+ 1 :+ 1 :+ 1 :+ 1 :+ 1 .
+  eq 8  = 1 :+ 1 :+ 1 :+ 1 :+ 1 :+ 1 :+ 1 :+ 1 .
+  eq 9  = 1 :+ 1 :+ 1 :+ 1 :+ 1 :+ 1 :+ 1 :+ 1 :+ 1 .
+  eq 10 = 1 :+ 1 :+ 1 :+ 1 :+ 1 :+ 1 :+ 1 :+ 1 :+ 1 :+ 1 .
+endfm
+
+fmod IDENTIFIER is
+  sort Id .
+  ops a b c d e f g h i j k l m n o p q r s t u v w x y z : -> Id [ctor] .
+  op _,_ : Id Id -> Id [ctor] .
+endfm
+
+fmod INT* is
+  pr NAT* .
+  sorts NzNeg* Int* .
+  subsorts Nat* NzNeg* < Int* .
+  op - : NzNat* -> NzNeg* [ctor] .
+  ---
+  op _:+_ : Int* Int* -> Int* [assoc comm id: 0] .
+  op _<Int_  : Int* Int* -> Bool* .
+  op _<=Int_ : Int* Int* -> Bool* .
+
+  vars n n' m : Nat* .
+  vars p q : NzNat* .
+  vars i j k l : Int* .
+
+  eq i :+ -(p) :+ -(q)   = i :+ -(p :+ q) [variant] .
+  eq i :+ p :+ -(p)      = i              [variant] .
+  eq i :+ p :+ -(p :+ q) = i :+ -(q)      [variant] .
+  eq i :+ p :+ q :+ -(p) = i :+ q         [variant] .
+
+  eq   n       <Int   p :+ n = tt  [variant] .
+  eq -(q)      <Int   n      = tt  [variant] .
+  eq -(p :+ q) <Int -(p)     = tt  [variant] .
+  eq   i :+ n  <Int   i      = ff  [variant] .
+
+  eq   p :+ n  <=Int   n       = ff  [variant] .
+  eq   n       <=Int -(q)      = ff  [variant] .
+  eq -(p)      <=Int -(p :+ q) = ff  [variant] .
+  eq   i       <=Int   i :+ n  = tt  [variant] .
+endfm
+
+---
+--- DESCENT MAPS
+---
+
+fmod PRESBURGER-NAT-TO-NAT is
+  pr NAT* .
+  pr META-LEVEL .
+  pr FOFORM .
+  pr RENAME-METAVARS .
+
+  sort NatForm .
+  op ((_,_)) : Nat QFForm -> NatForm [ctor] .
+
+  op reduce         : Module QFForm -> QFForm .
+  op elimNegExpLeq  : QFForm -> QFForm .
+  op elimNegExpLeq1 : EqAtom -> EqDisj .
+  op expLt          : Nat QFForm -> NatForm .
+  op getForm        : NatForm -> QFForm .
+  op nfToNat        : FindResult -> Nat .
+
+  var A  : Atom .
+  var EA : EqAtom .
+  var TA : TruthAtom .
+  var F F1 F2 F1' F2' : QFForm .
+  var N N' N'' : Nat .  var T T' : Term .
+  var M : Module .
+
+  eq reduce(M,F) = downTerm(renameTmpVar(upModule('NAT*,false),upTerm(getForm(expLt(nfToNat(highestSVar(M,upTerm(F))),elimNegExpLeq(F))))),ff) .
+
+  eq elimNegExpLeq (F1 \/ F2) = elimNegExpLeq(F1) \/ elimNegExpLeq(F2) .
+  eq elimNegExpLeq (F1 /\ F2) = elimNegExpLeq(F1) /\ elimNegExpLeq(F2) .
+  eq elimNegExpLeq (~ F1    ) = ~ elimNegExpLeq(F1) .
+  eq elimNegExpLeq (TA      ) = TA .
+  eq elimNegExpLeq (EA      ) = elimNegExpLeq1(EA) .
+  ---
+  eq elimNegExpLeq1('_<=Nat_[T,T'] != 'tt.Bool*)  = '_<Nat_[T',T] ?= 'tt.Bool* .
+  eq elimNegExpLeq1('_<Nat_[T,T']  != 'tt.Bool*)  = '_<Nat_[T',T] ?= 'tt.Bool* \/ T' ?= T .
+  eq elimNegExpLeq1('_<=Nat_[T,T'] ?= 'ff.Bool*)  = '_<Nat_[T',T] ?= 'tt.Bool* .
+  eq elimNegExpLeq1('_<Nat_[T,T']  ?= 'ff.Bool*)  = '_<Nat_[T',T] ?= 'tt.Bool* \/ T' ?= T .
+  ---
+  eq elimNegExpLeq1('_<=Nat_[T,T'] != 'ff.Bool*)  = '_<Nat_[T,T'] ?= 'tt.Bool* \/ T' ?= T .
+  eq elimNegExpLeq1('_<Nat_[T,T']  != 'ff.Bool*)  = '_<Nat_[T,T'] ?= 'tt.Bool* .
+  ---
+  eq elimNegExpLeq1('_<=Nat_[T,T'] ?= 'tt.Bool*)  = '_<Nat_[T,T'] ?= 'tt.Bool* \/ T' ?= T .
+  ---
+  eq elimNegExpLeq1(EA)                           = EA [owise] .
+
+ ceq expLt(N,F1 \/ F2) = (N'',F1' \/ F2')
+  if (N' ,F1') := expLt(N ,F1)
+  /\ (N'',F2') := expLt(N',F2) .
+ ceq expLt(N,F1 /\ F2) = (N'',F1' /\ F2')
+  if (N' ,F1') := expLt(N ,F1)
+  /\ (N'',F2') := expLt(N',F2) .
+  eq expLt(N,'_<Nat_[T,T'] ?= 'tt.Bool*) = (s(N),'_:+_[T,tmpvar(N,'NzNat*)] ?= T') .
+  ---
+  eq expLt(N,A) = (N,A) [owise] .
+
+  eq nfToNat(notFound) = 0 .
+  eq nfToNat(N)        = N .
+  eq getForm((N,F))    = F .
+endfm

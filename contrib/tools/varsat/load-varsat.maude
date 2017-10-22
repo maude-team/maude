@@ -1,0 +1,55 @@
+--- name: run.maude
+--- reqs: prelude, full-maude, decl.maude, sortify.maude,
+---       ctor-refine.maude, ctor-var-unif.maude, var-sat.maude
+--- desc: This module acts an entry point for using the library;
+---       all it does it load the other modules in the required
+---       order.
+---
+---       The main function this tool exports is called var-sat()
+---       which takes two arguments:
+---         [a] a functional module
+---         [b] a disunification problem
+---
+---       An example invocation:
+---
+---         red var-sat(upModule(MYMOD,true),
+---                     'X:Var ==? 'C.Const /\
+---                     'OperatorName['C1.Const,'Y:Var] =!? 'X:Var) .
+---
+---       A few things to notice:
+---             [1] The syntax of meta-terms above: in particular
+---                 for constants, variables, and non-constant terms
+---             [2] The syntax for the disunification problems;
+---                 T ==? T' is a unification literal, T =!? T' is
+---                 a disunification literal
+---             [3] The operator /\ is used to conjoin literals
+---             [4] Right now, the tool does not support \/; we
+---                 assume all input has been converted into
+---                 DNF and each conjunction is feed in one at
+---                 a time; later this restrction will be lifted
+---
+---       NOTE: Right now, the tool is an alpha state; that means
+---             it performs very limited error checking and may
+---             crash in weird ways for more complex inputs;
+---             If the tool does crash, be sure to check that:
+---             [1] Your input module meets the variant satisfiability
+---                 requirements
+---             [2] You aren't using a sort with a reserved name; right now
+---                 reserved names included any symbol starting with
+---                 an "#" or a "@"
+---             [3] Your input problem is well-formed, i.e. for each
+---                 literal T ==? T' and T =!? T', T and T' are both
+---                 well-formed and that they are in the same connected
+---                 component
+---
+
+load var-sat.maude
+load vs-wf-check.maude
+
+set include BOOL off .
+
+---- This is the entry point into the tool
+fmod VAR-SAT-TOOL is
+  pr VAR-SAT .
+  pr VSWF-CHECK .
+endfm

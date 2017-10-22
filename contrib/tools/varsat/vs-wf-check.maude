@@ -1,0 +1,217 @@
+--- name: vs-wf-check.maude
+--- reqs: prelude, full-maude, decl.maude, types.maude
+--- desc: This module implements several checks to
+---       ensure that the module in question meets the
+---       criteria of the variant satisfiability algorithm.
+---       In particular, it implements two checks:
+---
+---       [1] assocNotComm? - which checks for associativity without commutativity axioms
+---       [2] ctorsPreregularBelow - which checks that the ctor subsignature
+---           is preregular below the entire signature
+---
+---       One essential test that is missing at the moment
+---       is the constructors free modulo B check; which
+---       can be handled via a call to the CETA library.
+---       At the moment, this case isn't handled yet.
+
+load ../base/prelude-aux.maude
+
+fmod VSWF-AUX is
+  pr TYPE-EXTRA .
+  pr OPDECLSET-EXTRA .
+  pr EXT-DECL . --- FULL-MAUDE
+
+  var M : Module .
+  var Q : Qid .
+  var TYL KL : TypeList .
+  var TY TY' : Type .
+  var AS AS' : AttrSet .
+  var TYLS : TypeListSet .
+  var OS OS' OS'' : OpDeclSet .
+  var OD OD' : OpDecl .
+
+  --- INP: OpDeclSet OpDeclSet
+  --- PRE: None
+  --- OUT: true iff OpDeclSets intersect?
+  op intersect? : OpDeclSet OpDeclSet -> Bool .
+  op $intersect? : OpDecl OpDeclSet -> Bool .
+  eq intersect?(OD OS,OS') = $intersect?(OD,OS') or-else intersect?(OS,OS') .
+  eq intersect?(none,OS') = false .
+  eq $intersect?(OD OS,OD OS') = true .
+  eq $intersect?(OS,OS') = false [owise] .
+
+  --- INP: Module TypeList
+  --- PRE: TypeList defined in Module
+  --- OUT: TypeListSet of all TypeLists less than the current one
+  op typesBelow        : Module TypeList -> TypeListSet .
+  op $typesBelow       : Module TypeList TypeListSet -> TypeListSet .
+  eq typesBelow(M,TYL) = $typesBelow(M,TYL,nil) .
+  eq $typesBelow(M,TY TYL,TYLS) = $typesBelow(M,TYL,merge(TYLS,lesserSorts(M,TY) ; TY)) .
+  eq $typesBelow(M,nil,TYLS) = TYLS .
+
+  --- INP: OpDeclSet
+  --- PRE: None
+  --- OUT: True iff there is an assoc op that isn't comm
+  op assocNotComm? : OpDeclSet -> Bool .
+  op noComm? : AttrSet -> Bool .
+  ceq assocNotComm?(op Q : TYL -> TY [assoc AS]. OS) = true if noComm?(AS) .
+  eq assocNotComm?(OS) = false [owise] .
+  eq noComm?(comm AS) = false .
+  eq noComm?(AS) = true [owise] .
+
+  --- INP: Module TypeList OpDeclSet
+  --- PRE: OpDecls are well-defined with respect to Module
+  --- OUT: All OpDecls in OpDeclSet that are less than OpDecl
+  op opsAbove : Module TypeList -> OpDeclSet .
+  op opsAbove : Module TypeList OpDeclSet -> OpDeclSet .
+  op $opsAbove : Module TypeList OpDeclSet OpDeclSet -> OpDeclSet .
+  eq opsAbove(M,TYL) = opsAbove(M,TYL,getOps(M)) .
+  eq opsAbove(M,TYL,OS) = $opsAbove(M,TYL,OS,none) .
+  eq $opsAbove(M,TYL,OD' OS',OS'') =
+    if typeLeqS(M,TYL,argTypes(OD')) then
+      $opsAbove(M,TYL,OS',OS'' OD')
+    else
+      $opsAbove(M,TYL,OS',OS'')
+    fi .
+  eq $opsAbove(M,TYL,none,OS'') = OS'' .
+
+  --- INP: Module OpDeclSet
+  --- PRE: OpDeclSet is well-defined with respect to Module
+  --- OUT: The minimal OpDecls in the OpDeclSet
+  op getMinimal : Module OpDeclSet -> OpDeclSet .
+  op $getMinimal : Module OpDeclSet OpDeclSet OpDeclSet -> OpDeclSet .
+  op $getMinimal1 : Module OpDecl OpDeclSet -> Bool .
+  eq getMinimal(M,OS) = $getMinimal(M,OS,none,none) .
+
+  --- OS'' are the mininmal
+  eq $getMinimal(M,OD OS,OS',OS'') =
+    --- if minimal w/respect to rest of OS, add to minimal and non-minimal pools
+    if $getMinimal1(M,OD,OS OS') then
+      $getMinimal(M,OS,OD OS',OD OS'')
+    else
+      $getMinimal(M,OS,OS',OS'')
+    fi .
+  eq $getMinimal(M,none,OS',OS'') = OS'' .
+
+  --- Check if OD is minimal
+  eq $getMinimal1(M,OD,OD' OS) =
+    not typeLeqS(M,resultType(OD'),resultType(OD)) and-then $getMinimal1(M,OD,OS) .
+  eq $getMinimal1(M,OD,none) = true .
+
+  --- INP: Module TypeList
+  --- PRE: TypeList well-defined in Module
+  --- OUT: KindList corresponding to this TypeList
+  op toKind : Module TypeList -> TypeList .
+  eq toKind(M,TY TYL) = completeName(M,getKind(M,TY)) toKind(M,TYL) .
+  eq toKind(M,nil) = nil .
+endfm
+
+fmod OP-FAMILY is
+  pr VSWF-AUX .
+
+  sort OpFamily OpFamilyMap .
+  subsort OpFamily < OpFamilyMap .
+  op (_,_)|->_ : Qid TypeList OpDeclSet -> OpFamily [ctor] .
+  op __ : OpFamilyMap OpFamilyMap -> OpFamilyMap [ctor assoc comm id: nil] .
+  op nil : -> OpFamilyMap [ctor] .
+
+  op getOpFamilies : Module -> OpFamilyMap .
+  op getOpFamilies : Module OpDeclSet -> OpFamilyMap [memo] .
+  op $opF : Module OpDeclSet OpFamilyMap -> OpFamilyMap .
+  op adhoc-overloaded? : OpFamilyMap -> Bool .
+
+  var M : Module .
+  var Q : Qid .
+  var TYL TYL' : TypeList .
+  var TY : Type .
+  var AS : AttrSet .
+  var OS OS' : OpDeclSet .
+  var OFM : OpFamilyMap .
+  var OD : OpDecl .
+
+  --- INP: Module
+  --- PRE: None
+  --- OUT: OpFamilyMap which maps each Qid to all
+  ---      the OpDecl's which have this Qid as their name
+  eq getOpFamilies(M) = getOpFamilies(M,getOps(M)) .
+  eq getOpFamilies(M,OS) = $opF(M,OS,nil) .
+ ceq $opF(M,op Q : TYL -> TY [AS]. OS,OFM (Q,TYL') |-> OS') = $opF(M,OS,OFM (Q,TYL') |-> OS' op Q : TYL -> TY [AS].)
+  if TYL' == toKind(M,TYL) .
+  eq $opF(M,OD OS, OFM) = $opF(M,OS, OFM (qid(OD),toKind(M,argTypes(OD))) |-> OD) [owise] .
+  eq $opF(M,none,OFM) = OFM .
+
+  --- INP: OpFamilyMap
+  --- PRE: OpFamilyMap is well-formed and sensible
+  --- OUT: true iff operators are adhoc-overloaded
+ ceq adhoc-overloaded?(((Q,TYL) |-> OS) ((Q,TYL') |-> OS') OFM) = true if TYL =/= TYL' .
+  eq adhoc-overloaded?(OFM)                                 = false [owise] .
+endfm
+
+fmod CTOR-PREREGULAR-BELOW is
+  pr OP-FAMILY .
+
+  op ctorsPreregularBelow : Module -> Bool .
+  op ctorsPreregularBelow : Module OpFamilyMap -> Bool .
+  op $ctorsPreregularBelow : Module TypeListSet OpDeclSet OpDeclSet -> Bool .
+  op $ctorsPreregularBelow1 : Module TypeList OpDeclSet OpDeclSet -> Bool .
+  op typesBelowMaximalOps : Module OpDeclSet -> TypeListSet .
+
+  var M : Module .
+  var Q : Qid .
+  var TYL TYL' KL : TypeList .
+  var TY TY' : Type .
+  var AS AS' : AttrSet .
+  var OS OS' OS'' : OpDeclSet .
+  var OFM : OpFamilyMap .
+  var OD : OpDecl .
+  var TYLS : TypeListSet .
+
+  eq typesBelowMaximalOps(M,OD OS) = typesBelow(M,argTypes(OD)) ; typesBelowMaximalOps(M,OS) .
+  eq typesBelowMaximalOps(M,none) =  none .
+
+  --- INP: OpFamilyMap
+  --- PRE: Valid OpFamilyMap
+  --- OUT: true iff ctors always have minimal typings
+  eq ctorsPreregularBelow(M) = ctorsPreregularBelow(M,getOpFamilies(M)) .
+  eq ctorsPreregularBelow(M,OFM (Q,KL) |-> OS) =
+   $ctorsPreregularBelow(M,typesBelowMaximalOps(M,OS),ctors(OS),OS - ctors(OS)) and-then
+   ctorsPreregularBelow(M,OFM) .
+  eq ctorsPreregularBelow(M,nil) = true .
+
+  eq $ctorsPreregularBelow(M,TYL ; TYLS,OS,OS') =
+     $ctorsPreregularBelow1(M,TYL,OS,OS') and-then
+     $ctorsPreregularBelow(M,TYLS,OS,OS') .
+  eq $ctorsPreregularBelow(M,none,OS,OS') = true .
+
+  --- NOTE: if the opsAbove intersect?s with the ctors, then the minimum
+  ---       must be a ctor; if there is no minimum, we violated preregularity
+  ceq $ctorsPreregularBelow1(M,TYL,OS,OS') = intersect?(OS,OS'') implies OD in OS
+  if OS'' := opsAbove(M,TYL,OS OS') /\
+     OD   := getMinimal(M,OS'') .
+  eq $ctorsPreregularBelow1(M,TYL,OS,OS') = false [owise] .
+endfm
+
+fmod VSWF-OTHER-CHECKS is
+  pr OP-FAMILY .
+
+  var Q : Qid .
+  var KL TYL : TypeList .
+  var TY TY' : Type .
+  var AS AS' : AttrSet .
+  var OFM : OpFamilyMap .
+  var OS : OpDeclSet .
+
+  --- INP: OpFamilyMap
+  --- PRE: Valid OpFamilyMap
+  --- OUT: true iff no ops have the same input sorts and different output sorts
+  op sameArgsDiffRes : OpFamilyMap -> Bool .
+ ceq sameArgsDiffRes(OFM (Q,KL) |-> OS op Q : TYL -> TY [AS]. op Q : TYL -> TY' [AS'].) = true if TY == TY' .
+  eq sameArgsDiffRes(OFM) = false [owise] .
+endfm
+
+fmod VSWF-CHECK is
+  pr CTOR-PREREGULAR-BELOW .
+  op vswf-check : Module -> Bool .
+  var M : Module .
+  eq vswf-check(M) = (not assocNotComm?(getOps(M))) and-then ctorsPreregularBelow(M) .
+endfm

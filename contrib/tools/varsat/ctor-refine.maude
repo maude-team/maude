@@ -1,0 +1,133 @@
+--- name: ctor-refine.maude
+--- reqs: prelude, full-maude, string.maude, sortify.maude
+--- desc: This module has methods such that, given a module
+---       without memberships and where no sorts have
+---       a reserved name, it will compute the constructor
+---       sort refinement of that module according to the
+---       definition sketched in "Metalevel algorithms for
+---       Variant Satisfiability."
+---
+---       This module also contains functionality to take
+---       a term in the extended signature and convert it
+---       into one in the original signature---and then
+---       lifts operation to substitutions.
+
+load ../meta/kind-ops.maude
+
+fmod CTOR-REFINE is
+  pr META-LEVEL .
+  pr KIND-CHECK .    --- for kind checks
+  pr UNIT .          --- for module operations
+  pr UNIQUE-PREFIX . --- to generate unique prefixes for sorts
+
+  op ctor-refine    : Module ~> Module [memo] .
+  op $ctor-refine   : Module ~> Module .
+  op ctor-sort      : Module Sort -> Sort .
+  op ctor-sort      : Module SortSet -> SortSet .
+  op ctor-subsorts1 : Module SortSet -> SubsortDeclSet .
+  op ctor-subsorts2 : Module SubsortDeclSet -> SubsortDeclSet .
+  --- these operators are partial because they might fail
+  --- due to the presence of kinds; that is why the kind
+  --- check is performed in the initial call ctor-refine()
+  op ctor-sort      : Module TypeListSet ~> TypeListSet .
+  op ctor-ops       : Module OpDeclSet ~> OpDeclSet .
+  ---
+  op ctor-term      : Module TermList -> TermList .
+  op ctor-term      : Module OpDeclSet TermList -> TermList .
+  op has-ctr-const  : OpDeclSet Qid Sort -> Bool .
+
+  var M   : Module .
+  var X Y : Sort .
+  var S   : SortSet .
+  var Q   : Qid .
+  var LS  : TypeListSet .
+  var AS  : AttrSet .
+  var L L'  : TypeList .
+  var O O' : OpDecl .
+  var OS : OpDeclSet .
+  var DS : SubsortDeclSet .
+  var T : Term .
+  var TL : NeTermList .
+  var V : Variable .
+  var C : Constant .
+
+  ceq ctor-refine(M) = $ctor-refine(M)
+  if not kinds?(true,M)
+  /\ getMbs(M) == none .
+
+  eq $ctor-refine(M) =
+    addOps(ctor-ops(M,getOps(M)),
+      addSubsorts(ctor-subsorts1(M,getSorts(M)) ctor-subsorts2(M,getSubsorts(M)),
+        addSorts(ctor-sort(M,getSorts(M)),M))) .
+
+  eq ctor-sort(M,X)           = qid(sortPrefix(M) + string(X)) .
+  eq ctor-sort(M,X L)         = ctor-sort(M,X) ctor-sort(M,L) .
+  eq ctor-sort(M,nil)         = nil .
+  eq ctor-sort(M,L ; L' ; LS) = ctor-sort(M,L) ; ctor-sort(M,L' ; LS) .
+  eq ctor-sort(M,none)        = none .
+
+  eq ctor-subsorts1(M,X ; S)  = subsort ctor-sort(M,X) < X . ctor-subsorts1(M,S) .
+  eq ctor-subsorts1(M,none)   = none .
+
+  eq ctor-subsorts2(M,subsort X < Y . DS) =
+    subsort ctor-sort(M,X) < ctor-sort(M,Y) . ctor-subsorts2(M,DS) .
+  eq ctor-subsorts2(M,none) = none .
+
+  eq ctor-ops(M,op Q : L -> X [ctor AS].) =
+    op Q : ctor-sort(M,L) -> ctor-sort(M,X) [ctor AS]. .
+  eq ctor-ops(M,O) = O [owise] .
+  eq ctor-ops(M,O O' OS) = ctor-ops(M,O) ctor-ops(M,O' OS) .
+  eq ctor-ops(M,none) = none .
+
+  eq ctor-term(M,T) = ctor-term(M,getOps(M),T) .
+  eq ctor-term(M,OS,V) = qid(string(getName(V)) + ":" + string(ctor-sort(M,getType(V)))) .
+  eq ctor-term(M,OS,C) =
+    if has-ctr-const(OS,getName(C),getType(C)) then
+      qid(string(getName(C)) + "." + string(ctor-sort(M,getType(C))))
+    else
+      C
+    fi .
+  eq ctor-term(M,OS,Q[TL])  = Q[ctor-term(M,OS,TL)] .
+  eq ctor-term(M,OS,(T,TL)) = ctor-term(M,OS,T), ctor-term(M,OS,TL) .
+  eq ctor-term(M,OS,empty)  = empty .
+
+  eq has-ctr-const(op Q : nil -> X [ctor AS]. OS,Q,X) = true .
+  eq has-ctr-const(OS,Q,X) = false [owise] .
+endfm
+
+fmod CTOR-LIFT is
+  pr META-LEVEL .
+  pr QID-JOIN .
+  pr SUBSTITUTIONSET .
+  pr UNIQUE-PREFIX .
+
+  op lift-sort : Module Sort -> Sort .
+  op lift-sort : Module String -> Sort .
+  op lift-term : Module TermList -> TermList .
+  op lift-sub  : Module SubstitutionSet -> SubstitutionSet .
+
+  var M : Module .
+  var S : Sort .
+  var R : String .
+  var C : Constant .
+  var V : Variable .
+  var Q : Qid .
+  var T : Term .
+  var L : NeTermList .
+  var B B' : Substitution .
+  var BS : SubstitutionSet .
+
+  eq lift-sort(M,S)     = lift-sort(M,string(S)) .
+  eq lift-sort(M,R)     = qid(if substr(R,0,length(sortPrefix(M))) == sortPrefix(M) then substr(R,length(sortPrefix(M)),length(R)) else R fi) .
+
+  eq lift-term(M,C)     = join(getName(C) '. lift-sort(M,getType(C))) .
+  eq lift-term(M,V)     = join(getName(V) ': lift-sort(M,getType(V))) .
+  eq lift-term(M,Q[L])  = Q[lift-term(M,L)] .
+  eq lift-term(M,(T,L)) = lift-term(M,T), lift-term(M,L) .
+  eq lift-term(M,empty) = empty .
+
+  eq lift-sub(M,V <- T ; B)  = lift-term(M,V) <- lift-term(M,T) ; lift-sub(M,B) .
+  eq lift-sub(M,none)        = none .
+  eq lift-sub(M,B | B' | BS) = lift-sub(M,B) | lift-sub(M,B' | BS) .
+  eq lift-sub(M,empty)       = empty .
+endfm
