@@ -5881,8 +5881,8 @@ fmod FM-MOD-EXPRS is
   *** module expression
   op _*`(_`) : @ModExp@ @MapList@ -> @ModExp@ .
   op _`{_`} : @ModExp@ @ViewExp@ -> @ModExp@ .
-  op TUPLE`[_`] : @Token@ -> @ModExp@ .
-  op POWER`[_`] : @Token@ -> @ModExp@ .
+  op TUPLE[_] : @Token@ -> @ModExp@ .
+  op POWER[_] : @Token@ -> @ModExp@ .
   op _+_ : @ModExp@ @ModExp@ -> @ModExp@ [assoc prec 42] .
 
   *** renaming maps
@@ -7285,8 +7285,8 @@ fmod MOD-EXPR is
   inc META-MODULE .
   pr FMAP .
 
-  op TUPLE`[_`] : NzNat -> ModuleExpression .
-  op POWER`[_`] : NzNat -> ModuleExpression .
+  op TUPLE[_] : NzNat -> ModuleExpression .
+  op POWER[_] : NzNat -> ModuleExpression .
 
   eq ME:ModuleExpression * ( none ) = ME:ModuleExpression .
 
