@@ -1,38 +1,38 @@
 ==========================================
 reduce in BOUND : not unbounded < 3 .
-rewrites: 3 in 0ms cpu (0ms real) (~ rewrites/second)
+rewrites: 3
 result Bool: true
 ==========================================
 reduce in BOUND : 3 < unbounded .
-rewrites: 1 in 0ms cpu (0ms real) (~ rewrites/second)
+rewrites: 1
 result Bool: true
 ==========================================
 reduce in BOUND : unbounded < unbounded =/= true and unbounded < unbounded =/=
     false .
-rewrites: 3 in 0ms cpu (0ms real) (~ rewrites/second)
+rewrites: 3
 result Bool: true
 ==========================================
 reduce in BOUND : continue(3,5) == 4,5 .
-rewrites: 3 in 0ms cpu (0ms real) (~ rewrites/second)
+rewrites: 3
 result Bool: true
 ==========================================
 reduce in BOUND : continue(3,unbounded) == 4,unbounded .
-rewrites: 3 in 0ms cpu (0ms real) (~ rewrites/second)
+rewrites: 3
 result Bool: true
 ==========================================
 reduce in BOUND : continue(3,4) :: Depth .
-rewrites: 3 in 0ms cpu (0ms real) (~ rewrites/second)
+rewrites: 3
 result Bool: true
 ==========================================
 reduce in BOUND : continue(3,unbounded) :: Depth .
-rewrites: 3 in 0ms cpu (0ms real) (~ rewrites/second)
+rewrites: 3
 result Bool: true
 ==========================================
 reduce in BOUND : not continue(unbounded,unbounded) :: Depth .
-rewrites: 3 in 0ms cpu (0ms real) (~ rewrites/second)
+rewrites: 3
 result Bool: true
 ==========================================
 reduce in BOUND : not continue(5,3) :: Depth .
-rewrites: 4 in 0ms cpu (0ms real) (~ rewrites/second)
+rewrites: 4
 result Bool: true
 Bye.

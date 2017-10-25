@@ -1,3 +1,8 @@
+--- Load Systems and Prelude
+--- ------------------------
+
+set show timing off .
+
 load ../../../contrib/tools/base/prelude.maude
 
 --- Module BOUND
