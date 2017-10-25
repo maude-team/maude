@@ -3,6 +3,7 @@
 
 set show timing off .
 
+load ../../../contrib/systems/cycle.maude
 load ../../../contrib/tools/base/prelude.maude
 
 --- Module BOUND
@@ -20,3 +21,17 @@ reduce      continue(3, 4)                 :: Depth .
 reduce      continue(3, unbounded)         :: Depth .
 reduce not (continue(unbounded, unbounded) :: Depth) .
 reduce not (continue(5, 3)                 :: Depth) .
+
+--- Module META-LEVEL
+--- -----------------
+
+select META-LEVEL .
+
+reduce metaNarrowingApply(upModule('EXT-CYCLE, true), 'f['a.PreState], empty, '#, 0)
+    == { 'f['b.PreState] ,'State , [] , 'a2b,(none).Substitution,(none).Substitution , '% } .
+
+reduce metaNarrowingApply(upModule('EXT-CYCLE, true), 'f['a.PreState], empty, '#, 1)
+    == { 'g['c.PreState] ,'State , [] , 'a2c ,(none).Substitution ,(none).Substitution , '% } .
+
+reduce metaNarrowingApply(upModule('EXT-CYCLE, true), 'f['a.PreState], empty, '#, 2)
+    == (failure).NarrowingApplyResult? .

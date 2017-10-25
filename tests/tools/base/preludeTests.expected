@@ -35,4 +35,29 @@ result Bool: true
 reduce in BOUND : not continue(5,3) :: Depth .
 rewrites: 4
 result Bool: true
+==========================================
+reduce in META-LEVEL : metaNarrowingApply(upModule('EXT-CYCLE, true), 'f[
+    'a.PreState], empty, '#, 0) == {
+  'f['b.PreState],'State,
+  [],
+  'a2b,(none).Substitution,(none).Substitution,
+  '%
+} .
+rewrites: 5
+result Bool: true
+==========================================
+reduce in META-LEVEL : metaNarrowingApply(upModule('EXT-CYCLE, true), 'f[
+    'a.PreState], empty, '#, 1) == {
+  'g['c.PreState],'State,
+  [],
+  'a2c,(none).Substitution,(none).Substitution,
+  '%
+} .
+rewrites: 5
+result Bool: true
+==========================================
+reduce in META-LEVEL : metaNarrowingApply(upModule('EXT-CYCLE, true), 'f[
+    'a.PreState], empty, '#, 2) == (failure).NarrowingApplyResult? .
+rewrites: 4
+result Bool: true
 Bye.
