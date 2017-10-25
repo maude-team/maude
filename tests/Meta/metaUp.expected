@@ -263,6 +263,14 @@ eq 'getOps['mod_is_sorts_._____endm['H:Header,'IL:ImportList,'SS:SortSet,
 eq 'getOps['th_is_sorts_._____endth['Q:Qid,'IL:ImportList,'SS:SortSet,
     'SSDS:SubsortDeclSet,'OPDS:OpDeclSet,'MAS:MembAxSet,'EQS:EquationSet,
     'RLS:RuleSet]] = 'OPDS:OpDeclSet [none] .
+eq 'getRls['RL:Qid,'none.RuleSet] = 'none.RuleSet [none] .
+eq 'getRls['RL:Qid,'__['RLS:RuleSet,'rl_=>_`[_`].['T:Term,'T':Term,'__[
+    'AS:AttrSet,'label['Q:Qid]]]]] = '__['getRls['RL:Qid,'RLS:RuleSet],
+    'if_then_else_fi['_==_['RL:Qid,'Q:Qid],'rl_=>_`[_`].['T:Term,'T':Term,'__[
+    'AS:AttrSet,'label['Q:Qid]]],'none.RuleSet]] [none] .
+eq 'getRls['RL:Qid,'mod_is_sorts_._____endm['H:Header,'IL:ImportList,
+    'SS:SortSet,'SSDS:SubsortDeclSet,'OPDS:OpDeclSet,'MAS:MembAxSet,
+    'EQS:EquationSet,'RLS:RuleSet]] = 'getRls['RL:Qid,'RLS:RuleSet] [none] .
 eq 'getRls['fmod_is_sorts_.____endfm['H:Header,'IL:ImportList,'SS:SortSet,
     'SSDS:SubsortDeclSet,'OPDS:OpDeclSet,'MAS:MembAxSet,'EQS:EquationSet]] =
     'none.RuleSet [none] .

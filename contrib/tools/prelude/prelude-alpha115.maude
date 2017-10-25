@@ -1842,13 +1842,15 @@ fmod META-MODULE is
                 sorts none . none none none none none endth) .
 
 *** projection functions
-  var Q : Qid .
+ vars Q RL : Qid .
+ vars T T' : Term .
   var PDL : ParameterDeclList .
   var H : Header .
   var M : Module .
   var IL : ImportList .
   var SS : SortSet .
   var SSDS : SubsortDeclSet .
+  var AS : AttrSet .
   var OPDS : OpDeclSet .
   var MAS : MembAxSet .
   var EQS : EquationSet .
@@ -1903,6 +1905,18 @@ fmod META-MODULE is
   eq getRls(mod H is IL sorts SS . SSDS OPDS MAS EQS RLS endm) = RLS .
   eq getRls(fth Q is IL sorts SS . SSDS OPDS MAS EQS endfth) = none .
   eq getRls(th Q is IL sorts SS . SSDS OPDS MAS EQS RLS endth) = RLS .
+
+  op getRls : Qid  Module -> RuleSet .
+  op getRls : Qid RuleSet -> RuleSet .
+  ------------------------------------
+  eq getRls ( RL , mod H is IL sorts SS . SSDS OPDS MAS EQS RLS endm ) = getRls(RL, RLS) .
+
+  eq getRls ( RL , none ) = none .
+  eq getRls ( RL , rl T => T' [ label(Q) AS ] . RLS )
+   = if RL == Q then rl T => T' [ label(Q) AS ] .
+                else none
+     fi
+     getRls(RL, RLS) .
 endfm
 
 fmod META-VIEW is

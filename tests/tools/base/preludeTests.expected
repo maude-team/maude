@@ -36,6 +36,33 @@ reduce in BOUND : not continue(5,3) :: Depth .
 rewrites: 4
 result Bool: true
 ==========================================
+reduce in META-LEVEL : getRls('nonsense, upModule('EXT-CYCLE, true)) == (
+    none).RuleSet .
+rewrites: 23
+result Bool: true
+==========================================
+reduce in META-LEVEL : getRls('a2b, upModule('EXT-CYCLE, true)) == rl 'f[
+    'a.PreState] => 'f['b.PreState] [narrowing label('a2b)] . .
+rewrites: 23
+result Bool: true
+==========================================
+reduce in META-LEVEL : getRls('a2c, upModule('EXT-CYCLE, true)) == rl 'f[
+    'a.PreState] => 'g['c.PreState] [narrowing label('a2c)] .
+rl 'g['a.PreState] => 'g['c.PreState] [narrowing label('a2c)] . .
+rewrites: 23
+result Bool: true
+==========================================
+reduce in META-LEVEL : getRls('b2c, upModule('EXT-CYCLE, true)) == rl 'f[
+    'b.PreState] => 'f['c.PreState] [narrowing label('b2c)] . .
+rewrites: 23
+result Bool: true
+==========================================
+reduce in META-LEVEL : getRls('c2a, upModule('EXT-CYCLE, true)) == rl 'f[
+    'c.PreState] => 'f['a.PreState] [narrowing label('c2a)] .
+rl 'g['c.PreState] => 'g['a.PreState] [narrowing label('c2a)] . .
+rewrites: 23
+result Bool: true
+==========================================
 reduce in META-LEVEL : metaNarrowingApply(upModule('EXT-CYCLE, true), 'f[
     'a.PreState], empty, '#, 0) == {
   'f['b.PreState],'State,

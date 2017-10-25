@@ -27,6 +27,16 @@ reduce not (continue(5, 3)                 :: Depth) .
 
 select META-LEVEL .
 
+reduce getRls('nonsense, upModule('EXT-CYCLE, true)) == none .
+reduce getRls('a2b, upModule('EXT-CYCLE, true)) == ( rl 'f['a.PreState] => 'f['b.PreState] [narrowing label('a2b)] . ) .
+reduce getRls('a2c, upModule('EXT-CYCLE, true)) == ( rl 'f['a.PreState] => 'g['c.PreState] [narrowing label('a2c)] .
+                                                     rl 'g['a.PreState] => 'g['c.PreState] [narrowing label('a2c)] .
+                                                   ) .
+reduce getRls('b2c, upModule('EXT-CYCLE, true)) == ( rl 'f['b.PreState] => 'f['c.PreState] [narrowing label('b2c)] . ) .
+reduce getRls('c2a, upModule('EXT-CYCLE, true)) == ( rl 'f['c.PreState] => 'f['a.PreState] [narrowing label('c2a)] .
+                                                     rl 'g['c.PreState] => 'g['a.PreState] [narrowing label('c2a)] .
+                                                   ) .
+
 reduce metaNarrowingApply(upModule('EXT-CYCLE, true), 'f['a.PreState], empty, '#, 0)
     == { 'f['b.PreState] ,'State , [] , 'a2b,(none).Substitution,(none).Substitution , '% } .
 
