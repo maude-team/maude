@@ -71,9 +71,9 @@ mod TOKEN-MUTEX is
   vars N M : Number . var CF : Conf .
 
   rl [enter] : < N,         {M} [M, wait] CF >
-            => < N,             [M, crit] CF > .
+            => < N,             [M, crit] CF > [narrowing] .
   rl [exit1] : < s s N M,       [M, crit] CF >
-            => < s s N M, {s M} [M, wait] CF > .
+            => < s s N M, {s M} [M, wait] CF > [narrowing] .
   rl [exit2] : <     s M,       [M, crit] CF >
-            => <     s M,   {0} [M, wait] CF > .
+            => <     s M,   {0} [M, wait] CF > [narrowing] .
 endm
