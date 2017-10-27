@@ -17,7 +17,7 @@ fmod NARROWING-STEP-SET is
 
     var M : Module . vars NextVar : Nat . vars S S' : Substitution .
     vars T TS CtTS : Term . var TL : TermList . var TP : Type . var R : Rule .
-    var Tr : TraceNarrow . var B : Flags . vars Ct CtS : Context .
+    var Tr : TraceNarrow . var B : Flags . vars Ct CtS : Context . var V : Variant .
     var SR : StepResult . var RTS : ResultContextSet . var SRS : StepResultSet .
 
     op empty :                             -> StepResultSet [ctor] .
@@ -49,7 +49,7 @@ fmod NARROWING-STEP-SET is
     op emptyVariantSet :                       -> VariantSet [ctor] .
     op _#_             : VariantSet VariantSet -> VariantSet [ctor assoc comm id: emptyVariantSet prec 65 format (d d n d)] .
     -------------------------------------------------------------------------------------------------------------------------
-    eq X:Variant # X:Variant = X:Variant .
+    eq V # V = V .
 endfm
 
 eof
