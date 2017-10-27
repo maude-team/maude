@@ -78,9 +78,9 @@ mod BAKERY is
 
   var PS : ProcSet .  vars N M : Name .
 
-  rl [wake] : N ; M ; [idle]    PS => s N ; M   ; [wait(N)] PS .
-  rl [crit] : N ; M ; [wait(M)] PS => N   ; M   ; [crit(M)] PS .
-  rl [exit] : N ; M ; [crit(M)] PS => N   ; s M ; [idle]    PS .
+  rl [wake] : N ; M ; [idle]    PS => s N ; M   ; [wait(N)] PS [narrowing] .
+  rl [crit] : N ; M ; [wait(M)] PS => N   ; M   ; [crit(M)] PS [narrowing] .
+  rl [exit] : N ; M ; [crit(M)] PS => N   ; s M ; [idle]    PS [narrowing] .
 endm
 
 --- Version 3 - FVP
