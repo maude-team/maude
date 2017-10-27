@@ -285,21 +285,21 @@ mod DIJKSTRA-MUTEX is
   sort Conf .
   op <_> : CProcSet -> Conf [ctor] .
 
-  rl [l1]  : < {F,l1,-} CPS >          => < {1,l2,-} CPS > .
-  rl [l1]  : < {F,l1,!} PS >           => < {1,l2,!} PS > .
+  rl [l1]  : < {F,l1,-} CPS >          => < {1,l2,-} CPS >         [narrowing] .
+  rl [l1]  : < {F,l1,!} PS >           => < {1,l2,!} PS >          [narrowing] .
 
-  rl [l2]  : < {F,l2,-} {0,S,!} PS >   => < {F,l2,!} {0,S,-} PS > .
-  rl [l2]  : < {F,l2,!} PS >           => < {F,l3,!} PS > .
+  rl [l2]  : < {F,l2,-} {0,S,!} PS >   => < {F,l2,!} {0,S,-} PS >  [narrowing] .
+  rl [l2]  : < {F,l2,!} PS >           => < {F,l3,!} PS >          [narrowing] .
 
-  rl [l3]  : < {F,l3,-} CPS >          => < {2,l4,-} CPS > .
-  rl [l3]  : < {F,l3,!} PS >           => < {2,l4,!} PS > .
+  rl [l3]  : < {F,l3,-} CPS >          => < {2,l4,-} CPS >         [narrowing] .
+  rl [l3]  : < {F,l3,!} PS >           => < {2,l4,!} PS >          [narrowing] .
 
-  rl [l4]  : < {F,l4,-} CWS >          => < {F,crit,-} CWS > .
-  rl [l4]  : < {F,l4,!} WS >           => < {F,crit,!} WS > .
-  rl [l4]  : < {F,l4,-} {2,S,-} CPS >  => < {F,l1,-} {2,S,-} CPS > .
-  rl [l4]  : < {F,l4,!} {2,S,-} PS >   => < {F,l1,!} {2,S,-} PS > .
-  rl [l4]  : < {F,l4,-} {2,S,!} PS >   => < {F,l1,-} {2,S,!} PS > .
+  rl [l4]  : < {F,l4,-} CWS >          => < {F,crit,-} CWS >       [narrowing] .
+  rl [l4]  : < {F,l4,!} WS >           => < {F,crit,!} WS >        [narrowing] .
+  rl [l4]  : < {F,l4,-} {2,S,-} CPS >  => < {F,l1,-} {2,S,-} CPS > [narrowing] .
+  rl [l4]  : < {F,l4,!} {2,S,-} PS >   => < {F,l1,!} {2,S,-} PS >  [narrowing] .
+  rl [l4]  : < {F,l4,-} {2,S,!} PS >   => < {F,l1,-} {2,S,!} PS >  [narrowing] .
 
-  rl [l5]  : < {F,crit,-} CPS >        => < {0,l1,-} CPS > .
-  rl [l5]  : < {F,crit,!} PS >         => < {0,l1,!} PS > .
+  rl [l5]  : < {F,crit,-} CPS >        => < {0,l1,-} CPS >         [narrowing] .
+  rl [l5]  : < {F,crit,!} PS >         => < {0,l1,!} PS >          [narrowing] .
 endm
