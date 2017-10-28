@@ -1,0 +1,10 @@
+#!/bin/sh
+
+MAUDE_LIB=$srcdir/../../../src/Main
+export MAUDE_LIB
+
+../../../src/Main/maude \
+  < mtransform.maude -no-banner -no-advise \
+  > mtransform.out 2>&1
+
+diff mtransform.expected mtransform.out > /dev/null 2>&1
