@@ -2,3 +2,43 @@ load ../../../contrib/systems/dijkstra.maude
 load ../../../contrib/systems/oc.maude
 load ../../../contrib/systems/qlock.maude
 load ../../../contrib/tools/meta/mtransform.maude
+
+select UNCONDITIONALIZE .
+
+reduce internalizeConditions(upModule('DIJKSTRA, false), 'State)
+    == ( mod 'DIJKSTRA is
+           protecting 'DIJKSTRA-DATA .
+           protecting 'META-MODULE .
+            sorts 'CState ; 'Conf ; 'State .
+            subsort 'State < 'CState .
+            op '<_> : 'Conf -> 'State [ctor] .
+            op '_|_ : 'Proc 'ProcSet -> 'Conf [ctor] .
+            op '_|_ : 'State 'Condition -> 'CState [none] .
+            op '`[_`] : 'Conf -> 'State [ctor] .
+            none
+            none
+            rl '<_>['_|_['P:Proc,'PS:ProcSet]] => '`[_`]['_|_['P:Proc,'PS:ProcSet]] [ label('stop)] .
+            rl '<_>['_|_['P:Proc,'__['`{0`,try`}.WProc,'PS:ProcSet]]] => '<_>['_|_[ 'P:Proc,'__['`{1`,try`}.WProc,'PS:ProcSet]]] [label('start1)] .
+            rl '<_>['_|_['P:Proc,'__['`{1`,upf`}.WProc,'PS:ProcSet]]] => '<_>['_|_[ 'P:Proc,'__['`{2`,chf`}.2Proc,'PS:ProcSet]]] [label('set-flag1)] .
+            rl '<_>['_|_['P:Proc,'__['`{1`,upt`}.WProc,'PS:ProcSet]]] => '<_>['_|_[ '`{1`,upf`}.WProc,'__['P:Proc,'PS:ProcSet]]] [label('set-turn1)] .
+            rl '<_>['_|_['P:Proc,'__['`{2`,crt`}.CProc,'PS:ProcSet]]] => '<_>['_|_[ 'P:Proc,'__['`{2`,ext`}.2Proc,'PS:ProcSet]]] [label('done-crit1)] .
+            rl '<_>['_|_['P:Proc,'__['`{2`,ext`}.2Proc,'PS:ProcSet]]] => '<_>['_|_[ 'P:Proc,'__['`{0`,try`}.WProc,'PS:ProcSet]]] [label('exit-crit1)] .
+            rl '<_>['_|_['`{0`,try`}.WProc,'PS:ProcSet]] => '<_>['_|_['`{1`,try`}.WProc, 'PS:ProcSet]] [label('start2)] .
+            rl '<_>['_|_['`{0`,try`}.WProc,'__['`{1`,try`}.WProc,'PS:ProcSet]]] => '<_>[ '_|_['`{0`,try`}.WProc,'__['`{1`,upt`}.WProc,'PS:ProcSet]]] [label( 'chk-turn1)] .
+            rl '<_>['_|_['`{1`,try`}.WProc,'PS:ProcSet]] => '<_>['_|_['`{1`,upf`}.WProc, 'PS:ProcSet]] [label('chk-turn2)] .
+            rl '<_>['_|_['`{1`,upf`}.WProc,'PS:ProcSet]] => '<_>['_|_['`{2`,chf`}.2Proc, 'PS:ProcSet]] [label('set-flag2)] .
+            rl '<_>['_|_['`{2`,chf`}.2Proc,'2PS:2ProcSet]] => '<_>['_|_[ '`{2`,ext`}.2Proc,'2PS:2ProcSet]] [label('fail-crit2)] .
+            rl '<_>['_|_['`{2`,chf`}.2Proc,'WPS:WProcSet]] => '<_>['_|_[ '`{2`,crt`}.CProc,'WPS:WProcSet]] [label('go-crit2)] .
+            rl '<_>['_|_['`{2`,crt`}.CProc,'PS:ProcSet]] => '<_>['_|_['`{2`,ext`}.2Proc, 'PS:ProcSet]] [label('done-crit2)] .
+            rl '<_>['_|_['`{2`,ext`}.2Proc,'PS:ProcSet]] => '<_>['_|_['`{0`,try`}.WProc, 'PS:ProcSet]] [label('exit-crit2)] .
+            rl '_|_['<_>['_|_['P:Proc,'__['`{2`,chf`}.2Proc,'PS:ProcSet]]],varAway(('<_>[ '_|_['P:Proc,'__['`{2`,chf`}.2Proc,'PS:ProcSet]]],'<_>['_|_['P:Proc,'__[ '`{2`,crt`}.CProc,'PS:ProcSet]]],'_=_['_`[_`][''_==_.Sort,'_`,_['_`[_`][ ''safe?.Sort,'_`[_`][''__.Sort,'_`,_[''P:Proc.Variable, ''PS:ProcSet.Variable]]],''tt.Bool*.Constant]],''tt.Bool*.Constant]))] => '_|_['<_>['_|_['P:Proc,'__['`{2`,crt`}.CProc,'PS:ProcSet]]],'_/\_[varAway(( '<_>['_|_['P:Proc,'__['`{2`,chf`}.2Proc,'PS:ProcSet]]],'<_>['_|_['P:Proc, '__['`{2`,crt`}.CProc,'PS:ProcSet]]],'_=_['_`[_`][''_==_.Sort,'_`,_[ '_`[_`][''safe?.Sort,'_`[_`][''__.Sort,'_`,_[''P:Proc.Variable, ''PS:ProcSet.Variable]]],''tt.Bool*.Constant]],''tt.Bool*.Constant])),'_=_[ '_`[_`][''_==_.Sort,'_`,_['_`[_`][''safe?.Sort,'_`[_`][''__.Sort,'_`,_[ ''P:Proc.Variable,''PS:ProcSet.Variable]]],''tt.Bool*.Constant]], ''tt.Bool*.Constant]]] [label('go-crit1)] .
+            rl '_|_['<_>['_|_['P:Proc,'__['`{2`,chf`}.2Proc,'PS:ProcSet]]],varAway(('<_>[ '_|_['P:Proc,'__['`{2`,chf`}.2Proc,'PS:ProcSet]]],'<_>['_|_['P:Proc,'__[ '`{2`,ext`}.2Proc,'PS:ProcSet]]],'_=_['_`[_`][''_==_.Sort,'_`,_['_`[_`][ ''safe?.Sort,'_`[_`][''__.Sort,'_`,_[''P:Proc.Variable, ''PS:ProcSet.Variable]]],''ff.Bool*.Constant]],''tt.Bool*.Constant]))] => '_|_['<_>['_|_['P:Proc,'__['`{2`,ext`}.2Proc,'PS:ProcSet]]],'_/\_[varAway(( '<_>['_|_['P:Proc,'__['`{2`,chf`}.2Proc,'PS:ProcSet]]],'<_>['_|_['P:Proc, '__['`{2`,ext`}.2Proc,'PS:ProcSet]]],'_=_['_`[_`][''_==_.Sort,'_`,_[ '_`[_`][''safe?.Sort,'_`[_`][''__.Sort,'_`,_[''P:Proc.Variable, ''PS:ProcSet.Variable]]],''ff.Bool*.Constant]],''tt.Bool*.Constant])),'_=_[ '_`[_`][''_==_.Sort,'_`,_['_`[_`][''safe?.Sort,'_`[_`][''__.Sort,'_`,_[ ''P:Proc.Variable,''PS:ProcSet.Variable]]],''ff.Bool*.Constant]], ''tt.Bool*.Constant]]] [label('fail-crit1)] .
+          endm
+       ) .
+
+reduce wellFormed(internalizeConditions(upModule('DIJKSTRA, false), 'State)) .
+
+reduce internalizeConditions(upModule('FT-COMM, false),  'State) .
+reduce internalizeConditions(upModule('QLOCK, false),    'State) .
+
+reduce 'State :: Sort .
