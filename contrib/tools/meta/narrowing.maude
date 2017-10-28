@@ -85,6 +85,26 @@ fmod NARROWING is
     eq metaNarrow2(M,T) = to4Tuple(M,metaENarrowShowAll(M,T,1,full noStrategy BuiltIn-unify)) |> T .
 endfm
 
+fmod NARROWING2 is
+   protecting VARIANT-SET .
+   protecting NARROWING-STEP-SET .
+   protecting SUBSTITUTIONSET .
+
+    var N : Nat . vars Q RL : Qid .
+    var TYPE : Type . var CTX : Context .
+    var M : Module . var T : Term . vars SUBST TSUBST RLSUBST : Substitution .
+
+    op allNarrowSteps : Module Term Nat -> [StepResultSet] .
+    --------------------------------------------------------
+    eq allNarrowSteps(M, T, N) = .StepResultSet [owise] .
+   ceq allNarrowSteps(M, T, N) = { T , TYPE , TSUBST / getRls(RL, M) } || allNarrowSteps(M, T, N + 1)
+    if { T , TYPE , CTX , RL , TSUBST , RLSUBST , Q } := metaNarrowingApply(M, T, empty, '#, N) .
+
+    op metaNarrow2 : Module Term -> StepResult .
+    --------------------------------------------
+    eq metaNarrow2(M,T) = allNarrowSteps(M, T, 0) .
+endfm
+
 eof
 
 fmod FVP-NARROWING-GRAPH is
