@@ -1,5 +1,6 @@
 all: \
-	meta/structured-names.maude
+	meta/structured-names.maude \
+	meta/cterms.maude
 
 # `pd` is a patched version of `pandoc` capable of writing code files
 # Download it from 'https://github.com/ehildenb/pandoc'

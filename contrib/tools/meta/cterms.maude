@@ -1,0 +1,156 @@
+--- ; Constrained Terms
+--- ; =================
+
+--- ; Constrained terms are a term coupled with a FO-formula (provided by `foform.maude`).
+
+--- ; We should make the first part of a constrained term use Stephen Skeirik’s pattern operations when it detects that the term falls in a module where that is safe.
+--- ; The formulas present are being broken into different categories based on what we have decision procedures for, so it’s only natural that we use the pattern operations when they are safe.
+
+--- ; We also need to extend FOForm to handle terms which fall into CVC4’s abilities directly.
+--- ; This will require infrastructure to determine whether part of a formula downs correctly into a module.
+
+
+load unification.maude
+load fresh-vars.maude
+load foform.maude
+
+fmod CTERM-SET is
+   protecting FOFORM-DEFINEDOPS .
+   protecting FOFORMSIMPLIFY .
+   protecting FOFORM-SUBSTITUTIONSET .
+
+    sorts CTerm NeCTermSet CTermSet CTermSet? .
+    -------------------------------------------
+    subsorts Term < CTerm < NeCTermSet < CTermSet < CTermSet? .
+
+    var CTX : Context . var Q : Qid .
+    vars N M M' : Nat . vars F F' F'' : FOForm . var X : Variable .
+    var MOD : Module . vars S S' : Substitution . var SS : SubstitutionSet .
+    vars T T' : Term . vars CT CT' CT'' : CTerm . vars TML? TML?' : [TermList] . var EqC : EqConj .
+    vars CTS CTS' : CTermSet . vars NeCTS NeCTS' : NeCTermSet .
+
+    op _|_ : Term FOForm -> CTerm [right id: tt prec 52] .
+    ------------------------------------------------------
+    eq T | ff ;; CTS = CTS .
+    eq Q [ TML? , (T | EqC), TML?' ] = Q[TML?, T, TML?'] | EqC .
+
+    op _<<_ : CTerm Substitution -> CTerm .
+    op _<<_ : CTerm SubstitutionSet -> CTermSet .
+    ---------------------------------------------
+    eq .CTermSet     << SS = .CTermSet .
+    eq (CT ;; NeCTS) << SS = (CT << SS) ;; (NeCTS << SS) .
+    eq CT << empty         = .CTermSet .
+    eq CT << (S | S' | SS) = (CT << S) ;; (CT << S') ;; (CT << SS) .
+   ceq (T | F)       << S  = (T << S) | (F << S)
+    if not (F == tt) .
+
+    op .CTermSet : -> CTermSet .
+    op _;;_ : CTermSet CTermSet   -> CTermSet   [ctor assoc comm id: .CTermSet prec 60] .
+    op _;;_ : CTermSet CTermSet?  -> CTermSet?  [ctor ditto] .
+    op _;;_ : CTermSet NeCTermSet -> NeCTermSet [ctor ditto] .
+    ----------------------------------------------------------
+    eq NeCTS ;; NeCTS = NeCTS .
+
+    op _[_] : CTermSet? Module -> [CTermSet] [prec 64] .
+    ----------------------------------------------------
+    eq CTS [ MOD ] = CTS .
+
+    op _++_ : CTermSet? CTermSet? -> CTermSet? [assoc comm id: .CTermSet prec 61] .
+    -------------------------------------------------------------------------------
+    eq NeCTS ;; CTS ++ NeCTS ;; CTS'  = NeCTS ;; CTS ++ CTS' .
+    eq NeCTS        ++ NeCTS' [ MOD ] = NeCTS ;; NeCTS' [owise] .
+
+   ceq T | F ;; CTS ++ CT' ;; CTS' [ MOD ] = T | F'' ;; CTS ++ CTS' [ MOD ]
+    if T' | F' := #varsApart(CT', T | F)
+    /\ S | SS  := #subsumesWith(MOD, T, T')
+    /\ F''     := simplify(F \/ (F' /\ #disjSubsts(S | SS))) .
+
+    op _--_ : CTermSet? CTermSet? -> CTermSet? [right id: .CTermSet prec 62] .
+    --------------------------------------------------------------------------
+    eq .CTermSet    -- NeCTS          = .CTermSet .
+    eq NeCTS ;; CTS -- NeCTS ;; CTS'  = CTS -- NeCTS ;; CTS' .
+    eq CT ;; NeCTS  -- NeCTS' [ MOD ] = (CT -- NeCTS' [ MOD ]) ;; (NeCTS -- NeCTS' [ MOD ]) .
+    eq NeCTS        -- NeCTS' [ MOD ] = NeCTS [owise] . --- Over-approximate when we can't simplify
+
+   ceq CT    -- CT' ;; CTS'  [ MOD ] = .CTermSet
+    if S | SS := #subsumesWith(MOD, CT', #varsApart(CT, CT')) .
+
+   ceq T | F -- CT' ;; CTS'  [ MOD ] = CT -- CTS' [ MOD ]
+    if T' | F' := #varsApart(CT', T | F)
+    /\ S | SS  := #subsumesWith(MOD, T, T')
+    /\ CT      := (T | F /\ (#disjSubsts(S | SS) => (~ F'))) .
+
+   ceq CT    -- CT' ;; CTS   [ MOD ] = CT -- CTS' ;; CTS [ MOD ]
+    if CTS' := #intersect(MOD, CT, CT') .
+
+    op #intersect : Module CTerm CTerm -> CTermSet? .
+    -------------------------------------------------
+   ceq #intersect(MOD, T | F, CT') = (T | F /\ F') << (S | SS)
+    if T' | F' := #varsApart(CT', T | F)
+    /\ S | SS  := #unifiers(MOD, T, T') .
+
+    op #disjSubsts : SubstitutionSet -> PosEqQFForm? .
+    --------------------------------------------------
+    eq #disjSubsts(empty)  = ff .
+    eq #disjSubsts(S | SS) = #conjSubst(S) \/ #disjSubsts(SS) .
+
+    op #conjSubst : Substitution -> PosEqConj? .
+    --------------------------------------------
+    eq #conjSubst(none)       = tt .
+    eq #conjSubst(X <- T ; S) = X ?= T /\ #conjSubst(S) .
+
+    --- TODO: This should eventually actually try to do what it claims.
+    op #varsApart : CTerm CTerm -> CTerm .
+    --------------------------------------
+    eq #varsApart(CT, CT') = CT .
+
+    --- These should be moved to their own Meta-Level utils file.
+
+    op #unifiers : Module Term Term -> SubstitutionSet .
+    op #unifiers : Module Term Term Nat Nat -> SubstitutionSet .
+    ------------------------------------------------------------
+    eq #unifiers(MOD, T, T')       = #unifiers(MOD, T, T', 0, 0) .
+   ceq #unifiers(MOD, T, T', N, M) = S | #unifiers(MOD, T, T', s(N), M') if { S , M' } := metaUnify(MOD, T =? T', N, M) .
+    eq #unifiers(MOD, T, T', N, M) = empty [owise] .
+
+    op #subsumesWith : Module Term Term -> SubstitutionSet .
+    op #subsumesWith : Module Term Term Nat -> SubstitutionSet .
+    ------------------------------------------------------------
+    eq #subsumesWith(MOD, T, T')    = #subsumesWith(MOD, T, T', 0) .
+   ceq #subsumesWith(MOD, T, T', N) = S | #subsumesWith(MOD, T, T', s(N)) if S := metaMatch(MOD, T, T', nil, N) .
+    eq #subsumesWith(MOD, T, T', N) = empty [owise] .
+
+    op #subsumesXWith : Module Term Term -> SubstitutionSet .
+    op #subsumesXWith : Module Term Term Nat -> SubstitutionSet .
+    -------------------------------------------------------------
+    eq #subsumesXWith(MOD, T, T')    = #subsumesXWith(MOD, T, T', 0) .
+   ceq #subsumesXWith(MOD, T, T', N) = S | #subsumesXWith(MOD, T, T', s(N)) if { S , CTX } := metaXmatch(MOD, T, T', nil, 0, unbounded, N) .
+    eq #subsumesXWith(MOD, T, T', N) = empty [owise] .
+endfm
+
+
+--- ; A trace of constrained terms is just a map from naturals to pairs constrained-term sets.
+--- ; The first element of the pair are the states seen for the first time in that step, and the second element are the accumulated states up to that point.
+
+
+fmod CTERM-TRACE is
+    protecting CTERM-SET .
+
+    sorts CTermSetPair CTermSetPairMap CTermSetTrace .
+
+    op <_,_> : CTermSet CTermSet -> CTermSetPair .
+    ----------------------------------------------
+
+    op .CTermSetPairMap : -> CTermSetPairMap .
+    op _|->_ : Nat CTermSetPair -> CTermSetPairMap [prec 64] .
+    op __    : CTermSetPairMap CTermSetPairMap -> CTermSetPairMap [assoc comm id: .CTermSetPairMap prec 65 format(d n d)] .
+    -----------------------------------------------------------------------------------------------------------------------
+
+    op .CTermSetTrace : -> CTermSetTrace .
+    op _|_            : Nat CTermSetPairMap -> CTermSetTrace [prec 66] .
+    --------------------------------------------------------------------
+    eq .CTermSetTrace = 0 | .CTermSetPairMap .
+endfm
+
+
+
