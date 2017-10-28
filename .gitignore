@@ -34,3 +34,6 @@ lib*.a
 # some of the versions of Maude do not correctly sync src/Mixfix/surface.* with the files it's built from
 # until this is fixed, these files will not be ignored
 # src/Mixfix/surface.*
+
+# unignore needed Makefiles
+!/contrib/tools/Makefile

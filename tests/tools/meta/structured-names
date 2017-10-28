@@ -1,0 +1,10 @@
+#!/bin/sh
+
+MAUDE_LIB=$srcdir/../../../src/Main
+export MAUDE_LIB
+
+../../../src/Main/maude \
+  < structured-names.maude -no-banner -no-advise \
+  > structured-names.out 2>&1
+
+diff structured-names.expected structured-names.out > /dev/null 2>&1
