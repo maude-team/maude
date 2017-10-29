@@ -11,7 +11,7 @@ This will require infrastructure to determine whether part of a formula downs co
 
 ```maude
 load unification.maude
-load fresh-vars.maude
+load variables.maude
 load foform.maude
 
 fmod CTERM-SET is

@@ -11,7 +11,7 @@
 
 
 load unification.maude
-load fresh-vars.maude
+load variables.maude
 load foform.maude
 
 fmod CTERM-SET is

@@ -7,7 +7,7 @@
 ---       and are called through META-LEVEL reflection. This isolates the
 ---       modules from one another and simplifies the algorithm design.
 
-load fresh-vars.maude
+load variables.maude
 
 fmod REFLECT is
   pr META-LEVEL .
