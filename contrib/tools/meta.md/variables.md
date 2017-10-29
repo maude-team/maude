@@ -1,184 +1,184 @@
---- ; Variable Handling
---- ; =================
+Variable Handling
+=================
 
---- ; Metavariable Renaming/Fresh
---- ; ---------------------------
+Metavariable Renaming/Fresh
+---------------------------
 
---- ; This file implements a universal metavariable renaming routine for Maude that
---- ; will rename some metavariables so that they are fresh with respect to other
---- ; metavariables. Dependency on full-maude is very weak; just one function addEqs
---- ; is borrowed which could very easily be incorporated into this source.
+This file implements a universal metavariable renaming routine for Maude that
+will rename some metavariables so that they are fresh with respect to other
+metavariables. Dependency on full-maude is very weak; just one function addEqs
+is borrowed which could very easily be incorporated into this source.
 
---- ; TODO:  
---- ; Rework renameTmpVar and renameAllVar so that they don’t need work by
---- ; evaluating at the metalevel in particular, this entails getting rid of the
---- ; rewrite-rule based presentation that is used now for renameTmpVar. Since
---- ; Maude tools essentially cannot analyze production Maude code, we won’t worry
---- ; about using hard-to-analyze features. Primary focus should be making the
---- ; code short, sweet, and usable in larger projects. Secondary focus should be
---- ; given to avoiding namespace pollution, extending prelude sorts with junk,
---- ; etc…
+TODO:
+:   Rework renameTmpVar and renameAllVar so that they don't need work by
+    evaluating at the metalevel in particular, this entails getting rid of the
+    rewrite-rule based presentation that is used now for renameTmpVar. Since
+    Maude tools essentially cannot analyze production Maude code, we won't worry
+    about using hard-to-analyze features. Primary focus should be making the
+    code short, sweet, and usable in larger projects. Secondary focus should be
+    given to avoiding namespace pollution, extending prelude sorts with junk,
+    etc...
 
---- ; ### Glossary
+### Glossary
 
---- ; variable:  
---- ; a Maude object or meta\*level variable (depending on context)
---- ; 
---- ; object variable:  
---- ; a Maude object level variable with a particular sort, ex: N:Nat
---- ; 
---- ; metavariable:  
---- ; a Maude meta-level variable with sort Variable, ex: ’N:Nat
---- ; 
---- ; meta\*variable:  
---- ; a Maude meta-level variable that has been upTerm’ed zero or more times
---- ; 
---- ; variable name:  
---- ; the part of a variable which has no semantic information, ex: Bob
---- ; 
---- ; user data:  
---- ; any data inputted by the user that may contain meta\*variables
---- ; 
---- ; user variable:  
---- ; a meta\*variable inputted by the user; not guaranteed to be standard
---- ; 
---- ; temporary:  
---- ; a meta*variable whose name matches .*(\#/%)(0/(1\[0-9\]\*))
---- ; 
---- ; standard:  
---- ; a meta*variable whose name matches .*@(0/(1\[0-9\]\*))
---- ; 
---- ; standard data:  
---- ; any data which is guaranteed to contain only standard variables
---- ; 
---- ; indexed data:  
---- ; any data which is guaranteed to contain only temporary/standard variables
---- ; 
---- ; standardize:  
---- ; to rename a variable such that it becomes standard
---- ; 
---- ; variable index:  
---- ; final number occuring in the name of a temporary or standard meta\*variable
---- ; 
---- ; term/termlist:  
---- ; anything which belongs to the sort Term/Context or GTermList in META-TERM
---- ; 
---- ; highestVar:  
---- ; a function which returns the highest temporary/standard meta\*variable
---- ; indices
---- ; 
---- ; base data:  
---- ; this data contains meta\*variables which will not be renamed
---- ; 
---- ; base index:  
---- ; the maximum standard meta\*variable index occuring in the term
---- ; representation of the base data
---- ; 
---- ; fresh data:  
---- ; this data contains meta\*variables which will be renamed
---- ; 
---- ; fresh w.r.t.:  
---- ; a standard meta\*variable is fresh with respect to a index/base data when
---- ; its index is greater than the index/base index
---- ; 
---- ; renameAllVar:  
---- ; a function which standardizes all meta\*variables in fresh data so that they
---- ; are fresh with respect to the base index
---- ; 
---- ; renameTmpVar:  
---- ; a function which standardizes only temporary meta\*variables in fresh data
---- ; so that they are fresh with respect to the base index
+variable:
+:   a Maude object or meta\*level variable (depending on context)
 
---- ; ### Overview
+object variable:
+:   a Maude object level variable with a particular sort, ex: N:Nat
 
---- ; Generally, a caller of this library will only need to import the RENAME-METAVARS
---- ; module. This module only defines a small number of function names so as to avoid
---- ; polluting the global namespace.
+metavariable:
+:   a Maude meta-level variable with sort Variable, ex: 'N:Nat
 
---- ; To make proper use of this library, the calling code must observe certain
---- ; conventions. Otherwise, the freshness of generated variables cannot be
---- ; guaranteed. There is one general assumption made by the whole library:
+meta\*variable:
+:   a Maude meta-level variable that has been upTerm'ed zero or more times
 
---- ; 1.  GTermList MUST NOT have constructors added beyond what is in META-TERM
+variable name:
+:   the part of a variable which has no semantic information, ex: Bob
 
---- ; The renameTmpVar function has an addtional requirement:
+user data:
+:   any data inputted by the user that may contain meta\*variables
 
---- ; 1.  the base data MUST NOT contain temporary meta\*variables
+user variable:
+:   a meta\*variable inputted by the user; not guaranteed to be standard
 
---- ; NOTE: since these functions understand meta\*variables, the type of data is
---- ; irrelevant; a simple call to upTerm() will enable the data to be input into the
---- ; function.
+temporary:
+:   a meta*variable whose name matches .*(#/%)(0/(1[0-9]*))
 
---- ; The two functions renameAllVar and renameTmpVar work in concert. If dealing with
---- ; user data, use renameAllVar to first standardize all user variables. If there
---- ; are pieces of user data which must be fresh with respect to each other, use
---- ; multiple calls to renameAllVar and pass the base index between each call.
+standard:
+:   a meta*variable whose name matches .*@(0/(1[0-9]*))
 
---- ; If it is necessary to generate fresh variables for the application of some
---- ; sub-algorithm, but the caller doesn’t wish to keep track of many indices, then
---- ; s/he may do the following:
+standard data:
+:   any data which is guaranteed to contain only standard variables
 
---- ; 1.  Ensure the data which the sub-algorithm will operate on does not contain
---- ;     temporary variables (as might be the case with user data). If needed, call
---- ;     renameAllVar.
---- ; 
---- ; 2.  The sub-algorithm will maintain a counter; each time a fresh variable is
---- ;     required, generate a temporary variable with tmpvar() and your desired
---- ;     index. It is irrelevant how many times the temporary variable occurs.
---- ; 
---- ; 3.  When the sub-algorithm is finished, call renameTmpVar on the relevant data,
---- ;     being sure to pass in an appropriate base index so the generated variables
---- ;     are really fresh.
+indexed data:
+:   any data which is guaranteed to contain only temporary/standard variables
 
---- ; Axes of the Design Space In order to understand why this project was designed
---- ; the way that it was, it is helpful to explore different points all the design
---- ; space and compare and contrast different implementation choices. We list three
---- ; axes below:
+standardize:
+:   to rename a variable such that it becomes standard
 
---- ; 1.  In which contexts can we rename variables? Most implementations can only
---- ;     rename metavariables in a particular datastructure by explicitly recursing
---- ;     over it — our implementation sidesteps this issue because it understands
---- ;     how to rename meta*variables; we can rename variables in *any\* datastructure
---- ;     by first upTerm’ing it, recursing over its metarepresentation, and renaming
---- ;     any meta\*variables we find.
---- ; 
---- ; 2.  What data is required to rename variables? Some implementations explictly
---- ;     require the user to carry a counter around which signifies the next fresh
---- ;     variable name — our method can automatically compute such counters when
---- ;     necessary or the user can explicitly provide them.
---- ; 
---- ; 3.  Which variables can we rename? Some implementations will rename all
---- ;     variables on every pass (if necessary). This has the advantage that the user
---- ;     never has to worry about some variables that should be renamed are not.
---- ;     However, this approach requires the renaming algorithm to maintain a table
---- ;     of variable names and which names they were mapped to — and incurs a table
---- ;     lookup cost each time we access the table. We support this approach, but we
---- ;     also support an alternative approach which only renames temporary variables
---- ;     which does not need a table lookup.
---- ; 
---- ;     NOTE: after running some basic tests on the code base with Maude 2.7.1, it
---- ;     appears our alternative approach wins on performance when 3 or more
---- ;     variables are going to be renamed.
---- ; 
---- ; 4.  How are variables renamed? Some implementations replace all variable names
---- ;     with numbers in increasing order. Theoretically, this works, but the user
---- ;     experience is not very enjoyable. In this implementation, two strategies are
---- ;     explored. renameAllVar() appends a unique fresh index to each variable in
---- ;     term traversal order. renameTmpVar() precomputes a proper base index and
---- ;     renames each temporary variable in place— only temporary variables are
---- ;     renamed.
+variable index:
+:   final number occuring in the name of a temporary or standard meta\*variable
 
---- ; In practice, fresh metavariables are usually automatically generated according
---- ; to a scheme similar to the one we adopt here. For example, fresh metavariables
---- ; generated during Maude’s unification and built-in variant computation are all
---- ; temporary. Thus, this code can be used for renaming the generated variables from
---- ; Maude built-in functions.
+term/termlist:
+:   anything which belongs to the sort Term/Context or GTermList in META-TERM
 
---- ; NOTE: using “cat metafresh.maude | egrep -v
---- ; `"^[ ]*---" | egrep -v "^[ ]*$" | wc -l` to count code lines (excl.
---- ; comments/blanks) last gave slightly &lt; 250
+highestVar:
+:   a function which returns the highest temporary/standard meta\*variable
+    indices
 
+base data:
+:   this data contains meta\*variables which will not be renamed
 
+base index:
+:   the maximum standard meta\*variable index occuring in the term
+    representation of the base data
+
+fresh data:
+:   this data contains meta\*variables which will be renamed
+
+fresh w.r.t.:
+:   a standard meta\*variable is fresh with respect to a index/base data when
+    its index is greater than the index/base index
+
+renameAllVar:
+:   a function which standardizes all meta\*variables in fresh data so that they
+    are fresh with respect to the base index
+
+renameTmpVar:
+:   a function which standardizes only temporary meta\*variables in fresh data
+    so that they are fresh with respect to the base index
+
+### Overview
+
+Generally, a caller of this library will only need to import the RENAME-METAVARS
+module. This module only defines a small number of function names so as to avoid
+polluting the global namespace.
+
+To make proper use of this library, the calling code must observe certain
+conventions. Otherwise, the freshness of generated variables cannot be
+guaranteed. There is one general assumption made by the whole library:
+
+a.  GTermList MUST NOT have constructors added beyond what is in META-TERM
+
+The renameTmpVar function has an addtional requirement:
+
+b.  the base data MUST NOT contain temporary meta\*variables
+
+NOTE: since these functions understand meta\*variables, the type of data is
+irrelevant; a simple call to upTerm() will enable the data to be input into the
+function.
+
+The two functions renameAllVar and renameTmpVar work in concert. If dealing with
+user data, use renameAllVar to first standardize all user variables. If there
+are pieces of user data which must be fresh with respect to each other, use
+multiple calls to renameAllVar and pass the base index between each call.
+
+If it is necessary to generate fresh variables for the application of some
+sub-algorithm, but the caller doesn't wish to keep track of many indices, then
+s/he may do the following:
+
+1.  Ensure the data which the sub-algorithm will operate on does not contain
+    temporary variables (as might be the case with user data). If needed, call
+    renameAllVar.
+
+2.  The sub-algorithm will maintain a counter; each time a fresh variable is
+    required, generate a temporary variable with tmpvar() and your desired
+    index. It is irrelevant how many times the temporary variable occurs.
+
+3.  When the sub-algorithm is finished, call renameTmpVar on the relevant data,
+    being sure to pass in an appropriate base index so the generated variables
+    are really fresh.
+
+Axes of the Design Space In order to understand why this project was designed
+the way that it was, it is helpful to explore different points all the design
+space and compare and contrast different implementation choices. We list three
+axes below:
+
+1.  In which contexts can we rename variables? Most implementations can only
+    rename metavariables in a particular datastructure by explicitly recursing
+    over it --- our implementation sidesteps this issue because it understands
+    how to rename meta*variables; we can rename variables in *any* datastructure
+    by first upTerm'ing it, recursing over its metarepresentation, and renaming
+    any meta*variables we find.
+
+2.  What data is required to rename variables? Some implementations explictly
+    require the user to carry a counter around which signifies the next fresh
+    variable name --- our method can automatically compute such counters when
+    necessary or the user can explicitly provide them.
+
+3.  Which variables can we rename? Some implementations will rename all
+    variables on every pass (if necessary). This has the advantage that the user
+    never has to worry about some variables that should be renamed are not.
+    However, this approach requires the renaming algorithm to maintain a table
+    of variable names and which names they were mapped to --- and incurs a table
+    lookup cost each time we access the table. We support this approach, but we
+    also support an alternative approach which only renames temporary variables
+    which does not need a table lookup.
+
+    NOTE: after running some basic tests on the code base with Maude 2.7.1, it
+    appears our alternative approach wins on performance when 3 or more
+    variables are going to be renamed.
+
+4.  How are variables renamed? Some implementations replace all variable names
+    with numbers in increasing order. Theoretically, this works, but the user
+    experience is not very enjoyable. In this implementation, two strategies are
+    explored. renameAllVar() appends a unique fresh index to each variable in
+    term traversal order. renameTmpVar() precomputes a proper base index and
+    renames each temporary variable in place--- only temporary variables are
+    renamed.
+
+In practice, fresh metavariables are usually automatically generated according
+to a scheme similar to the one we adopt here. For example, fresh metavariables
+generated during Maude's unification and built-in variant computation are all
+temporary. Thus, this code can be used for renaming the generated variables from
+Maude built-in functions.
+
+NOTE: using "cat metafresh.maude | egrep -v
+`"^[ ]*---" | egrep -v "^[ ]*$" | wc -l` to count code lines (excl.
+comments/blanks) last gave slightly < 250
+
+```maude
 load ../base/prelude-aux.maude
 
 fmod RENAME-DATA is
@@ -602,6 +602,4 @@ fmod RENAME-METAVARS is
   eq $renameTmpVar(N,T) =
        downTerm(getTerm(metaReduce(addEqs(eq 'base.Nat = upTerm(N) [none] .,upModule('RTV-IMPL3,false)),T)),empty) .
 endfm
-
-
-
+```
