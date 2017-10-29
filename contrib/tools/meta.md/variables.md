@@ -7,6 +7,10 @@ Determiistic Variables
 Often times, fresh variables aren't needed if you can deterministically compute
 a correct "new variable" given an existing list of terms. This module does that.
 
+TODO:
+:   Perhaps we could provide a "minimized" fresh generator which hashes the
+    string used for the variable name instead?
+
 ```maude
 fmod DETERMINISTIC-VARIABLES is
    protecting META-TERM .
