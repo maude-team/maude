@@ -5,6 +5,8 @@ load ../../../contrib/tools/meta/mtransform.maude
 
 select UNCONDITIONALIZE .
 
+eof
+
 reduce internalizeConditions(upModule('DIJKSTRA, false), 'State)
     == ( mod 'DIJKSTRA is
            protecting 'DIJKSTRA-DATA .

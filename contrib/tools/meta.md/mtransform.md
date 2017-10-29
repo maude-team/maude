@@ -1,7 +1,14 @@
 Module Transformations
 ======================
 
-This file is a collection of the module transformations available for Maude.
+This file is a collection of the module transformations available for Maude. The
+data-structures used are from `mtemplate.maude` for flexibility (as opposed to
+the prelude ones).
+
+```maude
+load mtemplate.maude
+load variables.maude
+```
 
 Removing Conditional Equations/Rules
 ------------------------------------
@@ -9,16 +16,16 @@ Removing Conditional Equations/Rules
 ```maude
 fmod UNCONDITIONALIZE is
    protecting META-LEVEL .
+   protecting MODULE-TEMPLATE .
+   protecting DETERMINISTIC-VARIABLES .
 
     var M : Module . var FM : FModule . var S : Sort .
     vars T T' C' : Term . var AS : AttrSet . var C : Condition . var V : Variable .
-    var H : Header . var IL : ImportList . var SS : SortSet .
+    var H : Header .
+    vars NeMDS NeMDS' : NeModuleDeclSet .
+    var IS : ImportDeclSet . var SDS : SortDeclSet .
     var SSDS : SubsortDeclSet . var OPDS : OpDeclSet . var MAS : MembAxSet .
     var EQS : EquationSet . var RLS : RuleSet .
-
-    --- TODO: Implement/use some existing implementation.
-    op varAway : TermList -> Variable .
-    -----------------------------------
 
     op cSort : Sort -> Sort .
     -------------------------
@@ -32,27 +39,26 @@ fmod UNCONDITIONALIZE is
     -------------------------
     eq mmImport = (protecting 'META-MODULE .) .
 
-    op internalizeConditions : Module Sort RuleSet -> [RuleSet] .
+    op rmConditions : Module Sort RuleSet -> [RuleSet] .
     -------------------------------------------------------------
-    eq internalizeConditions(M, S, none) = none .
-    eq internalizeConditions(M, S,  rl T => T'      [AS] . RLS) = (rl      T     =>      T'                [AS] .) internalizeConditions(M, S, RLS) .
-   ceq internalizeConditions(M, S, crl T => T' if C [AS] . RLS) = (rl '_|_[T, V] => '_|_[T', '_/\_[V, C']] [AS] .) internalizeConditions(M, S, RLS)
+    eq rmConditions(M, S, none) = none .
+    eq rmConditions(M, S,  rl T => T'      [AS] . RLS) = (rl      T     =>      T'                [AS] .) rmConditions(M, S, RLS) .
+   ceq rmConditions(M, S, crl T => T' if C [AS] . RLS) = (rl '_|_[T, V] => '_|_[T', '_/\_[V, C']] [AS] .) rmConditions(M, S, RLS)
     if sameKind(M, S, leastSort(M, T))
     /\ C' := upTerm(C)
-    /\ V  := varAway((T,T',C')) .
+    /\ V  := #var((T,T',C'), 'Condition) .
 
-    op internalizeConditions : Module Sort -> [Module] .
-    ----------------------------------------------------
-    eq internalizeConditions(FM, S) = FM .
-   ceq internalizeConditions(M, S)  = ( mod H is
-                                           IL mmImport
-                                           sorts S ; cSort(S) ; SS .
-                                           SSDS (subsort S < cSort(S) .)
-                                           OPDS ctermOp(S)
-                                           MAS
-                                           EQS internalizeConditions(M, S, RLS)
-                                        endm
-                                      )
-    if (mod H is IL sorts S ; SS . SSDS OPDS MAS EQS RLS endm) := M .
+    op rmConditions : Sort ModuleDeclSet -> [ModuleDeclSet] .
+    ---------------------------------------------------------
+    eq rmConditions(S, none)                = none .
+    eq rmConditions(S, IS SDS SSDS MAS EQS) = IS SDS SSDS MAS EQS .
+    eq rmConditions(S, NeMDS NeMDS')        = rmConditions(S, NeMDS) rmConditions(S, NeMDS') .
+
+   ceq rmConditions(S, rl T => T' [AS] .) = ( rl '_|_[T, V] => '_|_[T', V] [AS] . )
+    if V := #var((T, T'), 'Condition) .
+
+   ceq rmConditions(S, crl T => T' if C [AS] .) = ( rl '_|_[T, V] => '_|_[T', '_/\_[V, C']] [AS] . )
+    if C' := upTerm(C)
+    /\ V  := #var((T, T', C'), 'Condition) .
 endfm
 ```
