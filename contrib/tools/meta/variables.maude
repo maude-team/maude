@@ -1,6 +1,41 @@
 --- ; Variable Handling
 --- ; =================
 
+--- ; Determiistic Variables
+--- ; ----------------------
+
+--- ; Often times, fresh variables aren’t needed if you can deterministically compute
+--- ; a correct “new variable” given an existing list of terms. This module does that.
+
+
+fmod DETERMINISTIC-VARIABLES is
+   protecting META-TERM .
+
+    var Q : Qid . var STR : String . var S : Sort .
+    var T : Term . vars NeTL NeTL' : NeTermList . var TL : TermList .
+
+    op #string : TermList -> String .
+    ---------------------------------
+    eq #string(Q)              = string(Q) .
+    eq #string(Q[TL])          = #string(Q) + "[" + #string(TL) + "]" .
+    eq #string((NeTL , NeTL')) = #string(NeTL) + "," + #string(NeTL') .
+
+    op #qid : TermList -> Qid .
+    ---------------------------
+    eq #qid(TL) = qid(#string(TL)) .
+
+    op #makeVariable : Qid    Sort -> Variable .
+    op #makeVariable : String Sort -> Variable .
+    --------------------------------------------
+    eq #makeVariable(Q, S)   = qid("#makeVariable(" + string(Q) + "):" + string(S)) .
+    eq #makeVariable(STR, S) = qid("#makeVariable(" + STR + "):" + string(S)) .
+
+    op #var : TermList Sort -> Variable .
+    -------------------------------------
+    eq #var(TL, S) = #makeVariable(#string(TL), S) .
+endfm
+
+
 --- ; Metavariable Renaming/Fresh
 --- ; ---------------------------
 
