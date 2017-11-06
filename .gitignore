@@ -36,4 +36,4 @@ lib*.a
 # src/Mixfix/surface.*
 
 # unignore needed Makefiles
-!/contrib/tools/Makefile
+!/contrib/Makefile
