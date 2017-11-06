@@ -77,9 +77,9 @@ AC_SUBST(BUDDY_LIB)
 #
 AC_ARG_WITH(yices2,
 	    AC_HELP_STRING([--with-yices2],
-                           [use Yices2 SMT solver library [default=yes]]),
+                           [use Yices2 SMT solver library [default=no]]),
 			   [WITH_YICES2=$withval],
-			   [WITH_YICES2=yes])
+			   [WITH_YICES2=no])
 if (test $WITH_YICES2 = yes) then
 #
 #	Check if user set a particular Yices2 library to use and if
