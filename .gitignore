@@ -19,6 +19,7 @@ Makefile.in
 .deps
 lib*.a
 *.o
+*.pdf
 
 # testing files
 *.log
