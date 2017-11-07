@@ -8,6 +8,7 @@ Rewriting Logic
 -   Uses term-structure to represent state.
 -   Use algorithms for *matching modulo axioms* $B$ to take a specific transition.
 -   *Reflective* nature allows self-representing implementations.
+-   Tuple $(\Sigma, B \cup E, R)$ of signature, axioms, equational rules, and rewriting rules.
 
 ### Conditional Rewriting Logic
 
@@ -17,7 +18,12 @@ Rewriting Logic
 ### Narrowing
 
 -   Symbolic rewriting by using unification instead of matching.
--   Unification algorithm may not be present for a given set of axioms $B$.
+-   Unification algorithm may not be present for a given set of axioms $B$ and equations $E$.
+
+\newcommand{\mt}{\emptyset}
+
+If $E = \mt$ and $B$ has a finitary unification algorithm, then we say that $(\Omega, B, R) = (\Sigma, B \cup E, R)$ is a *subsignature of free constructors modulo $B$*.
+In this case, $B$ unification alone is enough to perform narrowing.
 
 Order Sorted Algebra
 --------------------
