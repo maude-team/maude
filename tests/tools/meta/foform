@@ -1,0 +1,10 @@
+#!/bin/sh
+
+MAUDE_LIB=$srcdir/../../../src/Main
+export MAUDE_LIB
+
+../../../src/Main/maude \
+  < foform.maude -no-banner -no-advise \
+  > foform.out 2>&1
+
+diff foform.expected foform.out > /dev/null 2>&1
