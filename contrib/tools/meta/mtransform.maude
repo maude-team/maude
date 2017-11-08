@@ -15,9 +15,9 @@ load variables.maude
 
 --- ; When rewrite theory ℛ protects sub-theory (*Σ*₁, *B*₁ ∪ *E*₁), define a new theory (*Σ*, *B* ∪ *E*, *R*′) with:
 
---- ; TODO: Make `EqTheory` a sub-sort of `ModuleDeclSet`?
---- ; TODO: Make `Rule < CRule`, with `op _if_ : Rule Condition -> Rule [right id: true]` for easier matching.
---- ; TODO: Bring in code from `PURIFICATION` module.
+--- ; -   TODO: Make `EqTheory` a sub-sort of `ModuleDeclSet`?
+--- ; -   TODO: Make `Rule < CRule`, with `op _if_ : Rule Condition -> Rule [right id: true]` for easier matching.
+--- ; -   TODO: Bring in code from `PURIFICATION` module.
 
 
 fmod SUBTHEORY-ABSTRACTION is
@@ -42,6 +42,9 @@ endfm
 --- ; ------------------
 
 --- ; If the equational fragment has a finitary unification algorithm, then we can “build” them into the rules.
+
+--- ; -   TODO: Define `#eqnsModule` function.
+--- ; -   TODO: Define `#variantsFrom` function.
 
 
 fmod BUILDIN-EQUATIONS is

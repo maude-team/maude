@@ -16,9 +16,9 @@ Subtheory Abstraction
 
 When rewrite theory $\R$ protects sub-theory $(\Sigma_1, B_1 \cup E_1)$, define a new theory $(\Sigma, B \cup E, R')$ with:
 
-TODO: Make `EqTheory` a sub-sort of `ModuleDeclSet`?
-TODO: Make `Rule < CRule`, with `op _if_ : Rule Condition -> Rule [right id: true]` for easier matching.
-TODO: Bring in code from `PURIFICATION` module.
+-   TODO: Make `EqTheory` a sub-sort of `ModuleDeclSet`?
+-   TODO: Make `Rule < CRule`, with `op _if_ : Rule Condition -> Rule [right id: true]` for easier matching.
+-   TODO: Bring in code from `PURIFICATION` module.
 
 ```maude
 fmod SUBTHEORY-ABSTRACTION is
@@ -43,6 +43,9 @@ Build-in Equations
 ------------------
 
 If the equational fragment has a finitary unification algorithm, then we can "build" them into the rules.
+
+-   TODO: Define `#eqnsModule` function.
+-   TODO: Define `#variantsFrom` function.
 
 ```maude
 fmod BUILDIN-EQUATIONS is
