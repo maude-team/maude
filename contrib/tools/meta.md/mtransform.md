@@ -105,6 +105,6 @@ fmod UNCONDITIONALIZE is
 
     op unconditionalize : Sort ModuleDeclSet -> [ModuleDeclSet] .
     -------------------------------------------------------------
-    eq unconditionalize(S, MDS) = cTermOp(S) rmConditions(S, MDS) .
+    eq unconditionalize(S, MDS) = ( pr 'META-LEVEL . ) cTermOp(S) rmConditions(S, MDS) .
 endfm
 ```
