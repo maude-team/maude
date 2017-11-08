@@ -2,6 +2,7 @@
 --- ; ======================
 
 
+load cterms.maude
 load mtemplate.maude
 load variables.maude
 
@@ -21,14 +22,24 @@ load variables.maude
 
 
 fmod SUBTHEORY-ABSTRACTION is
+   protecting CTERM-SET .
    protecting MODULE-TEMPLATE .
-   protecting PURIFICATION .
+   --- protecting PURIFICATION .
+
+    var IS : ImportDeclSet . var SDS : SubsortDeclSet . vars SSDS : SubsortDeclSet .
+    var MAS : MembAxSet . var EQS : EquationSet . var RLS : RuleSet .
+    vars NeMDS NeMDS' : NeModuleDeclSet . var M : Module .
+    vars L L' R R' : Term . vars C CL' CR' : Constraint . var AS : AttrSet .
 
     op #purifyIn : Term          Module -> [CTerm] .
     op #purifyIn : ModuleDeclSet Module -> [ModuleDeclSet] .
     --------------------------------------------------------
     eq #purifyIn(IS SDS SSDS MAS EQS, M) = IS SDS SSDS MAS EQS .
     eq #purifyIn(NeMDS NeMDS',        M) = #purifyIn(NeMDS, M) #purifyIn(NeMDS', M) .
+
+   ceq #purifyIn(( rl L => R [AS] . ), M) = ( crl L' => R' if CL' /\ CR' [AS] . )
+    if L' | CL' := #purifyIn(L, M)
+    /\ R' | CR' := #purifyIn(R, M) .
 
    ceq #purifyIn(( crl L => R if C [AS] . ), M) = ( crl L' => R' if C /\ CL' /\ CR' [AS] . )
     if L' | CL' := #purifyIn(L, M)
