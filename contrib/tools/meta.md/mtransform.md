@@ -1,13 +1,65 @@
 Module Transformations
 ======================
 
-This file is a collection of the module transformations available for Maude. The
-data-structures used are from `mtemplate.maude` for flexibility (as opposed to
-the prelude ones).
-
 ```maude
 load mtemplate.maude
 load variables.maude
+```
+
+\newcommand{\R}{\mathcal{R}}
+
+Theory transformations take advantage of Maude's *reflective* nature.
+Assume throughout a rewrite theory $\R = (\Sigma, B \cup E, R)$.
+
+Subtheory Abstraction
+---------------------
+
+When rewrite theory $\R$ protects sub-theory $(\Sigma_1, B_1 \cup E_1)$, define a new theory $(\Sigma, B \cup E, R')$ with:
+
+TODO: Make `EqTheory` a sub-sort of `ModuleDeclSet`?
+TODO: Make `Rule < CRule`, with `op _if_ : Rule Condition -> Rule [right id: true]` for easier matching.
+TODO: Bring in code from `PURIFICATION` module.
+
+```maude
+fmod SUBTHEORY-ABSTRACTION is
+   protecting MODULE-TEMPLATE .
+   protecting PURIFICATION .
+
+    op #purifyIn : Term          Module -> [CTerm] .
+    op #purifyIn : ModuleDeclSet Module -> [ModuleDeclSet] .
+    --------------------------------------------------------
+    eq #purifyIn(IS SDS SSDS MAS EQS, M) = IS SDS SSDS MAS EQS .
+    eq #purifyIn(NeMDS NeMDS',        M) = #purifyIn(NeMDS, M) #purifyIn(NeMDS', M) .
+
+   ceq #purifyIn(( crl L => R if C [AS] . ), M) = ( crl L' => R' if C /\ CL' /\ CR' [AS] . )
+    if L' | CL' := #purifyIn(L, M)
+    /\ R' | CR' := #purifyIn(R, M) .
+endfm
+```
+
+Note that when the sub-theory $(\Sigma_1, B_1 \cup E_1)$ is FVP, the above theory transformation enables variant unification to be used for narrowing.
+
+Build-in Equations
+------------------
+
+If the equational fragment has a finitary unification algorithm, then we can "build" them into the rules.
+
+```maude
+fmod BUILDIN-EQUATIONS is
+   protecting MODULE-TEMPLATE .
+   protecting UNIFICATION .
+
+    op #eqnsModule : Module -> [Module] .
+    -------------------------------------
+
+    op #buildinEqns : ModuleDeclSet Module -> [ModuleDeclSet] .
+    -----------------------------------------------------------
+    eq #buildinEqns(IS SDS SSDS MAS EQS, M) = IS SDS SSDS MAS EQS .
+    eq #buildinEqns(NeMDS NeMDS',        M) = #buildinEqns(NeMDS, M) #buildinEqns(NeMDS', M) .
+
+   ceq #buildinEqns(( crl L => R if C [AS] . ), M) = ( crl L => R if C [AS] . ) << SUBSTS
+    if SUBSTS := #variantsFrom('_|_[L,R], #eqnsModule(M)) .
+endfm
 ```
 
 Removing Conditional Equations/Rules
