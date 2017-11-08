@@ -95,7 +95,7 @@ fmod UNCONDITIONALIZE is
     eq mmImport = (protecting 'META-MODULE .) .
 
     op rmConditions : Module Sort RuleSet -> [RuleSet] .
-    -------------------------------------------------------------
+    ----------------------------------------------------
     eq rmConditions(M, S, none) = none .
     eq rmConditions(M, S,  rl T => T'      [AS] . RLS) = (rl      T     =>      T'                [AS] .) rmConditions(M, S, RLS) .
    ceq rmConditions(M, S, crl T => T' if C [AS] . RLS) = (rl '_|_[T, V] => '_|_[T', '_/\_[V, C']] [AS] .) rmConditions(M, S, RLS)
