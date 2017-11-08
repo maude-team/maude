@@ -4,6 +4,7 @@ all: \
 tools: \
 	tools/meta/structured-names.maude \
 	tools/meta/cterms.maude \
+	tools/meta/foform.maude \
 	tools/meta/mtemplate.maude \
 	tools/meta/mtransform.maude \
 	tools/meta/variables.maude

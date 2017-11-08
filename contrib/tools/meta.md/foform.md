@@ -1,13 +1,13 @@
---- ; First-Order Formulae
---- ; --------------------
+First-Order Formulae
+--------------------
 
---- ; This file implements a first-order logic formula datatype. The main datatype is
---- ; defined in FOFORM. Various functionalities are provided to compute normal forms:
---- ; NNF, PNF, DNF, and CNF or simplify/rename formulas. These functions are stored
---- ; in separate modules from FOFORM and are called through META-LEVEL reflection.
---- ; This isolates the modules from one another and simplifies the algorithm design.
+This file implements a first-order logic formula datatype. The main datatype is
+defined in FOFORM. Various functionalities are provided to compute normal forms:
+NNF, PNF, DNF, and CNF or simplify/rename formulas. These functions are stored
+in separate modules from FOFORM and are called through META-LEVEL reflection.
+This isolates the modules from one another and simplifies the algorithm design.
 
-
+```maude
 load variables.maude
 
 fmod REFLECT is
@@ -925,6 +925,4 @@ view NegConj?        from TRIV to FOFORM                  is sort Elt to NegConj
 view NegDisj?        from TRIV to FOFORM                  is sort Elt to NegDisj?        . endv
 --- FOFormSubstPair
 view FOFormSubstPair from TRIV to FOFORMSUBSTITUTION-PAIR is sort Elt to FOFormSubstPair . endv
-
-
-
+```
