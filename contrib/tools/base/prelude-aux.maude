@@ -3,8 +3,6 @@
 --- desc: This file extends the basic datatypes in the prelude
 ---       with many additional operations
 
-load full-maude.maude
-
 fmod BOOL-ERR is
   pr BOOL .
   pr QID-LIST .
@@ -316,18 +314,6 @@ fmod STRING-PAIR is
   eq  split(S,S')  = split(S, find(S,S',0),length(S')) .
   eq rsplit(S,S')  = split(S,rfind(S,S',length(S)),length(S')) .
   eq  split(S,B,L) = (substr(S,0,B),substr(S,B + L,length(S))) .
-endfm
-
-fmod MOD-EXTRA is
-  pr UNIT .
-  op protecting? : Module Module -> Bool .
-  op protecting? : ModuleExpression ImportList -> Bool .
-  var ME ME' : ModuleExpression . var IL : ImportList . var M M' : Module .
-  eq protecting?(M,M') = protecting?(getName(M'),getImports(M)) .
-  eq protecting?(ME,protecting ME' . IL) = ME == ME' or-else protecting?(ME,IL) .
-  eq protecting?(ME,including  ME' . IL) = protecting?(ME,IL) .
-  eq protecting?(ME,extending  ME' . IL) = protecting?(ME,IL) .
-  eq protecting?(ME,nil) = false .
 endfm
 
 fmod TYPE-EXTRA is
@@ -772,6 +758,74 @@ fmod OPDECL-ORDER is
   eq relatedOps(M,OD,none) = none .
 endfm
 
+--- this module has functionality to generate unique prefixes with
+--- respect to the sorts/operators in a module; this is useful when
+--- an algorithm needs to generate fresh sorts/operators; if the
+--- generated sort/operator will be needed often, it can be memoized
+fmod UNIQUE-PREFIX is
+  pr META-LEVEL .
+  pr OPDECLSET-EXTRA .
+  pr SET{String} .
+
+  op sortPrefix     : Module             -> String [memo] .
+  op sortPrefix     : SortSet            -> String .
+  op opPrefix       : Module             -> String [memo] .
+  op opPrefix       : OpDeclSet          -> String .
+  op uniquePrefix   : QidSet             -> String .
+  op uniquePrefix   : String Set{String} -> String .
+  op qidSetToStrSet : QidSet             -> Set{String} .
+
+  var P S : String . var SS : Set{String} . var D : Qid . var Q : QidSet .
+
+  eq sortPrefix(M:Module)   = uniquePrefix(getSorts(M:Module)) .
+  eq sortPrefix(S:SortSet)  = uniquePrefix(S:SortSet) .
+  eq opPrefix(M:Module)     = uniquePrefix(qid(getOps(M:Module))) .
+  eq opPrefix(O:OpDeclSet)  = uniquePrefix(qid(O:OpDeclSet)) .
+  eq uniquePrefix(Q)        = uniquePrefix("@",qidSetToStrSet(Q)) .
+  eq uniquePrefix(P,(S,SS)) = if P == substr(S,0,length(P)) then uniquePrefix(P + "@",(S,SS))
+                                                         else uniquePrefix(P,SS) fi .
+  eq uniquePrefix(P,empty)  = P .
+  eq qidSetToStrSet(D ; Q)  = string(D) , qidSetToStrSet(Q) .
+  eq qidSetToStrSet(none)   = empty .
+endfm
+
+fmod VARIABLESET is
+  pr META-LEVEL .
+  sort NeVariableSet VariableSet .
+  subsort Variable < NeVariableSet < VariableSet < QidSet .
+  subsort EmptyTypeSet < VariableSet .
+  subsort NeVariableSet < NeQidSet .
+  op _;_ : VariableSet VariableSet   -> VariableSet   [ctor ditto].
+  op _;_ : NeVariableSet VariableSet -> NeVariableSet [ctor ditto].
+
+  var V : Variable .
+  var VS : VariableSet .
+  var SS : SortSet .
+
+  op sorts : VariableSet -> TypeSet .
+  eq sorts(V ; VS) = getType(V) ; sorts(VS) .
+  eq sorts(none) = none .
+
+  op filterBySort : VariableSet SortSet -> VariableSet .
+  eq filterBySort(V ; VS,SS) =
+    if getType(V) in SS then V else none fi ; filterBySort(VS,SS) .
+  eq filterBySort(none,SS) = none .
+endfm
+
+load ../base/full-maude.maude
+
+fmod MOD-EXTRA is
+  pr UNIT .
+  op protecting? : Module Module -> Bool .
+  op protecting? : ModuleExpression ImportList -> Bool .
+  var ME ME' : ModuleExpression . var IL : ImportList . var M M' : Module .
+  eq protecting?(M,M') = protecting?(getName(M'),getImports(M)) .
+  eq protecting?(ME,protecting ME' . IL) = ME == ME' or-else protecting?(ME,IL) .
+  eq protecting?(ME,including  ME' . IL) = protecting?(ME,IL) .
+  eq protecting?(ME,extending  ME' . IL) = protecting?(ME,IL) .
+  eq protecting?(ME,nil) = false .
+endfm
+
 fmod OPDECL-TYPING is
   pr META-LEVEL .
   pr TERM-HANDLING .
@@ -873,37 +927,6 @@ fmod TERM-EXTRA is
   eq domain(none)       = none .
 endfm
 
---- this module has functionality to generate unique prefixes with
---- respect to the sorts/operators in a module; this is useful when
---- an algorithm needs to generate fresh sorts/operators; if the
---- generated sort/operator will be needed often, it can be memoized
-fmod UNIQUE-PREFIX is
-  pr META-LEVEL .
-  pr OPDECLSET-EXTRA .
-  pr SET{String} .
-
-  op sortPrefix     : Module             -> String [memo] .
-  op sortPrefix     : SortSet            -> String .
-  op opPrefix       : Module             -> String [memo] .
-  op opPrefix       : OpDeclSet          -> String .
-  op uniquePrefix   : QidSet             -> String .
-  op uniquePrefix   : String Set{String} -> String .
-  op qidSetToStrSet : QidSet             -> Set{String} .
-
-  var P S : String . var SS : Set{String} . var D : Qid . var Q : QidSet .
-
-  eq sortPrefix(M:Module)   = uniquePrefix(getSorts(M:Module)) .
-  eq sortPrefix(S:SortSet)  = uniquePrefix(S:SortSet) .
-  eq opPrefix(M:Module)     = uniquePrefix(qid(getOps(M:Module))) .
-  eq opPrefix(O:OpDeclSet)  = uniquePrefix(qid(O:OpDeclSet)) .
-  eq uniquePrefix(Q)        = uniquePrefix("@",qidSetToStrSet(Q)) .
-  eq uniquePrefix(P,(S,SS)) = if P == substr(S,0,length(P)) then uniquePrefix(P + "@",(S,SS))
-                                                         else uniquePrefix(P,SS) fi .
-  eq uniquePrefix(P,empty)  = P .
-  eq qidSetToStrSet(D ; Q)  = string(D) , qidSetToStrSet(Q) .
-  eq qidSetToStrSet(none)   = empty .
-endfm
-
 --- this module provides functionality to add a set of variables into a module
 --- as FRESH constants (by using the functionality of opPrefix above); the function
 --- returns a new module as well as an assignment mapping each variable into its
@@ -990,29 +1013,6 @@ fmod APPLY-SUBS is
   op apply : SubstitutionSet Term -> TermSet .
   eq apply(S | SS,T) = (T << S) | apply(SS,T) .
   eq apply(none,T) = emptyTermSet .
-endfm
-
-fmod VARIABLESET is
-  pr META-LEVEL .
-  sort NeVariableSet VariableSet .
-  subsort Variable < NeVariableSet < VariableSet < QidSet .
-  subsort EmptyTypeSet < VariableSet .
-  subsort NeVariableSet < NeQidSet .
-  op _;_ : VariableSet VariableSet   -> VariableSet   [ctor ditto].
-  op _;_ : NeVariableSet VariableSet -> NeVariableSet [ctor ditto].
-
-  var V : Variable .
-  var VS : VariableSet .
-  var SS : SortSet .
-
-  op sorts : VariableSet -> TypeSet .
-  eq sorts(V ; VS) = getType(V) ; sorts(VS) .
-  eq sorts(none) = none .
-
-  op filterBySort : VariableSet SortSet -> VariableSet .
-  eq filterBySort(V ; VS,SS) =
-    if getType(V) in SS then V else none fi ; filterBySort(VS,SS) .
-  eq filterBySort(none,SS) = none .
 endfm
 
 fmod MODULE-DATABASE-IMP{X :: TRIV} is
