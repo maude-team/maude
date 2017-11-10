@@ -17,6 +17,7 @@ fmod CTERM-SET is
    protecting FOFORM-DEFINEDOPS .
    protecting FOFORMSIMPLIFY .
    protecting FOFORM-SUBSTITUTIONSET .
+   protecting META-LEVEL-EXT .
 
     sorts CTerm NeCTermSet CTermSet CTermSet? .
     -------------------------------------------
@@ -365,6 +366,7 @@ The resulting formulas will always be of the form
 fmod PURIFICATION is
     protecting META-LEVEL .
     protecting BREAK-EQATOMS .
+    protecting CTERM-SET .
 
     var Q : Qid . var TA : TruthAtom . vars EqC EqC' : EqConj . var QFF : QFForm .
     vars ME ME' : ModuleExpression . vars M M' : Module .
