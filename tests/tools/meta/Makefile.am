@@ -4,6 +4,7 @@ TESTS = \
 	foform \
 	mtemplate \
 	mtransform \
+	unification \
 	variables
 
 MAUDE_FILES = \
@@ -12,6 +13,7 @@ MAUDE_FILES = \
 	foform.maude \
 	mtemplate.maude \
 	mtransform.maude \
+	unification.maude \
 	variables.maude
 
 RESULT_FILES = \
@@ -20,6 +22,7 @@ RESULT_FILES = \
 	foform.expected \
 	mtemplate.expected \
 	mtransform.expected \
+	unification.expected \
 	variables.expected
 
 EXTRA_DIST = $(TESTS) $(MAUDE_FILES) $(RESULT_FILES)
