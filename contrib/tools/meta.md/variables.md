@@ -1,3 +1,7 @@
+```maude
+load ../base/full-maude.maude
+```
+
 Variable Handling
 =================
 
@@ -218,8 +222,6 @@ NOTE: using "cat metafresh.maude | egrep -v
 comments/blanks) last gave slightly < 250
 
 ```maude
-load ../base/prelude-aux.maude
-
 fmod RENAME-DATA is
   pr META-LEVEL .
   sort RenameData TermData VarData .

@@ -1,3 +1,7 @@
+
+load ../base/full-maude.maude
+
+
 --- ; Variable Handling
 --- ; =================
 
@@ -217,8 +221,6 @@ endfm
 --- ; `"^[ ]*---" | egrep -v "^[ ]*$" | wc -l` to count code lines (excl.
 --- ; comments/blanks) last gave slightly &lt; 250
 
-
-load ../base/prelude-aux.maude
 
 fmod RENAME-DATA is
   pr META-LEVEL .
