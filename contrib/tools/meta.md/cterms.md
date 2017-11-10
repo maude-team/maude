@@ -437,7 +437,7 @@ endfm
 Traversing Terms
 ================
 
-```maude
+```
 fmod TERM-TRAVERSE is
     protecting FOFORMSIMPLIFY-IMPL .
     protecting META-LEVEL .

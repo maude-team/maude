@@ -437,47 +437,45 @@ endfm
 --- ; Traversing Terms
 --- ; ================
 
-
-fmod TERM-TRAVERSE is
-    protecting FOFORMSIMPLIFY-IMPL .
-    protecting META-LEVEL .
-    protecting BREAK-EQATOMS .
-
-    var TO TO' : TermOp . var C : Constant . var V : Variable . var Q : Qid .
-    var T : Term . var NeTL NeTL' : NeTermList . var TL : TermList .
-
-    sorts TermOp ModuleExpressionList .
-    subsort ModuleExpression < ModuleExpressionList .
-
-    op _;_  : TermOp TermOp -> TermOp [assoc] .
-    op _[_] : TermOp TermList -> [TermList] .
-    -----------------------------------------
-    eq (TO ; TO')[T]    = TO'[TO[T]] .
-    eq TO[NeTL , NeTL'] = TO[NeTL] , TO[NeTL'] .
-
-    op onChildren : TermOp -> TermOp .
-    ----------------------------------
-    eq onChildren(TO)[C]     = C .
-    eq onChildren(TO)[V]     = V .
-    eq onChildren(TO)[Q[TL]] = Q[TO[TL]] .
-
-    op traverseUp   : TermOp -> TermOp .
-    op traverseDown : TermOp -> TermOp .
-    ------------------------------------
-    eq traverseUp  (TO)[T] = TO[onChildren(traverseUp(TO))[T]] .
-    eq traverseDown(TO)[T] = onChildren(traverseDown(TO))[TO[T]] .
-
-    op _;;;_ : ModuleExpressionList ModuleExpressionList -> ModuleExpressionList [assoc] .
-    --------------------------------------------------------------------------------------
-
-    op purify : ModuleExpressionList -> TermOp .
-    --------------------------------------------
-    ceq purify(ME ;;; MEL          [T]     = T                          if wellFormed(M, T) .
-    ceq purify(ME ;;; MEL)         [Q[TL]] = Q[purify((ME ;; MEL))[TL]] if Q inO asTemplate(ME) .
----    ceq purify(ME ;;; ME' ;;; MEL) [Q[TL]] = FV | ((FV ?= T) /\ QFF)    if not Q inO asTemplate(ME)
----                                                                        /\ T | QFF := purify(ME' ;;; MEL ;;; ME) [Q[TL]]
----                                                                        /\ FV      := ??? .
-endfm
-
+--- ;     fmod TERM-TRAVERSE is
+--- ;         protecting FOFORMSIMPLIFY-IMPL .
+--- ;         protecting META-LEVEL .
+--- ;         protecting BREAK-EQATOMS .
+--- ; 
+--- ;         var TO TO' : TermOp . var C : Constant . var V : Variable . var Q : Qid .
+--- ;         var T : Term . var NeTL NeTL' : NeTermList . var TL : TermList .
+--- ; 
+--- ;         sorts TermOp ModuleExpressionList .
+--- ;         subsort ModuleExpression < ModuleExpressionList .
+--- ; 
+--- ;         op _;_  : TermOp TermOp -> TermOp [assoc] .
+--- ;         op _[_] : TermOp TermList -> [TermList] .
+--- ;         -----------------------------------------
+--- ;         eq (TO ; TO')[T]    = TO'[TO[T]] .
+--- ;         eq TO[NeTL , NeTL'] = TO[NeTL] , TO[NeTL'] .
+--- ; 
+--- ;         op onChildren : TermOp -> TermOp .
+--- ;         ----------------------------------
+--- ;         eq onChildren(TO)[C]     = C .
+--- ;         eq onChildren(TO)[V]     = V .
+--- ;         eq onChildren(TO)[Q[TL]] = Q[TO[TL]] .
+--- ; 
+--- ;         op traverseUp   : TermOp -> TermOp .
+--- ;         op traverseDown : TermOp -> TermOp .
+--- ;         ------------------------------------
+--- ;         eq traverseUp  (TO)[T] = TO[onChildren(traverseUp(TO))[T]] .
+--- ;         eq traverseDown(TO)[T] = onChildren(traverseDown(TO))[TO[T]] .
+--- ; 
+--- ;         op _;;;_ : ModuleExpressionList ModuleExpressionList -> ModuleExpressionList [assoc] .
+--- ;         --------------------------------------------------------------------------------------
+--- ; 
+--- ;         op purify : ModuleExpressionList -> TermOp .
+--- ;         --------------------------------------------
+--- ;         ceq purify(ME ;;; MEL          [T]     = T                          if wellFormed(M, T) .
+--- ;         ceq purify(ME ;;; MEL)         [Q[TL]] = Q[purify((ME ;; MEL))[TL]] if Q inO asTemplate(ME) .
+--- ;     ---    ceq purify(ME ;;; ME' ;;; MEL) [Q[TL]] = FV | ((FV ?= T) /\ QFF)    if not Q inO asTemplate(ME)
+--- ;     ---                                                                        /\ T | QFF := purify(ME' ;;; MEL ;;; ME) [Q[TL]]
+--- ;     ---                                                                        /\ FV      := ??? .
+--- ;     endfm
 
 
