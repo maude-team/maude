@@ -1,4 +1,5 @@
 TESTS = \
+	metalevel-ext \
 	structured-names \
 	cterms \
 	foform \
@@ -8,6 +9,7 @@ TESTS = \
 	variables
 
 MAUDE_FILES = \
+	metalevel-ext.maude \
 	structured-names.maude \
 	cterms.maude \
 	foform.maude \
@@ -17,6 +19,7 @@ MAUDE_FILES = \
 	variables.maude
 
 RESULT_FILES = \
+	metalevel-ext.expected \
 	structured-names.expected \
 	cterms.expected \
 	foform.expected \

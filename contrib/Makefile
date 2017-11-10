@@ -2,6 +2,7 @@ all: \
 	tools
 
 tools: \
+	tools/meta/metalevel-ext.maude \
 	tools/meta/structured-names.maude \
 	tools/meta/cterms.maude \
 	tools/meta/foform.maude \
