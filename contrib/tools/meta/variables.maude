@@ -554,12 +554,12 @@ endfm
 
 --- Gathers all functionality into a single module
 fmod RENAME-METAVARS is
-  pr META-LEVEL   .
-  pr CONVERSION   .
-  pr GET-TYPES    .
-  pr GEN-VARNAMES .
-  pr UNIT         . --- FULL-MAUDE DEPENDENCY
-  pr RENAME-DATA  .
+  pr META-LEVEL      .
+  pr CONVERSION      .
+  pr GET-TYPES       .
+  pr GEN-VARNAMES    .
+  pr RENAME-DATA     .
+  pr MODULE-HANDLING .
 
   --- auxiliary function that adds a types equation to a module
   op  add-types    : Module Module -> Module .
