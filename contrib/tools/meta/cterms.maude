@@ -10,10 +10,8 @@
 --- ; This will require infrastructure to determine whether part of a formula downs correctly into a module.
 
 
-load unification.maude
-load variables.maude
-load foform.maude
 load mtemplate.maude
+load foform.maude
 
 fmod CTERM-SET is
    protecting FOFORM-DEFINEDOPS .

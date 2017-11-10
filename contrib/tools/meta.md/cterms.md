@@ -10,10 +10,8 @@ We also need to extend FOForm to handle terms which fall into CVC4's abilities d
 This will require infrastructure to determine whether part of a formula downs correctly into a module.
 
 ```maude
-load unification.maude
-load variables.maude
-load foform.maude
 load mtemplate.maude
+load foform.maude
 
 fmod CTERM-SET is
    protecting FOFORM-DEFINEDOPS .
