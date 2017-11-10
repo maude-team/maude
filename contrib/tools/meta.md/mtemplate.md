@@ -6,8 +6,7 @@ These depend on `STRUCTURED-NAMES` for easy matching, and on `SUBSTITUTIONSET`.
 
 ```maude
 load structured-names.maude
-load cterms.maude
-load unification.maude
+load metalevel-ext.maude
 ```
 
 Module Declarations
@@ -20,7 +19,7 @@ Additionally, extra sorts are added for the non-empty versions of each declarati
 fmod MODULE-DECLARATION is
    protecting STRUCTURED-NAME .
    protecting SUBSTITUTIONSET .
-   protecting CTERM-SET .
+   protecting META-LEVEL-EXT .
 
     sorts ImportDecl ImportDeclSet .
     --------------------------------

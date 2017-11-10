@@ -6,8 +6,7 @@
 
 
 load structured-names.maude
-load cterms.maude
-load unification.maude
+load metalevel-ext.maude
 
 
 --- ; Module Declarations
@@ -20,7 +19,7 @@ load unification.maude
 fmod MODULE-DECLARATION is
    protecting STRUCTURED-NAME .
    protecting SUBSTITUTIONSET .
-   protecting CTERM-SET .
+   protecting META-LEVEL-EXT .
 
     sorts ImportDecl ImportDeclSet .
     --------------------------------
