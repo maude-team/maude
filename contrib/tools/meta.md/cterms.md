@@ -103,6 +103,17 @@ fmod CTERM-SET is
     op #varsApart : CTerm CTerm -> CTerm .
     --------------------------------------
     eq #varsApart(CT, CT') = CT .
+```
+
+`EqConj` is extended to handle constrained terms.
+It's not clear that we always want to separate a constraint from its term (the commented equations).
+
+```maude
+    op _?=_ : CTerm CTerm -> EqConj [ditto] .
+    op _!=_ : CTerm CTerm -> EqConj [ditto] .
+    -----------------------------------------
+---    eq TM? ?= (TM | EqC) = (TM? ?= TM) /\ EqC .
+---    eq TM? != (TM | EqC) = (TM? != TM) /\ EqC .
 endfm
 ```
 
@@ -147,8 +158,6 @@ fmod INTERSECTION is
     vars Q Q' : Qid . vars H H' : Header . vars S S' : Sort . vars SS SS' : SortSet .
     vars NeMDS NeMDS' : NeModuleDeclSet . vars MDS MDS' MDS'' : ModuleDeclSet .
 
-    var EqC : EqConj . var TM : Term . var TM? : [Term] . vars TML? TML?' : [TermList] .
-
     op intersect : ModuleDeclSet ModuleDeclSet -> ModuleDeclSet [assoc comm id: none] .
     -----------------------------------------------------------------------------------
     eq intersect( NeMDS     , NeMDS' )     = none [owise] .
@@ -172,18 +181,6 @@ It will often be useful to know if a sort or an operator is in a `ModuleDeclSet`
     eq Q inO ( op Q : TL -> T [AS] . ) MDS = true .
     eq S inS MDS = false [owise] .
     eq Q inO MDS = false [owise] .
-```
-
-When purifying we'll generate extra constraints we want to bubble to the top.
-Allowing QF equality atoms to bubble to the top is safe.
-
-```maude
-    op _?=_ : CTerm CTerm -> EqConj [ditto] .
-    op _!=_ : CTerm CTerm -> EqConj [ditto] .
-    -----------------------------------------
-    eq TM? ?= (TM | EqC)          = (TM? ?= TM) /\ EqC .
-    eq TM? != (TM | EqC)          = (TM? != TM) /\ EqC .
-    eq Q[TML?, (TM | EqC), TML?'] = Q[TML?, TM, TML?'] | EqC .
 ```
 
 Joint Sorts
