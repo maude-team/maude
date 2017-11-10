@@ -14,29 +14,29 @@ load mtemplate.maude
 load foform.maude
 
 fmod CTERM-SET is
+   protecting FOFORM-SUBSTITUTION .
    protecting FOFORM-DEFINEDOPS .
-   protecting FOFORMSIMPLIFY .
-   protecting FOFORM-SUBSTITUTIONSET .
    protecting META-LEVEL-EXT .
+   protecting TERMSET .
 
     sorts CTerm NeCTermSet CTermSet CTermSet? .
     -------------------------------------------
     subsorts Term < CTerm < NeCTermSet < CTermSet < CTermSet? .
+    subsort TermSet < CTermSet .
 
-    var CTX : Context . var Q : Qid .
-    vars N M M' : Nat . vars F F' F'' : FOForm . var X : Variable .
-    var MOD : Module . vars S S' : Substitution . var SS : SubstitutionSet .
-    vars T T' : Term . vars CT CT' CT'' : CTerm . vars TML? TML?' : [TermList] . var EqC : EqConj .
-    vars CTS CTS' : CTermSet . vars NeCTS NeCTS' : NeCTermSet .
+    var Q : Qid . vars S S' : Substitution . var SS : SubstitutionSet .
+    var MOD : Module . var X : Variable . vars T T' : Term . vars TML? TML?' : [TermList] .
+    vars CT CT' : CTerm . vars CTS CTS' : CTermSet . vars NeCTS NeCTS' : NeCTermSet .
+    vars F F' F'' : FOForm . var EqC : EqConj .
 
     op _|_ : Term FOForm -> CTerm [right id: tt prec 52] .
     ------------------------------------------------------
     eq T | ff ;; CTS = CTS .
     eq Q [ TML? , (T | EqC), TML?' ] = Q[TML?, T, TML?'] | EqC .
 
-    op _<<_ : CTerm Substitution -> CTerm .
-    op _<<_ : CTerm SubstitutionSet -> CTermSet .
-    ---------------------------------------------
+    op _<<_ : CTerm    Substitution    -> CTerm .
+    op _<<_ : CTermSet SubstitutionSet -> CTermSet .
+    ------------------------------------------------
     eq .CTermSet     << SS = .CTermSet .
     eq (CT ;; NeCTS) << SS = (CT << SS) ;; (NeCTS << SS) .
     eq CT << empty         = .CTermSet .
@@ -63,7 +63,7 @@ fmod CTERM-SET is
    ceq T | F ;; CTS ++ CT' ;; CTS' [ MOD ] = T | F'' ;; CTS ++ CTS' [ MOD ]
     if T' | F' := #varsApart(CT', T | F)
     /\ S | SS  := #subsumesWith(MOD, T, T')
-    /\ F''     := simplify(F \/ (F' /\ #disjSubsts(S | SS))) .
+    /\ F''     := F \/ (F' /\ #disjSubsts(S | SS)) .
 
     op _--_ : CTermSet? CTermSet? -> CTermSet? [right id: .CTermSet prec 62] .
     --------------------------------------------------------------------------
@@ -88,6 +88,13 @@ fmod CTERM-SET is
    ceq #intersect(MOD, T | F, CT') = (T | F /\ F') << (S | SS)
     if T' | F' := #varsApart(CT', T | F)
     /\ S | SS  := #unifiers(MOD, T, T') .
+```
+
+This should either be implemented, hooked up to an existing implementation, or we should convince ourselves it's not needed.
+
+```maude
+    op #varsApart : CTerm CTerm -> [CTerm] .
+    ----------------------------------------
 
     op #disjSubsts : SubstitutionSet -> PosEqQFForm? .
     --------------------------------------------------
@@ -149,8 +156,7 @@ The intersection operation is lifted to `Module` via `asTemplate`.
 
 ```maude
 fmod INTERSECTION is
-    protecting MODULE-TEMPLATE * ( op _;;_ to _;;;_ ) .
-    protecting RENAMING-EXPR-EVALUATION .
+    protecting MODULE-TEMPLATE .
 
     var B : Bool . vars TL : TypeList . var T : Type . var AS : AttrSet .
     var OPD : OpDecl . var OPDS : OpDeclSet .
@@ -267,7 +273,7 @@ Breaking equality atoms means taking an equality atom between terms of different
 ```maude
 fmod BREAK-EQATOMS is
     protecting DETERMINISTIC-VARIABLES .
-    protecting FOFORMSIMPLIFY-IMPL .
+    protecting FOFORM .
 
     vars EqC EqC' : EqConj . vars MOD MOD' : Module . vars ME ME' : ModuleExpression .
     vars T T' : Term . var NV : Variable .
