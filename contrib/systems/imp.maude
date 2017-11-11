@@ -3,14 +3,10 @@ set include BOOL off .
 load ../tools/varsat/numbers.maude
 
 fmod IMP-DATA is
-   protecting MULT-NAT* .
+   protecting MULT-NAT* + NUMBERS .
 
     sort Id .
     ---------
-
-    op x  :    -> Id [ctor] .
-    op _, : Id -> Id [ctor] .
-    -------------------------
 
     sorts Env WrappedEnv .
     ----------------------
