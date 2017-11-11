@@ -1,0 +1,122 @@
+Warning: "bank-account.maude", line 100 (mod BANK-ACCOUNT): variable m is used
+    before it is bound in rule:
+rl < bal: n pend: x overdraft: ff > # msgs => < bal: n + m pend: x overdraft:
+    ff > # msgs .
+Warning: "bank-account.maude", line 153 (mod BANK-ACCOUNT-CTOR): variable m is
+    used before it is bound in rule:
+rl < bal: n pend: x overdraft: ff > # msgs => < bal: n + m pend: x overdraft:
+    ff > # msgs .
+==========================================
+get variants in BANK-ACCOUNT : [< bal: n pend: x overdraft: ff > # msgs,
+    withdraw(m),[m > n,< bal: n pend: x overdraft: tt > # msgs,< bal: n - m
+    pend: x - m overdraft: ff > # msgs]] .
+
+Variant #1
+rewrites: 0
+StatePair: [< bal: #1:Nat pend: #2:Nat overdraft: ff > # #3:MsgConf,withdraw(
+    #4:Nat),[#4:Nat > #1:Nat,< bal: #1:Nat pend: #2:Nat overdraft: tt > #
+    #3:MsgConf,< bal: #1:Nat - #4:Nat pend: #2:Nat - #4:Nat overdraft: ff > #
+    #3:MsgConf]]
+n --> #1:Nat
+x --> #2:Nat
+msgs --> #3:MsgConf
+m --> #4:Nat
+
+Variant #2
+rewrites: 6
+StatePair: [< bal: %3:Nat + %4:Nat pend: %1:Nat overdraft: ff > # %2:MsgConf,
+    withdraw(%3:Nat),< bal: %4:Nat pend: %1:Nat - %3:Nat overdraft: ff > #
+    %2:MsgConf]
+n --> %3:Nat + %4:Nat
+x --> %1:Nat
+msgs --> %2:MsgConf
+m --> %3:Nat
+
+Variant #3
+rewrites: 6
+StatePair: [< bal: %3:Nat pend: %1:Nat overdraft: ff > # %2:MsgConf,withdraw(
+    %3:Nat + %4:Nat),[(%3:Nat + %4:Nat) > %3:Nat,< bal: %3:Nat pend: %1:Nat
+    overdraft: tt > # %2:MsgConf,< bal: 0 pend: %1:Nat - %3:Nat + %4:Nat
+    overdraft: ff > # %2:MsgConf]]
+n --> %3:Nat
+x --> %1:Nat
+msgs --> %2:MsgConf
+m --> %3:Nat + %4:Nat
+
+Variant #4
+rewrites: 6
+StatePair: [< bal: %1:Nat pend: %3:Nat overdraft: ff > # %2:MsgConf,withdraw(
+    %3:Nat + %4:Nat),[(%3:Nat + %4:Nat) > %1:Nat,< bal: %1:Nat pend: %3:Nat
+    overdraft: tt > # %2:MsgConf,< bal: %1:Nat - %3:Nat + %4:Nat pend: 0
+    overdraft: ff > # %2:MsgConf]]
+n --> %1:Nat
+x --> %3:Nat
+msgs --> %2:MsgConf
+m --> %3:Nat + %4:Nat
+
+Variant #5
+rewrites: 6
+StatePair: [< bal: %1:Nat pend: %3:Nat + %4:Nat overdraft: ff > # %2:MsgConf,
+    withdraw(%3:Nat),[%3:Nat > %1:Nat,< bal: %1:Nat pend: %3:Nat + %4:Nat
+    overdraft: tt > # %2:MsgConf,< bal: %1:Nat - %3:Nat pend: %4:Nat overdraft:
+    ff > # %2:MsgConf]]
+n --> %1:Nat
+x --> %3:Nat + %4:Nat
+msgs --> %2:MsgConf
+m --> %3:Nat
+
+Variant #6
+rewrites: 22
+StatePair: [< bal: #1:Nat + #3:Nat + #4:Nat pend: #3:Nat overdraft: ff > #
+    #2:MsgConf,withdraw(#3:Nat + #4:Nat),< bal: #1:Nat pend: 0 overdraft: ff >
+    # #2:MsgConf]
+n --> #1:Nat + #3:Nat + #4:Nat
+x --> #3:Nat
+msgs --> #2:MsgConf
+m --> #3:Nat + #4:Nat
+
+Variant #7
+rewrites: 22
+StatePair: [< bal: #1:Nat + #3:Nat pend: #3:Nat + #4:Nat overdraft: ff > #
+    #2:MsgConf,withdraw(#3:Nat),< bal: #1:Nat pend: #4:Nat overdraft: ff > #
+    #2:MsgConf]
+n --> #1:Nat + #3:Nat
+x --> #3:Nat + #4:Nat
+msgs --> #2:MsgConf
+m --> #3:Nat
+
+Variant #8
+rewrites: 22
+StatePair: [< bal: #1:Nat pend: #2:Nat overdraft: ff > # #3:MsgConf,withdraw(1
+    + #1:Nat + #4:Nat),< bal: #1:Nat pend: #2:Nat overdraft: tt > # #3:MsgConf]
+n --> #1:Nat
+x --> #2:Nat
+msgs --> #3:MsgConf
+m --> 1 + #1:Nat + #4:Nat
+
+Variant #9
+rewrites: 22
+StatePair: [< bal: #3:Nat + #2:Nat pend: #4:Nat + #2:Nat overdraft: ff > #
+    #1:MsgConf,withdraw(#3:Nat + #4:Nat + #2:Nat + #5:Nat),[(#3:Nat + #4:Nat +
+    #2:Nat + #5:Nat) > #3:Nat + #2:Nat,< bal: #3:Nat + #2:Nat pend: #4:Nat +
+    #2:Nat overdraft: tt > # #1:MsgConf,< bal: 0 pend: 0 overdraft: ff > #
+    #1:MsgConf]]
+n --> #3:Nat + #2:Nat
+x --> #4:Nat + #2:Nat
+msgs --> #1:MsgConf
+m --> #3:Nat + #4:Nat + #2:Nat + #5:Nat
+
+Variant #10
+rewrites: 22
+StatePair: [< bal: #2:Nat pend: #3:Nat + #4:Nat + #2:Nat overdraft: ff > #
+    #1:MsgConf,withdraw(#3:Nat + #2:Nat),[(#3:Nat + #2:Nat) > #2:Nat,< bal:
+    #2:Nat pend: #3:Nat + #4:Nat + #2:Nat overdraft: tt > # #1:MsgConf,< bal: 0
+    pend: #4:Nat overdraft: ff > # #1:MsgConf]]
+n --> #2:Nat
+x --> #3:Nat + #4:Nat + #2:Nat
+msgs --> #1:MsgConf
+m --> #3:Nat + #2:Nat
+
+No more variants.
+rewrites: 32
+Bye.

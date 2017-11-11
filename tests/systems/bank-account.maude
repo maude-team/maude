@@ -1,0 +1,10 @@
+set show timing off .
+
+load ../../contrib/systems/bank-account.maude
+
+get variants in BANK-ACCOUNT :
+    [ < bal: n pend: x overdraft: ff > # withdraw(m) , msgs
+    , [ m > n , < bal: n       pend: x       overdraft: tt > # msgs
+              , < bal: (n - m) pend: (x - m) overdraft: ff > # msgs
+      ]
+    ] .
