@@ -17,7 +17,6 @@ fmod CTERM-SET is
    protecting FOFORM-SUBSTITUTION .
    protecting FOFORM-DEFINEDOPS .
    protecting META-LEVEL-EXT .
-   protecting TERMSET .
 
     sorts CTerm NeCTermSet CTermSet CTermSet? .
     -------------------------------------------
