@@ -1,3 +1,10 @@
 set show timing off .
 
 load ../../contrib/systems/imp.maude
+
+rewrite < x = 3 ; ~> done | x |-> 0 > .
+
+rewrite < sum(n, s) ~> done | n |-> 10 * s |-> 3 > .
+
+rewrite < swap(x, y, t)       ~> done | x |-> 3 * y |-> 5 * t |-> 0 > .
+rewrite < swap-in-place(x, y) ~> done | x |-> 3 * y |-> 5 > .
