@@ -1,0 +1,3 @@
+set show timing off .
+
+load ../../contrib/systems/imp.maude
