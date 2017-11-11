@@ -183,3 +183,32 @@ mod NONSEQ-IMP-SEMANTICS is
    crl [@add-rght] : < AE +: AE'      ~> K | E > => < AE' ~> AE +: [] ~> K | E > if val?(AE) = ff .
     rl [#add-rght] : < N  ~> AE +: [] ~> K | E > => < AE +: N         ~> K | E > .
 endm
+
+mod IMP-PROGRAMS is
+   protecting IMP-SEMANTICS + IDENTIFIER .
+
+    vars N S X Y Z T : Id .
+
+    op sum : Id Id -> Stmt .
+    ------------------------
+    eq sum(N,S)
+     = S = 0 ;
+       while (0 <: N) {
+           S = S +: N ;
+           N = N -: 1 ;
+       } .
+
+    op swap : Id Id Id -> Stmt .
+    ----------------------------
+    eq swap(X,Y,T)
+     = T = X ;
+       X = Y ;
+       Y = T ; .
+
+    op swap-in-place : Id Id -> Stmt .
+    ----------------------------------
+    eq swap-in-place(X, Y)
+     = X = X +: Y ;
+       Y = X -: Y ;
+       X = X -: Y ; .
+endm
