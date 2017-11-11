@@ -156,6 +156,7 @@ endfm
 
 fmod INTERSECTION is
     protecting MODULE-TEMPLATE .
+    protecting DETERMINISTIC-VARIABLES .
 
     var B : Bool . vars TL : TypeList . var T : Type . var AS : AttrSet .
     var OPD : OpDecl . var OPDS : OpDeclSet .
@@ -204,7 +205,7 @@ fmod INTERSECTION is
     ceq joint-sort(S, MDS, MDS') = S if S inS intersect(MDS, MDS') .
     ceq joint-sort(S, MDS, MDS') = joint-sort(S, MDS', MDS) if (not S inS MDS) /\ S inS MDS .
     ceq joint-sort(S, MDS, MDS') = if S inS MDS'' then S else #top-sort(MDS'') fi
-                                 if S inS MDS /\ MDS'' := intersect(connected-component(MDS, (sorts S .)), MDS') .
+                                if S inS MDS /\ MDS'' := intersect(connected-component(MDS, (sorts S .)), MDS') .
 
     op joint-sort : Sort Module           Module           -> Sort .
     op joint-sort : Sort ModuleExpression ModuleExpression -> Sort .
@@ -216,39 +217,10 @@ fmod INTERSECTION is
     ----------------------------------------
     eq #top-sort( ( sorts S ; SS . )   MDS ) = top-sort( ( sorts S ; SS . )   MDS , S ) .
     eq #top-sort( ( subsort S < S' . ) MDS ) = top-sort( ( subsort S < S' . ) MDS , S ) .
-endfm
 
 
---- ; Deterministic Variables
---- ; =======================
+--- ; Sometimes it’s necessary to calculate a joint-variable of a term in the intersection of two modules.
 
---- ; Having deterministically calculated variables makes many things much simpler.
---- ; This module calculates a variable for a given term by simply turning the term into a string.
---- ; This guarantees that if the same term is encountered twice, the same variable will be generated.
-
-
-fmod DETERMINISTIC-VARIABLES is
-    protecting INTERSECTION .
-
-    var Q : Qid . var Str : String . var S : Sort .
-    vars ME ME' : ModuleExpression . vars MOD MOD' : Module . var T : Term .
-    vars NeTL NeTL' : NeTermList . var TL : TermList .
-
-    op #string : TermList -> String .
-    ---------------------------------
-    eq #string(Q)              = string(Q) .
-    eq #string(Q[TL])          = #string(Q) + "[" + #string(TL) + "]" .
-    eq #string((NeTL , NeTL')) = #string(NeTL) + "," + #string(NeTL') .
-
-    op #qid : TermList -> Qid .
-    ---------------------------
-    eq #qid(TL) = qid(#string(TL)) .
-
-    op #makeVariable : Qid    Sort -> Variable .
-    op #makeVariable : String Sort -> Variable .
-    --------------------------------------------
-    eq #makeVariable(Q, S)   = qid("#makeVariable(" + string(Q) + "):" + string(S)) .
-    eq #makeVariable(Str, S) = qid("#makeVariable(" + Str + "):" + string(S)) .
 
     op joint-variable : ModuleExpression ModuleExpression Term -> Variable .
     ------------------------------------------------------------------------
@@ -256,8 +228,10 @@ fmod DETERMINISTIC-VARIABLES is
 
     op joint-variable : Module Module Term -> Variable .
     ----------------------------------------------------
-    ceq joint-variable(MOD, MOD', T) = #makeVariable(#string(T), joint-sort(leastSort(MOD, T),  MOD, MOD')) if wellFormed(MOD, T) .
-    ceq joint-variable(MOD, MOD', T) = #makeVariable(#string(T) ,joint-sort(leastSort(MOD', T), MOD', MOD)) if wellFormed(MOD', T) .
+   ceq joint-variable(MOD, MOD', T) = #makeVariable(#string(T), joint-sort(leastSort(MOD, T),  MOD, MOD'))
+                                   if wellFormed(MOD, T) .
+   ceq joint-variable(MOD, MOD', T) = #makeVariable(#string(T) ,joint-sort(leastSort(MOD', T), MOD', MOD))
+                                   if wellFormed(MOD', T) .
 endfm
 
 
@@ -271,7 +245,7 @@ endfm
 
 
 fmod BREAK-EQATOMS is
-    protecting DETERMINISTIC-VARIABLES .
+    protecting INTERSECTION .
     protecting FOFORM .
 
     vars EqC EqC' : EqConj . vars MOD MOD' : Module . vars ME ME' : ModuleExpression .
