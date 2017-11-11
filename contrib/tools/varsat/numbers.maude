@@ -112,9 +112,19 @@ fmod NUMBERS is
 endfm
 
 fmod IDENTIFIER is
-  sort Id .
-  ops a b c d e f g h i j k l m n o p q r s t u v w x y z : -> Id [ctor] .
-  op _,_ : Id Id -> Id [ctor] .
+
+    sorts Id Ids .
+    --------------
+    subsort Id < Ids .
+
+    ops a b c d e f g h i j k l m n o p q r s t u v w x y z : -> Id [ctor] .
+    ------------------------------------------------------------------------
+
+    op _,_ : Id Id -> Id [ctor] .
+    -----------------------------
+
+    op _;_ : Ids Ids -> Ids [ctor assoc] .
+    --------------------------------------
 endfm
 
 fmod INT* is
