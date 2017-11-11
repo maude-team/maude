@@ -1,0 +1,7 @@
+set show timing off .
+
+load ../../contrib/systems/nim.maude
+
+search [ init1 ] =>! C:Conf .
+
+search [ init2 ] =>! C:Conf .

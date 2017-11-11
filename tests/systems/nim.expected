@@ -1,0 +1,164 @@
+==========================================
+search in NIM : [init1] =>! C:Conf .
+
+Solution 1 (state 146)
+states: 183  rewrites: 894
+C:Conf --> [< | >
+< | >
+< | >
+< | >
+< | >]
+
+Solution 2 (state 147)
+states: 183  rewrites: 894
+C:Conf --> [< | >
+< | >
+< | >
+< | >]
+
+Solution 3 (state 148)
+states: 183  rewrites: 894
+C:Conf --> [< | >
+< | >
+< | >]
+
+Solution 4 (state 164)
+states: 189  rewrites: 915
+C:Conf --> [< | | >
+< | | >
+< | | >
+< | | >]
+
+Solution 5 (state 165)
+states: 189  rewrites: 915
+C:Conf --> [< | | >
+< | | >
+< | | >]
+
+Solution 6 (state 170)
+states: 191  rewrites: 921
+C:Conf --> [< | | | >
+< | | | >
+< | | | >]
+
+Solution 7 (state 194)
+states: 204  rewrites: 1028
+C:Conf --> [< | | | | >
+< | | | | >]
+
+Solution 8 (state 196)
+states: 204  rewrites: 1029
+C:Conf --> [< | | | >
+< | | | >]
+
+Solution 9 (state 197)
+states: 204  rewrites: 1029
+C:Conf --> [< | | | >
+< | | | | >]
+
+Solution 10 (state 199)
+states: 204  rewrites: 1030
+C:Conf --> [< | | >
+< | | >]
+
+Solution 11 (state 200)
+states: 204  rewrites: 1030
+C:Conf --> [< | | >
+< | | | | >]
+
+Solution 12 (state 201)
+states: 204  rewrites: 1030
+C:Conf --> [< | | >
+< | | | >]
+
+Solution 13 (state 202)
+states: 204  rewrites: 1030
+C:Conf --> [< | | >
+< | | | | | >]
+
+Solution 14 (state 204)
+states: 205  rewrites: 1032
+C:Conf --> [.Board]
+
+No more solutions.
+states: 205  rewrites: 1032
+==========================================
+search in NIM : [init2] =>! C:Conf .
+
+Solution 1 (state 78)
+states: 117  rewrites: 444
+C:Conf --> [< | >
+< | >
+< | >]
+
+Solution 2 (state 81)
+states: 117  rewrites: 446
+C:Conf --> [< | | | | | >
+< | | | | | >]
+
+Solution 3 (state 87)
+states: 121  rewrites: 455
+C:Conf --> [< | >
+< | >
+< | >
+< | >]
+
+Solution 4 (state 92)
+states: 121  rewrites: 461
+C:Conf --> [< | | | >
+< | | | >]
+
+Solution 5 (state 106)
+states: 127  rewrites: 490
+C:Conf --> [< | | | >
+< | | | >
+< | | | >]
+
+Solution 6 (state 110)
+states: 129  rewrites: 497
+C:Conf --> [< | | | >
+< | | | | | >]
+
+Solution 7 (state 131)
+states: 145  rewrites: 616
+C:Conf --> [.Board]
+
+Solution 8 (state 133)
+states: 145  rewrites: 617
+C:Conf --> [< | | | | >
+< | | | | >]
+
+Solution 9 (state 136)
+states: 145  rewrites: 621
+C:Conf --> [< | | >
+< | | >]
+
+Solution 10 (state 137)
+states: 145  rewrites: 621
+C:Conf --> [< | | >
+< | | | >]
+
+Solution 11 (state 138)
+states: 145  rewrites: 621
+C:Conf --> [< | | >
+< | | >
+< | | >]
+
+Solution 12 (state 141)
+states: 145  rewrites: 625
+C:Conf --> [< | | >
+< | | | | | >]
+
+Solution 13 (state 144)
+states: 146  rewrites: 629
+C:Conf --> [< | | | >
+< | | | | >]
+
+Solution 14 (state 146)
+states: 147  rewrites: 637
+C:Conf --> [< | | >
+< | | | | >]
+
+No more solutions.
+states: 147  rewrites: 637
+Bye.

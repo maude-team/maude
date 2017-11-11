@@ -1,5 +1,6 @@
 all: \
-	tools
+	tools \
+	systems
 
 tools: \
 	tools/meta/metalevel-ext.maude \
@@ -11,8 +12,14 @@ tools: \
 	tools/meta/unification.maude \
 	tools/meta/variables.maude
 
+systems: \
+	systems/nim.maude
+
 # `pd` is a patched version of `pandoc` capable of writing code files
 # Download it from 'https://github.com/ehildenb/pandoc'
 
 tools/meta/%.maude: tools/meta.md/%.md
+	pd --from markdown --to 'code{.maude}' $< > $@
+
+systems/%.maude: systems.md/%.md
 	pd --from markdown --to 'code{.maude}' $< > $@
