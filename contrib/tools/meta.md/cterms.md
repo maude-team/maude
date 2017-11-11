@@ -345,7 +345,7 @@ fmod PURIFICATION is
     protecting CTERM-SET .
 
     var Q : Qid . var TA : TruthAtom . vars EqC EqC' : EqConj . var QFF : QFForm .
-    vars ME ME' : ModuleExpression . vars M M' : Module .
+    vars ME ME' : ModuleExpression . vars M M' : Module . var MDS : ModuleDeclSet .
     vars FV : Variable . vars T T' T1 T2 : Term . var T? : [Term] .
     vars NeTL NeTL' : NeTermList . vars TL TL' : TermList . vars TL? TL?' : [TermList] .
 
@@ -410,6 +410,22 @@ Otherwise, generate an equality constraint at the top and purify with respect to
     ceq purify(M, M', Q[TL]) = FV | ((FV ?= T) /\ QFF) if (not Q inO asTemplate(M)) /\ Q inO asTemplate(M')
                                                        /\ T | QFF := purify(M', M, Q[TL])
                                                        /\ FV      := joint-variable(M', M, T) .
+```
+
+Sometimes, we need to make sure that a term contains only symbols from a given subtheory.
+
+```maude
+    op subtheoryPurify : ModuleDeclSet Module TermList -> [TermList] .
+    ------------------------------------------------------------------
+    eq subtheoryPurify(MDS, M, empty)         = empty .
+    eq subtheoryPurify(MDS, M, (NeTL, NeTL')) = subtheoryPurify(MDS, M, NeTL) , subtheoryPurify(MDS, M, NeTL') .
+   ceq subtheoryPurify(MDS, M, T)             = T
+                                             if wellFormed(fromTemplate('TMP, MDS), T) .
+   ceq subtheoryPurify(MDS, M, Q[TL])         = Q[subtheoryPurify(MDS, M, TL)]
+                                             if Q inO MDS .
+   ceq subtheoryPurify(MDS, M, Q[TL])         = FV | FV ?= Q[TL]
+                                             if (not Q inO MDS)
+                                             /\ FV := #var(Q[TL], leastSort(M, Q[TL])) .
 endfm
 ```
 

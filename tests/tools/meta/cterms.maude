@@ -18,3 +18,35 @@ reduce ('_:+_['Y:Nat*, 'X:Nat*, 'Y:Nat*] | 'Y:Nat* ?= '_:*_['0.Nat*,'1.Nat*] | '
 
 reduce ('_:+_['Y:Nat*, ('X:Nat* | 'Z:Nat* ?= '_:*_['1.Nat*, '0.Nat*]), 'Z:Nat*])
     == ('_:+_['Y:Nat*, 'X:Nat*, 'Z:Nat*] | 'Z:Nat* ?= '_:*_['1.Nat*, '0.Nat*]) .
+
+--- Module PURIFICATION
+--- ===================
+
+select PURIFICATION .
+
+--- Function `subtheoryPurify`
+--- --------------------------
+
+--- ### System `MULT-NAT*`
+
+reduce subtheoryPurify(asTemplate(upModule('NAT*, true)), upModule('MULT-NAT*, true), '0.Nat*)
+    == '0.Nat* .
+
+reduce subtheoryPurify(asTemplate(upModule('NAT*, true)), upModule('MULT-NAT*, true), 'X:Nat*)
+    == 'X:Nat* .
+
+reduce subtheoryPurify(asTemplate(upModule('NAT*, true)), upModule('MULT-NAT*, true), '_:+_['0.Nat*, '1.Nat*])
+    == '_:+_['0.Nat*, '1.Nat*] .
+
+reduce subtheoryPurify(asTemplate(upModule('NAT*, true)), upModule('MULT-NAT*, true), '_:+_['0.Nat*, 'X:Nat*])
+    == '_:+_['0.Nat*, 'X:Nat*] .
+
+reduce subtheoryPurify(asTemplate(upModule('NAT*, true)), upModule('MULT-NAT*, true), '_:*_['0.Nat*, '1.Nat*])
+    == ('#makeVariable`(_:*_`[0.Nat*`,1.Nat*`]`):Nat* | '#makeVariable`(_:*_`[0.Nat*`,1.Nat*`]`):Nat* ?= '_:*_['0.Nat*,'1.Nat*]) .
+
+reduce subtheoryPurify(asTemplate(upModule('NAT*, true)), upModule('MULT-NAT*, true), '_:+_['_:*_['0.Nat*, '1.Nat*], 'X:Nat*])
+    == ('_:+_['#makeVariable`(_:*_`[0.Nat*`,1.Nat*`]`):Nat*,'X:Nat*] | '#makeVariable`(_:*_`[0.Nat*`,1.Nat*`]`):Nat* ?= '_:*_['0.Nat*,'1.Nat*]) .
+
+reduce subtheoryPurify(asTemplate(upModule('NAT*, true)), upModule('MULT-NAT*, true), '_:+_['_:*_['0.Nat*, '1.Nat*], 'X:Nat*, '_:*_['0.Nat*, '1.Nat*]])
+    == ('_:+_['#makeVariable`(_:*_`[0.Nat*`,1.Nat*`]`):Nat*,'X:Nat*, '#makeVariable`(_:*_`[0.Nat*`,1.Nat*`]`):Nat*]
+             | '#makeVariable`(_:*_`[0.Nat*`,1.Nat*`]`):Nat* ?= '_:*_['0.Nat*,'1.Nat*]) .

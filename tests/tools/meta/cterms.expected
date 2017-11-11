@@ -10,4 +10,52 @@ reduce in CTERM-SET : '_:+_['Y:Nat*,'X:Nat* | 'Z:Nat* ?= '_:*_['1.Nat*,
     '1.Nat*,'0.Nat*]) .
 rewrites: 2
 result Bool: true
+Warning: sort declarations for operator resolveNames failed preregularity check
+    on 6 out of 43 sort tuples. First such tuple is (Type).
+Warning: sort declarations for operator resolveNames failed preregularity check
+    on 1 out of 28 sort tuples. First such tuple is (NullDeclSet).
+==========================================
+reduce in PURIFICATION : subtheoryPurify(asTemplate(upModule('NAT*, true)),
+    upModule('MULT-NAT*, true), '0.Nat*) == '0.Nat* .
+rewrites: 9
+result Bool: true
+==========================================
+reduce in PURIFICATION : subtheoryPurify(asTemplate(upModule('NAT*, true)),
+    upModule('MULT-NAT*, true), 'X:Nat*) == 'X:Nat* .
+rewrites: 9
+result Bool: true
+==========================================
+reduce in PURIFICATION : subtheoryPurify(asTemplate(upModule('NAT*, true)),
+    upModule('MULT-NAT*, true), '_:+_['0.Nat*,'1.Nat*]) == '_:+_['0.Nat*,
+    '1.Nat*] .
+rewrites: 9
+result Bool: true
+==========================================
+reduce in PURIFICATION : subtheoryPurify(asTemplate(upModule('NAT*, true)),
+    upModule('MULT-NAT*, true), '_:+_['0.Nat*,'X:Nat*]) == '_:+_['0.Nat*,
+    'X:Nat*] .
+rewrites: 9
+result Bool: true
+==========================================
+reduce in PURIFICATION : subtheoryPurify(asTemplate(upModule('NAT*, true)),
+    upModule('MULT-NAT*, true), '_:*_['0.Nat*,'1.Nat*]) == (
+    '#makeVariable`(_:*_`[0.Nat*`,1.Nat*`]`):Nat* |
+    '#makeVariable`(_:*_`[0.Nat*`,1.Nat*`]`):Nat* ?= '_:*_['0.Nat*,'1.Nat*]) .
+rewrites: 34
+result Bool: true
+==========================================
+reduce in PURIFICATION : subtheoryPurify(asTemplate(upModule('NAT*, true)),
+    upModule('MULT-NAT*, true), '_:+_['_:*_['0.Nat*,'1.Nat*],'X:Nat*]) == (
+    '_:+_['#makeVariable`(_:*_`[0.Nat*`,1.Nat*`]`):Nat*,'X:Nat*] |
+    '#makeVariable`(_:*_`[0.Nat*`,1.Nat*`]`):Nat* ?= '_:*_['0.Nat*,'1.Nat*]) .
+rewrites: 45
+result Bool: true
+==========================================
+reduce in PURIFICATION : subtheoryPurify(asTemplate(upModule('NAT*, true)),
+    upModule('MULT-NAT*, true), '_:+_['_:*_['0.Nat*,'1.Nat*],'X:Nat*,'_:*_[
+    '0.Nat*,'1.Nat*]]) == ('_:+_['#makeVariable`(_:*_`[0.Nat*`,1.Nat*`]`):Nat*,
+    'X:Nat*,'#makeVariable`(_:*_`[0.Nat*`,1.Nat*`]`):Nat*] |
+    '#makeVariable`(_:*_`[0.Nat*`,1.Nat*`]`):Nat* ?= '_:*_['0.Nat*,'1.Nat*]) .
+rewrites: 78
+result Bool: true
 Bye.
