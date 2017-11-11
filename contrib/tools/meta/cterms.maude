@@ -14,8 +14,7 @@ load mtemplate.maude
 load foform.maude
 
 fmod CTERM-SET is
-   protecting FOFORM-SUBSTITUTION .
-   protecting FOFORM-DEFINEDOPS .
+   protecting FOFORM-SUBSTITUTION + FOFORMSIMPLIFY-IMPL + FOFORM-DEFINEDOPS .
    protecting META-LEVEL-EXT .
 
     sorts CTerm NeCTermSet CTermSet CTermSet? .
@@ -26,11 +25,12 @@ fmod CTERM-SET is
     var Q : Qid . vars S S' : Substitution . var SS : SubstitutionSet .
     var MOD : Module . var X : Variable . vars T T' : Term . vars TML? TML?' : [TermList] .
     vars CT CT' : CTerm . vars CTS CTS' : CTermSet . vars NeCTS NeCTS' : NeCTermSet .
-    vars F F' F'' : FOForm . var EqC : EqConj .
+    vars F F' F'' : FOForm . vars EqC EqC' : EqConj .
 
     op _|_ : Term FOForm -> CTerm [right id: tt prec 52] .
     ------------------------------------------------------
-    eq T | ff ;; CTS = CTS .
+    eq  T        | ff                = .CTermSet .
+    eq (T | EqC) | EqC'              = T | (EqC /\ EqC') .
     eq Q [ TML? , (T | EqC), TML?' ] = Q[TML?, T, TML?'] | EqC .
 
     op _<<_ : CTerm    Substitution    -> CTerm .

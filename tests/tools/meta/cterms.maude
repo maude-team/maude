@@ -1,1 +1,20 @@
+set show timing off .
+
+load ../../../contrib/tools/varsat/numbers.maude
 load ../../../contrib/tools/meta/cterms.maude
+
+--- Module CTERM-SET
+--- ================
+
+select CTERM-SET .
+
+--- Operator `_|_`
+--- --------------
+
+--- ### System `MULT-NAT*`
+
+reduce ('_:+_['Y:Nat*, 'X:Nat*, 'Y:Nat*] | 'Y:Nat* ?= '_:*_['0.Nat*,'1.Nat*] | 'Y:Nat* ?= '_:*_['0.Nat*,'1.Nat*])
+    == ('_:+_['Y:Nat*, 'X:Nat*, 'Y:Nat*] | 'Y:Nat* ?= '_:*_['0.Nat*,'1.Nat*]) .
+
+reduce ('_:+_['Y:Nat*, ('X:Nat* | 'Z:Nat* ?= '_:*_['1.Nat*, '0.Nat*]), 'Z:Nat*])
+    == ('_:+_['Y:Nat*, 'X:Nat*, 'Z:Nat*] | 'Z:Nat* ?= '_:*_['1.Nat*, '0.Nat*]) .

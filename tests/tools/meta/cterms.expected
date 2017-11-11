@@ -1,1 +1,13 @@
+==========================================
+reduce in CTERM-SET : ('_:+_['Y:Nat*,'X:Nat*,'Y:Nat*] | 'Y:Nat* ?= '_:*_[
+    '0.Nat*,'1.Nat*] | 'Y:Nat* ?= '_:*_['0.Nat*,'1.Nat*]) == ('_:+_['Y:Nat*,
+    'X:Nat*,'Y:Nat*] | 'Y:Nat* ?= '_:*_['0.Nat*,'1.Nat*]) .
+rewrites: 3
+result Bool: true
+==========================================
+reduce in CTERM-SET : '_:+_['Y:Nat*,'X:Nat* | 'Z:Nat* ?= '_:*_['1.Nat*,
+    '0.Nat*],'Z:Nat*] == ('_:+_['Y:Nat*,'X:Nat*,'Z:Nat*] | 'Z:Nat* ?= '_:*_[
+    '1.Nat*,'0.Nat*]) .
+rewrites: 2
+result Bool: true
 Bye.
