@@ -32,14 +32,14 @@ fmod DETERMINISTIC-VARIABLES is
     ---------------------------
     eq #qid(TL) = qid(#string(TL)) .
 
-    op #makeVariable : Qid    Sort -> Variable .
-    op #makeVariable : String Sort -> Variable .
-    --------------------------------------------
+    op #makeVariable : Qid    Sort -> [Variable] .
+    op #makeVariable : String Sort -> [Variable] .
+    ----------------------------------------------
     eq #makeVariable(Q, S)   = qid("#makeVariable(" + string(Q) + "):" + string(S)) .
     eq #makeVariable(STR, S) = qid("#makeVariable(" + STR + "):" + string(S)) .
 
-    op #var : TermList Sort -> Variable .
-    -------------------------------------
+    op #var : TermList Sort -> [Variable] .
+    ---------------------------------------
     eq #var(TL, S) = #makeVariable(#string(TL), S) .
 endfm
 ```
