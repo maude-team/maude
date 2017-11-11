@@ -187,7 +187,8 @@ endm
 mod IMP-PROGRAMS is
    protecting IMP-SEMANTICS + IDENTIFIER .
 
-    vars N S X Y Z T : Id .
+    vars N M O P Q R S T X Y Z : Id .
+    vars XS YS ZS : Ids .
 
     op sum : Id Id -> Stmt .
     ------------------------
@@ -211,4 +212,12 @@ mod IMP-PROGRAMS is
      = X = X +: Y ;
        Y = X -: Y ;
        X = X -: Y ; .
+
+    op swap-sort : Ids -> Stmt .
+    ----------------------------
+    eq swap-sort(X)          = {} .
+    eq swap-sort(X ; Y)      = if (X <: Y) {} else { swap-in-place(X, Y) } .
+    eq swap-sort(X ; Y ; ZS) = swap-sort(X ; Y)
+                               swap-sort(X ; ZS)
+                               swap-sort(Y ; ZS) .
 endm

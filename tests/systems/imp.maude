@@ -8,3 +8,8 @@ rewrite < sum(n, s) ~> done | n |-> 10 * s |-> 3 > .
 
 rewrite < swap(x, y, t)       ~> done | x |-> 3 * y |-> 5 * t |-> 0 > .
 rewrite < swap-in-place(x, y) ~> done | x |-> 3 * y |-> 5 > .
+
+rewrite < swap-sort(x ; y ; z)         ~> done | x |-> 3 * y |-> 4 * z |-> 5 > .
+rewrite < swap-sort(x ; z ; y)         ~> done | x |-> 3 * y |-> 4 * z |-> 5 > .
+rewrite < swap-sort(y ; z ; x)         ~> done | x |-> 3 * y |-> 4 * z |-> 5 > .
+rewrite < swap-sort(y ; z ; q ; x ; r) ~> done | x |-> 3 * y |-> 4 * z |-> 5 * r |-> 7 * q |-> 3 > .
