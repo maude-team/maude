@@ -29,7 +29,7 @@ fmod SUBTHEORY-ABSTRACTION is
 
     var IS : ImportDeclSet . var SDS : SubsortDeclSet . vars SSDS : SubsortDeclSet .
     var MAS : MembAxSet . var EQS : EquationSet . var RLS : RuleSet .
-    vars NeMDS NeMDS' : NeModuleDeclSet . vars M M' : Module .
+    vars NeMDS NeMDS' : NeModuleDeclSet . var MDS : ModuleDeclSet . vars M M' : Module .
     vars L L' R R' : Term . vars CL' CR' : EqConj . var C : Condition . var EqC : EqCondition . var AS : AttrSet .
 
     op unif : EqConj -> EqCondition .
@@ -55,6 +55,10 @@ fmod SUBTHEORY-ABSTRACTION is
    ceq subtheoryAbstract(( crl L => R if C [AS] . ), M, M') = ( crl L' => R' if C /\ unif(CL' /\ CR') [AS] . )
     if L' | CL' := subtheoryPurify(asTemplate(M), M', L)
     /\ R' | CR' := subtheoryPurify(asTemplate(M), M', R) .
+
+    op subtheoryAbstract : Module Module -> [Module] .
+    --------------------------------------------------
+    eq subtheoryAbstract(M, M') = fromTemplate(getName(M'), subtheoryAbstract(asTemplate(M'), M, M')) .
 endfm
 
 eof
