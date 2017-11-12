@@ -3,6 +3,16 @@ load ../../../contrib/systems/oc.maude
 load ../../../contrib/systems/qlock.maude
 load ../../../contrib/tools/meta/mtransform.maude
 
+--- Module SUBTHEORY-ABSTRACTION
+--- ============================
+
+--- Function `subtheoryAbstract`
+--- ----------------------------
+
+--- ### System `BANK-ACCOUNT`
+
+select SUBTHEORY-ABSTRACTION .
+
 eof
 
 select UNCONDITIONALIZE .
