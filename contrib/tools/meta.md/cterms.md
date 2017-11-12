@@ -128,7 +128,7 @@ The first element of the pair are the states seen for the first time in that ste
 
 ```maude
 fmod CTERM-TRACE is
-    protecting CTERM-SET .
+   protecting CTERM-SET .
 
     sorts CTermSetPair CTermSetPairMap CTermSetTrace .
 
@@ -155,8 +155,8 @@ The intersection operation is lifted to `Module` via `asTemplate`.
 
 ```maude
 fmod INTERSECTION is
-    protecting MODULE-TEMPLATE .
-    protecting DETERMINISTIC-VARIABLES .
+   protecting MODULE-TEMPLATE .
+   protecting DETERMINISTIC-VARIABLES .
 
     var B : Bool . vars TL : TypeList . var T : Type . var AS : AttrSet .
     var OPD : OpDecl . var OPDS : OpDeclSet .
@@ -245,8 +245,8 @@ Breaking equality atoms means taking an equality atom between terms of different
 
 ```maude
 fmod BREAK-EQATOMS is
-    protecting INTERSECTION .
-    protecting FOFORM .
+   protecting INTERSECTION .
+   protecting FOFORM .
 
     vars EqC EqC' : EqConj . vars MOD MOD' : Module . vars ME ME' : ModuleExpression .
     vars T T' : Term . var NV : Variable .
@@ -282,7 +282,7 @@ Output:
 
 ```maude
 fmod VABS is
-    protecting BREAK-EQATOMS .
+   protecting BREAK-EQATOMS .
 
     vars V FV : Variable . var C : Constant . var Q : Qid . vars T T' T'' : Term .
     vars TL TL' : TermList . vars NeTL NeTL' : NeTermList .
@@ -340,9 +340,9 @@ The resulting formulas will always be of the form
 
 ```maude
 fmod PURIFICATION is
-    protecting META-LEVEL .
-    protecting BREAK-EQATOMS .
-    protecting CTERM-SET .
+   protecting META-LEVEL .
+   protecting BREAK-EQATOMS .
+   protecting CTERM-SET .
 
     var Q : Qid . var TA : TruthAtom . vars EqC EqC' : EqConj . var QFF : QFForm .
     vars ME ME' : ModuleExpression . vars M M' : Module . var MDS : ModuleDeclSet .
@@ -434,9 +434,9 @@ Traversing Terms
 
 ```
 fmod TERM-TRAVERSE is
-    protecting FOFORMSIMPLIFY-IMPL .
-    protecting META-LEVEL .
-    protecting BREAK-EQATOMS .
+   protecting FOFORMSIMPLIFY-IMPL .
+   protecting META-LEVEL .
+   protecting BREAK-EQATOMS .
 
     var TO TO' : TermOp . var C : Constant . var V : Variable . var Q : Qid .
     var T : Term . var NeTL NeTL' : NeTermList . var TL : TermList .
