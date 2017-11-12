@@ -25,27 +25,39 @@ When rewrite theory $\R$ protects sub-theory $(\Sigma_1, B_1 \cup E_1)$, define 
 fmod SUBTHEORY-ABSTRACTION is
    protecting CTERM-SET .
    protecting MODULE-TEMPLATE .
-   --- protecting PURIFICATION .
+   protecting PURIFICATION .
 
     var IS : ImportDeclSet . var SDS : SubsortDeclSet . vars SSDS : SubsortDeclSet .
     var MAS : MembAxSet . var EQS : EquationSet . var RLS : RuleSet .
-    vars NeMDS NeMDS' : NeModuleDeclSet . var M : Module .
-    vars L L' R R' : Term . vars C CL' CR' : Constraint . var AS : AttrSet .
+    vars NeMDS NeMDS' : NeModuleDeclSet . vars M M' : Module .
+    vars L L' R R' : Term . vars CL' CR' : EqConj . var C : Condition . var EqC : EqCondition . var AS : AttrSet .
 
-    op #purifyIn : Term          Module -> [CTerm] .
-    op #purifyIn : ModuleDeclSet Module -> [ModuleDeclSet] .
-    --------------------------------------------------------
-    eq #purifyIn(IS SDS SSDS MAS EQS, M) = IS SDS SSDS MAS EQS .
-    eq #purifyIn(NeMDS NeMDS',        M) = #purifyIn(NeMDS, M) #purifyIn(NeMDS', M) .
+    op unif : EqConj -> EqCondition .
+    ---------------------------------
 
-   ceq #purifyIn(( rl L => R [AS] . ), M) = ( crl L' => R' if CL' /\ CR' [AS] . )
-    if L' | CL' := #purifyIn(L, M)
-    /\ R' | CR' := #purifyIn(R, M) .
+    op subtheoryAbstract : ModuleDeclSet Module Module -> [ModuleDeclSet] .
+    -----------------------------------------------------------------------
+    eq subtheoryAbstract(IS SDS SSDS MAS, M, M') = IS SDS SSDS MAS .
+    eq subtheoryAbstract(NeMDS NeMDS',    M, M') = subtheoryAbstract(NeMDS, M, M') subtheoryAbstract(NeMDS', M, M') .
 
-   ceq #purifyIn(( crl L => R if C [AS] . ), M) = ( crl L' => R' if C /\ CL' /\ CR' [AS] . )
-    if L' | CL' := #purifyIn(L, M)
-    /\ R' | CR' := #purifyIn(R, M) .
+   ceq subtheoryAbstract(( eq L = R [AS] . ), M, M') = ( ceq L' = R' if unif(CL' /\ CR') [AS] . )
+    if L' | CL' := subtheoryPurify(asTemplate(M), M', L)
+    /\ R' | CR' := subtheoryPurify(asTemplate(M), M', R) .
+
+   ceq subtheoryAbstract(( ceq L = R if EqC [AS] . ), M, M') = ( ceq L' = R' if EqC /\ unif(CL' /\ CR') [AS] . )
+    if L' | CL' := subtheoryPurify(asTemplate(M), M', L)
+    /\ R' | CR' := subtheoryPurify(asTemplate(M), M', R) .
+
+   ceq subtheoryAbstract(( rl L => R [AS] . ), M, M') = ( crl L' => R' if unif(CL' /\ CR') [AS] . )
+    if L' | CL' := subtheoryPurify(asTemplate(M), M', L)
+    /\ R' | CR' := subtheoryPurify(asTemplate(M), M', R) .
+
+   ceq subtheoryAbstract(( crl L => R if C [AS] . ), M, M') = ( crl L' => R' if C /\ unif(CL' /\ CR') [AS] . )
+    if L' | CL' := subtheoryPurify(asTemplate(M), M', L)
+    /\ R' | CR' := subtheoryPurify(asTemplate(M), M', R) .
 endfm
+
+eof
 ```
 
 Note that when the sub-theory $(\Sigma_1, B_1 \cup E_1)$ is FVP, the above theory transformation enables variant unification to be used for narrowing.

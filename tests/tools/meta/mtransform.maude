@@ -3,9 +3,9 @@ load ../../../contrib/systems/oc.maude
 load ../../../contrib/systems/qlock.maude
 load ../../../contrib/tools/meta/mtransform.maude
 
-select UNCONDITIONALIZE .
-
 eof
+
+select UNCONDITIONALIZE .
 
 reduce internalizeConditions(upModule('DIJKSTRA, false), 'State)
     == ( mod 'DIJKSTRA is
