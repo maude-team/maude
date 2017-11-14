@@ -82,3 +82,52 @@ mod BAKERY is
   rl [crit] : N ; M ; [wait(M)] PS => N   ; M   ; [crit(M)] PS .
   rl [exit] : N ; M ; [crit(M)] PS => N   ; s M ; [idle]    PS .
 endm
+
+--- Version 3 - FVP
+--- ---------------
+
+set include BOOL off .
+
+fmod NAT> is
+  sorts Zero NzNat Nat Bool .
+  subsorts Zero NzNat < Nat .
+  op tt : -> Bool [ctor] .  *** true
+  op ff : -> Bool [ctor] .  *** false
+  op 0 : -> Zero [ctor] .
+  op 1 : -> NzNat [ctor] .
+  op _+_ : Nat Nat -> Nat [ctor assoc comm id: 0] .
+  op _+_ : NzNat Nat -> NzNat [ctor assoc comm id: 0] .
+  op _+_ : Nat NzNat -> NzNat [ctor assoc comm id: 0] .
+  op _+_ : NzNat NzNat -> NzNat [ctor assoc comm id: 0] .
+  op _>_ : Nat Nat -> Bool .
+
+  vars n m : Nat .  vars n' m' : NzNat .
+
+  eq n + n' > n = tt [variant] .
+  eq n > n + m = ff  [variant] .
+endfm
+
+mod BAKERY-FVP is
+  protecting NAT> .
+
+  sorts Mode NcMode BState .
+  subsort NcMode < Mode .
+
+  op sleep : -> NcMode [ctor] .
+  ops wait : -> NcMode [ctor] .
+  op crit : -> Mode [ctor] .
+  op <_,_,_,_> : Mode Nat Mode Nat -> BState [ctor] .
+
+  vars P Q : Mode .
+  vars X Y : Nat .
+
+  rl [p1_sleep] : < sleep, X, Q, Y > => < wait, Y + 1, Q, Y > .
+  rl [p1_wait] : < wait, X, Q, 0 > => < crit, X, Q, 0 > .
+  crl [p1_wait] : < wait, X, Q, Y > => < crit, X, Q, Y > if  X > Y = ff .
+  rl [p1_crit] : < crit, X, Q, Y > => < sleep, 0, Q, Y > .
+
+  rl [p2_sleep] : < P, X, sleep, Y > => < P, X, wait, X + 1  > .
+  rl [p2_wait] : < P, 0, wait, Y > => < P, 0, crit, Y > .
+  crl [p2_wait] : < P, X, wait, Y > => < P, X, crit, Y > if X > Y = tt .
+  rl [p2_crit] : < P, X, crit, Y > => < P, X, sleep, 0 > .
+endm
