@@ -1,8 +1,8 @@
-Warning: "bank-account.maude", line 100 (mod BANK-ACCOUNT): variable m is used
+Warning: "bank-account.maude", line 101 (mod BANK-ACCOUNT): variable m is used
     before it is bound in rule:
 rl < bal: n pend: x overdraft: ff > # msgs => < bal: n + m pend: x overdraft:
     ff > # msgs .
-Warning: "bank-account.maude", line 153 (mod BANK-ACCOUNT-CTOR): variable m is
+Warning: "bank-account.maude", line 155 (mod BANK-ACCOUNT-CTOR): variable m is
     used before it is bound in rule:
 rl < bal: n pend: x overdraft: ff > # msgs => < bal: n + m pend: x overdraft:
     ff > # msgs .

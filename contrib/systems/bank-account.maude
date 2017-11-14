@@ -70,9 +70,10 @@ mod BANK-ACCOUNT is
     -----------------------
     vars s s' : State .
 
+    --- TODO: Should [_,_,_] be frozen?
     op _#_ : Account MsgConf -> State [ctor] .
-    op [_,_,_] : Truth State State -> State .  *** if-then-else
-    -----------------------------------------------------------
+    op [_,_,_] : Truth State State -> State [frozen] .  *** if-then-else
+    --------------------------------------------------------------------
     eq [tt,s,s'] = s  [variant] .
     eq [ff,s,s'] = s' [variant] .
 
@@ -122,9 +123,10 @@ mod BANK-ACCOUNT-CTOR is
     -----------------------
     vars s s' : State .
 
+    --- TODO: Should [_,_,_] be frozen?
     op _#_ : Account MsgConf -> State [ctor] .
-    op [_,_,_] : Truth State State -> State .  *** if-then-else
-    -----------------------------------------------------------
+    op [_,_,_] : Truth State State -> State [frozen] .  *** if-then-else
+    --------------------------------------------------------------------
     eq [tt,s,s'] = s  [variant] .
     eq [ff,s,s'] = s' [variant] .
 
