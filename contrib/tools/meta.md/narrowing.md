@@ -1,16 +1,16 @@
---- ; Narrowing
---- ; =========
+Narrowing
+=========
 
---- ; Several narrowing utilities/wrappers are provided here.
+Several narrowing utilities/wrappers are provided here.
 
-
+```maude
 load unification.maude
+```
 
+Variant Sets
+------------
 
---- ; Variant Sets
---- ; ------------
-
-
+```maude
 fmod VARIANT-SET is
     protecting RENAMING .
 
@@ -40,12 +40,12 @@ fmod VARIANT-SET is
    ceq metaGenVariant2(M, T, N', N) = V # metaGenVariant2(M,T,N',s N)
     if V := metaGetVariant(M,T,empty,N',N) .
 endfm
+```
 
+Single Narrowing Steps
+----------------------
 
---- ; Single Narrowing Steps
---- ; ----------------------
-
-
+```maude
 fmod NARROWING-STEP-SET is
    protecting RESULT-CONTEXT-SET .
 
@@ -88,12 +88,12 @@ fmod NARROWING-STEP-SET is
     eq getRuleSet(nil)           = none .
     eq getRuleSet({T,S,TP,R} Tr) = R getRuleSet(Tr) .
 endfm
+```
 
+Narrowing using Santiago Escobar's Code
+---------------------------------------
 
---- ; Narrowing using Santiago Escobar’s Code
---- ; ---------------------------------------
-
-
+```maude
 fmod NARROWING is
    protecting VARIANT-SET .
    protecting NARROWING-STEP-SET .
@@ -105,12 +105,12 @@ fmod NARROWING is
     --------------------------------------------
     eq metaNarrow2(M,T) = to4Tuple(M,metaENarrowShowAll(M,T,1,full noStrategy BuiltIn-unify)) |> T .
 endfm
+```
 
+Narrowing using Core Maude
+--------------------------
 
---- ; Narrowing using Core Maude
---- ; --------------------------
-
-
+```maude
 fmod NARROWING2 is
    protecting VARIANT-SET .
    protecting NARROWING-STEP-SET .
@@ -130,92 +130,85 @@ fmod NARROWING2 is
     --------------------------------------------
     eq metaNarrow2(M,T) = allNarrowSteps(M, T, 0) .
 endfm
+```
 
+Unfinished
+----------
 
---- ; Unfinished
---- ; ----------
+```
+fmod FVP-NARROWING-GRAPH is
+    protecting SUBSTITUTIONSET .
 
---- ; \`\`\`
---- ; fmod FVP-NARROWING-GRAPH is
---- ; protecting SUBSTITUTIONSET .
+    var N : Nat . vars Q RL : Qid .
+    vars S S' : State . var TYPE : Type . var CTX : Context .
+    var M : Module . var T : Term . vars SUBST TSUBST RLSUBST : Substitution .
 
---- ;     var N : Nat . vars Q RL : Qid .
---- ;     vars S S' : State . var TYPE : Type . var CTX : Context .
---- ;     var M : Module . var T : Term . vars SUBST TSUBST RLSUBST : Substitution .
---- ; 
---- ;     op allNarrowSteps : Module Term Nat -> [TransitionSet] .
---- ;     --------------------------------------------------------
---- ;     eq allNarrowSteps(M, S, N) = .TransitionSet [owise] .
+    op allNarrowSteps : Module Term Nat -> [TransitionSet] .
+    --------------------------------------------------------
+    eq allNarrowSteps(M, S, N) = .TransitionSet [owise] .
+   ceq allNarrowSteps(M, S, N) = < TSUBST , S' > , allNarrowSteps(M, S, N + 1)
+    if { T , TYPE , CTX , RL , TSUBST , RLSUBST , Q }
+          := metaNarrowingApply(M, upTerm(S), empty, '#, N)
+    /\ S' := downTerm(T, downStateError) .
 
---- ; ceq allNarrowSteps(M, S, N) = &lt; TSUBST , S’ &gt; , allNarrowSteps(M, S, N + 1)
---- ; if { T , TYPE , CTX , RL , TSUBST , RLSUBST , Q }
---- ; := metaNarrowingApply(M, upTerm(S), empty, ‘\#, N)
---- ; / S’ := downTerm(T, downStateError) .
+    op step : Module State -> [TransitionSet] .
+    -------------------------------------------
+    eq step(M, S) = allNarrowSteps(M, S, 0) .
 
---- ;     op step : Module State -> [TransitionSet] .
---- ;     -------------------------------------------
---- ;     eq step(M, S) = allNarrowSteps(M, S, 0) .
---- ; 
---- ;     --- One single match is enough to fold here.
---- ;     op fold : Module State State -> [Fold] .
---- ;     ----------------------------------------
+    --- One single match is enough to fold here.
+    op fold : Module State State -> [Fold] .
+    ----------------------------------------
+   ceq fold(M, S, S') = SUBST if SUBST := metaMatch(M, upTerm(S'), upTerm(S), nil, 0) .
+endfm
 
---- ; ceq fold(M, S, S’) = SUBST if SUBST := metaMatch(M, upTerm(S’), upTerm(S), nil, 0) .
---- ; endfm
+fmod FVP-NARROWING-MODULO-T-GRAPH is
+    protecting SUBSTITUTIONSET .
+    protecting NARROWING-GRAPH .
+    protecting INTEGER .
 
---- ; fmod FVP-NARROWING-MODULO-T-GRAPH is
---- ; protecting SUBSTITUTIONSET .
---- ; protecting NARROWING-GRAPH .
---- ; protecting INTEGER .
+    sorts Constraint CState .
+    subsort State < CState .
+    ------------------------
+    vars NeTS NeTS' : NeTransitionSet . var T : Term . var N : Nat .
+    vars C C' : Constraint . var M : Module . vars S S' : State .
+    var SUBST : Substitution . var SUBSTS : SubstitutionSet .
 
---- ;     sorts Constraint CState .
---- ;     subsort State < CState .
---- ;     ------------------------
---- ;     vars NeTS NeTS' : NeTransitionSet . var T : Term . var N : Nat .
---- ;     vars C C' : Constraint . var M : Module . vars S S' : State .
---- ;     var SUBST : Substitution . var SUBSTS : SubstitutionSet .
---- ; 
---- ;     op downConstraintError : -> [Constraint] .
---- ;     op _<<_ : Constraint Substitution -> Constraint .
---- ;     -------------------------------------------------
+    op downConstraintError : -> [Constraint] .
+    op _<<_ : Constraint Substitution -> Constraint .
+    -------------------------------------------------
+   ceq C << SUBST = C'
+    if T  := upTerm(C) << SUBST
+    /\ C' := downTerm(T, downConstraintError) .
 
---- ; ceq C &lt;&lt; SUBST = C’
---- ; if T := upTerm(C) &lt;&lt; SUBST
---- ; / C’ := downTerm(T, downConstraintError) .
+    op unsatis? : Constraint            -> [Bool] .
+    op entails? : Constraint Constraint -> [Bool] .
+    -----------------------------------------------
 
---- ;     op unsatis? : Constraint            -> [Bool] .
---- ;     op entails? : Constraint Constraint -> [Bool] .
---- ;     -----------------------------------------------
---- ; 
---- ;     op _|_ : State Constraint -> CState .
---- ;     op <_,_> : Step CState -> Transition .
---- ;     --------------------------------------
---- ; 
---- ;     op step : Module CState -> [TransitionSet] .
---- ;     --------------------------------------------
---- ;     eq step(M, S | C) = updateTransitions(C, step(M, S)) .
---- ; 
---- ;     op updateTransitions : Constraint TransitionSet -> [TransitionSet] .
---- ;     --------------------------------------------------------------------
---- ;     eq updateTransitions(C, .TransitionSet) = .TransitionSet .
---- ;     eq updateTransitions(C, (NeTS , NeTS')) = updateTransitions(C, NeTS) , updateTransitions(C, NeTS') .
+    op _|_ : State Constraint -> CState .
+    op <_,_> : Step CState -> Transition .
+    --------------------------------------
 
---- ; ceq updateTransitions(C, &lt; SUBST , S &gt;) = .TransitionSet if C’ := C &lt;&lt; SUBST / unsatis?(C’) .
---- ; eq updateTransitions(C, &lt; SUBST , S &gt;) = &lt; SUBST , S | C &lt;&lt; SUBST &gt; \[owise\] .
+    op step : Module CState -> [TransitionSet] .
+    --------------------------------------------
+    eq step(M, S | C) = updateTransitions(C, step(M, S)) .
 
---- ;     op allMatches : Module State State Nat -> [SubstitutionSet] .
---- ;     -------------------------------------------------------------
---- ;     eq allMatches(M, S, S', N) = none [owise] .
+    op updateTransitions : Constraint TransitionSet -> [TransitionSet] .
+    --------------------------------------------------------------------
+    eq updateTransitions(C, .TransitionSet) = .TransitionSet .
+    eq updateTransitions(C, (NeTS , NeTS')) = updateTransitions(C, NeTS) , updateTransitions(C, NeTS') .
 
---- ; ceq allMatches(M, S, S’, N) = SUBST | allMatches(M, S, S’, N + 1)
---- ; if SUBST := metaMatch(M, upTerm(S’), upTerm(S), nil, N) .
+   ceq updateTransitions(C, < SUBST , S >) = .TransitionSet             if C' := C << SUBST /\ unsatis?(C') .
+    eq updateTransitions(C, < SUBST , S >) = < SUBST , S | C << SUBST > [owise] .
 
---- ;     op fold : Module CState CState -> [Fold] .
---- ;     ------------------------------------------
+    op allMatches : Module State State Nat -> [SubstitutionSet] .
+    -------------------------------------------------------------
+    eq allMatches(M, S, S', N) = none [owise] .
+   ceq allMatches(M, S, S', N) = SUBST | allMatches(M, S, S', N + 1)
+    if SUBST := metaMatch(M, upTerm(S'), upTerm(S), nil, N) .
 
---- ; ceq fold(M, S | C, S’ | C’) = SUBST
---- ; if SUBST | SUBSTS := allMatches(M, S, S’, 0)
---- ; / entails?(C’, C &lt;&lt; SUBST) .
---- ; endfm
-
-
+    op fold : Module CState CState -> [Fold] .
+    ------------------------------------------
+   ceq fold(M, S | C, S' | C') = SUBST
+    if SUBST | SUBSTS := allMatches(M, S, S', 0)
+    /\ entails?(C', C << SUBST) .
+endfm

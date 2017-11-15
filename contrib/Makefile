@@ -10,7 +10,8 @@ tools: \
 	tools/meta/mtemplate.maude \
 	tools/meta/mtransform.maude \
 	tools/meta/unification.maude \
-	tools/meta/variables.maude
+	tools/meta/variables.maude \
+	tools/meta/narrowing.maude
 
 systems: \
 	systems/nim.maude
