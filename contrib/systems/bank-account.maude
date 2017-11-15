@@ -114,7 +114,7 @@ mod BANK-ACCOUNT-CTOR is
     op _,_ : MsgConf MsgConf -> MsgConf [ctor assoc comm id: mt] .
 
     sort Account .
-    ------------
+    --------------
 
     op < bal:_pend:_overdraft:_> : Nat Nat Truth -> Account [ctor] .
     ----------------------------------------------------------------
