@@ -118,13 +118,13 @@ fmod NARROWING2 is
 
     var N : Nat . vars Q RL : Qid .
     var TYPE : Type . var CTX : Context .
-    var M : Module . var T : Term . vars SUBST TSUBST RLSUBST : Substitution .
+    var M : Module . vars T T' : Term . vars SUBST TSUBST RLSUBST : Substitution .
 
     op allNarrowSteps : Module Term Nat -> [StepResultSet] .
     --------------------------------------------------------
     eq allNarrowSteps(M, T, N) = .StepResultSet [owise] .
-   ceq allNarrowSteps(M, T, N) = { T , TYPE , TSUBST / getRls(RL, M) } || allNarrowSteps(M, T, N + 1)
-    if { T , TYPE , CTX , RL , TSUBST , RLSUBST , Q } := metaNarrowingApply(M, T, empty, '#, N) .
+   ceq allNarrowSteps(M, T, N) = { T' , TYPE , TSUBST / getRls(RL, M) } || allNarrowSteps(M, T, N + 1)
+    if { T' , TYPE , CTX , RL , TSUBST , RLSUBST , Q } := metaNarrowingApply(M, T, empty, '#, N) .
 
     op metaNarrow2 : Module Term -> StepResult .
     --------------------------------------------
