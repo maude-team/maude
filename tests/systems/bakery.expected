@@ -1,0 +1,22 @@
+==========================================
+search [, 2] in BAKERY-META-LEVEL : s ; s ; [idle] [idle] =>* C:Conf .
+
+Solution 1 (state 0)
+states: 1  rewrites: 0
+C:Conf --> s ; s ; [idle] [idle]
+
+Solution 2 (state 1)
+states: 2  rewrites: 1
+C:Conf --> (s s) ; s ; [idle] [wait(s)]
+
+Solution 3 (state 2)
+states: 3  rewrites: 2
+C:Conf --> (s s s) ; s ; [wait(s)] [wait(s s)]
+
+Solution 4 (state 3)
+states: 4  rewrites: 3
+C:Conf --> (s s) ; s ; [idle] [crit(s)]
+
+No more solutions.
+states: 4  rewrites: 3
+Bye.

@@ -1,0 +1,10 @@
+set show timing off .
+
+load ../../contrib/systems/bakery.maude
+
+mod BAKERY-META-LEVEL is
+   protecting BAKERY .
+   protecting META-LEVEL .
+endm
+
+search [,2] s 0 ; s 0 ; [idle] [idle] =>* C:Conf .
