@@ -121,13 +121,13 @@ mod BAKERY-FVP is
   vars P Q : Mode .
   vars X Y : Nat> .
 
-  rl [p1_sleep] : < sleep, X, Q, Y > => < wait, Y + 1, Q, Y > .
-  rl [p1_wait] : < wait, X, Q, 0 > => < crit, X, Q, 0 > .
-  crl [p1_wait] : < wait, X, Q, Y > => < crit, X, Q, Y > if  X > Y = ff .
-  rl [p1_crit] : < crit, X, Q, Y > => < sleep, 0, Q, Y > .
+  rl [p1_sleep] : < sleep, X, Q, Y > => <  wait, Y + 1, Q, Y > .
+  rl [p1_wait]  : <  wait, X, Q, 0 > => <  crit, X,     Q, 0 > .
+ crl [p1_wait]  : <  wait, X, Q, Y > => <  crit, X,     Q, Y > if  X > Y = ff .
+  rl [p1_crit]  : <  crit, X, Q, Y > => < sleep, 0,     Q, Y > .
 
-  rl [p2_sleep] : < P, X, sleep, Y > => < P, X, wait, X + 1  > .
-  rl [p2_wait] : < P, 0, wait, Y > => < P, 0, crit, Y > .
-  crl [p2_wait] : < P, X, wait, Y > => < P, X, crit, Y > if X > Y = tt .
-  rl [p2_crit] : < P, X, crit, Y > => < P, X, sleep, 0 > .
+  rl [p2_sleep] : < P, X, sleep, Y > => < P, X,  wait, X + 1  > .
+  rl [p2_wait]  : < P, 0,  wait, Y > => < P, 0,  crit, Y      > .
+ crl [p2_wait]  : < P, X,  wait, Y > => < P, X,  crit, Y      > if X > Y = tt .
+  rl [p2_crit]  : < P, X,  crit, Y > => < P, X, sleep, 0      > .
 endm
