@@ -89,19 +89,19 @@ endm
 set include BOOL off .
 
 fmod NAT> is
-  sorts Zero NzNat Nat Bool .
-  subsorts Zero NzNat < Nat .
-  op tt : -> Bool [ctor] .  *** true
-  op ff : -> Bool [ctor] .  *** false
-  op 0 : -> Zero [ctor] .
-  op 1 : -> NzNat [ctor] .
-  op _+_ : Nat Nat -> Nat [ctor assoc comm id: 0] .
-  op _+_ : NzNat Nat -> NzNat [ctor assoc comm id: 0] .
-  op _+_ : Nat NzNat -> NzNat [ctor assoc comm id: 0] .
-  op _+_ : NzNat NzNat -> NzNat [ctor assoc comm id: 0] .
-  op _>_ : Nat Nat -> Bool .
+  sorts Zero> NzNat> Nat> Bool> .
+  subsorts Zero> NzNat> < Nat> .
+  op tt : -> Bool> [ctor] .  *** true
+  op ff : -> Bool> [ctor] .  *** false
+  op 0 : -> Zero> [ctor] .
+  op 1 : -> NzNat> [ctor] .
+  op _+_ : Nat> Nat> -> Nat> [ctor assoc comm id: 0] .
+  op _+_ : NzNat> Nat> -> NzNat> [ctor assoc comm id: 0] .
+  op _+_ : Nat> NzNat> -> NzNat> [ctor assoc comm id: 0] .
+  op _+_ : NzNat> NzNat> -> NzNat> [ctor assoc comm id: 0] .
+  op _>_ : Nat> Nat> -> Bool> .
 
-  vars n m : Nat .  vars n' m' : NzNat .
+  vars n m : Nat> .  vars n' m' : NzNat> .
 
   eq n + n' > n = tt [variant] .
   eq n > n + m = ff  [variant] .
@@ -116,10 +116,10 @@ mod BAKERY-FVP is
   op sleep : -> NcMode [ctor] .
   ops wait : -> NcMode [ctor] .
   op crit : -> Mode [ctor] .
-  op <_,_,_,_> : Mode Nat Mode Nat -> BState [ctor] .
+  op <_,_,_,_> : Mode Nat> Mode Nat> -> BState [ctor] .
 
   vars P Q : Mode .
-  vars X Y : Nat .
+  vars X Y : Nat> .
 
   rl [p1_sleep] : < sleep, X, Q, Y > => < wait, Y + 1, Q, Y > .
   rl [p1_wait] : < wait, X, Q, 0 > => < crit, X, Q, 0 > .
