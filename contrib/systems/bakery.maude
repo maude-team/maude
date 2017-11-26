@@ -138,3 +138,30 @@ mod BAKERY-FVP is
    crl [p2_wait]  : < P, X,  wait, Y > => < P, X,  crit, Y      > if X > Y = tt .
     rl [p2_crit]  : < P, X,  crit, Y > => < P, X, sleep, 0      > .
 endm
+
+mod BAKERY-FVP-CTOR is
+   protecting NAT> .
+
+    sorts Mode NcMode BState .
+    --------------------------
+    subsort NcMode < Mode .
+
+    vars P Q : Mode . vars X Y : Nat> .
+
+    op sleep : -> NcMode [ctor] .
+    op wait  : -> NcMode [ctor] .
+    op crit  : -> Mode   [ctor] .
+    -----------------------------
+
+    op <_,_,_,_> : Mode Nat> Mode Nat> -> BState [ctor] .
+    -----------------------------------------------------
+    rl [p1_sleep] : < sleep, X,                 Q, Y       > => <  wait, Y + 1,             Q, Y       > [narrowing] .
+    rl [p1_wait]  : <  wait, X,                 Q, 0       > => <  crit, X,                 Q, 0       > [narrowing] .
+    rl [p1_wait]  : <  wait, V1:Nat> + V2:Nat>, Q, V1:Nat> > => <  crit, V1:Nat> + V2:Nat>, Q, V1:Nat> > [narrowing] .
+    rl [p1_crit]  : <  crit, X,                 Q, Y       > => < sleep, 0,                 Q, Y       > [narrowing] .
+
+    rl [p2_sleep] : < P, X,                   sleep, Y       > => < P, X,                    wait, X + 1   > [narrowing] .
+    rl [p2_wait]  : < P, 0,                    wait, Y       > => < P, 0,                    crit, Y       > [narrowing] .
+    rl [p2_wait]  : < P, V1:Nat> + V2:NzNat>,  wait, V1:Nat> > => < P, V1:Nat> + V2:NzNat>,  crit, V1:Nat> > [narrowing] .
+    rl [p2_crit]  : < P, X,                    crit, Y       > => < P, X,                   sleep, 0       > [narrowing] .
+endm
