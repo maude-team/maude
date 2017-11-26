@@ -1,1 +1,109 @@
+==========================================
+reduce in NARROWING2 : allNarrowSteps(upModule('EXT-CYCLE, true), 'f[
+    'a.PreState], 0) == ({'f['b.PreState],'State,none / rl 'f['a.PreState] =>
+    'f['b.PreState] [narrowing label('a2b)] .} || {'g['c.PreState],'State,none
+    / rl 'f['a.PreState] => 'g['c.PreState] [narrowing label('a2c)] .
+rl 'g['a.PreState] => 'g['c.PreState] [narrowing label('a2c)] .}) .
+rewrites: 53
+result Bool: true
+==========================================
+reduce in NARROWING2 : allNarrowSteps(upModule('EXT-CYCLE, true), 'f[
+    'a.PreState], 1) == {'g['c.PreState],'State,none / rl 'f['a.PreState] =>
+    'g['c.PreState] [narrowing label('a2c)] .
+rl 'g['a.PreState] => 'g['c.PreState] [narrowing label('a2c)] .} .
+rewrites: 29
+result Bool: true
+==========================================
+reduce in NARROWING2 : allNarrowSteps(upModule('EXT-CYCLE, true), 'f[
+    'a.PreState], 2) == .StepResultSet .
+rewrites: 5
+result Bool: true
+==========================================
+reduce in NARROWING2 : allNarrowSteps(upModule('EXT-CYCLE, true), 'f[
+    'c.PreState], 0) == {'f['a.PreState],'State,none / rl 'f['c.PreState] =>
+    'f['a.PreState] [narrowing label('c2a)] .
+rl 'g['c.PreState] => 'g['a.PreState] [narrowing label('c2a)] .} .
+rewrites: 29
+result Bool: true
+==========================================
+reduce in NARROWING2 : allNarrowSteps(upModule('EXT-CYCLE, true), 'g[
+    'b.PreState], 0) == .StepResultSet .
+rewrites: 5
+result Bool: true
+==========================================
+reduce in NARROWING2 : allNarrowSteps(upModule('EXT-CYCLE, true), 'g[
+    'a.PreState], 0) == {'g['c.PreState],'State,none / rl 'f['a.PreState] =>
+    'g['c.PreState] [narrowing label('a2c)] .
+rl 'g['a.PreState] => 'g['c.PreState] [narrowing label('a2c)] .} .
+rewrites: 29
+result Bool: true
+==========================================
+reduce in NARROWING2 : allNarrowSteps(upModule('2TOKEN, true), '`{_`}['__[
+    '$.Token,'`[_`,wait`]['a.Name]]], 0) == {'`{_`}['`[_`,crit`]['a.Name]],
+    'State,none / rl '`{_`}['__['$.Token,'C:Conf,'`[_`,wait`]['a.Name]]] =>
+    '`{_`}['__['C:Conf,'`[_`,crit`]['a.Name]]] [narrowing label('a-enter)] .} .
+rewrites: 22
+result Bool: true
+==========================================
+reduce in NARROWING2 : allNarrowSteps(upModule('2TOKEN, true), '`{_`}['__[
+    'T:Token,'P:Proc]], 0) == ((({'`{_`}['`[_`,crit`]['a.Name]],'State,
+  'P:Proc <- '`[_`,wait`]['a.Name] ; 
+  'T:Token <- '$.Token / rl '`{_`}['__['$.Token,'C:Conf,'`[_`,wait`]['a.Name]]]
+    => '`{_`}['__['C:Conf,'`[_`,crit`]['a.Name]]] [narrowing label('a-enter)]
+    .} || {'`{_`}['`[_`,crit`]['b.Name]],'State,
+  'P:Proc <- '`[_`,wait`]['b.Name] ; 
+  'T:Token <- '*.Token / rl '`{_`}['__['*.Token,'C:Conf,'`[_`,wait`]['b.Name]]]
+    => '`{_`}['__['C:Conf,'`[_`,crit`]['b.Name]]] [narrowing label('b-enter)]
+    .}) || {'`{_`}['__['*.Token,'@1:Token,'`[_`,wait`]['a.Name]]],'State,
+  'P:Proc <- '`[_`,crit`]['a.Name] ; 
+  'T:Token <- '@1:Token / rl '`{_`}['__['C:Conf,'`[_`,crit`]['a.Name]]] =>
+    '`{_`}['__['`[_`,wait`]['a.Name],'__['*.Token,'C:Conf]]] [narrowing label(
+    'a-exit)] .}) || {'`{_`}['__['$.Token,'@1:Token,'`[_`,wait`]['b.Name]]],
+    'State,
+  'P:Proc <- '`[_`,crit`]['b.Name] ; 
+  'T:Token <- '@1:Token / rl '`{_`}['__['C:Conf,'`[_`,crit`]['b.Name]]] =>
+    '`{_`}['__['`[_`,wait`]['b.Name],'__['$.Token,'C:Conf]]] [narrowing label(
+    'b-exit)] .}) .
+rewrites: 76
+result Bool: true
+==========================================
+reduce in NARROWING2 : metaNarrow2(upModule('BAKERY, true), '_;_;_['N:Name,
+    'N:Name,'__['`[_`]['idle.ModeIdle],'`[_`]['idle.ModeIdle]]]) == {'_;_;_[
+    '__['s.Name,'@1:Name],'@1:Name,'__['`[_`]['idle.ModeIdle],'`[_`]['wait[
+    '@1:Name]]]],'Conf,
+  'N:Name <- '@1:Name / rl '_;_;_['N:Name,'M:Name,'__['PS:ProcSet,'`[_`][
+    'idle.ModeIdle]]] => '_;_;_['__['s.Name,'N:Name],'M:Name,'__['PS:ProcSet,
+    '`[_`]['wait['N:Name]]]] [narrowing label('wake)] .} .
+rewrites: 20
+result Bool: true
+==========================================
+reduce in NARROWING2 : metaNarrow2(upModule('BAKERY, true), '_;_;_['N:Name,
+    'M:Name,'IS:ProcIdleSet]) == {'_;_;_['__['s.Name,'@1:Name],'@2:Name,'__[
+    '@3:ProcIdleSet,'`[_`]['wait['@1:Name]]]],'Conf,
+  'IS:ProcIdleSet <- '__['@3:ProcIdleSet,'`[_`]['idle.ModeIdle]] ; 
+  'M:Name <- '@2:Name ; 
+  'N:Name <- '@1:Name / rl '_;_;_['N:Name,'M:Name,'__['PS:ProcSet,'`[_`][
+    'idle.ModeIdle]]] => '_;_;_['__['s.Name,'N:Name],'M:Name,'__['PS:ProcSet,
+    '`[_`]['wait['N:Name]]]] [narrowing label('wake)] .} .
+rewrites: 20
+result Bool: true
+==========================================
+reduce in NARROWING2 : metaNarrow2(upModule('BAKERY, true), '_;_;_['N:Name,
+    'M:Name,'WS:ProcWaitSet]) == ({'_;_;_['@1:Name,'@2:Name,'__[
+    '@3:ProcWaitSet,'`[_`]['crit['@2:Name]]]],'Conf,
+  'M:Name <- '@2:Name ; 
+  'N:Name <- '@1:Name ; 
+  'WS:ProcWaitSet <- '__['@3:ProcWaitSet,'`[_`]['wait['@2:Name]]] / rl '_;_;_[
+    'N:Name,'M:Name,'__['PS:ProcSet,'`[_`]['wait['M:Name]]]] => '_;_;_['N:Name,
+    'M:Name,'__['PS:ProcSet,'`[_`]['crit['M:Name]]]] [narrowing label('crit)]
+    .} || {'_;_;_['__['s.Name,'@1:Name],'@2:Name,'__['@3:ProcWaitSet,'`[_`][
+    'wait['@1:Name]]]],'Conf,
+  'M:Name <- '@2:Name ; 
+  'N:Name <- '@1:Name ; 
+  'WS:ProcWaitSet <- '__['@3:ProcWaitSet,'`[_`]['idle.ModeIdle]] / rl '_;_;_[
+    'N:Name,'M:Name,'__['PS:ProcSet,'`[_`]['idle.ModeIdle]]] => '_;_;_['__[
+    's.Name,'N:Name],'M:Name,'__['PS:ProcSet,'`[_`]['wait['N:Name]]]] [
+    narrowing label('wake)] .}) .
+rewrites: 35
+result Bool: true
 Bye.
