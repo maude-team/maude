@@ -63,6 +63,20 @@ rl 'g['c.PreState] => 'g['a.PreState] [narrowing label('c2a)] . .
 rewrites: 23
 result Bool: true
 ==========================================
+reduce in META-LEVEL : getRls('p1_sleep, upModule('BAKERY-FVP, true)) .
+rewrites: 27
+result Rule: rl '<_`,_`,_`,_>['sleep.NcMode,'X:Nat>,'Q:Mode,'Y:Nat>] =>
+    '<_`,_`,_`,_>['wait.NcMode,'_+_['1.Zero>,'Y:Nat>],'Q:Mode,'Y:Nat>] [label(
+    'p1_sleep)] .
+==========================================
+reduce in META-LEVEL : getRls('p2_wait, upModule('BAKERY-FVP, true)) .
+rewrites: 27
+result RuleSet: rl '<_`,_`,_`,_>['P:Mode,'0.Zero>,'wait.NcMode,'Y:Nat>] =>
+    '<_`,_`,_`,_>['P:Mode,'0.Zero>,'crit.Mode,'Y:Nat>] [label('p2_wait)] .
+crl '<_`,_`,_`,_>['P:Mode,'X:Nat>,'wait.NcMode,'Y:Nat>] => '<_`,_`,_`,_>[
+    'P:Mode,'X:Nat>,'crit.Mode,'Y:Nat>] if '_>_['X:Nat>,'Y:Nat>] = 'tt.Bool> [
+    label('p2_wait)] .
+==========================================
 reduce in META-LEVEL : metaNarrowingApply(upModule('EXT-CYCLE, true), 'f[
     'a.PreState], empty, '#, 0) == {
   'f['b.PreState],'State,

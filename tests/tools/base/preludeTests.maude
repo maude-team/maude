@@ -4,6 +4,7 @@
 set show timing off .
 
 load ../../../contrib/systems/cycle.maude
+load ../../../contrib/systems/bakery.maude
 load ../../../contrib/tools/base/prelude.maude
 
 --- Module BOUND
@@ -36,6 +37,9 @@ reduce getRls('b2c, upModule('EXT-CYCLE, true)) == ( rl 'f['b.PreState] => 'f['c
 reduce getRls('c2a, upModule('EXT-CYCLE, true)) == ( rl 'f['c.PreState] => 'f['a.PreState] [narrowing label('c2a)] .
                                                      rl 'g['c.PreState] => 'g['a.PreState] [narrowing label('c2a)] .
                                                    ) .
+
+reduce getRls('p1_sleep, upModule('BAKERY-FVP, true)) .
+reduce getRls('p2_wait,  upModule('BAKERY-FVP, true)) .
 
 reduce metaNarrowingApply(upModule('EXT-CYCLE, true), 'f['a.PreState], empty, '#, 0)
     == { 'f['b.PreState] ,'State , [] , 'a2b,(none).Substitution,(none).Substitution , '% } .
