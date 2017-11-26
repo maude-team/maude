@@ -1855,6 +1855,7 @@ fmod META-MODULE is
   var MAS : MembAxSet .
   var EQS : EquationSet .
   var RLS : RuleSet .
+  var C : Condition .
 
   op getName : Module -> Qid .
   eq getName(fmod Q is IL sorts SS . SSDS OPDS MAS EQS endfm) = Q .
@@ -1914,6 +1915,11 @@ fmod META-MODULE is
   eq getRls ( RL , none ) = none .
   eq getRls ( RL , rl T => T' [ label(Q) AS ] . RLS )
    = if RL == Q then rl T => T' [ label(Q) AS ] .
+                else none
+     fi
+     getRls(RL, RLS) .
+  eq getRls ( RL , crl T => T' if C [ label(Q) AS ] . RLS )
+   = if RL == Q then crl T => T' if C [ label(Q) AS ] .
                 else none
      fi
      getRls(RL, RLS) .
