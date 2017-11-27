@@ -20,20 +20,20 @@ fmod NARROWING-STEP-SET is
     var Tr : TraceNarrow . var B : Flags . vars Ct CtS : Context . var V : Variant .
     var SR : StepResult . var RTS : ResultContextSet . var SRS : StepResultSet .
 
-    op empty :                             -> StepResultSet [ctor] .
-    op _||_  : StepResultSet StepResultSet -> StepResultSet [ctor assoc comm id: empty prec 65] .
-    ---------------------------------------------------------------------------------------------
+    op .StepResultSet :                             -> StepResultSet [ctor] .
+    op _||_           : StepResultSet StepResultSet -> StepResultSet [ctor assoc comm id: .StepResultSet prec 65] .
+    ---------------------------------------------------------------------------------------------------------------
     eq SR || SR = SR .
 
     op to4Tuple : Module ResultContextSet -> StepResult .
     -----------------------------------------------------
-    eq to4Tuple(M, empty ) = empty .
+    eq to4Tuple(M, empty) = .StepResultSet .
     eq to4Tuple(M, {T,TP,S,S',Ct,CtS,TS,CtTS,NextVar,Tr,B} | RTS )
      = {CtTS, leastSort(M,CtTS), S .. S' / getRuleSet(Tr)} || to4Tuple(M, RTS) .
 
     op _|>_ : StepResult TermList -> StepResult .
     ---------------------------------------------
-    eq (empty).StepResult    |> TL = (empty).StepResult .
+    eq .StepResultSet        |> TL = .StepResultSet .
     eq ({T,TP,S / R} || SRS) |> TL = {T,TP,S |> TL / R} || (SRS |> TL) .
     eq (failure      || SRS) |> TL = failure || (SRS |> TL) .
 
@@ -46,9 +46,9 @@ fmod NARROWING-STEP-SET is
     -----------------
     subsort Variant < VariantSet .
 
-    op emptyVariantSet :                       -> VariantSet [ctor] .
-    op _#_             : VariantSet VariantSet -> VariantSet [ctor assoc comm id: emptyVariantSet prec 65 format (d d n d)] .
-    -------------------------------------------------------------------------------------------------------------------------
+    op .VariantSet :                       -> VariantSet [ctor] .
+    op _#_         : VariantSet VariantSet -> VariantSet [ctor assoc comm id: .VariantSet prec 65 format (d d n d)] .
+    -----------------------------------------------------------------------------------------------------------------
     eq V # V = V .
 endfm
 
