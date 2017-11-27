@@ -1,0 +1,7 @@
+fmod META-LMC-PARAMETERS is
+   protecting META-MODULE .
+
+    --- empty! the user module shoule define them.
+    op ##m## : ~> SModule  [memo] .
+    op ##f## : ~> TermList [memo] .
+endfm
