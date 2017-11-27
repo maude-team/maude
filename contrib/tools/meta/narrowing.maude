@@ -1,6 +1,6 @@
 load unification.maude
 
-fmod LMC-RESULT-SET is
+fmod NARROWING-STEP-SET is
    protecting RESULT-CONTEXT-SET .
 
     sorts StepResult StepResult? .
