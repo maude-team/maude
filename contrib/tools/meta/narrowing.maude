@@ -15,7 +15,7 @@ fmod NARROWING-STEP-SET is
     --------------------
     subsort StepResult < StepResultSet .
 
-    var M : Module . vars NextVar : Nat . vars S S' : Substitution .
+    var M : Module . vars N N' : Nat . vars S S' : Substitution .
     vars T TS CtTS : Term . var TL : TermList . var TP : Type . var R : Rule .
     var Tr : TraceNarrow . var B : Flags . vars Ct CtS : Context . var V : Variant .
     var SR : StepResult . var RTS : ResultContextSet . var SRS : StepResultSet .
@@ -28,7 +28,7 @@ fmod NARROWING-STEP-SET is
     op to4Tuple : Module ResultContextSet -> StepResult .
     -----------------------------------------------------
     eq to4Tuple(M, empty) = .StepResultSet .
-    eq to4Tuple(M, {T,TP,S,S',Ct,CtS,TS,CtTS,NextVar,Tr,B} | RTS )
+    eq to4Tuple(M, {T,TP,S,S',Ct,CtS,TS,CtTS,N',Tr,B} | RTS )
      = {CtTS, leastSort(M,CtTS), S .. S' / getRuleSet(Tr)} || to4Tuple(M, RTS) .
 
     op _|>_ : StepResult TermList -> StepResult .
@@ -50,6 +50,31 @@ fmod NARROWING-STEP-SET is
     op _#_         : VariantSet VariantSet -> VariantSet [ctor assoc comm id: .VariantSet prec 65 format (d d n d)] .
     -----------------------------------------------------------------------------------------------------------------
     eq V # V = V .
+endfm
+
+fmod NARROWING is
+   protecting NARROWING-STEP-SET .
+   protecting META-NARROWING-SEARCH .
+
+    vars N N' : Nat . var M : Module . var T : Term . var V : Variant .
+
+    op metaNarrow2 : Module Term -> StepResult .
+    --------------------------------------------
+    eq metaNarrow2(M,T) = to4Tuple(M,metaENarrowShowAll(M,T,1,full noStrategy BuiltIn-unify)) |> T .
+
+    op metaGenVariant : Module Term -> VariantSet .
+    -----------------------------------------------
+    eq metaGenVariant(M, T) = metaGenVariant(M, T, highestVar(T)) .
+
+    op metaGenVariant : Module Term Nat -> VariantSet .
+    ---------------------------------------------------
+    eq metaGenVariant(M, T, N) = metaGenVariant2(M, T, N, 0) .
+
+    op metaGenVariant2 : Module Term Nat Nat -> VariantSet .
+    --------------------------------------------------------
+    eq metaGenVariant2(M, T, N', N) = .VariantSet [owise] .
+   ceq metaGenVariant2(M, T, N', N) = V # metaGenVariant2(M,T,N',s N)
+    if V := metaGetVariant(M,T,empty,N',N) .
 endfm
 
 eof
