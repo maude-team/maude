@@ -1,4 +1,1 @@
-load ../../../contrib/systems/token.maude
-load ../../../contrib/tools/meta/narrowing.maude
-
 set show timing off .
