@@ -1,29 +1,68 @@
-load ../lmc/lgraph-search.maude
+load unification.maude
+
+fmod LMC-RESULT-SET is
+   protecting RESULT-CONTEXT-SET .
+
+    sorts StepResult StepResult? .
+    ------------------------------
+    subsort StepResult < StepResult? .
+
+    op failure   : -> StepResult? [ctor] .
+    op {_,_,_/_} : Term Type Substitution RuleSet -> StepResult [ctor] .
+    --------------------------------------------------------------------
+
+    sort StepResultSet .
+    --------------------
+    subsort StepResult < StepResultSet .
+
+    var M : Module . vars NextVar : Nat . vars S S' : Substitution .
+    vars T TS CtTS : Term . var TL : TermList . var TP : Type . var R : Rule .
+    var Tr : TraceNarrow . var B : Flags . vars Ct CtS : Context .
+    var SR : StepResult . var RTS : ResultContextSet . var SRS : StepResultSet .
+
+    op empty :                             -> StepResultSet [ctor] .
+    op _||_  : StepResultSet StepResultSet -> StepResultSet [ctor assoc comm id: empty prec 65] .
+    ---------------------------------------------------------------------------------------------
+    eq SR || SR = SR .
+
+    op to4Tuple : Module ResultContextSet -> StepResult .
+    -----------------------------------------------------
+    eq to4Tuple(M, empty ) = empty .
+    eq to4Tuple(M, {T,TP,S,S',Ct,CtS,TS,CtTS,NextVar,Tr,B} | RTS )
+     = {CtTS, leastSort(M,CtTS), S .. S' / getRuleSet(Tr)} || to4Tuple(M, RTS) .
+
+    op _|>_ : StepResult TermList -> StepResult .
+    ---------------------------------------------
+    eq (empty).StepResult    |> TL = (empty).StepResult .
+    eq ({T,TP,S / R} || SRS) |> TL = {T,TP,S |> TL / R} || (SRS |> TL) .
+    eq (failure      || SRS) |> TL = failure || (SRS |> TL) .
+
+    op getRuleSet : TraceNarrow -> RuleSet .
+    ----------------------------------------
+    eq getRuleSet(nil)           = none .
+    eq getRuleSet({T,S,TP,R} Tr) = R getRuleSet(Tr) .
+
+    sort VariantSet .
+    -----------------
+    subsort Variant < VariantSet .
+
+    op emptyVariantSet :                       -> VariantSet [ctor] .
+    op _#_             : VariantSet VariantSet -> VariantSet [ctor assoc comm id: emptyVariantSet prec 65 format (d d n d)] .
+    -------------------------------------------------------------------------------------------------------------------------
+    eq X:Variant # X:Variant = X:Variant .
+endfm
+
+eof
 
 fmod FVP-NARROWING-GRAPH is
-    protecting META-LEVEL .
-    extending GRAPH-FOLDING-SEARCH .
+    protecting SUBSTITUTIONSET .
 
-    subsort Substitution < Fold .
-    -----------------------------
-    var N : Nat .
-
-    --- Need some sort of constant identification here.
-    --- Perhaps this is telling us that we need a fth for the LGRAPH search stuff.
-    eq N [ none ] = N [ .Fold ] .
-
-    vars S S' : State . var TYPE : Type . var CTX : Context . vars Q RL : Qid .
+    var N : Nat . vars Q RL : Qid .
+    vars S S' : State . var TYPE : Type . var CTX : Context .
     var M : Module . var T : Term . vars SUBST TSUBST RLSUBST : Substitution .
 
-    op downStateError : -> [State] .
-    --------------------------------
-
-    subsort Substitution < Label .
-    --- op _:_ : Qid Substitution -> Label .
-    ----------------------------------------
-
-    op allNarrowSteps : Module State Nat -> [TransitionSet] .
-    ---------------------------------------------------------
+    op allNarrowSteps : Module Term Nat -> [TransitionSet] .
+    --------------------------------------------------------
     eq allNarrowSteps(M, S, N) = .TransitionSet [owise] .
    ceq allNarrowSteps(M, S, N) = < TSUBST , S' > , allNarrowSteps(M, S, N + 1)
     if { T , TYPE , CTX , RL , TSUBST , RLSUBST , Q }
@@ -39,8 +78,6 @@ fmod FVP-NARROWING-GRAPH is
     ----------------------------------------
    ceq fold(M, S, S') = SUBST if SUBST := metaMatch(M, upTerm(S'), upTerm(S), nil, 0) .
 endfm
-
-eof
 
 fmod FVP-NARROWING-MODULO-T-GRAPH is
     protecting SUBSTITUTIONSET .
