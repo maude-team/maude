@@ -1,1 +1,1 @@
-SUBDIRS = base meta
+SUBDIRS = base meta lmc

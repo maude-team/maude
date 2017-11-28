@@ -414,6 +414,7 @@ AC_CONFIG_FILES([Makefile
 		 tests/tools/Makefile
 		 tests/tools/base/Makefile
 		 tests/tools/meta/Makefile
+		 tests/tools/lmc/Makefile
 		 tests/systems/Makefile
 ])
 
