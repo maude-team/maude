@@ -124,6 +124,13 @@ fmod UNCONDITIONALIZE is
     if C' := upTerm(C)
     /\ V  := #var((T, T', C'), 'Condition) .
 
+    op rmConditions' : ModuleDeclSet -> [ModuleDeclSet] .
+    ----------------------------------------------------
+    eq rmConditions'(IS SDS SSDS MAS EQS)         = IS SDS SSDS MAS EQS .
+    eq rmConditions'(NeMDS NeMDS')                = rmConditions'(NeMDS) rmConditions'(NeMDS') .
+    eq rmConditions'(  rl T => T'      [ AS ] . ) = ( rl T => T' [ AS ] . ) .
+    eq rmConditions'( crl T => T' if C [ AS ] . ) = ( rl T => T' [ AS ] . ) .
+
     op unconditionalize : Sort ModuleDeclSet -> [ModuleDeclSet] .
     -------------------------------------------------------------
     eq unconditionalize(S, MDS) = ( pr 'META-LEVEL . ) ctermOp(S) rmConditions(S, MDS) .
