@@ -117,7 +117,6 @@ fmod UNCONDITIONALIZE is
 
     op rmConditions : Sort ModuleDeclSet -> [ModuleDeclSet] .
     ---------------------------------------------------------
-    eq rmConditions(S, none)                = none .
     eq rmConditions(S, IS SDS SSDS MAS EQS) = IS SDS SSDS MAS EQS .
     eq rmConditions(S, NeMDS NeMDS')        = rmConditions(S, NeMDS) rmConditions(S, NeMDS') .
 
