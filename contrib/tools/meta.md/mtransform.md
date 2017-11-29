@@ -109,8 +109,8 @@ fmod UNCONDITIONALIZE is
 
     op rmConditions : Sort ModuleDeclSet -> [ModuleDeclSet] .
     ---------------------------------------------------------
-    eq rmConditions(S, IS SDS SSDS MAS EQS) = IS SDS SSDS MAS EQS .
-    eq rmConditions(S, NeMDS NeMDS')        = rmConditions(S, NeMDS) rmConditions(S, NeMDS') .
+    eq rmConditions(S, IS SDS SSDS OPDS MAS EQS) = IS SDS SSDS OPDS MAS EQS .
+    eq rmConditions(S, NeMDS NeMDS')             = rmConditions(S, NeMDS) rmConditions(S, NeMDS') .
 
    ceq rmConditions(S, rl T => T' [AS] .) = ( rl '_|_[T, V] => '_|_[T', V] [AS] . )
     if V := #var((T, T'), 'Condition) .
@@ -121,7 +121,7 @@ fmod UNCONDITIONALIZE is
 
     op rmConditions' : ModuleDeclSet -> [ModuleDeclSet] .
     ----------------------------------------------------
-    eq rmConditions'(IS SDS SSDS MAS EQS)         = IS SDS SSDS MAS EQS .
+    eq rmConditions'(IS SDS SSDS OPDS MAS EQS)    = IS SDS SSDS OPDS MAS EQS .
     eq rmConditions'(NeMDS NeMDS')                = rmConditions'(NeMDS) rmConditions'(NeMDS') .
     eq rmConditions'(  rl T => T'      [ AS ] . ) = ( rl T => T' [ AS ] . ) .
     eq rmConditions'( crl T => T' if C [ AS ] . ) = ( rl T => T' [ AS ] . ) .
