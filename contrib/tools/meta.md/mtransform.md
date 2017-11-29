@@ -60,8 +60,6 @@ fmod SUBTHEORY-ABSTRACTION is
     --------------------------------------------------
     eq subtheoryAbstract(M, M') = fromTemplate(getName(M'), subtheoryAbstract(asTemplate(M'), M, M')) .
 endfm
-
-eof
 ```
 
 Note that when the sub-theory $(\Sigma_1, B_1 \cup E_1)$ is FVP, the above theory transformation enables variant unification to be used for narrowing.
@@ -74,7 +72,7 @@ If the equational fragment has a finitary unification algorithm, then we can "bu
 -   TODO: Define `#eqnsModule` function.
 -   TODO: Define `#variantsFrom` function.
 
-```maude
+```
 fmod BUILDIN-EQUATIONS is
    protecting MODULE-TEMPLATE .
    protecting UNIFICATION .
@@ -103,7 +101,7 @@ fmod UNCONDITIONALIZE is
 
     var M : Module . var FM : FModule . var S : Sort .
     vars T T' C' : Term . var AS : AttrSet . var C : Condition . var V : Variable .
-    var H : Header .
+    var H : Header . var MDS : ModuleDeclSet .
     vars NeMDS NeMDS' : NeModuleDeclSet .
     var IS : ImportDeclSet . var SDS : SortDeclSet .
     var SSDS : SubsortDeclSet . var OPDS : OpDeclSet . var MAS : MembAxSet .
@@ -132,6 +130,6 @@ fmod UNCONDITIONALIZE is
 
     op unconditionalize : Sort ModuleDeclSet -> [ModuleDeclSet] .
     -------------------------------------------------------------
-    eq unconditionalize(S, MDS) = ( pr 'META-LEVEL . ) cTermOp(S) rmConditions(S, MDS) .
+    eq unconditionalize(S, MDS) = ( pr 'META-LEVEL . ) ctermOp(S) rmConditions(S, MDS) .
 endfm
 ```

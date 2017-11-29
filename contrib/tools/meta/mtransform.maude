@@ -60,8 +60,6 @@ fmod SUBTHEORY-ABSTRACTION is
     eq subtheoryAbstract(M, M') = fromTemplate(getName(M'), subtheoryAbstract(asTemplate(M'), M, M')) .
 endfm
 
-eof
-
 
 --- ; Note that when the sub-theory (*Σ*₁, *B*₁ ∪ *E*₁) is FVP, the above theory transformation enables variant unification to be used for narrowing.
 
@@ -73,23 +71,21 @@ eof
 --- ; -   TODO: Define `#eqnsModule` function.
 --- ; -   TODO: Define `#variantsFrom` function.
 
-
-fmod BUILDIN-EQUATIONS is
-   protecting MODULE-TEMPLATE .
-   protecting UNIFICATION .
-
-    op #eqnsModule : Module -> [Module] .
-    -------------------------------------
-
-    op #buildinEqns : ModuleDeclSet Module -> [ModuleDeclSet] .
-    -----------------------------------------------------------
-    eq #buildinEqns(IS SDS SSDS MAS EQS, M) = IS SDS SSDS MAS EQS .
-    eq #buildinEqns(NeMDS NeMDS',        M) = #buildinEqns(NeMDS, M) #buildinEqns(NeMDS', M) .
-
-   ceq #buildinEqns(( crl L => R if C [AS] . ), M) = ( crl L => R if C [AS] . ) << SUBSTS
-    if SUBSTS := #variantsFrom('_|_[L,R], #eqnsModule(M)) .
-endfm
-
+--- ;     fmod BUILDIN-EQUATIONS is
+--- ;        protecting MODULE-TEMPLATE .
+--- ;        protecting UNIFICATION .
+--- ; 
+--- ;         op #eqnsModule : Module -> [Module] .
+--- ;         -------------------------------------
+--- ; 
+--- ;         op #buildinEqns : ModuleDeclSet Module -> [ModuleDeclSet] .
+--- ;         -----------------------------------------------------------
+--- ;         eq #buildinEqns(IS SDS SSDS MAS EQS, M) = IS SDS SSDS MAS EQS .
+--- ;         eq #buildinEqns(NeMDS NeMDS',        M) = #buildinEqns(NeMDS, M) #buildinEqns(NeMDS', M) .
+--- ; 
+--- ;        ceq #buildinEqns(( crl L => R if C [AS] . ), M) = ( crl L => R if C [AS] . ) << SUBSTS
+--- ;         if SUBSTS := #variantsFrom('_|_[L,R], #eqnsModule(M)) .
+--- ;     endfm
 
 --- ; Removing Conditional Equations/Rules
 --- ; ------------------------------------
@@ -102,7 +98,7 @@ fmod UNCONDITIONALIZE is
 
     var M : Module . var FM : FModule . var S : Sort .
     vars T T' C' : Term . var AS : AttrSet . var C : Condition . var V : Variable .
-    var H : Header .
+    var H : Header . var MDS : ModuleDeclSet .
     vars NeMDS NeMDS' : NeModuleDeclSet .
     var IS : ImportDeclSet . var SDS : SortDeclSet .
     var SSDS : SubsortDeclSet . var OPDS : OpDeclSet . var MAS : MembAxSet .
@@ -131,7 +127,7 @@ fmod UNCONDITIONALIZE is
 
     op unconditionalize : Sort ModuleDeclSet -> [ModuleDeclSet] .
     -------------------------------------------------------------
-    eq unconditionalize(S, MDS) = ( pr 'META-LEVEL . ) cTermOp(S) rmConditions(S, MDS) .
+    eq unconditionalize(S, MDS) = ( pr 'META-LEVEL . ) ctermOp(S) rmConditions(S, MDS) .
 endfm
 
 
