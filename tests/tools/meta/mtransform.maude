@@ -11,9 +11,17 @@ load ../../../contrib/tools/meta/mtransform.maude
 
 select SUBTHEORY-ABSTRACTION .
 
-eof
+--- Module UNCONDITIONALIZE
+--- =======================
 
 select UNCONDITIONALIZE .
+
+reduce rmConditions'(asTemplate(upModule('DIJKSTRA, true))) .
+reduce rmConditions'(asTemplate(upModule('BAKERY-FVP, true))) .
+reduce rmConditions'(asTemplate(upModule('FT-COMM, true))) .
+reduce rmConditions'(asTemplate(upModule('QLOCK-STATE, true))) .
+
+eof
 
 reduce internalizeConditions(upModule('DIJKSTRA, false), 'State)
     == ( mod 'DIJKSTRA is

@@ -1,1 +1,246 @@
+Warning: sort declarations for operator resolveNames failed preregularity check
+    on 6 out of 39 sort tuples. First such tuple is (Type).
+Warning: sort declarations for operator resolveNames failed preregularity check
+    on 1 out of 28 sort tuples. First such tuple is (NullDeclSet).
+==========================================
+reduce in UNCONDITIONALIZE : rmConditions'(asTemplate(upModule('DIJKSTRA,
+    true))) .
+rewrites: 124
+result NeModuleDeclSet: (sorts '2Proc ; '2ProcSet ; 'Bool* ; 'CProc ; 'Conf ;
+    'NCProc ; 'NCProcSet ; 'Proc ; 'ProcSet ; 'State ; 'WProc ; 'WProcSet .)
+subsort '2Proc < '2ProcSet .
+subsort '2Proc < 'NCProc .
+subsort '2ProcSet < 'NCProcSet .
+subsort 'CProc < 'Proc .
+subsort 'NCProc < 'NCProcSet .
+subsort 'NCProc < 'Proc .
+subsort 'NCProcSet < 'ProcSet .
+subsort 'Proc < 'ProcSet .
+subsort 'WProc < 'NCProc .
+subsort 'WProc < 'WProcSet .
+subsort 'WProcSet < 'NCProcSet .
+eq '_and*_['B:Bool*,'ff.Bool*] = 'ff.Bool* [variant] .
+eq '_and*_['B:Bool*,'tt.Bool*] = 'B:Bool* [variant] .
+eq '_or*_['B:Bool*,'ff.Bool*] = 'B:Bool* [variant] .
+eq '_or*_['B:Bool*,'tt.Bool*] = 'tt.Bool* [variant] .
+eq 'not*_['ff.Bool*] = 'tt.Bool* [variant] .
+eq 'not*_['tt.Bool*] = 'ff.Bool* [variant] .
+eq 'safe?['P:2ProcSet] = 'ff.Bool* [none] .
+eq 'safe?['P:WProcSet] = 'tt.Bool* [none] .
+eq 'safe?['__['C:Proc,'P:ProcSet]] = 'ff.Bool* [none] .
+rl '<_>['_|_['P:Proc,'PS:ProcSet]] => '`[_`]['_|_['P:Proc,'PS:ProcSet]] [label(
+    'stop)] .
+rl '<_>['_|_['P:Proc,'__['`{0`,try`}.WProc,'PS:ProcSet]]] => '<_>['_|_['P:Proc,
+    '__['`{1`,try`}.WProc,'PS:ProcSet]]] [label('start1)] .
+rl '<_>['_|_['P:Proc,'__['`{1`,upf`}.WProc,'PS:ProcSet]]] => '<_>['_|_['P:Proc,
+    '__['`{2`,chf`}.2Proc,'PS:ProcSet]]] [label('set-flag1)] .
+rl '<_>['_|_['P:Proc,'__['`{1`,upt`}.WProc,'PS:ProcSet]]] => '<_>['_|_[
+    '`{1`,upf`}.WProc,'__['P:Proc,'PS:ProcSet]]] [label('set-turn1)] .
+rl '<_>['_|_['P:Proc,'__['`{2`,chf`}.2Proc,'PS:ProcSet]]] => '<_>['_|_['P:Proc,
+    '__['`{2`,crt`}.CProc,'PS:ProcSet]]] [label('go-crit1)] .
+rl '<_>['_|_['P:Proc,'__['`{2`,chf`}.2Proc,'PS:ProcSet]]] => '<_>['_|_['P:Proc,
+    '__['`{2`,ext`}.2Proc,'PS:ProcSet]]] [label('fail-crit1)] .
+rl '<_>['_|_['P:Proc,'__['`{2`,crt`}.CProc,'PS:ProcSet]]] => '<_>['_|_['P:Proc,
+    '__['`{2`,ext`}.2Proc,'PS:ProcSet]]] [label('done-crit1)] .
+rl '<_>['_|_['P:Proc,'__['`{2`,ext`}.2Proc,'PS:ProcSet]]] => '<_>['_|_['P:Proc,
+    '__['`{0`,try`}.WProc,'PS:ProcSet]]] [label('exit-crit1)] .
+rl '<_>['_|_['`{0`,try`}.WProc,'PS:ProcSet]] => '<_>['_|_['`{1`,try`}.WProc,
+    'PS:ProcSet]] [label('start2)] .
+rl '<_>['_|_['`{0`,try`}.WProc,'__['`{1`,try`}.WProc,'PS:ProcSet]]] => '<_>[
+    '_|_['`{0`,try`}.WProc,'__['`{1`,upt`}.WProc,'PS:ProcSet]]] [label(
+    'chk-turn1)] .
+rl '<_>['_|_['`{1`,try`}.WProc,'PS:ProcSet]] => '<_>['_|_['`{1`,upf`}.WProc,
+    'PS:ProcSet]] [label('chk-turn2)] .
+rl '<_>['_|_['`{1`,upf`}.WProc,'PS:ProcSet]] => '<_>['_|_['`{2`,chf`}.2Proc,
+    'PS:ProcSet]] [label('set-flag2)] .
+rl '<_>['_|_['`{2`,chf`}.2Proc,'2PS:2ProcSet]] => '<_>['_|_['`{2`,ext`}.2Proc,
+    '2PS:2ProcSet]] [label('fail-crit2)] .
+rl '<_>['_|_['`{2`,chf`}.2Proc,'WPS:WProcSet]] => '<_>['_|_['`{2`,crt`}.CProc,
+    'WPS:WProcSet]] [label('go-crit2)] .
+rl '<_>['_|_['`{2`,crt`}.CProc,'PS:ProcSet]] => '<_>['_|_['`{2`,ext`}.2Proc,
+    'PS:ProcSet]] [label('done-crit2)] .
+rl '<_>['_|_['`{2`,ext`}.2Proc,'PS:ProcSet]] => '<_>['_|_['`{0`,try`}.WProc,
+    'PS:ProcSet]] [label('exit-crit2)] .
+op '<_> : 'Conf -> 'State [ctor] .
+op '_==_ : 'Bool* 'Bool* -> 'Bool* [none] .
+op '__ : '2ProcSet '2ProcSet -> '2ProcSet [assoc comm ctor id('mt.WProcSet)] .
+op '__ : '2ProcSet 'WProcSet -> '2ProcSet [assoc comm ctor id('mt.WProcSet)] .
+op '__ : 'NCProcSet 'NCProcSet -> 'NCProcSet [assoc comm ctor id('mt.WProcSet)]
+    .
+op '__ : 'ProcSet 'ProcSet -> 'ProcSet [assoc comm ctor id('mt.WProcSet)] .
+op '__ : 'WProcSet 'WProcSet -> 'WProcSet [assoc comm ctor id('mt.WProcSet)] .
+op '_and*_ : 'Bool* 'Bool* -> 'Bool* [none] .
+op '_or*_ : 'Bool* 'Bool* -> 'Bool* [none] .
+op '_|_ : 'Proc 'ProcSet -> 'Conf [ctor] .
+op '`[_`] : 'Conf -> 'State [ctor] .
+op '`{0`,try`} : nil -> 'WProc [ctor] .
+op '`{1`,try`} : nil -> 'WProc [ctor] .
+op '`{1`,upf`} : nil -> 'WProc [ctor] .
+op '`{1`,upt`} : nil -> 'WProc [ctor] .
+op '`{2`,chf`} : nil -> '2Proc [ctor] .
+op '`{2`,crt`} : nil -> 'CProc [ctor] .
+op '`{2`,ext`} : nil -> '2Proc [ctor] .
+op 'ff : nil -> 'Bool* [ctor] .
+op 'mt : nil -> 'WProcSet [none] .
+op 'not*_ : 'Bool* -> 'Bool* [none] .
+op 'safe? : 'ProcSet -> 'Bool* [none] .
+op 'tt : nil -> 'Bool* [ctor] .
+==========================================
+reduce in UNCONDITIONALIZE : rmConditions'(asTemplate(upModule('BAKERY-FVP,
+    true))) .
+rewrites: 56
+result NeModuleDeclSet: (sorts 'BState ; 'Bool> ; 'Mode ; 'Nat> ; 'NcMode ;
+    'NzNat> ; 'Zero> .)
+subsort 'NcMode < 'Mode .
+subsort 'NzNat> < 'Nat> .
+subsort 'Zero> < 'Nat> .
+eq '_>_['n:Nat>,'_+_['n:Nat>,'m:Nat>]] = 'ff.Bool> [variant] .
+eq '_>_['_+_['n:Nat>,'n':NzNat>],'n:Nat>] = 'tt.Bool> [variant] .
+rl '<_`,_`,_`,_>['P:Mode,'0.Zero>,'wait.NcMode,'Y:Nat>] => '<_`,_`,_`,_>[
+    'P:Mode,'0.Zero>,'crit.Mode,'Y:Nat>] [label('p2_wait)] .
+rl '<_`,_`,_`,_>['P:Mode,'X:Nat>,'crit.Mode,'Y:Nat>] => '<_`,_`,_`,_>['P:Mode,
+    'X:Nat>,'sleep.NcMode,'0.Zero>] [label('p2_crit)] .
+rl '<_`,_`,_`,_>['P:Mode,'X:Nat>,'sleep.NcMode,'Y:Nat>] => '<_`,_`,_`,_>[
+    'P:Mode,'X:Nat>,'wait.NcMode,'_+_['1.Zero>,'X:Nat>]] [label('p2_sleep)] .
+rl '<_`,_`,_`,_>['P:Mode,'X:Nat>,'wait.NcMode,'Y:Nat>] => '<_`,_`,_`,_>[
+    'P:Mode,'X:Nat>,'crit.Mode,'Y:Nat>] [label('p2_wait)] .
+rl '<_`,_`,_`,_>['crit.Mode,'X:Nat>,'Q:Mode,'Y:Nat>] => '<_`,_`,_`,_>[
+    'sleep.NcMode,'0.Zero>,'Q:Mode,'Y:Nat>] [label('p1_crit)] .
+rl '<_`,_`,_`,_>['sleep.NcMode,'X:Nat>,'Q:Mode,'Y:Nat>] => '<_`,_`,_`,_>[
+    'wait.NcMode,'_+_['1.Zero>,'Y:Nat>],'Q:Mode,'Y:Nat>] [label('p1_sleep)] .
+rl '<_`,_`,_`,_>['wait.NcMode,'X:Nat>,'Q:Mode,'0.Zero>] => '<_`,_`,_`,_>[
+    'crit.Mode,'X:Nat>,'Q:Mode,'0.Zero>] [label('p1_wait)] .
+rl '<_`,_`,_`,_>['wait.NcMode,'X:Nat>,'Q:Mode,'Y:Nat>] => '<_`,_`,_`,_>[
+    'crit.Mode,'X:Nat>,'Q:Mode,'Y:Nat>] [label('p1_wait)] .
+op '0 : nil -> 'Zero> [ctor] .
+op '1 : nil -> 'Zero> [ctor] .
+op '<_`,_`,_`,_> : 'Mode 'Nat> 'Mode 'Nat> -> 'BState [ctor] .
+op '_+_ : 'Nat> 'Nat> -> 'Nat> [assoc comm ctor id('0.Zero>)] .
+op '_+_ : 'Nat> 'NzNat> -> 'NzNat> [assoc comm ctor id('0.Zero>)] .
+op '_+_ : 'NzNat> 'Nat> -> 'NzNat> [assoc comm ctor id('0.Zero>)] .
+op '_+_ : 'NzNat> 'NzNat> -> 'NzNat> [assoc comm ctor id('0.Zero>)] .
+op '_>_ : 'Nat> 'Nat> -> 'Bool> [none] .
+op 'crit : nil -> 'Mode [ctor] .
+op 'ff : nil -> 'Bool> [ctor] .
+op 'sleep : nil -> 'NcMode [ctor] .
+op 'tt : nil -> 'Bool> [ctor] .
+op 'wait : nil -> 'NcMode [ctor] .
+==========================================
+reduce in UNCONDITIONALIZE : rmConditions'(asTemplate(upModule('FT-COMM,
+    true))) .
+rewrites: 114
+result NeModuleDeclSet: (sorts 'Bool* ; 'ListNat* ; 'MaybeNat* ; 'MaybePairNat*
+    ; 'Nat* ; 'NeListNat* ; 'NzNat* ; 'PairNat* ; 'State .)
+subsort 'Nat* < 'MaybeNat* .
+subsort 'Nat* < 'NeListNat* .
+subsort 'NeListNat* < 'ListNat* .
+subsort 'NzNat* < 'Nat* .
+subsort 'PairNat* < 'MaybePairNat* .
+eq '_<=Nat_['n:Nat*,'_:+_['n:Nat*,'m:Nat*]] = 'tt.Bool* [variant] .
+eq '_<=Nat_['_:+_['p:NzNat*,'n:Nat*],'n:Nat*] = 'ff.Bool* [variant] .
+eq '_<Nat_['n:Nat*,'_:+_['p:NzNat*,'n:Nat*]] = 'tt.Bool* [variant] .
+eq '_<Nat_['_:+_['n:Nat*,'m:Nat*],'n:Nat*] = 'ff.Bool* [variant] .
+eq '_and*_['B:Bool*,'ff.Bool*] = 'ff.Bool* [variant] .
+eq '_and*_['B:Bool*,'tt.Bool*] = 'B:Bool* [variant] .
+eq '_or*_['B:Bool*,'ff.Bool*] = 'B:Bool* [variant] .
+eq '_or*_['B:Bool*,'tt.Bool*] = 'tt.Bool* [variant] .
+eq 'max['n:Nat*,'_:+_['n:Nat*,'m:Nat*]] = '_:+_['n:Nat*,'m:Nat*] [variant] .
+eq 'min['n:Nat*,'_:+_['n:Nat*,'m:Nat*]] = 'n:Nat* [variant] .
+eq 'not*_['ff.Bool*] = 'tt.Bool* [variant] .
+eq 'not*_['tt.Bool*] = 'ff.Bool* [variant] .
+eq 's['n:Nat*] = '_:+_['1.NzNat*,'n:Nat*] [variant] .
+eq 'sd['n:Nat*,'_:+_['n:Nat*,'m:Nat*]] = '0.Nat* [variant] .
+eq 'sd['_:+_['n:Nat*,'m:Nat*],'n:Nat*] = 'm:Nat* [variant] .
+rl '`[_::_|_|_|_::_`]['n:Nat*,'l1:ListNat*,'k:Nat*,'pa?:MaybePairNat*,
+    'l2:ListNat*,'m:Nat*] => '`[_::_|_|_|_::_`]['n:Nat*,'l1:ListNat*,
+    'null.MaybeNat*,'pa?:MaybePairNat*,'l2:ListNat*,'m:Nat*] [label('drop-ack)]
+    .
+rl '`[_::_|_|_|_::_`]['n:Nat*,'l1:ListNat*,'n?:MaybeNat*,'pa:PairNat*,
+    'l2:ListNat*,'m:Nat*] => '`[_::_|_|_|_::_`]['n:Nat*,'l1:ListNat*,
+    'n?:MaybeNat*,'nullp.MaybePairNat*,'l2:ListNat*,'m:Nat*] [label('drop-snd)]
+    .
+rl '`[_::_|_|_|_::_`]['p:NzNat*,'l:NeListNat*,'n?:MaybeNat*,'`[_`,_`]['n:Nat*,
+    'q:NzNat*],'l':NeListNat*,'q:NzNat*] => '`[_::_|_|_|_::_`]['p:NzNat*,
+    'l:NeListNat*,'q:NzNat*,'nullp.MaybePairNat*,'l':NeListNat*,'q:NzNat*] [
+    label('resend-ack)] .
+rl '`[_::_|_|_|_::_`]['p:NzNat*,'l:NeListNat*,'n?:MaybeNat*,'`[_`,_`]['n:Nat*,
+    '_:+_['1.NzNat*,'m:Nat*]],'l':NeListNat*,'m:Nat*] => '`[_::_|_|_|_::_`][
+    'p:NzNat*,'l:NeListNat*,'_:+_['1.NzNat*,'m:Nat*],'nullp.MaybePairNat*,'__[
+    'l':NeListNat*,'n:Nat*],'_:+_['1.NzNat*,'m:Nat*]] [label('rec-+)] .
+rl '`[_::_|_|_|_::_`]['p:NzNat*,'l:NeListNat*,'n?:MaybeNat*,'`[_`,_`]['n:Nat*,
+    '_:+_['1.NzNat*,'m:Nat*]],'nil.ListNat*,'m:Nat*] => '`[_::_|_|_|_::_`][
+    'p:NzNat*,'l:NeListNat*,'_:+_['1.NzNat*,'m:Nat*],'nullp.MaybePairNat*,
+    'n:Nat*,'_:+_['1.NzNat*,'m:Nat*]] [label('rec-1)] .
+rl '`[_::_|_|_|_::_`]['p:NzNat*,'n:Nat*,'n?:MaybeNat*,'nullp.MaybePairNat*,
+    'l1:ListNat*,'m:Nat*] => '`[_::_|_|_|_::_`]['p:NzNat*,'n:Nat*,
+    'null.MaybeNat*,'`[_`,_`]['n:Nat*,'p:NzNat*],'l1:ListNat*,'m:Nat*] [label(
+    'resend-1)] .
+rl '`[_::_|_|_|_::_`]['p:NzNat*,'n:Nat*,'p:NzNat*,'pa?:MaybePairNat*,
+    'l:NeListNat*,'q:NzNat*] => '`[_::_|_|_|_::_`]['p:NzNat*,'nil.ListNat*,
+    'null.MaybeNat*,'nullp.MaybePairNat*,'l:NeListNat*,'q:NzNat*] [label(
+    'rec-ack-1)] .
+rl '`[_::_|_|_|_::_`]['p:NzNat*,'__['n:Nat*,'l:NeListNat*],'n?:MaybeNat*,
+    'nullp.MaybePairNat*,'l1:ListNat*,'m:Nat*] => '`[_::_|_|_|_::_`]['p:NzNat*,
+    '__['n:Nat*,'l:NeListNat*],'null.MaybeNat*,'`[_`,_`]['n:Nat*,'p:NzNat*],
+    'l1:ListNat*,'m:Nat*] [label('resend-+)] .
+rl '`[_::_|_|_|_::_`]['p:NzNat*,'__['n:Nat*,'m:Nat*],'p:NzNat*,
+    'pa?:MaybePairNat*,'l:NeListNat*,'q:NzNat*] => '`[_::_|_|_|_::_`]['_:+_[
+    '1.NzNat*,'p:NzNat*],'m:Nat*,'null.MaybeNat*,'`[_`,_`]['m:Nat*,'_:+_[
+    '1.NzNat*,'p:NzNat*]],'l:NeListNat*,'q:NzNat*] [label('rec-ack-2)] .
+rl '`[_::_|_|_|_::_`]['p:NzNat*,'__['n:Nat*,'m:Nat*,'l':NeListNat*],'p:NzNat*,
+    'pa?:MaybePairNat*,'l:NeListNat*,'q:NzNat*] => '`[_::_|_|_|_::_`]['_:+_[
+    '1.NzNat*,'p:NzNat*],'__['m:Nat*,'l':NeListNat*],'null.MaybeNat*,'`[_`,_`][
+    'm:Nat*,'_:+_['1.NzNat*,'p:NzNat*]],'l:NeListNat*,'q:NzNat*] [label(
+    'rec-ack-+)] .
+op '0 : nil -> 'Nat* [ctor] .
+op '1 : nil -> 'NzNat* [ctor] .
+op '_:+_ : 'Nat* 'Nat* -> 'Nat* [assoc comm ctor id('0.Nat*)] .
+op '_:+_ : 'NzNat* 'Nat* -> 'NzNat* [assoc comm ctor id('0.Nat*)] .
+op '_<=Nat_ : 'Nat* 'Nat* -> 'Bool* [none] .
+op '_<Nat_ : 'Nat* 'Nat* -> 'Bool* [none] .
+op '_=/=_ : 'MaybeNat* 'MaybeNat* -> 'Bool* [none] .
+op '_=/=_ : 'Nat* 'Nat* -> 'Bool* [none] .
+op '_==_ : 'MaybeNat* 'MaybeNat* -> 'Bool* [none] .
+op '_==_ : 'Nat* 'Nat* -> 'Bool* [none] .
+op '__ : 'NeListNat* 'NeListNat* -> 'NeListNat* [assoc ctor] .
+op '_and*_ : 'Bool* 'Bool* -> 'Bool* [none] .
+op '_or*_ : 'Bool* 'Bool* -> 'Bool* [none] .
+op '`[_::_|_|_|_::_`] : 'Nat* 'ListNat* 'MaybeNat* 'MaybePairNat* 'ListNat*
+    'Nat* -> 'State [ctor] .
+op '`[_`,_`] : 'Nat* 'NzNat* -> 'PairNat* [ctor] .
+op 'ff : nil -> 'Bool* [ctor] .
+op 'max : 'Nat* 'Nat* -> 'Nat* [comm] .
+op 'min : 'Nat* 'Nat* -> 'Nat* [comm] .
+op 'nil : nil -> 'ListNat* [ctor] .
+op 'not*_ : 'Bool* -> 'Bool* [none] .
+op 'null : nil -> 'MaybeNat* [ctor] .
+op 'nullp : nil -> 'MaybePairNat* [ctor] .
+op 's : 'Nat* -> 'Nat* [none] .
+op 'sd : 'Nat* 'Nat* -> 'Nat* [none] .
+op 'tt : nil -> 'Bool* [ctor] .
+==========================================
+reduce in UNCONDITIONALIZE : rmConditions'(asTemplate(upModule('QLOCK-STATE,
+    true))) .
+rewrites: 4
+result NeModuleDeclSet: (sorts 'Bool* ; 'Nat* ; 'NeQueue ; 'Pred ; 'Queue ;
+    'Soup .)
+subsort 'Nat* < 'NeQueue .
+subsort 'Nat* < 'Soup .
+subsort 'NeQueue < 'Queue .
+eq '_in_['N:Nat*,'N:Nat*] = 'true.Pred [variant] .
+eq '_in_['N:Nat*,'__['N:Nat*,'S:Soup]] = 'true.Pred [variant] .
+eq 'dupl['__['N:Nat*,'N:Nat*]] = 'true.Pred [variant] .
+eq 'dupl['__['N:Nat*,'N:Nat*,'S:Soup]] = 'true.Pred [variant] .
+op '0 : nil -> 'Nat* [ctor] .
+op '1 : nil -> 'Nat* [ctor] .
+op '_:+_ : 'Nat* 'Nat* -> 'Nat* [assoc comm ctor id('0.Nat*)] .
+op '_=/=_ : 'Pred 'Pred -> 'Bool* [ctor] .
+op '_@_ : 'NeQueue 'NeQueue -> 'NeQueue [assoc ctor] .
+op '__ : 'Soup 'Soup -> 'Soup [assoc comm ctor id('mt.Soup)] .
+op '_in_ : 'Nat* 'Soup -> 'Pred [ctor] .
+op 'dupl : 'Soup -> 'Pred [ctor] .
+op 'mt : nil -> 'Soup [ctor] .
+op 'nil : nil -> 'Queue [ctor] .
+op 'true : nil -> 'Pred [ctor] .
+op 'tt : nil -> 'Bool* [ctor] .
 Bye.
