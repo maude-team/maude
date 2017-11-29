@@ -1,15 +1,13 @@
+set show timing off .
+
 load ../../../contrib/systems/dijkstra.maude
+load ../../../contrib/systems/bakery.maude
 load ../../../contrib/systems/oc.maude
 load ../../../contrib/systems/qlock.maude
 load ../../../contrib/tools/meta/mtransform.maude
 
 --- Module SUBTHEORY-ABSTRACTION
 --- ============================
-
---- Function `subtheoryAbstract`
---- ----------------------------
-
---- ### System `BANK-ACCOUNT`
 
 select SUBTHEORY-ABSTRACTION .
 
