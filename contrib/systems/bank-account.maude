@@ -155,3 +155,14 @@ mod BANK-ACCOUNT-CTOR is
     rl < bal: n     pend: x overdraft: ff > # msgs
     => < bal: n + m pend: x overdraft: ff > # msgs [narrowing] .
 endm
+
+mod BANK-ACCOUNT-DEFINEDOPS is
+   protecting BANK-ACCOUNT-CTOR .
+
+    var N : Nat . var MSGS : MsgConf .
+
+    op debts : MsgConf -> Nat .
+    ---------------------------
+    eq debts(mt)                 = 0 .
+    eq debts(withdraw(N) , MSGS) = N + debts(MSGS) .
+endm
