@@ -1,4 +1,27 @@
 ==========================================
+get variants in BAKERY-FVP : X > Y .
+
+Variant #1
+rewrites: 0
+Bool>: #1:Nat> > #2:Nat>
+X --> #1:Nat>
+Y --> #2:Nat>
+
+Variant #2
+rewrites: 2
+Bool>: tt
+X --> %1:Nat> + %2:NzNat>
+Y --> %1:Nat>
+
+Variant #3
+rewrites: 2
+Bool>: ff
+X --> %1:Nat>
+Y --> %1:Nat> + %2:Nat>
+
+No more variants.
+rewrites: 2
+==========================================
 search [, 2] in BAKERY-META-LEVEL : s ; s ; [idle] [idle] =>* C:Conf .
 
 Solution 1 (state 0)

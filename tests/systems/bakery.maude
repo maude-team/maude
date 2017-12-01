@@ -2,6 +2,12 @@ set show timing off .
 
 load ../../contrib/systems/bakery.maude
 
+--- Variants of conditions in BAKERY-FVP
+
+get variants in BAKERY-FVP : X:Nat> > Y:Nat> .
+
+--- Reachability command
+
 mod BAKERY-META-LEVEL is
    protecting BAKERY .
    protecting META-LEVEL .
