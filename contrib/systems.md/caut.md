@@ -29,12 +29,15 @@ We define the structure of a `Culture`. Every `Cell` is a singleton `Culture`.
 fmod CELLULAR-CULTURE is
 
     sorts State States State? .
+    ---------------------------
     subsort State < States State? .
-    sorts StateLabel StateKey .
-    sorts Cell Culture .
-    subsort Cell < Culture .
 
-    sorts Clock Dish .
+    sorts StateLabel StateKey .
+    ---------------------------
+
+    sorts Cell Culture .
+    --------------------
+    subsort Cell < Culture .
 ```
 
 ### Cell
@@ -46,6 +49,7 @@ A `State?` can just be a regular `State` (by subsorting), or it can be a `State`
 ```maude
     op _->_ : State States -> State? [prec 56] .
     op _::_ : StateLabel State? -> Cell [prec 57] .
+    -----------------------------------------------
 ```
 
 ### Culture
@@ -54,8 +58,8 @@ We have an "empty" `Culture` (`mt`), and say that `Culture`s can be combined ass
 
 ```maude
     op mt  : -> Culture [ctor] .
-    op _;_ : Culture Culture -> Culture
-             [assoc comm idem id: mt prec 60 format(d n d d)] .
+    op _;_ : Culture Culture -> Culture [assoc comm idem id: mt prec 60 format(d n d d)] .
+    --------------------------------------------------------------------------------------
 ```
 
 ### Computing Next State
@@ -64,33 +68,34 @@ When computing the next state for the current cell, we'll need a list of neigbho
 To know which neighboring cell corresponds to each neighboring state, we'll use a marker `StateKey`, which can hold either the `StateLabel` or the `State` of the state it corresponds to.
 
 ```maude
+    vars N N'   : StateLabel .
+    vars S S'   : State .
+    var  SS SS' : States .
+    var  SK     : StateKey .
+
     op mt   : -> States .
     op __   : States   States     -> States [assoc comm id: mt prec 55] .
     op _[_] : StateKey State      -> States .
     op _[_] : StateKey StateLabel -> States .
+    -----------------------------------------
+    eq   N :: S -> SK[N] SS
+       = N :: S -> SK[S] SS .
 
-    op neighbors : StateLabel -> State? .
+    eq   N :: S -> SK[N'] SS ; N' :: S' -> SS'
+       = N :: S -> SK[S'] SS ; N' :: S' -> SS' .
 ```
-
-The `neighbors` function is used to calculate which neighbors are relevant to each `Cell`.
-This is simulation specific.
 
 ### Neighbor Lookup
 
 If what we're holding is the `StateLabel`, we need to do a lookup in the associative commutative soup of `Cell` to find the corresponding `State`.
 It could be that the `StateLabel` refers to our own state, which needs to be handled specially.
 
+The `neighbors` function is used to calculate which neighbors are relevant to each `Cell`.
+This is simulation specific.
+
 ```maude
-    vars N N'   : StateLabel .
-    vars S S'   : State .
-    var  SS SS' : States .
-    var  SK     : StateKey .
-
-    eq   N :: S -> SK[N] SS
-       = N :: S -> SK[S] SS .
-
-    eq   N :: S -> SK[N'] SS ; N' :: S' -> SS'
-       = N :: S -> SK[S'] SS ; N' :: S' -> SS' .
+    op neighbors : StateLabel -> State? .
+    -------------------------------------
 ```
 
 ### Life Cycle
@@ -99,23 +104,23 @@ To drive the whole simulation forward, we'll need a `Clock` which switches back 
 A `Clock` together with a `Culture` is a `Dish`.
 
 ```maude
-    ops tick tock : -> Clock .
-    op  _{_}      : Clock Culture -> Dish [format(d n s n d)].
+    sorts Clock Dish .
+    ------------------
+    var C : Culture .
+
+   ops tick tock : -> Clock .
+    op _{_} : Clock Culture -> Dish [format(d n s n d)] .
+    -----------------------------------------------------
+    eq tick { N :: S                 ; C }
+     = tick { N :: S -> neighbors(N) ; C } .
+
+    eq tock { N :: S -> S' ; C }
+     = tock { N :: S'      ; C } .
+endfm
 ```
 
 Notice that on `tick`, any unactivated `Cell` is activated by querying the `neighbors` function to get the relevant state from the surrounding `Culture`.
 On `tock` the simplified `Cell`s which have already computed their next state are deactivated (notice we use variable `S'`, which is of sort `State`, not of sort `State?`).
-
-```maude
-    var  C    : Culture .
-
-    eq   tick { N :: S                 ; C }
-       = tick { N :: S -> neighbors(N) ; C } .
-
-    eq   tock { N :: S -> S' ; C }
-       = tock { N :: S'      ; C } .
-endfm
-```
 
 Our Simulation
 --------------
