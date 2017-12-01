@@ -142,7 +142,6 @@ Periodic Grid
 ```maude
 fmod PERIODIC-GRID is
    protecting INT .
-   protecting RANDOM .
     extending CELLULAR-CULTURE .
 
     vars N M : Int .
