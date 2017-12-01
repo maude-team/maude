@@ -163,7 +163,6 @@ fmod PERIODIC-GRID is
     --- States are either `X` or `-`
     --- The neighborhood is the current cell + adjacent cells
 
-   ops X - : -> State .
    ops up down left right : -> StateKey .
     -------------------------------------
     eq neighbors((N,M)) = up    [(N , M + 1)]
