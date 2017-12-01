@@ -165,11 +165,11 @@ fmod PERIODIC-GRID is
 
    ops up down left right : -> StateKey .
     -------------------------------------
-    eq neighbors((N,M)) = up    [(N , M + 1)]
-                          left  [(N - 1 , M)]
-                          down  [(N , M - 1)]
-                          right [(N + 1 , M)]
-                          .
+    eq neighbors((N,M))
+     = up    [(N , M + 1)]
+       left  [(N - 1 , M)]
+       down  [(N , M - 1)]
+       right [(N + 1 , M)] .
 endfm
 
 
