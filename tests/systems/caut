@@ -1,0 +1,10 @@
+#!/bin/sh
+
+MAUDE_LIB=$srcdir/../../src/Main
+export MAUDE_LIB
+
+../../src/Main/maude \
+  < caut.maude -no-banner -no-advise \
+  > caut.out 2>&1
+
+diff caut.expected caut.out > /dev/null 2>&1
