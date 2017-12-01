@@ -179,36 +179,3 @@ fmod PERIODIC-GRID is
                           .
 endfm
 ```
-
-### Instantiate to 5x5 Grid
-
-```maude
-fmod 5x5GRID is
-    including PERIODIC-GRID .
-
-    vars S U D L R : State .
-
-    --- calculate the next state as a function of the neighborhood
-
-    eq width  = 5 .
-    eq height = 5 .
-    eq S -> up[X] down[X] left[L] right[R] = S -> X .
-    eq S -> up[U] down[D] left[-] right[X] = S -> X .
-    eq - -> up[-] down[X] left[-] right[-] = - -> X .
-    eq S -> up[U] down[D] left[L] right[R] = S -> - [owise] .
-
-    --- generate a random 5X5 grid
-
-    var Rn : Nat .
-
-    op init    : -> Culture .
-    op genInit : Nat -> Culture .
-
-    eq  init = genInit(0) .
-    ceq genInit(Rn) = mt
-        if Rn == width * height .
-    ceq genInit(Rn) = genInit(Rn + 1)
-                    ; pt(Rn) :: if random(Rn) rem 2 == 0 then X else - fi
-        if Rn < 25 .
-endfm
-```
