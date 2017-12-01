@@ -1,11 +1,10 @@
 Cellular Automata in Maude
 ==========================
 
-A cellular automata is a soup of cells, where each cell is holding some internal
-state. Once a cell is "activated", it reads the state of each of its neighbor
-cells to compute its own next state. Once the next state has been computed, a
-cell waits to be deactivated. All of the cells are activated simultaneously, and
-once all of the cells have computed their next state they are all deactivated.
+A cellular automata is a soup of cells, where each cell is holding some internal state.
+Once a cell is "activated", it reads the state of each of its neighbor cells to compute its own next state.
+Once the next state has been computed, a cell waits to be deactivated.
+All of the cells are activated simultaneously, and once all of the cells have computed their next state they are all deactivated.
 
 To make a query, first launch `maude` with the input file:
 
@@ -40,11 +39,9 @@ fmod CELLULAR-CULTURE is
 
 ### Cell
 
-`Cell`s store a different amount of data, depending on whether they are
-"activated" or not. They always store their own `StateLabel` and their own
-`State?`. A `State?` can just be a regular `State` (by subsorting), or it can be
-a `State` and a `States` (using the `_->_` operator), meaning the `Cell` is
-activated and calculating its next state.
+`Cell`s store a different amount of data, depending on whether they are "activated" or not.
+They always store their own `StateLabel` and their own `State?`.
+A `State?` can just be a regular `State` (by subsorting), or it can be a `State` and a `States` (using the `_->_` operator), meaning the `Cell` is activated and calculating its next state.
 
 ```maude
     op _->_ : State States -> State? [prec 56] .
@@ -53,8 +50,7 @@ activated and calculating its next state.
 
 ### Culture
 
-We have an "empty" `Culture` (`mt`), and say that `Culture`s can be combined
-associatively/comuttatively using the `_;_` operator.
+We have an "empty" `Culture` (`mt`), and say that `Culture`s can be combined associatively/comuttatively using the `_;_` operator.
 
 ```maude
     op mt  : -> Culture [ctor] .
@@ -64,10 +60,8 @@ associatively/comuttatively using the `_;_` operator.
 
 ### Computing Next State
 
-When computing the next state for the current cell, we'll need a list of
-neigbhoring states. To know which neighboring cell corresponds to each
-neighboring state, we'll use a marker `StateKey`, which can hold either the
-`StateLabel` or the `State` of the state it corresponds to.
+When computing the next state for the current cell, we'll need a list of neigbhoring states.
+To know which neighboring cell corresponds to each neighboring state, we'll use a marker `StateKey`, which can hold either the `StateLabel` or the `State` of the state it corresponds to.
 
 ```maude
     op mt   : -> States .
@@ -78,15 +72,13 @@ neighboring state, we'll use a marker `StateKey`, which can hold either the
     op neighbors : StateLabel -> State? .
 ```
 
-The `neighbors` function is used to calculate which neighbors are relevant to
-each `Cell`. This is simulation specific.
+The `neighbors` function is used to calculate which neighbors are relevant to each `Cell`.
+This is simulation specific.
 
 ### Neighbor Lookup
 
-If what we're holding is the `StateLabel`, we need to do a lookup in the
-associative commutative soup of `Cell` to find the corresponding `State`. It
-could be that the `StateLabel` refers to our own state, which needs to be
-handled specially.
+If what we're holding is the `StateLabel`, we need to do a lookup in the associative commutative soup of `Cell` to find the corresponding `State`.
+It could be that the `StateLabel` refers to our own state, which needs to be handled specially.
 
 ```maude
     vars N N'   : StateLabel .
@@ -103,20 +95,16 @@ handled specially.
 
 ### Life Cycle
 
-To drive the whole simulation forward, we'll need a `Clock` which switches back
-and forth between two states, `tick` and `tock`. A `Clock` together with a
-`Culture` is a `Dish`.
+To drive the whole simulation forward, we'll need a `Clock` which switches back and forth between two states, `tick` and `tock`.
+A `Clock` together with a `Culture` is a `Dish`.
 
 ```maude
     ops tick tock : -> Clock .
     op  _{_}      : Clock Culture -> Dish [format(d n s n d)].
 ```
 
-Notice that on `tick`, any unactivated `Cell` is activated by querying the
-`neighbors` function to get the relevant state from the surrounding `Culture`.
-On `tock` the simplified `Cell`s which have already computed their next state
-are deactivated (notice we use variable `S'`, which is of sort `State`, not of
-sort `State?`).
+Notice that on `tick`, any unactivated `Cell` is activated by querying the `neighbors` function to get the relevant state from the surrounding `Culture`.
+On `tock` the simplified `Cell`s which have already computed their next state are deactivated (notice we use variable `S'`, which is of sort `State`, not of sort `State?`).
 
 ```maude
     var  C    : Culture .
