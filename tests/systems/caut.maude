@@ -2,10 +2,10 @@ set show timing off .
 
 load ../../contrib/systems/caut.maude
 
-fmod 5x5GRID is
+mod 5x5GRID is
     including PERIODIC-GRID .
 
-    var S : State . var SS : States .
+    vars S L U R D : State . var SS : States .
 
     --- calculate the next state as a function of the neighborhood
 
@@ -15,10 +15,10 @@ fmod 5x5GRID is
     eq width  = 3 .
     eq height = 3 .
 
-    eq S -> up[X] down[X]                  SS = S -> X .
-    eq S ->               left[-] right[X] SS = S -> X .
-    eq - -> up[-]         left[-] right[-] SS = - -> X .
-    eq S ->                                SS = S -> - [owise] .
+    eq - -> up[-] down[D] left[-] right[-] = - -> X .
+    eq S -> up[U] down[D] left[-] right[X] = S -> X .
+    eq S -> up[X] down[X] left[L] right[R] = S -> X .
+    eq S -> up[U] down[D] left[L] right[R] = S -> - [owise] .
 
     --- generate a random 5X5 grid
 
@@ -30,4 +30,9 @@ fmod 5x5GRID is
      = (0, 0) :: - ; (0, 1) :: X ; (0, 2) :: -
      ; (1, 0) :: X ; (1, 1) :: - ; (1, 2) :: -
      ; (2, 0) :: X ; (2, 1) :: X ; (2, 2) :: X .
-endfm
+endm
+
+reduce [ init(0) ] .
+reduce { init(0) } .
+
+--- search [20] [ init(0) ] =>* { C:Culture } .
