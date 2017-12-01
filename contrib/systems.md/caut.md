@@ -136,11 +136,11 @@ mod CELLULAR-AUTOMATA is
 endm
 ```
 
-Our Simulation
---------------
+Periodic Grid
+-------------
 
 ```maude
-fmod DISH-PARAMETERS is
+fmod PERIODIC-GRID is
    protecting INT .
    protecting RANDOM .
     extending CELLULAR-CULTURE .
@@ -159,8 +159,6 @@ fmod DISH-PARAMETERS is
 
    ops width height : -> Nat .
     --------------------------
-    eq width  = 5 .
-    eq height = 5 .
     eq pt(N) = (N rem width, N quo width) .
 
    ceq (N,M) = (N - width, M)  if N >= width .
@@ -179,11 +177,21 @@ fmod DISH-PARAMETERS is
                           down  [(N , M - 1)]
                           right [(N + 1 , M)]
                           .
+endfm
+```
+
+### Instantiate to 5x5 Grid
+
+```maude
+fmod 5x5GRID is
+    including PERIODIC-GRID .
 
     vars S U D L R : State .
 
     --- calculate the next state as a function of the neighborhood
 
+    eq width  = 5 .
+    eq height = 5 .
     eq S -> up[X] down[X] left[L] right[R] = S -> X .
     eq S -> up[U] down[D] left[-] right[X] = S -> X .
     eq - -> up[-] down[X] left[-] right[-] = - -> X .
