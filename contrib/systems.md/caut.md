@@ -26,7 +26,7 @@ Cellular Cultures
 We define the structure of a `Culture`. Every `Cell` is a singleton `Culture`.
 
 ```maude
-fmod CELLULAR-CULTURE is
+mod CELLULAR-AUTOMATA is
 
     sorts State States State? .
     ---------------------------
@@ -104,35 +104,30 @@ To drive the whole simulation forward, we'll need a `Clock` which switches back 
 A `Clock` together with a `Culture` is a `Dish`.
 
 ```maude
-    sorts Clock Dish .
-    ------------------
+    sort Dish .
+    -----------
+
     var C : Culture .
 
-   ops tick tock : -> Clock .
-    op _{_} : Clock Culture -> Dish [format(d n s n d)] .
-    -----------------------------------------------------
-    eq tick { N :: S                 ; C }
-     = tick { N :: S -> neighbors(N) ; C } .
+    op [_] : Culture -> Dish .
+    --------------------------
+    eq [ N :: S                 ; C ]
+     = [ N :: S -> neighbors(N) ; C ] .
 
-    eq tock { N :: S -> S' ; C }
-     = tock { N :: S'      ; C } .
-endfm
+    op {_} : Culture -> Dish .
+    --------------------------
+    eq { N :: S -> S' ; C }
+     = { N :: S'      ; C } .
 ```
 
-Notice that on `tick`, any unactivated `Cell` is activated by querying the `neighbors` function to get the relevant state from the surrounding `Culture`.
-On `tock` the simplified `Cell`s which have already computed their next state are deactivated (notice we use variable `S'`, which is of sort `State`, not of sort `State?`).
+Notice that when the square brackets (`[_]`) surround a `Culture`, any unactivated `Cell` is activated by querying the `neighbors` function to get the relevant state from the surrounding `Culture`.
+When the curly braces (`{_}`) surround a `Culture`, the state us updated with the calculated next state.
 
-Execution Harness
------------------
+Here, we drive execution forward by exchanging square and curly braces.
 
 ```maude
-mod CELLULAR-AUTOMATA is
-    protecting CELLULAR-CULTURE .
-
-    --- once all dish simplifications are done, push clock forward
-
-    rl [tock] : tick => tock .
-    rl [tick] : tock => tick .
+    rl [tock] : [ C ] => { C } .
+    rl [tick] : { C } => [ C ] .
 endm
 ```
 
@@ -140,9 +135,9 @@ Periodic Grid
 -------------
 
 ```maude
-fmod PERIODIC-GRID is
+mod PERIODIC-GRID is
    protecting INT .
-    extending CELLULAR-CULTURE .
+    extending CELLULAR-AUTOMATA .
 
     vars N M : Int .
 
@@ -175,5 +170,5 @@ fmod PERIODIC-GRID is
        left  [(N - 1 , M)]
        down  [(N , M - 1)]
        right [(N + 1 , M)] .
-endfm
+endm
 ```
