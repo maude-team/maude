@@ -14,7 +14,8 @@ tools: \
 	tools/meta/narrowing.maude
 
 systems: \
-	systems/nim.maude
+	systems/nim.maude \
+	systems/caut.maude
 
 # `pd` is a patched version of `pandoc` capable of writing code files
 # Download it from 'https://github.com/ehildenb/pandoc'
