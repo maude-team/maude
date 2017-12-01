@@ -5,7 +5,7 @@ rl < bal: n pend: x overdraft: ff > # msgs => < bal: n + m pend: x overdraft:
 Warning: "bank-account.maude", line 155 (mod BANK-ACCOUNT-CTOR): variable m is
     used before it is bound in rule:
 rl < bal: n pend: x overdraft: ff > # msgs => < bal: n + m pend: x overdraft:
-    ff > # msgs .
+    ff > # msgs [narrowing] .
 ==========================================
 get variants in BANK-ACCOUNT : [< bal: n pend: x overdraft: ff > # msgs,
     withdraw(m),[m > n,< bal: n pend: x overdraft: tt > # msgs,< bal: n - m
@@ -96,26 +96,26 @@ m --> 1 + #1:Nat + #4:Nat
 
 Variant #9
 rewrites: 22
-StatePair: [< bal: #3:Nat + #2:Nat pend: #4:Nat + #2:Nat overdraft: ff > #
-    #1:MsgConf,withdraw(#3:Nat + #4:Nat + #2:Nat + #5:Nat),[(#3:Nat + #4:Nat +
-    #2:Nat + #5:Nat) > #3:Nat + #2:Nat,< bal: #3:Nat + #2:Nat pend: #4:Nat +
-    #2:Nat overdraft: tt > # #1:MsgConf,< bal: 0 pend: 0 overdraft: ff > #
+StatePair: [< bal: #2:Nat + #3:Nat pend: #2:Nat + #4:Nat overdraft: ff > #
+    #1:MsgConf,withdraw(#2:Nat + #3:Nat + #4:Nat + #5:Nat),[(#2:Nat + #3:Nat +
+    #4:Nat + #5:Nat) > #2:Nat + #3:Nat,< bal: #2:Nat + #3:Nat pend: #2:Nat +
+    #4:Nat overdraft: tt > # #1:MsgConf,< bal: 0 pend: 0 overdraft: ff > #
     #1:MsgConf]]
-n --> #3:Nat + #2:Nat
-x --> #4:Nat + #2:Nat
+n --> #2:Nat + #3:Nat
+x --> #2:Nat + #4:Nat
 msgs --> #1:MsgConf
-m --> #3:Nat + #4:Nat + #2:Nat + #5:Nat
+m --> #2:Nat + #3:Nat + #4:Nat + #5:Nat
 
 Variant #10
 rewrites: 22
-StatePair: [< bal: #2:Nat pend: #3:Nat + #4:Nat + #2:Nat overdraft: ff > #
-    #1:MsgConf,withdraw(#3:Nat + #2:Nat),[(#3:Nat + #2:Nat) > #2:Nat,< bal:
-    #2:Nat pend: #3:Nat + #4:Nat + #2:Nat overdraft: tt > # #1:MsgConf,< bal: 0
+StatePair: [< bal: #2:Nat pend: #2:Nat + #3:Nat + #4:Nat overdraft: ff > #
+    #1:MsgConf,withdraw(#2:Nat + #3:Nat),[(#2:Nat + #3:Nat) > #2:Nat,< bal:
+    #2:Nat pend: #2:Nat + #3:Nat + #4:Nat overdraft: tt > # #1:MsgConf,< bal: 0
     pend: #4:Nat overdraft: ff > # #1:MsgConf]]
 n --> #2:Nat
-x --> #3:Nat + #4:Nat + #2:Nat
+x --> #2:Nat + #3:Nat + #4:Nat
 msgs --> #1:MsgConf
-m --> #3:Nat + #2:Nat
+m --> #2:Nat + #3:Nat
 
 No more variants.
 rewrites: 32
