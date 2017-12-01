@@ -156,10 +156,10 @@ mod BAKERY-FVP-CTOR is
 
     op <_,_,_,_> : Mode Nat> Mode Nat> -> BState [ctor] .
     -----------------------------------------------------
-    rl [p1_sleep] : < sleep, X,                 Q, Y       > => <  wait, Y + 1,             Q, Y       > [narrowing] .
-    rl [p1_wait]  : <  wait, X,                 Q, 0       > => <  crit, X,                 Q, 0       > [narrowing] .
-    rl [p1_wait]  : <  wait, V1:Nat> + V2:Nat>, Q, V1:Nat> > => <  crit, V1:Nat> + V2:Nat>, Q, V1:Nat> > [narrowing] .
-    rl [p1_crit]  : <  crit, X,                 Q, Y       > => < sleep, 0,                 Q, Y       > [narrowing] .
+    rl [p1_sleep] : < sleep, X,       Q, Y                 > => <  wait, Y + 1,   Q, Y                 > [narrowing] .
+    rl [p1_wait]  : <  wait, X,       Q, 0                 > => <  crit, X,       Q, 0                 > [narrowing] .
+    rl [p1_wait]  : <  wait, V1:Nat>, Q, V1:Nat> + V2:Nat> > => <  crit, V1:Nat>, Q, V1:Nat> + V2:Nat> > [narrowing] .
+    rl [p1_crit]  : <  crit, X,       Q, Y                 > => < sleep, 0,       Q, Y                 > [narrowing] .
 
     rl [p2_sleep] : < P, X,                   sleep, Y       > => < P, X,                    wait, X + 1   > [narrowing] .
     rl [p2_wait]  : < P, 0,                    wait, Y       > => < P, 0,                    crit, Y       > [narrowing] .
