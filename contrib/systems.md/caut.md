@@ -6,20 +6,6 @@ Once a cell is "activated", it reads the state of each of its neighbor cells to 
 Once the next state has been computed, a cell waits to be deactivated.
 All of the cells are activated simultaneously, and once all of the cells have computed their next state they are all deactivated.
 
-To make a query, first launch `maude` with the input file:
-
-```sh
-$ maude caut.maude
-```
-
-Then ask Maude to `rewrite` a certain number of times from the initial state:
-
-```sh
-Maude> rewrite [25] tick { init } .
-Maude> rewrite [28] tick { init } .
-```
-
-
 Cellular Cultures
 -----------------
 
