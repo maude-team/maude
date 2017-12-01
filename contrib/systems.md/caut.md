@@ -122,41 +122,58 @@ endfm
 Notice that on `tick`, any unactivated `Cell` is activated by querying the `neighbors` function to get the relevant state from the surrounding `Culture`.
 On `tock` the simplified `Cell`s which have already computed their next state are deactivated (notice we use variable `S'`, which is of sort `State`, not of sort `State?`).
 
+Execution Harness
+-----------------
+
+```maude
+mod CELLULAR-AUTOMATA is
+    protecting CELLULAR-CULTURE .
+
+    --- once all dish simplifications are done, push clock forward
+
+    rl [tock] : tick => tock .
+    rl [tick] : tock => tick .
+endm
+```
+
 Our Simulation
 --------------
 
 ```maude
 fmod DISH-PARAMETERS is
-    protecting INT .
-    protecting RANDOM .
+   protecting INT .
+   protecting RANDOM .
     extending CELLULAR-CULTURE .
 
+    vars N M : Int .
+
     sort Point .
+    ------------
     subsort Point < StateLabel .
 
     --- Labels are indices in a 5X5 Circular Grid
 
     op (_,_) : Int Int -> Point .
     op pt    : Int -> Point .
+    -------------------------
 
-    vars N M : Int .
+   ops width height : -> Nat .
+    --------------------------
+    eq width  = 5 .
+    eq height = 5 .
+    eq pt(N) = (N rem width, N quo width) .
 
-    ops width height : -> Nat .
-    eq  width  = 5 .
-    eq  height = 5 .
-    eq  pt(N) = (N rem width, N quo width) .
-
-    ceq (N,M) = (N - width, M)  if N >= width .
-    ceq (N,M) = (N, M - height) if M >= height .
-    ceq (N,M) = (N + width, M)  if N < 0 .
-    ceq (N,M) = (N, M + height) if M < 0 .
+   ceq (N,M) = (N - width, M)  if N >= width .
+   ceq (N,M) = (N, M - height) if M >= height .
+   ceq (N,M) = (N + width, M)  if N < 0 .
+   ceq (N,M) = (N, M + height) if M < 0 .
 
     --- States are either `X` or `-`
     --- The neighborhood is the current cell + adjacent cells
 
-    ops X - : -> State .
-    ops up down left right : -> StateKey .
-
+   ops X - : -> State .
+   ops up down left right : -> StateKey .
+    -------------------------------------
     eq neighbors((N,M)) = up    [(N , M + 1)]
                           left  [(N - 1 , M)]
                           down  [(N , M - 1)]
@@ -186,15 +203,4 @@ fmod DISH-PARAMETERS is
                     ; pt(Rn) :: if random(Rn) rem 2 == 0 then X else - fi
         if Rn < 25 .
 endfm
-```
-
-```maude
-mod CELLULAR-AUTOMATA is
-    extending DISH-PARAMETERS .
-
-    --- once all dish simplifications are done, push clock forward
-
-    rl [tock] : tick => tock .
-    rl [tick] : tock => tick .
-endm
 ```
