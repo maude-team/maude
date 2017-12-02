@@ -12,6 +12,18 @@ reduce in BOUND : unbounded < unbounded =/= true and unbounded < unbounded =/=
 rewrites: 3
 result Bool: true
 ==========================================
+reduce in BOUND : decrement(0) .
+rewrites: 0
+result [Bound]: decrement(0)
+==========================================
+reduce in BOUND : decrement(9) .
+rewrites: 1
+result NzNat: 8
+==========================================
+reduce in BOUND : decrement(unbounded) .
+rewrites: 1
+result Bound: unbounded
+==========================================
 reduce in BOUND : continue(3,5) == 4,5 .
 rewrites: 3
 result Bool: true

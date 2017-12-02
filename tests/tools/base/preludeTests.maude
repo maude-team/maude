@@ -16,6 +16,10 @@ reduce not (unbounded < 3) .
 reduce 3 < unbounded .
 reduce (unbounded < unbounded =/= true) and (unbounded < unbounded =/= false) .
 
+reduce decrement(0) .
+reduce decrement(9) .
+reduce decrement(unbounded) .
+
 reduce continue(3, 5)         == 4, 5 .
 reduce continue(3, unbounded) == 4, unbounded .
 reduce      continue(3, 4)                 :: Depth .
