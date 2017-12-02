@@ -827,6 +827,11 @@ fmod BOUND is
   op unbounded : -> Bound [ctor] .
   --------------------------------
 
+  op decrement : Bound -> [Bound] .
+  ---------------------------------
+  eq decrement(s N)       = N .
+  eq decrement(unbounded) = unbounded .
+
   op _,_ : Nat Bound -> Depth .
   -----------------------------
 
