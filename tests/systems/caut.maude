@@ -2,36 +2,40 @@ set show timing off .
 
 load ../../contrib/systems/caut.maude
 
+--- 3x3 grid topology
+--- =================
+
 mod 3x3GRID is
     including PERIODIC-GRID .
 
-    vars S L U R D : State . var SS : States .
-
-    --- calculate the next state as a function of the neighborhood
-
-   ops X - : -> State .
-   --------------------
+    var N : Nat . vars S L U R D : State . var SS : States .
 
     eq width  = 3 .
     eq height = 3 .
+    ---------------
 
+    --- update rule
+
+   ops X - : -> State .
+   --------------------
     eq - -> up[-] down[D] left[-] right[-] = - -> X .
     eq S -> up[U] down[-] left[-] right[X] = S -> X .
     eq S -> up[X] down[X] left[L] right[R] = S -> X .
     eq S -> up[U] down[D] left[L] right[R] = S -> - [owise] .
 
-    var N : Nat .
-
     op init : Nat -> Cells .
     ------------------------
     eq init(0)
-     = < 0 , 0 > :: -   ;   < 0 , 1 > :: X   ;   < 0 , 2 > :: -
-     ; < 1 , 0 > :: X   ;   < 1 , 1 > :: -   ;   < 1 , 2 > :: -
-     ; < 2 , 0 > :: X   ;   < 2 , 1 > :: X   ;   < 2 , 2 > :: X .
+     =   < 0 , 0 > :: -   ;   < 0 , 1 > :: X   ;   < 0 , 2 > :: -
+     ;   < 1 , 0 > :: X   ;   < 1 , 1 > :: -   ;   < 1 , 2 > :: -
+     ;   < 2 , 0 > :: X   ;   < 2 , 1 > :: X   ;   < 2 , 2 > :: X .
 endm
+
+--- check operator `{_}` and `[_]`
 
 reduce [ init(0) ] .
 reduce { init(0) } .
 
---- Show repeating cycle of 3 states from initial board
+--- Show all reachable states from initial board
+
 search [ init(0) ] =>* { CS:Cells } .
