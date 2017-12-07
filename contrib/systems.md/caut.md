@@ -75,11 +75,11 @@ fmod CELLULAR-AUTOMATA-DATA is
     op _[_] : CellKey State  -> States .
     op _[_] : CellKey CellId -> States .
     ------------------------------------
-    eq   N :: S -> CK[N] SS
-       = N :: S -> CK[S] SS .
+    eq N :: S -> CK[N] SS
+     = N :: S -> CK[S] SS .
 
-    eq   N :: S -> CK[N'] SS ; N' :: S' -> SS'
-       = N :: S -> CK[S'] SS ; N' :: S' -> SS' .
+    eq N :: S -> CK[N'] SS ; N' :: S' -> SS'
+     = N :: S -> CK[S'] SS ; N' :: S' -> SS' .
 ```
 
 -   `neighbors` is defined by the user to inform which cells should be considered neighbors by the simulator.
@@ -175,8 +175,8 @@ mod PERIODIC-GRID is
 
 ```maude
    ops up down left right : -> CellKey .
-    ------------------------------------
-    eq neighbors(< N ,M >)
+   -------------------------------------
+    eq neighbors(< N , M >)
      = up    [< N - 1 , M     >]
        left  [< N     , M - 1 >]
        down  [< N + 1 , M     >]
