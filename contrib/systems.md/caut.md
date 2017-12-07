@@ -155,8 +155,7 @@ mod PERIODIC-GRID is
     op <_,_> : Int Int -> Point .
     op pt    : Int     -> Point .
     -----------------------------
-    eq pt(N) = < N rem width , N quo width > .
-
+    eq pt(N) = < N quo width , N rem width > .
 ```
 
 -   `width` and `height` are specified by the user to make the grid the correct size (notice that inside a `Point` modular arithmetic is performed).
@@ -164,10 +163,10 @@ mod PERIODIC-GRID is
 ```maude
    ops width height : -> Nat .
    ---------------------------
-   ceq < N , M > = < N - width , M          > if N >= width .
-   ceq < N , M > = < N         , M - height > if M >= height .
-   ceq < N , M > = < N + width , M          > if N < 0 .
-   ceq < N , M > = < N         , M + height > if M < 0 .
+   ceq < N , M > = < N - height , M         > if N >= height .
+   ceq < N , M > = < N          , M - width > if M >= width .
+   ceq < N , M > = < N + height , M         > if N < 0 .
+   ceq < N , M > = < N          , M + width > if M < 0 .
 ```
 
 -   We have 4 neighbors, so there are 4 `CellKey`s, one for each neighbor.
