@@ -156,6 +156,8 @@ eq '`[_`]['Q:Qid] = 'th_is_sorts_._____endth['Q:Qid,'including_.['Q:Qid],
     'none.EquationSet,'none.RuleSet] [none] .
 eq 'append['A:NatList,'L:NatList] = '__['A:NatList,'L:NatList] [none] .
 eq 'append['A:QidList,'L:QidList] = '__['A:QidList,'L:QidList] [none] .
+eq 'decrement['unbounded.Bound] = 'unbounded.Bound [none] .
+eq 'decrement['s_['N:Nat]] = 'N:Nat [none] .
 eq 'delete['E:Qid,'S:QidSet] = 'S:QidSet [owise] .
 eq 'delete['E:Qid,'_;_['E:Qid,'S:QidSet]] = 'delete['E:Qid,'S:QidSet] [none] .
 eq 'front['__['L:NatList,'E:Nat]] = 'L:NatList [none] .
@@ -264,6 +266,11 @@ eq 'getOps['th_is_sorts_._____endth['Q:Qid,'IL:ImportList,'SS:SortSet,
     'SSDS:SubsortDeclSet,'OPDS:OpDeclSet,'MAS:MembAxSet,'EQS:EquationSet,
     'RLS:RuleSet]] = 'OPDS:OpDeclSet [none] .
 eq 'getRls['RL:Qid,'none.RuleSet] = 'none.RuleSet [none] .
+eq 'getRls['RL:Qid,'__['RLS:RuleSet,'crl_=>_if_`[_`].['T:Term,'T':Term,
+    'C:Condition,'__['AS:AttrSet,'label['Q:Qid]]]]] = '__['getRls['RL:Qid,
+    'RLS:RuleSet],'if_then_else_fi['_==_['RL:Qid,'Q:Qid],'crl_=>_if_`[_`].[
+    'T:Term,'T':Term,'C:Condition,'__['AS:AttrSet,'label['Q:Qid]]],
+    'none.RuleSet]] [none] .
 eq 'getRls['RL:Qid,'__['RLS:RuleSet,'rl_=>_`[_`].['T:Term,'T':Term,'__[
     'AS:AttrSet,'label['Q:Qid]]]]] = '__['getRls['RL:Qid,'RLS:RuleSet],
     'if_then_else_fi['_==_['RL:Qid,'Q:Qid],'rl_=>_`[_`].['T:Term,'T':Term,'__[
