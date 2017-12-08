@@ -1,3 +1,5 @@
+set show timing off .
+
 load ../../../contrib/tools/meta/variables.maude
 
 --- Test Module VARIABLE-NUMBERS
