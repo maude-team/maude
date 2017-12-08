@@ -6,7 +6,8 @@ TESTS = \
 	mtemplate \
 	mtransform \
 	unification \
-	variables
+	variables \
+	narrowing
 
 MAUDE_FILES = \
 	metalevel-ext.maude \
@@ -16,7 +17,8 @@ MAUDE_FILES = \
 	mtemplate.maude \
 	mtransform.maude \
 	unification.maude \
-	variables.maude
+	variables.maude \
+	narrowing.maude
 
 RESULT_FILES = \
 	metalevel-ext.expected \
@@ -26,6 +28,7 @@ RESULT_FILES = \
 	mtemplate.expected \
 	mtransform.expected \
 	unification.expected \
-	variables.expected
+	variables.expected \
+	narrowing.expected
 
 EXTRA_DIST = $(TESTS) $(MAUDE_FILES) $(RESULT_FILES)

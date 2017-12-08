@@ -1,0 +1,10 @@
+#!/bin/sh
+
+MAUDE_LIB=$srcdir/../../../src/Main
+export MAUDE_LIB
+
+../../../src/Main/maude \
+  < narrowing.maude -no-banner -no-advise \
+  > narrowing.out 2>&1
+
+diff narrowing.expected narrowing.out > /dev/null 2>&1
