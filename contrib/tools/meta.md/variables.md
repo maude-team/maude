@@ -1,9 +1,9 @@
-```maude
-load ../base/full-maude.maude
-```
-
 Variable Handling
 =================
+
+```maude
+load ../base/prelude-aux.maude
+```
 
 Determiistic Variables
 ----------------------
@@ -551,7 +551,12 @@ fmod RAV-IMPL is
   eq [M6] : maxIdx(none,QS,M)        = M .
  ceq [M7] : maxIdx(S,QS,(N,R,J),M)   = maxIdx(S,QS ; qid(N),maxF(J,M)) if not qid(N) in QS .
 endfm
+```
 
+The only remaining Full Maude dependency is the `MODULE-HANDLING` import here.
+
+```maude
+load ../base/full-maude.maude
 --- Gathers all functionality into a single module
 fmod RENAME-METAVARS is
   pr META-LEVEL      .
