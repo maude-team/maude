@@ -78,7 +78,7 @@ result Bool: true
 reduce in META-LEVEL : getRls('p1_sleep, upModule('BAKERY-FVP, true)) .
 rewrites: 27
 result Rule: rl '<_`,_`,_`,_>['sleep.NcMode,'X:Nat>,'Q:Mode,'Y:Nat>] =>
-    '<_`,_`,_`,_>['wait.NcMode,'_+_['1.Zero>,'Y:Nat>],'Q:Mode,'Y:Nat>] [label(
+    '<_`,_`,_`,_>['wait.NcMode,'_+_['1.NzNat>,'Y:Nat>],'Q:Mode,'Y:Nat>] [label(
     'p1_sleep)] .
 ==========================================
 reduce in META-LEVEL : getRls('p2_wait, upModule('BAKERY-FVP, true)) .
