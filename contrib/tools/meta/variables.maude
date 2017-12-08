@@ -44,6 +44,54 @@ fmod DETERMINISTIC-VARIABLES is
 endfm
 
 
+--- ; Variable Numbering
+--- ; ------------------
+
+
+fmod VARIABLE-NUMBERS is
+   protecting META-LEVEL .
+   protecting CONVERSION .
+
+    var N : Nat . var Q : Qid . var S : String .
+    var C : Constant . var V : Variable .
+    var TL : TermList . vars NeTL NeTL' : NeTermList .
+
+    op flattenTerm : TermList -> [TermList] .
+    -----------------------------------------
+    eq flattenTerm(C)       = C .
+    eq flattenTerm(V)       = V .
+    eq flattenTerm(Q[NeTL]) = flattenTerm(NeTL) .
+
+    eq flattenTerm(empty)          = empty .
+    eq flattenTerm((NeTL , NeTL')) = flattenTerm(NeTL) , flattenTerm(NeTL') .
+
+    op  variables : TermList -> [TermList] .
+    op #variables : TermList -> [TermList] .
+    ----------------------------------------
+    eq variables(TL) = #variables(flattenTerm(TL)) .
+
+    eq #variables(C) = empty .
+    eq #variables(V) = V .
+
+    eq #variables(empty)          = empty .
+    eq #variables((NeTL , NeTL')) = #variables(NeTL) , #variables(NeTL') .
+
+    op  metaHighestVar : TermList -> Nat .
+    op #metaHighestVar : TermList -> Nat .
+    --------------------------------------
+    eq metaHighestVar(TL) = #metaHighestVar(variables(TL)) .
+
+    eq #metaHighestVar(V) = 0 [owise] .
+   ceq #metaHighestVar(V) = N
+                     if S := string(getName(V))
+                     /\ (substr(S, 0, 1) == "@" or substr(S, 0, 1) == "#")
+                     /\ N := rat(substr(S, 1, length(S)), 10) .
+
+    eq #metaHighestVar(empty)          = 0 .
+    eq #metaHighestVar((NeTL , NeTL')) = max(#metaHighestVar(NeTL), #metaHighestVar(NeTL')) .
+endfm
+
+
 --- ; Metavariable Renaming/Fresh
 --- ; ---------------------------
 
