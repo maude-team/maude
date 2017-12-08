@@ -1,1 +1,84 @@
+==========================================
+reduce in VARIABLE-NUMBERS : flattenTerm('T:Nat) .
+rewrites: 1 in 0ms cpu (0ms real) (~ rewrites/second)
+result Variable: 'T:Nat
+==========================================
+reduce in VARIABLE-NUMBERS : flattenTerm('T.Nat) .
+rewrites: 1 in 0ms cpu (0ms real) (~ rewrites/second)
+result Constant: 'T.Nat
+==========================================
+reduce in VARIABLE-NUMBERS : flattenTerm(('T.Nat,'T:Nat)) .
+rewrites: 3 in 0ms cpu (0ms real) (~ rewrites/second)
+result NeTermList: 'T.Nat,'T:Nat
+==========================================
+reduce in VARIABLE-NUMBERS : flattenTerm(('T.Nat,'T:Nat,'s_['L:Nat,'_+_['R.Nat,
+    'Q:Nat]])) .
+rewrites: 11 in 0ms cpu (0ms real) (~ rewrites/second)
+result NeTermList: 'T.Nat,'T:Nat,'L:Nat,'R.Nat,'Q:Nat
+==========================================
+reduce in VARIABLE-NUMBERS : flattenTerm('_+_['s_['R:Nat,'T:Nat]]) .
+rewrites: 5 in 0ms cpu (0ms real) (~ rewrites/second)
+result NeTermList: 'R:Nat,'T:Nat
+==========================================
+reduce in VARIABLE-NUMBERS : #variables('T:Nat) .
+rewrites: 1 in 0ms cpu (0ms real) (~ rewrites/second)
+result Variable: 'T:Nat
+==========================================
+reduce in VARIABLE-NUMBERS : #variables(('R:Nat,'t.Nat)) .
+rewrites: 3 in 0ms cpu (0ms real) (~ rewrites/second)
+result Variable: 'R:Nat
+==========================================
+reduce in VARIABLE-NUMBERS : #variables(('t.Nat,'R:Nat,'l.Nat,'L:nat)) .
+rewrites: 7 in 0ms cpu (0ms real) (~ rewrites/second)
+result NeTermList: 'R:Nat,'L:nat
+==========================================
+reduce in VARIABLE-NUMBERS : variables(('_+_['s_['R:Nat,'t.Nat]],'s_['T:Nat]))
+    .
+rewrites: 14 in 0ms cpu (0ms real) (~ rewrites/second)
+result NeTermList: 'R:Nat,'T:Nat
+==========================================
+reduce in VARIABLE-NUMBERS : variables(('S:Nat,'L:Nat,'t.Nat,'_+_['T:Nat,
+    'r.Nat])) .
+rewrites: 20 in 0ms cpu (0ms real) (~ rewrites/second)
+result NeTermList: 'S:Nat,'L:Nat,'T:Nat
+==========================================
+reduce in VARIABLE-NUMBERS : #metaHighestVar('#0:Nat) .
+rewrites: 18 in 0ms cpu (0ms real) (~ rewrites/second)
+result Zero: 0
+==========================================
+reduce in VARIABLE-NUMBERS : #metaHighestVar('#4:Nat) .
+rewrites: 18 in 0ms cpu (0ms real) (~ rewrites/second)
+result NzNat: 4
+==========================================
+reduce in VARIABLE-NUMBERS : #metaHighestVar('@1:Nat) .
+rewrites: 18 in 0ms cpu (0ms real) (~ rewrites/second)
+result NzNat: 1
+==========================================
+reduce in VARIABLE-NUMBERS : #metaHighestVar('@4:Nat) .
+rewrites: 18 in 0ms cpu (0ms real) (~ rewrites/second)
+result NzNat: 4
+==========================================
+reduce in VARIABLE-NUMBERS : #metaHighestVar(('#0:Nat,'@3:Nat,'@4:Nat)) .
+rewrites: 58 in 0ms cpu (0ms real) (~ rewrites/second)
+result NzNat: 4
+==========================================
+reduce in VARIABLE-NUMBERS : #metaHighestVar(('#0:Nat,'#7:Nat,'@4:Nat)) .
+rewrites: 58 in 0ms cpu (0ms real) (~ rewrites/second)
+result NzNat: 7
+==========================================
+reduce in VARIABLE-NUMBERS : metaHighestVar('_+_['@7:Nat,'s_['#2:Nat],'_+_['s_[
+    '@5:Nat],'s_['#3:NzNat]]]) .
+rewrites: 99 in 0ms cpu (0ms real) (~ rewrites/second)
+result NzNat: 7
+==========================================
+reduce in VARIABLE-NUMBERS : metaHighestVar('_+_['3.Nat,'s_['L:Nat],'_+_['s_[
+    '@5:Nat],'s_['#3:NzNat]]]) .
+rewrites: 76 in 0ms cpu (0ms real) (~ rewrites/second)
+result NzNat: 5
+==========================================
+reduce in VARIABLE-NUMBERS : metaHighestVar(('<_`,_`,_`,_>['@1:Mode,'0.Zero>,
+    'crit.Mode,'@2:Nat>],'<_`,_`,_`,_>['@1:Mode,'_+_['@2:Nat>,'@3:NzNat>],
+    'crit.Mode,'@2:Nat>])) .
+rewrites: 157 in 0ms cpu (0ms real) (~ rewrites/second)
+result NzNat: 3
 Bye.

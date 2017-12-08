@@ -1,1 +1,33 @@
 load ../../../contrib/tools/meta/variables.maude
+
+--- Test Module VARIABLE-NUMBERS
+--- ============================
+
+select VARIABLE-NUMBERS .
+
+reduce flattenTerm('T:Nat) .
+reduce flattenTerm('T.Nat) .
+reduce flattenTerm(('T.Nat, 'T:Nat)) .
+reduce flattenTerm(('T.Nat, 'T:Nat, 's_['L:Nat, '_+_['R.Nat, 'Q:Nat]])) .
+reduce flattenTerm('_+_['s_['R:Nat, 'T:Nat]]) .
+
+reduce #variables('T:Nat) .
+reduce #variables(('R:Nat, 't.Nat)) .
+reduce #variables(('t.Nat, 'R:Nat, 'l.Nat, 'L:nat)) .
+
+reduce variables(('_+_['s_['R:Nat, 't.Nat]], 's_['T:Nat])) .
+reduce variables(('S:Nat, 'L:Nat, 't.Nat, '_+_['T:Nat, 'r.Nat])) .
+
+reduce #metaHighestVar('#0:Nat) .
+reduce #metaHighestVar('#4:Nat) .
+reduce #metaHighestVar('@1:Nat) .
+reduce #metaHighestVar('@4:Nat) .
+reduce #metaHighestVar(('#0:Nat, '@3:Nat, '@4:Nat)) .
+reduce #metaHighestVar(('#0:Nat, '#7:Nat, '@4:Nat)) .
+
+reduce metaHighestVar('_+_['@7:Nat, 's_['#2:Nat], '_+_['s_['@5:Nat], 's_['#3:NzNat]]]) .
+reduce metaHighestVar('_+_['3.Nat, 's_['L:Nat], '_+_['s_['@5:Nat], 's_['#3:NzNat]]]) .
+reduce metaHighestVar( ( '<_`,_`,_`,_>['@1:Mode,'0.Zero>,'crit.Mode,'@2:Nat>]
+                       , '<_`,_`,_`,_>['@1:Mode,'_+_['@2:Nat>,'@3:NzNat>],'crit.Mode,'@2:Nat>]
+                       )
+                     ) .
