@@ -94,7 +94,7 @@ fmod NAT> is
     -------------------------------
     subsorts Zero> NzNat> < Nat> .
 
-    vars n m : Nat> .  vars n' m' : NzNat> .
+    vars n m : Nat> . vars n' m' : NzNat> .
 
    ops tt ff : -> Bool> [ctor] .
    ops 0  1  : -> Zero> [ctor] .
@@ -108,8 +108,8 @@ fmod NAT> is
 
     op _>_ : Nat> Nat> -> Bool> .
     -----------------------------
-    eq n + n' > n = tt [variant] .
-    eq n > n + m = ff  [variant] .
+    eq n + n' > n     = tt [variant] .
+    eq n      > n + m = ff [variant] .
 endfm
 
 mod BAKERY-FVP is
