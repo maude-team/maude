@@ -96,9 +96,10 @@ fmod NAT> is
 
     vars n m : Nat> . vars n' m' : NzNat> .
 
-   ops tt ff : -> Bool> [ctor] .
-   ops 0  1  : -> Zero> [ctor] .
-   -----------------------------
+   ops tt ff : -> Bool>  [ctor] .
+    op 0     : -> Zero>  [ctor] .
+    op 1     : -> NzNat> [ctor] .
+    -----------------------------
 
     op _+_ : Nat>   Nat>   -> Nat>   [ctor assoc comm id: 0] .
     op _+_ : NzNat> Nat>   -> NzNat> [ctor assoc comm id: 0] .
